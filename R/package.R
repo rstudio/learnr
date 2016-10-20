@@ -74,11 +74,13 @@ install_knitr_hooks <- function() {
     
     # produce a tutor wrapper div w/ the specified class
     tutor_wrapper_div <- function(class) {
-      if (before)
-        paste0('<div class="tutor-', class, 
+      knitr::asis_output(
+        if (before)
+          paste0('<div class="tutor-', class, 
                '" data-label="', options$label, '">')
-      else
-        paste0('</div>')
+        else
+          paste0('</div>')
+      )
     }
     
     # handle interactive and exercise chunks
