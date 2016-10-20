@@ -6,13 +6,6 @@ output:
 runtime: shiny_prerendered
 ---
 
-```{css}
-.tutor-exercise {
-  display: none;
-}
-```
-
-
 ```{r setup, include=FALSE}
 library(tutor)
 ```
@@ -20,6 +13,8 @@ library(tutor)
 ```{r, interactive=TRUE}
 summary(cars)
 ```
+
+
 
 
 

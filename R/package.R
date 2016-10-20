@@ -4,6 +4,7 @@
 .onAttach <- function(libname, pkgname) {
   install_rmarkdown_hooks()
   install_knitr_hooks()
+  shiny::addResourcePath("tutor", system.file("www", package="tutor"))
 }
 
 # remove knitr hooks when package is attached to search path
@@ -74,19 +75,23 @@ install_knitr_hooks <- function() {
     
     # produce a tutor wrapper div w/ the specified class
     tutor_wrapper_div <- function(class) {
-      knitr::asis_output(
-        if (before)
-          paste0('<div class="tutor-', class, 
-               '" data-label="', options$label, '">')
-        else
-          paste0('</div>')
-      )
+      if (before)
+        paste0('<div class="tutor-', class, 
+             '" data-label="', options$label, '">')
+      else
+        paste0('</div>')
+    }
+    
+    add_tutor_dependency <- function() {
+      knitr::knit_meta_add(list(tutor_html_dependency()))
     }
     
     # handle interactive and exercise chunks
     if (is_interactive_chunk(options)) {
       
       # generate shiny server code
+      
+      add_tutor_dependency()
       
       # output wrapper div
       tutor_wrapper_div("interactive")
@@ -95,12 +100,23 @@ install_knitr_hooks <- function() {
       
       # generate shiny server code
       
+      add_tutor_dependency()
       
       # output wrapper div
       tutor_wrapper_div("exercise")
     }
   })
   
+}
+
+tutor_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "tutor",
+    version = packageVersion("tutor"),
+    src = c(href = "tutor"),
+    script = "tutor.js",
+    stylesheet = "tutor.css"
+  )
 }
 
 remove_knitr_hooks <- function() {
