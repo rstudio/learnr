@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+output: html_document
+runtime: shiny_prerendered
+---
+
+```{r, context="setup", include=FALSE}
+library(tutorials)
+```
+
+
+```{r cars, exercise=TRUE}
+summary(cars)
+```
+
+```{r cars-setup}
+cat("Setup!\n")
+```
+
+```{r cars-evaluate}
+cat("Evaluate!")
+```
+
+
+```{r cars2}
+verbatimTextOutput("cars")
+```
+
+```{r, context="server"}
+output$cars <- renderPrint({
+  summary(cars)
+})
+```
+
+
