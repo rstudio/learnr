@@ -1,24 +1,41 @@
 ---
-title: "Untitled"
+title: "Tutor"
 output: html_document
 runtime: shiny_prerendered
 ---
 
-```{r, context="setup", include=FALSE}
-library(tutorials)
+```{css}
+.tutor-exercise {
+  display: none;
+}
 ```
 
 
-```{r cars, exercise=TRUE}
+```{r setup, include=FALSE}
+library(tutor)
+```
+
+```{r, interactive=TRUE}
 summary(cars)
 ```
 
+
+
+
+
 ```{r cars-setup}
 cat("Setup!\n")
+knitr::all_labels(label == "cars-exercise")
 ```
 
-```{r cars-evaluate}
-cat("Evaluate!")
+```{r cars-exercise}
+summary(cars)
+```
+
+
+
+```{r cars-check}
+cat("Check!")
 ```
 
 
