@@ -1,5 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^docs$
 ^inst/examples/.+\.html
 ^inst/examples/.+_files
+^inst/examples/.+_data
 

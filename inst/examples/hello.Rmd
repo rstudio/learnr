@@ -2,7 +2,10 @@
 title: "Tutor"
 output: 
   html_document:
-    theme: united
+    theme: cosmo
+    highlight: textmate
+    fig_width: 5
+    fig_height: 3.5
 runtime: shiny_prerendered
 ---
 

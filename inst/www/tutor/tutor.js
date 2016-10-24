@@ -1,5 +1,4 @@
 
-
 $(document).ready(function() {
   
   // find interactive code blocks
@@ -10,14 +9,13 @@ $(document).ready(function() {
     var code = code_element.text() + "\n";
     code_element.parent().remove();
     
-    // add div with id in it's place
+    // add div in it's place
     var code_div = $('<div></div>');
     var code_id = $(this).attr('data-label') + "-code";
     code_div.attr('id', code_id);
     code_div.addClass('tutor-interactive-editor');
     $(this).prepend(code_div);
     
-  
     // edit it
     var editor = ace.edit(code_id);
     editor.setHighlightActiveLine(false);
@@ -30,15 +28,14 @@ $(document).ready(function() {
     editor.session.getSelection().clearSelection();
     editor.setValue(code, -1);
     
+    // mange ace height as the document changes
     var updateAceHeight = function()  {
       editor.setOptions({
         minLines: 2,
         maxLines: Math.max(editor.session.getLength(), 2)
       });
     };
-    
     updateAceHeight();
-    
     editor.getSession().on('change', updateAceHeight);
   });
   
