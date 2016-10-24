@@ -1,4 +1,6 @@
 
+#' @import htmltools
+NULL
 
 # install knitr hooks when package is attached to search path
 .onAttach <- function(libname, pkgname) {

@@ -2,7 +2,7 @@
 title: "Tutor"
 output: 
   html_document:
-    theme: cosmo
+    theme: united
 runtime: shiny_prerendered
 ---
 
@@ -11,7 +11,7 @@ library(tutor)
 ```
 
 ```{r, interactive=TRUE}
-summary(cars)
+plot(cars)
 ```
 
 
