@@ -7,7 +7,7 @@ $(document).ready(function() {
     
     // get code then remove the code element
     var code_element = $(this).children('pre').children('code');
-    var code = code_element.text()  + "\n";
+    var code = code_element.text();
     code_element.parent().remove();
     
     // add div with id in it's place
