@@ -29,10 +29,17 @@ $(document).ready(function() {
     editor.session.setMode("ace/mode/r");
     editor.session.getSelection().clearSelection();
     editor.setValue(code, -1);
-    editor.setOptions({
-      minLines: 2,
-      maxLines: Math.max(editor.session.getLength(), 2)
-    });
+    
+    var updateAceHeight = function()  {
+      editor.setOptions({
+        minLines: 2,
+        maxLines: Math.max(editor.session.getLength(), 2)
+      });
+    };
+    
+    updateAceHeight();
+    
+    editor.getSession().on('change', updateAceHeight);
   });
   
 });
