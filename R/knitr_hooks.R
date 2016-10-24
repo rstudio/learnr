@@ -42,14 +42,20 @@ install_knitr_hooks <- function() {
     if (!is_shiny_prerendered_active())
       return(options)
     
-    # if this is an exercise chunk then don't eval it
-    if (is_exercise_chunk(options))
+    # if this is an interative chunk then don't highlight it
+    if (is_interactive_chunk(options)) {
+      options$highlight = FALSE
+    }
+    
+    # if this is an exercise chunk then don't eval or highlight it
+    if (is_exercise_chunk(options)) {
       options$eval = FALSE
+      options$highlight = FALSE
+    }
     
     # return modified options
     options
   })
-  
   
   # knit hook to amend output for interactive and exercise chunks
   knitr::knit_hooks$set(tutor = function(before, options, envir) {
@@ -72,8 +78,11 @@ install_knitr_hooks <- function() {
     # handle tutor chunks
     if (is_tutor_chunk(options)) {
       
-      # ensure tutor js and css are included
-      knitr::knit_meta_add(list(tutor_html_dependency()))
+      # inject html dependencies
+      knitr::knit_meta_add(list(
+        ace_html_dependency(),
+        tutor_html_dependency()
+      ))
       
       # handle interactive chunks
       if (is_interactive_chunk(options)) {
@@ -94,6 +103,11 @@ install_knitr_hooks <- function() {
       
     }
   })
+  
+  # source hook for preventing highlight treatment
+  #knitr::knit_hooks$set(source = function(x, options) {
+  #  knitr::render_markdown()
+  #})
 }
 
 remove_knitr_hooks <- function() {
