@@ -5,7 +5,8 @@
 
 .tutor-interactive-editor {
   border: solid 1px #cccccc;
-  margin-bottom: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 100%;
   line-height: 1.6;
 }

@@ -11,9 +11,16 @@ library(tutor)
 ```
 
 ```{r, interactive=TRUE}
-plot(cars)
+library(ggplot2)
+qplot(mpg, wt, data = mtcars)
 ```
 
+
+```{r, interactive=TRUE}
+library(dygraphs)
+dygraph(ldeaths) %>%
+  dyRangeSelector(height = 20)
+```
 
 
 
@@ -28,21 +35,8 @@ knitr::all_labels(label == "cars-exercise")
 summary(cars)
 ```
 
-
-
 ```{r cars-check}
 cat("Check!")
-```
-
-
-```{r cars2}
-verbatimTextOutput("cars")
-```
-
-```{r, context="server"}
-output$cars <- renderPrint({
-  summary(cars)
-})
 ```
 
 
