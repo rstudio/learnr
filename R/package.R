@@ -1,26 +1,16 @@
 
 #' @import htmltools
+#' @import shiny
 NULL
 
 # install knitr hooks when package is attached to search path
 .onAttach <- function(libname, pkgname) {
-  install_rmarkdown_hooks()
   install_knitr_hooks()
-  shiny::addResourcePath("tutor", system.file("www", package="tutor"))
 }
 
-# remove knitr hooks when package is attached to search path
+# remove knitr hooks when package is detached from search path
 .onDetach <- function(libpath) {
   remove_knitr_hooks() 
-}
-
-install_rmarkdown_hooks <- function() {
-  setHook("rmarkdown.onKnit", 
-          function(input) install_knitr_hooks(), 
-          action = "append")
-  setHook("rmarkdown.onKnitCompleted",
-          function(input) remove_knitr_hooks(),
-          action = "append")
 }
 
 install_knitr_hooks <- function() {
@@ -50,6 +40,8 @@ install_knitr_hooks <- function() {
   }
 
   # set global tutor option which we can use as a basis for hooks
+  # (this is so we don't collide with hooks set by the user or
+  # by other packages or Rmd output formats)
   knitr::opts_chunk$set(tutor = TRUE)
   
   # option hook to turn off evaluation for exercise related chunks
@@ -115,7 +107,7 @@ tutor_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "tutor",
     version = packageVersion("tutor"),
-    src = c(href = "tutor"),
+    src = system.file("www", package = "tutor"),
     script = "tutor.js",
     stylesheet = "tutor.css"
   )
