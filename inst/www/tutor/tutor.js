@@ -3,6 +3,11 @@
 
   var $ = jQuery;
 
+  // helper function to get the current label context
+  function labelContext(el) {
+    return $(el).closest(".tutor-exercise").attr('data-label');
+  }
+
   // initialize exercises
   function initializeExercises() {
     
@@ -30,7 +35,6 @@
       input_div.attr('id', create_id('input'));
       
       // create action button
-      // <button id="foo" type="button" class="btn btn-default action-button"></button>
       var run_button = $('<button class="btn btn-success action-button"></button>');
       run_button.attr('type', 'button');
       run_button.text('Run Code');
@@ -104,31 +108,18 @@
       },
       
       subscribe: function(el, callback) {
-        var editor = ace.edit($(el).attr('id'));
-        editor.getSession().on("change", function () {
+        this.executeButton(el).on('click.exerciseInputBinding', function() {
           callback(true);
         });
       },
       
       unsubscribe: function(el) {
-        var editor = ace.edit($(el).attr('id'));
-        editor.getSession().removeAllListeners('change');
+        this.executeButton(el).off('.exerciseInputBinding');
       },
       
-      receiveMessage: function (el, data) {
-        
-      },
-    
-      getState: function (el, data) {
-        
-      },
-
-      getRatePolicy: function () {
-        return null;
-      },
-      
-      initialize: function (el) {
-      
+      executeButton: function(el) {
+        var label = labelContext(el);
+        return $("#tutor-exercise-" + label + "-button");
       }
     });
     Shiny.inputBindings.register(exerciseInputBinding, 'tutor.exerciseInput');
