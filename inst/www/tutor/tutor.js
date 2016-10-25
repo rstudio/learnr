@@ -136,32 +136,36 @@
     // register an output binding for exercise output
     var exerciseOutputBinding = new Shiny.OutputBinding();
     $.extend(exerciseOutputBinding, {
+      
       find: function find(scope) {
         return $(scope).find('.tutor-exercise-output');
       },
+      
       onValueError: function onValueError(el, err) {
-        this.clearProgress(el);
+       
         Shiny.unbindAll(el);
         this.renderError(el, err);
       },
+      
       renderValue: function renderValue(el, data) {
-        
-        // clear progress
-        this.clearProgress(el);
-        
+    
         // remove default content (if any)
-        $(el).parent().children().not($(el)).remove();
+        this.outputFrame(el).children().not($(el)).remove();
         
         // render the content
         Shiny.renderContent(el, data);
       },
       
       showProgress: function (el, show) {
-        // handled separately on button click and in render functions  
+        var RECALCULATING = 'recalculating';
+        if (show)
+          this.outputFrame(el).addClass(RECALCULATING);
+        else
+          this.outputFrame(el).removeClass(RECALCULATING);
       },
       
-      clearProgress: function(el) {
-        $(el).closest('.tutor-exercise-output-frame').removeClass('recalculating');
+      outputFrame: function(el) {
+        return $(el).closest('.tutor-exercise-output-frame');
       }
     });
     Shiny.outputBindings.register(exerciseOutputBinding, 'tutor.exerciseOutput');
