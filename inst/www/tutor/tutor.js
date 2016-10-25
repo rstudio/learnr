@@ -2,7 +2,7 @@
 $(document).ready(function() {
   
   // find interactive code blocks
-  $(".tutor-interactive").each(function() {
+  $(".tutor-exercise").each(function() {
     
     // get code then remove the code element
     var code_element = $(this).children('pre').children('code');

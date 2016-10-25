@@ -6,6 +6,8 @@ output:
     highlight: textmate
     fig_width: 5
     fig_height: 3.5
+    toc: true
+    toc_float: true
 runtime: shiny_prerendered
 ---
 
@@ -13,33 +15,44 @@ runtime: shiny_prerendered
 library(tutor)
 ```
 
-```{r, interactive=TRUE}
+```{r data}
+
+```
+
+
+
+## ggplot
+
+```{r ggplot, exercise=TRUE}
 library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
 
-```{r, interactive=TRUE}
+## dygraphs
+
+
+```{r dygraphs-setup}
+cat("Setup!\n")
+```
+
+```{r dygraphs, exercise=TRUE}
 library(dygraphs)
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
 ```
 
-
-
-
-
-```{r cars-setup}
-cat("Setup!\n")
-knitr::all_labels(label == "cars-exercise")
+```{r, dygraphs-solution}
+cat("Solution!")
 ```
 
-```{r cars-exercise}
-summary(cars)
-```
-
-```{r cars-check}
+```{r, dygraphs-check}
 cat("Check!")
 ```
+
+
+
+
+
 
 
