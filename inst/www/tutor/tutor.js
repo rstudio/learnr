@@ -64,6 +64,15 @@
       editor.session.getSelection().clearSelection();
       editor.setValue(code, -1);
       
+      // bind Cmd+Shift+Enter
+      editor.commands.addCommand({
+        name: "execute",
+        bindKey: {win: "Ctrl+Shift+Enter", mac: "Command+Shift+Enter"},
+        exec: function(editor) {
+          run_button.trigger('click');
+        }
+      });
+      
       // mange ace height as the document changes
       var updateAceHeight = function()  {
         editor.setOptions({
@@ -79,7 +88,7 @@
 
   function registerShinyBindings() {
     
-      // register a shiny input binding for code editors
+    // register a shiny input binding for code editors
     var exerciseInputBinding = new Shiny.InputBinding();
     $.extend(exerciseInputBinding, {
       
