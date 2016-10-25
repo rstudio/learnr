@@ -1,43 +1,129 @@
 
-$(document).ready(function() {
-  
-  // find interactive code blocks
-  $(".tutor-exercise").each(function() {
-    
-    // get code then remove the code element
-    var code_element = $(this).children('pre').children('code');
-    var code = code_element.text() + "\n";
-    code_element.parent().remove();
-    
-    // add div in it's place
-    var code_div = $('<div></div>');
-    var code_id = $(this).attr('data-label') + "-code";
-    code_div.attr('id', code_id);
-    code_div.addClass('tutor-interactive-editor');
-    $(this).prepend(code_div);
-    
-    // edit it
-    var editor = ace.edit(code_id);
-    editor.setHighlightActiveLine(false);
-    editor.setShowPrintMargin(false);
-    editor.setShowFoldWidgets(false);
-    editor.renderer.setDisplayIndentGuides(false);
-    editor.setTheme("ace/theme/textmate");
-    editor.$blockScrolling = Infinity;
-    editor.session.setMode("ace/mode/r");
-    editor.session.getSelection().clearSelection();
-    editor.setValue(code, -1);
-    
-    // mange ace height as the document changes
-    var updateAceHeight = function()  {
-      editor.setOptions({
-        minLines: 2,
-        maxLines: Math.max(editor.session.getLength(), 2)
-      });
-    };
-    updateAceHeight();
-    editor.getSession().on('change', updateAceHeight);
-  });
-  
-});
+(function () {
 
+  var $ = jQuery;
+
+  // find exercises and bind an ace editor to them
+  function bindCodeEditorInputs() {
+    
+    $(".tutor-exercise").each(function() {
+      
+      // alias exercise
+      var exercise = $(this);
+       
+      // helper to create an id
+      function create_id(suffix) {
+        return "tutor-exercise-" + exercise.attr('data-label') + "-" + suffix;
+      }
+      
+      // get code then remove the code element
+      var code_element = exercise.children('pre').children('code');
+      var code = code_element.text() + "\n";
+      code_element.parent().remove();
+      
+      // create input div
+      var input_div = $('<div class="tutor-exercise-input"></div>');
+      input_div.attr('id', create_id('input'));
+      
+      // create action button
+      // <button id="foo" type="button" class="btn btn-default action-button"></button>
+      var run_button = $('<button class="btn btn-success action-button"></button>');
+      run_button.attr('type', 'button');
+      run_button.text('Run Code');
+      run_button.attr('id', create_id('button'));
+      input_div.append(run_button);
+      
+      // create code div and add it to the input div
+      var code_div = $('<div class="tutor-exercise-code-editor"></div>');
+      var code_id = create_id('code-editor');
+      code_div.attr('id', code_id);
+      input_div.append(code_div);
+      
+      // prepend the input div to the exercise container
+      exercise.prepend(input_div);
+      
+      // create an output div and append it to the exercise container
+      var output_div = $('<div class="shiny-html-output"></div>');
+      output_div.attr('id', create_id('output'));
+      exercise.append(output_div);
+        
+      // activate the ace editor
+      var editor = ace.edit(code_id);
+      editor.setHighlightActiveLine(false);
+      editor.setShowPrintMargin(false);
+      editor.setShowFoldWidgets(false);
+      editor.renderer.setDisplayIndentGuides(false);
+      editor.setTheme("ace/theme/textmate");
+      editor.$blockScrolling = Infinity;
+      editor.session.setMode("ace/mode/r");
+      editor.session.getSelection().clearSelection();
+      editor.setValue(code, -1);
+      
+      // mange ace height as the document changes
+      var updateAceHeight = function()  {
+        editor.setOptions({
+          minLines: 2,
+          maxLines: Math.max(editor.session.getLength(), 2)
+        });
+      };
+      updateAceHeight();
+      editor.getSession().on('change', updateAceHeight);
+    });
+  }
+
+  // register a shiny input binding for code editors
+  function registerCodeEditorInputBinding() {
+    
+    var codeEditorInputBinding = new Shiny.InputBinding();
+    $.extend(codeEditorInputBinding, {
+      
+      find: function(scope) {
+        return $(scope).find('.tutor-exercise-code-editor');
+      },
+      
+      getValue: function(el) {
+        var editor = ace.edit($(el).attr('id'));
+        return editor.getSession().getValue();
+      },
+      
+      subscribe: function(el, callback) {
+        var editor = ace.edit($(el).attr('id'));
+        editor.getSession().on("change", function () {
+          callback(true);
+        });
+      },
+      
+      unsubscribe: function(el) {
+        var editor = ace.edit($(el).attr('id'));
+        editor.getSession().removeAllListeners('change');
+      },
+      
+      receiveMessage: function (el, data) {
+        
+      },
+    
+      getState: function (el, data) {
+        
+      },
+
+      getRatePolicy: function () {
+        return null;
+      },
+      
+      initialize: function (el) {
+      
+      }
+    });
+    
+    Shiny.inputBindings.register(codeEditorInputBinding, 'tutor.exerciseCodeEditor');
+  }
+
+  $(document).ready(function() {
+    
+    bindCodeEditorInputs();
+    
+    registerCodeEditorInputBinding();
+    
+  });
+
+})();

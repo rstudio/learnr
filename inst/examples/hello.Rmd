@@ -28,6 +28,16 @@ library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
+```{r context="server"}
+ggplotCode <- eventReactive(input$`tutor-exercise-ggplot-button`, {
+  input$`tutor-exercise-ggplot-code-editor`
+})
+
+output$`tutor-exercise-ggplot-output` <- renderUI({
+  htmltools::pre(ggplotCode())
+})
+```
+
 
 ## dygraphs
 
