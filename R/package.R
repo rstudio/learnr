@@ -3,6 +3,7 @@
 #' @import shiny
 #' @import knitr
 #' @import rmarkdown
+#' @import uuid
 NULL
 
 # install knitr hooks when package is attached to search path

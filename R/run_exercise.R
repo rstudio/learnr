@@ -9,19 +9,28 @@ run_exercise <- function(exercise, envir = parent.frame()) {
 }
 
 
-# get the per-user session figure path
-knitr_figure_path <- function(envir) {
+# get the per-user knitr output path
+knitr_output_paths <- function(envir) {
   
-  # create figure path if we need to
-  if (!exists("tutor-exercise-figure-path", envir = envir)) {
-    figure_path <- tempfile(pattern = "tutor-exercise-figures")
-    dir.create(figure_path)
-    shiny::addResourcePath(basename(figure_path), figure_path)
-    assign("tutor-exercise-figure-path", figure_path, envir = envir)
+  # create output paths if we need to
+  if (!exists(".tutor-exercise-knitr-paths", envir = envir)) {
+    
+    # create the paths
+    paths <- list()
+    paths$knit <- tempfile(pattern = "tutor-exercise-knit-")
+    dir.create(paths$knit)
+    paths$fig <- file.path(paths$knit, uuid::UUIDgenerate())
+    dir.create(paths$fig)
+    
+    # add shiny resource path
+    shiny::addResourcePath(basename(paths$fig), paths$fig)
+    
+    # assign them for subsequent reading
+    assign(".tutor-exercise-knitr-paths", paths, envir = envir)
   }
   
-  # return the figure path
-  get("tutor-exercise-figure-path", envir = envir)
+  # return the output paths
+  get(".tutor-exercise-knitr-paths", envir = envir)
 }
 
 
