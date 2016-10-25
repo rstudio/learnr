@@ -82,17 +82,19 @@ install_knitr_hooks <- function() {
     # handle exercise chunks
     if (is_exercise_chunk(options)) {
       
-      # inject html dependencies
-      knitr::knit_meta_add(list(
-        ace_html_dependency(),
-        tutor_html_dependency()
-      ))
+      # one-time dependenies/server code
+      if (before) {
+        # inject html dependencies
+        knitr::knit_meta_add(list(
+          ace_html_dependency(),
+          tutor_html_dependency()
+        ))
+        
+        # write server code
+        exercise_server_chunk(options$label)
+      }
       
-      #
-      # TODO: generate shiny server code
-      #
-      
-      # output wrapper div
+      # wrapper div (called for before and after)
       exercise_wrapper_div()
     }
     
@@ -110,5 +112,14 @@ install_knitr_hooks <- function() {
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutor = NULL)
   knitr::knit_hooks$set(tutor = NULL)
+}
+
+exercise_server_chunk <- function(label) {
+  rmarkdown::shiny_prerendered_chunk('server', sprintf(
+'output$`tutor-exercise-%s-output` <- renderUI({
+  eventReactive(input$`tutor-exercise-%s-button`, {
+    htmltools::pre(input$`tutor-exercise-%s-code-editor`)
+  })()
+})', label, label, label))
 }
 
