@@ -71,7 +71,9 @@ install_knitr_hooks <- function() {
                '" data-label="', options$label, '">')
       }
       else {
-        '</div>'
+        c(sprintf('<div id="tutor-%s-output" class="shiny-html-output"></div>',
+                  options$label),
+          '</div>')
       }
     }
     
