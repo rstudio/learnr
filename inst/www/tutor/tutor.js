@@ -111,6 +111,19 @@
         var editor = ace.edit($(el).attr('id'));
         value.code = editor.getSession().getValue();
         
+        // get any setup or check chunks
+        var label = labelContext(el);
+        function supportingCode(name) {
+          var selector = '.tutor-exercise-support[data-label="' + label + '-' + name + '"]';
+          var code = $(selector).children('pre').children('code');
+          if (code.length > 0)
+            return code.text();
+          else
+            return null;
+        }
+        value.setup = supportingCode("setup");
+        value.check = supportingCode("check");
+        
         // return the value
         return value;
       },
