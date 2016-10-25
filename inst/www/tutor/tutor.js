@@ -3,8 +3,8 @@
 
   var $ = jQuery;
 
-  // find exercises and bind an ace editor to them
-  function bindCodeEditorInputs() {
+  // initialize exercises
+  function initializeExercises() {
     
     $(".tutor-exercise").each(function() {
       
@@ -20,6 +20,11 @@
       var code_element = exercise.children('pre').children('code');
       var code = code_element.text() + "\n";
       code_element.parent().remove();
+      
+      // wrap the remaining elements in an output frame div
+      var output_frame = exercise.wrapInner(
+        '<div class="tutor-exercise-output-frame"></div>'
+      );
       
       // create input div
       var input_div = $('<div class="tutor-exercise-input"></div>');
@@ -42,10 +47,10 @@
       // prepend the input div to the exercise container
       exercise.prepend(input_div);
       
-      // create an output div and append it to the exercise container
-      var output_div = $('<div class="shiny-html-output"></div>');
+      // create an output div and append it to the output_frame
+      var output_div = $('<div class="tutor-exercise-output"></div>');
       output_div.attr('id', create_id('output'));
-      exercise.append(output_div);
+      output_frame.append(output_div);
         
       // activate the ace editor
       var editor = ace.edit(code_id);
@@ -71,11 +76,12 @@
     });
   }
 
-  // register a shiny input binding for code editors
-  function registerCodeEditorInputBinding() {
+
+  function registerShinyBindings() {
     
-    var codeEditorInputBinding = new Shiny.InputBinding();
-    $.extend(codeEditorInputBinding, {
+      // register a shiny input binding for code editors
+    var exerciseInputBinding = new Shiny.InputBinding();
+    $.extend(exerciseInputBinding, {
       
       find: function(scope) {
         return $(scope).find('.tutor-exercise-code-editor');
@@ -114,15 +120,35 @@
       
       }
     });
+    Shiny.inputBindings.register(exerciseInputBinding, 'tutor.exerciseInput');
     
-    Shiny.inputBindings.register(codeEditorInputBinding, 'tutor.exerciseCodeEditor');
+    // register an output binding for exercise output
+    var exerciseOutputBinding = new Shiny.OutputBinding();
+    $.extend(exerciseOutputBinding, {
+      find: function find(scope) {
+        return $(scope).find('.tutor-exercise-output');
+      },
+      onValueError: function onValueError(el, err) {
+        Shiny.unbindAll(el);
+        this.renderError(el, err);
+      },
+      renderValue: function renderValue(el, data) {
+        
+        // remove default content (if any)
+        $(el).parent().children().nextUntil($(el)).remove();
+        
+        // render the content
+        Shiny.renderContent(el, data);
+      }
+    });
+    Shiny.outputBindings.register(exerciseOutputBinding, 'tutor.exerciseOutput');
   }
 
   $(document).ready(function() {
     
-    bindCodeEditorInputs();
+    initializeExercises();
     
-    registerCodeEditorInputBinding();
+    registerShinyBindings();
     
   });
 
