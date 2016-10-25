@@ -9,7 +9,7 @@ run_exercise <- function(exercise, envir = parent.frame()) {
 }
 
 
-# get the per-user knitr output path
+# get the per-user knitr output paths
 knitr_output_paths <- function(envir) {
   
   # create output paths if we need to
