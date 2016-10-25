@@ -103,8 +103,16 @@
       },
       
       getValue: function(el) {
+        
+        // value object to return 
+        var value = {};
+        
+        // get the code from the editor
         var editor = ace.edit($(el).attr('id'));
-        return editor.getSession().getValue();
+        value.code = editor.getSession().getValue();
+        
+        // return the value
+        return value;
       },
       
       subscribe: function(el, callback) {
