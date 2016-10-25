@@ -22,9 +22,8 @@
       code_element.parent().remove();
       
       // wrap the remaining elements in an output frame div
-      var output_frame = exercise.wrapInner(
-        '<div class="tutor-exercise-output-frame"></div>'
-      );
+      exercise.wrapInner('<div class="tutor-exercise-output-frame"></div>');
+      var output_frame = exercise.children('.tutor-exercise-output-frame');
       
       // create input div
       var input_div = $('<div class="tutor-exercise-input"></div>');
@@ -36,6 +35,9 @@
       run_button.attr('type', 'button');
       run_button.text('Run Code');
       run_button.attr('id', create_id('button'));
+      run_button.on('click', function() {
+        output_frame.addClass('recalculating');
+      });
       input_div.append(run_button);
       
       // create code div and add it to the input div
@@ -138,16 +140,28 @@
         return $(scope).find('.tutor-exercise-output');
       },
       onValueError: function onValueError(el, err) {
+        this.clearProgress(el);
         Shiny.unbindAll(el);
         this.renderError(el, err);
       },
       renderValue: function renderValue(el, data) {
         
+        // clear progress
+        this.clearProgress(el);
+        
         // remove default content (if any)
-        $(el).parent().children().nextUntil($(el)).remove();
+        $(el).parent().children().not($(el)).remove();
         
         // render the content
         Shiny.renderContent(el, data);
+      },
+      
+      showProgress: function (el, show) {
+        // handled separately on button click and in render functions  
+      },
+      
+      clearProgress: function(el) {
+        $(el).closest('.tutor-exercise-output-frame').removeClass('recalculating');
       }
     });
     Shiny.outputBindings.register(exerciseOutputBinding, 'tutor.exerciseOutput');
