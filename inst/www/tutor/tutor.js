@@ -79,7 +79,7 @@
       var updateAceHeight = function()  {
         editor.setOptions({
           minLines: 2,
-          maxLines: Math.max(editor.session.getLength(), 2)
+          maxLines: Math.max(Math.min(editor.session.getLength(), 15), 2)
         });
       };
       updateAceHeight();
