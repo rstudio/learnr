@@ -10,7 +10,7 @@ Imports:
   htmltools (>= 0.3.5),
   shiny (>= 0.13),
   knitr (>= 1.14),
-  rmarkdown (>= 1.1.9006),
+  rmarkdown (>= 1.1.9008),
   markdown,
   uuid,
   jsonlite

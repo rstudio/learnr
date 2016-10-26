@@ -14,6 +14,9 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
+  # get server startup code (used for out-of-proc runners)
+  server_start_code <- shiny_prerendered_server_start_code(envir)
+  
   # create new environment for evaluation
   eval_envir <- new.env(parent = envir)
   
