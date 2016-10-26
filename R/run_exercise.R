@@ -35,3 +35,36 @@ knitr_output_paths <- function(envir) {
 
 
 
+# some concepts
+
+local_inproc_runner <- function() {
+  
+}
+
+local_shell_runner <- function() {
+  
+}
+
+local_firejail_runner <- function() {
+  
+}
+
+local_temp_storage <- function() {
+  
+}
+
+local_appdir_storage <- function() {
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
