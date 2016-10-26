@@ -21,10 +21,15 @@
         return "tutor-exercise-" + exercise.attr('data-label') + "-" + suffix;
       }
       
-      // get code then remove the code element
-      var code_element = exercise.children('pre').children('code');
-      var code = code_element.text() + "\n";
-      code_element.parent().remove();
+      // get all <pre class='text'> elements, get their code, then remove them
+      var code = '';
+      var code_blocks = exercise.children('pre[class="text"]');
+      code_blocks.each(function() {
+        var code_element = $(this).children('code');
+        if (code_element.length > 0)
+          code = code + code_element.text() + "\n";
+      });
+      code_blocks.remove();
       
       // wrap the remaining elements in an output frame div
       exercise.wrapInner('<div class="tutor-exercise-output-frame"></div>');
