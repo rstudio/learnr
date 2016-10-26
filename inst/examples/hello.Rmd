@@ -13,12 +13,14 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
+knitr::opts_chunk$set(exercise.eval=TRUE)
 ```
 
 ## summary
 
-```{r, exercise=TRUE, exercise.eval = TRUE}
+```{r, exercise=TRUE}
 summary(pressure)
+summary(cars)
 ```
 
 ## ggplot
@@ -28,7 +30,10 @@ library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
+
+
 ## dygraphs
+
 
 ```{r dygraphs-setup}
 library(dygraphs)
