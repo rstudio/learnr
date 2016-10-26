@@ -4,6 +4,7 @@
 #' @import knitr
 #' @import rmarkdown
 #' @import uuid
+#' @import markdown
 NULL
 
 # install knitr hooks when package is attached to search path
