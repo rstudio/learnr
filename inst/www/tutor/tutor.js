@@ -12,6 +12,22 @@
   function exerciseLabel(el) {
     return exerciseContainer(el).attr('data-label');
   }
+  
+  // ensure that the exercise containing this element is fully visible
+  function ensureExerciseVisible(el) {
+    // convert to containing exercise element
+    var exerciseEl = exerciseContainer(el)[0];
+
+    // ensure visibility
+    var rect = exerciseEl.getBoundingClientRect();
+    if (rect.top < 0 || rect.bottom > $(window).height()) {
+      if (exerciseEl.scrollIntoView) {
+        exerciseEl.scrollIntoView(false);
+        document.body.scrollTop += 40;
+      } 
+    }
+}
+  
 
   // initialize exercises
   function initializeExercises() {
@@ -189,6 +205,9 @@
         
         // render the content
         Shiny.renderContent(el, data);
+        
+        // scroll exercise fully into view if necessary
+        ensureExerciseVisible(el);
       },
       
       showProgress: function (el, show) {
