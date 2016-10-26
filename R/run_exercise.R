@@ -14,9 +14,12 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
+  # create new environment for evaluation
+  eval_envir <- new.env(parent = envir)
+  
   # run setup chunk if necessary
   if (!is.null(exercise$setup))
-    eval(parse(text = exercise$setup), envir = envir)
+    eval(parse(text = exercise$setup), envir = eval_envir)
   
   # get knitr paths
   paths <- knitr_output_paths(envir)
@@ -41,7 +44,7 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   # spin the R code to markdown
   output <- knitr::spin(report = FALSE,
                         text = exercise$code, 
-                        envir = envir, 
+                        envir = eval_envir, 
                         format = "Rmd")
   
   # collect html dependencies
