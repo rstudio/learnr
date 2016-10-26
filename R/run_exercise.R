@@ -14,6 +14,10 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
+  # run setup chunk if necessary
+  if (!is.null(exercise$setup))
+    eval(parse(text = exercise$setup), envir = envir)
+  
   # get knitr paths
   paths <- knitr_output_paths(envir)
   

@@ -17,7 +17,7 @@ library(tutor)
 
 ## summary
 
-```{r, exercise=TRUE}
+```{r, exercise=TRUE, exercise.eval = TRUE}
 summary(pressure)
 ```
 
@@ -30,8 +30,11 @@ qplot(mpg, wt, data = mtcars)
 
 ## dygraphs
 
-```{r dygraphs, exercise=TRUE}
+```{r dygraphs-setup}
 library(dygraphs)
+```
+
+```{r dygraphs, exercise=TRUE}
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
 ```
