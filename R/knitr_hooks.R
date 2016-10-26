@@ -64,7 +64,7 @@ install_knitr_hooks <- function() {
       return(NULL)
     
     # helper to produce an exercise wrapper div w/ the specified class
-    exercise_wrapper_div <- function(suffix = NULL) {
+    exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
       # before exercise
       if (before) {
         if (!is.null(suffix))
@@ -75,14 +75,15 @@ install_knitr_hooks <- function() {
       }
       # after exercise
       else {
-        '</div>'
+        c(extra_html, '</div>')
       }
     }
     
     # handle exercise chunks
     if (is_exercise_chunk(options)) {
       
-      # one-time dependenies/server code
+      # one-time dependencies/server code
+      extra_html <- NULL
       if (before) {
         # inject html dependencies
         knitr::knit_meta_add(list(
@@ -92,10 +93,33 @@ install_knitr_hooks <- function() {
         
         # write server code
         exercise_server_chunk(options$label)
+      } 
+      else {
+        # forward a subset of chunk options
+        preserved_options <- list()
+        preserved_options$fig.width <- options$fig.width
+        preserved_options$fig.height <- options$fig.height
+        preserved_options$fig.retina <- options$fig.retina
+        preserved_options$fig.asp <- options$fig.asp
+        preserved_options$fig.align <- options$fig.align
+        preserved_options$fig.keep <- options$fig.keep
+        preserved_options$fig.show <- options$fig.show
+        preserved_options$fig.cap <- options$fig.cap
+        preserved_options$out.width <- options$out.width
+        preserved_options$out.height <- options$out.height
+        preserved_options$out.extra <- options$out.extra
+        preserved_options$warning <- options$warning
+        preserved_options$error <- options$error
+        preserved_options$message <- options$message
+        
+        # script tag with knit options for this chunk
+        extra_html <- c('<script type="application/json" data-opts-chunk="1">',
+                        jsonlite::toJSON(preserved_options, auto_unbox = TRUE),
+                        '</script>')
       }
       
       # wrapper div (called for before and after)
-      exercise_wrapper_div()
+      exercise_wrapper_div(extra_html = extra_html)
     }
     
     # handle exercise support chunks (setup, solution, and check)

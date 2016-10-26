@@ -12,7 +12,8 @@ Imports:
   knitr (>= 1.14),
   rmarkdown (>= 1.1.9006),
   markdown,
-  uuid
+  uuid,
+  jsonlite
 Remotes: rstudio/rmarkdown
 License: What license is it under?
 Encoding: UTF-8

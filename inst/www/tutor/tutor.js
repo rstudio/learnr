@@ -3,9 +3,14 @@
 
   var $ = jQuery;
 
+  // helper function to get the exercise container of an element
+  function exerciseContainer(el) {
+    return $(el).closest(".tutor-exercise");
+  }
+
   // helper function to get the current label context
-  function labelContext(el) {
-    return $(el).closest(".tutor-exercise").attr('data-label');
+  function exerciseLabel(el) {
+    return exerciseContainer(el).attr('data-label');
   }
 
   // initialize exercises
@@ -31,6 +36,9 @@
       });
       code_blocks.remove();
       
+      // get the knitr options script block and detach it (will move to input div)
+      var options_script = exercise.children('script[data-opts-chunk="1"]').detach();
+      
       // wrap the remaining elements in an output frame div
       exercise.wrapInner('<div class="tutor-exercise-output-frame"></div>');
       var output_frame = exercise.children('.tutor-exercise-output-frame');
@@ -54,6 +62,9 @@
       var code_id = create_id('code-editor');
       code_div.attr('id', code_id);
       input_div.append(code_div);
+      
+      // add the knitr options script to the input div
+      input_div.append(options_script);
       
       // prepend the input div to the exercise container
       exercise.prepend(input_div);
@@ -117,7 +128,7 @@
         value.code = editor.getSession().getValue();
         
         // get any setup or check chunks
-        var label = labelContext(el);
+        var label = exerciseLabel(el);
         function supportingCode(name) {
           var selector = '.tutor-exercise-support[data-label="' + label + '-' + name + '"]';
           var code = $(selector).children('pre').children('code');
@@ -128,6 +139,13 @@
         }
         value.setup = supportingCode("setup");
         value.check = supportingCode("check");
+        
+        // get the preserved chunk options (if any)
+        var options_script = exerciseContainer(el).find('script[data-opts-chunk="1"]');
+        if (options_script.length == 1)
+          value.options = JSON.parse(options_script.text());
+        else
+          value.options = {};
         
         // return the value
         return value;
@@ -144,7 +162,7 @@
       },
       
       executeButton: function(el) {
-        var label = labelContext(el);
+        var label = exerciseLabel(el);
         return $("#tutor-exercise-" + label + "-button");
       }
     });

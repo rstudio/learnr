@@ -5,6 +5,7 @@
 #' @import rmarkdown
 #' @import uuid
 #' @import markdown
+#' @import jsonlite
 NULL
 
 # install knitr hooks when package is attached to search path

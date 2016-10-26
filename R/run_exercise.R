@@ -21,6 +21,9 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   oldwd <- setwd(paths$knit)
   on.exit(setwd(oldwd), add = TRUE)
   
+  # set preserved chunk options
+  knitr::opts_chunk$set(as.list(exercise$options))
+  
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(fig.path=paths$figures)
