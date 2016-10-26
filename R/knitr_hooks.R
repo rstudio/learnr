@@ -17,8 +17,9 @@ install_knitr_hooks <- function() {
   }
   
   # helper to check for an exercise support chunk
-  is_exercise_support_chunk <- function(options) {
-    support_regex <- "-(setup|solution|check)$"
+  is_exercise_support_chunk <- function(options, type = c("setup", "solution", "check")) {
+    type <- paste(type, collapse = "|")
+    support_regex <- paste0("-(", type, ")$")
     if (grepl(support_regex, options$label)) {
       exercise_label <- sub(support_regex, "", options$label)
       all_exercise_labels <- knitr::all_labels(exercise == TRUE)
@@ -50,11 +51,32 @@ install_knitr_hooks <- function() {
     
     # if this is an exercise support chunk then force echo, but don't 
     # eval or highlight it
-    else if (is_exercise_support_chunk(options)) {
+    if (is_exercise_support_chunk(options)) {
       options$echo <- TRUE
       options$include <- TRUE
       options$eval <- FALSE
       options$highlight <- FALSE
+    }
+    
+    # if this is an exercise setup chunk then eval it if the corresponding
+    # exercise chunk is going to be executed
+    if (is_exercise_support_chunk(options, type = "setup")) {
+      
+      # figure out the default behavior
+      exercise_eval <- knitr::opts_chunk$get('exercise.eval')
+      if (is.null(exercise_eval))
+        exercise_eval <- FALSE
+      
+      # run a query looking for a reversal of the default beahvior
+      exercise_label <- sub("-setup$", "", options$label)
+      label_query <- paste0("knitr::all_labels(label == '", exercise_label, "', ",
+                            "identical(exercise.eval, ", !exercise_eval, "))")
+      default_reversed <- length(eval(parse(text = label_query))) > 0
+      if (default_reversed)
+        exercise_eval <- !exercise_eval
+     
+      # set the eval property as appropriate
+      options$eval <- exercise_eval
     }
     
     # return modified options
