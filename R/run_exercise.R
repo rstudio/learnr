@@ -26,6 +26,7 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
+  knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(screenshot.force = FALSE)
   knitr::opts_chunk$set(fig.path=paths$figures)
   

@@ -4,8 +4,8 @@ output:
   html_document:
     theme: cosmo
     highlight: textmate
-    fig_width: 5
-    fig_height: 3.5
+    fig_width: 6.5
+    fig_height: 4
     toc: true
     toc_float: true
 runtime: shiny_prerendered
@@ -15,38 +15,25 @@ runtime: shiny_prerendered
 library(tutor)
 ```
 
-```{r data}
+## summary
 
+```{r, exercise=TRUE}
+summary(pressure)
 ```
-
-
 
 ## ggplot
 
-```{r ggplot, exercise=TRUE}
+```{r ggplot, exercise=TRUE, eval=FALSE}
 library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
 ## dygraphs
 
-
-```{r dygraphs-setup}
-cat("Setup!\n")
-```
-
 ```{r dygraphs, exercise=TRUE, eval=FALSE}
 library(dygraphs)
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
-```
-
-```{r, dygraphs-solution}
-cat("Solution!")
-```
-
-```{r, dygraphs-check}
-cat("Check!")
 ```
 
 

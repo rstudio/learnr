@@ -38,18 +38,19 @@ install_knitr_hooks <- function() {
     
     # if this is an exercise chunk then force echo and don't highlight it
     if (is_exercise_chunk(options)) {
-      options$echo = TRUE
-      options$include = TRUE
-      options$highlight = FALSE
+      options$echo <- TRUE
+      options$include <- TRUE
+      options$highlight <- FALSE
+      options$comment <- NA
     }
     
     # if this is an exercise support chunk then force echo, but don't 
     # eval or highlight it
     else if (is_exercise_support_chunk(options)) {
-      options$echo = TRUE
-      options$include = TRUE
-      options$eval = FALSE
-      options$highlight = FALSE
+      options$echo <- TRUE
+      options$include <- TRUE
+      options$eval <- FALSE
+      options$highlight <- FALSE
     }
     
     # return modified options
