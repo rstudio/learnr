@@ -212,10 +212,13 @@
       
       showProgress: function (el, show) {
         var RECALCULATING = 'recalculating';
-        if (show)
-          this.outputFrame(el).addClass(RECALCULATING);
-        else
-          this.outputFrame(el).removeClass(RECALCULATING);
+        var outputFrame = this.outputFrame(el);
+        if (show) {
+          outputFrame.addClass(RECALCULATING);
+        }
+        else {
+          outputFrame.removeClass(RECALCULATING);
+        }
       },
       
       outputFrame: function(el) {
