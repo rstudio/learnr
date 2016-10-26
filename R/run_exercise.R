@@ -45,10 +45,8 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   
   # render the markdown (respecting html-preserve)
   extracted <- htmltools::extractPreserveChunks(output)
-  output <- markdown::renderMarkdown(
-    text = extracted$value,
-    renderer.options = c("use_xhtml", "fragment_only")
-  )
+  output <- markdown::renderMarkdown(text = extracted$value,
+                                     renderer.options = c("use_xhtml", "fragment_only"))
   output <- htmltools::restorePreserveChunks(output, extracted$chunks)
   
   # return the output as HTML w/ dependencies
