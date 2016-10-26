@@ -23,14 +23,14 @@ summary(pressure)
 
 ## ggplot
 
-```{r ggplot, exercise=TRUE, eval=FALSE}
+```{r ggplot, exercise=TRUE}
 library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
 ## dygraphs
 
-```{r dygraphs, exercise=TRUE, eval=FALSE}
+```{r dygraphs, exercise=TRUE}
 library(dygraphs)
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
