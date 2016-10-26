@@ -3,10 +3,25 @@
   display: none;
 }
 
+.tutor-exercise-input {
+  margin-top: 20px;
+  position: relative;
+}
+
+.tutor-exercise-run {
+  position: absolute;
+  right: 0;
+  z-index: 100;
+}
+
+
 .tutor-exercise-code-editor {
   border: solid 1px #cccccc;
-  margin-top: 20px;
   margin-bottom: 20px;
   width: 100%;
   line-height: 1.6;
+}
+
+.ace-tm {
+  background-color: rgb(252,252,252);
 }
