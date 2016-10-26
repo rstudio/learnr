@@ -35,7 +35,7 @@ qplot(mpg, wt, data = mtcars)
 cat("Setup!\n")
 ```
 
-```{r dygraphs, exercise=TRUE}
+```{r dygraphs, exercise=TRUE, eval=FALSE}
 library(dygraphs)
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)

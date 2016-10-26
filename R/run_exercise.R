@@ -26,7 +26,12 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
+  knitr::opts_chunk$set(screenshot.force = FALSE)
   knitr::opts_chunk$set(fig.path=paths$figures)
+  
+  # reset knit_meta (and ensure it's reset again when we exit)
+  knitr::knit_meta(clean = TRUE)
+  on.exit(knitr::knit_meta(clean = TRUE), add = TRUE)
   
   # spin the R code to markdown
   output <- knitr::spin(report = FALSE,
@@ -34,11 +39,19 @@ run_exercise <- function(exercise, envir = parent.frame()) {
                         envir = envir, 
                         format ="Rmd")
   
-  # render the markdown
-  output <- markdown::renderMarkdown(text = output)
+  # collect html dependencies
+  html_dependencies <- knitr::knit_meta(class = "html_dependency")
   
-  # return the output as HTML
-  htmltools::HTML(output)
+  # render the markdown (respecting html-preserve)
+  extracted <- htmltools::extractPreserveChunks(output)
+  output <- markdown::renderMarkdown(text = extracted$value)
+  output <- htmltools::restorePreserveChunks(output, extracted$chunks)
+  
+  # return the output as HTML w/ dependencies
+  htmltools::attachDependencies(
+    htmltools::HTML(output),
+    html_dependencies
+  )
 }
 
 
