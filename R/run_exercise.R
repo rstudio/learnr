@@ -37,14 +37,17 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   output <- knitr::spin(report = FALSE,
                         text = exercise$code, 
                         envir = envir, 
-                        format ="Rmd")
+                        format = "Rmd")
   
   # collect html dependencies
   html_dependencies <- knitr::knit_meta(class = "html_dependency")
   
   # render the markdown (respecting html-preserve)
   extracted <- htmltools::extractPreserveChunks(output)
-  output <- markdown::renderMarkdown(text = extracted$value)
+  output <- markdown::renderMarkdown(
+    text = extracted$value,
+    renderer.options = c("use_xhtml", "fragment_only")
+  )
   output <- htmltools::restorePreserveChunks(output, extracted$chunks)
   
   # return the output as HTML w/ dependencies
