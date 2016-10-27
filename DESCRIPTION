@@ -10,7 +10,7 @@ Imports:
   htmltools (>= 0.3.5),
   shiny (>= 0.13),
   knitr (>= 1.14),
-  rmarkdown (>= 1.1.9008),
+  rmarkdown (>= 1.1.9010),
   jsonlite
 Remotes: rstudio/rmarkdown
 License: What license is it under?

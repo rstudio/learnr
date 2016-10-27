@@ -218,6 +218,14 @@
         // render the content
         Shiny.renderContent(el, data);
         
+        // bind bootstrap tables if necessary
+        if (window.bootstrapStylePandocTables)
+          window.bootstrapStylePandocTables();
+        
+        // bind paged tables if necessary
+        if (window.PagedTableDoc)
+          window.PagedTableDoc.initAll();
+        
         // scroll exercise fully into view if necessary
         ensureExerciseVisible(el);
       },

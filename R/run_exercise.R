@@ -54,7 +54,8 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   output_format <- rmarkdown::html_fragment(
     fig_width = exercise$options$fig.width,
     fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina
+    fig_retina = exercise$options$fig.retina,
+    df_print = exercise$options$df_print
   )
   
   # knit the Rmd to markdown 
