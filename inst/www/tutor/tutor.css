@@ -22,6 +22,16 @@
   line-height: 1.6;
 }
 
+.tutor-exercise-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
 .ace-tm {
   background-color: rgb(252,252,252);
 }

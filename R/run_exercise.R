@@ -58,6 +58,10 @@ run_exercise <- function(exercise, envir = parent.frame()) {
     keep_md = FALSE
   )
   knitr_options$opts_chunk$error <- TRUE
+  knitr_options$knit_hooks$error = function(x, options) {
+    msg <- sub(" [^:]+:", ":", x)
+    as.character(htmltools::div(class = "tutor-exercise-error", msg))
+  }
   output_format <- rmarkdown::output_format(
     knitr = knitr_options,
     pandoc = NULL,
