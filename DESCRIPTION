@@ -11,8 +11,6 @@ Imports:
   shiny (>= 0.13),
   knitr (>= 1.14),
   rmarkdown (>= 1.1.9008),
-  markdown,
-  uuid,
   jsonlite
 Remotes: rstudio/rmarkdown
 License: What license is it under?

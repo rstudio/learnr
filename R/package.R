@@ -3,8 +3,6 @@
 #' @import shiny
 #' @import knitr
 #' @import rmarkdown
-#' @import uuid
-#' @import markdown
 #' @import jsonlite
 NULL
 

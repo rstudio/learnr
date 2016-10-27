@@ -44,7 +44,7 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   exercise_r <- "exercise.R"
   writeLines(exercise$code, con = exercise_r, useBytes = TRUE)
   
-  # spin it
+  # spin it to an Rmd
   exercise_rmd <- knitr::spin(hair = exercise_r,
                               knit = FALSE,
                               envir = envir,
@@ -57,25 +57,23 @@ run_exercise <- function(exercise, envir = parent.frame()) {
     fig_retina = exercise$options$fig.retina
   )
   
-  # render the R code to markdown + html_dependencies
+  # knit the Rmd to markdown 
   output_file <- rmarkdown::render(input = exercise_rmd,
                                    output_format = output_format,
                                    envir = eval_envir,
                                    clean = FALSE,
                                    run_pandoc = FALSE)
+  
+  # capture the dependenies
   html_dependencies <- attr(output_file, "knit_meta")
+  
+  # render the markdown
+  output_file <- rmarkdown::render(input = output_file,
+                                   output_format = output_format,
+                                   envir = eval_envir)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
-  
-  # render the markdown (respecting html-preserve)
-  extracted <- htmltools::extractPreserveChunks(output)
-  output <- markdown::markdownToHTML(
-    text = extracted$value,
-    options = c("use_xhtml", "fragment_only", "base64_images"),
-    extensions = markdown::markdownExtensions(),
-    fragment.only = TRUE
-  )
-  output <- htmltools::restorePreserveChunks(output, extracted$chunks)
-  
+  output <- paste(output, collapse = "\n")
+
   # return the output as HTML w/ dependencies
   htmltools::attachDependencies(
     htmltools::HTML(output),
