@@ -20,16 +20,13 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   # create new environment for evaluation
   eval_envir <- new.env(parent = envir)
   
+  # temporarily set wd to session knitr dir
+  oldwd <- setwd(session_knitr_dir(envir))
+  on.exit(setwd(oldwd), add = TRUE)
+  
   # run setup chunk if necessary
   if (!is.null(exercise$setup))
     eval(parse(text = exercise$setup), envir = eval_envir)
-  
-  # get knitr paths
-  paths <- knitr_output_paths(envir)
-  
-  # temporarily set wd
-  oldwd <- setwd(paths$knit)
-  on.exit(setwd(oldwd), add = TRUE)
   
   # set preserved chunk options
   knitr::opts_chunk$set(as.list(exercise$options))
@@ -38,7 +35,6 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(screenshot.force = FALSE)
-  knitr::opts_chunk$set(fig.path=paths$figures)
   
   # reset knit_meta (and ensure it's reset again when we exit)
   knitr::knit_meta(clean = TRUE)
@@ -55,8 +51,12 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   
   # render the markdown (respecting html-preserve)
   extracted <- htmltools::extractPreserveChunks(output)
-  output <- markdown::renderMarkdown(text = extracted$value,
-                                     renderer.options = c("use_xhtml", "fragment_only"))
+  output <- markdown::markdownToHTML(
+    text = extracted$value,
+    options = c("use_xhtml", "fragment_only", "base64_images"),
+    extensions = markdown::markdownExtensions(),
+    fragment.only = TRUE
+  )
   output <- htmltools::restorePreserveChunks(output, extracted$chunks)
   
   # return the output as HTML w/ dependencies
@@ -67,33 +67,22 @@ run_exercise <- function(exercise, envir = parent.frame()) {
 }
 
 
-# get the per-user knitr output paths
-knitr_output_paths <- function(envir) {
+# get the per-session knitr dir
+session_knitr_dir <- function(envir) {
   
-  # create output paths if we need to
-  if (!exists(".tutor-exercise-knitr-paths", envir = envir)) {
+  # create knitr dir
+  if (!exists(".tutor-session-knitr-dir", envir = envir)) {
     
-    # create the paths
-    paths <- list()
-    paths$knit <- tempfile(pattern = "tutor-exercise-knit-")
-    dir.create(paths$knit)
-    unique_path_name <- uuid::UUIDgenerate()
-    unique_path_name <- sub("^[0-9\\-]*", "", unique_path_name)
-    figures_path <- file.path(paths$knit, unique_path_name)
-    dir.create(figures_path)
-    
-    # add shiny resource path
-    shiny::addResourcePath(unique_path_name, figures_path)
-    
-    # return figures path
-    paths$figures <- paste0(unique_path_name, "/")
-    
-    # assign them for subsequent reading
-    assign(".tutor-exercise-knitr-paths", paths, envir = envir)
+    # create the directory
+    dir <- tempfile(pattern = "tutor-session-knitr-dir")
+    dir.create(dir)
+   
+    # assign for subsequent reading
+    assign(".tutor-session-knitr-dir", dir, envir = envir)
   }
   
-  # return the output paths
-  get(".tutor-exercise-knitr-paths", envir = envir)
+  # return the knitr dir
+  get(".tutor-session-knitr-dir", envir = envir)
 }
 
 
