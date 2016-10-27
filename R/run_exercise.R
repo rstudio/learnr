@@ -63,6 +63,7 @@ run_exercise <- function(exercise, envir = parent.frame()) {
                                    output_format = output_format,
                                    envir = eval_envir,
                                    clean = FALSE,
+                                   quiet = TRUE,
                                    run_pandoc = FALSE)
   
   # capture the dependenies
@@ -71,7 +72,9 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
-                                   envir = eval_envir)
+                                   envir = eval_envir,
+                                   quiet = TRUE,
+                                   clean = FALSE)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
 
