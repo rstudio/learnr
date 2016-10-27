@@ -1,6 +1,6 @@
 
 
-
+- Improved rendering of knitr errors (it should be a custom error printing handler in our format)
 
 - Runners, storage, tracking, etc.
 - Add quiz component

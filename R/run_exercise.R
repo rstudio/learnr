@@ -51,11 +51,17 @@ run_exercise <- function(exercise, envir = parent.frame()) {
                               format = "Rmd")
   
   # create html_fragment output format with forwarded knitr options
-  output_format <- rmarkdown::html_fragment(
-    fig_width = exercise$options$fig.width,
+  knitr_options <- rmarkdown::knitr_options_html(
+    fig_width = exercise$options$fig.width, 
     fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina,
-    df_print = exercise$options$df_print
+    fig_retina = exercise$options$fig.retina, 
+    keep_md = FALSE
+  )
+  knitr_options$opts_chunk$error <- TRUE
+  output_format <- rmarkdown::output_format(
+    knitr = knitr_options,
+    pandoc = NULL,
+    base_format = rmarkdown::html_fragment(df_print = exercise$options$df_print)
   )
   
   # knit the Rmd to markdown 
