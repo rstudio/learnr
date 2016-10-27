@@ -2,6 +2,18 @@
 # run an exercise and return HTML UI
 run_exercise <- function(exercise, envir = parent.frame()) {
   
+  # get server startup code (used for out-of-proc runners)
+  server_start_code <- shiny_prerendered_server_start_code(envir)
+  
+  # create temp dir for execution (remove on exit)
+  exercise_dir <- tempfile(pattern = "tutor-exercise")
+  dir.create(exercise_dir)
+  oldwd <- setwd(exercise_dir)
+  on.exit({
+    setwd(oldwd)
+    unlink(exercise_dir, recursive = TRUE)
+  }, add = TRUE)
+  
   # restore knitr options and hooks after knit
   optk <- knitr::opts_knit$get()
   on.exit(knitr::opts_knit$restore(optk), add = TRUE)
@@ -14,15 +26,8 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
-  # get server startup code (used for out-of-proc runners)
-  server_start_code <- shiny_prerendered_server_start_code(envir)
-  
   # create new environment for evaluation
   eval_envir <- new.env(parent = envir)
-  
-  # temporarily set wd to session knitr dir
-  oldwd <- setwd(session_knitr_dir(envir))
-  on.exit(setwd(oldwd), add = TRUE)
   
   # run setup chunk if necessary
   if (!is.null(exercise$setup))
@@ -34,20 +39,32 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
-  knitr::opts_chunk$set(screenshot.force = FALSE)
   
-  # reset knit_meta (and ensure it's reset again when we exit)
-  knitr::knit_meta(clean = TRUE)
-  on.exit(knitr::knit_meta(clean = TRUE), add = TRUE)
+  # write the R code to a temp file
+  exercise_r <- "exercise.R"
+  writeLines(exercise$code, con = exercise_r, useBytes = TRUE)
   
-  # spin the R code to markdown
-  output <- knitr::spin(report = FALSE,
-                        text = exercise$code, 
-                        envir = eval_envir, 
-                        format = "Rmd")
+  # spin it
+  exercise_rmd <- knitr::spin(hair = exercise_r,
+                              knit = FALSE,
+                              envir = envir,
+                              format = "Rmd")
   
-  # collect html dependencies
-  html_dependencies <- knitr::knit_meta(class = "html_dependency")
+  # create html_fragment output format with forwarded knitr options
+  output_format <- rmarkdown::html_fragment(
+    fig_width = exercise$options$fig.width,
+    fig_height = exercise$options$fig.height,
+    fig_retina = exercise$options$fig.retina
+  )
+  
+  # render the R code to markdown + html_dependencies
+  output_file <- rmarkdown::render(input = exercise_rmd,
+                                   output_format = output_format,
+                                   envir = eval_envir,
+                                   clean = FALSE,
+                                   run_pandoc = FALSE)
+  html_dependencies <- attr(output_file, "knit_meta")
+  output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   
   # render the markdown (respecting html-preserve)
   extracted <- htmltools::extractPreserveChunks(output)
@@ -65,27 +82,6 @@ run_exercise <- function(exercise, envir = parent.frame()) {
     html_dependencies
   )
 }
-
-
-# get the per-session knitr dir
-session_knitr_dir <- function(envir) {
-  
-  # create knitr dir
-  if (!exists(".tutor-session-knitr-dir", envir = envir)) {
-    
-    # create the directory
-    dir <- tempfile(pattern = "tutor-session-knitr-dir")
-    dir.create(dir)
-   
-    # assign for subsequent reading
-    assign(".tutor-session-knitr-dir", dir, envir = envir)
-  }
-  
-  # return the knitr dir
-  get(".tutor-session-knitr-dir", envir = envir)
-}
-
-
 
 # some concepts
 
