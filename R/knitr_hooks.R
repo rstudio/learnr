@@ -44,9 +44,9 @@ install_knitr_hooks <- function() {
       options$highlight <- FALSE
       options$comment <- NA
       if (!is.null(options$exercise.eval))
-        options$eval = options$exercise.eval
+        options$eval <- options$exercise.eval
       else
-        options$eval = FALSE
+        options$eval <- FALSE
     }
     
     # if this is an exercise support chunk then force echo, but don't 
