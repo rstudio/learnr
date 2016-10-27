@@ -108,14 +108,20 @@
       editor.session.getSelection().clearSelection();
       editor.setValue(code, -1);
       
-      // bind Cmd+Shift+Enter
-      editor.commands.addCommand({
-        name: "execute",
-        bindKey: {win: "Ctrl+Shift+Enter", mac: "Command+Shift+Enter"},
-        exec: function(editor) {
-          run_button.trigger('click');
-        }
-      });
+      // bind execution keys 
+      function bindExecutionKey(name, key) {
+        var macKey = key.replace("Ctrl+", "Command+");
+        editor.commands.addCommand({
+          name: name,
+          bindKey: {win: key, mac: macKey},
+          exec: function(editor) {
+            run_button.trigger('click');
+          }
+        });
+      }
+      bindExecutionKey("execute1", "Ctrl+Enter");
+      bindExecutionKey("execute2", "Ctrl+Shift+Enter");
+      bindExecutionKey("execute3", "Ctrl+R");
       
       // mange ace height as the document changes
       var updateAceHeight = function()  {
