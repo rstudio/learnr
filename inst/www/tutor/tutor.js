@@ -3,12 +3,15 @@
 
   var $ = jQuery;
 
-  // helper function to get the exercise container of an element
+  // platform check
+  var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+  // get the exercise container of an element
   function exerciseContainer(el) {
     return $(el).closest(".tutor-exercise");
   }
 
-  // helper function to get the current label context
+  // get the current label context of an element
   function exerciseLabel(el) {
     return exerciseContainer(el).attr('data-label');
   }
@@ -64,10 +67,13 @@
       input_div.attr('id', create_id('input'));
       
       // create action button
-      var run_button = $('<button class="btn btn-success btn-xs tutor-exercise-run action-button"></button>');
+      var run_button = $('<button class="btn btn-success btn-xs ' + 
+                         'tutor-exercise-run action-button"></button>');
       run_button.attr('type', 'button');
       run_button.text('Run Code');
       run_button.attr('id', create_id('button'));
+      var title = "Run code (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
+      run_button.attr('title', title);
       run_button.on('click', function() {
         output_frame.addClass('recalculating');
       });
