@@ -122,7 +122,7 @@ install_knitr_hooks <- function() {
         exercise_server_chunk(options$label)
       } 
       else {
-        # forward a subset of chunk options
+        # forward a subset of standard knitr chunk options
         preserved_options <- list()
         preserved_options$fig.width <- options$fig.width
         preserved_options$fig.height <- options$fig.height
@@ -139,10 +139,12 @@ install_knitr_hooks <- function() {
         preserved_options$error <- options$error
         preserved_options$message <- options$message
         
-        # use the same mechanism to forward df_print
+        # forward some exercise options
         preserved_options$exercise.df_print <- knitr::opts_knit$get('rmarkdown.df_print')
         if (is.null(preserved_options$exercise.df_print))
           preserved_options$exercise.df_print <- "default"
+        preserved_options$exercise.timelimit.cpu <- options$exercise.timelimit.cpu
+        preserved_options$exercise.timelimit.elapsed <- options$exercise.timelimit.elapsed
         
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
