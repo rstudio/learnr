@@ -14,7 +14,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-knitr::opts_chunk$set(exercise.eval=TRUE, exercise.timelimit = 2)
+knitr::opts_chunk$set(exercise.eval=TRUE, exercise.timelimit = 10)
 ```
 
 ```{r, context="server-start", include=FALSE}
@@ -35,8 +35,12 @@ mtcars
 
 ## ggplot
 
-```{r ggplot, exercise=TRUE}
+```{r ggplot-setup}
 library(ggplot2)
+```
+
+
+```{r ggplot, exercise=TRUE}
 qplot(mpg, wt, data = mtcars)
 ```
 

@@ -7,10 +7,5 @@
 - Solution display (font-awesome)
 - One time" code construct (use variable in environment)
 
-- exercise.timeout
-- eval.secure
-- R.util evalWithTimeout
-
-- Doesn't currently work on ubuntu
 - Test on Windows
 
