@@ -50,10 +50,6 @@ run_exercise <- function(exercise, envir) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
-  # run setup chunk if necessary
-  if (!is.null(exercise$setup))
-    eval(parse(text = exercise$setup), envir = envir)
-  
   # set preserved chunk options
   knitr::opts_chunk$set(as.list(exercise$options))
   
@@ -61,9 +57,10 @@ run_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
   
-  # write the R code to a temp file
+  # write the R code to a temp file (inclue setup code if necessary)
+  code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
-  writeLines(exercise$code, con = exercise_r, useBytes = TRUE)
+  writeLines(code, con = exercise_r, useBytes = TRUE)
   
   # spin it to an Rmd
   exercise_rmd <- knitr::spin(hair = exercise_r,
