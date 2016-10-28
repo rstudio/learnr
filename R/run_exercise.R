@@ -1,9 +1,58 @@
 
+
+
 # run an exercise and return HTML UI
-run_exercise <- function(exercise, envir = parent.frame()) {
+handle_exercise <- function(exercise, envir = parent.frame()) {
   
-  # get server startup code (used for out-of-proc runners)
-  server_start_code <- shiny_prerendered_server_start_code(envir)
+  # determine the exercise runner
+  runner <- getOption("tutor.runner", default = "internal")
+
+  if (runner == "internal") {
+    
+    # evaluate the exercise in process
+    result <- evaluate_exercise(exercise, envir)
+    
+  }  
+  else {
+    
+    # get server startup code and prepend it to the exercise setup code
+    server_start_code <- shiny_prerendered_server_start_code(envir)
+    exercise$setup <- paste(c(server_start_code, exercise$setup), collapse = "\n")
+    
+    # setup temp json input and output files for external call
+    input_file <- tempfile(pattern = "tutor-exercise-input", fileext = ".json")
+    output_file <- tempfile(pattern = "tutor-exercise-output", fileext = ".json")
+    on.exit(file.remove(c(input_file, output_file)), add = TRUE)
+    
+    # serialize as JSON then write to input_file
+    exercise_json <- jsonlite::serializeJSON(exercise)
+    writeLines(exercise_json, con = input_file, useBytes = TRUE)
+    
+    # launch an external R process to handle the request
+    if (runner == "external") {
+      cmd <- sprintf("tutor::run_exercise('%s', '%s')", input_file, output_file)
+      code <- system2(command = file.path(R.home('bin'), "R"), 
+                      args = c("--slave", "--vanilla", "-e", shQuote(cmd)))
+    } else {
+      code <- system2(runner, args = c(input_file, output_file))
+    }
+    if (code != 0)
+      stop("Error ", code, " executing exercise via '", runner, "'")
+  
+    # read the output_file
+    result_json <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
+    result <- jsonlite::unserializeJSON(result_json)
+  }
+  
+  # return the output as HTML w/ dependencies
+  htmltools::attachDependencies(
+    htmltools::HTML(result$output),
+    result$dependencies
+  )
+}
+
+# evaluate an exercise and return a list containing output and dependencies
+evaluate_exercise <- function(exercise, envir) {
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
@@ -26,12 +75,9 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
   
-  # create new environment for evaluation
-  eval_envir <- new.env(parent = envir)
-  
   # run setup chunk if necessary
   if (!is.null(exercise$setup))
-    eval(parse(text = exercise$setup), envir = eval_envir)
+    eval(parse(text = exercise$setup), envir = envir)
   
   # set preserved chunk options
   knitr::opts_chunk$set(as.list(exercise$options))
@@ -71,43 +117,63 @@ run_exercise <- function(exercise, envir = parent.frame()) {
   # knit the Rmd to markdown 
   output_file <- rmarkdown::render(input = exercise_rmd,
                                    output_format = output_format,
-                                   envir = eval_envir,
+                                   envir = envir,
                                    clean = FALSE,
                                    quiet = TRUE,
                                    run_pandoc = FALSE)
   
   # capture the dependenies
-  html_dependencies <- attr(output_file, "knit_meta")
+  dependencies <- attr(output_file, "knit_meta")
   
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
-                                   envir = eval_envir,
+                                   envir = envir,
                                    quiet = TRUE,
                                    clean = FALSE)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
-
-  # return the output as HTML w/ dependencies
-  htmltools::attachDependencies(
-    htmltools::HTML(output),
-    html_dependencies
-  )
+  
+  # return result 
+  list(output = output,
+       dependencies = dependencies)
 }
+
+
+#' Run an exercise and return it's results
+#' 
+#' Run a JSON serialiazed exercise and return the results as JSON.
+#' 
+#' @param input Path to file containing input JSON
+#' @param output Path to file to write output JSON
+#'
+#' @export 
+run_exercise <- function(input, output) {
+  
+  # read the json from the input file
+  exercise_json <- readLines(input, warn = FALSE, encoding = "UTF-8")
+  exercise <- jsonlite::unserializeJSON(exercise_json)
+  
+  # evalate the exercise
+  result <- evaluate_exercise(exercise, new.env())
+  
+  # write the results as json (write then move so the caller can
+  # check for file existence as an indicator that we are done)
+  result_json <- jsonlite::serializeJSON(result)
+  output_stage <- tempfile(pattern = "tutor-exercise-result-stage", 
+                           tmpdir = dirname(output),
+                           fileext = ".json")
+  writeLines(result_json, con = output_stage, useBytes = TRUE)
+  file.rename(output_stage, output)
+  
+  # return nothing
+  invisible(NULL)
+}
+
+
 
 # some concepts
 
-local_inproc_runner <- function() {
-  
-}
-
-local_shell_runner <- function() {
-  
-}
-
-local_firejail_runner <- function() {
-  
-}
 
 local_temp_storage <- function() {
   
