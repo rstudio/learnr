@@ -7,9 +7,10 @@
 - Solution display (font-awesome)
 - One time" code construct (use variable in environment)
 
-# TODO: exercise.timeout
-    
-# TODO: eval.secure
+- exercise.timeout
+- eval.secure
+- R.util evalWithTimeout
 
-# TODO: R.util evalWithTimeout
+- Doesn't currently work on ubuntu
+- Test on Windows
 
