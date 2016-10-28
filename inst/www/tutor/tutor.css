@@ -19,7 +19,7 @@
   border: solid 1px #cccccc;
   margin-bottom: 20px;
   width: 100%;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 .tutor-exercise-error {
@@ -33,4 +33,8 @@
 
 .ace-tm {
   background-color: rgb(252,252,252);
+  font-size: inherit;
 }
+
+
+
