@@ -7,27 +7,23 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   if (is.null(timelimit))
     timelimit <- getOption("tutor.exercise.timelimit", default = Inf)
   
-  # get the exercise evaluator
-  evaluator <- getOption("tutor.exercise.evaluator", evaluate_exercise)
+  # define exercise evaluator (allow replacement via global option)
+  evaluator <- getOption("tutor.exercise.evaluator", function(expr, timelimit) {
+    
+    # enforce time limit for the duration of this function call
+    setTimeLimit(elapsed=timelimit, transient=TRUE);
+    on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
+    
+    # evaluate 
+    force(expr)
+  })
   
   # evaluate the exercise
-  evaluator(run_exercise(exercise, envir), timelimit = timelimit)
+  evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
 }
 
-# default evaluator (in proc w/ timelimit)
-evaluate_exercise <- function(expr, timelimit = Inf) {
-  
-  # enforce time limit for the duration of this function call
-  setTimeLimit(elapsed=timelimit, transient=TRUE);
-  on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
-  
-  # evaluate 
-  force(expr)
-}
-
-
-# run an exercise and return a list containing output and dependencies
-run_exercise <- function(exercise, envir) {
+# evaluate an exercise and return a list containing output and dependencies
+evaluate_exercise <- function(exercise, envir) {
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
