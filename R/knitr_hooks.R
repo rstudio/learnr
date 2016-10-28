@@ -140,9 +140,9 @@ install_knitr_hooks <- function() {
         preserved_options$message <- options$message
         
         # use the same mechanism to forward df_print
-        preserved_options$df_print <- knitr::opts_knit$get('rmarkdown.df_print')
-        if (is.null(preserved_options$df_print))
-          preserved_options$df_print <- "default"
+        preserved_options$exercise.df_print <- knitr::opts_knit$get('rmarkdown.df_print')
+        if (is.null(preserved_options$exercise.df_print))
+          preserved_options$exercise.df_print <- "default"
         
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',

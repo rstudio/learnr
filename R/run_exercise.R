@@ -111,7 +111,9 @@ evaluate_exercise <- function(exercise, envir) {
   output_format <- rmarkdown::output_format(
     knitr = knitr_options,
     pandoc = NULL,
-    base_format = rmarkdown::html_fragment(df_print = exercise$options$df_print)
+    base_format = rmarkdown::html_fragment(
+                    df_print = exercise$options$exercise.df_print
+                  )
   )
   
   # knit the Rmd to markdown 

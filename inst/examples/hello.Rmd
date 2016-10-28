@@ -8,7 +8,7 @@ output:
     fig_height: 4
     toc: true
     toc_float: true
-    df_print: kable
+    df_print: paged
 runtime: shiny_prerendered
 ---
 
