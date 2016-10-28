@@ -8,7 +8,7 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     timelimit <- Inf
   
   # get the exercise evaluator
-  evaluator <- getOption("tutor.evaluator", evaluate_exercise)
+  evaluator <- getOption("tutor.exercise.evaluator", evaluate_exercise)
   
   # evaluate the exercise
   evaluator(run_exercise(exercise, envir), timelimit = timelimit)

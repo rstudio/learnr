@@ -15,6 +15,6 @@ apparmor_evaluate_exercise <- function(expr, timelimit = Inf) {
 }
 
 # install as exercise evaluator
-options(tutor.evaluator = apparmor_evaluate_exercise)
+options(tutor.exercise.evaluator = apparmor_evaluate_exercise)
 
 
