@@ -143,8 +143,7 @@ install_knitr_hooks <- function() {
         preserved_options$exercise.df_print <- knitr::opts_knit$get('rmarkdown.df_print')
         if (is.null(preserved_options$exercise.df_print))
           preserved_options$exercise.df_print <- "default"
-        preserved_options$exercise.timelimit.cpu <- options$exercise.timelimit.cpu
-        preserved_options$exercise.timelimit.elapsed <- options$exercise.timelimit.elapsed
+        preserved_options$exercise.timelimit <- options$exercise.timelimit
         
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',

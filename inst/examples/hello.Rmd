@@ -14,7 +14,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-knitr::opts_chunk$set(exercise.eval=TRUE)
+knitr::opts_chunk$set(exercise.eval=TRUE, exercise.timelimit = 2)
 ```
 
 ```{r, context="server-start", include=FALSE}
