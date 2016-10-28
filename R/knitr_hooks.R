@@ -33,12 +33,19 @@ install_knitr_hooks <- function() {
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutor = function(options) {
     
-    # bail if this isn't runtime: shiny_prerendered
-    if (!is_shiny_prerendered_active())
-      return(options)
+    # check for chunk type
+    exercise_chunk <- is_exercise_chunk(options)
+    exercise_support_chunk <- is_exercise_support_chunk(options)
+    exercise_setup_chunk <- is_exercise_support_chunk(options, type = "setup")
+    
+    # validate that we have runtime: shiny_prerendered
+    if ((exercise_chunk || exercise_support_chunk) && !is_shiny_prerendered_active()) {
+      stop("Tutorial exercises require the use of 'runtime: shiny_prerendered'",
+           call. = FALSE)
+    }
     
     # if this is an exercise chunk then force echo and don't highlight it
-    if (is_exercise_chunk(options)) {
+    if (exercise_chunk) {
       options$echo <- TRUE
       options$include <- TRUE
       options$highlight <- FALSE
@@ -51,7 +58,7 @@ install_knitr_hooks <- function() {
     
     # if this is an exercise support chunk then force echo, but don't 
     # eval or highlight it
-    if (is_exercise_support_chunk(options)) {
+    if (exercise_support_chunk) {
       options$echo <- TRUE
       options$include <- TRUE
       options$eval <- FALSE
@@ -60,7 +67,7 @@ install_knitr_hooks <- function() {
     
     # if this is an exercise setup chunk then eval it if the corresponding
     # exercise chunk is going to be executed
-    if (is_exercise_support_chunk(options, type = "setup")) {
+    if (exercise_setup_chunk) {
       
       # figure out the default behavior
       exercise_eval <- knitr::opts_chunk$get('exercise.eval')
@@ -85,10 +92,6 @@ install_knitr_hooks <- function() {
   
   # hook to amend output for exercise related chunks
   knitr::knit_hooks$set(tutor = function(before, options, envir) {
-    
-    # bail if this isn't runtime: shiny_prerendered
-    if (!is_shiny_prerendered_active())
-      return(NULL)
     
     # helper to produce an exercise wrapper div w/ the specified class
     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
