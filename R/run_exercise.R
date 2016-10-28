@@ -2,18 +2,14 @@
 # run an exercise and return HTML UI
 handle_exercise <- function(exercise, envir = parent.frame()) {
   
-  # evaluate the exercise 
-  result <- evaluate_exercise(exercise, envir)
+  # run the exercise 
+  run_exercise(exercise, envir)
     
-  # return the output as HTML w/ dependencies
-  htmltools::attachDependencies(
-    htmltools::HTML(result$output),
-    result$dependencies
-  )
+ 
 }
 
-# evaluate an exercise and return a list containing output and dependencies
-evaluate_exercise <- function(exercise, envir) {
+# run an exercise and return a list containing output and dependencies
+run_exercise <- function(exercise, envir) {
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
@@ -97,8 +93,10 @@ evaluate_exercise <- function(exercise, envir) {
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
   
-  # return result 
-  list(output = output,
-       dependencies = dependencies)
+  # return the output as HTML w/ dependencies
+  htmltools::attachDependencies(
+    htmltools::HTML(output),
+    dependencies
+  )
 }
 
