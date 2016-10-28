@@ -172,14 +172,3 @@ run_exercise <- function(input, output) {
   invisible(NULL)
 }
 
-
-
-
-
-
-
-
-
-
-
-
