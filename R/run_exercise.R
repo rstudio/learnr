@@ -2,10 +2,10 @@
 # run an exercise and return HTML UI
 handle_exercise <- function(exercise, envir = parent.frame()) {
   
-  # extract and normalize timelimit option
+  # get timelimit option (either from chunk option or from global option)
   timelimit <- exercise$options$exercise.timelimit
   if (is.null(timelimit))
-    timelimit <- Inf
+    timelimit <- getOption("tutor.exercise.timelimit", default = Inf)
   
   # get the exercise evaluator
   evaluator <- getOption("tutor.exercise.evaluator", evaluate_exercise)
