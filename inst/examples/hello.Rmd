@@ -8,6 +8,7 @@ output:
     fig_height: 4
     toc: true
     toc_float: true
+    df_print: kable
 runtime: shiny_prerendered
 ---
 
@@ -16,11 +17,20 @@ library(tutor)
 knitr::opts_chunk$set(exercise.eval=TRUE)
 ```
 
+```{r, context="server-start", include=FALSE}
+x <- 1 + 1
+```
+
+
+```{r data, include=FALSE}
+pressure2 <- pressure
+```
+
+
 ## summary
 
 ```{r, exercise=TRUE}
-summary(pressure)
-summary(cars)
+mtcars
 ```
 
 ## ggplot
@@ -39,7 +49,7 @@ qplot(mpg, wt, data = mtcars)
 library(dygraphs)
 ```
 
-```{r dygraphs, exercise=TRUE}
+```{r dygraphs, exercise=TRUE, exercise.eval = FALSE}
 dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
 ```
