@@ -174,19 +174,6 @@ run_exercise <- function(input, output) {
 
 
 
-# some concepts
-
-
-local_temp_storage <- function() {
-  
-}
-
-local_appdir_storage <- function() {
-  
-}
-
-
-
 
 
 
