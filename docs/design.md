@@ -9,4 +9,4 @@
 - better progress treatment (esp for initial)
 
 
-- consistent font sizes
+- consistent font sizes (check flexdashboard website)
