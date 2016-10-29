@@ -9,6 +9,6 @@
 - Test on Windows
 
 - better progress treatment (esp for initial)
-- consider commonmark (w/ htmlPreserve) for lighter weight on server
+
 
 - consistent font sizes
