@@ -6,8 +6,6 @@
 - Knitr engines?
 - Solution display (font-awesome)
 
-- Test on Windows
-
 - better progress treatment (esp for initial)
 
 
