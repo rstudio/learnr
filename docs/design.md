@@ -8,5 +8,6 @@
 
 - better progress treatment (esp for initial)
 
+- ability to specify # of lines for exercises
 
 - consistent font sizes (check flexdashboard website)
