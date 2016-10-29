@@ -44,7 +44,7 @@ install_knitr_hooks <- function() {
            call. = FALSE)
     }
     
-    # if this is an exercise chunk then force echo and don't highlight it
+    # if this is an exercise chunk then set various options
     if (exercise_chunk) {
       options$echo <- TRUE
       options$include <- TRUE
