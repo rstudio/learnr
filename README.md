@@ -1,6 +1,6 @@
 ## Overview
 
-The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. 
+The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
 For example, here's a very simple tutorial:
 
@@ -33,7 +33,7 @@ rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
 ```
     
     
-We'll go thorugh this example in more detail below. First though let's cover how to install and get started with the **tutor** package.
+We'll go through this example in more detail below. First though let's cover how to install and get started with the **tutor** package.
 
 
 ## Getting Started
@@ -56,7 +56,7 @@ A tutorial is just a standard R Markdown document that has three additional attr
 2. It loads the **tutor** package.
 3. It includes one or more code chunks with the `exercise=TRUE` attribute.
 
-The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorails: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
+The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
 
 You can copy and paste the simple "Hello, Tutor!" example from above to get started creating your own tutorials.
 
@@ -79,7 +79,7 @@ There are some special considerations for code chunks with `exercise=TRUE` which
 
 ### Standalone Code
 
-When a code chunk with `exercise=TRUE` is evaluated it's evaulated in a standalone environment (in other words, it doesn't have access to previous computations from within the document other than those provided in the `setup` chunk). This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
+When a code chunk with `exercise=TRUE` is evaluated it's evaluated in a standalone environment (in other words, it doesn't have access to previous computations from within the document other than those provided in the `setup` chunk). This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
 
 You can however arrange for per-exercise chunk setup code to be run to ensure that the environment is primed correctly. To do this give your exercise chunk a label (e.g. `exercise1`) then add another chunk with the same label plus a `-setup` suffix (e.g. `exercise1-setup`). For example, here we provide a setup chunk to ensure that the correct dataset is always available within an exercise's evaluation environment:
 
@@ -93,7 +93,7 @@ You can however arrange for per-exercise chunk setup code to be run to ensure th
     nycflights <- filter(nycflights, month == 1)
     ```
 
-As mentioned above, you can also have global setup code that all chunks will get the benefit of by including a global `setup` chunk. For example, if there were multiple chunks that needed access to the original version of the flights datset you could do this:
+As mentioned above, you can also have global setup code that all chunks will get the benefit of by including a global `setup` chunk. For example, if there were multiple chunks that needed access to the original version of the flights dataset you could do this:
 
 
     ```{r setup, include=FALSE}
@@ -128,7 +128,6 @@ You can also set a global default for exercise evaluation using `knitr::opts_chu
     ```
 
 ## Using Shiny
-
 
 The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interaction and interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
 
@@ -190,17 +189,89 @@ Tutorials are Shiny applications that are run using the `rmarkdown::run` functio
 rmarkdown::run("tutorial.Rmd")
 ```
 
-This means that tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. See the [Deployment](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html#deployment) section of the `runtime: shiny_prerendered` documentation for additional details.
+This means that tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
 
-Note that there is one important difference between tutorials and most other Shiny applications you deploy: with tutorials the end user can directly execute R code on the server. This creates some special considerations around resource usage and security which are discussed below.
+### Local Deployment
+
+For local deployment, you should consider bundling the tutorial into an R package and providing a high level function to run it. For example, the following functions provide wrappers around the "hello.Rmd" and "slidy.Rmd" tutorials we ran earlier:
+
+```r
+hello_tutorial <- function() {
+  rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
+}
+
+slidy_tutorial <- function() {
+  rmarkdown::run(system.file("examples/slidy.Rmd", package = "tutor"))
+}
+```
+
+### Server Deployment
+
+You can also deploy tutorials on a server as you'd deploy any other Shiny application (the [Deployment](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html#deployment) section of the `runtime: shiny_prerendered` documentation has additional details on how to do this).
+
+Note however that there is one important difference between tutorials and most other Shiny applications you deploy: with tutorials the end user can directly execute R code on the server. This creates some special considerations around resource usage, concurrent users, and security which are discussed below. 
+
+Local deployment of tutorials is therefore the recommended approach unless you feel comfortable that you've accounted for these concerns. Note that if you deploy tutorials to end users running RStudio Server then you can combine centralized deployment with a local execution context that is segregated from other users.
 
 ### Resource Usage
 
+Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. they could create an infinite loop or allocate all available memory on the machine).
 
+#### Exercise Timeouts
+
+To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
+
+    ```{r, exercise=TRUE, exercise.timelimit=10}
+    
+To limit all exercise chunks within a tutorial to 10 seconds of execution time:
+
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(exercise.timelimit = 10)
+    ```
+
+To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)
+
+    options(tutor.exercise.timelimit = 10)
+
+#### Resource Limits
+
+To apply other resource limits, you can run tutorials within system imposed resource managers (e.g. ulimit or cgroups) or alternatively use a containerization technology like LXC or Docker. You can also apply resources limits using the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package, which is described below in the [Security](#Security) section.
+
+### Concurrent Users
+
+If you have multiple users accessing a tutorial at the same time their R code will by default be executed within a single R process. This means that if exercises take a long time to complete and many users are submitting them at once there could be a long wait for some users. 
+
+The `exercise.timelimit` option described above is a way to prevent this problem in some cases, but in other cases you may need to run your tutorial using multiple R processes. This is possible using [shinyapps.io](http://docs.rstudio.com/shinyapps.io/applications.html#ApplicationInstances), [Shiny Server Pro](http://docs.rstudio.com/shiny-server/#utilization-scheduler), and [RStudio Connect](http://docs.rstudio.com/connect/admin/appendix-configuration.html#appendix-configuration-scheduler) (see the linked documentation for the various products for additional details).
 
 ### Security
 
+Since tutorials enable end users to execute R code directly, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and other system resources.
 
+The **tutor** package can also have it's exercise evaluation function replaced with one based on the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package. Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor:
 
+1. Install and configure the **RAppArmor** package as described here: https://github.com/jeroenooms/RAppArmor#readme
+
+2. Add the following line to the `/etc/apparmor.d/rapparmor.d/r-user` profile (this is required so that the default AppArmor profile also support calling the pandoc markdown renderer):
+
+    ```bash
+    /usr/lib/rstudio/bin/pandoc/* rix,
+    ```
+
+3. Define an evaluator function that uses `RAppArmor::eval.secure` and set it as the `tutor.exercise.evaluator` global options (you'd do this in e.g. the `Rprofile.site`):
+
+    ```r
+    # exercise evaluation function
+    apparmor_evaluate_exercise <- function(expr, timelimit = Inf) {
+      RAppArmor::eval.secure(expr, 
+                             timeout = timelimit, 
+                             profile="r-user",
+                             RLIMIT_NPROC = 1000,
+                             RLIMIT_AS = 1024*1024*1024) 
+    }
+    
+    # install as exercise evaluator
+    options(tutor.exercise.evaluator = apparmor_evaluate_exercise)
+    ```
 
 
