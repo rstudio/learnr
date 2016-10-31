@@ -74,7 +74,7 @@ There are some special considerations for code chunks with `exercise=TRUE` which
 
 ### Standalone Code
 
-When a code chunk with `exercise=TRUE` is evaluated it's evaluated in a standalone environment (in other words, it doesn't have access to previous computations from within the document other than those provided in the `setup` chunk). This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
+Code chunks with `exercise=TRUE` are evaluated within standalone environments. This means that they don't have access to previous computations from within the document other than those provided in the `setup` chunk. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
 
 You can however arrange for per-exercise chunk setup code to be run to ensure that the environment is primed correctly. To do this give your exercise chunk a label (e.g. `exercise1`) then add another chunk with the same label plus a `-setup` suffix (e.g. `exercise1-setup`). For example, here we provide a setup chunk to ensure that the correct dataset is always available within an exercise's evaluation environment:
 
@@ -95,19 +95,19 @@ As mentioned above, you can also have global setup code that all chunks will get
     nycflights <- nycflights13::flights
     ```
     
-    ```{r exercise1, exercise=TRUE}
+    ```{r, exercise=TRUE}
     # Change the filter to select February rather than January
     filter(nycflights, month == 1)
     ```
 
-    ```{r exercise1, exercise=TRUE}
+    ```{r, exercise=TRUE}
     # Change the sort order to Ascending
     arrange(nycflights, desc(arr_delay))
     ```
 
 ### Evaluation
 
-By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
+By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
 
 You can arrange for an exercise to be pre-evaluated (and it's output shown) using the `exercise.eval` chunk option. For example:
 
@@ -124,7 +124,7 @@ You can also set a global default for exercise evaluation using `knitr::opts_chu
 
 ## Using Shiny
 
-The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interaction and interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
+The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
 
 The basic technique is to add a `context="server"` attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:
 
@@ -146,7 +146,7 @@ You can learn more by reading the [Prerendered Shiny Documents](http://rmarkdown
 
 ## External Resources
 
-You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny server:
+You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:
 
 <table>
 <thead>
@@ -175,7 +175,7 @@ You may wish to include external resources (images, videos, CSS, etc.) within yo
 </tbody>
 </table>
 
-The reason that all files within the directory of the main Rmd can't be referenced from within the web document is that many of these files are application source code and data, which may not be something you want to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.
+The reason that all files within the directory of the main Rmd can't be referenced from within the web document is that you may not want all files within your tutorial's directory to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.
 
 ## Tutorial Formats
 
@@ -214,13 +214,13 @@ slidy_tutorial <- function() {
 
 You can also deploy tutorials on a server as you'd deploy any other Shiny application (the [Deployment](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html#deployment) section of the `runtime: shiny_prerendered` documentation has additional details on how to do this).
 
-Note however that there is one important difference between tutorials and most other Shiny applications you deploy: with tutorials the end user can directly execute R code on the server. This creates some special considerations around resource usage, concurrent users, and security which are discussed below. 
+Note however that there is one important difference between tutorials and most other Shiny applications you deploy: with tutorials end users are providing R code to be executed on the server. This creates some special considerations around resources, concurrent usage, and security which are discussed below. 
 
-Local deployment of tutorials is therefore the recommended approach unless you feel comfortable that you've accounted for these concerns. Note that if you deploy tutorials to end users running RStudio Server then you can combine centralized deployment with a local execution context that is segregated from other users.
+As a result of these considerations local deployment of tutorials is the recommended approach unless you feel comfortable that you've accounted for these concerns. Note that if you deploy tutorials to end users running RStudio Server then you can get the best of both worlds (centralized deployment with a local execution context that is segregated from other users of the same server).
 
 ### Resource Usage
 
-Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. they could create an infinite loop or allocate all available memory on the machine).
+Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine).
 
 #### Exercise Timeouts
 
@@ -251,7 +251,7 @@ The `exercise.timelimit` option described above is a way to prevent this problem
 
 ### Security
 
-Since tutorials enable end users to execute R code directly, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and other system resources.
+Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and/or other system resources.
 
 The **tutor** package can also have it's exercise evaluation function replaced with one based on the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package. Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor:
 
