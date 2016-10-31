@@ -1,0 +1,66 @@
+---
+title: "Tutor"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    fig_width: 6.5
+    fig_height: 4
+    toc: true
+    toc_float: true
+    df_print: paged
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(tutor)
+knitr::opts_chunk$set(exercise.eval=TRUE, exercise.timelimit = 10)
+```
+
+```{r, context="server-start", include=FALSE}
+x <- 1 + 1
+```
+
+
+```{r data, include=FALSE}
+pressure2 <- pressure
+```
+
+
+## summary
+
+```{r, exercise=TRUE}
+mtcars
+```
+
+## ggplot
+
+```{r ggplot-setup}
+library(ggplot2)
+```
+
+
+```{r ggplot, exercise=TRUE}
+qplot(mpg, wt, data = mtcars)
+```
+
+
+
+## dygraphs
+
+
+```{r dygraphs-setup}
+library(dygraphs)
+```
+
+```{r dygraphs, exercise=TRUE, exercise.eval = FALSE}
+dygraph(ldeaths) %>%
+  dyRangeSelector(height = 20)
+```
+
+
+
+
+
+
+
