@@ -26,13 +26,7 @@ This is what the running tutorial document looks like after the user has entered
 <img src="README_files/images/hello.png"  width="650" height="189" style="border: solid 1px #cccccc;"/>
 </kbd>    
     
-You can run a live version of this tutorial with:
 
-```r
-rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
-```
-    
-    
 We'll go through this example in more detail below. First though let's cover how to install and get started with the **tutor** package.
 
 
@@ -60,18 +54,19 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 You can copy and paste the simple "Hello, Tutor!" example from above to get started creating your own tutorials.
 
-Note that you aren't limited to the default `html_document` format when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
+### Running Tutorials
 
-<kbd>
-<img src="README_files/images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/>
-</kbd>
-
-You can run a live version of this tutorial with:
+Tutorials are Shiny applications that are run using the `rmarkdown::run` function rather than the `shiny::runApp` function. For example:
 
 ```r
-rmarkdown::run(system.file("examples/slidy.Rmd", package = "tutor"))
+rmarkdown::run("tutorial.Rmd")
 ```
 
+Assuming you've installed the **tutor** package you can run a live version of the "Hello, Tutor" example provided above with:
+
+```r
+rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
+```
 
 ## Tutorial Exercises
 
@@ -148,6 +143,7 @@ The basic technique is to add a `context="server"` attribute to code chunks that
 
 You can learn more by reading the [Prerendered Shiny Documents](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html) article on the R Markdown website.
 
+
 ## External Resources
 
 You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny server:
@@ -181,15 +177,24 @@ You may wish to include external resources (images, videos, CSS, etc.) within yo
 
 The reason that all files within the directory of the main Rmd can't be referenced from within the web document is that many of these files are application source code and data, which may not be something you want to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.
 
-## Deploying Tutorials
+## Tutorial Formats
 
-Tutorials are Shiny applications that are run using the `rmarkdown::run` function rather than the `shiny::runApp` function:
+You aren't limited to the default `html_document` format when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
+
+<kbd>
+<img src="README_files/images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/>
+</kbd>
+
+You can run a live version of this example with:
 
 ```r
-rmarkdown::run("tutorial.Rmd")
+rmarkdown::run(system.file("examples/slidy.Rmd", package = "tutor"))
 ```
 
-This means that tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
+
+## Deploying Tutorials
+
+Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
 
 ### Local Deployment
 
