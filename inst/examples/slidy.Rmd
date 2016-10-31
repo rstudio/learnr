@@ -1,0 +1,19 @@
+---
+output: slidy_presentation
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(tutor)
+library(dygraphs)
+```
+
+## Time Series with dygraphs
+
+Modify the dyOptions to customize the graph's appearance:
+
+```{r, exercise=TRUE, exercise.eval=TRUE, fig.height=4}
+dygraph(ldeaths) %>% 
+  dyOptions(fillGraph = TRUE, drawGrid = TRUE)
+```
+
