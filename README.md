@@ -126,9 +126,60 @@ You can also set a global default for exercise evaluation using `knitr::opts_chu
 
 ## Using Shiny
 
-Shiny Prerendered
 
-Dependent Files
+The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interaction and interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
+
+### Server Chunks
+
+The basic technique is to add a `context="server"` attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:
+
+    ```{r, echo=FALSE}
+    sliderInput("bins", "Number of bins:", min = 1, max = 50, value = 30)
+    plotOutput("distPlot")
+    ```
+    
+    ```{r, context="server"}
+    output$distPlot <- renderPlot({
+      x <- faithful[, 2]  # Old Faithful Geyser data
+      bins <- seq(min(x), max(x), length.out = input$bins + 1)
+      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    })
+    ```
+
+You can learn more by reading the [Prerendered Shiny Documents](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html) article on the R Markdown website.
+
+
+### External Resources
+
+You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny server:
+
+<table>
+<thead>
+<tr class="header">
+<th>Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>images/</code></td>
+<td>Image files (e.g. PNG, JPEG, etc.)</td>
+</tr>
+<tr class="even">
+<td><code>css/</code></td>
+<td>CSS stylesheets</td>
+</tr>
+<tr class="odd">
+<td><code>js/</code></td>
+<td>JavaScript scripts</td>
+</tr>
+<tr class="even">
+<td><code>www/</code></td>
+<td>Any other files (e.g. downloadable datasets)</td>
+</tr>
+</tbody>
+</table>
+
 
 ## Deploying Tutorials
 
