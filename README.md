@@ -22,7 +22,9 @@ For example, here's a very simple tutorial:
     
 This is what the running tutorial document looks like after the user has entered their answer:
 
+<kbd>
 <img src="README_files/images/hello.png"  width="500" height="146" style="border: solid 1px #cccccc;"/>
+</kbd>    
     
 You can run a live version of this tutorial as follows:
 
@@ -58,7 +60,9 @@ You can copy and paste the simple "Hello, Tutor!" example from above to get star
 
 Note that you aren't limited to the default `html_document` format when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
 
+<kbd>
 <img src="README_files/images/slidy.png" width="500" height="364" style="border: solid 1px #cccccc;"/>
+</kbd>
 
 You can run a live version of this tutorial as follows:
 
@@ -79,7 +83,7 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 
 
-## Exercises
+## Tutorial Exercises
 
 
 Standalone/Setup
