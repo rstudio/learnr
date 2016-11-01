@@ -128,7 +128,7 @@
       // mange ace height as the document changes
       var updateAceHeight = function()  {
         var lines = exercise.attr('data-lines');
-        if (lines) {
+        if (lines && (lines > 0)) {
            editor.setOptions({
               minLines: lines,
               maxLines: lines
