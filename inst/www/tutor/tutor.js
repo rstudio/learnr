@@ -127,10 +127,19 @@
       
       // mange ace height as the document changes
       var updateAceHeight = function()  {
-        editor.setOptions({
-          minLines: 2,
-          maxLines: Math.max(Math.min(editor.session.getLength(), 15), 2)
-        });
+        var lines = exercise.attr('data-lines');
+        if (lines) {
+           editor.setOptions({
+              minLines: lines,
+              maxLines: lines
+           });
+        } else {
+           editor.setOptions({
+              minLines: 2,
+              maxLines: Math.max(Math.min(editor.session.getLength(), 15), 2)
+           });
+        }
+       
       };
       updateAceHeight();
       editor.getSession().on('change', updateAceHeight);

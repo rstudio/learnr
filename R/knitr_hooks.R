@@ -100,8 +100,11 @@ install_knitr_hooks <- function() {
         if (!is.null(suffix))
           suffix <- paste0("-", suffix)
         class <- paste0("exercise", suffix)
+        lines <- ifelse(is.numeric(options$exercise.lines), 
+                        options$exercise.lines, 0)
         paste0('<div class="tutor-', class, 
-               '" data-label="', options$label, '">')
+               '" data-label="', options$label, 
+               '" data-lines="', lines, '">')
       }
       # after exercise
       else {

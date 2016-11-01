@@ -122,6 +122,20 @@ You can also set a global default for exercise evaluation using `knitr::opts_chu
     knitr::opts_chunk$set(exercise.eval = TRUE)
     ```
 
+### Editor Size
+
+By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
+
+You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
+
+    ```{r, exercise=TRUE, exercise.lines=15}
+    # Write a function to add two numbers together
+    add_numbers <- function(a, b) {
+    
+    }
+    ```
+
+
 ## Using Shiny
 
 The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
