@@ -4,11 +4,11 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 
 For example, here's a very simple tutorial:
 
-    ----
+    ---
     title: "Hello, Tutor!"
     output: html_document
     runtime: shiny_prerendered
-    ----
+    ---
     
     ```{r setup, include=FALSE}
     library(tutor)
