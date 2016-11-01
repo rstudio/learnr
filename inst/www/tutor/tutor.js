@@ -47,11 +47,13 @@
       
       // get all <pre class='text'> elements, get their code, then remove them
       var code = '';
-      var code_blocks = exercise.children('pre[class="text"]');
+      var code_blocks = exercise.children('pre.text, pre.lang-text');
       code_blocks.each(function() {
         var code_element = $(this).children('code');
         if (code_element.length > 0)
           code = code + code_element.text() + "\n";
+        else 
+          code = code + $(this).text();
       });
       code_blocks.remove();
       
