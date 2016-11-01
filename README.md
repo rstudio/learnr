@@ -34,13 +34,13 @@ We'll go through this example in more detail below. First though let's cover how
 
 ### Installation
 
-You can install the development version of the **tutor** package from GitHub as follows:
+1. Install the development version of the **tutor** package from GitHub as follows:
 
-```r
-devtools::install_github("rstudio/tutor", auth_token = "33cdbf9d899fe6eff5022e67e21f08964f7c7b19")
-```
+    ```r
+    devtools::install_github("rstudio/tutor", auth_token = "33cdbf9d899fe6eff5022e67e21f08964f7c7b19")
+    ```
 
-You should also install the current [RStudio Preview Release](https://www.rstudio.com/products/rstudio/download/preview/) (v1.0.44 or higher) as it includes tools for easily running and previewing tutorials.
+2. Install the current [RStudio Daily Build](https://dailies.rstudio.com) (v1.0.114 or higher) as it includes tools for easily running and previewing tutorials.
 
 ### Creating a Tutorial
 
