@@ -72,38 +72,55 @@ rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
 
 There are some special considerations for code chunks with `exercise=TRUE` which are covered in more depth below.
 
-### Standalone Code
+### Exercise Setup
 
-Code chunks with `exercise=TRUE` are evaluated within standalone environments. This means that they don't have access to previous computations from within the document other than those provided in the `setup` chunk. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
+Code chunks with `exercise=TRUE` are evaluated within standalone environments. This means that they don't have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
 
-You can however arrange for per-exercise chunk setup code to be run to ensure that the environment is primed correctly. To do this give your exercise chunk a label (e.g. `exercise1`) then add another chunk with the same label plus a `-setup` suffix (e.g. `exercise1-setup`). For example, here we provide a setup chunk to ensure that the correct dataset is always available within an exercise's evaluation environment:
+You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:
 
+1. Add code to the global `setup` chunk. This code is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:
 
-    ```{r exercise1-setup}
-    nycflights <- nycflights13::flights
-    ```
+        ```{r setup, include=FALSE}
+        nycflights <- nycflights13::flights
+        ```
     
-    ```{r exercise1, exercise=TRUE}
-    # Change the filter to select February rather than January
-    nycflights <- filter(nycflights, month == 1)
-    ```
-
-As mentioned above, you can also have global setup code that all chunks will get the benefit of by including a global `setup` chunk. For example, if there were multiple chunks that needed access to the original version of the flights dataset you could do this:
-
-
-    ```{r setup, include=FALSE}
-    nycflights <- nycflights13::flights
-    ```
+        ```{r, exercise=TRUE}
+        # Change the filter to select February rather than January
+        filter(nycflights, month == 1)
+        ```
     
-    ```{r, exercise=TRUE}
-    # Change the filter to select February rather than January
-    filter(nycflights, month == 1)
-    ```
+        ```{r, exercise=TRUE}
+        # Change the sort order to Ascending
+        arrange(nycflights, desc(arr_delay))
+        ```
 
-    ```{r, exercise=TRUE}
-    # Change the sort order to Ascending
-    arrange(nycflights, desc(arr_delay))
-    ```
+2. Create a setup chunk that's shared by several exercises. If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `flights-setup`:
+
+        ```{r setup_flights}
+        nycflights <- nycflights13::flights
+        ```
+        
+        ```{r, exercise=TRUE, exercise.setup = "setup_flights"}
+        # Change the filter to select February rather than January
+        filter(nycflights, month == 1)
+        ```
+    
+        ```{r, exercise=TRUE, exercise.setup = "setup_flights"}
+        # Change the sort order to Ascending
+        arrange(nycflights, desc(arr_delay))
+        ```
+
+3. Create a setup chunk that's specific to another chunk using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `exercise1`) then add another chunk with the same label plus a `-setup` suffix (e.g. `exercise1-setup`). For example:
+
+        ```{r exercise1-setup}
+        nycflights <- nycflights13::flights
+        ```
+        
+        ```{r exercise1, exercise=TRUE}
+        # Change the filter to select February rather than January
+        nycflights <- filter(nycflights, month == 1)
+        ```
+
 
 ### Evaluation
 

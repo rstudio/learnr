@@ -284,25 +284,28 @@
         var editor = ace.edit($(el).attr('id'));
         value.code = editor.getSession().getValue();
         
-        // get any setup or check chunks
-        var label = exerciseLabel(el);
-        function supportingCode(name) {
-          var selector = '.tutor-exercise-support[data-label="' + label + '-' + name + '"]';
-          var code = $(selector).children('pre').children('code');
-          if (code.length > 0)
-            return code.text();
-          else
-            return null;
-        }
-        value.setup = supportingCode("setup");
-        value.check = supportingCode("check");
-        
         // get the preserved chunk options (if any)
         var options_script = exerciseContainer(el).find('script[data-opts-chunk="1"]');
         if (options_script.length == 1)
           value.options = JSON.parse(options_script.text());
         else
           value.options = {};
+        
+        // get any setup or check chunks
+        var label = exerciseLabel(el);
+        function supportingCode(label) {
+          var selector = '.tutor-exercise-support[data-label="' + label + '"]';
+          var code = $(selector).children('pre').children('code');
+          if (code.length > 0)
+            return code.text();
+          else
+            return null;
+        }
+        if (value.options["exercise.setup"])
+          value.setup = supportingCode(value.options["exercise.setup"]);     
+        else
+          value.setup = supportingCode(label + "-setup");  
+        value.check = supportingCode(label + "-check");
         
         // return the value
         return value;

@@ -16,14 +16,23 @@ install_knitr_hooks <- function() {
     isTRUE(options[["exercise"]]) 
   }
   
+  # helper to find chunks that name a chunk as their setup chunk
+  exercise_chunks_for_setup_chunk <- function(label) {
+    label_query <- paste0("knitr::all_labels(exercise.setup == '", label, "')")
+    eval(parse(text = label_query))
+  }
+  
   # helper to check for an exercise support chunk
   is_exercise_support_chunk <- function(options, type = c("setup", "solution", "check")) {
-    type <- paste(type, collapse = "|")
-    support_regex <- paste0("-(", type, ")$")
+    support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")
     if (grepl(support_regex, options$label)) {
       exercise_label <- sub(support_regex, "", options$label)
       all_exercise_labels <- knitr::all_labels(exercise == TRUE)
       exercise_label %in% all_exercise_labels
+    }
+    else if ("setup" %in% type) {
+      # look for another chunk which names this as it's setup chunk
+      length(exercise_chunks_for_setup_chunk(options$label)) > 0
     }
     else {
       FALSE
@@ -74,10 +83,13 @@ install_knitr_hooks <- function() {
       if (is.null(exercise_eval))
         exercise_eval <- FALSE
       
-      # run a query looking for a reversal of the default beahvior
-      exercise_label <- sub("-setup$", "", options$label)
-      label_query <- paste0("knitr::all_labels(label == '", exercise_label, "', ",
+      # look for chunks that name this as their setup chunk
+      labels <- exercise_chunks_for_setup_chunk(options$label)
+      if (grepl("-setup$", options$label))
+        labels <- c(labels, sub("-setup$", "", options$label))
+      label_query <- paste0("knitr::all_labels(label %in% ", deparse(labels), ", ",
                             "identical(exercise.eval, ", !exercise_eval, "))")
+      
       default_reversed <- length(eval(parse(text = label_query))) > 0
       if (default_reversed)
         exercise_eval <- !exercise_eval
@@ -150,6 +162,7 @@ install_knitr_hooks <- function() {
         if (is.null(preserved_options$exercise.df_print))
           preserved_options$exercise.df_print <- "default"
         preserved_options$exercise.timelimit <- options$exercise.timelimit
+        preserved_options$exercise.setup <- options$exercise.setup
         
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
