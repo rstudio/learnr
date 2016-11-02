@@ -34,6 +34,17 @@ evaluate_exercise <- function(exercise, envir) {
     unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
   
+  # hack the pager function so that we can print help
+  # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
+  pager <- function(files, header, title, delete.file) {
+    all.str <- do.call("c",lapply(files,readLines))
+    cat(all.str,sep="\n")
+  }
+  orig_width <- options(width=70)
+  on.exit(options(orig_width), add = TRUE)
+  orig_pager <- options(pager=pager)
+  on.exit(options(orig_pager), add = TRUE)
+  
   # restore knitr options and hooks after knit
   optk <- knitr::opts_knit$get()
   on.exit(knitr::opts_knit$restore(optk), add = TRUE)

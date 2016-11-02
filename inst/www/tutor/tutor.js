@@ -41,8 +41,8 @@
     var rect = exerciseEl.getBoundingClientRect();
     if (rect.top < 0 || rect.bottom > $(window).height()) {
       if (exerciseEl.scrollIntoView) {
-        exerciseEl.scrollIntoView(false);
-        document.body.scrollTop += 40;
+        exerciseEl.scrollIntoView(true);
+        document.body.scrollTop -= 40;
       } 
     }
   }
