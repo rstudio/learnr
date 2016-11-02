@@ -29,6 +29,11 @@ pressure2 <- pressure
 
 ## summary
 
+```{r, eval=FALSE}
+mtcars
+```
+
+
 ```{r, exercise=TRUE}
 mtcars
 ```
