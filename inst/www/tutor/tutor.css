@@ -35,11 +35,6 @@
   background-color: rgb(252,252,252);
 }
 
-img[src^="https://www.youtube.com/embed"],
-img[src^="https://player.vimeo.com/video/"] {
-  display: none;
-}
-
 
 .tutor-video-container {
   position: relative;
