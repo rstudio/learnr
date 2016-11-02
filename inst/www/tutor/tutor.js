@@ -1,4 +1,20 @@
 
+
+// jquery plugin to change element type
+(function($) {
+  $.fn.changeElementType = function(newType) {
+    var attrs = {};
+    
+    $.each(this[0].attributes, function(idx, attr) {
+      attrs[attr.nodeName] = attr.nodeValue;
+    });
+    
+    return this.replaceWith(function() {
+      return $("<" + newType + "/>", attrs).append($(this).contents());
+    });
+  };
+})(jQuery);
+
 (function () {
 
   var $ = jQuery;
@@ -29,8 +45,79 @@
         document.body.scrollTop -= 40;
       } 
     }
-}
+  }
   
+  // initialize videos
+  function initializeVideos() {
+    
+    // function to set the width and height for the container conditioned on
+    // any user-specified height and width
+    function setContainerSize(container, width, height) {
+      
+      // default ratio
+      var aspectRatio = 9 / 16;
+      
+      // default width to 100% if not specified
+      if (!width)
+        width = "100%";
+      
+      // percentage based width
+      if (width.slice(-1) == "%") {
+        
+        container.css('width', width);
+        if (!height) {
+          height = 0;
+          var paddingBottom = (parseFloat(width) * aspectRatio) + '%';
+          container.css('padding-bottom', paddingBottom);
+        }
+        container.css('height', height);
+      }
+      // other width unit
+      else {
+        // add 'px' if necessary
+        if ($.isNumeric(width))
+          width = width + "px";
+        container.css('width', width);
+        if (!height)
+          height = (parseFloat(width) * aspectRatio) + 'px';
+        container.css('height', height);
+      }
+    }
+    
+    // collect all the videos
+    var videos = $("img[src^='https://www.youtube.com/embed']," + 
+                   "img[src^='https://player.vimeo.com/video/']");
+    
+    // create a new iframe element with the same attributes & replace the img
+    videos.each(function() {
+      // collect width and height (if any)
+      var width = $(this).get(0).style.width;
+      var height = $(this).get(0).style.height;
+      $(this).css('width', '').css('height', '');
+      var attrs = {};
+      $.each(this.attributes, function(idex, attr) {
+        if (attr.nodeName == "width")
+          width = String(attr.nodeValue);
+        else if (attr.nodeName == "height")
+          height = String(attr.nodeValue);
+        else
+          attrs[attr.nodeName] = attr.nodeValue;
+      });
+      // create and initialize iframe
+      $(this).replaceWith(function() {
+        var iframe = $('<iframe/>', attrs);
+        iframe.addClass('tutor-video');
+        iframe.attr('allowfullscreen', '');
+        var container = $('<div class="tutor-video-container"></div>');
+        setContainerSize(container, width, height);
+        container.append(iframe);
+        return container;
+      });
+    });
+    
+    // TODO: take non-embed URLs
+
+  }
 
   // initialize exercises
   function initializeExercises() {
@@ -260,6 +347,8 @@
   }
 
   $(document).ready(function() {
+    
+    initializeVideos();
     
     initializeExercises();
     
