@@ -131,9 +131,35 @@ You can also specify a number of lines explicitly using the `exercise.lines` chu
     ```{r, exercise=TRUE, exercise.lines=15}
     # Write a function to add two numbers together
     add_numbers <- function(a, b) {
-    
+      
     }
     ```
+
+## Including Videos
+
+You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. For example:
+
+    ![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
+     
+    ![](https://vimeo.com/142172484)
+
+Note that any valid YouTube or Vimeo URL will work, so the following is equivalent to the example above:
+
+    ![](https://youtu.be/zNzZ1PfUDNk)
+     
+    ![](https://player.vimeo.com/video/142172484)
+
+### Video Size
+
+Videos are responsively displayed at 100% of their container's width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.
+
+To use 90% width rather than 100% width:
+
+    ![](https://youtu.be/zNzZ1PfUDNk){width="90%"}
+
+To use a fixed width and height:
+
+    ![](https://youtu.be/zNzZ1PfUDNk){width="560" height="315"}
 
 
 ## Using Shiny
