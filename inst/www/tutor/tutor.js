@@ -50,6 +50,32 @@
   // initialize videos
   function initializeVideos() {
     
+    // regexes for video types
+    var youtubeRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    var vimeoRegex = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+    
+    // check a url for a video
+    function isVideo(src) {
+      return src.match(youtubeRegex) || src.match(vimeoRegex);
+    }
+    
+    // function to normalize a video src url (web view -> embed)
+    function normalizeVideoSrc(src) {
+      
+      // youtube
+      var youtubeMatch = src.match(youtubeRegex);
+      if (youtubeMatch)
+        return "https://www.youtube.com/embed/" + youtubeMatch[2];
+     
+      // vimeo
+      var vimeoMatch = src.match(vimeoRegex);
+      if (vimeoMatch)
+        return "https://player.vimeo.com/video/" + vimeoMatch[1];
+
+      // default to reflecting src back      
+      return src;
+    }
+    
     // function to set the width and height for the container conditioned on
     // any user-specified height and width
     function setContainerSize(container, width, height) {
@@ -84,16 +110,17 @@
       }
     }
     
-    // collect all the videos
-    var videos = $("img[src^='https://www.youtube.com/embed']," + 
-                   "img[src^='https://player.vimeo.com/video/']");
-                   
-    // hide them while we process
-    videos.css('display', 'none');
-    
-    // create a new iframe element with the same attributes & replace the img
-    videos.each(function() {
-      // collect width and height (if any)
+    // inspect all images to see if they contain videos
+    $("img").each(function() {
+      
+      // skip if this isn't a video
+      if (!isVideo($(this).attr('src')))
+        return;
+        
+      // hide while we process
+      $(this).css('display', 'none');
+  
+      // collect various attributes
       var width = $(this).get(0).style.width;
       var height = $(this).get(0).style.height;
       $(this).css('width', '').css('height', '');
@@ -103,9 +130,12 @@
           width = String(attr.nodeValue);
         else if (attr.nodeName == "height")
           height = String(attr.nodeValue);
+        else if (attr.nodeName == "src")
+          attrs.src = normalizeVideoSrc(attr.nodeValue);
         else
           attrs[attr.nodeName] = attr.nodeValue;
       });
+      
       // create and initialize iframe
       $(this).replaceWith(function() {
         var iframe = $('<iframe/>', attrs);
@@ -118,10 +148,6 @@
         return container;
       });
     });
-    
-    // TODO: take non-embed URLs
-    // TODO: documentation
-
   }
 
   // initialize exercises
