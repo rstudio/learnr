@@ -87,6 +87,9 @@
     // collect all the videos
     var videos = $("img[src^='https://www.youtube.com/embed']," + 
                    "img[src^='https://player.vimeo.com/video/']");
+                   
+    // hide them while we process
+    videos.css('display', 'none');
     
     // create a new iframe element with the same attributes & replace the img
     videos.each(function() {
@@ -108,6 +111,7 @@
         var iframe = $('<iframe/>', attrs);
         iframe.addClass('tutor-video');
         iframe.attr('allowfullscreen', '');
+        iframe.css('display', '');
         var container = $('<div class="tutor-video-container"></div>');
         setContainerSize(container, width, height);
         container.append(iframe);
