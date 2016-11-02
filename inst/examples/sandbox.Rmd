@@ -14,7 +14,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-knitr::opts_chunk$set(exercise.eval=TRUE, exercise.timelimit = 10)
+knitr::opts_chunk$set(exercise.eval=FALSE, exercise.timelimit = 10)
 ```
 
 ```{r, context="server-start", include=FALSE}
@@ -29,23 +29,19 @@ pressure2 <- pressure
 
 ## summary
 
-```{r, eval=FALSE}
-mtcars
-```
 
-
-```{r, exercise=TRUE}
+```{r, exercise=TRUE, exercise.eval=TRUE, exercise.setup="datasetup"}
 mtcars
 ```
 
 ## ggplot
 
-```{r ggplot-setup}
+```{r plotsetup}
 library(ggplot2)
 ```
 
 
-```{r ggplot, exercise=TRUE}
+```{r ggplot, exercise=TRUE, exercise.setup="plotsetup"}
 qplot(mpg, wt, data = mtcars)
 ```
 
