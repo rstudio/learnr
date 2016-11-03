@@ -11,7 +11,7 @@ tutor_html_dependency <- function() {
 
 ace_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor-ace",
+    name = "ace",
     version = "1.2.3",
     src = system.file("lib/ace", package = "tutor"),
     script = "ace.js"
