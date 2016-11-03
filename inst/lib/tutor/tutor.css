@@ -44,6 +44,11 @@
   margin-bottom: 15px;
 }
 
+.tutor-exercise-output>pre {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
 .tutor-video {
   position: absolute;
   top: 0;
