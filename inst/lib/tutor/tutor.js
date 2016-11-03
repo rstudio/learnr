@@ -1,20 +1,4 @@
 
-
-// jquery plugin to change element type
-(function($) {
-  $.fn.changeElementType = function(newType) {
-    var attrs = {};
-    
-    $.each(this[0].attributes, function(idx, attr) {
-      attrs[attr.nodeName] = attr.nodeValue;
-    });
-    
-    return this.replaceWith(function() {
-      return $("<" + newType + "/>", attrs).append($(this).contents());
-    });
-  };
-})(jQuery);
-
 (function () {
 
   var $ = jQuery;
