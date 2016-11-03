@@ -12,13 +12,13 @@ Authors@R: c(
 Description: Create interactive tutorials using R Markdown. Use a combination 
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
-Imports: 
+Imports:
+  utils,
+  jsonlite,
   htmltools (>= 0.3.5),
-  shiny (>= 0.13),
   knitr (>= 1.14),
   rmarkdown (>= 1.1.9010),
-  jsonlite,
-  utils
+  shiny (>= 0.13)
 Remotes: rstudio/rmarkdown
 License: GPL-2
 Encoding: UTF-8
