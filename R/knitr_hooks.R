@@ -134,6 +134,7 @@ install_knitr_hooks <- function() {
         # inject html dependencies
         knitr::knit_meta_add(list(
           ace_html_dependency(),
+          rmarkdown::html_dependency_jquery(),
           tutor_html_dependency()
         ))
         
