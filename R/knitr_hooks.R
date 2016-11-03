@@ -27,7 +27,8 @@ install_knitr_hooks <- function() {
     support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")
     if (grepl(support_regex, options$label)) {
       exercise_label <- sub(support_regex, "", options$label)
-      all_exercise_labels <- knitr::all_labels(exercise == TRUE)
+      label_query <- "knitr::all_labels(exercise == TRUE)"
+      all_exercise_labels <- eval(parse(text = label_query))
       exercise_label %in% all_exercise_labels
     }
     else if ("setup" %in% type) {

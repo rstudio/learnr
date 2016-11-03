@@ -1,19 +1,25 @@
 Package: tutor
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Interactive Tutorials for R
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+  person("JJ", "Allaire", role = c("aut", "cre"), email = "jj@rstudio.com"),
+  person(family = "RStudio, Inc.", role = "cph"),
+  person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
+  person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library")
+  )
+Description: Create interactive tutorials using R Markdown. Use a combination 
+  of narrative, figures, videos, exercises, and quizzes to create self-paced
+  tutorials for learning about R and R packages.
 Imports: 
   htmltools (>= 0.3.5),
   shiny (>= 0.13),
   knitr (>= 1.14),
   rmarkdown (>= 1.1.9010),
-  jsonlite
+  jsonlite,
+  utils
 Remotes: rstudio/rmarkdown
-License: What license is it under?
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
