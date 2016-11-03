@@ -17,3 +17,13 @@ ace_html_dependency <- function() {
     script = "ace.js"
   )
 }
+
+slickquiz_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "slickquiz",
+    version = "1.5.20",
+    src = system.file("lib/slickquiz", package = "tutor"),
+    script = "js/slickQuiz.js",
+    stylesheet = "css/slickQuiz.css"
+  )
+}
