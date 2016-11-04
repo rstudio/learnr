@@ -66,7 +66,7 @@ ul.responses li {
   padding-left: 0;
 }
 
-.answers .correct::after {
+.answers .checked::after {
   content: " \2713 ";
 }
 

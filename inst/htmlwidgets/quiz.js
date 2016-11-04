@@ -12,15 +12,13 @@ HTMLWidgets.widget({
         
         x.animationCallbacks = {
           checkAnswer: function() {
+        
+            // add checked and text-success class to correct answers
+            $(el).find('ul.answers').find('li.correct').addClass('checked text-success');
             
-            // add success text to correct answers
-            $(el).find('ul.answers').find('li.correct').addClass('text-success');
-    
-            
-            var correctItem = $(el).find('ul.responses').find('li.correct');
+            // check whether the answer is correct
             var correct = correctItem.css('display') == 'list-item';
             
-            console.log("answer checked: " + correct);  
           }
         };
         
