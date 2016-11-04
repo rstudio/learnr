@@ -7,38 +7,44 @@
 #' @param ... One or more quiz questions
 #' @param caption Text caption
 #'
+#' @name quiz
 #' @export
-quiz <- function(..., caption = NULL) {
+question <- function(text, 
+                     ..., 
+                     correct = "Correct!", 
+                     incorrect = "Incorrect.") {
 
-  # capture questions
-  questions <- list(...)
+  # capture/validate answers
+  answers <- list(...)
   
   # save all state/options into "x"
   x <- list()
-  x$quiz <- list(
+  x$skipStartButton <- TRUE
+  x$perQuestionResponseAnswers <- TRUE
+  x$perQuestionResponseMessaging <- TRUE
+  x$preventUnanswered <- TRUE
+  x$displayQuestionCount <- FALSE
+  x$displayQuestionNumber <- FALSE
+  x$disableRanking <- TRUE
+  x$nextQuestionText <- ""
+  x$checkAnswerText <- "Submit Answer"
+  x$json <- list(
     info = list(
-      name = "Test your knowledge!",
-      main = "The Quiz Description Text"
+      name = "Question",
+      main = ""
     ),
-    questions = list(
-      list(
-        q = "What number is the letter A in the English alphabet?",
-        a = list(
-          list(option = "8", correct = FALSE),
-          list(option = "14", correct = FALSE),
-          list(option = "1", correct = TRUE),
-          list(option = "23", correct = FALSE)
-        ),
-        correct = "Great job!",
-        incorrect = "You got it wrong!"
-      )
-    )
+    questions = list(list(
+      q = text,
+      a = answers,
+      correct = correct,
+      incorrect = incorrect
+    ))
   )
  
-  
   # define dependencies
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
+    rmarkdown::html_dependency_bootstrap(theme = "default"),
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",
@@ -64,9 +70,10 @@ quiz <- function(..., caption = NULL) {
 
 #' @rdname quiz
 #' @export
-question <- function(caption) {
-  structure(class = "quiz_question", list(
-    caption = caption
+answer <- function(text, correct = FALSE) {
+  structure(class = "tutor_quiz_answer", list(
+    option = text,
+    correct = correct
   ))
 }
 
@@ -74,16 +81,10 @@ question <- function(caption) {
 quiz_html <- function(id, style, class, ...) {
   htmltools::HTML(sprintf('
 <div id="%s" style="%s", class = "%s">
-<div class="quizName"></div>
-<div class="quizArea">
-<div class="quizHeader">
-<a class="startQuiz" href="">Get Started!</a>
+<div class="panel panel-info">
+<div class="panel-heading quizName"></div>
+<div class="panel-body quizArea">
 </div>
-</div>
-<div class="quizResults">
-<div class="quizScore">You Scored: <span></span></div>
-<div class="quizLevel"><strong>Ranking:</strong> <span></span></div>
-<div class="quizResultsCopy"></div>
 </div>
 </div>
 ', id, style, class))
