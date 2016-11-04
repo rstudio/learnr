@@ -17,6 +17,7 @@
 
 .tutor-exercise-code-editor {
   border: solid 1px #cccccc;
+  border-radius: 4px;
   margin-bottom: 20px;
   width: 100%;
   line-height: 1.4;
