@@ -248,6 +248,12 @@ You can run a live version of this example with:
 rmarkdown::run(system.file("examples/slidy.Rmd", package = "tutor"))
 ```
 
+You can use the **tutor** package with any R Markdown format that:
+
+1. Inherits from the [`html_document_base`](https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base) format (this includes [`html_document`](http://rmarkdown.rstudio.com/html_document_format.html), [`ioslides_presentation`](http://rmarkdown.rstudio.com/ioslides_presentation_format.html), [`slidy_presentation`](http://rmarkdown.rstudio.com/slidy_presentation_format.html), and many others).
+
+2. Is marked as `boostrap_compatible`. This is a parameter of [`html_document_base`](https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base) which indicates that it's safe to inject [Booststrap](http://getbootstrap.com/) CSS into the document.
+
 
 ## Deploying Tutorials
 
