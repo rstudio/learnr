@@ -44,7 +44,7 @@ question <- function(text,
   x$checkAnswerText <- "Submit Answer"
   x$json <- list(
     info = list(
-      name = "Question",
+      name = "",
       main = ""
     ),
     questions = list(question)
@@ -91,7 +91,6 @@ quiz_html <- function(id, style, class, ...) {
   htmltools::HTML(sprintf('
 <div id="%s" style="%s", class = "%s">
 <div class="panel panel-default">
-<div class="panel-heading quizName"></div>
 <div class="panel-body quizArea">
 </div>
 </div>

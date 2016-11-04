@@ -2,12 +2,13 @@
 title: "Tutor"
 output: 
   html_document:
-    theme: cosmo
+    theme: default
     highlight: textmate
     fig_width: 6.5
     fig_height: 4
     toc: true
     toc_float: true
+    toc_level: 3
     df_print: paged
 runtime: shiny_prerendered
 ---
@@ -28,6 +29,22 @@ pressure2 <- pressure
 
 
 ## summary
+
+
+```{r, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+question("What number is the letter B in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("2", correct = TRUE),
+  answer("23")
+)
+```
 
 
 ```{r, exercise=TRUE, exercise.eval=TRUE, exercise.setup="datasetup"}
