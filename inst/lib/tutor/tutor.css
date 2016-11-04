@@ -47,7 +47,7 @@
 
 .tutor-exercise-output>pre {
   max-height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .tutor-video {
