@@ -90,7 +90,7 @@ answer <- function(text, correct = FALSE) {
 quiz_html <- function(id, style, class, ...) {
   htmltools::HTML(sprintf('
 <div id="%s" style="%s", class = "%s">
-<div class="panel panel-info">
+<div class="panel panel-default">
 <div class="panel-heading quizName"></div>
 <div class="panel-body quizArea">
 </div>
