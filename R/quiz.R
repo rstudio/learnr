@@ -11,11 +11,25 @@
 #' @export
 question <- function(text, 
                      ..., 
+                     type = c("auto", "single", "multiple"),
                      correct = "Correct!", 
                      incorrect = "Incorrect.") {
-
+  
   # capture/validate answers
   answers <- list(...)
+  
+  # creation question
+  question <- list(
+    q = text,
+    a = answers,
+    correct = correct,
+    incorrect = incorrect
+  )
+  type <- match.arg(type)
+  if (type == "single")
+    question$select_any <- TRUE
+  if (type == "multiple")
+    question$force_checkbox <- TRUE
   
   # save all state/options into "x"
   x <- list()
@@ -33,12 +47,7 @@ question <- function(text,
       name = "Question",
       main = ""
     ),
-    questions = list(list(
-      q = text,
-      a = answers,
-      correct = correct,
-      incorrect = incorrect
-    ))
+    questions = list(question)
   )
  
   # define dependencies
