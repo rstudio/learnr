@@ -55,7 +55,9 @@ quiz <- function(..., caption = NULL) {
     width = NULL,
     height = NULL,
     dependencies = dependencies,
-    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE),
+    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE, 
+                                             knitr.defaultWidth = "100%", 
+                                             knitr.defaultHeight = "auto"),
     package = 'tutor'
   )
 }
@@ -72,15 +74,15 @@ question <- function(caption) {
 quiz_html <- function(id, style, class, ...) {
   htmltools::HTML(sprintf('
 <div id="%s" style="%s", class = "%s">
-<h1 class="quizName"></h1>
+<div class="quizName"></div>
 <div class="quizArea">
 <div class="quizHeader">
 <a class="startQuiz" href="">Get Started!</a>
 </div>
 </div>
 <div class="quizResults">
-<h3 class="quizScore">You Scored: <span></span></h3>
-<h3 class="quizLevel"><strong>Ranking:</strong> <span></span></h3>
+<div class="quizScore">You Scored: <span></span></div>
+<div class="quizLevel"><strong>Ranking:</strong> <span></span></div>
 <div class="quizResultsCopy"></div>
 </div>
 </div>
