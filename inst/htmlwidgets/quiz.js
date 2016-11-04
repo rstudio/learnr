@@ -6,15 +6,12 @@ HTMLWidgets.widget({
 
   factory: function(el, width, height) {
 
-    // TODO: define shared variables for this instance
-
+    
     return {
 
       renderValue: function(x) {
 
-        // TODO: code to render the widget, e.g.
-        el.innerText = x.message;
-
+        $(el).slickQuiz({json: x.quiz});
       },
 
       resize: function(width, height) {

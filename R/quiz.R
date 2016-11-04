@@ -14,7 +14,27 @@ quiz <- function(..., caption = NULL) {
   questions <- list(...)
   
   # save all state/options into "x"
-  x <- list(message = "quiz")
+  x <- list()
+  x$quiz <- list(
+    info = list(
+      name = "Test your knowledge!",
+      main = "The Quiz Description Text"
+    ),
+    questions = list(
+      list(
+        q = "What number is the letter A in the English alphabet?",
+        a = list(
+          list(option = "8", correct = FALSE),
+          list(option = "14", correct = FALSE),
+          list(option = "1", correct = TRUE),
+          list(option = "23", correct = FALSE)
+        ),
+        correct = "Great job!",
+        incorrect = "You got it wrong!"
+      )
+    )
+  )
+ 
   
   # define dependencies
   dependencies <- list(
@@ -35,6 +55,7 @@ quiz <- function(..., caption = NULL) {
     width = NULL,
     height = NULL,
     dependencies = dependencies,
+    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE),
     package = 'tutor'
   )
 }
@@ -47,5 +68,23 @@ question <- function(caption) {
   ))
 }
 
+
+quiz_html <- function(id, style, class, ...) {
+  htmltools::HTML(sprintf('
+<div id="%s" style="%s", class = "%s">
+<h1 class="quizName"></h1>
+<div class="quizArea">
+<div class="quizHeader">
+<a class="startQuiz" href="">Get Started!</a>
+</div>
+</div>
+<div class="quizResults">
+<h3 class="quizScore">You Scored: <span></span></h3>
+<h3 class="quizLevel"><strong>Ranking:</strong> <span></span></h3>
+<div class="quizResultsCopy"></div>
+</div>
+</div>
+', id, style, class))
+}
 
 
