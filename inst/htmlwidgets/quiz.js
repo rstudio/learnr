@@ -34,7 +34,7 @@ HTMLWidgets.widget({
         incorrectItem.addClass('alert alert-danger');
         
         // make check answer a proper button
-        $(el).find(".checkAnswer").addClass('btn btn-default');
+        $(el).find(".checkAnswer").addClass('btn btn-info');
       },
 
       resize: function(width, height) {
