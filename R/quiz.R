@@ -1,13 +1,20 @@
-#' <Add Title>
+#' Tutorial quiz question
 #'
-#' <Add Description>
+#' Add an interative multiple choice quiz question to a tutorial.
 #'
-#' @import htmlwidgets
+#' @param text Question or option text
+#' @param type Type of quiz question. Typically this can be automatically determined
+#'   based on the provided answers Pass \code{"single"} to indicate that even though
+#'   multiple correct answers are specified that inputs which include only one correct
+#'   answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
+#'   (as opposed to radio buttons) even though only once correct answer was provided.
+#' @param correct For \code{question}, text to print for a correct answer (defaults 
+#'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
+#'   correct.
+#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
+#' @param ... One or more answers 
 #'
-#' @param ... One or more quiz questions
-#' @param caption Text caption
-#'
-#' @name quiz
+#' @name question
 #' @export
 question <- function(text, 
                      ..., 
@@ -17,8 +24,12 @@ question <- function(text,
   
   # capture/validate answers
   answers <- list(...)
+  lapply(answers, function(answer) {
+    if (!inherits(answer, "tutor_quiz_answer"))
+      stop("Object which is not an answer passed to question function")
+  })
   
-  # creation question
+  # create question
   question <- list(
     q = text,
     a = answers,
@@ -77,7 +88,7 @@ question <- function(text,
   )
 }
 
-#' @rdname quiz
+#' @rdname question
 #' @export
 answer <- function(text, correct = FALSE) {
   structure(class = "tutor_quiz_answer", list(

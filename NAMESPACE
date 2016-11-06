@@ -2,11 +2,11 @@
 
 export(answer)
 export(question)
-import(htmlwidgets)
 importFrom(htmltools,HTML)
 importFrom(htmltools,attachDependencies)
 importFrom(htmltools,div)
 importFrom(htmltools,htmlDependency)
+importFrom(htmlwidgets,createWidget)
 importFrom(jsonlite,serializeJSON)
 importFrom(jsonlite,unserializeJSON)
 importFrom(knitr,all_labels)
