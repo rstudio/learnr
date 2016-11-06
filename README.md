@@ -1,6 +1,18 @@
 ## Overview
 
-The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
+The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consists of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
+
+1. Narrative, figures, illustrations, and equations.
+
+2. Videos (supported services include YouTube and Vimeo).
+
+3. Code exercises (R code chunks that users can edit and execute directly).
+
+4. Quiz questions.
+
+5. Interactive Shiny applets.
+
+To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
 For example, here's a very simple tutorial:
 
@@ -46,9 +58,9 @@ We'll go through this example in more detail below. First though let's cover how
 
 A tutorial is just a standard R Markdown document that has three additional attributes:
 
-1. It uses the `runtime: shiny_prerendered` directive in the YAML header.
-2. It loads the **tutor** package.
-3. It includes one or more code chunks with the `exercise=TRUE` attribute.
+1. Loads the **tutor** package.
+2. Includes one or more interactive components (exercises, quiz questions, etc.).
+3. Uses the `runtime: shiny_prerendered` directive in the YAML header.
 
 The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
 
@@ -169,6 +181,37 @@ You can also specify a number of lines explicitly using the `exercise.lines` chu
       
     }
     ```
+
+## Quiz Questions
+
+You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers. 
+
+Include a question by calling the `question` function within an R code chunk:
+
+    ```{r, echo=FALSE}
+    question("What number is the letter A in the English alphabet?",
+      answer("8"),
+      answer("14"),
+      answer("1", correct = TRUE),
+      answer("23")
+    )
+    ```
+    
+The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:
+
+    ```{r, echo=FALSE}
+    question("Where are you right now? (select ALL that apply)",
+      answer("Planet Earth", correct = TRUE),
+      answer("Pluto"),
+      answer("At a computing device", correct = TRUE),
+      answer("In the Milky Way", correct = TRUE),
+      incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer.")
+    )
+    ```
+
+This is what the above example quiz questions would look like within a tutorial:
+
+![](README_files/images/questions.png){width=731 height=521}
 
 ## Including Videos
 
