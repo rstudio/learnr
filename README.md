@@ -122,7 +122,7 @@ You can however arrange for setup code to be run before evaluation of an exercis
         ```
 
 
-### Evaluation
+### Exercise Evaluation
 
 By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
 
@@ -139,7 +139,25 @@ You can also set a global default for exercise evaluation using `knitr::opts_chu
     knitr::opts_chunk$set(exercise.eval = TRUE)
     ```
 
-### Editor Size
+### Exercise Timeouts
+
+To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
+
+    ```{r, exercise=TRUE, exercise.timelimit=10}
+    
+To limit all exercise chunks within a tutorial to 10 seconds of execution time:
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(exercise.timelimit = 10)
+    ```
+
+To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)
+
+    options(tutor.exercise.timelimit = 10)
+    
+Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutor.exercise.timelimit` if not otherwise specified is 30 seconds. 
+
+### Exercise Editor Size
 
 By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
 
@@ -285,26 +303,9 @@ As a result of these considerations local deployment of tutorials is the recomme
 
 Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine).
 
-#### Exercise Timeouts
+To apply resource limits, you can run tutorials within system imposed resource managers (e.g. ulimit or cgroups) or alternatively use a containerization technology like LXC or Docker. You can also apply resources limits using the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package, which is described below in the [Security](#Security) section.
 
-To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
-
-    ```{r, exercise=TRUE, exercise.timelimit=10}
-    
-To limit all exercise chunks within a tutorial to 10 seconds of execution time:
-
-
-    ```{r setup, include=FALSE}
-    knitr::opts_chunk$set(exercise.timelimit = 10)
-    ```
-
-To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)
-
-    options(tutor.exercise.timelimit = 10)
-
-#### Resource Limits
-
-To apply other resource limits, you can run tutorials within system imposed resource managers (e.g. ulimit or cgroups) or alternatively use a containerization technology like LXC or Docker. You can also apply resources limits using the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package, which is described below in the [Security](#Security) section.
+To limit the time taken for the execution of exercises you can use the `exercise.timelimit` option described in the [Exercise Timeouts](#exercise-timeouts) section above.
 
 ### Concurrent Users
 
@@ -330,7 +331,7 @@ The **tutor** package can also have it's exercise evaluation function replaced w
 
     ```r
     # exercise evaluation function
-    apparmor_evaluate_exercise <- function(expr, timelimit = Inf) {
+    apparmor_evaluate_exercise <- function(expr, timelimit) {
       RAppArmor::eval.secure(expr, 
                              timeout = timelimit, 
                              profile="r-user",

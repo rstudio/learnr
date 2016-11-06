@@ -6,7 +6,7 @@
 #  /usr/lib/rstudio/bin/pandoc/* rix,
 
 # exercise evaluation function
-apparmor_evaluate_exercise <- function(expr, timelimit = Inf) {
+apparmor_evaluate_exercise <- function(expr, timelimit) {
   RAppArmor::eval.secure(expr, 
                          timeout = timelimit, 
                          profile="r-user",

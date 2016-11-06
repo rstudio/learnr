@@ -5,7 +5,7 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   # get timelimit option (either from chunk option or from global option)
   timelimit <- exercise$options$exercise.timelimit
   if (is.null(timelimit))
-    timelimit <- getOption("tutor.exercise.timelimit", default = Inf)
+    timelimit <- getOption("tutor.exercise.timelimit", default = 30)
   
   # define exercise evaluator (allow replacement via global option)
   evaluator <- getOption("tutor.exercise.evaluator", function(expr, timelimit) {
