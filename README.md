@@ -209,9 +209,13 @@ The above example defines a question with a single correct answer. You can also 
     )
     ```
 
+Note that for the examples above we specify the `echo = FALSE` option on the R code chunks that produce the quesitons. This is required to ensure that the R source code for the questions is not printed within the document.
+
 This is what the above example quiz questions would look like within a tutorial:
 
 ![](README_files/images/questions.png){width=731 height=521}
+
+### Random Answer Order
 
 If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
 
