@@ -1,5 +1,5 @@
 
-#' @importFrom htmltools htmlDependency attachDependencies HTML div
+#' @importFrom htmltools htmlDependency attachDependencies HTML div tags
 #' @importFrom knitr opts_chunk opts_knit opts_hooks knit_hooks knit_meta_add all_labels spin
 #' @importFrom rmarkdown shiny_prerendered_chunk knitr_options_html output_format html_fragment render shiny_prerendered_server_start_code
 #' @importFrom jsonlite serializeJSON unserializeJSON

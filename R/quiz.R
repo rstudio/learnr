@@ -1,8 +1,9 @@
-#' Tutorial quiz question
+#' Tutorial quiz questions
 #'
-#' Add an interative multiple choice quiz question to a tutorial.
+#' Add interative multiple choice quiz questions to a tutorial.
 #'
 #' @param text Question or option text
+#' @param caption Optional quiz caption (defaults to "Quiz")
 #' @param type Type of quiz question. Typically this can be automatically determined
 #'   based on the provided answers Pass \code{"single"} to indicate that even though
 #'   multiple correct answers are specified that inputs which include only one correct
@@ -12,7 +13,7 @@
 #'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
-#' @param ... One or more answers 
+#' @param ... One or more questions or answers 
 #' @param random_answer_order Display answers in a random order.
 #' 
 #' @examples 
@@ -34,7 +35,24 @@
 #' )
 #' }
 #'
-#' @name question
+#' @name quiz
+#' @export
+quiz <- function(..., caption = "Quiz") {
+  
+  # create table rows from questions
+  questions <- lapply(list(...), function(question) {
+    tags$tr(tags$td(question))
+  })
+ 
+  
+  htmltools::browsable(div(class = "panel panel-default",
+    div(class = "panel-heading", caption),
+    tags$table(class = "table quiz-table", questions)
+  ))
+}
+
+
+#' @rdname quiz
 #' @export
 question <- function(text, 
                      ..., 
@@ -100,17 +118,19 @@ question <- function(text,
   htmlwidgets::createWidget(
     name = 'quiz',
     x = x,
-    width = NULL,
-    height = NULL,
+    width = "100%",
+    height = "auto",
     dependencies = dependencies,
     sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE, 
                                              knitr.defaultWidth = "100%", 
-                                             knitr.defaultHeight = "auto"),
+                                             knitr.defaultHeight = "auto",
+                                             viewer.defaultWidth = "100%",
+                                             viewer.defaultHeight = "auto"),
     package = 'tutor'
   )
 }
 
-#' @rdname question
+#' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE) {
   structure(class = "tutor_quiz_answer", list(

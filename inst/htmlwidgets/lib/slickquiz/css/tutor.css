@@ -32,3 +32,13 @@
   padding: 6px 12px;
   margin-bottom: 0;
 }
+
+.quiz-table .panel {
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
+.quiz-table > tbody > tr > td {
+  padding: 0;
+}

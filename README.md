@@ -215,21 +215,6 @@ This is what the above example quiz questions would look like within a tutorial:
 
 <img src="README_files/images/questions.png" width=731 height=521>
 
-
-### Random Answer Order
-
-If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
-
-    ```{r, echo=FALSE}
-    question("What number is the letter A in the English alphabet?",
-      answer("8"),
-      answer("14"),
-      answer("1", correct = TRUE),
-      answer("23"),
-      random_answer_order = TRUE
-    )
-    ```
-
 ### Formatting and Math
 
 You can use markdown to format text within questions and answers. You can also include embedded LaTeX math using the `$` delimiter. For example:
@@ -246,6 +231,46 @@ You can use markdown to format text within questions and answers. You can also i
 Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This is necessary to "escape" the single-backslash so that R doesn't interpret it as a special character. Here's what this example would look like within a tutorial:
 
 <img src="README_files/images/question-math.png" width=732 height=262>
+
+
+
+### Random Answer Order
+
+If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
+
+    ```{r, echo=FALSE}
+    question("What number is the letter A in the English alphabet?",
+      answer("8"),
+      answer("14"),
+      answer("1", correct = TRUE),
+      answer("23"),
+      random_answer_order = TRUE
+    )
+    ```
+
+
+### Quizzes (Groups of Questions)
+
+You can present a group of related questions as a quiz by wrapping your questions within the `quiz` function. For example:
+
+    ```{r, echo=FALSE}
+    quiz(
+      question("What number is the letter A in the *English* alphabet?",
+        answer("8"),
+        answer("14"),
+        answer("1", correct = TRUE),
+        answer("23")
+      ),
+      question("Where are you right now? (select ALL that apply)",
+        answer("Planet Earth", correct = TRUE),
+        answer("Pluto"),
+        answer("At a computing device", correct = TRUE),
+        answer("In the Milky Way"),
+        incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+      )
+    )
+    ```
+
 
 ## Including Videos
 
