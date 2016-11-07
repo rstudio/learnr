@@ -213,6 +213,18 @@ This is what the above example quiz questions would look like within a tutorial:
 
 ![](README_files/images/questions.png){width=731 height=521}
 
+If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
+
+    ```{r, echo=FALSE}
+    question("What number is the letter A in the English alphabet?",
+      answer("8"),
+      answer("14"),
+      answer("1", correct = TRUE),
+      answer("23"),
+      random_answer_order = TRUE
+    )
+    ```
+
 ## Including Videos
 
 You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. For example:

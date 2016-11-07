@@ -13,6 +13,7 @@
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
 #' @param ... One or more answers 
+#' @param random_answer_order Display answers in a random order.
 #' 
 #' @examples 
 #' \dontrun{
@@ -39,7 +40,8 @@ question <- function(text,
                      ..., 
                      type = c("auto", "single", "multiple"),
                      correct = "Correct!", 
-                     incorrect = "Incorrect.") {
+                     incorrect = "Incorrect.",
+                     random_answer_order = FALSE) {
   
   # capture/validate answers
   answers <- list(...)
@@ -72,6 +74,7 @@ question <- function(text,
   x$disableRanking <- TRUE
   x$nextQuestionText <- ""
   x$checkAnswerText <- "Submit Answer"
+  x$randomSortAnswers = random_answer_order
   x$json <- list(
     info = list(
       name = "",

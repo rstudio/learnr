@@ -6,7 +6,8 @@
 \title{Tutorial quiz question}
 \usage{
 question(text, ..., type = c("auto", "single", "multiple"),
-  correct = "Correct!", incorrect = "Incorrect.")
+  correct = "Correct!", incorrect = "Incorrect.",
+  random_answer_order = FALSE)
 
 answer(text, correct = FALSE)
 }
@@ -26,6 +27,8 @@ to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
 \item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect.")}
+
+\item{random_answer_order}{Display answers in a random order.}
 }
 \description{
 Add an interative multiple choice quiz question to a tutorial.
