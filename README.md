@@ -265,7 +265,7 @@ You can present a group of related questions as a quiz by wrapping your question
         answer("Planet Earth", correct = TRUE),
         answer("Pluto"),
         answer("At a computing device", correct = TRUE),
-        answer("In the Milky Way"),
+        answer("In the Milky Way", correct = TRUE),
         incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
       )
     )
