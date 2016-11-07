@@ -254,7 +254,7 @@ If you want the answers to questions to be randomly arranged, you can add the `r
 You can present a group of related questions as a quiz by wrapping your questions within the `quiz` function. For example:
 
     ```{r, echo=FALSE}
-    quiz(
+    quiz(caption = "Quiz 1",
       question("What number is the letter A in the *English* alphabet?",
         answer("8"),
         answer("14"),
