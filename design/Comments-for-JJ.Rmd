@@ -1,0 +1,148 @@
+---
+title: "Danny's comments on tutor"
+output: html_document
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(tutor)
+library(ggplot2)
+library(dplyr)
+include_question <- function(file) {
+  "The contents of the file would be formatted here."
+}
+```
+
+
+# It's easy enough
+
+The instructions for setup, etc. are clear enough and the markup is easy enough, that nobody who is motivated to write exercises will have a problem. It's always a good sign when a working example is 15 lines long. Good!
+
+# Example 1
+
+
+Fill in the code to create this plot:
+
+```{r, echo = FALSE, out.width = "30%"}
+ggplot(mtcars, aes(x = hp, y = mpg)) + 
+  geom_point()
+```
+
+```{r, mtcar-plot, exercise=TRUE}
+p <- ggplot(mtcars, aes( ___ , ___ )) + geom_point()
+p
+```
+
+It's important to have some way to provide feedback when the code is run. For instance, in the `1+1` example, the student can run the initially displayed code without consequence, and possibly without even noticing that the answer was wrong.
+
+Providing such feedback is a genuine challenge. DataCamp has its own approach which has the example of *not* requiring that intermediate results be stored in a variable: you can check properties of the code itself, as well as checking the specific functions were called and with what arguments, etc.. It's difficult for a neophyte to use and so they invest a lot of their own staff time in writing the tests. `testthat` provides a simpler framework, but only if there's access to the objects created in the exercise session, much as you do in having the state induced by the `-setup` chunks be accessible within the corresponding exercise.
+
+I don't have the answer here. For instance, I can see how to provide access to named objects (like the `p` in the above), but it would also be nice to have access to the objects that are simply printed. And I don't even know what should be the feedback to an answer like the following to your "rewrite `1 + 1`" example. Should this be correct?
+```r
+1 + 1
+2 + 2
+```
+
+As a start, perhaps provide access to the code and the created objects with names like `.code` and `.objects`. You've already got a naming system to determine how to link different chunks. Maybe extend that with `-evaluate` for the chunk that contains the evaluation code and a few functions (`success()`, `feedback()`) that could be invoked when a test set succeeds or fails.
+
+I do think that having some system to provide a thumbs up or down, even if it's rudimentary, would be really valuable in a first release.
+
+
+
+
+
+
+
+## Example 2
+
+```{r, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+         answer("8"),
+         answer("14"),
+         answer("1", correct = TRUE),
+         answer("23"),
+         incorrect = "Incorrect. No, that's the letter ____."
+)
+```
+
+* I'd like to be able to customize the feedback to the particular answer selected. I think it would suffice to have a feedback message as an argument for each `answer()` (including the correct one). The `incorrect =` message could be the default if no particular feedback is given for an answer.
+* Many instructors want to have the answer order randomized.
+* It would be good to be able to specify how many tries are allowed before the correct answer is shown. The feedback for the choice would be shown immediately, but not the check by the correct answer.
+
+## Example 3
+
+Many instructors would like to be able to write drill questions with a random component.
+
+```{r, random-letter-setup, echo = FALSE}
+letter_choice <- sample(26, size = 1)
+other_letters <- sample(setdiff(1:26, letter_choice), size = 3)
+```
+
+```{r, random-letter, echo=FALSE}
+question(sprintf("What position is the letter %s in the English alphabet?", LETTERS[letter_choice]),
+         answer(other_letters[1]),
+         answer(other_letters[2]),
+         answer(letter_choice, correct = TRUE),
+         answer(other_letters[3]),
+         incorrect = "Incorrect. No, that's the letter ____."
+)
+```
+
+* The setup chunk provides sufficient means to do this. 
+* I gave `answer()` an argument that is a number, not a character string. It worked. I don't know how general that will be to other kinds of objects that might be passed to `answer()`.
+
+## Example 4
+
+It would be good to be able to include math markup in the posed question and the answers. Many instructors would find this very compelling evidence that `tutor` should be their choice.
+
+```{r whats-x-setup,echo = FALSE}
+x <- sample(1:25, size = 1)
+```
+
+```{r, whats-x, echo=FALSE}
+question(sprintf("Suppose $x = %s$. Choose the correct statement", x),
+         answer(sprintf("$\\sqrt{x} = %d", x + 1)),
+         answer(sprintf("$x ^ 2 = %d$", x^2), correct = TRUE),
+         answer("$\\sin x = 1$"),
+         incorrect = "Incorrect."
+)
+```
+
+## Example 5
+
+The online systems that have been most successful have been those with question banks. Might it be possible to allow the user to specify with a URL or other address of a file that contains the intro code, setup, and question material, without having to copy that from another file? That would allow there to be decentralized collections of problems, or perhaps question banks provided through packages. 
+
+I think for many instructors there needs to be a way of constructing these files that is dead simple, e.g.
+
+    ---
+    title: "Spring 2017 Mid-Term"
+    output: html_document
+    runtime: shiny_prerendered
+    ---
+
+     ```{r setup_, include=FALSE}
+    library(tutor)
+    ```
+    
+    ### Problem 1
+
+     ```r
+     include_question("http://www.maa.org/questions/calcI/E784.rda")
+     ```
+     
+    ### Problem 2
+
+     ```r
+     include_question("http://www.maa.org/questions/calcI/Q98.rda")
+     ```
+     
+And maybe a supporting system for producing the little question packages, e.g. 
+
+    ---
+    title: "Calc I Questions"
+    output: tutor_archive
+    ---
+    
+## Recording student work
+
+In your email you described some of the planned mechanisms for keeping track of student work. I realize that this must depend on how the tutor documents are deployed, and that you're being flexible about this. All I'll say here is that it will be very, very helpful to have such a system.
