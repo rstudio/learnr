@@ -213,7 +213,8 @@ Note that for the examples above we specify the `echo = FALSE` option on the R c
 
 This is what the above example quiz questions would look like within a tutorial:
 
-![](README_files/images/questions.png){width=731 height=521}
+<img src="README_files/images/questions.png" width=731 height=521>
+
 
 ### Random Answer Order
 
@@ -244,7 +245,7 @@ You can use markdown to format text within questions and answers. You can also i
 
 Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This is necessary to "escape" the single-backslash so that R doesn't interpret it as a special character. Here's what this example would look like within a tutorial:
 
-![](README_files/images/question-math.png){width=732 height=262}
+<img src="README_files/images/question-math.png" width=732 height=262>
 
 ## Including Videos
 
