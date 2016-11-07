@@ -13,6 +13,7 @@
 #'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
+#' @param message Additional message to display along with correct/incorrect feedback.
 #' @param ... One or more questions or answers 
 #' @param random_answer_order Display answers in a random order.
 #' 
@@ -132,21 +133,32 @@ question <- function(text,
 
 #' @rdname quiz
 #' @export
-answer <- function(text, correct = FALSE) {
+answer <- function(text, correct = FALSE, message = NULL) {
   structure(class = "tutor_quiz_answer", list(
     option = quiz_text(text),
-    correct = correct
+    correct = correct,
+    message = quiz_text(message)
   ))
 }
 
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
-  markdown::markdownToHTML(
-    text = text,
-    options = c("use_xhtml", "fragment_only", "mathjax"),
-    extensions = markdown::markdownExtensions(),
-    fragment.only = TRUE
-  )
+  if (!is.null(text)) {
+    # convert markdown
+    md <- markdown::markdownToHTML(
+      text = text,
+      options = c("use_xhtml", "fragment_only", "mathjax"),
+      extensions = markdown::markdownExtensions(),
+      fragment.only = TRUE
+    )
+    # remove leading and trailing paragraph
+    md <- sub("^<p>", "", md)
+    md <- sub("</p>\n?$", "", md)
+    md
+  }
+  else {
+    NULL
+  }
 }
 
 

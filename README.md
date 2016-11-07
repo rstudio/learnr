@@ -215,9 +215,24 @@ This is what the above example quiz questions would look like within a tutorial:
 
 <img src="README_files/images/questions.png" width=731 height=521>
 
+### Answer Specific Messages
+
+You can add answer-specific correct/incorrect messages using the `message` option. For example:
+
+    ```{r, echo=FALSE}
+    question("What number is the letter A in the *English* alphabet?",
+      answer("8"),
+      answer("1", correct = TRUE),
+      answer("2", message = "2 is close but it's the letter B rather than A."),
+      answer("26")
+    )
+    ```
+
+<img src="README_files/images/questions-message.png" width=730 height=254>
+
 ### Formatting and Math
 
-You can use markdown to format text within questions and answers. You can also include embedded LaTeX math using the `$` delimiter. For example:
+You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the `$` delimiter. For example:
 
     ```{r, echo=FALSE}
     x <- 42

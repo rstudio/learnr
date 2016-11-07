@@ -19,6 +19,21 @@ HTMLWidgets.widget({
             // check whether the answer is correct
             var correct = correctItem.css('display') == 'list-item';
             
+            // look for custom messages
+            var msg_class = correct ? '.correct' : '.incorrect';
+            var message = $(el).find('.responses').children(msg_class).text();
+            var messages = $(el).find('.answers').children(msg_class + '[data-message]');
+            messages.each(function() {
+              if ($(this).children('input').is(':checked')) {
+                 var data_message = $(this).attr('data-message');
+                 message = message + ' ' + data_message;
+              }
+            });
+            $(el).find('.responses').children(msg_class).html(message);
+            
+            // render mathjax
+            if (window.MathJax)
+              window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
           }
         };
         
