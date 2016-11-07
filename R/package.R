@@ -4,6 +4,7 @@
 #' @importFrom rmarkdown shiny_prerendered_chunk knitr_options_html output_format html_fragment render shiny_prerendered_server_start_code
 #' @importFrom jsonlite serializeJSON unserializeJSON
 #' @importFrom htmlwidgets createWidget
+#' @importFrom markdown markdownToHTML markdownExtensions
 NULL
 
 # install knitr hooks when package is attached to search path

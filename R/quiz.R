@@ -52,10 +52,10 @@ question <- function(text,
   
   # create question
   question <- list(
-    q = text,
+    q = quiz_text(text),
     a = answers,
-    correct = correct,
-    incorrect = incorrect
+    correct = quiz_text(correct),
+    incorrect = quiz_text(incorrect)
   )
   type <- match.arg(type)
   if (type == "single")
@@ -114,9 +114,19 @@ question <- function(text,
 #' @export
 answer <- function(text, correct = FALSE) {
   structure(class = "tutor_quiz_answer", list(
-    option = text,
+    option = quiz_text(text),
     correct = correct
   ))
+}
+
+# render markdown (including equations) for quiz_text
+quiz_text <- function(text) {
+  markdown::markdownToHTML(
+    text = text,
+    options = c("use_xhtml", "fragment_only", "mathjax"),
+    extensions = markdown::markdownExtensions(),
+    fragment.only = TRUE
+  )
 }
 
 

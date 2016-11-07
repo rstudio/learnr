@@ -229,6 +229,23 @@ If you want the answers to questions to be randomly arranged, you can add the `r
     )
     ```
 
+### Formatting and Math
+
+You can use markdown to format text within questions and answers. You can also include embedded LaTeX math using the `$` delimiter. For example:
+
+    ```{r, echo=FALSE}
+    x <- 42
+    question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
+      answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
+      answer(sprintf("$x ^ 2 = %d$", x^2), correct = TRUE),
+      answer("$\\sin x = 1$")
+    )
+    ```
+
+Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This is necessary to "escape" the single-backslash so that R doesn't interpret it as a special character. Here's what this example would look like within a tutorial:
+
+![](README_files/images/question-math.png){width=732 height=262}
+
 ## Including Videos
 
 You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. For example:
