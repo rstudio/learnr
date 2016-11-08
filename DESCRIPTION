@@ -19,7 +19,7 @@ Imports:
   htmlwidgets,
   knitr (>= 1.14),
   markdown,
-  rmarkdown (>= 1.1.9010),
+  rmarkdown (>= 1.1.9015),
   shiny (>= 0.13)
 Remotes: rstudio/rmarkdown
 License: GPL-2

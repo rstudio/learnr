@@ -6,6 +6,16 @@
   // platform check
   var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
+  // server http request
+  function tutorServerRequest(type, params, success) {
+    $.get("session/" + Shiny.shinyapp.config.sessionId + 
+          "/dataobj/" + type + "?w=" + Shiny.shinyapp.config.workerId, 
+          params)
+      .done(function(data) {
+        success(data);
+      });
+  }
+
   // get the exercise container of an element
   function exerciseContainer(el) {
     return $(el).closest(".tutor-exercise");

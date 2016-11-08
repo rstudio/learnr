@@ -192,6 +192,14 @@ remove_knitr_hooks <- function() {
 }
 
 exercise_server_chunk <- function(label) {
+  
+  # register editor rpc endpoints
+  rmarkdown::shiny_prerendered_chunk('server', 
+    'tutor:::register_editor_handlers(session)',
+    singleton = TRUE
+  )
+  
+  # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
 'output$`tutor-exercise-%s-output` <- renderUI({
   eventReactive(input$`tutor-exercise-%s-button`, {
