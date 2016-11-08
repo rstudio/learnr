@@ -30,24 +30,6 @@ pressure2 <- pressure
 
 ## summary
 
-
-```{r, echo=FALSE}
-question("What number is the letter A in the English alphabet?",
-  answer("8"),
-  answer("14"),
-  answer("1", correct = TRUE),
-  answer("23")
-)
-question("Where are you right now? (select ALL that apply)",
-  answer("Planet Earth", correct = TRUE),
-  answer("Pluto"),
-  answer("At a computing device", correct = TRUE),
-  answer("In the Milky Way"),
-  incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
-)
-```
-
-
 ```{r, exercise=TRUE, exercise.eval=TRUE, exercise.setup="datasetup"}
 mtcars
 ```
@@ -63,8 +45,6 @@ library(ggplot2)
 qplot(mpg, wt, data = mtcars)
 ```
 
-
-
 ## dygraphs
 
 
@@ -77,6 +57,46 @@ dygraph(ldeaths) %>%
   dyRangeSelector(height = 20)
 ```
 
+## quiz
+
+
+```{r, echo=FALSE}
+quiz(caption = "Quiz: Check for Understanding",
+  question("What number is the letter A in the *English* alphabet?",
+    answer("8"),
+    answer("14", message = "That's $x+ 1$ **insane!**"),
+    answer("1", correct = TRUE, message = "Good job!"),
+    answer("23")
+  ),
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", message = "You only think you are on earth"),
+    answer("Pluto", message = "How could you think we are on Pluto?"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+  )
+)
+```
+
+
+```{r, echo=FALSE}
+x <- 42
+question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
+  answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
+  answer(sprintf("$x ^ 2 = %d$", x^2), correct = TRUE),
+  answer("$\\sin x = 1$")
+)
+```
+
+
+```{r, echo=FALSE}
+question("What number is the letter A in the *English* alphabet?",
+  answer("8"),
+  answer("1", correct = TRUE),
+  answer("2", message = "2 is close but it's the letter B rather than A."),
+  answer("26")
+)
+```
 
 
 
