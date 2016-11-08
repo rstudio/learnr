@@ -131,12 +131,11 @@ install_knitr_hooks <- function() {
       # one-time dependencies/server code
       extra_html <- NULL
       if (before) {
-        # inject html dependencies
-        knitr::knit_meta_add(list(
-          ace_html_dependency(),
-          rmarkdown::html_dependency_jquery(),
-          tutor_html_dependency()
-        ))
+        # ensure tutor is initialized
+        initialize()
+        
+        # inject ace dependency
+        knitr::knit_meta_add(list(ace_html_dependency()))
         
         # write server code
         exercise_server_chunk(options$label)

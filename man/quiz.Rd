@@ -6,18 +6,18 @@
 \alias{quiz}
 \title{Tutorial quiz questions}
 \usage{
-quiz(caption = "Quiz", ...)
+quiz(..., caption = "Quiz")
 
 question(text, ..., type = c("auto", "single", "multiple"),
   correct = "Correct!", incorrect = "Incorrect.",
   random_answer_order = FALSE)
 
-answer(text, correct = FALSE)
+answer(text, correct = FALSE, message = NULL)
 }
 \arguments{
-\item{caption}{Optional quiz caption (defaults to "Quiz")}
-
 \item{...}{One or more questions or answers}
+
+\item{caption}{Optional quiz caption (defaults to "Quiz")}
 
 \item{text}{Question or option text}
 
@@ -34,6 +34,8 @@ correct.}
 \item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect.")}
 
 \item{random_answer_order}{Display answers in a random order.}
+
+\item{message}{Additional message to display along with correct/incorrect feedback.}
 }
 \description{
 Add interative multiple choice quiz questions to a tutorial.
