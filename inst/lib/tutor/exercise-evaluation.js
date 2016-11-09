@@ -1,6 +1,9 @@
 
 Tutor.prototype.$initializeExerciseEvaluation = function() {
   
+  // alias this
+  var thiz = this;
+  
   // get the exercise container of an element
   function exerciseContainer(el) {
     return $(el).closest(".tutor-exercise");
@@ -52,19 +55,11 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       
       // get any setup or check chunks
       var label = exerciseLabel(el);
-      function supportingCode(label) {
-        var selector = '.tutor-exercise-support[data-label="' + label + '"]';
-        var code = $(selector).children('pre').children('code');
-        if (code.length > 0)
-          return code.text();
-        else
-          return null;
-      }
       if (value.options["exercise.setup"])
-        value.setup = supportingCode(value.options["exercise.setup"]);     
+        value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);     
       else
-        value.setup = supportingCode(label + "-setup");  
-      value.check = supportingCode(label + "-check");
+        value.setup = thiz.$exerciseSupportCode(label + "-setup");  
+      value.check = thiz.$exerciseSupportCode(label + "-check");
       
       // return the value
       return value;
