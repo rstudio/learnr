@@ -22,7 +22,12 @@ tutor_html_dependency <- function() {
     name = "tutor",
     version = utils::packageVersion("tutor"),
     src = system.file("lib/tutor", package = "tutor"),
-    script = "tutor.js",
+    script = c(
+      "tutor.js", 
+      "exercise.js",
+      "exercise-editor.js", 
+      "exercise-evaluation.js", 
+      "video.js"),
     stylesheet = "tutor.css"
   )
 }
