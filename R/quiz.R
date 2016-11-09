@@ -112,7 +112,7 @@ question <- function(text,
       version = "1.5.20",
       src = system.file("htmlwidgets/lib/slickquiz", package = "tutor"),
       script = "js/slickQuiz.js",
-      stylesheet = c("css/slickQuiz.css", "css/tutor.css")
+      stylesheet = c("css/slickQuiz.css", "css/slickQuizTutor.css")
     )
   )
   
