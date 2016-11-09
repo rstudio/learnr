@@ -18,10 +18,23 @@ initialize <- function() {
 }
 
 tutor_html_dependency <- function() {
+  
+  # return package source directory when in live preview mode
+  tutor_src <- function() {
+    if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_LIVE_PREVIEW"))) {
+      r_dir <- getSrcDirectory(tutor::initialize, unique = TRUE)
+      pkg_dir <- dirname(r_dir)
+      file.path(pkg_dir, "inst", "lib", "tutor")
+    }
+    else {
+      system.file("lib/tutor", package = "tutor")
+    }
+  }
+  
   htmltools::htmlDependency(
     name = "tutor",
     version = utils::packageVersion("tutor"),
-    src = system.file("lib/tutor", package = "tutor"),
+    src = tutor_src(),
     script = c(
       "tutor.js", 
       "exercise.js",
