@@ -84,6 +84,23 @@ rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
 
 There are some special considerations for code chunks with `exercise=TRUE` which are covered in more depth below.
 
+### Exercise Evaluation
+
+By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
+
+You can arrange for an exercise to be pre-evaluated (and it's output shown) using the `exercise.eval` chunk option. For example:
+
+    ```{r, exercise=TRUE, exercise.eval=TRUE}
+    # Change the filter to select February rather than January
+    filter(nycflights, month == 1)
+    ```
+    
+You can also set a global default for exercise evaluation using `knitr::opts_chunk` within your global setup chunk, for example:
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(exercise.eval = TRUE)
+    ```
+
 ### Exercise Setup
 
 Code chunks with `exercise=TRUE` are evaluated within standalone environments. This means that they don't have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
@@ -133,22 +150,17 @@ You can however arrange for setup code to be run before evaluation of an exercis
         nycflights <- filter(nycflights, month == 1)
         ```
 
+### Exercise Editor Size
 
-### Exercise Evaluation
+By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
 
-By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
+You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
 
-You can arrange for an exercise to be pre-evaluated (and it's output shown) using the `exercise.eval` chunk option. For example:
-
-    ```{r, exercise=TRUE, exercise.eval=TRUE}
-    # Change the filter to select February rather than January
-    filter(nycflights, month == 1)
-    ```
-    
-You can also set a global default for exercise evaluation using `knitr::opts_chunk` within your global setup chunk, for example:
-
-    ```{r setup, include=FALSE}
-    knitr::opts_chunk$set(exercise.eval = TRUE)
+    ```{r, exercise=TRUE, exercise.lines=15}
+    # Write a function to add two numbers together
+    add_numbers <- function(a, b) {
+      
+    }
     ```
 
 ### Exercise Timeouts
@@ -168,19 +180,6 @@ To establish a global default exercise timeout (note this can be overridden on a
     options(tutor.exercise.timelimit = 10)
     
 Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutor.exercise.timelimit` if not otherwise specified is 30 seconds. 
-
-### Exercise Editor Size
-
-By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
-
-You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
-
-    ```{r, exercise=TRUE, exercise.lines=15}
-    # Write a function to add two numbers together
-    add_numbers <- function(a, b) {
-      
-    }
-    ```
 
 ## Quiz Questions
 
