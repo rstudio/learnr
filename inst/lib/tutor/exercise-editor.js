@@ -27,6 +27,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
   function addSolution(exercise, panel_heading) {
 
     // http://getbootstrap.com/javascript/#popovers
+    // http://codingexplained.com/coding/front-end/css/change-bootstrap-popover-position
 
     // get label
     var label = exercise.attr('data-label');
