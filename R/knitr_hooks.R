@@ -50,6 +50,7 @@ install_knitr_hooks <- function() {
     if (!isTRUE(knitr::opts_knit$get("tutor.initialized"))) {
       knitr::knit_meta_add(list(
         rmarkdown::html_dependency_jquery(),
+        rmarkdown::html_dependency_font_awesome(),
         tutor_html_dependency()
       ))
       knitr::opts_knit$set(tutor.initialized = TRUE)

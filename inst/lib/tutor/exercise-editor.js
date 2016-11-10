@@ -41,7 +41,6 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     input_div.attr('id', create_id('input'));
 
     // creating heading
-
     var panel_heading = $('<div class="panel-heading tutor-panel-heading"></div>');
     panel_heading.text('Exercise');
     input_div.append(panel_heading);
@@ -51,10 +50,11 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     input_div.append(panel_body);
     
     // create action button
-    var run_button = $('<button class="btn btn-success btn-xs ' + 
-                       'pull-right action-button"></button>');
+    var run_button = $('<a class="btn btn-success btn-xs ' + 
+                       'pull-right action-button"></a>');
+    run_button.append($('<i class="fa fa-play"></i>'));
     run_button.attr('type', 'button');
-    run_button.text('Run Code');
+    run_button.append(' Run Code');
     run_button.attr('id', create_id('button'));
     var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
     var title = "Run code (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
@@ -109,6 +109,11 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     bindExecutionKey("execute2", "Ctrl+Shift+Enter");
     bindExecutionKey("execute3", "Ctrl+R");
     
+    // re-focus the editor on click
+    run_button.on('click', function() {
+      editor.focus();
+    });
+
     // mange ace height as the document changes
     var updateAceHeight = function()  {
       var lines = exercise.attr('data-lines');
