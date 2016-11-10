@@ -34,9 +34,11 @@
   width: 100%;
 }
 
+
 .tutor-solution-popover {
-  min-width: 500px;
-  max-width: 100%;
+  min-width: 600px;
+  max-width: 100%
+  right: 20px;
 }
 
 .tutor-exercise-error {
