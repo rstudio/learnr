@@ -64,6 +64,14 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     });
     panel_heading.append(run_button);
 
+    // create hint button
+    var hint_button = $('<a class="btn btn-warning btn-xs pull-right"></a>');
+    hint_button.append($('<i class="fa fa-lightbulb-o"></i>'));
+    hint_button.append(' Solution');
+    hint_button.attr('title', 'See the solution');
+    panel_heading.append(hint_button);
+
+
     
     // create code div and add it to the input div
     var code_div = $('<div class="tutor-exercise-code-editor"></div>');

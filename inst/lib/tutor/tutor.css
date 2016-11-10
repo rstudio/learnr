@@ -13,6 +13,7 @@
   padding-left: 8px;
   padding-right: 8px;
   font-size: 13px;
+  font-weight: 500;
   width: 100%;
 }
 
@@ -20,6 +21,8 @@
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
+  margin-left: 10px;
+  font-weight: normal;
 }
 
 .tutor-exercise-input .panel-body {
