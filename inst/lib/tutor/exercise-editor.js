@@ -2,14 +2,94 @@
 
 Tutor.prototype.$initializeExerciseEditors = function() {
   
+  // alias this
+  var thiz = this;
+
   // behavior constants
   var kMinLines = 3;
 
+  // edit code within an ace editor
+  function attachAceEditor(target, code) {
+    var editor = ace.edit(target);
+    editor.setHighlightActiveLine(false);
+    editor.setShowPrintMargin(false);
+    editor.setShowFoldWidgets(false);
+    editor.renderer.setDisplayIndentGuides(false);
+    editor.setTheme("ace/theme/textmate");
+    editor.$blockScrolling = Infinity;
+    editor.session.setMode("ace/mode/r");
+    editor.session.getSelection().clearSelection();
+    editor.setValue(code, -1);
+    return editor;
+  }
+
+  // add a solution for the specified exercise label
+  function addSolution(exercise, panel_heading) {
+
+    // http://getbootstrap.com/javascript/#popovers
+
+    // get label
+    var label = exercise.attr('data-label');
+
+    // see if there is a solution for this exercise
+    var solution = thiz.$exerciseSupportCode(label + "-solution");
+    if (solution) {
+      
+      // create solution buttion
+      var button = $('<a class="btn btn-warning btn-xs pull-right"></a>');
+      button.attr('role', 'button');
+      button.attr('title', 'Solution');
+      button.append($('<i class="fa fa-lightbulb-o"></i>'));
+      button.append(' Solution'); 
+      panel_heading.append(button);      
+      
+      // handle showing and hiding the popover
+      button.on('click', function() {
+        var visible = button.next('div.popover:visible').length > 0;
+        if (!visible) {
+          var popover = button.popover({
+            placement: 'auto top',
+            template: '<div class="popover tutor-solution-popover" role="tooltip">' + 
+                      '<div class="arrow"></div>' + 
+                      '<div class="popover-title tutor-panel-heading"></div>' + 
+                      '<div class="popover-content"></div>' + 
+                      '</div>',
+            content: solution,
+            trigger: "manual"
+          });
+          popover.on('inserted.bs.popover', function() {
+            var dataPopover = popover.data('bs.popover');
+            var content = dataPopover.tip().find('.popover-content');
+            var editor = attachAceEditor(content.get(0), solution);
+            editor.setReadOnly(true);
+            // adjust editor and container height
+            var lines = Math.max(editor.session.getLength(), kMinLines);
+            editor.setOptions({
+              minLines: lines
+            });
+            var height = lines * editor.renderer.lineHeight;
+            content.css('height', height + 'px');
+          });
+          button.popover('show');
+        }
+        else {
+          button.popover('destroy');
+        }
+      });
+     
+
+    }
+  }
+
+
   this.$forEachExercise(function(exercise) {
     
+    // capture label
+    var label = exercise.attr('data-label');
+
     // helper to create an id
     function create_id(suffix) {
-      return "tutor-exercise-" + exercise.attr('data-label') + "-" + suffix;
+      return "tutor-exercise-" + label + "-" + suffix;
     } 
      
     // get all <pre class='text'> elements, get their code, then remove them
@@ -64,14 +144,8 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     });
     panel_heading.append(run_button);
 
-    // create hint button
-    var hint_button = $('<a class="btn btn-warning btn-xs pull-right"></a>');
-    hint_button.append($('<i class="fa fa-lightbulb-o"></i>'));
-    hint_button.append(' Solution');
-    hint_button.attr('title', 'See the solution');
-    panel_heading.append(hint_button);
-
-
+    // add solution button if necessary
+    addSolution(exercise, panel_heading);
     
     // create code div and add it to the input div
     var code_div = $('<div class="tutor-exercise-code-editor"></div>');
@@ -91,16 +165,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     output_frame.append(output_div);
       
     // activate the ace editor
-    var editor = ace.edit(code_id);
-    editor.setHighlightActiveLine(false);
-    editor.setShowPrintMargin(false);
-    editor.setShowFoldWidgets(false);
-    editor.renderer.setDisplayIndentGuides(false);
-    editor.setTheme("ace/theme/textmate");
-    editor.$blockScrolling = Infinity;
-    editor.session.setMode("ace/mode/r");
-    editor.session.getSelection().clearSelection();
-    editor.setValue(code, -1);
+    var editor = attachAceEditor(code_id, code);
     
     // bind execution keys 
     function bindExecutionKey(name, key) {
@@ -117,7 +182,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     bindExecutionKey("execute2", "Ctrl+Shift+Enter");
     bindExecutionKey("execute3", "Ctrl+R");
     
-    // re-focus the editor on click
+    // re-focus the editor on run button click
     run_button.on('click', function() {
       editor.focus();
     });
