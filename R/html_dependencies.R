@@ -1,28 +1,11 @@
 
 
-#' Initialize tutor within a document
-#' 
-#' @details 
-#' Tutor is automatically initialiazed whenever you use an exercise
-#' or a question so calling this function explicilty is typically not
-#' required. You might need it if you were using e.g. only the video
-#' embedding feature of tutor without exercises or questions.
-#' 
-#' @keywords internal
-#' @export
-initialize <- function() {
-  knitr::knit_meta_add(list(
-    rmarkdown::html_dependency_jquery(),
-    tutor_html_dependency()
-  ))
-}
-
 tutor_html_dependency <- function() {
   
-  # return package source directory when in live preview mode
+  # return package source directory when in dev mode
   tutor_src <- function() {
-    if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_LIVE_PREVIEW"))) {
-      r_dir <- getSrcDirectory(tutor::initialize, unique = TRUE)
+    if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
+      r_dir <- getSrcDirectory(tutor_html_dependency, unique = TRUE)
       pkg_dir <- dirname(r_dir)
       file.path(pkg_dir, "inst", "lib", "tutor")
     }

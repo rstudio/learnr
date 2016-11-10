@@ -46,6 +46,15 @@ install_knitr_hooks <- function() {
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutor = function(options) {
     
+    # add tutor dependencies once per-knit
+    if (!isTRUE(knitr::opts_knit$get("tutor.initialized"))) {
+      knitr::knit_meta_add(list(
+        rmarkdown::html_dependency_jquery(),
+        tutor_html_dependency()
+      ))
+      knitr::opts_knit$set(tutor.initialized = TRUE)
+    }
+    
     # check for chunk type
     exercise_chunk <- is_exercise_chunk(options)
     exercise_support_chunk <- is_exercise_support_chunk(options)
@@ -134,8 +143,6 @@ install_knitr_hooks <- function() {
       # one-time dependencies/server code
       extra_html <- NULL
       if (before) {
-        # ensure tutor is initialized
-        initialize()
         
         # inject ace dependency
         knitr::knit_meta_add(list(ace_html_dependency()))
