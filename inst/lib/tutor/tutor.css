@@ -4,30 +4,26 @@
 }
 
 .tutor-exercise-input {
-  margin-top: 20px;
-  position: relative;
+  margin-top: 15px;
 }
 
 .tutor-panel-heading {
   padding-top: 6px;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
   padding-left: 8px;
+  padding-right: 8px;
   font-size: 13px;
+  width: 100%;
 }
 
 .tutor-exercise-input .btn-xs {
+  margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
 }
 
 .tutor-exercise-input .panel-body {
   padding: 0;
-}
-
-.tutor-exercise-run {
-  position: absolute;
-  right: 5px;
-  z-index: 100;
 }
 
 

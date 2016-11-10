@@ -52,7 +52,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     
     // create action button
     var run_button = $('<button class="btn btn-success btn-xs ' + 
-                       'tutor-exercise-run action-button"></button>');
+                       'pull-right action-button"></button>');
     run_button.attr('type', 'button');
     run_button.text('Run Code');
     run_button.attr('id', create_id('button'));
