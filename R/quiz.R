@@ -47,7 +47,7 @@ quiz <- function(..., caption = "Quiz") {
  
   
   htmltools::browsable(div(class = "panel panel-default",
-    div(class = "panel-heading", caption),
+    div(class = "panel-heading tutor-panel-heading", caption),
     tags$table(class = "table quiz-table", questions)
   ))
 }

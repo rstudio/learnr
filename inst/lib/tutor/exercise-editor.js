@@ -2,6 +2,9 @@
 
 Tutor.prototype.$initializeExerciseEditors = function() {
   
+  // behavior constants
+  var kMinLines = 3;
+
   this.$forEachExercise(function(exercise) {
     
     // helper to create an id
@@ -15,11 +18,16 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     code_blocks.each(function() {
       var code_element = $(this).children('code');
       if (code_element.length > 0)
-        code = code + code_element.text() + "\n";
+        code = code + code_element.text();
       else 
         code = code + $(this).text();
     });
     code_blocks.remove();
+    // ensure a minimum of 3 lines
+    var lines = code.split(/\r\n|\r|\n/).length;
+    for (var i=lines; i<kMinLines;i++)
+      code = code + "\n";
+        
     
     // get the knitr options script block and detach it (will move to input div)
     var options_script = exercise.children('script[data-opts-chunk="1"]').detach();
@@ -29,8 +37,18 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var output_frame = exercise.children('.tutor-exercise-output-frame');
     
     // create input div
-    var input_div = $('<div class="tutor-exercise-input"></div>');
+    var input_div = $('<div class="tutor-exercise-input panel panel-default"></div>');
     input_div.attr('id', create_id('input'));
+
+    // creating heading
+
+    var panel_heading = $('<div class="panel-heading tutor-panel-heading"></div>');
+    panel_heading.text('Exercise');
+    input_div.append(panel_heading);
+
+    // create body
+    var panel_body = $('<div class="panel-body"></div>');
+    input_div.append(panel_body);
     
     // create action button
     var run_button = $('<button class="btn btn-success btn-xs ' + 
@@ -44,16 +62,17 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     run_button.on('click', function() {
       output_frame.addClass('recalculating');
     });
-    input_div.append(run_button);
+    panel_heading.append(run_button);
+
     
     // create code div and add it to the input div
     var code_div = $('<div class="tutor-exercise-code-editor"></div>');
     var code_id = create_id('code-editor');
     code_div.attr('id', code_id);
-    input_div.append(code_div);
+    panel_body.append(code_div);
     
     // add the knitr options script to the input div
-    input_div.append(options_script);
+    panel_body.append(options_script);
     
     // prepend the input div to the exercise container
     exercise.prepend(input_div);
@@ -100,8 +119,8 @@ Tutor.prototype.$initializeExerciseEditors = function() {
          });
       } else {
          editor.setOptions({
-            minLines: 2,
-            maxLines: Math.max(Math.min(editor.session.getLength(), 15), 2)
+            minLines: kMinLines,
+            maxLines: Math.max(Math.min(editor.session.getLength(), 15), kMinLines)
          });
       }
      

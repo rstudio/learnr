@@ -8,20 +8,33 @@
   position: relative;
 }
 
+.tutor-panel-heading {
+  padding-top: 6px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  font-size: 13px;
+}
+
+.tutor-exercise-input .btn-xs {
+  margin-top: -1px;
+  font-size: 11px;
+}
+
+.tutor-exercise-input .panel-body {
+  padding: 0;
+}
+
 .tutor-exercise-run {
   position: absolute;
-  right: 0;
+  right: 5px;
   z-index: 100;
 }
 
 
 .tutor-exercise-code-editor {
-  border: solid 1px #cccccc;
-  border-radius: 4px;
-  margin-bottom: 20px;
   width: 100%;
-  line-height: 1.4;
 }
+
 
 .tutor-exercise-error {
   color: #a94442;
@@ -33,7 +46,6 @@
 }
 
 .ace-tm {
-  background-color: rgb(250,250,250);
   font-family: monospace;
   font-size: 90%;
 }
