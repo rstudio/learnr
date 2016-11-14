@@ -311,7 +311,7 @@ What the code within the "-check" chunk actually does will vary depending on whi
 </tr>
 <tr class="odd">
 <td><code>evaluate_result</code></td>
-<td>The return value from the [`evaluate::evaluate`](https://www.rdocumentation.org/packages/evaluate/topics/evaluate) function.</td>
+<td>The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.</td>
 </tr>
 <tr class="even">
 <td><code>html_result</code></td>
