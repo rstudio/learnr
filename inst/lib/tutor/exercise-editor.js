@@ -107,8 +107,9 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
   this.$forEachExercise(function(exercise) {
     
-    // capture label
+    // capture label and caption
     var label = exercise.attr('data-label');
+    var caption = exercise.attr('data-caption');
 
     // helper to create an id
     function create_id(suffix) {
@@ -119,7 +120,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     // when we receive focus hide solutions in other exercises
     exercise.on('focusin', function() {
       $('.btn-tutor-solution').each(function() {
-        if (exercise.has($(this)).length == 0)
+        if (exercise.has($(this)).length === 0)
           removeSolution(thiz.$exerciseContainer($(this)));
       });
     });
@@ -154,7 +155,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
     // creating heading
     var panel_heading = $('<div class="panel-heading tutor-panel-heading"></div>');
-    panel_heading.text('Exercise');
+    panel_heading.text(caption);
     input_div.append(panel_heading);
 
     // create body
