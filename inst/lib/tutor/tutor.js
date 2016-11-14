@@ -24,6 +24,19 @@ Tutor.prototype.$serverRequest = function (type, params, success) {
 };
 
 
+Tutor.prototype.$scrollIntoView = function(element) {
+  var element = $(element);
+  var rect = element[0].getBoundingClientRect();
+  if (rect.top < 0 || rect.bottom > $(window).height()) {
+    if (element[0].scrollIntoView) {
+      element[0].scrollIntoView(false);
+      document.body.scrollTop += 20;
+    }  
+  }
+};
+
+
+
 
 
 

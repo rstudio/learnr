@@ -23,11 +23,14 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     return editor;
   }
 
-  // add a solution for the specified exercise label
-  function addSolution(exercise, panel_heading) {
+  // remove a solution for an exercise
+  function removeSolution(exercise) {
+    exercise.find('.btn-tutor-solution').popover('destroy');
+  }
 
-    // http://getbootstrap.com/javascript/#popovers
-    // http://codingexplained.com/coding/front-end/css/change-bootstrap-popover-position
+
+  // add a solution for the specified exercise label
+  function addSolution(exercise, panel_heading, editor) {
 
     // get label
     var label = exercise.attr('data-label');
@@ -37,7 +40,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     if (solution) {
       
       // create solution buttion
-      var button = $('<a class="btn btn-warning btn-xs pull-right"></a>');
+      var button = $('<a class="btn btn-warning btn-xs btn-tutor-solution pull-right"></a>');
       button.attr('role', 'button');
       button.attr('title', 'Solution');
       button.append($('<i class="fa fa-lightbulb-o"></i>'));
@@ -79,10 +82,16 @@ Tutor.prototype.$initializeExerciseEditors = function() {
           popoverElement.css('left', '0');
           var popoverArrow = popoverElement.find('.arrow');
           popoverArrow.css('left', button.position().left + (button.outerWidth()/2) + 'px');
+
+          // scroll into view if necessary
+          thiz.$scrollIntoView(popoverElement);
         }
         else {
-          button.popover('destroy');
+          removeSolution(exercise);
         }
+
+        // always refocus editor
+        editor.focus();
       });
     }
   }
@@ -97,6 +106,15 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     function create_id(suffix) {
       return "tutor-exercise-" + label + "-" + suffix;
     } 
+
+
+    // when we receive focus hide solutions in other exercises
+    exercise.on('focusin', function() {
+      $('.btn-tutor-solution').each(function() {
+        if (exercise.has($(this)).length == 0)
+          removeSolution(thiz.$exerciseContainer($(this)));
+      });
+    });
      
     // get all <pre class='text'> elements, get their code, then remove them
     var code = '';
@@ -146,12 +164,10 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var title = "Run code (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
     run_button.attr('title', title);
     run_button.on('click', function() {
+      removeSolution(exercise);
       output_frame.addClass('recalculating');
     });
     panel_heading.append(run_button);
-
-    // add solution button if necessary
-    addSolution(exercise, panel_heading);
     
     // create code div and add it to the input div
     var code_div = $('<div class="tutor-exercise-code-editor"></div>');
@@ -211,6 +227,10 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     };
     updateAceHeight();
     editor.getSession().on('change', updateAceHeight);
+
+    // add solution button if necessary
+    addSolution(exercise, panel_heading, editor);
+
   });  
 };
 

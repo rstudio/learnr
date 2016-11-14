@@ -4,29 +4,18 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
   // alias this
   var thiz = this;
   
-  // get the exercise container of an element
-  function exerciseContainer(el) {
-    return $(el).closest(".tutor-exercise");
-  }
-
   // get the current label context of an element
   function exerciseLabel(el) {
-    return exerciseContainer(el).attr('data-label');
+    return thiz.$exerciseContainer(el).attr('data-label');
   }
   
   // ensure that the exercise containing this element is fully visible
   function ensureExerciseVisible(el) {
     // convert to containing exercise element
-    var exerciseEl = exerciseContainer(el)[0];
+    var exerciseEl = thiz.$exerciseContainer(el)[0];
 
     // ensure visibility
-    var rect = exerciseEl.getBoundingClientRect();
-    if (rect.top < 0 || rect.bottom > $(window).height()) {
-      if (exerciseEl.scrollIntoView) {
-        exerciseEl.scrollIntoView(false);
-        document.body.scrollTop += 40;
-      } 
-    }
+    thiz.$scrollIntoView(exerciseEl);
   }
   
   // register a shiny input binding for code editors
@@ -47,7 +36,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       value.code = editor.getSession().getValue();
       
       // get the preserved chunk options (if any)
-      var options_script = exerciseContainer(el).find('script[data-opts-chunk="1"]');
+      var options_script = thiz.$exerciseContainer(el).find('script[data-opts-chunk="1"]');
       if (options_script.length == 1)
         value.options = JSON.parse(options_script.text());
       else

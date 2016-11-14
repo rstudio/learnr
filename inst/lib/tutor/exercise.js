@@ -27,3 +27,7 @@ Tutor.prototype.$exerciseSupportCode = function(label) {
     return null;
 }
 
+// get the exercise container of an element
+Tutor.prototype.$exerciseContainer = function(el) {
+  return $(el).closest(".tutor-exercise");
+};
