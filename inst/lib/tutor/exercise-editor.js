@@ -28,6 +28,14 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     exercise.find('.btn-tutor-solution').popover('destroy');
   }
 
+  // hide solutions when clicking outside exercises
+  $(document).on('mouseup', function(ev) {
+    var exercise = thiz.$exerciseContainer(ev.target);
+    if (exercise.length == 0) {
+      thiz.$forEachExercise(removeSolution);
+    }
+  });
+
 
   // add a solution for the specified exercise label
   function addSolution(exercise, panel_heading, editor) {
