@@ -35,7 +35,7 @@ For example, here's a very simple tutorial:
 This is what the running tutorial document looks like after the user has entered their answer:
 
 <kbd>
-<img src="README_files/images/hello.png"  width="650" height="189" style="border: solid 1px #cccccc;"/>
+<img src="README_files/images/hello.png"  width="879" height="279" style="border: solid 1px #cccccc;"/>
 </kbd>    
     
 
