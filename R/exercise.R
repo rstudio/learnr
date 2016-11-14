@@ -87,6 +87,11 @@ evaluate_exercise <- function(exercise, envir) {
     msg <- sub(" [^:]+:", ":", x)
     as.character(htmltools::div(class = "tutor-exercise-error", msg))
   }
+  evaluate_result <- NULL
+  knitr_options$knit_hooks$evaluate =function(code, envir, ...) {
+    evaluate_result <<- evaluate::evaluate(code, envir, ...)
+    evaluate_result
+  }
   output_format <- rmarkdown::output_format(
     knitr = knitr_options,
     pandoc = NULL,
@@ -115,10 +120,22 @@ evaluate_exercise <- function(exercise, envir) {
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
   
-  # return the output as HTML w/ dependencies
-  htmltools::attachDependencies(
+  # capture output as HTML w/ dependencies
+  html <- htmltools::attachDependencies(
     htmltools::HTML(output),
     dependencies
   )
+  
+  # get the exercise checker (default just returns the output)
+  checker <- getOption("tutor.exercise.checker", default = function(..., html_result) {
+    html_result
+  })
+  
+  # call the checker 
+  checker(label = exercise$label,
+          user_code = exercise$code,
+          check_code = exercise$check,
+          envir_result = envir,
+          evaluate_result = evaluate_result,
+          html_result = html)
 }
-

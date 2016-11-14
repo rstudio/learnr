@@ -74,7 +74,7 @@ dygraph(ldeaths)
 
 
 ```{r quiz1, echo=FALSE}
-quiz(caption = "Quiz: Check for Understanding",
+quiz(
   question("What number is the letter A in the *English* alphabet?",
     answer("8"),
     answer("14", message = "That's $x+ 1$ **insane!**"),

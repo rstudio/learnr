@@ -5,6 +5,7 @@
 #' @importFrom jsonlite serializeJSON unserializeJSON
 #' @importFrom htmlwidgets createWidget
 #' @importFrom markdown markdownToHTML markdownExtensions
+#' @importFrom evaluate evaluate
 NULL
 
 # install knitr hooks when package is attached to search path

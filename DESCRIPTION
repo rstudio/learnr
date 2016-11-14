@@ -17,6 +17,7 @@ Imports:
   jsonlite,
   htmltools (>= 0.3.5),
   htmlwidgets,
+  evaluate,
   knitr (>= 1.14),
   markdown,
   rmarkdown (>= 1.1.9015),

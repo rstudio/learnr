@@ -3,6 +3,7 @@
 export(answer)
 export(question)
 export(quiz)
+importFrom(evaluate,evaluate)
 importFrom(htmltools,HTML)
 importFrom(htmltools,attachDependencies)
 importFrom(htmltools,div)

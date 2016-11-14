@@ -31,6 +31,9 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       // value object to return 
       var value = {};
       
+      // get the label
+      value.label = exerciseLabel(el);
+      
       // get the code from the editor
       var editor = ace.edit($(el).attr('id'));
       value.code = editor.getSession().getValue();
