@@ -127,9 +127,12 @@ evaluate_exercise <- function(exercise, envir) {
   )
   
   # get the exercise checker (default just returns the output)
-  checker <- getOption("tutor.exercise.checker", default = function(..., html_result) {
-    html_result
-  })
+  checker <- knitr::opts_knit$get("tutor.exercise.checker")
+  if (is.null(exercise$check) || is.null(checker)) {
+    checker <- function(..., html_result) {
+      html_result
+    }
+  }
   
   # call the checker 
   checker(label = exercise$label,

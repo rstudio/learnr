@@ -268,6 +268,73 @@ To establish a global default exercise timeout (note this can be overridden on a
     
 Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutor.exercise.timelimit` if not otherwise specified is 30 seconds. 
 
+### Checking Exercises
+
+The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `tutor.exercise.checker` knitr option. For example:
+
+    ```{r setup, include=FALSE}
+    knitr::opts_knitr$set(tutor.exercise.checker = checkthat::check_exercise)
+    ```
+
+To arrange for an exercise to be checked, add a "-check" chunk for it includes whatever code is required to check the exercise, for example:
+
+
+     ```{r exercise1-check, exercise=TRUE, exercise.timelimit=10}
+     # code to check exercise here
+     ```
+
+What the code within the "-check" chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user's exercise input:
+
+<table>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>label</code></td>
+<td>Label for exercise chunk.</td>
+</tr>
+<tr class="even">
+<td><code>user_code</code></td>
+<td>R code submitted by the user.</td>
+</tr>
+<tr class="odd">
+<td><code>check_code</code></td>
+<td>Code provided within the "-check" chunk for the exercise.</td>
+</tr>
+<tr class="even">
+<td><code>envir_result</code></td>
+<td>The R environment after the execution of the chunk.</td>
+</tr>
+<tr class="odd">
+<td><code>evaluate_result</code></td>
+<td>The return value from the [`evaluate::evaluate`](https://www.rdocumentation.org/packages/evaluate/topics/evaluate) function.</td>
+</tr>
+<tr class="even">
+<td><code>html_result</code></td>
+<td>The output of the evaluation as HTML.</td>
+</tr>
+</tbody>
+</table>
+
+
+Here is the default implementation, which simply returns the `html_result` without any checking:
+
+```r
+check_exercise <- function(label, user_code, check_code, 
+                           envir_result, evaluate_result, html_result, 
+                           ...) {
+  html_result
+}
+```
+
+Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
+
+Custom exercise checker functions should always return HTML output (i.e. HTML tags objects as produced by the [htmltools](https://www.rdocumentation.org/packages/htmltools/) package). In some cases you'll return the default HTML output passed in `html_result` with some annotations, and in other cases you may replace the output entirely.
+
 ## Quiz Questions
 
 You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers. 
