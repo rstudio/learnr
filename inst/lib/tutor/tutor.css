@@ -3,6 +3,10 @@
   display: none;
 }
 
+.slide .tutor-exercise {
+  line-height: 1.4;
+}
+
 .tutor-exercise {
   position: relative;
 }
