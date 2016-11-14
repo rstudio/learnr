@@ -36,15 +36,18 @@ Tutor.prototype.$exerciseContainer = function(el) {
 Tutor.prototype.$showExerciseProgress = function(el, show) {
   var exercise = this.$exerciseContainer(el);
   var outputFrame = exercise.children('.tutor-exercise-output-frame');
-  var runIcon = exercise.find('.btn-tutor-run-code').children('i');
+  var runButton = exercise.find('.btn-tutor-run-code');
+  var runIcon = runButton.children('i');
   var spinner = 'fa-spinner fa-spin fa-fw';
   if (show) {
     outputFrame.addClass('recalculating');
+    runButton.addClass('disabled').removeClass('active');
     runIcon.removeClass('fa-play');
     runIcon.addClass(spinner);
   }
   else {
     outputFrame.removeClass('recalculating');
+    runButton.addClass('active').removeClass('disabled');
     runIcon.addClass('fa-play');
     runIcon.removeClass(spinner);
   }
