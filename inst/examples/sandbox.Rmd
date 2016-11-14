@@ -22,8 +22,13 @@ Sys.setenv(RMARKDOWN_SHINY_PRERENDERED_DEVMODE = "1")
 
 ## solution
 
+```{r exercise1-setup}
+nycflights <- nycflights13::flights
+```
+
 ```{r exercise1, exercise=TRUE}
 # Change the filter to select February rather than January
+library(dplyr)
 nycflights <- filter(nycflights, month == 1)
 ```
 
