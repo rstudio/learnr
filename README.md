@@ -80,9 +80,67 @@ Assuming you've installed the **tutor** package you can run a live version of th
 rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
 ```
 
-## Tutorial Exercises
+## Exercises
 
-There are some special considerations for code chunks with `exercise=TRUE` which are covered in more depth below.
+Exercises are interactive R code chunks that allow readers to directly execute R code and see it's results. There are many options associated with tutorial exercises (all of which are described in more detail below):
+
+<table>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>exercise.cap</code></td>
+<td>Caption for exercise chunk (defaults to "Exercise")</td>
+</tr>
+<tr class="even">
+<td><code>exercise.eval</code></td>
+<td>Whether to pre-evaluate the exercise so the reader can see some default output (defaults to <code>FALSE</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>exercise.lines</code></td>
+<td>Lines of code for exercise editor (default to size of code chunk)</td>
+</tr>
+<tr class="even">
+<td><code>exercise.timelimit</code></td>
+<td>Number of seconds to limit execution time to (defaults to 30)</td>
+</tr>
+</tbody>
+</table>
+
+Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options:
+
+    ```{r setup, include=FALSE}
+    library(tutor)
+    knitr::opts_chunk$set(exercise.timelimit = 60)
+    ```
+
+While this code sets per-chunk options:
+
+    ```{r, exercise=TRUE, exercise.timelimit = 60}
+    1 + 1
+    ```
+
+There are also some other specialized chunks that can be used with an exercise chunk, including:
+
+1. Exercise [setup chunks](#exercise-setup), which enable you to execute code to setup the environment immediately prior to executing submitted code.
+
+2. Exercise [solution chunks](#exercise-solutions) which enable you to provide a solution to the execrise that can be optionally viewed by users of the tutorial.
+
+The use of these special chunks is also described in detail below.
+
+
+### Exercise Captions
+
+By default exercises are displayed with caption of "Exercise". However, in some cases you may want either a custom per-chunk caption or a generic caption with a less tutorial/learning oriented connotation (e.g. "Sandbox" or "R Code"). For example:
+
+    ```{r setup, include=FALSE}
+    library(tutor)
+    knitr::opts_chunk$set(exercise.cap = "R Code")
+    ```
 
 ### Exercise Evaluation
 
