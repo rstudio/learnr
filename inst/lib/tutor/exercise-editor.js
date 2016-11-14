@@ -49,7 +49,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
         var visible = button.next('div.popover:visible').length > 0;
         if (!visible) {
           var popover = button.popover({
-            placement: 'auto top',
+            placement: 'top',
             template: '<div class="popover tutor-solution-popover" role="tooltip">' + 
                       '<div class="arrow"></div>' + 
                       '<div class="popover-title tutor-panel-heading"></div>' + 
@@ -60,7 +60,8 @@ Tutor.prototype.$initializeExerciseEditors = function() {
           });
           popover.on('inserted.bs.popover', function() {
             var dataPopover = popover.data('bs.popover');
-            var content = dataPopover.tip().find('.popover-content');
+            var popoverTip = dataPopover.tip();
+            var content = popoverTip.find('.popover-content');
             var editor = attachAceEditor(content.get(0), solution);
             editor.setReadOnly(true);
             // adjust editor and container height
@@ -72,13 +73,17 @@ Tutor.prototype.$initializeExerciseEditors = function() {
             content.css('height', height + 'px');
           });
           button.popover('show');
+          
+          // left position of popover and arrow
+          var popoverElement = exercise.find('.tutor-solution-popover');
+          popoverElement.css('left', '0');
+          var popoverArrow = popoverElement.find('.arrow');
+          popoverArrow.css('left', button.position().left + (button.outerWidth()/2) + 'px');
         }
         else {
           button.popover('destroy');
         }
       });
-     
-
     }
   }
 

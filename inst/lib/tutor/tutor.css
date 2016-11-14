@@ -3,6 +3,10 @@
   display: none;
 }
 
+.tutor-exercise {
+  position: relative;
+}
+
 .tutor-exercise-input {
   margin-top: 15px;
 }
@@ -36,10 +40,15 @@
 
 
 .tutor-solution-popover {
-  min-width: 600px;
-  max-width: 100%
-  right: 20px;
+  max-width: none;
+  width: 100%;
 }
+
+.tutor-solution-popover.top>.arrow {
+  margin-left: 0px;
+}
+
+
 
 .tutor-exercise-error {
   color: #a94442;
