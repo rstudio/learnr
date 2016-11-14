@@ -15,16 +15,37 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-knitr::opts_chunk$set(exercise.eval = TRUE)
+knitr::opts_knit$set(tutor.label.required = TRUE)
+knitr::opts_chunk$set(exercise.eval = FALSE, exercise.cap = "Sandbox")
+Sys.setenv(RMARKDOWN_SHINY_PRERENDERED_DEVMODE = "1")
 ```
+
+## solution
+
+```{r exercise1, exercise=TRUE}
+# Change the filter to select February rather than January
+nycflights <- filter(nycflights, month == 1)
+```
+
+```{r exercise1-solution}
+nycflights <- filter(nycflights, month == 2)
+```
+
 
 ## summary
 
-Modify this code so that it prints only the first 20 rows of the `mtcars` dataset:
+Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
 
-```{r, exercise=TRUE, exercise.eval=TRUE}
+```{r cars, exercise=TRUE, exercise.eval=FALSE}
+Sys.sleep(5)
 mtcars
 ```
+
+```{r cars-solution}
+mtcars <- head(mtcars, n = 5)
+mtcars
+```
+
 
 ## ggplot
 
@@ -47,7 +68,7 @@ dygraph(ldeaths)
 ## quiz
 
 
-```{r, echo=FALSE}
+```{r quiz1, echo=FALSE}
 quiz(caption = "Quiz: Check for Understanding",
   question("What number is the letter A in the *English* alphabet?",
     answer("8"),

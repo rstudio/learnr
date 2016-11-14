@@ -147,6 +147,9 @@ install_knitr_hooks <- function() {
       extra_html <- NULL
       if (before) {
         
+        # verify the chunk has a label if required
+        verify_tutor_chunk_label()
+      
         # inject ace dependency
         knitr::knit_meta_add(list(ace_html_dependency()))
         
@@ -220,4 +223,15 @@ exercise_server_chunk <- function(label) {
   })()
 })', label, label, label))
 }
+
+
+verify_tutor_chunk_label <- function() {
+  label <- knitr::opts_current$get('label')
+  unnamed_label <- knitr::opts_knit$get('unnamed.chunk.label')
+  if (isTRUE(grepl(paste0('^', unnamed_label), label))) {
+    stop("Code chunks with exercises or quiz questions must be labeled.", 
+         call. = FALSE)
+  }
+}
+
 

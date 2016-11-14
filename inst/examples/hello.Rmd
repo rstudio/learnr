@@ -10,7 +10,7 @@ library(tutor)
     
 The following code computes the answer to 1+1. Change it so it computes 2 + 2:
     
-```{r, exercise=TRUE}
+```{r addition, exercise=TRUE}
 1 + 1
 ```
 

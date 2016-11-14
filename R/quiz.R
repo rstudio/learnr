@@ -69,6 +69,9 @@ question <- function(text,
       stop("Object which is not an answer passed to question function")
   })
   
+  # verify chunk label if necessary
+  verify_tutor_chunk_label()
+  
   # create question
   question <- list(
     q = quiz_text(text),

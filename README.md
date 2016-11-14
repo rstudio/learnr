@@ -28,7 +28,7 @@ For example, here's a very simple tutorial:
     
     The following code computes the answer to 1+1. Change it so it computes 2 + 2:
     
-    ```{r, exercise=TRUE}
+    ```{r addition, exercise=TRUE}
     1 + 1
     ```
     
@@ -61,6 +61,14 @@ A tutorial is just a standard R Markdown document that has three additional attr
 1. Loads the **tutor** package.
 2. Includes one or more interactive components (exercises, quiz questions, etc.).
 3. Uses the `runtime: shiny_prerendered` directive in the YAML header.
+
+There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled `addition`:
+
+    ```{r addition, exercise=TRUE}
+    1 + 1
+    ```
+
+This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.
 
 The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
 
@@ -120,7 +128,7 @@ Note that these options can all be specified either globally or per-chunk. For e
 
 While this code sets per-chunk options:
 
-    ```{r, exercise=TRUE, exercise.timelimit = 60}
+    ```{r addition, exercise=TRUE, exercise.timelimit = 60}
     1 + 1
     ```
 
@@ -148,7 +156,7 @@ By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial 
 
 You can arrange for an exercise to be pre-evaluated (and it's output shown) using the `exercise.eval` chunk option. For example:
 
-    ```{r, exercise=TRUE, exercise.eval=TRUE}
+    ```{r filter, exercise=TRUE, exercise.eval=TRUE}
     # Change the filter to select February rather than January
     filter(nycflights, month == 1)
     ```
@@ -171,39 +179,39 @@ You can however arrange for setup code to be run before evaluation of an exercis
         nycflights <- nycflights13::flights
         ```
     
-        ```{r, exercise=TRUE}
+        ```{r filter, exercise=TRUE}
         # Change the filter to select February rather than January
         filter(nycflights, month == 1)
         ```
     
-        ```{r, exercise=TRUE}
+        ```{r arrange, exercise=TRUE}
         # Change the sort order to Ascending
         arrange(nycflights, desc(arr_delay))
         ```
 
-2. Create a setup chunk that's shared by several exercises. If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `flights-setup`:
+2. Create a setup chunk that's shared by several exercises. If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
 
-        ```{r setup_flights}
+        ```{r prepare-flights}
         nycflights <- nycflights13::flights
         ```
         
-        ```{r, exercise=TRUE, exercise.setup = "setup_flights"}
+        ```{r filter, exercise=TRUE, exercise.setup = "prepare-flights"}
         # Change the filter to select February rather than January
         filter(nycflights, month == 1)
         ```
     
-        ```{r, exercise=TRUE, exercise.setup = "setup_flights"}
+        ```{r arrange, exercise=TRUE, exercise.setup = "prepare-flights"}
         # Change the sort order to Ascending
         arrange(nycflights, desc(arr_delay))
         ```
 
-3. Create a setup chunk that's specific to another chunk using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `exercise1`) then add another chunk with the same label plus a `-setup` suffix (e.g. `exercise1-setup`). For example:
+3. Create a setup chunk that's specific to another chunk using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `filter`) then add another chunk with the same label plus a `-setup` suffix (e.g. `filter-setup`). For example:
 
-        ```{r exercise1-setup}
+        ```{r filter-setup}
         nycflights <- nycflights13::flights
         ```
         
-        ```{r exercise1, exercise=TRUE}
+        ```{r filter, exercise=TRUE}
         # Change the filter to select February rather than January
         nycflights <- filter(nycflights, month == 1)
         ```
@@ -212,12 +220,12 @@ You can however arrange for setup code to be run before evaluation of an exercis
 
 You can optionally provide a solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk a `-solution` chunk label suffix. For example:
 
-        ```{r exercise1, exercise=TRUE}
+        ```{r filter, exercise=TRUE}
         # Change the filter to select February rather than January
         nycflights <- filter(nycflights, month == 1)
         ```
         
-        ```{r exercise1-solution}
+        ```{r filter-solution}
         nycflights <- filter(nycflights, month == 2)
         ```
 
@@ -235,7 +243,7 @@ By default, the size of the exercise editor provided to users will match the num
 
 You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
 
-    ```{r, exercise=TRUE, exercise.lines=15}
+    ```{r add-function, exercise=TRUE, exercise.lines=15}
     # Write a function to add two numbers together
     add_numbers <- function(a, b) {
       
@@ -246,7 +254,7 @@ You can also specify a number of lines explicitly using the `exercise.lines` chu
 
 To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
 
-    ```{r, exercise=TRUE, exercise.timelimit=10}
+    ```{r exercise1, exercise=TRUE, exercise.timelimit=10}
     
 To limit all exercise chunks within a tutorial to 10 seconds of execution time:
 
@@ -266,7 +274,7 @@ You can include one or more multiple-choice quiz questions within a tutorial to 
 
 Include a question by calling the `question` function within an R code chunk:
 
-    ```{r, echo=FALSE}
+    ```{r letter-a, echo=FALSE}
     question("What number is the letter A in the English alphabet?",
       answer("8"),
       answer("14"),
@@ -277,7 +285,7 @@ Include a question by calling the `question` function within an R code chunk:
     
 The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:
 
-    ```{r, echo=FALSE}
+    ```{r where-am-i, echo=FALSE}
     question("Where are you right now? (select ALL that apply)",
       answer("Planet Earth", correct = TRUE),
       answer("Pluto"),
@@ -297,7 +305,7 @@ This is what the above example quiz questions would look like within a tutorial:
 
 You can add answer-specific correct/incorrect messages using the `message` option. For example:
 
-    ```{r, echo=FALSE}
+    ```{r letter-a, echo=FALSE}
     question("What number is the letter A in the *English* alphabet?",
       answer("8"),
       answer("1", correct = TRUE),
@@ -312,7 +320,7 @@ You can add answer-specific correct/incorrect messages using the `message` optio
 
 You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the `$` delimiter. For example:
 
-    ```{r, echo=FALSE}
+    ```{r math, echo=FALSE}
     x <- 42
     question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
       answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
@@ -331,7 +339,7 @@ Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This i
 
 If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
 
-    ```{r, echo=FALSE}
+    ```{r letter-a, echo=FALSE}
     question("What number is the letter A in the English alphabet?",
       answer("8"),
       answer("14"),
@@ -346,7 +354,7 @@ If you want the answers to questions to be randomly arranged, you can add the `r
 
 You can present a group of related questions as a quiz by wrapping your questions within the `quiz` function. For example:
 
-    ```{r, echo=FALSE}
+    ```{r quiz1, echo=FALSE}
     quiz(caption = "Quiz 1",
       question("What number is the letter A in the *English* alphabet?",
         answer("8"),
