@@ -150,6 +150,27 @@ You can however arrange for setup code to be run before evaluation of an exercis
         nycflights <- filter(nycflights, month == 1)
         ```
 
+### Exercise Solutions
+
+You can optionally provide a solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk a `-solution` chunk label suffix. For example:
+
+        ```{r exercise1, exercise=TRUE}
+        # Change the filter to select February rather than January
+        nycflights <- filter(nycflights, month == 1)
+        ```
+        
+        ```{r exercise1-solution}
+        nycflights <- filter(nycflights, month == 2)
+        ```
+
+A "Solution" button will be added to the exercise alongside the "Run Code" button:
+
+<kbd>
+<img src="README_files/images/solution.png"  width="730" height="96"/>
+</kbd>    
+    
+
+
 ### Exercise Editor Size
 
 By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
@@ -208,7 +229,7 @@ The above example defines a question with a single correct answer. You can also 
     )
     ```
 
-Note that for the examples above we specify the `echo = FALSE` option on the R code chunks that produce the quesitons. This is required to ensure that the R source code for the questions is not printed within the document.
+Note that for the examples above we specify the `echo = FALSE` option on the R code chunks that produce the questions. This is required to ensure that the R source code for the questions is not printed within the document.
 
 This is what the above example quiz questions would look like within a tutorial:
 
