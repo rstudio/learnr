@@ -25,7 +25,7 @@ Tutor.prototype.$exerciseSupportCode = function(label) {
     return code.text();
   else
     return null;
-}
+};
 
 // get the exercise container of an element
 Tutor.prototype.$exerciseContainer = function(el) {
