@@ -110,7 +110,7 @@ question <- function(text,
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",
-      src = system.file("htmlwidgets/lib/slickquiz", package = "tutor"),
+      src = html_dependency_src("htmlwidgets", "lib", "slickquiz"),
       script = "js/slickQuiz.js",
       stylesheet = c("css/slickQuiz.css", "css/slickQuizTutor.css")
     )

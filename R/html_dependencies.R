@@ -1,23 +1,22 @@
 
 
-tutor_html_dependency <- function() {
-  
-  # return package source directory when in dev mode
-  tutor_src <- function() {
-    if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
-      r_dir <- getSrcDirectory(tutor_html_dependency, unique = TRUE)
-      pkg_dir <- dirname(r_dir)
-      file.path(pkg_dir, "inst", "lib", "tutor")
-    }
-    else {
-      system.file("lib/tutor", package = "tutor")
-    }
+html_dependency_src <- function(...) {
+  if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
+    r_dir <- getSrcDirectory(html_dependency_src, unique = TRUE)
+    pkg_dir <- dirname(r_dir)
+    file.path(pkg_dir, "inst", ...)
   }
-  
+  else {
+    system.file(..., package = "tutor")
+  }
+}
+
+
+tutor_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "tutor",
     version = utils::packageVersion("tutor"),
-    src = tutor_src(),
+    src = html_dependency_src("lib", "tutor"),
     script = c(
       "tutor.js", 
       "exercise.js",
