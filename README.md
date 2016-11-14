@@ -184,7 +184,7 @@ You can also specify a number of lines explicitly using the `exercise.lines` chu
     }
     ```
 
-### Exercise Timeouts
+### Exercise Time Limits
 
 To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
 
