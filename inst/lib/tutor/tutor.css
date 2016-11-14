@@ -30,7 +30,13 @@
   margin-top: -1px;
   font-size: 11px;
   margin-left: 10px;
+  padding-right: 8px;
   font-weight: normal;
+}
+
+.tutor-exercise-input .btn-xs i {
+  width: 10px;
+  margin-right: 1px;
 }
 
 .tutor-exercise-input .panel-body {

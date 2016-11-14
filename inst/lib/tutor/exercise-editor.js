@@ -163,7 +163,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     input_div.append(panel_body);
     
     // create action button
-    var run_button = $('<a class="btn btn-success btn-xs ' + 
+    var run_button = $('<a class="btn btn-success btn-xs btn-tutor-run-code ' + 
                        'pull-right action-button"></a>');
     run_button.append($('<i class="fa fa-play"></i>'));
     run_button.attr('type', 'button');
@@ -174,7 +174,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     run_button.attr('title', title);
     run_button.on('click', function() {
       removeSolution(exercise);
-      output_frame.addClass('recalculating');
+      thiz.$showExerciseProgress(output_frame, true);
     });
     panel_heading.append(run_button);
     

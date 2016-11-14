@@ -105,15 +105,8 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       ensureExerciseVisible(el);
     },
     
-    showProgress: function (el, show) {
-      var RECALCULATING = 'recalculating';
-      var outputFrame = this.outputFrame(el);
-      if (show) {
-        outputFrame.addClass(RECALCULATING);
-      }
-      else {
-        outputFrame.removeClass(RECALCULATING);
-      }
+    showProgress: function(el, show) {
+      thiz.$showExerciseProgress(el, show);
     },
     
     outputFrame: function(el) {
