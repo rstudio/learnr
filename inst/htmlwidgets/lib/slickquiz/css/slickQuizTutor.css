@@ -1,6 +1,7 @@
 
 .questions {
   padding: 8px;
+  margin-bottom: 0;
 }
 
 .questions h3 {
@@ -12,7 +13,7 @@
 
 .answers {
   padding-left: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .answers label {
@@ -41,4 +42,8 @@
 
 .quiz-table > tbody > tr > td {
   padding: 0;
+}
+
+.quiz .panel-body {
+  padding: 10px;
 }
