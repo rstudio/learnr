@@ -25,6 +25,12 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
   // remove a solution for an exercise
   function removeSolution(exercise) {
+    // destory clipboardjs object if we've got one
+    var solutionButton = exercise.find('.btn-tutor-copy-solution');
+    if (solutionButton.length > 0)
+      solutionButton.data('clipboard').destroy();
+      
+    // destroy popover
     exercise.find('.btn-tutor-solution').popover('destroy');
   }
 
@@ -70,18 +76,39 @@ Tutor.prototype.$initializeExerciseEditors = function() {
             trigger: "manual"
           });
           popover.on('inserted.bs.popover', function() {
+            
+            // get popover element
             var dataPopover = popover.data('bs.popover');
             var popoverTip = dataPopover.tip();
             var content = popoverTip.find('.popover-content');
-            var editor = attachAceEditor(content.get(0), solution);
-            editor.setReadOnly(true);
+            
             // adjust editor and container height
-            var lines = Math.max(editor.session.getLength(), kMinLines);
-            editor.setOptions({
+            var solutionEditor = attachAceEditor(content.get(0), solution);
+            solutionEditor.setReadOnly(true);
+            var lines = Math.max(solutionEditor.session.getLength(), kMinLines);
+            solutionEditor.setOptions({
               minLines: lines
             });
-            var height = lines * editor.renderer.lineHeight;
+            var height = lines * solutionEditor.renderer.lineHeight;
             content.css('height', height + 'px');
+            
+            // add copy button
+            var popoverTitle = popoverTip.find('.popover-title');
+            var copyButton = $('<a class="btn btn-default btn-xs btn-tutor-copy-solution pull-right"></a>');
+            copyButton.append($('<i class="fa fa-copy"></i>'));
+            copyButton.append(" Copy to Clipboard");
+            popoverTitle.append(copyButton);
+            var clipboard = new Clipboard(copyButton[0], {
+              text: function(trigger) {
+                return solution;
+              }
+            });
+            clipboard.on('success', function(e) {
+              removeSolution(exercise);
+              editor.focus();
+            });
+            copyButton.data('clipboard', clipboard);
+            
           });
           button.popover('show');
           
