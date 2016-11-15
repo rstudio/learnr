@@ -195,7 +195,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     run_button.append($('<i class="fa fa-play"></i>'));
     run_button.attr('type', 'button');
     run_button.append(' Run Code');
-    run_button.attr('id', create_id('button'));
+    run_button.attr('id', create_id('run-button'));
     var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
     var title = "Run code (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
     run_button.attr('title', title);

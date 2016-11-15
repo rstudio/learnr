@@ -58,18 +58,18 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     },
     
     subscribe: function(el, callback) {
-      this.executeButton(el).on('click.exerciseInputBinding', function() {
+      this.runButton(el).on('click.exerciseInputBinding', function() {
         callback(true);
       });
     },
     
     unsubscribe: function(el) {
-      this.executeButton(el).off('.exerciseInputBinding');
+      this.runButton(el).off('.exerciseInputBinding');
     },
     
-    executeButton: function(el) {
+    runButton: function(el) {
       var label = exerciseLabel(el);
-      return $("#tutor-exercise-" + label + "-button");
+      return $("#tutor-exercise-" + label + "-run-button");
     }
   });
   Shiny.inputBindings.register(exerciseInputBinding, 'tutor.exerciseInput');
