@@ -313,27 +313,19 @@ What the code within the "-check" chunk actually does will vary depending on whi
 <td><code>evaluate_result</code></td>
 <td>The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.</td>
 </tr>
-<tr class="even">
-<td><code>html_result</code></td>
-<td>The output of the evaluation as HTML.</td>
-</tr>
 </tbody>
 </table>
 
+You can use the `feedback` function to return the appropriate feedback after performing whatever checks are specified. For example:
 
-Here is the default implementation, which simply returns the `html_result` without any checking:
 
 ```r
-check_exercise <- function(label, user_code, check_code, 
-                           envir_result, evaluate_result, html_result, 
-                           ...) {
-  html_result
+check_exercise <- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
+  tutor::feedback("Great job!", type = "success", location = "append")
 }
 ```
 
 Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
-
-Custom exercise checker functions should always return HTML output (i.e. HTML tags objects as produced by the [htmltools](https://www.rdocumentation.org/packages/htmltools/) package). In some cases you'll return the default HTML output passed in `html_result` with some annotations, and in other cases you may replace the output entirely.
 
 ## Quiz Questions
 

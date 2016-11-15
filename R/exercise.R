@@ -85,7 +85,8 @@ evaluate_exercise <- function(exercise, envir) {
   knitr_options$opts_chunk$error <- TRUE
   knitr_options$knit_hooks$error = function(x, options) {
     msg <- sub(" [^:]+:", ":", x)
-    as.character(htmltools::div(class = "tutor-exercise-error", msg))
+    as.character(htmltools::div(class = "alert alert-danger", 
+                                role = "alert", msg))
   }
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate =function(code, envir, ...) {
@@ -121,24 +122,34 @@ evaluate_exercise <- function(exercise, envir) {
   output <- paste(output, collapse = "\n")
   
   # capture output as HTML w/ dependencies
-  html <- htmltools::attachDependencies(
+  output_html <- htmltools::attachDependencies(
     htmltools::HTML(output),
     dependencies
   )
   
-  # get the exercise checker (default just returns the output)
+  # get the exercise checker (default does nothing)
   checker <- knitr::opts_knit$get("tutor.exercise.checker")
-  if (is.null(exercise$check) || is.null(checker)) {
-    checker <- function(..., html_result) {
-      html_result
-    }
-  }
+  if (is.null(exercise$check) || is.null(checker))
+    checker <- function(...) { NULL }
   
   # call the checker 
-  checker(label = exercise$label,
-          user_code = exercise$code,
-          check_code = exercise$check,
-          envir_result = envir,
-          evaluate_result = evaluate_result,
-          html_result = html)
+  feedback <- checker(label = exercise$label,
+                      user_code = exercise$code,
+                      check_code = exercise$check,
+                      envir_result = envir,
+                      evaluate_result = evaluate_result)
+  
+  # amend output with feedback as required
+  if (!is.null(feedback)) {
+    feedback_html <- htmltools::as.tags(feedback)
+    if (feedback$location == "append")
+      htmltools::tagList(output_html, feedback_html)
+    else if (feedback$location == "prepend")
+      htmltools::tagList(feedback_html, output_html)
+    else if (feedback$location == "replace")
+      feedback_html
+  }
+  else {
+    output_html
+  }
 }
