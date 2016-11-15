@@ -19,7 +19,7 @@ knitr::opts_knit$set(tutor.label.required = TRUE)
 knitr::opts_chunk$set(exercise.eval = FALSE, exercise.cap = "Sandbox")
 
 knitr::opts_knit$set(tutor.exercise.checker = function(...) {
-  feedback("Nice job!", location = "replace", type = "error")
+  feedback("Nice job!", location = "append")
 })
 
 ```
@@ -45,8 +45,9 @@ nycflights <- filter(nycflights, month == 2)
 
 Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
 
-```{r cars, exercise=TRUE, exercise.eval=FALSE}
-Sys.sleep(5)
+```{r cars, exercise=TRUE, exercise.eval=FALSE, exercise.timelimit=1}
+for (i in 1:5)
+  Sys.sleep(1)
 mtcars
 ```
 

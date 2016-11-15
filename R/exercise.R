@@ -63,6 +63,7 @@ evaluate_exercise <- function(exercise, envir) {
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
+  knitr::opts_chunk$set(error = FALSE)
   
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
@@ -82,14 +83,9 @@ evaluate_exercise <- function(exercise, envir) {
     fig_retina = exercise$options$fig.retina, 
     keep_md = FALSE
   )
-  knitr_options$opts_chunk$error <- TRUE
-  knitr_options$knit_hooks$error = function(x, options) {
-    msg <- sub(" [^:]+:", ":", x)
-    as.character(htmltools::div(class = "alert alert-danger", 
-                                role = "alert", msg))
-  }
+  
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate =function(code, envir, ...) {
+  knitr_options$knit_hooks$evaluate = function(code, envir, ...) {
     evaluate_result <<- evaluate::evaluate(code, envir, ...)
     evaluate_result
   }
@@ -101,13 +97,26 @@ evaluate_exercise <- function(exercise, envir) {
                   )
   )
   
-  # knit the Rmd to markdown 
-  output_file <- rmarkdown::render(input = exercise_rmd,
-                                   output_format = output_format,
-                                   envir = envir,
-                                   clean = FALSE,
-                                   quiet = TRUE,
-                                   run_pandoc = FALSE)
+  # knit the Rmd to markdown (catch and report errors)
+  error_html <- NULL
+  tryCatch({
+    output_file <- rmarkdown::render(input = exercise_rmd,
+                                     output_format = output_format,
+                                     envir = envir,
+                                     clean = FALSE,
+                                     quiet = TRUE,
+                                     run_pandoc = FALSE)
+  }, error = function(e) {
+    msg <- sub(" [^:]+:", ":", e$message)
+    pattern <- gettext("reached elapsed time limit", domain="R")
+    if (regexpr(pattern, msg) != -1L) {
+      msg <- paste("Error: Your code ran longer than the permitted time", 
+                   "limit for this exercise.")
+    }
+    error_html <<- div(class = "alert alert-danger", role = "alert", msg)
+  })
+  if (!is.null(error_html))
+    return(error_html)
   
   # capture the dependenies
   dependencies <- attr(output_file, "knit_meta")
