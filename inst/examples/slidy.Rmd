@@ -12,7 +12,7 @@ library(dygraphs)
 
 Modify the dyOptions to customize the graph's appearance:
 
-```{r dygraph-options, exercise=TRUE, exercise.eval=TRUE, fig.height=6}
+```{r dygraph-options, exercise=TRUE, exercise.eval=TRUE, fig.height=5.5}
 dygraph(ldeaths) %>% 
   dyOptions(fillGraph = TRUE, drawGrid = TRUE)
 ```

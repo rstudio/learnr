@@ -17,7 +17,11 @@ runtime: shiny_prerendered
 library(tutor)
 knitr::opts_knit$set(tutor.label.required = TRUE)
 knitr::opts_chunk$set(exercise.eval = FALSE, exercise.cap = "Sandbox")
-Sys.setenv(RMARKDOWN_SHINY_PRERENDERED_DEVMODE = "1")
+
+knitr::opts_knit$set(tutor.exercise.checker = function(...) {
+  feedback("Nice job!", location = "replace", type = "error")
+})
+
 ```
 
 ## solution
@@ -49,6 +53,11 @@ mtcars
 ```{r cars-solution}
 mtcars <- head(mtcars, n = 5)
 mtcars
+```
+
+
+```{r cars-check}
+#
 ```
 
 
