@@ -2,7 +2,7 @@
 
 html_dependency_src <- function(...) {
   if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
-    r_dir <- getSrcDirectory(html_dependency_src, unique = TRUE)
+    r_dir <- utils::getSrcDirectory(html_dependency_src, unique = TRUE)
     pkg_dir <- dirname(r_dir)
     file.path(pkg_dir, "inst", ...)
   }
