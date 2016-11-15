@@ -100,7 +100,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
             popoverTitle.append(copyButton);
             var clipboard = new Clipboard(copyButton[0], {
               text: function(trigger) {
-                return solution;
+                return solutionEditor.getValue();
               }
             });
             clipboard.on('success', function(e) {
