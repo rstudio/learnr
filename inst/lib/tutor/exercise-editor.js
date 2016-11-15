@@ -31,7 +31,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
   // hide solutions when clicking outside exercises
   $(document).on('mouseup', function(ev) {
     var exercise = thiz.$exerciseContainer(ev.target);
-    if (exercise.length == 0) {
+    if (exercise.length === 0) {
       thiz.$forEachExercise(removeSolution);
     }
   });
