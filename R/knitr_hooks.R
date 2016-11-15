@@ -150,8 +150,11 @@ install_knitr_hooks <- function() {
         # verify the chunk has a label if required
         verify_tutor_chunk_label()
       
-        # inject ace dependency
-        knitr::knit_meta_add(list(ace_html_dependency()))
+        # inject ace and clipboardjs dependencies
+        knitr::knit_meta_add(list(
+          list(ace_html_dependency()),
+          list(clipboardjs_html_dependency())
+        ))
         
         # write server code
         exercise_server_chunk(options$label)

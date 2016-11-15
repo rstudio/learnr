@@ -6,6 +6,7 @@ Authors@R: c(
   person("JJ", "Allaire", role = c("aut", "cre"), email = "jj@rstudio.com"),
   person(family = "RStudio, Inc.", role = "cph"),
   person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
+  person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),
   person("Julie", "Cameron", role = "ctb", comment = "SlickQuiz library"),
   person(family = "Quicken Loans", role = "cph", comment = "SlickQuiz library")
   )

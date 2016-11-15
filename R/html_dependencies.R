@@ -27,6 +27,16 @@ tutor_html_dependency <- function() {
   )
 }
 
+clipboardjs_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "clipboardjs",
+    version = "1.5.15",
+    src = system.file("lib/clipboardjs", package = "tutor"),
+    script = "clipboard.min.js"
+  )
+}
+
+
 ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
