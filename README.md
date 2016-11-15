@@ -270,7 +270,7 @@ Since tutorials are a highly interactive format you should in general be designi
 
 ### Checking Exercises
 
-The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `tutor.exercise.checker` knitr option. For example:
+The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `tutor.exercise.checker` knitr option within the `setup` chunk of your tutorial. For example:
 
     ```{r setup, include=FALSE}
     knitr::opts_knitr$set(tutor.exercise.checker = checkthat::check_exercise)
