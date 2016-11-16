@@ -51,7 +51,7 @@ Modify this code so that it prints only the first 5 rows of the `mtcars` dataset
 mtcars
 ```
 
-```{r cars-solution}
+```{r cars-hint}
 mtcars <- head(mtcars, n = 5)
 mtcars
 ```

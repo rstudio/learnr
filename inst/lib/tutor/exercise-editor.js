@@ -50,15 +50,26 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var label = exercise.attr('data-label');
 
     // see if there is a solution for this exercise
+    var hint = thiz.$exerciseSupportCode(label + "-hint");
     var solution = thiz.$exerciseSupportCode(label + "-solution");
-    if (solution) {
+    if (hint || solution) {
+      
+      // determine caption
+      var caption = null;
+      if (hint) {
+        caption = "Hint";
+        solution = hint;
+      }
+      else {
+        caption = "Solution";
+      }
       
       // create solution buttion
       var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
       button.attr('role', 'button');
-      button.attr('title', 'Solution');
+      button.attr('title', caption);
       button.append($('<i class="fa fa-lightbulb-o"></i>'));
-      button.append(' Solution'); 
+      button.append(' ' + caption); 
       panel_heading.append(button);      
       
       // handle showing and hiding the popover

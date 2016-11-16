@@ -220,9 +220,9 @@ You can however arrange for setup code to be run before evaluation of an exercis
         nycflights <- filter(nycflights, month == 1)
         ```
 
-### Exercise Solutions
+### Exercise Hints and Solutions
 
-You can optionally provide a solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk a `-solution` chunk label suffix. For example:
+You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk with "-hint" or "-solution" chunk label suffix. For example:
 
         ```{r filter, exercise=TRUE}
         # Change the filter to select February rather than January
@@ -233,7 +233,7 @@ You can optionally provide a solution for each exercise that can be optionally d
         nycflights <- filter(nycflights, month == 2)
         ```
 
-A "Solution" button is added to the left side of the exercise header region:
+A "Hint" or "Solution" button is added to the left side of the exercise header region:
 
 <img src="README_files/images/solution.png"  width="732" height="183"/>
     
