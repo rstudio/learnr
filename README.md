@@ -238,39 +238,6 @@ A "Solution" button will be added to the exercise alongside the "Run Code" butto
 <kbd>
 <img src="README_files/images/solution.png"  width="730" height="96"/>
 </kbd>    
-    
-
-
-### Exercise Editor Size
-
-By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
-
-You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
-
-    ```{r add-function, exercise=TRUE, exercise.lines=15}
-    # Write a function to add two numbers together
-    add_numbers <- function(a, b) {
-      
-    }
-    ```
-
-### Exercise Time Limits
-
-To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
-
-    ```{r exercise1, exercise=TRUE, exercise.timelimit=10}
-    
-To limit all exercise chunks within a tutorial to 10 seconds of execution time:
-
-    ```{r setup, include=FALSE}
-    knitr::opts_chunk$set(exercise.timelimit = 10)
-    ```
-
-To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)
-
-    options(tutor.exercise.timelimit = 10)
-    
-Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutor.exercise.timelimit` if not otherwise specified is 30 seconds. 
 
 ### Checking Exercises
 
@@ -330,6 +297,37 @@ check_exercise <- function(label, user_code, check_code, envir_result, evaluate_
 ```
 
 Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
+
+### Exercise Editor Size
+
+By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.
+
+You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
+
+    ```{r add-function, exercise=TRUE, exercise.lines=15}
+    # Write a function to add two numbers together
+    add_numbers <- function(a, b) {
+      
+    }
+    ```
+
+### Exercise Time Limits
+
+To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutor.exercise.timelimit` option. For example, to limit a single chunk to 10 seconds of execution time:
+
+    ```{r exercise1, exercise=TRUE, exercise.timelimit=10}
+    
+To limit all exercise chunks within a tutorial to 10 seconds of execution time:
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(exercise.timelimit = 10)
+    ```
+
+To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)
+
+    options(tutor.exercise.timelimit = 10)
+    
+Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutor.exercise.timelimit` if not otherwise specified is 30 seconds. 
 
 ## Quiz Questions
 
