@@ -15,3 +15,5 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 5.  Interactive Shiny applets.
 
 You can find documentation on using the **tutor** package here: <https://rstudio.github.com/tutor/45796A4F836C4B5B>
+
+**IMPORTANT NOTE**: This repository is not yet public however the documentation URL above is publicly accessible (but obscured using the "45796A4F836C4B5B" token at the end). Please do not share this link until the repository itself is made public, which should be in the next week or two.
