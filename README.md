@@ -233,15 +233,13 @@ You can optionally provide a solution for each exercise that can be optionally d
         nycflights <- filter(nycflights, month == 2)
         ```
 
-A "Solution" button will be added to the exercise alongside the "Run Code" button:
+A "Solution" button is added to the left side of the exercise header region:
 
-<kbd>
-<img src="README_files/images/solution.png"  width="730" height="96"/>
-</kbd>    
-
+<img src="README_files/images/solution.png"  width="732" height="183"/>
+    
 ### Checking Exercises
 
-The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `tutor.exercise.checker` knitr option within the `setup` chunk of your tutorial. For example:
+The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial. For example:
 
     ```{r setup, include=FALSE}
     knitr::opts_chunk$set(exercise.checker = checkthat::check_exercise)
@@ -253,6 +251,12 @@ To arrange for an exercise to be checked, add a "-check" chunk for it includes w
      ```{r exercise1-check, exercise=TRUE, exercise.timelimit=10}
      # code to check exercise here
      ```
+     
+When you provide a "-check" chunk for an exercise, an additional "Submit Answer" button is added to the exercise editor:
+
+<img src="README_files/images/exercise-submit.png"  width="730" height="92"/>
+    
+This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.
 
 What the code within the "-check" chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user's exercise input:
 

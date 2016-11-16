@@ -26,15 +26,15 @@ knitr::opts_chunk$set(
 
 
 
-## solution
+## solution {style="margin-top: 50px;"}
 
 ```{r exercise1-setup}
+library(dyplr)
 nycflights <- nycflights13::flights
 ```
 
 ```{r exercise1, exercise=TRUE}
 # Change the filter to select February rather than January
-library(dplyr)
 nycflights <- filter(nycflights, month == 1)
 ```
 
