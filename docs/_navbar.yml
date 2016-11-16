@@ -1,0 +1,18 @@
+title: "tutor for R"
+type: inverse
+left:
+  - text: "Home"
+    href: index.html
+  - text: "Exercises"
+    href: exercises.html
+  - text: "Questions"
+    href: questions.html
+  - text: "Deployment"
+    href: deployment.html
+right:
+  - icon: fa-github
+    href: https://github.com/rstudio/tutor
+
+
+
+

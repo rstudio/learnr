@@ -7,22 +7,3 @@ output:
     toc: true
     toc_depth: 2
     toc_float: true
-navbar:
-  title: "tutor for R"
-  type: inverse
-  left:
-    - text: "Home"
-      href: index.html
-    - text: "Exercises"
-      href: exercises.html
-    - text: "Questions"
-      href: questions.html
-    - text: "Deployment"
-      href: deployment.html
-  right:
-    - icon: fa-github
-      href: https://github.com/rstudio/tutor
-
-
-
-
