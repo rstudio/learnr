@@ -29,15 +29,26 @@
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
-  margin-left: 10px;
+  margin-left: 12px;
   padding-right: 8px;
   font-weight: normal;
+}
+
+.btn-light {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.tutor-exercise-input .btn-tutor-solution {
+  margin-left: 15px;  
 }
 
 .tutor-exercise-input .btn-xs i {
   width: 10px;
   margin-right: 1px;
 }
+
 
 .tutor-exercise-input .panel-body {
   padding: 0;

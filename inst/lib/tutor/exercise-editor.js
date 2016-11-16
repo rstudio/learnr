@@ -54,7 +54,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     if (solution) {
       
       // create solution buttion
-      var button = $('<a class="btn btn-warning btn-xs btn-tutor-solution pull-right"></a>');
+      var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
       button.attr('role', 'button');
       button.attr('title', 'Solution');
       button.append($('<i class="fa fa-lightbulb-o"></i>'));
@@ -94,7 +94,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
             
             // add copy button
             var popoverTitle = popoverTip.find('.popover-title');
-            var copyButton = $('<a class="btn btn-default btn-xs btn-tutor-copy-solution pull-right"></a>');
+            var copyButton = $('<a class="btn btn-light btn-xs btn-tutor-copy-solution pull-right"></a>');
             copyButton.append($('<i class="fa fa-copy"></i>'));
             copyButton.append(" Copy to Clipboard");
             popoverTitle.append(copyButton);
@@ -189,21 +189,35 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var panel_body = $('<div class="panel-body"></div>');
     input_div.append(panel_body);
     
-    // create action button
-    var run_button = $('<a class="btn btn-success btn-xs btn-tutor-run-code ' + 
-                       'pull-right action-button"></a>');
-    run_button.append($('<i class="fa fa-play"></i>'));
-    run_button.attr('type', 'button');
-    run_button.append(' Run Code');
-    run_button.attr('id', create_id('run-button'));
-    var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    var title = "Run code (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
-    run_button.attr('title', title);
-    run_button.on('click', function() {
-      removeSolution(exercise);
-      thiz.$showExerciseProgress(output_frame, true);
-    });
-    panel_heading.append(run_button);
+    // function to add a submit button
+    function add_submit_button(icon, style, text, check) {
+      var button = $('<a class="btn ' + style + ' btn-xs btn-tutor-run ' + 
+                       'pull-right"></a>');
+      button.append($('<i class="fa ' + icon + '"></i>'));
+      button.attr('type', 'button');
+      button.append(' ' + text);
+      var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      var title = text;
+      if (!check)
+        title = title + " (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
+      button.attr('title', title);
+      if (check)
+        button.attr('data-check', '1');
+      button.attr('data-icon', icon);
+      button.on('click', function() {
+        removeSolution(exercise);
+        thiz.$showExerciseProgress(output_frame, button, true);
+      });
+      panel_heading.append(button);
+      return button;
+    }
+    
+    // create submit answer button if checks are enabled
+    if (thiz.$exerciseCheckCode(label) !== null)
+      add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
+    
+    // create run button
+    var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false);
     
     // create code div and add it to the input div
     var code_div = $('<div class="tutor-exercise-code-editor"></div>');

@@ -1,6 +1,6 @@
 
 # run an exercise and return HTML UI
-handle_exercise <- function(exercise, envir = parent.frame(), check = FALSE) {
+handle_exercise <- function(exercise, envir = parent.frame()) {
   
   # get timelimit option (either from chunk option or from global option)
   timelimit <- exercise$options$exercise.timelimit
@@ -19,11 +19,11 @@ handle_exercise <- function(exercise, envir = parent.frame(), check = FALSE) {
   })
   
   # evaluate the exercise
-  evaluator(evaluate_exercise(exercise, envir, check), timelimit = timelimit)
+  evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
 }
 
 # evaluate an exercise and return a list containing output and dependencies
-evaluate_exercise <- function(exercise, envir, check) {
+evaluate_exercise <- function(exercise, envir) {
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
@@ -139,7 +139,7 @@ evaluate_exercise <- function(exercise, envir, check) {
   # get the exercise checker (default does nothing)
   checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")), 
                   envir = envir)
-  if (!check || is.null(exercise$check) || is.null(checker))
+  if (is.null(exercise$check) || is.null(checker))
     checker <- function(...) { NULL }
   
   # call the checker 

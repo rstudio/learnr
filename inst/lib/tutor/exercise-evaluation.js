@@ -28,6 +28,10 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     
     getValue: function(el) {
       
+      // return null if we haven't been clicked
+      if (!this.clicked)
+        return null;
+      
       // value object to return 
       var value = {};
       
@@ -50,27 +54,38 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       if (value.options["exercise.setup"])
         value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);     
       else
-        value.setup = thiz.$exerciseSupportCode(label + "-setup");  
-      value.check = thiz.$exerciseSupportCode(label + "-check");
+        value.setup = thiz.$exerciseSupportCode(label + "-setup");
+        
+      if (this.check)
+        value.check = thiz.$exerciseCheckCode(label);
+
+      // some randomness to ensure we re-execute on button clicks
+      value.timestamp = new Date().getTime();
       
       // return the value
       return value;
     },
     
     subscribe: function(el, callback) {
-      this.runButton(el).on('click.exerciseInputBinding', function() {
+      var thiz = this;
+      this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
+        thiz.clicked = true;
+        thiz.check = ev.target.hasAttribute('data-check');
         callback(true);
       });
     },
     
     unsubscribe: function(el) {
-      this.runButton(el).off('.exerciseInputBinding');
+      this.runButtons(el).off('.exerciseInputBinding');
     },
     
-    runButton: function(el) {
-      var label = exerciseLabel(el);
-      return $("#tutor-exercise-" + label + "-run-button");
-    }
+    runButtons: function(el) {
+      var exercise = thiz.$exerciseContainer(el);
+      return exercise.find('.btn-tutor-run');
+    },
+    
+    clicked: false,
+    check: false
   });
   Shiny.inputBindings.register(exerciseInputBinding, 'tutor.exerciseInput');
   
@@ -109,7 +124,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     },
     
     showProgress: function(el, show) {
-      thiz.$showExerciseProgress(el, show);
+      thiz.$showExerciseProgress(el, null, show);
     },
     
     outputFrame: function(el) {

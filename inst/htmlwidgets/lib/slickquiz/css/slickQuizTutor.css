@@ -47,3 +47,7 @@
 .quiz .panel-body {
   padding: 10px;
 }
+
+.checkAnswer i {
+  margin-right: 8px;
+}

@@ -17,12 +17,14 @@ runtime: shiny_prerendered
 library(tutor)
 knitr::opts_chunk$set(
   exercise.eval = FALSE, 
-  exercise.cap = "Sandbox",
+  exercise.cap = "Exercise",
   exercise.checker = function(...) {
     feedback("Nice job!", location = "append")
   }
 )
 ```
+
+
 
 ## solution
 
@@ -46,8 +48,6 @@ nycflights <- filter(nycflights, month == 2)
 Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
 
 ```{r cars, exercise=TRUE, exercise.eval=FALSE, exercise.timelimit=1}
-for (i in 1:5)
-  Sys.sleep(1)
 mtcars
 ```
 

@@ -27,28 +27,42 @@ Tutor.prototype.$exerciseSupportCode = function(label) {
     return null;
 };
 
+Tutor.prototype.$exerciseCheckCode = function(label) {
+  return this.$exerciseSupportCode(label + "-check");
+};
+
 // get the exercise container of an element
 Tutor.prototype.$exerciseContainer = function(el) {
   return $(el).closest(".tutor-exercise");
 };
 
 // show progress for exercise
-Tutor.prototype.$showExerciseProgress = function(el, show) {
+Tutor.prototype.$showExerciseProgress = function(el, button, show) {
+  
+  // references to various UI elements
   var exercise = this.$exerciseContainer(el);
   var outputFrame = exercise.children('.tutor-exercise-output-frame');
-  var runButton = exercise.find('.btn-tutor-run-code');
-  var runIcon = runButton.children('i');
+  var runButtons = exercise.find('.btn-tutor-run');
+  
+  // show/hide progress UI
   var spinner = 'fa-spinner fa-spin fa-fw';
   if (show) {
     outputFrame.addClass('recalculating');
-    runButton.addClass('disabled').removeClass('active');
-    runIcon.removeClass('fa-play');
-    runIcon.addClass(spinner);
+    runButtons.addClass('disabled');
+    if (button !== null) {
+      var runIcon = button.children('i');
+      runIcon.removeClass(button.attr('data-icon'));
+      runIcon.addClass(spinner);
+    }
   }
   else {
     outputFrame.removeClass('recalculating');
-    runButton.addClass('active').removeClass('disabled');
-    runIcon.addClass('fa-play');
-    runIcon.removeClass(spinner);
+    runButtons.removeClass('disabled');
+    runButtons.each(function() {
+      var button = $(this);
+      var runIcon = button.children('i');
+      runIcon.addClass(button.attr('data-icon'));
+      runIcon.removeClass(spinner);
+    });
   }
 };
