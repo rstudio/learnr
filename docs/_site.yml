@@ -1,0 +1,9 @@
+name: "tutor-docs"
+output_dir: "45796A4F836C4B5B"
+navbar:
+  title: "R tutor"
+  left:
+    - text: "Home"
+      href: index.html
+
+
