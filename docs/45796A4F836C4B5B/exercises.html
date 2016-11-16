@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Exercises</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">tutor for R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="exercises.html">Exercises</a>
+</li>
+<li>
+  <a href="questions.html">Questions</a>
+</li>
+<li>
+  <a href="deployment.html">Deployment</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/rstudio/tutor">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercises</h1>
+
+</div>
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see it’s results. There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Option
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>exercise.cap</code>
+</td>
+<td>
+Caption for exercise chunk (defaults to “Exercise”)
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>exercise.eval</code>
+</td>
+<td>
+Whether to pre-evaluate the exercise so the reader can see some default output (defaults to <code>FALSE</code>).
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>exercise.lines</code>
+</td>
+<td>
+Lines of code for exercise editor (default to size of code chunk).
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>exercise.timelimit</code>
+</td>
+<td>
+Number of seconds to limit execution time to (defaults to 30).
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>exercise.checker</code>
+</td>
+<td>
+Function used to check exercise answers.
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options:</p>
+<pre><code>```{r setup, include=FALSE}
+library(tutor)
+knitr::opts_chunk$set(exercise.timelimit = 60)
+```</code></pre>
+<p>While this code sets per-chunk options:</p>
+<pre><code>```{r addition, exercise=TRUE, exercise.timelimit = 60}
+1 + 1
+```</code></pre>
+<p>There are also some other specialized chunks that can be used with an exercise chunk, including:</p>
+<ol style="list-style-type: decimal">
+<li><p>Exercise <a href="#exercise-setup">setup chunks</a>, which enable you to execute code to setup the environment immediately prior to executing submitted code.</p></li>
+<li><p>Exercise <a href="#exercise-solutions">solution chunks</a> which enable you to provide a solution to the execrise that can be optionally viewed by users of the tutorial.</p></li>
+</ol>
+<p>The use of these special chunks is also described in detail below.</p>
+</div>
+<div id="exercise-evaluation" class="section level2">
+<h2>Exercise Evaluation</h2>
+<p>By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).</p>
+<p>You can arrange for an exercise to be pre-evaluated (and it’s output shown) using the <code>exercise.eval</code> chunk option. For example:</p>
+<pre><code>```{r filter, exercise=TRUE, exercise.eval=TRUE}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```</code></pre>
+<p>You can also set a global default for exercise evaluation using <code>knitr::opts_chunk</code> within your global setup chunk, for example:</p>
+<pre><code>```{r setup, include=FALSE}
+knitr::opts_chunk$set(exercise.eval = TRUE)
+```</code></pre>
+</div>
+<div id="exercise-setup" class="section level2">
+<h2>Exercise Setup</h2>
+<p>Code chunks with <code>exercise=TRUE</code> are evaluated within standalone environments. This means that they don’t have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).</p>
+<p>You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:</p>
+<ol style="list-style-type: decimal">
+<li><p>Add code to the global <code>setup</code> chunk. This code is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
+<pre><code>```{r setup, include=FALSE}
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```
+
+```{r arrange, exercise=TRUE}
+# Change the sort order to Ascending
+arrange(nycflights, desc(arr_delay))
+```</code></pre></li>
+<li><p>Create a setup chunk that’s shared by several exercises. If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
+<pre><code>```{r prepare-flights}
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE, exercise.setup = &quot;prepare-flights&quot;}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```
+
+```{r arrange, exercise=TRUE, exercise.setup = &quot;prepare-flights&quot;}
+# Change the sort order to Ascending
+arrange(nycflights, desc(arr_delay))
+```</code></pre></li>
+<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
+<pre><code>```{r filter-setup}
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE}
+# Change the filter to select February rather than January
+nycflights &lt;- filter(nycflights, month == 1)
+```</code></pre></li>
+</ol>
+</div>
+<div id="hints-and-solutions" class="section level2">
+<h2>Hints and Solutions</h2>
+<p>You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
+<pre><code>    ```{r filter, exercise=TRUE}
+    # Change the filter to select February rather than January
+    nycflights &lt;- filter(nycflights, month == 1)
+    ```
+    
+    ```{r filter-solution}
+    nycflights &lt;- filter(nycflights, month == 2)
+    ```</code></pre>
+<p>A “Hint” or “Solution” button is added to the left side of the exercise header region:</p>
+<p><img src="images/solution.png"  width="732" height="183"/></p>
+</div>
+<div id="checking-exercises" class="section level2">
+<h2>Checking Exercises</h2>
+<p>The <strong>tutor</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial. For example:</p>
+<pre><code>```{r setup, include=FALSE}
+knitr::opts_chunk$set(exercise.checker = checkthat::check_exercise)
+```</code></pre>
+<p>To arrange for an exercise to be checked, add a “-check” chunk for it includes whatever code is required to check the exercise, for example:</p>
+<pre><code> ```{r exercise1-check}
+ # code to check exercise here
+ ```
+ </code></pre>
+<p>When you provide a “-check” chunk for an exercise, an additional “Submit Answer” button is added to the exercise editor:</p>
+<p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
+<p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
+<p>What the code within the “-check” chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user’s exercise input:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Argument
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>label</code>
+</td>
+<td>
+Label for exercise chunk.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>user_code</code>
+</td>
+<td>
+R code submitted by the user.
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>check_code</code>
+</td>
+<td>
+Code provided within the “-check” chunk for the exercise.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>envir_result</code>
+</td>
+<td>
+The R environment after the execution of the chunk.
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>evaluate_result</code>
+</td>
+<td>
+The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can use the <code>feedback</code> function to return the appropriate feedback after performing whatever checks are specified. For example:</p>
+<pre class="r"><code>check_exercise &lt;- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
+  tutor::feedback(&quot;Great job!&quot;, type = &quot;success&quot;, location = &quot;append&quot;)
+}</code></pre>
+<p>Note that the <code>...</code> argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.</p>
+</div>
+<div id="exercise-caption" class="section level2">
+<h2>Exercise Caption</h2>
+<p>By default exercises are displayed with caption of “Exercise”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a less tutorial/learning oriented connotation (e.g. “Sandbox” or “R Code”). For example:</p>
+<pre><code>```{r setup, include=FALSE}
+library(tutor)
+knitr::opts_chunk$set(exercise.cap = &quot;R Code&quot;)
+```</code></pre>
+</div>
+<div id="editor-size" class="section level2">
+<h2>Editor Size</h2>
+<p>By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.</p>
+<p>You can also specify a number of lines explicitly using the <code>exercise.lines</code> chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:</p>
+<pre><code>```{r add-function, exercise=TRUE, exercise.lines=15}
+# Write a function to add two numbers together
+add_numbers &lt;- function(a, b) {
+  
+}
+```</code></pre>
+</div>
+<div id="time-limits" class="section level2">
+<h2>Time Limits</h2>
+<p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutor.exercise.timelimit</code> option. For example, to limit a single chunk to 10 seconds of execution time:</p>
+<pre><code>```{r exercise1, exercise=TRUE, exercise.timelimit=10}</code></pre>
+<p>To limit all exercise chunks within a tutorial to 10 seconds of execution time:</p>
+<pre><code>```{r setup, include=FALSE}
+knitr::opts_chunk$set(exercise.timelimit = 10)
+```</code></pre>
+<p>To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)</p>
+<pre><code>options(tutor.exercise.timelimit = 10)</code></pre>
+<p>Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for <code>tutor.exercise.timelimit</code> if not otherwise specified is 30 seconds.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

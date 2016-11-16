@@ -11,16 +11,19 @@
 
 
 
-<title>My Website</title>
+<title>tutor: Interactive tutorials for R</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -161,9 +164,103 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
 
 
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -171,16 +268,30 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R tutor</a>
+      <a class="navbar-brand" href="index.html">tutor for R</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
 </li>
+<li>
+  <a href="exercises.html">Exercises</a>
+</li>
+<li>
+  <a href="questions.html">Questions</a>
+</li>
+<li>
+  <a href="deployment.html">Deployment</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/rstudio/tutor">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -190,15 +301,207 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">My Website</h1>
+<h1 class="title toc-ignore">tutor: Interactive tutorials for R</h1>
 
 </div>
 
 
-<p>Hello, Website!</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <strong>tutor</strong> package makes it easy to turn any <a href="http://rmarkdown.rstudio.com">R Markdown</a> document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Narrative, figures, illustrations, and equations.</p></li>
+<li><p>Code exercises (R code chunks that users can edit and execute directly).</p></li>
+<li><p>Quiz questions.</p></li>
+<li><p>Videos (supported services include YouTube and Vimeo).</p></li>
+<li><p>Interactive Shiny applets.</p></li>
+</ol>
+<p>To create a tutorial, just use <code>library(tutor)</code> within your Rmd file to activate tutorial mode, then use the <code>exercise = TRUE</code> attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.</p>
+<p>For example, here’s a very simple tutorial:</p>
+<pre><code>---
+title: &quot;Hello, Tutor!&quot;
+output: html_document
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(tutor)
+```
+
+The following code computes the answer to 1+1. Change it so it computes 2 + 2:
+
+```{r addition, exercise=TRUE}
+1 + 1
+```</code></pre>
+<p>This is what the running tutorial document looks like after the user has entered their answer:</p>
+<p><img src="images/hello.png"  width="879" height="279" style="border: solid 1px #cccccc;"/></p>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<div id="installation" class="section level3">
+<h3>Installation</h3>
+<ol style="list-style-type: decimal">
+<li><p>Install the development version of the <strong>tutor</strong> package from GitHub as follows:</p>
+<pre class="r"><code>devtools::install_github(&quot;rstudio/tutor&quot;, auth_token = &quot;33cdbf9d899fe6eff5022e67e21f08964f7c7b19&quot;)</code></pre></li>
+<li><p>Install the current <a href="https://dailies.rstudio.com">RStudio Daily Build</a> (v1.0.114 or higher) as it includes tools for easily running and previewing tutorials.</p></li>
+</ol>
+</div>
+<div id="creating-a-tutorial" class="section level3">
+<h3>Creating a Tutorial</h3>
+<p>A tutorial is just a standard R Markdown document that has three additional attributes:</p>
+<ol style="list-style-type: decimal">
+<li>Loads the <strong>tutor</strong> package.</li>
+<li>Includes one or more interactive components (exercises, quiz questions, etc.).</li>
+<li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</li>
+</ol>
+<p>There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled <code>addition</code>:</p>
+<pre><code>```{r addition, exercise=TRUE}
+1 + 1
+```</code></pre>
+<p>This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.</p>
+<p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
+<p>You can copy and paste the simple “Hello, Tutor!” example from above to get started creating your own tutorials.</p>
+</div>
+<div id="running-tutorials" class="section level3">
+<h3>Running Tutorials</h3>
+<p>Tutorials are Shiny applications that are run using the <code>rmarkdown::run</code> function rather than the <code>shiny::runApp</code> function. For example:</p>
+<pre class="r"><code>rmarkdown::run(&quot;tutorial.Rmd&quot;)</code></pre>
+<p>Assuming you’ve installed the <strong>tutor</strong> package you can run a live version of the “Hello, Tutor” example provided above with:</p>
+<pre class="r"><code>rmarkdown::run(system.file(&quot;examples/hello.Rmd&quot;, package = &quot;tutor&quot;))</code></pre>
+</div>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see it’s results:</p>
+<p><img src="images/exercises.png" width=770 height=922 style="border: solid 1px #cccccc;"></p>
+<p>Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The <a href="exercises.html">Exercises</a> page includes a more in depth discussion of exercies and their various available options and behaviors.</p>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
+<p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
+<pre><code>```{r letter-a, echo=FALSE}
+question(&quot;What number is the letter A in the English alphabet?&quot;,
+  answer(&quot;8&quot;),
+  answer(&quot;14&quot;),
+  answer(&quot;1&quot;, correct = TRUE),
+  answer(&quot;23&quot;)
+)
+```</code></pre>
+<p>Here’s what the above question would look like within a tutorial:</p>
+<p><img src="images/question.png" width=729 height=227></p>
+<p>The <a href="quesiton.html">Questions</a> page includes additional information on using questions within tutorials.</p>
+</div>
+<div id="including-videos" class="section level2">
+<h2>Including Videos</h2>
+<p>You can include videos published on either <a href="https://www.youtube.com">YouTube</a> or <a href="https://vimeo.com">Vimeo</a> within a tutorial using the standard markdown image syntax. For example:</p>
+<pre><code>![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
+ 
+![](https://vimeo.com/142172484)</code></pre>
+<p>Note that any valid YouTube or Vimeo URL will work, so the following is equivalent to the example above:</p>
+<pre><code>![](https://youtu.be/zNzZ1PfUDNk)
+ 
+![](https://player.vimeo.com/video/142172484)</code></pre>
+<div id="video-size" class="section level3">
+<h3>Video Size</h3>
+<p>Videos are responsively displayed at 100% of their container’s width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.</p>
+<p>To use 90% width rather than 100% width:</p>
+<pre><code>![](https://youtu.be/zNzZ1PfUDNk){width=&quot;90%&quot;}</code></pre>
+<p>To use a fixed width and height:</p>
+<pre><code>![](https://youtu.be/zNzZ1PfUDNk){width=&quot;560&quot; height=&quot;315&quot;}</code></pre>
+</div>
+</div>
+<div id="shiny-applets" class="section level2">
+<h2>Shiny Applets</h2>
+<p>The <strong>tutor</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
+<p>The basic technique is to add a <code>context=&quot;server&quot;</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
+<pre><code>```{r, echo=FALSE}
+sliderInput(&quot;bins&quot;, &quot;Number of bins:&quot;, min = 1, max = 50, value = 30)
+plotOutput(&quot;distPlot&quot;)
+```
+
+```{r, context=&quot;server&quot;}
+output$distPlot &lt;- renderPlot({
+  x &lt;- faithful[, 2]  # Old Faithful Geyser data
+  bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)
+  hist(x, breaks = bins, col = &#39;darkgray&#39;, border = &#39;white&#39;)
+})
+```</code></pre>
+<p>You can learn more by reading the <a href="http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html">Prerendered Shiny Documents</a> article on the R Markdown website.</p>
+</div>
+<div id="external-resources" class="section level2">
+<h2>External Resources</h2>
+<p>You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Directory
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>images/</code>
+</td>
+<td>
+Image files (e.g. PNG, JPEG, etc.)
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>css/</code>
+</td>
+<td>
+CSS stylesheets
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>js/</code>
+</td>
+<td>
+JavaScript scripts
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>www/</code>
+</td>
+<td>
+Any other files (e.g. downloadable datasets)
+</td>
+</tr>
+</tbody>
+</table>
+<p>The reason that all files within the directory of the main Rmd can’t be referenced from within the web document is that you may not want all files within your tutorial’s directory to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.</p>
+</div>
+<div id="tutorial-formats" class="section level2">
+<h2>Tutorial Formats</h2>
+<p>You aren’t limited to the default <code>html_document</code> format when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
+<p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
+<p>You can run a live version of this example with:</p>
+<pre class="r"><code>rmarkdown::run(system.file(&quot;examples/slidy.Rmd&quot;, package = &quot;tutor&quot;))</code></pre>
+<p>You can use the <strong>tutor</strong> package with any R Markdown format that:</p>
+<ol style="list-style-type: decimal">
+<li><p>Inherits from the <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> format (this includes <a href="http://rmarkdown.rstudio.com/html_document_format.html"><code>html_document</code></a>, <a href="http://rmarkdown.rstudio.com/ioslides_presentation_format.html"><code>ioslides_presentation</code></a>, <a href="http://rmarkdown.rstudio.com/slidy_presentation_format.html"><code>slidy_presentation</code></a>, and many others).</p></li>
+<li><p>Is marked as <code>boostrap_compatible</code>. This is a parameter of <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> which indicates that it’s safe to inject <a href="http://getbootstrap.com/">Booststrap</a> CSS into the document.</p></li>
+</ol>
+</div>
+<div id="deployment" class="section level2">
+<h2>Deployment</h2>
+<p>Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include within an R package and have users run it directly from within the package.</p>
+<p>The <a href="deployment.html">Deployment</a> page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.</p>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 

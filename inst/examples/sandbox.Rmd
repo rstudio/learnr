@@ -43,12 +43,12 @@ nycflights <- filter(nycflights, month == 2)
 ```
 
 
-## summary
+## Viewing Data
 
 Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
 
-```{r cars, exercise=TRUE, exercise.eval=FALSE, exercise.timelimit=1}
-mtcars
+```{r cars, exercise=TRUE, exercise.eval=TRUE, exercise.timelimit=1}
+head(mtcars, n = 5)
 ```
 
 ```{r cars-hint}
@@ -61,14 +61,23 @@ mtcars
 #
 ```
 
-
-## ggplot
+<div style="margin-top: 10px;">&nbsp;</div>
 
 Modify this plot to use the `cyl` variable rather than the `wt` variable:
 
-```{r ggplot, exercise=TRUE}
+```{r ggplot, exercise=TRUE, exercise.eval=TRUE, fig.width=8}
 library(ggplot2)
-qplot(mpg, wt, data = mtcars)
+qplot(mpg, cyl, data = mtcars)
+```
+
+```{r ggplot-hint}
+mtcars <- head(mtcars, n = 5)
+mtcars
+```
+
+```{r ggplot-check}
+mtcars <- head(mtcars, n = 5)
+mtcars
 ```
 
 ## dygraphs
@@ -81,6 +90,16 @@ dygraph(ldeaths)
 ```
 
 ## quiz
+
+
+```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
 
 
 ```{r quiz1, echo=FALSE}

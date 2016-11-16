@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^README_files$
+^README.R?md$
 ^dependencies$
 ^design$
 ^docs$
