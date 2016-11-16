@@ -7,3 +7,5 @@ output:
     toc: true
     toc_depth: 2
     toc_float: true
+    includes:
+      in_header: _include/header.html
