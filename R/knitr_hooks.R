@@ -183,7 +183,8 @@ install_knitr_hooks <- function() {
           preserved_options$exercise.df_print <- "default"
         preserved_options$exercise.timelimit <- options$exercise.timelimit
         preserved_options$exercise.setup <- options$exercise.setup
-        
+        preserved_options$exercise.checker <- deparse(options$exercise.checker)
+     
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
                         jsonlite::toJSON(preserved_options, auto_unbox = TRUE),

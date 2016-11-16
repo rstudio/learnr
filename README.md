@@ -110,11 +110,15 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 </tr>
 <tr class="odd">
 <td><code>exercise.lines</code></td>
-<td>Lines of code for exercise editor (default to size of code chunk)</td>
+<td>Lines of code for exercise editor (default to size of code chunk).</td>
 </tr>
 <tr class="even">
 <td><code>exercise.timelimit</code></td>
-<td>Number of seconds to limit execution time to (defaults to 30)</td>
+<td>Number of seconds to limit execution time to (defaults to 30).</td>
+</tr>
+<tr class="odd">
+<td><code>exercise.checker</code></td>
+<td>Function used to check exercise answers.</td>
 </tr>
 </tbody>
 </table>
@@ -273,7 +277,7 @@ Since tutorials are a highly interactive format you should in general be designi
 The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `tutor.exercise.checker` knitr option within the `setup` chunk of your tutorial. For example:
 
     ```{r setup, include=FALSE}
-    knitr::opts_knitr$set(tutor.exercise.checker = checkthat::check_exercise)
+    knitr::opts_chunk$set(exercise.checker = checkthat::check_exercise)
     ```
 
 To arrange for an exercise to be checked, add a "-check" chunk for it includes whatever code is required to check the exercise, for example:

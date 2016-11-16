@@ -137,7 +137,8 @@ evaluate_exercise <- function(exercise, envir, check) {
   )
   
   # get the exercise checker (default does nothing)
-  checker <- knitr::opts_knit$get("tutor.exercise.checker")
+  checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")), 
+                  envir = envir)
   if (!check || is.null(exercise$check) || is.null(checker))
     checker <- function(...) { NULL }
   

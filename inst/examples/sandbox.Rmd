@@ -15,13 +15,13 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-knitr::opts_knit$set(tutor.label.required = TRUE)
-knitr::opts_chunk$set(exercise.eval = FALSE, exercise.cap = "Sandbox")
-
-knitr::opts_knit$set(tutor.exercise.checker = function(...) {
-  feedback("Nice job!", location = "append")
-})
-
+knitr::opts_chunk$set(
+  exercise.eval = FALSE, 
+  exercise.cap = "Sandbox",
+  exercise.checker = function(...) {
+    feedback("Nice job!", location = "append")
+  }
+)
 ```
 
 ## solution
