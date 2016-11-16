@@ -248,7 +248,7 @@ The **tutor** package doesn't directly include features for checking exercise in
 To arrange for an exercise to be checked, add a "-check" chunk for it includes whatever code is required to check the exercise, for example:
 
 
-     ```{r exercise1-check, exercise=TRUE, exercise.timelimit=10}
+     ```{r exercise1-check}
      # code to check exercise here
      ```
      
