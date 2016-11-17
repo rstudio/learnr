@@ -23,8 +23,10 @@ Imports:
   knitr (>= 1.14),
   markdown,
   rmarkdown (>= 1.1.9017),
-  shiny (>= 0.13)
-Remotes: rstudio/rmarkdown
+  shiny (>= 0.14.2.9000)
+Remotes: 
+   rstudio/rmarkdown,
+   rstudio/shiny
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
