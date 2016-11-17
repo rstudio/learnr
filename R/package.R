@@ -6,6 +6,7 @@
 #' @importFrom htmlwidgets createWidget
 #' @importFrom markdown markdownToHTML markdownExtensions
 #' @importFrom evaluate evaluate
+#' @importFrom withr with_envvar
 NULL
 
 # install knitr hooks when package is attached to search path

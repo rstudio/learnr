@@ -15,13 +15,14 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   tutorials for learning about R and R packages.
 Imports:
   utils,
+  withr,
   jsonlite,
   htmltools (>= 0.3.5),
   htmlwidgets,
   evaluate,
   knitr (>= 1.14),
   markdown,
-  rmarkdown (>= 1.1.9015),
+  rmarkdown (>= 1.1.9017),
   shiny (>= 0.13)
 Remotes: rstudio/rmarkdown
 License: GPL-2
