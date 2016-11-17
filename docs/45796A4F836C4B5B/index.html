@@ -25,8 +25,20 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <meta name="robots" content="noindex">
+
+<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+<style type="text/css">
+.snippet {
+  border: solid 1px #cccccc;
+  margin-bottom: 12px;
+  width: 100%;
+}
+</style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -327,21 +339,10 @@ div.tocify {
 </ol>
 <p>To create a tutorial, just use <code>library(tutor)</code> within your Rmd file to activate tutorial mode, then use the <code>exercise = TRUE</code> attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.</p>
 <p>For example, here’s a very simple tutorial:</p>
-<pre><code>---
-title: &quot;Hello, Tutor!&quot;
-output: html_document
-runtime: shiny_prerendered
----
+<div id="hellotutor">
 
-```{r setup, include=FALSE}
-library(tutor)
-```
-
-The following code computes the answer to 1+1. Change it so it computes 2 + 2:
-
-```{r addition, exercise=TRUE}
-1 + 1
-```</code></pre>
+</div>
+<script type="text/javascript">loadSnippet('hellotutor')</script>
 <p>This is what the running tutorial document looks like after the user has entered their answer:</p>
 <p><img src="images/hello.png"  width="879" height="279" style="border: solid 1px #cccccc;"/></p>
 </div>
@@ -364,9 +365,10 @@ The following code computes the answer to 1+1. Change it so it computes 2 + 2:
 <li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</li>
 </ol>
 <p>There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled <code>addition</code>:</p>
-<pre><code>```{r addition, exercise=TRUE}
-1 + 1
-```</code></pre>
+<div id="addition">
+
+</div>
+<script type="text/javascript">loadSnippet('addition')</script>
 <p>This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.</p>
 <p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
 <p>You can copy and paste the simple “Hello, Tutor!” example from above to get started creating your own tutorials.</p>
@@ -389,53 +391,39 @@ The following code computes the answer to 1+1. Change it so it computes 2 + 2:
 <h2>Questions</h2>
 <p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
 <p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
-<pre><code>```{r letter-a, echo=FALSE}
-question(&quot;What number is the letter A in the English alphabet?&quot;,
-  answer(&quot;8&quot;),
-  answer(&quot;14&quot;),
-  answer(&quot;1&quot;, correct = TRUE),
-  answer(&quot;23&quot;)
-)
-```</code></pre>
+<div id="question">
+
+</div>
+<script type="text/javascript">loadSnippet('question')</script>
 <p>Here’s what the above question would look like within a tutorial:</p>
 <p><img src="images/question.png" width=729 height=227></p>
 <p>The <a href="quesiton.html">Questions</a> page includes additional information on using questions within tutorials.</p>
 </div>
 <div id="including-videos" class="section level2">
 <h2>Including Videos</h2>
-<p>You can include videos published on either <a href="https://www.youtube.com">YouTube</a> or <a href="https://vimeo.com">Vimeo</a> within a tutorial using the standard markdown image syntax. For example:</p>
-<pre><code>![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
- 
-![](https://vimeo.com/142172484)</code></pre>
-<p>Note that any valid YouTube or Vimeo URL will work, so the following is equivalent to the example above:</p>
-<pre><code>![](https://youtu.be/zNzZ1PfUDNk)
- 
-![](https://player.vimeo.com/video/142172484)</code></pre>
+<p>You can include videos published on either <a href="https://www.youtube.com">YouTube</a> or <a href="https://vimeo.com">Vimeo</a> within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:</p>
+<div id="videos">
+
+</div>
+<script type="text/javascript">loadSnippet('videos', 'markdown')</script>
 <div id="video-size" class="section level3">
 <h3>Video Size</h3>
 <p>Videos are responsively displayed at 100% of their container’s width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.</p>
-<p>To use 90% width rather than 100% width:</p>
-<pre><code>![](https://youtu.be/zNzZ1PfUDNk){width=&quot;90%&quot;}</code></pre>
-<p>To use a fixed width and height:</p>
-<pre><code>![](https://youtu.be/zNzZ1PfUDNk){width=&quot;560&quot; height=&quot;315&quot;}</code></pre>
+<p>You can specify an alternate percentage for the video’s width or an alternate fixed width and height. For example:</p>
+<div id="videos-size">
+
+</div>
+<script type="text/javascript">loadSnippet('videos-size', 'markdown')</script>
 </div>
 </div>
 <div id="shiny-applets" class="section level2">
 <h2>Shiny Applets</h2>
 <p>The <strong>tutor</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
 <p>The basic technique is to add a <code>context=&quot;server&quot;</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
-<pre><code>```{r, echo=FALSE}
-sliderInput(&quot;bins&quot;, &quot;Number of bins:&quot;, min = 1, max = 50, value = 30)
-plotOutput(&quot;distPlot&quot;)
-```
+<div id="shiny">
 
-```{r, context=&quot;server&quot;}
-output$distPlot &lt;- renderPlot({
-  x &lt;- faithful[, 2]  # Old Faithful Geyser data
-  bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)
-  hist(x, breaks = bins, col = &#39;darkgray&#39;, border = &#39;white&#39;)
-})
-```</code></pre>
+</div>
+<script type="text/javascript">loadSnippet('shiny')</script>
 <p>You can learn more by reading the <a href="http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html">Prerendered Shiny Documents</a> article on the R Markdown website.</p>
 </div>
 <div id="external-resources" class="section level2">
