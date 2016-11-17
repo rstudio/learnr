@@ -383,15 +383,11 @@ Function used to check exercise answers.
 </tr>
 </tbody>
 </table>
-<p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options:</p>
-<pre><code>```{r setup, include=FALSE}
-library(tutor)
-knitr::opts_chunk$set(exercise.timelimit = 60)
-```</code></pre>
-<p>While this code sets per-chunk options:</p>
-<pre><code>```{r addition, exercise=TRUE, exercise.timelimit = 60}
-1 + 1
-```</code></pre>
+<p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the <code>setup</code> chunk and also sets some local options on the <code>addition</code> chunk:</p>
+<div id="exerciseoptions">
+
+</div>
+<script type="text/javascript">loadSnippet('exerciseoptions')</script>
 <p>There are also some other specialized chunks that can be used with an exercise chunk, including:</p>
 <ol style="list-style-type: decimal">
 <li><p>Exercise <a href="#exercise-setup">setup chunks</a>, which enable you to execute code to setup the environment immediately prior to executing submitted code.</p></li>
@@ -402,15 +398,11 @@ knitr::opts_chunk$set(exercise.timelimit = 60)
 <div id="exercise-evaluation" class="section level2">
 <h2>Exercise Evaluation</h2>
 <p>By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).</p>
-<p>You can arrange for an exercise to be pre-evaluated (and it’s output shown) using the <code>exercise.eval</code> chunk option. For example:</p>
-<pre><code>```{r filter, exercise=TRUE, exercise.eval=TRUE}
-# Change the filter to select February rather than January
-filter(nycflights, month == 1)
-```</code></pre>
-<p>You can also set a global default for exercise evaluation using <code>knitr::opts_chunk</code> within your global setup chunk, for example:</p>
-<pre><code>```{r setup, include=FALSE}
-knitr::opts_chunk$set(exercise.eval = TRUE)
-```</code></pre>
+<p>You can arrange for an exercise to be pre-evaluated (and it’s output shown) using the <code>exercise.eval</code> chunk option. This option can also be set either globally or per-chunk:</p>
+<div id="exerciseeval">
+
+</div>
+<script type="text/javascript">loadSnippet('exerciseeval')</script>
 </div>
 <div id="exercise-setup" class="section level2">
 <h2>Exercise Setup</h2>
@@ -418,69 +410,39 @@ knitr::opts_chunk$set(exercise.eval = TRUE)
 <p>You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:</p>
 <ol style="list-style-type: decimal">
 <li><p>Add code to the global <code>setup</code> chunk. This code is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
-<pre><code>```{r setup, include=FALSE}
-nycflights &lt;- nycflights13::flights
-```
+<div id="exercisesetup" style="width: 95%;">
 
-```{r filter, exercise=TRUE}
-# Change the filter to select February rather than January
-filter(nycflights, month == 1)
-```
-
-```{r arrange, exercise=TRUE}
-# Change the sort order to Ascending
-arrange(nycflights, desc(arr_delay))
-```</code></pre></li>
+</div>
+<script type="text/javascript">loadSnippet('exercisesetup')</script></li>
 <li><p>Create a setup chunk that’s shared by several exercises. If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
-<pre><code>```{r prepare-flights}
-nycflights &lt;- nycflights13::flights
-```
+<div id="exercisesetupshared" style="width: 95%;">
 
-```{r filter, exercise=TRUE, exercise.setup = &quot;prepare-flights&quot;}
-# Change the filter to select February rather than January
-filter(nycflights, month == 1)
-```
-
-```{r arrange, exercise=TRUE, exercise.setup = &quot;prepare-flights&quot;}
-# Change the sort order to Ascending
-arrange(nycflights, desc(arr_delay))
-```</code></pre></li>
+</div>
+<script type="text/javascript">loadSnippet('exercisesetupshared')</script></li>
 <li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
-<pre><code>```{r filter-setup}
-nycflights &lt;- nycflights13::flights
-```
+<div id="exercisesetupsuffix" style="width: 95%;">
 
-```{r filter, exercise=TRUE}
-# Change the filter to select February rather than January
-nycflights &lt;- filter(nycflights, month == 1)
-```</code></pre></li>
+</div>
+<script type="text/javascript">loadSnippet('exercisesetupsuffix')</script></li>
 </ol>
 </div>
 <div id="hints-and-solutions" class="section level2">
 <h2>Hints and Solutions</h2>
 <p>You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
-<pre><code>    ```{r filter, exercise=TRUE}
-    # Change the filter to select February rather than January
-    nycflights &lt;- filter(nycflights, month == 1)
-    ```
-    
-    ```{r filter-solution}
-    nycflights &lt;- filter(nycflights, month == 2)
-    ```</code></pre>
+<div id="exercisesolution">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisesolution')</script>
 <p>A “Hint” or “Solution” button is added to the left side of the exercise header region:</p>
 <p><img src="images/solution.png"  width="732" height="183"/></p>
 </div>
 <div id="checking-exercises" class="section level2">
 <h2>Checking Exercises</h2>
-<p>The <strong>tutor</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial. For example:</p>
-<pre><code>```{r setup, include=FALSE}
-knitr::opts_chunk$set(exercise.checker = checkthat::check_exercise)
-```</code></pre>
-<p>To arrange for an exercise to be checked, add a “-check” chunk for it includes whatever code is required to check the exercise, for example:</p>
-<pre><code> ```{r exercise1-check}
- # code to check exercise here
- ```
- </code></pre>
+<p>The <strong>tutor</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example:</p>
+<div id="exercisecheck">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisecheck')</script>
 <p>When you provide a “-check” chunk for an exercise, an additional “Submit Answer” button is added to the exercise editor:</p>
 <p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
 <p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
@@ -540,40 +502,37 @@ The return value from the <a href="https://www.rdocumentation.org/packages/evalu
 </tbody>
 </table>
 <p>You can use the <code>feedback</code> function to return the appropriate feedback after performing whatever checks are specified. For example:</p>
-<pre class="r"><code>check_exercise &lt;- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
-  tutor::feedback(&quot;Great job!&quot;, type = &quot;success&quot;, location = &quot;append&quot;)
-}</code></pre>
+<div id="exercisefeedback">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisefeedback')</script>
 <p>Note that the <code>...</code> argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.</p>
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
 <p>By default exercises are displayed with caption of “Exercise”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a less tutorial/learning oriented connotation (e.g. “Sandbox” or “R Code”). For example:</p>
-<pre><code>```{r setup, include=FALSE}
-library(tutor)
-knitr::opts_chunk$set(exercise.cap = &quot;R Code&quot;)
-```</code></pre>
+<div id="exercisecaption">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisecaption')</script>
 </div>
 <div id="editor-size" class="section level2">
 <h2>Editor Size</h2>
 <p>By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.</p>
 <p>You can also specify a number of lines explicitly using the <code>exercise.lines</code> chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:</p>
-<pre><code>```{r add-function, exercise=TRUE, exercise.lines=15}
-# Write a function to add two numbers together
-add_numbers &lt;- function(a, b) {
-  
-}
-```</code></pre>
+<div id="exerciselines">
+
+</div>
+<script type="text/javascript">loadSnippet('exerciselines')</script>
 </div>
 <div id="time-limits" class="section level2">
 <h2>Time Limits</h2>
-<p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutor.exercise.timelimit</code> option. For example, to limit a single chunk to 10 seconds of execution time:</p>
-<pre><code>```{r exercise1, exercise=TRUE, exercise.timelimit=10}</code></pre>
-<p>To limit all exercise chunks within a tutorial to 10 seconds of execution time:</p>
-<pre><code>```{r setup, include=FALSE}
-knitr::opts_chunk$set(exercise.timelimit = 10)
-```</code></pre>
-<p>To establish a global default exercise timeout (note this can be overridden on a per-chunk or per-document basis)</p>
-<pre><code>options(tutor.exercise.timelimit = 10)</code></pre>
+<p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutor.exercise.timelimit</code> option.</p>
+<p>The following demonstrates setting a 10 second time limit as a global option, document level option, and chunk level option:</p>
+<div id="exercisetimelimit">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisetimelimit')</script>
 <p>Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for <code>tutor.exercise.timelimit</code> if not otherwise specified is 30 seconds.</p>
 </div>
 
