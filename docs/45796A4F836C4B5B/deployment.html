@@ -25,6 +25,7 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <meta name="robots" content="noindex">
 
@@ -364,19 +365,12 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 <ol style="list-style-type: decimal">
 <li><p>Install and configure the <strong>RAppArmor</strong> package as described here: <a href="https://github.com/jeroenooms/RAppArmor#readme" class="uri">https://github.com/jeroenooms/RAppArmor#readme</a></p></li>
 <li><p>Add the following line to the <code>/etc/apparmor.d/rapparmor.d/r-user</code> profile (this is required so that the default AppArmor profile also support calling the pandoc markdown renderer):</p>
-<pre class="bash"><code>/usr/lib/rstudio/bin/pandoc/* rix,</code></pre></li>
+<pre><code>/usr/lib/rstudio/bin/pandoc/* rix,</code></pre></li>
 <li><p>Define an evaluator function that uses <code>RAppArmor::eval.secure</code> and set it as the <code>tutor.exercise.evaluator</code> global options (you’d do this in e.g. the <code>Rprofile.site</code>):</p>
-<pre class="r"><code># exercise evaluation function
-apparmor_evaluate_exercise &lt;- function(expr, timelimit) {
-  RAppArmor::eval.secure(expr, 
-                         timeout = timelimit, 
-                         profile=&quot;r-user&quot;,
-                         RLIMIT_NPROC = 1000,
-                         RLIMIT_AS = 1024*1024*1024) 
-}
+<div id="exerciseevaluator">
 
-# install as exercise evaluator
-options(tutor.exercise.evaluator = apparmor_evaluate_exercise)</code></pre></li>
+</div>
+<script type="text/javascript">loadSnippet('exerciseevaluator')</script></li>
 </ol>
 </div>
 </div>

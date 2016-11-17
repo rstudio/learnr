@@ -61,24 +61,13 @@ The **tutor** package can also have it's exercise evaluation function replaced w
 
 2. Add the following line to the `/etc/apparmor.d/rapparmor.d/r-user` profile (this is required so that the default AppArmor profile also support calling the pandoc markdown renderer):
 
-    ```bash
+    ```
     /usr/lib/rstudio/bin/pandoc/* rix,
     ```
 
 3. Define an evaluator function that uses `RAppArmor::eval.secure` and set it as the `tutor.exercise.evaluator` global options (you'd do this in e.g. the `Rprofile.site`):
 
-    ```r
-    # exercise evaluation function
-    apparmor_evaluate_exercise <- function(expr, timelimit) {
-      RAppArmor::eval.secure(expr, 
-                             timeout = timelimit, 
-                             profile="r-user",
-                             RLIMIT_NPROC = 1000,
-                             RLIMIT_AS = 1024*1024*1024) 
-    }
-    
-    # install as exercise evaluator
-    options(tutor.exercise.evaluator = apparmor_evaluate_exercise)
-    ```
+    <div id="exerciseevaluator"></div>
+    <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
 
 
