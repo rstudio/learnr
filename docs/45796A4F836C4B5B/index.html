@@ -185,7 +185,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify
@@ -239,14 +239,21 @@ div.tocify {
 }
 
 .tocify-subheader .tocify-item {
-  font-size: 0.9em;
-  padding-left: 5px;
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -368,8 +375,8 @@ The following code computes the answer to 1+1. Change it so it computes 2 + 2:
 <h3>Running Tutorials</h3>
 <p>Tutorials are Shiny applications that are run using the <code>rmarkdown::run</code> function rather than the <code>shiny::runApp</code> function. For example:</p>
 <pre class="r"><code>rmarkdown::run(&quot;tutorial.Rmd&quot;)</code></pre>
-<p>Assuming you’ve installed the <strong>tutor</strong> package you can run a live version of the “Hello, Tutor” example provided above with:</p>
-<pre class="r"><code>rmarkdown::run(system.file(&quot;examples/hello.Rmd&quot;, package = &quot;tutor&quot;))</code></pre>
+<p>If your tutorial is included within an R package you can also run it via the <code>tutor::run_tutorial</code> function. For example, you can run a live version of the “Hello, Tutor” example provided above with:</p>
+<pre class="r"><code>tutor::run_tutorial(&quot;hello&quot;, package = &quot;tutor&quot;)</code></pre>
 </div>
 </div>
 <div id="exercises" class="section level2">
@@ -487,7 +494,7 @@ Any other files (e.g. downloadable datasets)
 <p>You aren’t limited to the default <code>html_document</code> format when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
 <p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
 <p>You can run a live version of this example with:</p>
-<pre class="r"><code>rmarkdown::run(system.file(&quot;examples/slidy.Rmd&quot;, package = &quot;tutor&quot;))</code></pre>
+<pre class="r"><code>tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
 <p>You can use the <strong>tutor</strong> package with any R Markdown format that:</p>
 <ol style="list-style-type: decimal">
 <li><p>Inherits from the <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> format (this includes <a href="http://rmarkdown.rstudio.com/html_document_format.html"><code>html_document</code></a>, <a href="http://rmarkdown.rstudio.com/ioslides_presentation_format.html"><code>ioslides_presentation</code></a>, <a href="http://rmarkdown.rstudio.com/slidy_presentation_format.html"><code>slidy_presentation</code></a>, and many others).</p></li>
@@ -496,7 +503,7 @@ Any other files (e.g. downloadable datasets)
 </div>
 <div id="deployment" class="section level2">
 <h2>Deployment</h2>
-<p>Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include within an R package and have users run it directly from within the package.</p>
+<p>Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include it within an R package and have users run it directly via the <code>tutor::run_tutorial</code> function.</p>
 <p>The <a href="deployment.html">Deployment</a> page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.</p>
 </div>
 

@@ -81,10 +81,10 @@ Tutorials are Shiny applications that are run using the `rmarkdown::run` functio
 rmarkdown::run("tutorial.Rmd")
 ```
 
-Assuming you've installed the **tutor** package you can run a live version of the "Hello, Tutor" example provided above with:
+If your tutorial is included within an R package you can also run it via the `tutor::run_tutorial` function. For example, you can run a live version of the "Hello, Tutor" example provided above with:
 
 ```r
-rmarkdown::run(system.file("examples/hello.Rmd", package = "tutor"))
+tutor::run_tutorial("hello", package = "tutor")
 ```
 
 ## Exercises
@@ -211,7 +211,7 @@ You aren't limited to the default `html_document` format when creating tutorials
 You can run a live version of this example with:
 
 ```r
-rmarkdown::run(system.file("examples/slidy.Rmd", package = "tutor"))
+tutor::run_tutorial("slidy", package = "tutor")
 ```
 
 You can use the **tutor** package with any R Markdown format that:
@@ -222,7 +222,7 @@ You can use the **tutor** package with any R Markdown format that:
 
 ## Deployment
 
-Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include within an R package and have users run it directly from within the package.
+Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include it within an R package and have users run it directly via the `tutor::run_tutorial` function.
 
 The [Deployment](deployment.html) page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.
 
