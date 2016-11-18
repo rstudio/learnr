@@ -5,6 +5,7 @@
 Tutor.prototype.$initializeExercises = function() {
   
   this.$initializeExerciseEditors();
+  this.$initializeExerciseSolutions();
   this.$initializeExerciseEvaluation();
   
 };
@@ -65,6 +66,22 @@ Tutor.prototype.$showExerciseProgress = function(el, button, show) {
       runIcon.removeClass(spinner);
     });
   }
+};
+
+
+// edit code within an ace editor
+Tutor.prototype.$attachAceEditor = function(target, code) {
+  var editor = ace.edit(target);
+  editor.setHighlightActiveLine(false);
+  editor.setShowPrintMargin(false);
+  editor.setShowFoldWidgets(false);
+  editor.renderer.setDisplayIndentGuides(false);
+  editor.setTheme("ace/theme/textmate");
+  editor.$blockScrolling = Infinity;
+  editor.session.setMode("ace/mode/r");
+  editor.session.getSelection().clearSelection();
+  editor.setValue(code, -1);
+  return editor;
 };
 
 // behavior constants

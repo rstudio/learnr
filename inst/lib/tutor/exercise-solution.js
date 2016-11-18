@@ -1,6 +1,6 @@
 
 
-Tutor.prototype.$initializeSolutions = function() {
+Tutor.prototype.$initializeExerciseSolutions = function() {
   
   // alias this
   var thiz = this;

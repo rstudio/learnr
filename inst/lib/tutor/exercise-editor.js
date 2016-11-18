@@ -5,9 +5,6 @@ Tutor.prototype.$initializeExerciseEditors = function() {
   // alias this
   var thiz = this;
 
-  // also initialize solutions
-  thiz.$initializeSolutions();
-
   this.$forEachExercise(function(exercise) {
     
     // capture label and caption
@@ -161,17 +158,3 @@ Tutor.prototype.$initializeExerciseEditors = function() {
   });  
 };
 
-// edit code within an ace editor
-Tutor.prototype.$attachAceEditor = function(target, code) {
-  var editor = ace.edit(target);
-  editor.setHighlightActiveLine(false);
-  editor.setShowPrintMargin(false);
-  editor.setShowFoldWidgets(false);
-  editor.renderer.setDisplayIndentGuides(false);
-  editor.setTheme("ace/theme/textmate");
-  editor.$blockScrolling = Infinity;
-  editor.session.setMode("ace/mode/r");
-  editor.session.getSelection().clearSelection();
-  editor.setValue(code, -1);
-  return editor;
-};
