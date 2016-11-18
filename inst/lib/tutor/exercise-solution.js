@@ -27,6 +27,16 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   // see if there is a single solution or hint for this exercise
   var solution = thiz.$exerciseSolutionCode(label);
   var hints = thiz.$exerciseHintsCode(label);
+  
+  // helper function to record solution/hint requests
+  function recordHintRequest(index) {
+    tutor.record(label, "exercise_hint", {
+      type: solution !== null ? "solution" : "hint",
+      index: hintIndex
+    });
+  }
+
+  // if we have a solution or a hint
   if (solution || hints) {
     
     // determine caption
@@ -63,6 +73,9 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
     
     // handle showing and hiding the popover
     button.on('click', function() {
+      
+      // record the request
+      recordHintRequest(hintIndex);
       
       // determine solution text
       var solutionText = solution !== null ? solution : hints[hintIndex];
@@ -108,6 +121,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
               solutionEditor.setValue(hints[hintIndex], -1);
               if (hintIndex == (hints.length-1))
                 nextHintButton.addClass('disabled');
+              recordHintRequest(hintIndex);
             });
             if (hintIndex == (hints.length-1))
               nextHintButton.addClass('disabled');
