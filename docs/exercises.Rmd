@@ -153,6 +153,8 @@ You can use the `feedback` function to return the appropriate feedback after per
 
 Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
 
+In addition to a text message the call to the `tutor::feedback` function also specifies whether the code submitted for the exercise should be considered correct or incorrect.
+
 ## Exercise Caption
 
 By default exercises are displayed with caption of "Exercise". However, in some cases you may want either a custom per-chunk caption or a generic caption with a less tutorial/learning oriented connotation (e.g. "Sandbox" or "R Code"). For example:
