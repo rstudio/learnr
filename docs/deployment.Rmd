@@ -70,4 +70,54 @@ The **tutor** package can also have it's exercise evaluation function replaced w
     <div id="exerciseevaluator"></div>
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
 
+## Recording User Actions
+
+As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). You can do this by providing a function for the `tutor.recorder` global function. 
+
+For example, here's how you would define a simple recorder function that prints to stdout:
+
+<div id="tutorrecorder"></div>
+<script type="text/javascript">loadSnippet('tutorrecorder')</script>
+
+The `tutorial` parameter provides a unique identifier for the tutorial (NOTE:  This is not yet implemented and is currently always `NULL`).
+
+The `user` parameter provides a unique identifer for the tutorial user (NOTE: This is not yet implemented and is currently always `NULL`).
+
+The `label` parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.
+
+The `action` parameter is one of the following values:
+
+<table>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>exercise_hint</td>
+<td>User requested a hint or solution for an exercise.</td>
+</tr>
+<tr class="even">
+<td>exercise_submission</td>
+<td>User submitted an answer for an exercise.</td>
+</tr>
+<tr class="odd">
+<td>question_submission</td>
+<td>User submitted an answer for a multiple-choice question.</td>
+</tr>
+</tbody>
+</table>
+
+The `data` parameter is an R list which provides additonal data that varies depending on which `action` is being recorded.
+
+
+
+
+
+
+
+
+
 

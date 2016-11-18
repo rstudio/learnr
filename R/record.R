@@ -1,18 +1,14 @@
 
-#' Record a user action
-#' 
-#' Record an action performed by a user in a tutorial (e.g. answering a question,
-#' taking a hint, etc.).
-#' 
-#' @param label Unique label for action
-#' @param action Name of action
-#' @param data Custom data for action
-#' 
-#' @export
+
 record <- function(label, action, data) {
   recorder <- getOption("tutor.recorder", default = NULL)
-  if (!is.null(recorder))
-    recorder(label, action, data)
+  if (!is.null(recorder)) {
+    recorder(tutorial = NULL, 
+             user = NULL, 
+             label = label,
+             action = action, 
+             data = data)
+  }
   invisible(NULL)
 }
 
@@ -36,9 +32,9 @@ record_exercise_submission <- function(label,
                      correct = correct))
 }
 
-record_question_response <- function(label, question, answers, correct) {
+record_question_submission <- function(label, question, answers, correct) {
   record(label = label, 
-         action = "question_response", 
+         action = "question_submission", 
          data = list(question = question, 
                      answers = answers,
                      correct = correct))

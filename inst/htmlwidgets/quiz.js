@@ -43,7 +43,7 @@ HTMLWidgets.widget({
                 var label = $("label[for='"+$(this).attr("id")+"']");
                 answers.push(label.text());
               });
-              tutor.record(x.label, "question_response", {
+              tutor.record(x.label, "question_submission", {
                 question: x.question,
                 answers: answers,
                 correct: correct

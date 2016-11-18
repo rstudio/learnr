@@ -374,6 +374,58 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 </ol>
 </div>
 </div>
+<div id="recording-actions" class="section level2">
+<h2>Recording Actions</h2>
+<p>As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). You can do this by providing a function for the <code>tutor.recorder</code> global function.</p>
+<p>For example, here’s how you would define a simple recorder function that prints to stdout:</p>
+<div id="tutorrecorder">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorrecorder')</script>
+<p>The <code>tutorial</code> parameter provides a unique identifier for the tutorial (NOTE: This is not yet implemented and is currently always <code>NULL</code>).</p>
+<p>The <code>user</code> parameter provides a unique identifer for the tutorial user (NOTE: This is not yet implemented and is currently always <code>NULL</code>).</p>
+<p>The <code>label</code> parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.</p>
+<p>The <code>action</code> parameter is one of the following values:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Action
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+exercise_hint
+</td>
+<td>
+User requested a hint or solution for an exercise.
+</td>
+</tr>
+<tr class="even">
+<td>
+exercise_submission
+</td>
+<td>
+User submitted an answer for an exercise.
+</td>
+</tr>
+<tr class="odd">
+<td>
+question_submission
+</td>
+<td>
+User submitted an answer for a multiple-choice question.
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>data</code> parameter is an R list which provides additonal data that varies depending on which <code>action</code> is being recorded.</p>
+</div>
 
 
 
