@@ -66,3 +66,7 @@ Tutor.prototype.$showExerciseProgress = function(el, button, show) {
     });
   }
 };
+
+// behavior constants
+Tutor.prototype.kMinLines = 3;
+

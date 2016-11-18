@@ -5,143 +5,8 @@ Tutor.prototype.$initializeExerciseEditors = function() {
   // alias this
   var thiz = this;
 
-  // behavior constants
-  var kMinLines = 3;
-
-  // edit code within an ace editor
-  function attachAceEditor(target, code) {
-    var editor = ace.edit(target);
-    editor.setHighlightActiveLine(false);
-    editor.setShowPrintMargin(false);
-    editor.setShowFoldWidgets(false);
-    editor.renderer.setDisplayIndentGuides(false);
-    editor.setTheme("ace/theme/textmate");
-    editor.$blockScrolling = Infinity;
-    editor.session.setMode("ace/mode/r");
-    editor.session.getSelection().clearSelection();
-    editor.setValue(code, -1);
-    return editor;
-  }
-
-  // remove a solution for an exercise
-  function removeSolution(exercise) {
-    // destory clipboardjs object if we've got one
-    var solutionButton = exercise.find('.btn-tutor-copy-solution');
-    if (solutionButton.length > 0)
-      solutionButton.data('clipboard').destroy();
-      
-    // destroy popover
-    exercise.find('.btn-tutor-solution').popover('destroy');
-  }
-
-  // hide solutions when clicking outside exercises
-  $(document).on('mouseup', function(ev) {
-    var exercise = thiz.$exerciseContainer(ev.target);
-    if (exercise.length === 0) {
-      thiz.$forEachExercise(removeSolution);
-    }
-  });
-
-
-  // add a solution for the specified exercise label
-  function addSolution(exercise, panel_heading, editor) {
-
-    // get label
-    var label = exercise.attr('data-label');
-
-    // see if there is a solution for this exercise
-    var hint = thiz.$exerciseSupportCode(label + "-hint");
-    var solution = thiz.$exerciseSupportCode(label + "-solution");
-    if (hint || solution) {
-      
-      // determine caption
-      var caption = null;
-      if (hint) {
-        caption = "Hint";
-        solution = hint;
-      }
-      else {
-        caption = "Solution";
-      }
-      
-      // create solution buttion
-      var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
-      button.attr('role', 'button');
-      button.attr('title', caption);
-      button.append($('<i class="fa fa-lightbulb-o"></i>'));
-      button.append(' ' + caption); 
-      panel_heading.append(button);      
-      
-      // handle showing and hiding the popover
-      button.on('click', function() {
-        var visible = button.next('div.popover:visible').length > 0;
-        if (!visible) {
-          var popover = button.popover({
-            placement: 'top',
-            template: '<div class="popover tutor-solution-popover" role="tooltip">' + 
-                      '<div class="arrow"></div>' + 
-                      '<div class="popover-title tutor-panel-heading"></div>' + 
-                      '<div class="popover-content"></div>' + 
-                      '</div>',
-            content: solution,
-            trigger: "manual"
-          });
-          popover.on('inserted.bs.popover', function() {
-            
-            // get popover element
-            var dataPopover = popover.data('bs.popover');
-            var popoverTip = dataPopover.tip();
-            var content = popoverTip.find('.popover-content');
-            
-            // adjust editor and container height
-            var solutionEditor = attachAceEditor(content.get(0), solution);
-            solutionEditor.setReadOnly(true);
-            var lines = Math.max(solutionEditor.session.getLength(), kMinLines);
-            solutionEditor.setOptions({
-              minLines: lines
-            });
-            var height = lines * solutionEditor.renderer.lineHeight;
-            content.css('height', height + 'px');
-            
-            // add copy button
-            var popoverTitle = popoverTip.find('.popover-title');
-            var copyButton = $('<a class="btn btn-light btn-xs btn-tutor-copy-solution pull-right"></a>');
-            copyButton.append($('<i class="fa fa-copy"></i>'));
-            copyButton.append(" Copy to Clipboard");
-            popoverTitle.append(copyButton);
-            var clipboard = new Clipboard(copyButton[0], {
-              text: function(trigger) {
-                return solutionEditor.getValue();
-              }
-            });
-            clipboard.on('success', function(e) {
-              removeSolution(exercise);
-              editor.focus();
-            });
-            copyButton.data('clipboard', clipboard);
-            
-          });
-          button.popover('show');
-          
-          // left position of popover and arrow
-          var popoverElement = exercise.find('.tutor-solution-popover');
-          popoverElement.css('left', '0');
-          var popoverArrow = popoverElement.find('.arrow');
-          popoverArrow.css('left', button.position().left + (button.outerWidth()/2) + 'px');
-
-          // scroll into view if necessary
-          thiz.$scrollIntoView(popoverElement);
-        }
-        else {
-          removeSolution(exercise);
-        }
-
-        // always refocus editor
-        editor.focus();
-      });
-    }
-  }
-
+  // also initialize solutions
+  thiz.$initializeSolutions();
 
   this.$forEachExercise(function(exercise) {
     
@@ -159,7 +24,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     exercise.on('focusin', function() {
       $('.btn-tutor-solution').each(function() {
         if (exercise.has($(this)).length === 0)
-          removeSolution(thiz.$exerciseContainer($(this)));
+          thiz.$removeSolution(thiz.$exerciseContainer($(this)));
       });
     });
      
@@ -176,7 +41,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     code_blocks.remove();
     // ensure a minimum of 3 lines
     var lines = code.split(/\r\n|\r|\n/).length;
-    for (var i=lines; i<kMinLines;i++)
+    for (var i=lines; i<thiz.kMinLines;i++)
       code = code + "\n";
         
     
@@ -216,7 +81,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
         button.attr('data-check', '1');
       button.attr('data-icon', icon);
       button.on('click', function() {
-        removeSolution(exercise);
+        thiz.$removeSolution(exercise);
         thiz.$showExerciseProgress(output_frame, button, true);
       });
       panel_heading.append(button);
@@ -248,7 +113,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     output_frame.append(output_div);
       
     // activate the ace editor
-    var editor = attachAceEditor(code_id, code);
+    var editor = thiz.$attachAceEditor(code_id, code);
     
     // bind execution keys 
     function bindExecutionKey(name, key) {
@@ -280,8 +145,9 @@ Tutor.prototype.$initializeExerciseEditors = function() {
          });
       } else {
          editor.setOptions({
-            minLines: kMinLines,
-            maxLines: Math.max(Math.min(editor.session.getLength(), 15), kMinLines)
+            minLines: thiz.kMinLines,
+            maxLines: Math.max(Math.min(editor.session.getLength(), 15), 
+                               thiz.kMinLines)
          });
       }
      
@@ -290,8 +156,22 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     editor.getSession().on('change', updateAceHeight);
 
     // add solution button if necessary
-    addSolution(exercise, panel_heading, editor);
+    thiz.$addSolution(exercise, panel_heading, editor);
 
   });  
 };
 
+// edit code within an ace editor
+Tutor.prototype.$attachAceEditor = function(target, code) {
+  var editor = ace.edit(target);
+  editor.setHighlightActiveLine(false);
+  editor.setShowPrintMargin(false);
+  editor.setShowFoldWidgets(false);
+  editor.renderer.setDisplayIndentGuides(false);
+  editor.setTheme("ace/theme/textmate");
+  editor.$blockScrolling = Infinity;
+  editor.session.setMode("ace/mode/r");
+  editor.session.getSelection().clearSelection();
+  editor.setValue(code, -1);
+  return editor;
+};

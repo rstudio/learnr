@@ -20,6 +20,7 @@ tutor_html_dependency <- function() {
     script = c(
       "tutor.js", 
       "exercise.js",
+      "exercise-solution.js",
       "exercise-editor.js", 
       "exercise-evaluation.js", 
       "video.js"),
