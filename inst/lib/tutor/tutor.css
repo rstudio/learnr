@@ -44,6 +44,11 @@
   margin-left: 15px;  
 }
 
+.tutor-exercise-input .btn-tutor-next-hint {
+  margin-left: 15px;
+  padding-right: 4px;
+}
+
 .tutor-exercise-input .btn-xs i {
   width: 10px;
   margin-right: 1px;

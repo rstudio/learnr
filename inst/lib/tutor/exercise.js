@@ -28,8 +28,38 @@ Tutor.prototype.$exerciseSupportCode = function(label) {
     return null;
 };
 
+Tutor.prototype.$exerciseSolutionCode = function(label) {
+  return this.$exerciseSupportCode(label + "-solution");
+};
+
 Tutor.prototype.$exerciseCheckCode = function(label) {
   return this.$exerciseSupportCode(label + "-check");
+};
+
+Tutor.prototype.$exerciseHintsCode = function(label) {
+  
+  // look for a single hint
+  var hint = this.$exerciseSupportCode(label + "-hint");
+  if (hint !== null)
+    return [hint];
+    
+  // look for a sequence of hints
+  var hints = [];
+  var index = 1;
+  while(true) {
+    var hintLabel = label + "-hint-" + index++;
+    hint = this.$exerciseSupportCode(hintLabel);
+    if (hint !== null)
+      hints.push(hint);
+    else
+      break;
+  }
+  
+  // return what we have (null if empty)
+  if (hints.length > 0)
+    return hints;
+  else
+    return null;
 };
 
 // get the exercise container of an element

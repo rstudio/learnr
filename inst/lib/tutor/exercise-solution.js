@@ -25,9 +25,9 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   var label = exercise.attr('data-label');
 
   // see if there is a single solution or hint for this exercise
-  var solution = thiz.$exerciseSupportCode(label + "-solution");
-  var hint = thiz.$exerciseSupportCode(label + "-hint");
-  if (solution || hint) {
+  var solution = thiz.$exerciseSolutionCode(label);
+  var hints = thiz.$exerciseHintsCode(label);
+  if (solution || hints) {
     
     // determine caption
     var caption = null;
@@ -35,9 +35,23 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
       caption = "Solution";
     }
     else {
-      caption = "Hint";
-      solution = hint;
+      if (hints.length > 1)
+        caption = "Hints";
+      else 
+        caption = "Hint";
     }
+    
+    // determine editor lines
+    var editorLines = thiz.kMinLines;
+    if (solution)
+      editorLines = Math.max(thiz.$countLines(solution), editorLines);
+    else {
+      for (var i = 0; i<hints.length; i++)
+        editorLines = Math.max(thiz.$countLines(hints[i]), editorLines);
+    }
+    
+    // track hint index
+    var hintIndex = 0;
     
     // create solution buttion
     var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
@@ -49,6 +63,10 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
     
     // handle showing and hiding the popover
     button.on('click', function() {
+      
+      // determine solution text
+      var solutionText = solution !== null ? solution : hints[hintIndex];
+ 
       var visible = button.next('div.popover:visible').length > 0;
       if (!visible) {
         var popover = button.popover({
@@ -58,7 +76,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
                     '<div class="popover-title tutor-panel-heading"></div>' + 
                     '<div class="popover-content"></div>' + 
                     '</div>',
-          content: solution,
+          content: solutionText,
           trigger: "manual"
         });
         popover.on('inserted.bs.popover', function() {
@@ -69,18 +87,35 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
           var content = popoverTip.find('.popover-content');
           
           // adjust editor and container height
-          var solutionEditor = thiz.$attachAceEditor(content.get(0), solution);
+          var solutionEditor = thiz.$attachAceEditor(content.get(0), solutionText);
           solutionEditor.setReadOnly(true);
-          var lines = Math.max(solutionEditor.session.getLength(), thiz.kMinLines);
           solutionEditor.setOptions({
-            minLines: lines
+            minLines: editorLines
           });
-          var height = lines * solutionEditor.renderer.lineHeight;
+          var height = editorLines * solutionEditor.renderer.lineHeight;
           content.css('height', height + 'px');
           
-          // add copy button
+          // get title panel
           var popoverTitle = popoverTip.find('.popover-title');
-          var copyButton = $('<a class="btn btn-light btn-xs ' + 
+          
+          // add hints button if we have > 1 hint
+          if (hints.length > 0) {
+            var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutor-next-hint"></a>');
+            nextHintButton.append("Next Hint ");
+            nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
+            nextHintButton.on('click', function() {
+              hintIndex = hintIndex + 1;
+              solutionEditor.setValue(hints[hintIndex], -1);
+              if (hintIndex == (hints.length-1))
+                nextHintButton.addClass('disabled');
+            });
+            if (hintIndex == (hints.length-1))
+              nextHintButton.addClass('disabled');
+            popoverTitle.append(nextHintButton);
+          }
+          
+          // add copy button
+          var copyButton = $('<a class="btn btn-info btn-xs ' + 
                              'btn-tutor-copy-solution pull-right"></a>');
           copyButton.append($('<i class="fa fa-copy"></i>'));
           copyButton.append(" Copy to Clipboard");

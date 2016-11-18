@@ -35,6 +35,9 @@ Tutor.prototype.$scrollIntoView = function(element) {
   }
 };
 
+Tutor.prototype.$countLines = function(str) { 
+  return str.split(/\r\n|\r|\n/).length; 
+};
 
 
 

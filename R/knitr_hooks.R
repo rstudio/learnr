@@ -25,6 +25,7 @@ install_knitr_hooks <- function() {
   # helper to check for an exercise support chunk
   is_exercise_support_chunk <- function(options, type = c("setup", 
                                                           "hint",
+                                                          "hint-\\d+",
                                                           "solution", 
                                                           "check")) {
     support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")

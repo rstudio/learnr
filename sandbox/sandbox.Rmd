@@ -24,6 +24,24 @@ knitr::opts_chunk$set(
 )
 ```
 
+## flights
+
+```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
+
+```{r filter-hint-1}
+filter(flights, ...)
+```
+
+```{r filter-hint-2}
+filter(flights, UniqueCarrier=="AA")
+```
+
+```{r filter-hint-3}
+filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
+```
 
 
 ## solution {style="margin-top: 50px;"}
@@ -38,6 +56,11 @@ nycflights <- nycflights13::flights
 nycflights <- filter(nycflights, month == 1)
 ```
 
+```{r exercise1-hint}
+# hint
+```
+
+
 ```{r exercise1-solution}
 nycflights <- filter(nycflights, month == 2)
 ```
@@ -51,11 +74,20 @@ Modify this code so that it prints only the first 5 rows of the `mtcars` dataset
 head(mtcars, n = 5)
 ```
 
-```{r cars-hint}
+```{r cars-hint-1}
 mtcars <- head(mtcars, n = 5)
 mtcars
 ```
 
+
+```{r cars-hint-2}
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+```
 
 ```{r cars-check}
 #
@@ -70,7 +102,7 @@ library(ggplot2)
 qplot(mpg, cyl, data = mtcars)
 ```
 
-```{r ggplot-hint}
+```{r ggplot-hint5}
 mtcars <- head(mtcars, n = 5)
 mtcars
 ```
