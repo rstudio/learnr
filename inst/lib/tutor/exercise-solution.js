@@ -24,19 +24,19 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   // get label
   var label = exercise.attr('data-label');
 
-  // see if there is a solution for this exercise
-  var hint = thiz.$exerciseSupportCode(label + "-hint");
+  // see if there is a single solution or hint for this exercise
   var solution = thiz.$exerciseSupportCode(label + "-solution");
-  if (hint || solution) {
+  var hint = thiz.$exerciseSupportCode(label + "-hint");
+  if (solution || hint) {
     
     // determine caption
     var caption = null;
-    if (hint) {
-      caption = "Hint";
-      solution = hint;
+    if (solution) {
+      caption = "Solution";
     }
     else {
-      caption = "Solution";
+      caption = "Hint";
+      solution = hint;
     }
     
     // create solution buttion
