@@ -143,11 +143,22 @@ evaluate_exercise <- function(exercise, envir) {
     checker <- function(...) { NULL }
   
   # call the checker 
-  feedback <- checker(label = exercise$label,
-                      user_code = exercise$code,
-                      check_code = exercise$check,
-                      envir_result = envir,
-                      evaluate_result = evaluate_result)
+  feedback <- checker(
+    label = exercise$label,
+    user_code = exercise$code,
+    check_code = exercise$check,
+    envir_result = envir,
+    evaluate_result = evaluate_result
+  )
+  
+  # record the submission
+  record_exercise_submission(
+    label = exercise$label,
+    code = exercise$code,
+    output = evaluate_result,
+    checked = !is.null(exercise$check),
+    correct = ifelse(is.null(feedback), NA, feedback$correct)
+  )
   
   # amend output with feedback as required
   if (!is.null(feedback)) {

@@ -41,7 +41,12 @@
 quiz <- function(..., caption = "Quiz") {
   
   # create table rows from questions
+  index <- 1
   questions <- lapply(list(...), function(question) {
+    if (!is.null(question$x$label)) {
+      question$x$label <- paste(question$x$label, index, sep="-")
+      index <<- index + 1
+    }
     tags$tr(tags$td(question))
   })
  
@@ -87,6 +92,8 @@ question <- function(text,
   
   # save all state/options into "x"
   x <- list()
+  x$question <- quiz_text(text)
+  x$label <- knitr::opts_current$get('label')
   x$skipStartButton <- TRUE
   x$perQuestionResponseAnswers <- TRUE
   x$perQuestionResponseMessaging <- TRUE

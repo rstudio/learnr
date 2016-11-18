@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
   exercise.eval = FALSE, 
   exercise.cap = "Exercise",
   exercise.checker = function(...) {
-    feedback("Nice job!", location = "append")
+    feedback("Nice job!", correct = TRUE, location = "append")
   }
 )
 ```
@@ -100,11 +100,6 @@ Modify this plot to use the `cyl` variable rather than the `wt` variable:
 ```{r ggplot, exercise=TRUE, exercise.eval=TRUE, fig.width=8}
 library(ggplot2)
 qplot(mpg, cyl, data = mtcars)
-```
-
-```{r ggplot-hint5}
-mtcars <- head(mtcars, n = 5)
-mtcars
 ```
 
 ```{r ggplot-check}

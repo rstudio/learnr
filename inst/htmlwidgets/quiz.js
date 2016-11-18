@@ -34,6 +34,21 @@ HTMLWidgets.widget({
             // render mathjax
             if (window.MathJax)
               window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
+              
+            // record if we are running inside a tutorial
+            if (window.tutor && x.label) {
+              var answers = [];
+              var checkedInputs = $(el).find('.answers').find('input:checked');
+              checkedInputs.each(function() {
+                var label = $("label[for='"+$(this).attr("id")+"']");
+                answers.push(label.text());
+              });
+              tutor.record(x.label, "question_response", {
+                question: x.question,
+                answers: answers,
+                correct: correct
+              });
+            }
           }
         };
         

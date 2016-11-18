@@ -47,13 +47,22 @@ install_knitr_hooks <- function() {
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutor = function(options) {
     
-    # add tutor dependencies once per-knit
+    # once per-knit actions
     if (!isTRUE(knitr::opts_knit$get("tutor.initialized"))) {
+      
+      # html dependencies
       knitr::knit_meta_add(list(
         rmarkdown::html_dependency_jquery(),
         rmarkdown::html_dependency_font_awesome(),
         tutor_html_dependency()
       ))
+      
+      # http handlers
+      rmarkdown::shiny_prerendered_chunk('server', 
+                                         'tutor:::register_http_handlers(session)',
+                                         singleton = TRUE
+      )
+      
       knitr::opts_knit$set(tutor.initialized = TRUE)
     }
     
@@ -213,13 +222,7 @@ remove_knitr_hooks <- function() {
 }
 
 exercise_server_chunk <- function(label) {
-  
-  # register editor rpc endpoints
-  rmarkdown::shiny_prerendered_chunk('server', 
-    'tutor:::register_editor_handlers(session)',
-    singleton = TRUE
-  )
-  
+
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
 'output$`tutor-exercise-%s-output` <- renderUI({

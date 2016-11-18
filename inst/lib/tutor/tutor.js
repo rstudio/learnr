@@ -2,25 +2,38 @@
 /* Tutor construction and initialization */
 
 function Tutor() {
+  
+  // Initialize DOM/members
   this.$initializeVideos();  
   this.$initializeExercises();
+  
+  // Record a user action
+  this.record = function(label, action, data) {
+    var params = {
+      label: label,
+      action: action,
+      data: data
+    };
+    this.$serverRequest("record", params, null);
+  };
 }
 
 $(document).ready(function() {
-  new Tutor();
+  window.tutor = new Tutor();
 });
-
-
 
 //* Tutor shared utility functions */
 
-Tutor.prototype.$serverRequest = function (type, params, success) {
-  $.get("session/" + Shiny.shinyapp.config.sessionId + 
-        "/dataobj/" + type + "?w=" + Shiny.shinyapp.config.workerId, 
-        params)
-    .done(function(data) {
-      success(data);
-    });
+Tutor.prototype.$serverRequest = function (type, data, success) {
+  return $.ajax({
+    type: "POST",
+    url: "session/" + Shiny.shinyapp.config.sessionId + 
+           "/dataobj/" + type + "?w=" + Shiny.shinyapp.config.workerId,
+    contentType: "application/json",
+    data: JSON.stringify(data),
+    dataType: "json",
+    success: success
+  });
 };
 
 
