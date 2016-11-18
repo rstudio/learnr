@@ -1,50 +1,54 @@
 
 
+
 register_http_handlers <- function(session) {
   
-  response <- list(
-    status = 200L,
-    headers = list(
-      'Content-Type' = 'application/json'
-    ),
-    body = jsonlite::toJSON(list(foo = "bar"))
-  )
-  
   # recorder handler
-  session$registerDataObj("record", NULL, function(data, req) {
+  session$registerDataObj("record", NULL, rpc_handler(function(input) {
+    record(label = input$label,
+           action = input$action,
+           data = input$data)
+  }))
+  
+  # help handler
+  session$registerDataObj("help",  NULL, rpc_handler(function(input) {
+    
+  }))
+  
+  # completion handler
+  session$registerDataObj("completion",  NULL, rpc_handler(function(input) {
+    
+  }))
+  
+  # diagnostics handler
+  session$registerDataObj("diagnotics",  NULL, rpc_handler(function(input) {
+    
+  }))
+  
+}
+
+# return a rook wrapper for a funciton that takes a list and returns a list
+# (list contents are automatically converted to/from JSON for rook as required)
+rpc_handler <- function(handler) {
+  
+  function(data, req) {
     
     # get the post data and deserialize it
-    input <- req[["rook.input"]]
-    params <- jsonlite::fromJSON(input$read_lines())
+    input_stream <- req[["rook.input"]]
+    input <- jsonlite::fromJSON(input_stream$read_lines())
     
-    # record 
-    record(label = params$label,
-           action = params$action,
-           data = params$data)
+    # call the handler
+    result <- handler(input)
     
-    # return success
+    # return the result as JSON
     list(
       status = 200L,
       headers = list(
-        'Content-Type' = 'text/plain'
+        'Content-Type' = 'application/json'
       ),
-      body = ''
+      body = jsonlite::toJSON(result)
     )
-  })
-  
-  # help handler
-  session$registerDataObj("help",  NULL,  function(data, req) {
-    response
-  })
-  
-  # completion handler
-  session$registerDataObj("completion",  NULL,  function(data, req) {
-    response
-  })
-  
-  # diagnostics handler
-  session$registerDataObj("diagnotics",  NULL,  function(data, req) {
-    response
-  })
-  
+  }
 }
+
+

@@ -13,6 +13,7 @@ record <- function(label, action, data) {
   recorder <- getOption("tutor.recorder", default = NULL)
   if (!is.null(recorder))
     recorder(label, action, data)
+  invisible(NULL)
 }
 
 record_exercise_hint <- function(label, type = c("solution", "hint"), index) {
