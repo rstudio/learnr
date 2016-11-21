@@ -5,7 +5,8 @@ register_http_handlers <- function(session) {
   
   # recorder handler
   session$registerDataObj("record", NULL, rpc_handler(function(input) {
-    record(label = input$label,
+    record(session = session,
+           label = input$label,
            action = input$action,
            data = input$data)
   }))

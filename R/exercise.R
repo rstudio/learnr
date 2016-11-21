@@ -25,6 +25,9 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
   
+  # get the session (used for calls to recording functions)
+  session <- get("session", envir = envir)
+  
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
   dir.create(exercise_dir)
@@ -107,12 +110,21 @@ evaluate_exercise <- function(exercise, envir) {
                                      quiet = TRUE,
                                      run_pandoc = FALSE)
   }, error = function(e) {
+    # make the time limit error message a bit more friendly
     msg <- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, msg) != -1L) {
       msg <- paste("Error: Your code ran longer than the permitted time", 
                    "limit for this exercise.")
     } 
+    
+    # record the error
+    record_exercise_error(session = session,
+                          label = exercise$label,
+                          code = exercise$code,
+                          message = msg)
+    
+    # provide error html
     error_html <<- div(class = "alert alert-danger", role = "alert", msg)
   })
   if (!is.null(error_html))
@@ -153,6 +165,7 @@ evaluate_exercise <- function(exercise, envir) {
   
   # record the submission
   record_exercise_submission(
+    session = session,
     label = exercise$label,
     code = exercise$code,
     output = evaluate_result,
