@@ -7,7 +7,7 @@ function Tutor() {
   this.$initializeVideos();  
   this.$initializeExercises();
   
-  // Record a user action
+  // Function to record a user action
   this.record = function(label, action, data) {
     var params = {
       label: label,
@@ -16,11 +16,33 @@ function Tutor() {
     };
     this.$serverRequest("record", params, null);
   };
+  
+  // one-shot function to initialize server (wait for Shiny.shinyapp
+  // to be available fore attempting to call server)
+  var thiz = this;
+  function initializeServer() {
+    if (typeof Shiny !== "undefined" && 
+        typeof Shiny.shinyapp !== "undefined") {
+      thiz.$serverRequest("initialize", null, null);
+    }
+    else {
+      setTimeout(function(){
+        initializeServer();
+      },250);
+    }
+  }
+  // call initialize function
+  initializeServer();
+
 }
 
 $(document).ready(function() {
+  
+  // create tutor
   window.tutor = new Tutor();
+
 });
+
 
 //* Tutor shared utility functions */
 
@@ -35,7 +57,6 @@ Tutor.prototype.$serverRequest = function (type, data, success) {
     success: success
   });
 };
-
 
 Tutor.prototype.$scrollIntoView = function(element) {
   element = $(element);

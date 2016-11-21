@@ -3,6 +3,23 @@
 
 register_http_handlers <- function(session) {
   
+  # initialize handler
+  session$registerDataObj("initialize", NULL,  function(data, req) {
+    
+    # initialize recording identifiers based on http headers
+    initialize_recording_identifiers(session, req)
+    
+    # return empty json result
+    list(
+      status = 200L,
+      headers = list(
+        'Content-Type' = 'application/json'
+      ),
+      body = jsonlite::toJSON(NULL)
+    )
+  })
+  
+  
   # recorder handler
   session$registerDataObj("record", NULL, rpc_handler(function(input) {
     record(session = session,

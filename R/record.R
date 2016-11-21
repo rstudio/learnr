@@ -45,21 +45,27 @@ debug_recorder <- function(tutorial, user, label, action, data) {
 }
 
 
-initialize_recording_identifiers <- function(session) {
+initialize_recording_identifiers <- function(session, request) {
  
   # helper to read rook headers
   as_rook_header <- function(name) {
     if (!is.null(name))
-      paste0("HTTP_", toupper(name))
+      paste0("HTTP_", toupper(gsub("-", "_", name, fixed = TRUE)))
     else
       NULL
   }
   
   # read tutorial id and user id from custom headers (if provided)
   id_header <- as_rook_header(getOption("tutor.http_header_tutorial_id"))
-  id <- read_request(session, id_header, getwd())
+  if (!is.null(id_header) && exists(id_header, envir = request))
+    id <- get(id_header, envir = request)
+  else
+    id <- getwd()
   user_id_header <- as_rook_header(getOption("tutor.http_header_user_id"))
-  user_id <- read_request(session, user_id_header, unname(Sys.info()["user"]))
+  if (!is.null(user_id_header) && exists(user_id_header, envir = request))
+    user_id <- get(user_id_header, envir = request)
+  else 
+    user_id <- unname(Sys.info()["user"])
   
   # set their values into session header which can be re-read later
   write_request(session, "tutor.tutorial_id", id)
