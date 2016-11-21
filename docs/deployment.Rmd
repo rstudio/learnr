@@ -22,12 +22,23 @@ To bundle a tutorial into an R package and make it available for running via the
 
 2. Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development & preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).
 
+### Dependencies
+
 Note that the **tutor** package has quite a few dependencies including the **rmarkdown** and **shiny** packages so it's a better idea to list it as a `Suggests` rather than `Imports` dependency of your package. Users would then simply install tutor directly before running your tutorial, for example:
 
 ```r
 install.packages("tutor")
 tutor::run_tutorial("introduction", package = "mypackage")
 ```
+
+Note that if your tutorial performs [exercise checking](exercises.html#checking-exercises) via an external package then you should either add that package as an Imports dependency of your package (so it's installed automatically) or simply ask users to install that package alongside **tutor** package. For example:
+
+```r
+install.packages(c("tutor", "checkthat"))
+tutor::run_tutorial("introduction", package = "mypackage")
+```
+
+Note that it's likely that the **tutor** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
 
 ## Server Deployment
 
