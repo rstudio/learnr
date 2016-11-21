@@ -62,7 +62,7 @@ install_knitr_hooks <- function() {
     if (exercise_chunk) {
       
       # one time tutor initialization
-      initialize()
+      initialize_tutor()
       
       options$echo <- TRUE
       options$include <- TRUE

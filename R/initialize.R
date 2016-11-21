@@ -8,7 +8,7 @@
 #' as a result of using exercises or questions.
 #' 
 #' @export
-initialize <- function() {
+initialize_tutor <- function() {
   
   # helper function for one time initialization
   if (isTRUE(getOption("knitr.in.progress")) &&

@@ -68,7 +68,7 @@ question <- function(text,
                      random_answer_order = FALSE) {
   
   # one time tutor initialization
-  initialize()
+  initialize_tutor()
   
   # capture/validate answers
   answers <- list(...)
