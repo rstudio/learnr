@@ -24,7 +24,7 @@ initialize_tutor <- function() {
     # session initialization
     rmarkdown::shiny_prerendered_chunk(
       'server', 
-      'tutor:::initialize_shiny_session(session)',
+      'tutor:::register_http_handlers(session)',
       singleton = TRUE
     )
     
