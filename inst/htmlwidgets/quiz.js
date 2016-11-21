@@ -10,6 +10,24 @@ HTMLWidgets.widget({
 
       renderValue: function(x) {
         
+        // helper function to record an answer
+        function recordAnswer(correct) {
+          if (window.tutor && x.label) {
+            var answers = [];
+            var checkedInputs = $(el).find('.answers').find('input:checked');
+            checkedInputs.each(function() {
+              var label = $("label[for='"+$(this).attr("id")+"']");
+              answers.push(label.text());
+            });
+            tutor.record(x.label, "question_submission", {
+              question: x.question,
+              answers: answers,
+              correct: correct
+            });
+          }
+        }
+        
+        // provide callback for providing answer feedback and recording it
         x.animationCallbacks = {
           checkAnswer: function() {
         
@@ -29,26 +47,16 @@ HTMLWidgets.widget({
                  message = message + ' ' + data_message;
               }
             });
+            
+            // display custom messages
             $(el).find('.responses').children(msg_class).html(message);
             
             // render mathjax
             if (window.MathJax)
               window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
               
-            // record if we are running inside a tutorial
-            if (window.tutor && x.label) {
-              var answers = [];
-              var checkedInputs = $(el).find('.answers').find('input:checked');
-              checkedInputs.each(function() {
-                var label = $("label[for='"+$(this).attr("id")+"']");
-                answers.push(label.text());
-              });
-              tutor.record(x.label, "question_submission", {
-                question: x.question,
-                answers: answers,
-                correct: correct
-              });
-            }
+            // record answer
+            recordAnswer(correct);
           }
         };
         
