@@ -3,6 +3,7 @@
 S3method(as.tags,tutor_feedback)
 export(answer)
 export(feedback)
+export(initialize)
 export(question)
 export(quiz)
 export(run_tutorial)

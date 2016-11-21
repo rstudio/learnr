@@ -67,6 +67,9 @@ question <- function(text,
                      incorrect = "Incorrect.",
                      random_answer_order = FALSE) {
   
+  # one time tutor initialization
+  initialize()
+  
   # capture/validate answers
   answers <- list(...)
   lapply(answers, function(answer) {

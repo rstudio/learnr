@@ -107,12 +107,12 @@ evaluate_exercise <- function(exercise, envir) {
                                      quiet = TRUE,
                                      run_pandoc = FALSE)
   }, error = function(e) {
-    msg <- sub(" [^:]+:", ":", e$message)
+    msg <- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, msg) != -1L) {
       msg <- paste("Error: Your code ran longer than the permitted time", 
                    "limit for this exercise.")
-    }
+    } 
     error_html <<- div(class = "alert alert-danger", role = "alert", msg)
   })
   if (!is.null(error_html))
