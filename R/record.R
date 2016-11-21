@@ -66,21 +66,4 @@ initialize_recording_identifiers <- function(session) {
   write_request(session, "tutor.user_id", user_id)
 }
 
-read_request <- function(session, name, default = NULL) {
-  if (!is.null(name)) {
-    if (exists(name, envir = session$request))
-      get(name, envir = session$request)
-    else
-      default
-  } else {
-    default
-  }
-}
-
-write_request <- function(session, name, value) {
-  do.call("unlockBinding", list("request", session))
-  session$request[[name]] <- value
-  do.call("lockBinding", list("request", session))
-}
-
 

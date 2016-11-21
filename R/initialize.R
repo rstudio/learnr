@@ -35,17 +35,6 @@ initialize <- function() {
 
 
 
-# one-time initialization for Shiny session
-initialize_shiny_session <- function(session) {
- 
-  # initialize session and user identifiers
-  initialize_recording_identifiers(session)
-  
-  # register http handlers
-  register_http_handlers(session)   
-}
-
-
 
 
 
