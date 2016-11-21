@@ -72,16 +72,18 @@ The **tutor** package can also have it's exercise evaluation function replaced w
 
 ## Recording User Actions
 
-As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). You can do this by providing a function for the `tutor.recorder` global function. 
+As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
 
-For example, here's how you would define a simple recorder function that prints to stdout:
+### Recorder Function
+
+You can capture various user actions by using a custom recorder function. This function is specified via the `tutor.recorder` global option. For example, here's how you would define a simple recorder function that prints to stdout:
 
 <div id="tutorrecorder"></div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
 
-The `tutorial` parameter provides a unique identifier for the tutorial (NOTE:  This is not yet implemented and is currently always `NULL`).
+The `tutorial` parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).
 
-The `user` parameter provides a unique identifer for the tutorial user (NOTE: This is not yet implemented and is currently always `NULL`).
+The `user` parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).
 
 The `label` parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.
 
@@ -100,10 +102,14 @@ The `action` parameter is one of the following values:
 <td>User requested a hint or solution for an exercise.</td>
 </tr>
 <tr class="even">
+<td>exercise_error</td>
+<td>Error occurred within R code submitted as an answer for an exercise.</td>
+</tr>
+<tr class="add">
 <td>exercise_submission</td>
 <td>User submitted an answer for an exercise.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>question_submission</td>
 <td>User submitted an answer for a multiple-choice question.</td>
 </tr>
@@ -112,6 +118,16 @@ The `action` parameter is one of the following values:
 
 The `data` parameter is an R list which provides additonal data that varies depending on which `action` is being recorded.
 
+### Tutorial and User IDs
+
+By default the tutorial ID is the directory containing the tutorial Rmd and user ID is the username of the local account executing the tutorial. While these defaults work well for local/package deployment, if you are hosting tutorials on a server you may want to customize these values based on other considerations.
+
+You can pass a custom tutorial ID and/or user ID through to the **tutor** package by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the `tutor.http_header_tutorial_id` and `tutor.http_header_user_id` global options. For example:
+
+<div id="tutorids"></div>
+<script type="text/javascript">loadSnippet('tutorids')</script>
+
+Once configuring these custom header names you'd then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.
 
 
 

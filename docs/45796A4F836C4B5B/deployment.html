@@ -374,16 +374,18 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 </ol>
 </div>
 </div>
-<div id="recording-actions" class="section level2">
-<h2>Recording Actions</h2>
-<p>As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). You can do this by providing a function for the <code>tutor.recorder</code> global function.</p>
-<p>For example, here’s how you would define a simple recorder function that prints to stdout:</p>
+<div id="recording-user-actions" class="section level2">
+<h2>Recording User Actions</h2>
+<p>As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
+<div id="recorder-function" class="section level3">
+<h3>Recorder Function</h3>
+<p>You can capture various user actions by using a custom recorder function. This function is specified via the <code>tutor.recorder</code> global option. For example, here’s how you would define a simple recorder function that prints to stdout:</p>
 <div id="tutorrecorder">
 
 </div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
-<p>The <code>tutorial</code> parameter provides a unique identifier for the tutorial (NOTE: This is not yet implemented and is currently always <code>NULL</code>).</p>
-<p>The <code>user</code> parameter provides a unique identifer for the tutorial user (NOTE: This is not yet implemented and is currently always <code>NULL</code>).</p>
+<p>The <code>tutorial</code> parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).</p>
+<p>The <code>user</code> parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).</p>
 <p>The <code>label</code> parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.</p>
 <p>The <code>action</code> parameter is one of the following values:</p>
 <table>
@@ -408,13 +410,21 @@ User requested a hint or solution for an exercise.
 </tr>
 <tr class="even">
 <td>
+exercise_error
+</td>
+<td>
+Error occurred within R code submitted as an answer for an exercise.
+</td>
+</tr>
+<tr class="add">
+<td>
 exercise_submission
 </td>
 <td>
 User submitted an answer for an exercise.
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 question_submission
 </td>
@@ -425,6 +435,17 @@ User submitted an answer for a multiple-choice question.
 </tbody>
 </table>
 <p>The <code>data</code> parameter is an R list which provides additonal data that varies depending on which <code>action</code> is being recorded.</p>
+</div>
+<div id="tutorial-and-user-ids" class="section level3">
+<h3>Tutorial and User IDs</h3>
+<p>By default the tutorial ID is the directory containing the tutorial Rmd and user ID is the username of the local account executing the tutorial. While these defaults work well for local/package deployment, if you are hosting tutorials on a server you may want to customize these values based on other considerations.</p>
+<p>You can pass a custom tutorial ID and/or user ID through to the <strong>tutor</strong> package by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the <code>tutor.http_header_tutorial_id</code> and <code>tutor.http_header_user_id</code> global options. For example:</p>
+<div id="tutorids">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorids')</script>
+<p>Once configuring these custom header names you’d then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.</p>
+</div>
 </div>
 
 

@@ -39,8 +39,8 @@ record_exercise_submission <- function(session,
 
 
 debug_recorder <- function(tutorial, user, label, action, data) {
-  cat(tutorial, user, "\n", sep = ",")
-  cat("[", action, " : ", label, "]\n", sep = "")
+  cat(tutorial, "(", user, ")\n", sep = "")
+  cat(action, ": ", label, "\n", sep = "")
   cat(str(data), "\n")
 }
 
