@@ -112,7 +112,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
           var popoverTitle = popoverTip.find('.popover-title');
           
           // add hints button if we have > 1 hint
-          if (hints.length > 0) {
+          if (solution === null && hints.length > 0) {
             var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutor-next-hint"></a>');
             nextHintButton.append("Next Hint ");
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
