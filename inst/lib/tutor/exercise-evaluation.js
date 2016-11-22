@@ -49,13 +49,19 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       else
         value.options = {};
       
-      // get any setup or check chunks
+      // get any setup, solution, or check chunks
+      
+      // setup
       var label = exerciseLabel(el);
       if (value.options["exercise.setup"])
         value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);     
       else
         value.setup = thiz.$exerciseSupportCode(label + "-setup");
         
+      // solution
+      value.solution = thiz.$exerciseSupportCode(label + "-solution");  
+        
+      // check
       if (this.check)
         value.check = thiz.$exerciseCheckCode(label);
 

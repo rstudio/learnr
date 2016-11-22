@@ -158,6 +158,7 @@ evaluate_exercise <- function(exercise, envir) {
   feedback <- checker(
     label = exercise$label,
     user_code = exercise$code,
+    solution_code = exercise$solution,
     check_code = exercise$check,
     envir_result = envir,
     evaluate_result = evaluate_result

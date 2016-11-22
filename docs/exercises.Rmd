@@ -132,14 +132,18 @@ What the code within the "-check" chunk actually does will vary depending on whi
 <td>R code submitted by the user.</td>
 </tr>
 <tr class="odd">
+<td><code>solution_code</code></td>
+<td>Code provided within the "-solution" chunk for the exercise.</td>
+</tr>
+<tr class="even">
 <td><code>check_code</code></td>
 <td>Code provided within the "-check" chunk for the exercise.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>envir_result</code></td>
 <td>The R environment after the execution of the chunk.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>evaluate_result</code></td>
 <td>The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.</td>
 </tr>
