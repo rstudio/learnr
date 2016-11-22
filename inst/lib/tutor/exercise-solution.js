@@ -24,9 +24,13 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   // get label
   var label = exercise.attr('data-label');
 
-  // see if there is a single solution or hint for this exercise
+  // solution/hints (in the presence of hints convert solution to last hint)
   var solution = thiz.$exerciseSolutionCode(label);
   var hints = thiz.$exerciseHintsCode(label);
+  if (hints !== null && solution !== null) {
+    hints.push(solution);
+    solution = null;
+  }
   
   // helper function to record solution/hint requests
   function recordHintRequest(index) {
