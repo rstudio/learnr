@@ -21,12 +21,6 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   # evaluate the exercise and capture html output
   html_output <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
   
-  # store the submission for later replay
-  save_exercise_submission(session = get("session", envir = envir),
-                           label = exercise$label,
-                           input = exercise$code,
-                           output = html_output)
-  
   # return the html output
   html_output
 }
@@ -173,6 +167,17 @@ evaluate_exercise <- function(exercise, envir) {
     evaluate_result = evaluate_result
   )
   
+  # amend output with feedback as required
+  if (!is.null(feedback)) {
+    feedback_html <- htmltools::as.tags(feedback)
+    if (feedback$location == "append")
+      output_html <- htmltools::tagList(output_html, feedback_html)
+    else if (feedback$location == "prepend")
+      output_html <- htmltools::tagList(feedback_html, output_html)
+    else if (feedback$location == "replace")
+      output_html <- feedback_html
+  }
+  
   # record the submission
   record_exercise_submission(
     session = session,
@@ -183,17 +188,16 @@ evaluate_exercise <- function(exercise, envir) {
     correct = ifelse(is.null(feedback), NA, feedback$correct)
   )
   
-  # amend output with feedback as required
-  if (!is.null(feedback)) {
-    feedback_html <- htmltools::as.tags(feedback)
-    if (feedback$location == "append")
-      htmltools::tagList(output_html, feedback_html)
-    else if (feedback$location == "prepend")
-      htmltools::tagList(feedback_html, output_html)
-    else if (feedback$location == "replace")
-      feedback_html
-  }
-  else {
-    output_html
-  }
+  # save submission for later replay
+  save_exercise_submission(
+    session = session,
+    label = exercise$label,
+    code = exercise$code,
+    output = NULL, # not currently recording output
+    #output = html_output,
+    feedback = feedback
+  )
+  
+  # return html_output
+  output_html
 }

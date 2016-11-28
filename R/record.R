@@ -39,7 +39,7 @@ record_exercise_submission <- function(session,
                                        code, 
                                        output, 
                                        checked = FALSE, 
-                                       correct = NA) {
+                                       correct = NULL) {
   record(session = session,
          label = label,
          action = "exercise_submission",
@@ -54,7 +54,7 @@ record_exercise_submission <- function(session,
 debug_recorder <- function(tutorial, user, label, action, data) {
   cat(tutorial, "(", user, ")\n", sep = "")
   cat(action, ": ", label, "\n", sep = "")
-  cat(str(data), "\n")
+  cat(names(data), "\n")
 }
 
 

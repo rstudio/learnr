@@ -7,28 +7,29 @@ save_question_submission <- function(session, label, question, answers) {
   )))
 }
 
-save_exercise_submission <- function(session, label, input, output) {
+save_exercise_submission <- function(session, label, code, output, feedback) {
   save_object(session, label, tutor_object("exercise_submission", list(
-    input = input,
-    output = output
+    code = code,
+    output = output,
+    feedback = feedback
   )))  
 }
 
 save_object <- function(session, object_id, data) {
-  tutorial_id = read_request(session, "tutor.tutorial_id")
-  user_id = read_request(session, "tutor.user_id")
+  tutorial_id <- read_request(session, "tutor.tutorial_id")
+  user_id <- read_request(session, "tutor.user_id")
   storage()$save_object(tutorial_id, user_id, object_id, data)
 }
 
 get_object <- function(session, object_id) {
-  tutorial_id = read_request(session, "tutor.tutorial_id")
-  user_id = read_request(session, "tutor.user_id")
+  tutorial_id <- read_request(session, "tutor.tutorial_id")
+  user_id <- read_request(session, "tutor.user_id")
   storage()$get_object(tutorial_id, user_id, object_id)
 }
 
-get_objects <- function(session, user_id) {
-  tutorial_id = read_request(session, "tutor.tutorial_id")
-  user_id = read_request(session, "tutor.user_id")
+get_objects <- function(session) {
+  tutorial_id <- read_request(session, "tutor.tutorial_id")
+  user_id <- read_request(session, "tutor.user_id")
   storage()$get_objects(tutorial_id, user_id)
 }
 
@@ -93,7 +94,7 @@ filesystem_storage <- function(dir, compress = TRUE) {
       for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
         object <- readRDS(file.path(objects_path, object_path))
         object_id <- sub("\\.rds$", "", id_from_filesystem_path(object_path))
-        objects[[object_id]] <<- object
+        objects[[object_id]] <- object
       }
       objects
     }

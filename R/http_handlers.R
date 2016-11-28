@@ -21,9 +21,14 @@ register_http_handlers <- function(session) {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = jsonlite::toJSON(data)
+      body = rpc_json_result(data)
     )
   })
+  
+  # restore state handler
+  session$registerDataObj("restore_state", NULL, rpc_handler(function(input) {
+    get_objects(session)
+  }))
   
   # recorder handler
   session$registerDataObj("record", NULL, rpc_handler(function(input) {
@@ -73,7 +78,8 @@ register_http_handlers <- function(session) {
   
 }
 
-# return a rook wrapper for a funciton that takes a list and returns a list
+
+# return a rook wrapper for a function that takes a list and returns a list
 # (list contents are automatically converted to/from JSON for rook as required)
 rpc_handler <- function(handler) {
   
@@ -92,9 +98,15 @@ rpc_handler <- function(handler) {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = jsonlite::toJSON(result)
+      body = rpc_json_result(result)
     )
   }
 }
+
+# helper for returning JSON
+rpc_json_result <- function(x) {
+  jsonlite::toJSON(x, null = "null", force = TRUE)
+}
+
 
 

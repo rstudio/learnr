@@ -41,14 +41,13 @@ $(document).ready(function() {
 Tutor.prototype.$initializeServer = function() {
   
   // one-shot function to initialize server (wait for Shiny.shinyapp
-  // to be available fore attempting to call server)
+  // to be available before attempting to call server)
   var thiz = this;
   function initializeServer() {
-    if (typeof Shiny !== "undefined" && 
-        typeof Shiny.shinyapp !== "undefined") {
+    if (typeof Shiny !== "undefined" && typeof Shiny.shinyapp !== "undefined") {
       thiz.$serverRequest("initialize", null, function(data) {
-        console.log("tutorial_id: " + data.identifiers.tutorial_id);
-        console.log("user_id: " + data.identifiers.user_id);
+        // now that the server is initialized we can restore state
+        thiz.$restoreState();
       });
     }
     else {
