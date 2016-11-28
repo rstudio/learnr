@@ -21,6 +21,19 @@ record_exercise_error <- function(session, label, code, message) {
            message = message))
 }
 
+record_question_submission <- function(session,
+                                       label,
+                                       question,
+                                       answers,
+                                       correct) {
+  record(session = session,
+         label = label,
+         action = "question_submission",
+         data = list(question = question,
+                     answers = answers,
+                     correct = correct))
+}
+
 record_exercise_submission <- function(session,
                                        label, 
                                        code, 
@@ -55,12 +68,14 @@ initialize_recording_identifiers <- function(session, request) {
       NULL
   }
   
-  # read tutorial id and user id from custom headers (if provided)
+  # read tutorial_id from http header (or default to tutorial directory)
   id_header <- as_rook_header(getOption("tutor.http_header_tutorial_id"))
   if (!is.null(id_header) && exists(id_header, envir = request))
     id <- get(id_header, envir = request)
   else
     id <- getwd()
+  
+  # read user_id from http header (or default to current username)
   user_id_header <- as_rook_header(getOption("tutor.http_header_user_id"))
   if (!is.null(user_id_header) && exists(user_id_header, envir = request))
     user_id <- get(user_id_header, envir = request)

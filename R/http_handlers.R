@@ -33,6 +33,29 @@ register_http_handlers <- function(session) {
            data = input$data)
   }))
   
+  # question submission handler
+  session$registerDataObj("question_submission", NULL, rpc_handler(function(input) {
+    
+    # extract inputs
+    label <- input$label
+    question <- input$question
+    answers <- input$answers
+    correct <- input$correct
+    
+    # record
+    record_question_submission(session = session,
+                               label = label,
+                               question = question,
+                               answers = answers,
+                               correct = correct)
+    
+    # store for later replay
+    save_object(session, label, tutor_object("question_submission", list(
+      question = question,
+      answers = answers
+    )))
+  }))
+  
   # help handler
   session$registerDataObj("help",  NULL, rpc_handler(function(input) {
     

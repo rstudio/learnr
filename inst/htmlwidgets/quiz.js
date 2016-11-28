@@ -19,11 +19,8 @@ HTMLWidgets.widget({
               var label = $("label[for='"+$(this).attr("id")+"']");
               answers.push(label.text());
             });
-            tutor.record(x.label, "question_submission", {
-              question: x.question,
-              answers: answers,
-              correct: correct
-            });
+            // notify server of question submission
+            tutor.questionSubmission(x.label, x.question, answers, correct);
           }
         }
         

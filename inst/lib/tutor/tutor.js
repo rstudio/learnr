@@ -17,6 +17,17 @@ function Tutor() {
     this.$serverRequest("record", params, null);
   };
   
+   // Function to notify the server of a question submission
+  this.questionSubmission = function(label, question, answers, correct) {
+    var params = {
+      label: label,
+      question: question,
+      answers: answers,
+      correct: correct
+    };
+    this.$serverRequest("question_submission", params, null);
+  };
+  
   // one-shot function to initialize server (wait for Shiny.shinyapp
   // to be available fore attempting to call server)
   var thiz = this;
