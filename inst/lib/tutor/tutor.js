@@ -3,10 +3,6 @@
 
 function Tutor() {
   
-  // Initialize DOM/members
-  this.$initializeVideos();  
-  this.$initializeExercises();
-  
   // Function to record a user action
   this.record = function(label, action, data) {
     var params = {
@@ -17,7 +13,7 @@ function Tutor() {
     this.$serverRequest("record", params, null);
   };
   
-   // Function to notify the server of a question submission
+  // Function to notify the server of a question submission
   this.questionSubmission = function(label, question, answers, correct) {
     var params = {
       label: label,
@@ -27,6 +23,22 @@ function Tutor() {
     };
     this.$serverRequest("question_submission", params, null);
   };
+  
+  // Initialization
+  this.$initializeVideos();  
+  this.$initializeExercises();
+  this.$initializeServer();
+}
+
+
+$(document).ready(function() {
+  window.tutor = new Tutor();
+});
+
+
+//* Tutor initialization */
+
+Tutor.prototype.$initializeServer = function() {
   
   // one-shot function to initialize server (wait for Shiny.shinyapp
   // to be available fore attempting to call server)
@@ -45,18 +57,10 @@ function Tutor() {
       },250);
     }
   }
+  
   // call initialize function
   initializeServer();
-
-}
-
-$(document).ready(function() {
-  
-  // create tutor
-  window.tutor = new Tutor();
-
-});
-
+};
 
 //* Tutor shared utility functions */
 
