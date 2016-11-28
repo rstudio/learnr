@@ -23,7 +23,10 @@ function Tutor() {
   function initializeServer() {
     if (typeof Shiny !== "undefined" && 
         typeof Shiny.shinyapp !== "undefined") {
-      thiz.$serverRequest("initialize", null, null);
+      thiz.$serverRequest("initialize", null, function(data) {
+        console.log("tutorial_id: " + data.identifiers.tutorial_id);
+        console.log("user_id: " + data.identifiers.user_id);
+      });
     }
     else {
       setTimeout(function(){

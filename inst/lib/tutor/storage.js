@@ -1,0 +1,7 @@
+
+
+
+Tutor.prototype.$getStorage = function() {
+  
+};
+

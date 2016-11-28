@@ -67,9 +67,15 @@ initialize_recording_identifiers <- function(session, request) {
   else 
     user_id <- unname(Sys.info()["user"])
   
-  # set their values into session header which can be re-read later
+  # set their values into session context which can be re-read later
   write_request(session, "tutor.tutorial_id", id)
   write_request(session, "tutor.user_id", user_id)
+  
+  # return them 
+  list(
+    tutorial_id = id,
+    user_id = user_id
+  )
 }
 
 read_request <- function(session, name, default = NULL) {
