@@ -18,8 +18,17 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     force(expr)
   })
   
-  # evaluate the exercise
-  evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
+  # evaluate the exercise and capture html output
+  html_output <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
+  
+  # store the submission for later replay
+  save_exercise_submission(session = get("session", envir = envir),
+                           label = exercise$label,
+                           input = exercise$code,
+                           output = html_output)
+  
+  # return the html output
+  html_output
 }
 
 # evaluate an exercise and return a list containing output and dependencies

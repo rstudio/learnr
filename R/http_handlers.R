@@ -50,10 +50,10 @@ register_http_handlers <- function(session) {
                                correct = correct)
     
     # store for later replay
-    save_object(session, label, tutor_object("question_submission", list(
-      question = question,
-      answers = answers
-    )))
+    save_question_submission(session = session, 
+                             label = label, 
+                             question = question, 
+                             answers = answers)
   }))
   
   # help handler

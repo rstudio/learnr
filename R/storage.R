@@ -1,5 +1,19 @@
 
 
+save_question_submission <- function(session, label, question, answers) {
+  save_object(session, label, tutor_object("question_submission", list(
+    question = question,
+    answers = answers
+  )))
+}
+
+save_exercise_submission <- function(session, label, input, output) {
+  save_object(session, label, tutor_object("exercise_submission", list(
+    input = input,
+    output = output
+  )))  
+}
+
 save_object <- function(session, object_id, data) {
   tutorial_id = read_request(session, "tutor.tutorial_id")
   user_id = read_request(session, "tutor.user_id")
