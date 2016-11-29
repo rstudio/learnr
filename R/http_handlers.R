@@ -27,7 +27,7 @@ register_http_handlers <- function(session) {
   
   # restore state handler
   session$registerDataObj("restore_state", NULL, rpc_handler(function(input) {
-    get_objects(session)
+    get_state(session)
   }))
   
   # recorder handler

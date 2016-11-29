@@ -19,8 +19,7 @@ Tutor.prototype.$restoreState = function() {
         // get submission data
         var exercise = data[i].data;
         var code = exercise.code[0];
-        var output = exercise.output[0];
-        
+      
         // find the editor
         var label = data[i].id[0];
         var editorContainer = thiz.$exerciseEditor(label);
@@ -32,11 +31,7 @@ Tutor.prototype.$restoreState = function() {
           
           // TODO: trigger output via firing 'restore' event on container
           
-          // TODO: we can just pass the output directly from the client
-          // (i.e. restore can be output rather than a flag). Note that
-          // to do this we'd need to start using serializeJSON. Perhaps
-          // better to let the server handle this.
-          
+          // TODO: ensure we don't scrollIntoView for restored output
         }
         
       }
