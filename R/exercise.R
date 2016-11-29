@@ -195,7 +195,7 @@ evaluate_exercise <- function(exercise, envir) {
     session = session,
     label = exercise$label,
     code = exercise$code,
-    output = html_output,
+    output = output_html,
     feedback = feedback
   )
   
