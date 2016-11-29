@@ -19,7 +19,7 @@ tutor_html_dependency <- function() {
     src = html_dependency_src("lib", "tutor"),
     script = c(
       "tutor.js", 
-      "state.js",
+      "restore.js",
       "exercise.js",
       "exercise-solution.js",
       "exercise-editor.js", 

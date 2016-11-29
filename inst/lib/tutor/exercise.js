@@ -12,6 +12,10 @@ Tutor.prototype.$initializeExercises = function() {
 
 //* Exercise shared utility functions */
 
+Tutor.prototype.$exerciseForLabel = function(label) {
+  return $('.tutor-exercise[data-label="' + label + '"]');
+};
+
 Tutor.prototype.$forEachExercise = function(operation) {
   return $(".tutor-exercise").each(function() {
     var exercise = $(this);

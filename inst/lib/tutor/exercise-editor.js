@@ -1,5 +1,9 @@
 
 
+Tutor.prototype.$exerciseEditor = function(label) {
+  return this.$exerciseForLabel(label).find('.tutor-exercise-code-editor');
+};
+
 Tutor.prototype.$initializeExerciseEditors = function() {
   
   // alias this

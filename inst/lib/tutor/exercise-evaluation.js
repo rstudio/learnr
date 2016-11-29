@@ -28,8 +28,8 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     
     getValue: function(el) {
       
-      // return null if we haven't been clicked
-      if (!this.clicked)
+      // return null if we haven't been clicked and this isn't a restore
+      if (!this.clicked && !this.restore)
         return null;
       
       // value object to return 
@@ -49,6 +49,9 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       else
         value.options = {};
       
+      // restore flag
+      value.restore = this.restore;
+
       // get any setup, solution, or check chunks
       
       // setup
@@ -73,10 +76,17 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     },
     
     subscribe: function(el, callback) {
-      var thiz = this;
+      var binding = this;
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
-        thiz.clicked = true;
-        thiz.check = ev.target.hasAttribute('data-check');
+        binding.restore = false;
+        binding.clicked = true;
+        binding.check = ev.target.hasAttribute('data-check');
+        callback(true);
+      });
+      $(el).on('restore.exerciseInputBinding', function(ev) {
+        binding.restore = true;
+        binding.clicked = false;
+        binding.check = false;
         callback(true);
       });
     },
@@ -90,6 +100,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       return exercise.find('.btn-tutor-run');
     },
     
+    restore: false,
     clicked: false,
     check: false
   });
