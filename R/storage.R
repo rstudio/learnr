@@ -77,6 +77,7 @@ filesystem_storage <- function(dir, compress = TRUE) {
   list(
     
     save_object = function(tutorial_id, user_id, object_id, data) {
+      data$id <- object_id
       object_path <- file.path(storage_path(tutorial_id, user_id), 
                                paste0(id_to_filesystem_path(object_id), ".rds"))
       saveRDS(data, file = object_path, compress = compress)
@@ -94,7 +95,7 @@ filesystem_storage <- function(dir, compress = TRUE) {
       for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
         object <- readRDS(file.path(objects_path, object_path))
         object_id <- sub("\\.rds$", "", id_from_filesystem_path(object_path))
-        objects[[object_id]] <- object
+        objects[[length(objects) + 1]] <- object
       }
       objects
     }
