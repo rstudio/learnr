@@ -136,6 +136,8 @@ evaluate_exercise <- function(exercise, envir) {
   # capture the dependenies
   dependencies <- attr(output_file, "knit_meta")
   
+  # TODO: purge any non-package library dependency file references
+  
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
@@ -193,8 +195,7 @@ evaluate_exercise <- function(exercise, envir) {
     session = session,
     label = exercise$label,
     code = exercise$code,
-    output = NULL, # not currently recording output
-    #output = html_output,
+    output = html_output,
     feedback = feedback
   )
   
