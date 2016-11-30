@@ -26,9 +26,19 @@ initialize_identifiers <- function(session, version, request) {
     value
   }
   
-  # determine default version
-  if (is.null(version))
-    version <- "1.0"
+  # if no version is specified then see if we can determine a default
+  if (is.null(version)) {
+
+    # if we are running inside a package use the package version
+    description_file <- tryCatch(rprojroot::find_package_root_file("DESCRIPTION"),
+                            error = function(e) NULL)
+    if (!is.null(description_file))
+      version <- unname(read.dcf(description_file, fields = ("Version"))[1,1])
+  
+    # fallback to version 1
+    if (is.null(version))
+      version <- "1.0"
+  }
  
   # initialize and return identifiers
   list(
