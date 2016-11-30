@@ -102,7 +102,10 @@ filesystem_storage <- function(dir, compress = TRUE) {
     get_object = function(tutorial_id, user_id, object_id) {
       object_path <- file.path(storage_path(tutorial_id, user_id), 
                                paste0(id_to_filesystem_path(object_id), ".rds"))
-      readRDS(object_path)
+      if (file.exists(object_path))
+        readRDS(object_path)
+      else
+        NULL
     },
     
     get_objects = function(tutorial_id, user_id) {

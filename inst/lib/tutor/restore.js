@@ -20,7 +20,7 @@ Tutor.prototype.$restoreState = function() {
         var exercise = data[i].data;
         var code = exercise.code[0];
       
-        // find the editor
+        // find the editor 
         var label = data[i].id[0];
         var editorContainer = thiz.$exerciseEditor(label);
         if (editorContainer.length > 0) {
@@ -29,15 +29,11 @@ Tutor.prototype.$restoreState = function() {
           var editor = ace.edit(editorContainer.attr('id'));
           editor.setValue(code, -1);
           
-          // TODO: trigger output via firing 'restore' event on container
-          
-          // TODO: ensure we don't scrollIntoView for restored output
+          // fire restore event on the container
+          editorContainer.trigger('restore');
         }
-        
       }
-      
     }
-      
   });
 };
 

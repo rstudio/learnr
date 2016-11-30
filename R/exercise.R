@@ -2,6 +2,27 @@
 # run an exercise and return HTML UI
 handle_exercise <- function(exercise, envir = parent.frame()) {
   
+  # short circult for restore
+  if (exercise$restore) {
+    
+    # try to restore the object from storage
+    object <- get_object(session = get("session", envir = envir),
+                         object_id = exercise$label)
+    if (!is.null(object))
+      output <- object$data$output
+    else 
+      output <- ""  
+    
+    # prepend special restored comment so client output binding knows this 
+    # value was restored (note: we could probably also accomplish this via
+    # a completely custom shiny output binding that happens to delegate to
+    # renderUI but I couldn't figure out a straightforward way to do this)
+    attribs <- attributes(output)
+    output <- paste("<!-- tutor-exercise-output-restored -->", object$data$output, sep = "\n")
+    attributes(output) <- attribs
+    return(output)
+  }
+  
   # get timelimit option (either from chunk option or from global option)
   timelimit <- exercise$options$exercise.timelimit
   if (is.null(timelimit))

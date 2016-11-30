@@ -136,8 +136,12 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       if (window.PagedTableDoc)
         window.PagedTableDoc.initAll();
       
+      // see if this was restored
+      var restored = data.indexOf("<!-- tutor-exercise-output-restored -->") != -1;
+      
       // scroll exercise fully into view if necessary
-      ensureExerciseVisible(el);
+      if (!restored)
+        ensureExerciseVisible(el);
     },
     
     showProgress: function(el, show) {
