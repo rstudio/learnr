@@ -17,7 +17,7 @@ HTMLWidgets.widget({
             var checkedInputs = $(el).find('.answers').find('input:checked');
             checkedInputs.each(function() {
               var label = $("label[for='"+$(this).attr("id")+"']");
-              answers.push(label.text());
+              answers.push(label.attr('data-answer'));
             });
             // notify server of question submission
             tutor.questionSubmission(x.label, x.question, answers, correct);
@@ -48,16 +48,16 @@ HTMLWidgets.widget({
             // display custom messages
             $(el).find('.responses').children(msg_class).html(message);
             
-            // render mathjax
-            if (window.MathJax)
-              window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
-              
             // record answer if we aren't restoring
             if (!$(el).data('restoring'))
               recordAnswer(correct);
-              
+            
             // clear restoring flag
             $(el).data('restoring', false);
+            
+            // render mathjax
+            if (window.MathJax)
+              window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
           }
         };
         
@@ -66,6 +66,11 @@ HTMLWidgets.widget({
         
         // add label attribute
         $(el).attr('data-label', x.label);
+        
+        // add data-answer attributes to answers
+        $(el).find('.answers').children('li').each(function(i) {
+          $(this).children('label').attr('data-answer', x.answers[i].option);  
+        });
         
         // get the correctItem and apply bg-success to it
         var correctItem = $(el).find('ul.responses').find('li.correct');

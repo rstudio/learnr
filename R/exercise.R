@@ -6,20 +6,14 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   if (exercise$restore) {
     
     # try to restore the object from storage
-    object <- get_object(session = get("session", envir = envir),
-                         object_id = exercise$label)
+    object <- get_exercise_submission(session = get("session", envir = envir),
+                                      label = exercise$label)
     if (!is.null(object))
       output <- object$data$output
     else 
       output <- ""  
     
-    # prepend special restored comment so client output binding knows this 
-    # value was restored (note: we could probably also accomplish this via
-    # a completely custom shiny output binding that happens to delegate to
-    # renderUI but I couldn't figure out a straightforward way to do this)
-    attribs <- attributes(output)
-    output <- paste("<!-- tutor-exercise-output-restored -->", object$data$output, sep = "\n")
-    attributes(output) <- attribs
+    # return the output
     return(output)
   }
   

@@ -1,21 +1,5 @@
 
 
-get_state <- function(session) {
-  
-  # get all of the objects
-  objects <- get_objects(session)
-  
-  # strip output (the client doesn't need it and it's expensive to transmit)
-  objects <- lapply(objects, function(object) {
-    if (object$type == "exercise_submission")
-      object$data["output"] <- list(NULL)
-    object
-  })
-  
-  # return objects
-  objects
-}
-
 save_question_submission <- function(session, label, question, answers) {
   save_object(session, label, tutor_object("question_submission", list(
     question = question,
@@ -30,6 +14,30 @@ save_exercise_submission <- function(session, label, code, output, feedback) {
     feedback = feedback
   )))  
 }
+
+get_exercise_submission <- function(session, label) {
+  get_object(session = session, object_id = label)
+}
+
+
+get_all_submissions <- function(session, exercise_output = TRUE) {
+  
+  # get all of the objects
+  objects <- get_objects(session)
+  
+  # strip output (the client doesn't need it and it's expensive to transmit)
+  objects <- lapply(objects, function(object) {
+    if (object$type == "exercise_submission")
+      if (!exercise_output)
+        object$data["output"] <- list(NULL)
+    object
+  })
+  
+  # return objects
+  objects
+}
+
+
 
 save_object <- function(session, object_id, data) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")

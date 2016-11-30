@@ -96,6 +96,7 @@ question <- function(text,
   # save all state/options into "x"
   x <- list()
   x$question <- quiz_text(text)
+  x$answers <- answers
   x$label <- knitr::opts_current$get('label')
   x$skipStartButton <- TRUE
   x$perQuestionResponseAnswers <- TRUE
