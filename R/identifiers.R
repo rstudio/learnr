@@ -9,37 +9,28 @@ initialize_identifiers <- function(session, request) {
       NULL
   }
   
-  # read tutorial_id from http header (or default to tutorial directory)
-  id_header <- as_rook_header(getOption("tutor.http_header_tutorial_id"))
-  if (!is.null(id_header) && exists(id_header, envir = request))
-    id <- get(id_header, envir = request)
-  else
-    id <- getwd()
-  
-  # read tutorial version from http header (or default to v1.0)
-  version_header <- as_rook_header(getOption("tutor.http_header_tutorial_version"))
-  if (!is.null(version_header) && exists(version_header, envir = request))
-    version <- get(version_header, envir = request)
-  else
-    version <- "1.0"
+  # function to initialize an identifier (read from http header or take default)
+  initialize_identifer <- function(identifier, default) {
     
-  # read user_id from http header (or default to current username)
-  user_id_header <- as_rook_header(getOption("tutor.http_header_user_id"))
-  if (!is.null(user_id_header) && exists(user_id_header, envir = request))
-    user_id <- get(user_id_header, envir = request)
-  else 
-    user_id <- unname(Sys.info()["user"])
+    # determine whether a custom header provides the value (fallback to default)
+    header <- as_rook_header(getOption(sprintf("tutor.http_header_%s", identifier)))
+    if (!is.null(header) && exists(header, envir = request))
+      value <- get(header, envir = request)
+    else
+      value <- default
+    
+    # write it into the request for reading later on
+    write_request(session, sprintf("tutor.%s", identifier), value)
+    
+    # return the value
+    value
+  }
   
-  # set their values into session context which can be re-read later
-  write_request(session, "tutor.tutorial_id", id)
-  write_request(session, "tutor.tutorial_version", version)
-  write_request(session, "tutor.user_id", user_id)
-  
-  # return them 
+  # initialize and return identifiers
   list(
-    tutorial_id = id,
-    tutorial_version = version,
-    user_id = user_id
+    tutorial_id = initialize_identifer("tutorial_id", default = getwd()),
+    tutorial_version = initialize_identifer("tutorial_version", default = "1.0"),
+    user_id = initialize_identifer("user_id", default = unname(Sys.info()["user"]))
   )
 }
 
