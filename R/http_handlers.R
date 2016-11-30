@@ -6,9 +6,9 @@ register_http_handlers <- function(session) {
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
     
-    # initialize recording identifiers based on http headers (or default
+    # initialize identifiers based on http headers (or default
     # identifers used for local mode)
-    identifiers <- initialize_recording_identifiers(session, req)
+    identifiers <- initialize_identifiers(session, req)
     
     # data payload to return
     data <- list(
