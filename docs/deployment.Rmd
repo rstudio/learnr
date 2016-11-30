@@ -81,20 +81,22 @@ The **tutor** package can also have it's exercise evaluation function replaced w
     <div id="exerciseevaluator"></div>
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
 
-## Recording Events
+## Recording User Events
 
-As part of deploying a tutorial you might want to record the various events (i.e. user actions) which are taken within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
+As part of deploying a tutorial you might want to record the various user events which occur witihn tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
 
-### Recorder Function
+### Event Recorder Function
 
 You can capture events by using a custom eent recorder function. This function is specified via the `tutor.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
 
 <div id="tutorrecorder"></div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
 
-The `tutorial` parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).
+The `tutorial_id` parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).
 
-The `user` parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).
+The `tutorial_version` parameter provides the version number of the tutorial.
+
+The `user_id` parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).
 
 The `label` parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.
 
@@ -139,6 +141,7 @@ You can pass a custom tutorial ID and/or user ID through to the **tutor** packag
 <script type="text/javascript">loadSnippet('tutorids')</script>
 
 Once configuring these custom header names you'd then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.
+
 
 
 

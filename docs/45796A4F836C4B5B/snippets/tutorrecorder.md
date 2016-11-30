@@ -1,5 +1,5 @@
-options(tutor.event_recorder = function(tutorial, user, label, event, data) {
-  cat(tutorial, "(", user, ")\n", sep = "")
-  cat(event, ": ", label, "\n", sep = "")
-  cat(str(data), "\n")
-})
+tutor_event_recorder <- function(tutorial_id, tutorial_version, user_id, 
+                                 label, event, data) {
+  cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
+  cat(label, ": ", event, "\n", sep = "")
+}

@@ -3,8 +3,9 @@
 record_event <- function(session, label, event, data) {
   recorder <- getOption("tutor.event_recorder", default = NULL)
   if (!is.null(recorder)) {
-    recorder(tutorial = read_request(session, "tutor.tutorial_id"), 
-             user = read_request(session, "tutor.user_id"), 
+    recorder(tutorial_id = read_request(session, "tutor.tutorial_id"), 
+             tutorial_version = read_request(session, "tutor.tutorial_version"),
+             user_id = read_request(session, "tutor.user_id"), 
              label = label,
              event = event, 
              data = data)
@@ -51,10 +52,14 @@ exercise_submission_event <- function(session,
 
 
 
-debug_event_recorder <- function(tutorial, user, label, event, data) {
-  cat(tutorial, "(", user, ")\n", sep = "")
-  cat(event, ": ", label, "\n", sep = "")
-  cat(names(data), "\n")
+debug_event_recorder <- function(tutorial_id, 
+                                 tutorial_version,
+                                 user_id, 
+                                 label, 
+                                 event, 
+                                 data) {
+  cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
+  cat(label, ": ", event, "\n", sep = "")
 }
 
 
