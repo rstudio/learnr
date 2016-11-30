@@ -20,11 +20,21 @@ initialize_tutor <- function() {
       rmarkdown::html_dependency_font_awesome(),
       tutor_html_dependency()
     ))
+  
+    # is there a version provided via metadata?
+    if (!is.null(rmarkdown::metadata$version)) {
+      version <- rmarkdown::metadata$version
+      if (is.numeric(version))
+        version <- format(version, nsmall = 1)
+      version <- sprintf('"%s"', version)
+    }
+    else
+      version <- "NULL"
     
     # session initialization
     rmarkdown::shiny_prerendered_chunk(
       'server', 
-      'tutor:::register_http_handlers(session)',
+      sprintf('tutor:::register_http_handlers(session, version = %s)', version),
       singleton = TRUE
     )
     

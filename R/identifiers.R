@@ -1,5 +1,5 @@
 
-initialize_identifiers <- function(session, request) {
+initialize_identifiers <- function(session, version, request) {
   
   # helper to read rook headers
   as_rook_header <- function(name) {
@@ -26,10 +26,14 @@ initialize_identifiers <- function(session, request) {
     value
   }
   
+  # determine default version
+  if (is.null(version))
+    version <- "1.0"
+ 
   # initialize and return identifiers
   list(
     tutorial_id = initialize_identifer("tutorial_id", default = getwd()),
-    tutorial_version = initialize_identifer("tutorial_version", default = "1.0"),
+    tutorial_version = initialize_identifer("tutorial_version", default = version),
     user_id = initialize_identifer("user_id", default = unname(Sys.info()["user"]))
   )
 }

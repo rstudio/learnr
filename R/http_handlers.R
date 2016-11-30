@@ -1,14 +1,14 @@
 
 
 
-register_http_handlers <- function(session) {
+register_http_handlers <- function(session, version) {
   
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
     
     # initialize identifiers based on http headers (or default
     # identifers used for local mode)
-    identifiers <- initialize_identifiers(session, req)
+    identifiers <- initialize_identifiers(session, version, req)
     
     # data payload to return
     data <- list(
