@@ -52,13 +52,20 @@ HTMLWidgets.widget({
             if (window.MathJax)
               window.MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
               
-            // record answer
-            recordAnswer(correct);
+            // record answer if we aren't restoring
+            if (!$(el).data('restoring'))
+              recordAnswer(correct);
+              
+            // clear restoring flag
+            $(el).data('restoring', false);
           }
         };
         
         // initialize slickQuick
         $(el).slickQuiz(x);
+        
+        // add label attribute
+        $(el).attr('data-label', x.label);
         
         // get the correctItem and apply bg-success to it
         var correctItem = $(el).find('ul.responses').find('li.correct');
