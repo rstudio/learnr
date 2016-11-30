@@ -16,6 +16,13 @@ initialize_identifiers <- function(session, request) {
   else
     id <- getwd()
   
+  # read tutorial version from http header (or default to v1.0)
+  version_header <- as_rook_header(getOption("tutor.http_header_tutorial_version"))
+  if (!is.null(version_header) && exists(version_header, envir = request))
+    version <- get(version_header, envir = request)
+  else
+    version <- "1.0"
+    
   # read user_id from http header (or default to current username)
   user_id_header <- as_rook_header(getOption("tutor.http_header_user_id"))
   if (!is.null(user_id_header) && exists(user_id_header, envir = request))
@@ -25,11 +32,13 @@ initialize_identifiers <- function(session, request) {
   
   # set their values into session context which can be re-read later
   write_request(session, "tutor.tutorial_id", id)
+  write_request(session, "tutor.tutorial_version", version)
   write_request(session, "tutor.user_id", user_id)
   
   # return them 
   list(
     tutorial_id = id,
+    tutorial_version = version,
     user_id = user_id
   )
 }

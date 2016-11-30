@@ -41,20 +41,23 @@ get_all_submissions <- function(session, exercise_output = TRUE) {
 
 save_object <- function(session, object_id, data) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
+  tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$save_object(tutorial_id, user_id, object_id, data)
+  storage()$save_object(tutorial_id, tutorial_version, user_id, object_id, data)
 }
 
 get_object <- function(session, object_id) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
+  tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$get_object(tutorial_id, user_id, object_id)
+  storage()$get_object(tutorial_id, tutorial_version, user_id, object_id)
 }
 
 get_objects <- function(session) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
+  tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$get_objects(tutorial_id, user_id)
+  storage()$get_objects(tutorial_id, tutorial_version, user_id)
 }
 
 
@@ -88,10 +91,11 @@ filesystem_storage <- function(dir, compress = TRUE) {
   }
   
   # get the path to storage (ensuring that the directory exists)
-  storage_path <- function(tutorial_id, user_id) {
+  storage_path <- function(tutorial_id, tutorial_version, user_id) {
     path <- file.path(dir, 
                       id_to_filesystem_path(user_id),
-                      id_to_filesystem_path(tutorial_id))
+                      id_to_filesystem_path(tutorial_id),
+                      id_to_filesystem_path(tutorial_version))
     if (!utils::file_test("-d", path))
       dir.create(path, recursive = TRUE)
     path
@@ -100,15 +104,15 @@ filesystem_storage <- function(dir, compress = TRUE) {
   # functions which implement storage via saving to RDS
   list(
     
-    save_object = function(tutorial_id, user_id, object_id, data) {
+    save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
       data$id <- object_id
-      object_path <- file.path(storage_path(tutorial_id, user_id), 
+      object_path <- file.path(storage_path(tutorial_id, tutorial_version, user_id), 
                                paste0(id_to_filesystem_path(object_id), ".rds"))
       saveRDS(data, file = object_path, compress = compress)
     },
     
-    get_object = function(tutorial_id, user_id, object_id) {
-      object_path <- file.path(storage_path(tutorial_id, user_id), 
+    get_object = function(tutorial_id, tutorial_version, user_id, object_id) {
+      object_path <- file.path(storage_path(tutorial_id, tutorial_version, user_id), 
                                paste0(id_to_filesystem_path(object_id), ".rds"))
       if (file.exists(object_path))
         readRDS(object_path)
@@ -116,8 +120,8 @@ filesystem_storage <- function(dir, compress = TRUE) {
         NULL
     },
     
-    get_objects = function(tutorial_id, user_id) {
-      objects_path <- storage_path(tutorial_id, user_id)
+    get_objects = function(tutorial_id, tutorial_version, user_id) {
+      objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
       objects <- list()
       for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
         object <- readRDS(file.path(objects_path, object_path))
