@@ -136,11 +136,11 @@ evaluate_exercise <- function(exercise, envir) {
                    "limit for this exercise.")
     } 
     
-    # record the error
-    record_exercise_error(session = session,
-                          label = exercise$label,
-                          code = exercise$code,
-                          message = msg)
+    # fire event
+    exercise_error_event(session = session,
+                         label = exercise$label,
+                         code = exercise$code,
+                         message = msg)
     
     # provide error html
     error_html <<- div(class = "alert alert-danger", role = "alert", msg)
@@ -195,8 +195,8 @@ evaluate_exercise <- function(exercise, envir) {
       output_html <- feedback_html
   }
   
-  # record the submission
-  record_exercise_submission(
+  # fire event
+  exercise_submission_event(
     session = session,
     label = exercise$label,
     code = exercise$code,

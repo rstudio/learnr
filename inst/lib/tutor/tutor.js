@@ -3,14 +3,14 @@
 
 function Tutor() {
   
-  // Function to record a user action
-  this.record = function(label, action, data) {
+  // Function to record an event
+  this.record_event = function(label, event, data) {
     var params = {
       label: label,
-      action: action,
+      event: event,
       data: data
     };
-    this.$serverRequest("record", params, null);
+    this.$serverRequest("record_event", params, null);
   };
   
   // Function to notify the server of a question submission

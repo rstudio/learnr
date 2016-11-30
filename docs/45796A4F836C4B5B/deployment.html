@@ -381,12 +381,12 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 </ol>
 </div>
 </div>
-<div id="recording-user-actions" class="section level2">
-<h2>Recording User Actions</h2>
-<p>As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
+<div id="recording-events" class="section level2">
+<h2>Recording Events</h2>
+<p>As part of deploying a tutorial you might want to record the various events (i.e. user actions) which are taken within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
 <div id="recorder-function" class="section level3">
 <h3>Recorder Function</h3>
-<p>You can capture various user actions by using a custom recorder function. This function is specified via the <code>tutor.recorder</code> global option. For example, here’s how you would define a simple recorder function that prints to stdout:</p>
+<p>You can capture events by using a custom eent recorder function. This function is specified via the <code>tutor.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
 <div id="tutorrecorder">
 
 </div>
@@ -394,12 +394,12 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 <p>The <code>tutorial</code> parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).</p>
 <p>The <code>user</code> parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).</p>
 <p>The <code>label</code> parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.</p>
-<p>The <code>action</code> parameter is one of the following values:</p>
+<p>The <code>event</code> parameter is one of the following values:</p>
 <table>
 <thead>
 <tr class="header">
 <th>
-Action
+Event
 </th>
 <th>
 Description
@@ -441,7 +441,7 @@ User submitted an answer for a multiple-choice question.
 </tr>
 </tbody>
 </table>
-<p>The <code>data</code> parameter is an R list which provides additonal data that varies depending on which <code>action</code> is being recorded.</p>
+<p>The <code>data</code> parameter is an R list which provides additonal data that varies depending on which <code>event</code> is being recorded.</p>
 </div>
 <div id="tutorial-and-user-ids" class="section level3">
 <h3>Tutorial and User IDs</h3>

@@ -32,12 +32,12 @@ register_http_handlers <- function(session) {
     )
   }))
   
-  # recorder handler
-  session$registerDataObj("record", NULL, rpc_handler(function(input) {
-    record(session = session,
-           label = input$label,
-           action = input$action,
-           data = input$data)
+  # event recording
+  session$registerDataObj("record_event", NULL, rpc_handler(function(input) {
+    record_event(session = session,
+                 label = input$label,
+                 event = input$event,
+                 data = input$data)
   }))
   
   # question submission handler
@@ -49,12 +49,12 @@ register_http_handlers <- function(session) {
     answers <- input$answers
     correct <- input$correct
     
-    # record
-    record_question_submission(session = session,
-                               label = label,
-                               question = question,
-                               answers = answers,
-                               correct = correct)
+    # fire event
+    question_submission_event(session = session,
+                              label = label,
+                              question = question,
+                              answers = answers,
+                              correct = correct)
     
     # store for later replay
     save_question_submission(session = session, 

@@ -34,7 +34,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   
   // helper function to record solution/hint requests
   function recordHintRequest(index) {
-    tutor.record(label, "exercise_hint", {
+    tutor.record_event(label, "exercise_hint", {
       type: solution !== null ? "solution" : "hint",
       index: hintIndex
     });

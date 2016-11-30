@@ -81,13 +81,13 @@ The **tutor** package can also have it's exercise evaluation function replaced w
     <div id="exerciseevaluator"></div>
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
 
-## Recording User Actions
+## Recording Events
 
-As part of deploying a tutorial you might want to record the various actions which users take within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
+As part of deploying a tutorial you might want to record the various events (i.e. user actions) which are taken within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
 
 ### Recorder Function
 
-You can capture various user actions by using a custom recorder function. This function is specified via the `tutor.recorder` global option. For example, here's how you would define a simple recorder function that prints to stdout:
+You can capture events by using a custom eent recorder function. This function is specified via the `tutor.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
 
 <div id="tutorrecorder"></div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
@@ -98,12 +98,12 @@ The `user` parameter provides a unique identifer for the tutorial user (defaults
 
 The `label` parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.
 
-The `action` parameter is one of the following values:
+The `event` parameter is one of the following values:
 
 <table>
 <thead>
 <tr class="header">
-<th>Action</th>
+<th>Event</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -127,7 +127,7 @@ The `action` parameter is one of the following values:
 </tbody>
 </table>
 
-The `data` parameter is an R list which provides additonal data that varies depending on which `action` is being recorded.
+The `data` parameter is an R list which provides additonal data that varies depending on which `event` is being recorded.
 
 ### Tutorial and User IDs
 

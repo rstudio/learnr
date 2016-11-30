@@ -15,12 +15,12 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-options(tutor.recorder = tutor:::debug_recorder)
+options(tutor.event_recorder = tutor:::debug_event_recorder)
 knitr::opts_chunk$set(
   exercise.eval = FALSE, 
   exercise.cap = "Exercise",
-  exercise.checker = function(...) {
-    feedback("Nice job!", correct = TRUE, location = "append")
+  exercise.checker = function(solution_code, ...) {
+    feedback(paste0("Nice job!", solution_code), correct = TRUE, location = "append")
   }
 )
 ```
@@ -57,11 +57,6 @@ nycflights <- nycflights13::flights
 nycflights <- filter(nycflights, month == 1)
 ```
 
-```{r exercise1-hint}
-# hint
-```
-
-
 ```{r exercise1-solution}
 nycflights <- filter(nycflights, month == 2)
 ```
@@ -75,13 +70,8 @@ Modify this code so that it prints only the first 5 rows of the `mtcars` dataset
 head(mtcars, n = 5)
 ```
 
-```{r cars-hint-1}
-mtcars <- head(mtcars, n = 5)
-mtcars
-```
 
-
-```{r cars-hint-2}
+```{r cars-solution}
 mtcars <- head(mtcars, n = 5)
 print(mtcars)
 mtcars <- head(mtcars, n = 5)

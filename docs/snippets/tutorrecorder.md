@@ -1,5 +1,5 @@
-options(tutor.recorder = function(tutorial, user, label, action, data) {
+options(tutor.event_recorder = function(tutorial, user, label, event, data) {
   cat(tutorial, "(", user, ")\n", sep = "")
-  cat(action, ": ", label, "\n", sep = "")
+  cat(event, ": ", label, "\n", sep = "")
   cat(str(data), "\n")
 })
