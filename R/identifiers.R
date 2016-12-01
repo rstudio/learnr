@@ -26,25 +26,37 @@ initialize_identifiers <- function(session, version, request) {
     value
   }
   
-  # if no version is specified then see if we can determine a default
-  if (is.null(version)) {
+  # determine default tutorial id 
+  default_tutorial_id <- getwd()
+  
+  
+  # determine default version
+  default_tutorial_version <- version
+  if (is.null(default_tutorial_version)) {
 
     # if we are running inside a package use the package version
     description_file <- tryCatch(rprojroot::find_package_root_file("DESCRIPTION"),
                             error = function(e) NULL)
     if (!is.null(description_file))
-      version <- unname(read.dcf(description_file, fields = ("Version"))[1,1])
+      default_tutorial_version <- unname(read.dcf(description_file, 
+                                                  fields = ("Version"))[1,1])
   
     # fallback to version 1
-    if (is.null(version))
-      version <- "1.0"
+    if (is.null(default_tutorial_version))
+      default_tutorial_version <- "1.0"
   }
  
   # initialize and return identifiers
   list(
-    tutorial_id = initialize_identifer("tutorial_id", default = getwd()),
-    tutorial_version = initialize_identifer("tutorial_version", default = version),
-    user_id = initialize_identifer("user_id", default = unname(Sys.info()["user"]))
+    # tutorial_id
+    tutorial_id = initialize_identifer("tutorial_id", 
+                                       default = default_tutorial_id),
+    # tutorial_version
+    tutorial_version = initialize_identifer("tutorial_version", 
+                                            default = default_tutorial_version),
+    # user id
+    user_id = initialize_identifer("user_id", 
+                                   default = unname(Sys.info()["user"]))
   )
 }
 

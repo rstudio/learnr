@@ -21,7 +21,7 @@ register_http_handlers <- function(session, version) {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = rpc_json_result(data)
+      body = json_rpc_result(data)
     )
   })
   
@@ -87,9 +87,8 @@ rpc_handler <- function(handler) {
   
   function(data, req) {
     
-    # get the post data and deserialize it
-    input_stream <- req[["rook.input"]]
-    input <- jsonlite::fromJSON(input_stream$read_lines())
+    # get the input
+    input <- json_rpc_input(req)
     
     # call the handler
     result <- handler(input)
@@ -100,13 +99,19 @@ rpc_handler <- function(handler) {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = rpc_json_result(result)
+      body = json_rpc_result(result)
     )
   }
 }
 
+# get the json from a request body
+json_rpc_input <- function(req) {
+  input_stream <- req[["rook.input"]]
+  jsonlite::fromJSON(input_stream$read_lines())
+}
+
 # helper for returning JSON
-rpc_json_result <- function(x) {
+json_rpc_result <- function(x) {
   jsonlite::toJSON(x, null = "null", force = TRUE)
 }
 
