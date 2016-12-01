@@ -368,6 +368,7 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 <div id="security" class="section level3">
 <h3>Security</h3>
 <p>Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it’s access to the filesystem and/or other system resources.</p>
+<p>By default when running on UNIX systems the <strong>tutor</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process.</p>
 <p>The <strong>tutor</strong> package can also have it’s exercise evaluation function replaced with one based on the <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package. Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor:</p>
 <ol style="list-style-type: decimal">
 <li><p>Install and configure the <strong>RAppArmor</strong> package as described here: <a href="https://github.com/jeroenooms/RAppArmor#readme" class="uri">https://github.com/jeroenooms/RAppArmor#readme</a></p></li>
