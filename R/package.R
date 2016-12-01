@@ -7,6 +7,7 @@
 #' @importFrom markdown markdownToHTML markdownExtensions
 #' @importFrom evaluate evaluate
 #' @importFrom withr with_envvar
+#' @importFrom parallel mcparallel mccollect
 NULL
 
 # install knitr hooks when package is attached to search path

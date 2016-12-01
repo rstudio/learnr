@@ -29,22 +29,62 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     setTimeLimit(elapsed=timelimit, transient=TRUE);
     on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
     
-    # evaluate 
-    force(expr)
+    # evaluate using mcparallel to isolate the code into a forked child process
+    if (!is_windows()) {
+      
+      # create a parallel job and evaluate the expression within it
+      job <- parallel::mcparallel(expr)
+      parallel::mccollect(job, wait = TRUE, timeout = timelimit)[[1]]
+      
+    }
+    else {
+      
+      # evaluate the expression
+      force(expr)
+    }
   })
   
-  # evaluate the exercise and capture html output
-  html_output <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
+  # evaluate the exercise 
+  result <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
+  
+  # get session which serves as context for recording
+  session <- get("session", envir = envir)
+  
+  # fire event depending on whether this was an error
+  if (!is.null(result$error_message)) {
+    exercise_error_event(
+      session = session,
+      label = exercise$label,
+      code = exercise$code,
+      message = result$error_message
+    )
+  }
+  else {
+    exercise_submission_event(
+      session = session,
+      label = exercise$label,
+      code = exercise$code,
+      output = result$evaluate_output,
+      checked = !is.null(exercise$check),
+      correct = ifelse(is.null(result$feedback), NA, result$feedback$correct)
+    )
+  }
+  
+  # save submission for later replay
+  save_exercise_submission(
+    session = session,
+    label = exercise$label,
+    code = exercise$code,
+    output = result$html_output,
+    feedback = result$feedback
+  )
   
   # return the html output
-  html_output
+  result$html_output
 }
 
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
-  
-  # get the session (used for calls to recording functions)
-  session <- get("session", envir = envir)
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
@@ -119,6 +159,7 @@ evaluate_exercise <- function(exercise, envir) {
   )
   
   # knit the Rmd to markdown (catch and report errors)
+  error_message <- NULL
   error_html <- NULL
   tryCatch({
     output_file <- rmarkdown::render(input = exercise_rmd,
@@ -129,24 +170,24 @@ evaluate_exercise <- function(exercise, envir) {
                                      run_pandoc = FALSE)
   }, error = function(e) {
     # make the time limit error message a bit more friendly
-    msg <- e$message
+    error_message <- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
-    if (regexpr(pattern, msg) != -1L) {
-      msg <- paste("Error: Your code ran longer than the permitted time", 
-                   "limit for this exercise.")
+    if (regexpr(pattern, error_message) != -1L) {
+      error_message <- paste("Error: Your code ran longer than the permitted time", 
+                             "limit for this exercise.")
     } 
     
-    # fire event
-    exercise_error_event(session = session,
-                         label = exercise$label,
-                         code = exercise$code,
-                         message = msg)
-    
     # provide error html
-    error_html <<- div(class = "alert alert-danger", role = "alert", msg)
+    error_html <<- div(class = "alert alert-danger", role = "alert", error_message)
   })
-  if (!is.null(error_html))
-    return(error_html)
+  if (!is.null(error_html)) {
+    return(list(
+      feedback = NULL,
+      evaluate_output = NULL,
+      error_message = error_message,
+      html_output = error_html
+    ))
+  }
   
   # capture the dependenies
   dependencies <- attr(output_file, "knit_meta")
@@ -176,7 +217,7 @@ evaluate_exercise <- function(exercise, envir) {
   output <- paste(output, collapse = "\n")
   
   # capture output as HTML w/ dependencies
-  output_html <- htmltools::attachDependencies(
+  html_output <- htmltools::attachDependencies(
     htmltools::HTML(output),
     dependencies
   )
@@ -201,32 +242,18 @@ evaluate_exercise <- function(exercise, envir) {
   if (!is.null(feedback)) {
     feedback_html <- htmltools::as.tags(feedback)
     if (feedback$location == "append")
-      output_html <- htmltools::tagList(output_html, feedback_html)
+      html_output <- htmltools::tagList(html_output, feedback_html)
     else if (feedback$location == "prepend")
-      output_html <- htmltools::tagList(feedback_html, output_html)
+      html_output <- htmltools::tagList(feedback_html, html_output)
     else if (feedback$location == "replace")
-      output_html <- feedback_html
+      html_output <- feedback_html
   }
   
-  # fire event
-  exercise_submission_event(
-    session = session,
-    label = exercise$label,
-    code = exercise$code,
-    output = evaluate_result,
-    checked = !is.null(exercise$check),
-    correct = ifelse(is.null(feedback), NA, feedback$correct)
+  # return a list with the various results of the expression
+  list(
+    feedback = feedback,
+    evaluate_output = evaluate_result,
+    error_message = NULL,
+    html_output = html_output
   )
-  
-  # save submission for later replay
-  save_exercise_submission(
-    session = session,
-    label = exercise$label,
-    code = exercise$code,
-    output = output_html,
-    feedback = feedback
-  )
-  
-  # return html_output
-  output_html
 }

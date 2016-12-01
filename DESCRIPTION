@@ -15,6 +15,7 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   tutorials for learning about R and R packages.
 Imports:
   utils,
+  parallel,
   withr,
   rappdirs,
   jsonlite,
