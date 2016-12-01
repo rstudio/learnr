@@ -151,8 +151,21 @@ evaluate_exercise <- function(exercise, envir) {
   # capture the dependenies
   dependencies <- attr(output_file, "knit_meta")
   
-  # TODO: purge any non-package library dependency file references
-  
+  # purge dependencies that aren't in a package (to close off reading of
+  # artibtary filesystem locations)
+  dependencies <- Filter(x = dependencies, function(dependency) {
+    if (!is.null(dependency$package)) {
+      TRUE
+    }
+    else {
+      ! is.null(tryCatch(
+        rprojroot::find_root(rprojroot::is_r_package, 
+                             path = dependency$src$file),
+        error = function(e) NULL
+      ))
+    }
+  })
+
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
