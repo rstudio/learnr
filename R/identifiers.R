@@ -1,5 +1,5 @@
 
-initialize_session_state <- function(session, version, location, request) {
+initialize_session_state <- function(session, metadata, location, request) {
   
   # helper to read rook headers
   as_rook_header <- function(name) {
@@ -36,24 +36,27 @@ initialize_session_state <- function(session, version, location, request) {
     package_info <- read.dcf(package_desc, all = TRUE)
   }
  
-  # determine default tutorial id (filesystem-based for localhost and remote URL
-  # based for other configurations)
-  if (is_localhost(location)) {
-    if (!is.null(package_dir)) {
-      default_tutorial_id <- sprintf("package:%s-%s", 
-                                     package_info$Package,
-                                     sub(paste0("^", package_dir), "", cwd))
+  # determine default tutorial id (metadata first then filesystem-based for 
+  # localhost and remote URL based for other configurations)
+  default_tutorial_id <- metadata$id
+  if (is.null(default_tutorial_id)) {
+    if (is_localhost(location)) {
+      if (!is.null(package_dir)) {
+        default_tutorial_id <- sprintf("package:%s-%s", 
+                                       package_info$Package,
+                                       sub(paste0("^", package_dir), "", cwd))
+      }
+      else {
+        default_tutorial_id <- cwd  
+      }
     }
     else {
-      default_tutorial_id <- cwd  
+      default_tutorial_id <- paste0(location$host, location$pathname)
     }
-  }
-  else {
-    default_tutorial_id <- paste0(location$host, location$pathname)
   }
   
   # determine default version (if in a package use the package version)
-  default_tutorial_version <- version
+  default_tutorial_version <- metadata$version
   if (is.null(default_tutorial_version)) {
     if (!is.null(package_dir))
       default_tutorial_version <- package_info$Version

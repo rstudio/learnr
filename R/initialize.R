@@ -21,20 +21,11 @@ initialize_tutor <- function() {
       tutor_html_dependency()
     ))
   
-    # is there a version provided via metadata?
-    if (!is.null(rmarkdown::metadata$version)) {
-      version <- rmarkdown::metadata$version
-      if (is.numeric(version))
-        version <- format(version, nsmall = 1)
-      version <- sprintf('"%s"', version)
-    }
-    else
-      version <- "NULL"
-    
-    # session initialization
+    # session initialization (forward tutorial metadata)
     rmarkdown::shiny_prerendered_chunk(
       'server', 
-      sprintf('tutor:::register_http_handlers(session, version = %s)', version),
+      sprintf('tutor:::register_http_handlers(session, metadata = %s)', 
+              deparse(rmarkdown::metadata$tutorial, control = c("keepInteger"))),
       singleton = TRUE
     )
     

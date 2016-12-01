@@ -1,7 +1,7 @@
 
 
 
-register_http_handlers <- function(session, version) {
+register_http_handlers <- function(session, metadata) {
   
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
@@ -10,7 +10,7 @@ register_http_handlers <- function(session, version) {
     location <- json_rpc_input(req)$location
     
     # initialize session state
-    identifiers <- initialize_session_state(session, version, location, req)
+    identifiers <- initialize_session_state(session, metadata, location, req)
     
     # data payload to return
     data <- list(
