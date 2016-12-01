@@ -45,7 +45,7 @@ Tutor.prototype.$initializeServer = function() {
   var thiz = this;
   function initializeServer() {
     if (typeof Shiny !== "undefined" && typeof Shiny.shinyapp !== "undefined") {
-      thiz.$serverRequest("initialize", null, function(data) {
+      thiz.$serverRequest("initialize", { location: window.location }, function(data) {
         // now that the server is initialized we can restore state
         thiz.$restoreState();
       });

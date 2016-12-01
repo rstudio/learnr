@@ -6,9 +6,11 @@ register_http_handlers <- function(session, version) {
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
     
-    # initialize identifiers based on http headers (or default
-    # identifers used for local mode)
-    identifiers <- initialize_identifiers(session, version, req)
+    # parameters
+    location <- json_rpc_input(req)$location
+    
+    # initialize session state
+    identifiers <- initialize_session_state(session, version, location, req)
     
     # data payload to return
     data <- list(

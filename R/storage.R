@@ -43,21 +43,21 @@ save_object <- function(session, object_id, data) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
   tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$save_object(tutorial_id, tutorial_version, user_id, object_id, data)
+  tutor_storage(session)$save_object(tutorial_id, tutorial_version, user_id, object_id, data)
 }
 
 get_object <- function(session, object_id) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
   tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$get_object(tutorial_id, tutorial_version, user_id, object_id)
+  tutor_storage(session)$get_object(tutorial_id, tutorial_version, user_id, object_id)
 }
 
 get_objects <- function(session) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
   tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
-  storage()$get_objects(tutorial_id, tutorial_version, user_id)
+  tutor_storage(session)$get_objects(tutorial_id, tutorial_version, user_id)
 }
 
 
@@ -71,11 +71,57 @@ tutor_object <- function(type, data) {
 
 
 # get the currently active storage handler
-storage <- function() {
-  getOption("tutor.storage", 
-            default = filesystem_storage(
-              file.path(rappdirs::user_data_dir(), "R", "tutor", "storage"))
-            )
+tutor_storage <- function(session) {
+  
+  # local storage implementation
+  local_storage <- filesystem_storage(
+    file.path(rappdirs::user_data_dir(), "R", "tutor", "storage")
+  )
+  
+  # remote storage implementation
+  remote_storage <- no_storage()
+  
+  # function to determine "auto" storage
+  auto_storage <- function() {
+    location <- read_request(session, "tutor.http_location")
+    if (is_localhost(location))
+      local_storage
+    else
+      remote_storage
+  }
+  
+  # examine the option
+  storage <- getOption("tutor.storage", default = "auto")
+
+  # resolve NULL to "none"
+  if (is.null(storage))
+    storage <- "none"
+  
+  # if it's a character vector then resolve it
+  if (is.character(storage)) {
+    storage <- switch(storage,
+      auto = auto_storage(),
+      local = local_storage,
+      remote = remote_storage,
+      none = no_storage()
+    )
+  }
+  
+  # verify that storage is a list
+  if (!is.list(storage))
+    stop("tutor.storage must be a 'auto', 'local', 'remote', 'none' or a ", 
+         "list of storage functions")
+  
+  # validate storage interface
+  if (is.null(storage$save_object))
+    stop("tutor.storage must implement the save_object function")
+  if (is.null(storage$get_object))
+    stop("tutor.storage must implement the get_object function")
+  if (is.null(storage$get_objects))
+    stop("tutor.storage must implements the get_objects function")
+  
+  # return it
+  storage
 }
 
 
@@ -145,7 +191,14 @@ filesystem_storage <- function(dir, compress = TRUE) {
   ) 
 }
 
-
+# no-op storage implementation
+no_storage <- function() {
+  list(
+    save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {},
+    get_object = function(tutorial_id, tutorial_version, user_id, object_id) { NULL },
+    get_objects = function(tutorial_id, tutorial_version, user_id) { list() }
+  )
+}
 
 
 

@@ -30,7 +30,10 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
     
     # evaluate using mcparallel to isolate the code into a forked child process
-    if (!is_windows()) {
+    # do this only on traditional server platforms since windows doesn't support
+    # parallel::mcparallel and OSX has problems w/ ggplot2 when forking a 
+    # CoreFoundation process
+    if (!is_windows() && !is_macos()) {
       
       # create a parallel job and evaluate the expression within it
       job <- parallel::mcparallel(expr)

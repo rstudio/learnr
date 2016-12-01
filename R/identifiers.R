@@ -1,5 +1,5 @@
 
-initialize_identifiers <- function(session, version, request) {
+initialize_session_state <- function(session, version, location, request) {
   
   # helper to read rook headers
   as_rook_header <- function(name) {
@@ -36,14 +36,20 @@ initialize_identifiers <- function(session, version, request) {
     package_info <- read.dcf(package_desc, all = TRUE)
   }
  
-  # determine default tutorial id 
-  if (!is.null(package_dir)) {
-    default_tutorial_id <- sprintf("package:%s-%s", 
-                                   package_info$Package,
-                                   sub(paste0("^", package_dir), "", cwd))
+  # determine default tutorial id (filesystem-based for localhost and remote URL
+  # based for other configurations)
+  if (is_localhost(location)) {
+    if (!is.null(package_dir)) {
+      default_tutorial_id <- sprintf("package:%s-%s", 
+                                     package_info$Package,
+                                     sub(paste0("^", package_dir), "", cwd))
+    }
+    else {
+      default_tutorial_id <- cwd  
+    }
   }
   else {
-    default_tutorial_id <- cwd  
+    default_tutorial_id <- paste0(location$host, location$pathname)
   }
   
   # determine default version (if in a package use the package version)
@@ -54,6 +60,9 @@ initialize_identifiers <- function(session, version, request) {
     else
       default_tutorial_version <- "1.0"
   }
+  
+  # save the location for later reading
+  write_request(session, "tutor.http_location", location)
  
   # initialize and return identifiers
   list(
