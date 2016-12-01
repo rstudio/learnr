@@ -79,7 +79,19 @@ storage <- function() {
 }
 
 
-# return an implementation of filesystem storage for specified directory
+#' Filesystem-based storage for tutor state data
+#' 
+#' Tutorial state storage handler that uses the filesystem
+#' as a backing store. The direcotry will contain tutorial
+#' state data partitioned by user_id, tutorial_id, and 
+#' tutorial_version (in that order)
+#' 
+#' @param dir Directory to store state data within
+#' @param compress Should \code{.rds} files be compressed?
+#' 
+#' @return Storage handler suitable for \code{options(tutor.storage = ...)}
+#' 
+#' @export
 filesystem_storage <- function(dir, compress = TRUE) {
   
   # helpers to transform ids into valid filesystem paths

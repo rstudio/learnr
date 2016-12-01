@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   exercise.eval = FALSE, 
   exercise.cap = "Exercise",
   exercise.checker = function(solution_code, ...) {
-    feedback(paste0("Nice job!", solution_code), correct = TRUE, location = "append")
+    feedback("Nice job!", correct = TRUE, location = "append")
   }
 )
 ```
