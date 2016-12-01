@@ -26,23 +26,32 @@ initialize_identifiers <- function(session, version, request) {
     value
   }
   
+  # determine if we are running inside a package 
+  cwd <- getwd()
+  package_dir <- tryCatch(rprojroot::find_root(rprojroot::is_r_package, 
+                                               path = cwd),
+                          error = function(e) NULL)
+  if (!is.null(package_dir)) {
+    package_desc <- file.path(package_dir, "DESCRIPTION")
+    package_info <- read.dcf(package_desc, all = TRUE)
+  }
+ 
   # determine default tutorial id 
-  default_tutorial_id <- getwd()
+  if (!is.null(package_dir)) {
+    default_tutorial_id <- sprintf("package:%s-%s", 
+                                   package_info$Package,
+                                   sub(paste0("^", package_dir), "", cwd))
+  }
+  else {
+    default_tutorial_id <- cwd  
+  }
   
-  
-  # determine default version
+  # determine default version (if in a package use the package version)
   default_tutorial_version <- version
   if (is.null(default_tutorial_version)) {
-
-    # if we are running inside a package use the package version
-    description_file <- tryCatch(rprojroot::find_package_root_file("DESCRIPTION"),
-                            error = function(e) NULL)
-    if (!is.null(description_file))
-      default_tutorial_version <- unname(read.dcf(description_file, 
-                                                  fields = ("Version"))[1,1])
-  
-    # fallback to version 1
-    if (is.null(default_tutorial_version))
+    if (!is.null(package_dir))
+      default_tutorial_version <- package_info$Version
+    else
       default_tutorial_version <- "1.0"
   }
  
