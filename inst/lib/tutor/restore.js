@@ -1,5 +1,11 @@
 
 
+Tutor.prototype.$initializeStateStorage = function() {
+  Shiny.addCustomMessageHandler("tutor.store_object", function(message) {
+    console.log(message);
+  });
+};
+
 
 Tutor.prototype.$restoreState = function() {
   

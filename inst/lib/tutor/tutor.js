@@ -27,6 +27,7 @@ function Tutor() {
   // Initialization
   this.$initializeVideos();  
   this.$initializeExercises();
+  this.$initializeStateStorage();
   this.$initializeServer();
 }
 

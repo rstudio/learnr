@@ -8,6 +8,12 @@ save_question_submission <- function(session, label, question, answers) {
 }
 
 save_exercise_submission <- function(session, label, code, output, feedback) {
+  
+  # don't save output when storing on the client
+  storage <- tutor_storage(session)
+  if (identical(storage$type, "client"))
+    output <- NULL
+  
   save_object(session, label, tutor_object("exercise_submission", list(
     code = code,
     output = output,
@@ -78,16 +84,13 @@ tutor_storage <- function(session) {
     file.path(rappdirs::user_data_dir(), "R", "tutor", "storage")
   )
   
-  # remote storage implementation
-  remote_storage <- no_storage()
-  
   # function to determine "auto" storage
   auto_storage <- function() {
     location <- read_request(session, "tutor.http_location")
     if (is_localhost(location))
       local_storage
     else
-      remote_storage
+      client_storage(session)
   }
   
   # examine the option
@@ -102,14 +105,14 @@ tutor_storage <- function(session) {
     storage <- switch(storage,
       auto = auto_storage(),
       local = local_storage,
-      remote = remote_storage,
+      client = client_storage(session),
       none = no_storage()
     )
   }
   
   # verify that storage is a list
   if (!is.list(storage))
-    stop("tutor.storage must be a 'auto', 'local', 'remote', 'none' or a ", 
+    stop("tutor.storage must be a 'auto', 'local', 'client', 'none' or a ", 
          "list of storage functions")
   
   # validate storage interface
@@ -163,6 +166,8 @@ filesystem_storage <- function(dir, compress = TRUE) {
   # functions which implement storage via saving to RDS
   list(
     
+    type = "local",
+    
     save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
       data$id <- object_id
       object_path <- file.path(storage_path(tutorial_id, tutorial_version, user_id), 
@@ -192,9 +197,85 @@ filesystem_storage <- function(dir, compress = TRUE) {
   ) 
 }
 
+# client side storage implementation. data is saved by broadcasting it to the client
+# this data is subsequently restored during initialize and stored in a per-session
+# in memory table for retreival
+client_storage <- function(session) {
+  
+  # helper to form a unique tutorial context id
+  tutorial_context_id <- function(tutorial_id, tutorial_version, user_id) {
+    paste(tutorial_id, tutorial_version, user_id, sep = "-")
+  }
+  
+  # get a reference to the session object cache for a gvien tutorial context
+  object_store <- function(context_id) {
+    
+    # create session objects on demand
+    session_objects <- read_request(session, "tutor.session_objects")
+    if (is.null(session_objects)) {
+      session_objects <- new.env(parent = emptyenv())
+      write_request(session, "tutor.session_objects", session_objects)
+    }
+    
+    # create entry for this context on demand
+    if (!exists(context_id, envir = session_objects))
+      assign(context_id, new.env(parent = emptyenv()), envir = session_objects)
+    store <- get(context_id, envir = session_objects)
+    
+    # return reference to the store
+    store
+  }
+  
+  list(
+    
+    type = "client",
+  
+    save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
+      
+      # save the object to our in-memory store
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      store <- object_store(context_id)
+      assign(object_id, data, envir = store)
+     
+      # broadcast to client
+      session$sendCustomMessage("tutor.store_object", list(
+        context = context_id,
+        id = object_id,
+        data = jsonlite::serializeJSON(data)
+      ))
+    },
+    
+    get_object = function(tutorial_id, tutorial_version, user_id, object_id) {
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      store <- object_store(context_id)
+      if (exists(object_id, envir = store))
+        get(object_id, envir = store)
+      else
+        NULL
+    },
+    
+    get_objects = function(tutorial_id, tutorial_version, user_id) { 
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      store <- object_store(context_id)
+      as.list(store)
+    },
+    
+    # function called from initialize to prime object storage from the browser db
+    initialize_objects_from_client <- function(context_id, objects) {
+      store <- object_store(context_id)
+      for (object_id in names(objects)) {
+        data <- jsonlite::unserializeJSON(objects[[object_id]])
+        assign(object_id, data, envir = store)
+      }
+    }
+  )
+}
+
+
 # no-op storage implementation
 no_storage <- function() {
   list(
+    type = "none",
     save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {},
     get_object = function(tutorial_id, tutorial_version, user_id, object_id) { NULL },
     get_objects = function(tutorial_id, tutorial_version, user_id) { list() }
