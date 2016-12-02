@@ -1,6 +1,6 @@
 
 
-Tutor.prototype.$initializeStateStorage = function(identifiers) {
+Tutor.prototype.$initializeStorage = function(identifiers, success) {
   
   // alias this
   var thiz = this;
@@ -10,7 +10,7 @@ Tutor.prototype.$initializeStateStorage = function(identifiers) {
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
   var store = localforage.createInstance({ 
-    name: "Tutorial-Restore-Progress", 
+    name: "Tutorial-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version + 
                            identifiers.user_id)
@@ -27,7 +27,7 @@ Tutor.prototype.$initializeStateStorage = function(identifiers) {
     objects = objects || {};
     objects[key] = value;
   }).then(function() {
-    thiz.$restoreState(objects);
+    success(objects);
   });
 };
 
