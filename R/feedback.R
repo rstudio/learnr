@@ -51,6 +51,11 @@ as.tags.tutor_feedback <- function(x, ...) {
   }
 }
 
+# helper function to create tags for error message
+error_message_html <- function(message) {
+  div(class = "alert alert-danger", role = "alert", message)
+}
+
 
 
 

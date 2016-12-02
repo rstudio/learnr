@@ -7,18 +7,21 @@ save_question_submission <- function(session, label, question, answers) {
   )))
 }
 
-save_exercise_submission <- function(session, label, code, output, feedback) {
+save_exercise_submission <- function(session, label, code, output, error_message, feedback) {
   
-  # for client storage we substitute feedback for output
+  # for client storage we only forward error output. this is because we want
+  # to replay errors back into the client with no execution (in case they were 
+  # timeout errors as a result of misbehaving code). for other outputs the client
+  # will just tickle the inputs to force re-execution of the outputs.
   storage <- tutor_storage(session)
   if (identical(storage$type, "client")) {
-    if (!is.null(feedback))
-      output <- htmltools::doRenderTags(htmltools::as.tags(feedback))
+    if (!is.null(error_message))
+      output <- error_message_html(error_message)
     else
       output <- NULL
   }
    
-  
+  # save object
   save_object(session, label, tutor_object("exercise_submission", list(
     code = code,
     output = output,

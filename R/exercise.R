@@ -13,6 +13,8 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     else 
       output <- ""  
     
+    # TODO: strip html_dependencies which have files outside of pkgs
+    
     # return the output
     return(output)
   }
@@ -79,6 +81,7 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     label = exercise$label,
     code = exercise$code,
     output = result$html_output,
+    error_message = result$error_message,
     feedback = result$feedback
   )
   
@@ -173,7 +176,7 @@ evaluate_exercise <- function(exercise, envir) {
                                      run_pandoc = FALSE)
   }, error = function(e) {
     # make the time limit error message a bit more friendly
-    error_message <- e$message
+    error_message <<- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, error_message) != -1L) {
       error_message <- paste("Error: Your code ran longer than the permitted time", 
@@ -181,7 +184,7 @@ evaluate_exercise <- function(exercise, envir) {
     } 
     
     # provide error html
-    error_html <<- div(class = "alert alert-danger", role = "alert", error_message)
+    error_html <<- error_message_html(error_message)
   })
   if (!is.null(error_html)) {
     return(list(
