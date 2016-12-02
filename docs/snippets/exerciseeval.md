@@ -1,5 +1,6 @@
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(exercise.eval = TRUE)
+library(tutor)
+tutor_options(exercise.eval = TRUE)
 ```
 
 ```{r filter, exercise=TRUE, exercise.eval=FALSE}

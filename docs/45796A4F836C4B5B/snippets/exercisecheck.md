@@ -1,5 +1,6 @@
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(exercise.checker = checkthat::check_exercise)
+library(tutor)
+tutor_options(exercise.checker = checkthat::check_exercise)
 ```
  
 ```{r exercise1-check}

@@ -16,9 +16,9 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(tutor)
 options(tutor.event_recorder = tutor:::debug_event_recorder)
-knitr::opts_chunk$set(
+tutor_options(
   exercise.eval = FALSE, 
-  exercise.cap = "Exercise",
+  exercise.cap = "Try it Out",
   exercise.checker = function(solution_code, ...) {
     feedback("Nice job!", correct = TRUE, location = "append")
   }
