@@ -8,11 +8,15 @@ Authors@R: c(
   person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
   person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),
   person("Julie", "Cameron", role = "ctb", comment = "SlickQuiz library"),
-  person(family = "Quicken Loans", role = "cph", comment = "SlickQuiz library")
+  person(family = "Quicken Loans", role = "cph", comment = "SlickQuiz library"),
+  person(family = "Mozila", role = c("ctb", "cph"), comment = "localforage library")
   )
 Description: Create interactive tutorials using R Markdown. Use a combination 
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
+License: Apache License 2.0 | file LICENSE
+URL: https://rstudio.github.io/tutor/
+BugReports: https://github.com/rstudio/tutor/issues
 Imports:
   utils,
   parallel,
@@ -24,12 +28,10 @@ Imports:
   evaluate,
   knitr (>= 1.14),
   markdown,
-  rmarkdown (>= 1.1.9017),
+  rmarkdown (>= 1.2),
   shiny (>= 0.14.2.9000)
 Remotes: 
-   rstudio/rmarkdown,
-   rstudio/shiny
-License: GPL-2
+  rstudio/shiny
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
