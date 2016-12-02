@@ -8,6 +8,7 @@
 #' @importFrom evaluate evaluate
 #' @importFrom withr with_envvar
 #' @importFrom parallel mcparallel mccollect
+#' @importFrom rprojroot find_root is_r_package
 NULL
 
 # install knitr hooks when package is attached to search path

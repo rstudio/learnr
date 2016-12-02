@@ -22,6 +22,7 @@ Imports:
   parallel,
   withr,
   rappdirs,
+  rprojroot,
   jsonlite,
   htmltools (>= 0.3.5),
   htmlwidgets,
