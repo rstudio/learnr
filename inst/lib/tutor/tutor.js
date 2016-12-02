@@ -3,6 +3,9 @@
 
 function Tutor() {
   
+  // Alias this
+  var thiz = this;
+  
   // Function to record an event
   this.recordEvent = function(label, event, data) {
     var params = {
@@ -10,24 +13,22 @@ function Tutor() {
       event: event,
       data: data
     };
-    this.$serverRequest("record_event", params, null);
+    thiz.$serverRequest("record_event", params, null);
   };
   
-  // Function to notify the server of a question submission
-  this.questionSubmission = function(label, question, answers, correct) {
-    var params = {
-      label: label,
-      question: question,
-      answers: answers,
-      correct: correct
-    };
-    this.$serverRequest("question_submission", params, null);
+  // Function to start over
+  this.startOver = function() {
+    thiz.$removeState(function() {
+      thiz.$serverRequest("remove_state", null, function() {
+        window.location.replace(window.location.href);
+      });
+    });
   };
   
   // Initialization
-  this.$initializeVideos();  
-  this.$initializeExercises();
-  this.$initializeServer();
+  thiz.$initializeVideos();  
+  thiz.$initializeExercises();
+  thiz.$initializeServer();
 }
 
 

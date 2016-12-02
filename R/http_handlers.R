@@ -40,6 +40,11 @@ register_http_handlers <- function(session, metadata) {
     )
   }))
   
+  # remove state handler
+  session$registerDataObj("remove_state", NULL, rpc_handler(function(input) {
+    remove_all_objects(session)
+  }))
+  
   # event recording
   session$registerDataObj("record_event", NULL, rpc_handler(function(input) {
     record_event(session = session,

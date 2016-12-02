@@ -75,6 +75,13 @@ get_objects <- function(session) {
   tutor_storage(session)$get_objects(tutorial_id, tutorial_version, user_id)
 }
 
+remove_all_objects <- function(session) {
+  tutorial_id <- read_request(session, "tutor.tutorial_id")
+  tutorial_version <- read_request(session, "tutor.tutorial_version")
+  user_id <- read_request(session, "tutor.user_id")
+  tutor_storage(session)$remove_all_objects(tutorial_id, tutorial_version, user_id)
+}
+
 initialize_objects_from_client <- function(session, objects) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
   tutorial_version <- read_request(session, "tutor.tutorial_version")
@@ -210,6 +217,11 @@ filesystem_storage <- function(dir, compress = TRUE) {
         objects[[length(objects) + 1]] <- object
       }
       objects
+    },
+    
+    remove_all_objects = function(tutorial_id, tutorial_version, user_id) {
+      objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+      unlink(objects_path, recursive = TRUE)
     }
   ) 
 }
@@ -280,6 +292,13 @@ client_storage <- function(session) {
       objects
     },
     
+    remove_all_objects = function(tutorial_id, tutorial_version, user_id) {
+      # remove on server side (client side is handled on client)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      store <- object_store(context_id)
+      rm(list = ls(store), envir = store)
+    },
+    
     # function called from initialize to prime object storage from the browser db
     initialize_objects_from_client = function(tutorial_id, tutorial_version, user_id, objects) {
       context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
@@ -299,7 +318,8 @@ no_storage <- function() {
     type = "none",
     save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {},
     get_object = function(tutorial_id, tutorial_version, user_id, object_id) { NULL },
-    get_objects = function(tutorial_id, tutorial_version, user_id) { list() }
+    get_objects = function(tutorial_id, tutorial_version, user_id) { list() },
+    remove_all_objects = function(tutorial_id, tutorial_version, user_id) {}
   )
 }
 

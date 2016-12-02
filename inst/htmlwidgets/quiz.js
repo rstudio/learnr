@@ -12,6 +12,7 @@ HTMLWidgets.widget({
         
         // helper function to record an answer
         function recordAnswer(correct) {
+          
           if (window.tutor && x.label) {
             var answers = [];
             var checkedInputs = $(el).find('.answers').find('input:checked');
@@ -19,8 +20,15 @@ HTMLWidgets.widget({
               var label = $("label[for='"+$(this).attr("id")+"']");
               answers.push(label.attr('data-answer'));
             });
+            
             // notify server of question submission
-            tutor.questionSubmission(x.label, x.question, answers, correct);
+            var params = {
+              label: x.label,
+              question: x.question,
+              answers: answers,
+              correct: correct
+            };
+            window.tutor.$serverRequest("question_submission", params, null);
           }
         }
         

@@ -9,7 +9,7 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
   // with storage since the entire behavior is a nice-to-have (i.e. we automatically
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
-  var store = localforage.createInstance({ 
+  thiz.$store = localforage.createInstance({ 
     name: "Tutorial-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version + 
@@ -18,12 +18,12 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
   
   // custom message handler to update store
   Shiny.addCustomMessageHandler("tutor.store_object", function(message) {
-    store.setItem(message.id, message.data);
+    thiz.$store.setItem(message.id, message.data);
   });
   
   // retreive the currently stored objects then pass them down to restore_state
   var objects = null;
-  store.iterate(function(value, key, iterationNumber) {
+  thiz.$store.iterate(function(value, key, iterationNumber) {
     objects = objects || {};
     objects[key] = value;
   }).then(function() {
@@ -104,5 +104,14 @@ Tutor.prototype.$restoreState = function(objects) {
       }
     }
   });
+};
+
+Tutor.prototype.$removeState = function(completed) {
+  this.$store.clear()
+    .then(completed)
+    .catch(function(err) {
+      console.log(err);
+      completed();
+    });
 };
 
