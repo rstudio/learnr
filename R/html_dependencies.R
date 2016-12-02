@@ -29,6 +29,15 @@ tutor_html_dependency <- function() {
   )
 }
 
+localforage_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "localforage",
+    version = "1.4.3",
+    src = system.file("lib/localForage", package = "tutor"),
+    script = "localForage.min.js"
+  )
+}
+
 clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",

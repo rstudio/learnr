@@ -29,6 +29,12 @@ register_http_handlers <- function(session, metadata) {
   
   # restore state handler
   session$registerDataObj("restore_state", NULL, rpc_handler(function(input) {
+    
+    # forward any client stored objects into our own storage
+    if (!is.null(input))
+      initialize_objects_from_client(session, input)
+    
+    # return submissions
     list(
       submissions = get_all_submissions(session, exercise_output = FALSE)
     )

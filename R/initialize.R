@@ -18,6 +18,7 @@ initialize_tutor <- function() {
     knitr::knit_meta_add(list(
       rmarkdown::html_dependency_jquery(),
       rmarkdown::html_dependency_font_awesome(),
+      localforage_html_dependency(),
       tutor_html_dependency()
     ))
   

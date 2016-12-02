@@ -9,10 +9,15 @@ save_question_submission <- function(session, label, question, answers) {
 
 save_exercise_submission <- function(session, label, code, output, feedback) {
   
-  # don't save output when storing on the client
+  # for client storage we substitute feedback for output
   storage <- tutor_storage(session)
-  if (identical(storage$type, "client"))
-    output <- NULL
+  if (identical(storage$type, "client")) {
+    if (!is.null(feedback))
+      output <- htmltools::doRenderTags(htmltools::as.tags(feedback))
+    else
+      output <- NULL
+  }
+   
   
   save_object(session, label, tutor_object("exercise_submission", list(
     code = code,
@@ -49,6 +54,7 @@ save_object <- function(session, object_id, data) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")
   tutorial_version <- read_request(session, "tutor.tutorial_version")
   user_id <- read_request(session, "tutor.user_id")
+  data$id <- object_id
   tutor_storage(session)$save_object(tutorial_id, tutorial_version, user_id, object_id, data)
 }
 
@@ -66,6 +72,15 @@ get_objects <- function(session) {
   tutor_storage(session)$get_objects(tutorial_id, tutorial_version, user_id)
 }
 
+initialize_objects_from_client <- function(session, objects) {
+  tutorial_id <- read_request(session, "tutor.tutorial_id")
+  tutorial_version <- read_request(session, "tutor.tutorial_version")
+  user_id <- read_request(session, "tutor.user_id")
+  client_storage(session)$initialize_objects_from_client(tutorial_id,
+                                                         tutorial_version,
+                                                         user_id,
+                                                         objects)
+}
 
 # helper to form a tutor object (type + data)
 tutor_object <- function(type, data) {
@@ -169,7 +184,6 @@ filesystem_storage <- function(dir, compress = TRUE) {
     type = "local",
     
     save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
-      data$id <- object_id
       object_path <- file.path(storage_path(tutorial_id, tutorial_version, user_id), 
                                paste0(id_to_filesystem_path(object_id), ".rds"))
       saveRDS(data, file = object_path, compress = compress)
@@ -257,11 +271,15 @@ client_storage <- function(session) {
     get_objects = function(tutorial_id, tutorial_version, user_id) { 
       context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
       store <- object_store(context_id)
-      as.list(store)
+      objects <- list()
+      for (object in ls(store))
+        objects[[length(objects) + 1]] <- get(object, envir = store)
+      objects
     },
     
     # function called from initialize to prime object storage from the browser db
-    initialize_objects_from_client <- function(context_id, objects) {
+    initialize_objects_from_client = function(tutorial_id, tutorial_version, user_id, objects) {
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
       store <- object_store(context_id)
       for (object_id in names(objects)) {
         data <- jsonlite::unserializeJSON(objects[[object_id]])

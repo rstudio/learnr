@@ -1,19 +1,44 @@
 
 
-Tutor.prototype.$initializeStateStorage = function() {
+Tutor.prototype.$initializeStateStorage = function(identifiers) {
+  
+  // alias this
+  var thiz = this;
+  
+  // initialize data store. note that we simply ignore errors for interactions
+  // with storage since the entire behavior is a nice-to-have (i.e. we automatically
+  // degrade gracefully by either not restoring any state or restoring whatever
+  // state we had stored)
+  var store = localforage.createInstance({ 
+    name: "Tutorial-Restore-Progress", 
+    storeName: window.btoa(identifiers.tutorial_id + 
+                           identifiers.tutorial_version + 
+                           identifiers.user_id)
+  });
+  
+  // custom message handler to update store
   Shiny.addCustomMessageHandler("tutor.store_object", function(message) {
-    console.log(message);
+    store.setItem(message.id, message.data);
+  });
+  
+  // retreive the currently stored objects then pass them down to restore_state
+  var objects = null;
+  store.iterate(function(value, key, iterationNumber) {
+    objects = objects || {};
+    objects[key] = value;
+  }).then(function() {
+    thiz.$restoreState(objects);
   });
 };
 
 
-Tutor.prototype.$restoreState = function() {
+Tutor.prototype.$restoreState = function(objects) {
   
   // alias this
   var thiz = this;
   
   // retreive state from server
-  this.$serverRequest("restore_state", null, function(data) {
+  this.$serverRequest("restore_state", objects, function(data) {
     
     // get submissions
     var submissions = data.submissions;

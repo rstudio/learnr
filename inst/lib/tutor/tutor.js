@@ -27,7 +27,6 @@ function Tutor() {
   // Initialization
   this.$initializeVideos();  
   this.$initializeExercises();
-  this.$initializeStateStorage();
   this.$initializeServer();
 }
 
@@ -46,9 +45,11 @@ Tutor.prototype.$initializeServer = function() {
   var thiz = this;
   function initializeServer() {
     if (typeof Shiny !== "undefined" && typeof Shiny.shinyapp !== "undefined") {
-      thiz.$serverRequest("initialize", { location: window.location }, function(data) {
-        // now that the server is initialized we can restore state
-        thiz.$restoreState();
+      thiz.$serverRequest("initialize", { location: window.location }, function(identifiers) {
+        
+        // now that the server is initialized we can initialize state storage
+        thiz.$initializeStateStorage(identifiers);
+       
       });
     }
     else {

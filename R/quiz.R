@@ -121,6 +121,7 @@ question <- function(text,
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = "default"),
     tutor_html_dependency(),
+    localforage_html_dependency(),
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",
