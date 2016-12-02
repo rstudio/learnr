@@ -11,7 +11,7 @@
 
 
 
-<title>Deployment</title>
+<title>Publishing</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -303,7 +303,7 @@ div.tocify {
   <a href="questions.html">Questions</a>
 </li>
 <li>
-  <a href="deployment.html">Deployment</a>
+  <a href="publishing.html">Publishing</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -322,15 +322,15 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Deployment</h1>
+<h1 class="title toc-ignore">Publishing</h1>
 
 </div>
 
 
-<p>Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io.</p>
-<div id="package-deployment" class="section level2">
-<h2>Package Deployment</h2>
-<p>A very convenient way to distribute tutorials is within R packages. Tutorials included within R packages can be run via the <code>tutor::run_tutorial</code> function. For example, the following functions runs the “hello” and “slidy” sample tutorials built in to the <strong>tutor</strong> package:</p>
+<p>Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like <a href="https://www.shinyapps.io">shinyapps.io</a>.</p>
+<div id="r-package" class="section level2">
+<h2>R Package</h2>
+<p>A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the <code>tutor::run_tutorial</code> function. For example, the following functions runs the “hello” and “slidy” sample tutorials built in to the <strong>tutor</strong> package:</p>
 <pre class="r"><code>tutor::run_tutorial(&quot;hello&quot;, package = &quot;tutor&quot;)
 tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
 <p>To bundle a tutorial into an R package and make it available for running via the <code>run_tutorial</code> function you should:</p>
@@ -338,35 +338,45 @@ tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
 <li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
 <li><p>Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development &amp; preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).</p></li>
 </ol>
-<div id="dependencies" class="section level3">
-<h3>Dependencies</h3>
-<p>Note that the <strong>tutor</strong> package has quite a few dependencies including the <strong>rmarkdown</strong> and <strong>shiny</strong> packages so it’s a better idea to list it as a <code>Suggests</code> rather than <code>Imports</code> dependency of your package. Users would then simply install tutor directly before running your tutorial, for example:</p>
+<p>Once you’ve done this users can run your tutorial as follows (note they should be sure to install the <strong>tutor</strong> package before attempting to run the tutorial):</p>
+<p>Users would then simply install tutor directly before running your tutorial, for example:</p>
 <pre class="r"><code>install.packages(&quot;tutor&quot;)
 tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
-<p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should either add that package as an Imports dependency of your package (so it’s installed automatically) or simply ask users to install that package alongside <strong>tutor</strong> package. For example:</p>
-<pre class="r"><code>install.packages(c(&quot;tutor&quot;, &quot;checkthat&quot;))
+<div id="exercise-checkers" class="section level3 toc-ignore">
+<h3>Exercise Checkers</h3>
+<p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should either add that package as an <code>Imports</code> dependency of your package (so it’s installed automatically) or simply ask users to install that package alongside <strong>tutor</strong> package. For example:</p>
+<pre class="r"><code>install.packages(c(&quot;tutor&quot;, &quot;checkr&quot;))
 tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
 <p>Note that it’s likely that the <strong>tutor</strong> package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.</p>
 </div>
 </div>
-<div id="server-deployment" class="section level2">
-<h2>Server Deployment</h2>
-<p>You can also deploy tutorials on a server as you’d deploy any other Shiny application (the <a href="http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html#deployment">Deployment</a> section of the <code>runtime: shiny_prerendered</code> documentation has additional details on how to do this).</p>
-<p>Note however that there is one important difference between tutorials and most other Shiny applications you deploy: with tutorials end users are providing R code to be executed on the server. This creates some special considerations around resources, concurrent usage, and security which are discussed below.</p>
-<p>As a result of these considerations local deployment of tutorials is the recommended approach unless you feel comfortable that you’ve accounted for these concerns. Note that if you deploy tutorials to end users running RStudio Server then you can get the best of both worlds (centralized deployment with a local execution context that is segregated from other users of the same server).</p>
+<div id="shiny-server" class="section level2">
+<h2>Shiny Server</h2>
+<p>You can also deploy tutorials on a server as you’d deploy any other Shiny application. There are several ways to do this:</p>
+<ol style="list-style-type: decimal">
+<li><p>Publish to the <a href="http://www.shinyapps.io/">shinyapps.io</a> cloud service.</p></li>
+<li><p>Publish to an <a href="https://www.rstudio.com/products/connect/">RStudio Connect</a> server.</p></li>
+<li><p>Publish to a <a href="https://www.rstudio.com/products/shiny/shiny-server/">Shiny Server</a>.</p></li>
+</ol>
+<p>For the first two methods you can use the RStudio IDE’s integrated <a href="https://support.rstudio.com/hc/en-us/articles/228270928-Push-button-publishing-to-RStudio-Connect">one-click publishing</a> to publish directly from your desktop:</p>
+<div class="figure">
+<img src="images/shinyapps-deploy-faithful.png" width="669" height="421" />
+
+</div>
+<p>Note that you should install the current <a href="https://www.rstudio.com/products/rstudio/download/preview/">Preview Release</a> of RStudio before attempting to use one-click publishing with tutorials.</p>
 <div id="resource-usage" class="section level3">
 <h3>Resource Usage</h3>
 <p>Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine).</p>
-<p>To apply resource limits, you can run tutorials within system imposed resource managers (e.g. ulimit or cgroups) or alternatively use a containerization technology like LXC or Docker. You can also apply resources limits using the <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package, which is described below in the <a href="#Security">Security</a> section.</p>
-<p>To limit the time taken for the execution of exercises you can use the <code>exercise.timelimit</code> option described in the <a href="#exercise-timeouts">Exercise Timeouts</a> section above.</p>
+<p>To limit the time taken for the execution of exercises you can use the <code>exercise.timelimit</code> option. see the documentation on <a href="exercises.html#time-limits">Exercise Time Limits</a> for additional details.</p>
+<p>You can use various features of <a href="https://www.rstudio.com/products/connect/">RStudio Connect</a> and <a href="%5BShiny%20Server%5D(https://www.rstudio.com/products/shiny/shiny-server/)">Shiny Server Pro</a> to run tutorials within a resource and/or filesystem sandbox.</p>
 </div>
 <div id="concurrent-users" class="section level3">
 <h3>Concurrent Users</h3>
 <p>If you have multiple users accessing a tutorial at the same time their R code will by default be executed within a single R process. This means that if exercises take a long time to complete and many users are submitting them at once there could be a long wait for some users.</p>
 <p>The <code>exercise.timelimit</code> option described above is a way to prevent this problem in some cases, but in other cases you may need to run your tutorial using multiple R processes. This is possible using <a href="http://docs.rstudio.com/shinyapps.io/applications.html#ApplicationInstances">shinyapps.io</a>, <a href="http://docs.rstudio.com/shiny-server/#utilization-scheduler">Shiny Server Pro</a>, and <a href="http://docs.rstudio.com/connect/admin/appendix-configuration.html#appendix-configuration-scheduler">RStudio Connect</a> (see the linked documentation for the various products for additional details).</p>
 </div>
-<div id="security" class="section level3">
-<h3>Security</h3>
+<div id="security-considerations" class="section level3">
+<h3>Security Considerations</h3>
 <p>Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it’s access to the filesystem and/or other system resources.</p>
 <p>By default when running on UNIX systems the <strong>tutor</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process.</p>
 <p>The <strong>tutor</strong> package can also have it’s exercise evaluation function replaced with one based on the <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package. Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor:</p>
@@ -382,20 +392,144 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 </ol>
 </div>
 </div>
-<div id="recording-user-events" class="section level2">
-<h2>Recording User Events</h2>
-<p>As part of deploying a tutorial you might want to record the various user events which occur witihn tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
-<div id="event-recorder-function" class="section level3">
-<h3>Event Recorder Function</h3>
-<p>You can capture events by using a custom eent recorder function. This function is specified via the <code>tutor.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
+<div id="hosting-services" class="section level2">
+<h2>Hosting Services</h2>
+<p>Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.).</p>
+<p>The <strong>tutor</strong> package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.</p>
+<div id="tutorial-storage" class="section level3">
+<h3>Tutorial Storage</h3>
+<p>Tutorials save the state of inputs and outputs (e.g. exercise and question submissions) and automatically restore them when users revisit the tutorial. For locally deployed tutorials (e.g. tutorials run from within an R package) this state is saved within the local filesystem.</p>
+<p>For server deployed tutorials the state is saved within the per-domain storage provided by the end user’s web browser. This has the benefit of saving and restoring state on a per-user basis without any notion of user authentication or identity, however will only work within a single web browser (i.e. state won’t be restored if the users accesses the same tutorial from another machine).</p>
+<div id="storage-provider" class="section level4">
+<h4>Storage Provider</h4>
+<p>Hosting services will typically want to provide a custom implementation for the storage of tutorial state which is tied to their tutorial provisioning and user identity system.</p>
+<p>A custom storage provider is specified by assigning an R list which includes the storage functions to the <code>tutor.storage</code> global option. For example, here is a “no-op” storage provider:</p>
+<div id="tutorstorage">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorstorage')</script>
+<p>The parameters passed to the storage provider’s functions are as follows (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+ID
+</th>
+<th>
+Default
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+tutorial_id
+</td>
+<td>
+Unique identfier for tutorial.
+</td>
+</tr>
+<tr class="even">
+<td>
+tutorial_version
+</td>
+<td>
+Tutorial version.
+</td>
+</tr>
+<tr class="odd">
+<td>
+user_id
+</td>
+<td>
+Unique identfier for user.
+</td>
+</tr>
+<tr class="even">
+<td>
+object_id
+</td>
+<td>
+Unique identifier for R object.
+</td>
+</tr>
+<tr class="odd">
+<td>
+data
+</td>
+<td>
+R object to be saved
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="recording-events" class="section level3">
+<h3>Recording Events</h3>
+<p>As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
+<div id="event-recorder-function" class="section level4">
+<h4>Event Recorder Function</h4>
+<p>You can capture events by using a custom event recorder function. This function is specified via the <code>tutor.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
 <div id="tutorrecorder">
 
 </div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
-<p>The <code>tutorial_id</code> parameter provides a unique identifier for the tutorial (defaults to the directory containing the tutorial Rmd).</p>
-<p>The <code>tutorial_version</code> parameter provides the version number of the tutorial.</p>
-<p>The <code>user_id</code> parameter provides a unique identifer for the tutorial user (defaults to the username of the currently logged in user).</p>
-<p>The <code>label</code> parameter represents the label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.</p>
+<p>The following parameters are passed to the event recorder function (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+ID
+</th>
+<th>
+Default
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+tutorial_id
+</td>
+<td>
+Unique identfier for tutorial.
+</td>
+</tr>
+<tr class="even">
+<td>
+tutorial_version
+</td>
+<td>
+Tutorial version.
+</td>
+</tr>
+<tr class="odd">
+<td>
+user_id
+</td>
+<td>
+Unique identfier for user.
+</td>
+</tr>
+<tr class="even">
+<td>
+label
+</td>
+<td>
+Label of the R code chunk where the exercise or question is defined. In the case of quizzes (which define multiple questions) a question index is also appended to the label.
+</td>
+</tr>
+<tr class="odd">
+<td>
+event
+</td>
+<td>
+Event name (see below for various valid values).
+</td>
+</tr>
+</tbody>
+</table>
 <p>The <code>event</code> parameter is one of the following values:</p>
 <table>
 <thead>
@@ -425,7 +559,7 @@ exercise_error
 Error occurred within R code submitted as an answer for an exercise.
 </td>
 </tr>
-<tr class="add">
+<tr class="odd">
 <td>
 exercise_submission
 </td>
@@ -443,17 +577,69 @@ User submitted an answer for a multiple-choice question.
 </tr>
 </tbody>
 </table>
-<p>The <code>data</code> parameter is an R list which provides additonal data that varies depending on which <code>event</code> is being recorded.</p>
+<p>The <code>data</code> parameter is an R list which provides additional data that varies depending on which <code>event</code> is being recorded.</p>
 </div>
-<div id="tutorial-and-user-ids" class="section level3">
-<h3>Tutorial and User IDs</h3>
-<p>By default the tutorial ID is the directory containing the tutorial Rmd and user ID is the username of the local account executing the tutorial. While these defaults work well for local/package deployment, if you are hosting tutorials on a server you may want to customize these values based on other considerations.</p>
-<p>You can pass a custom tutorial ID and/or user ID through to the <strong>tutor</strong> package by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the <code>tutor.http_header_tutorial_id</code> and <code>tutor.http_header_user_id</code> global options. For example:</p>
+</div>
+<div id="tutorial-identifiers" class="section level3">
+<h3>Tutorial Identifiers</h3>
+<p>The <a href="#tutorial-storage">Tutorial Storage</a> and <a href="#recording-events">Recording Events</a> sections above describe various ways to record user progress and actions within tutorials. Storage of tutorial state requires unique identifiers for tutorials (and their versions) as well as users.</p>
+<p>Tutorial hosting services will often need to customize these identifiers based on their own notions of tutorial provisioning and user identify. This section describes how to do this.</p>
+<div id="default-identifiers" class="section level4">
+<h4>Default Identifiers</h4>
+<p>The default tutorial and user identifiers are determined as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+ID
+</th>
+<th>
+Default
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+tutorial_id
+</td>
+<td>
+Network origin and path of tutorial.
+</td>
+</tr>
+<tr class="even">
+<td>
+tutorial_version
+</td>
+<td>
+1.0
+</td>
+</tr>
+<tr class="add">
+<td>
+user_id
+</td>
+<td>
+Account name of server user executing the tutorial
+</td>
+</tr>
+</tbody>
+</table>
+<p>In addition, tutorial authors can use YAML metadata to provide custom tutorial IDs and versions. For example:</p>
+<div id="tutoryamlids">
+
+</div>
+<script type="text/javascript">loadSnippet('tutoryamlids')</script>
+</div>
+<div id="custom-identifiers" class="section level4">
+<h4>Custom Identifiers</h4>
+<p>Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the <code>tutor.http_header_tutorial_id</code>, <code>tutor.http_header_tutorial_version</code> and <code>tutor.http_header_user_id</code> global options. For example:</p>
 <div id="tutorids">
 
 </div>
 <script type="text/javascript">loadSnippet('tutorids')</script>
 <p>Once configuring these custom header names you’d then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.</p>
+</div>
 </div>
 </div>
 

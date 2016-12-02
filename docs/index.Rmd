@@ -176,9 +176,11 @@ You can use the **tutor** package with any R Markdown format that:
 
 2. Is marked as `boostrap_compatible`. This is a parameter of [`html_document_base`](https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base) which indicates that it's safe to inject [Booststrap](http://getbootstrap.com/) CSS into the document.
 
-## Deployment
+## Publishing
 
-Tutorials can be deployed all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. The easist way to deploy a tutorial is to include it within an R package and have users run it directly via the `tutor::run_tutorial` function.
+Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
+
+The most straightforward way to deploy a tutorial is to include it within an R package and have users run it directly via the `tutor::run_tutorial` function.
 
 The [Deployment](deployment.html) page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.
 
