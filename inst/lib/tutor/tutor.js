@@ -44,17 +44,16 @@ Tutor.prototype.$initializeServer = function() {
   // to be available before attempting to call server)
   var thiz = this;
   function initializeServer() {
-    if (typeof Shiny !== "undefined" && typeof Shiny.shinyapp !== "undefined") {
-      thiz.$serverRequest("initialize", 
-                          { location: window.location }, 
-                          function(identifiers) {
-        
-        // initialize storage then restore state
-        thiz.$initializeStorage(identifiers, function(objects) {
-          thiz.$restoreState(objects);
-        });
-       
-      });
+    // wait for shiny config to be available (required for $serverRequest)
+    if (typeof ((Shiny || {}).shinyapp || {}).config !== "undefined")  {
+      thiz.$serverRequest("initialize", { location: window.location }, 
+        function(identifiers) {
+          // initialize storage then restore state
+          thiz.$initializeStorage(identifiers, function(objects) {
+            thiz.$restoreState(objects);
+          });
+        }
+      );
     }
     else {
       setTimeout(function(){
