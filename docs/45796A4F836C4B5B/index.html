@@ -340,6 +340,9 @@ div.tocify {
 <li><p>Videos (supported services include YouTube and Vimeo).</p></li>
 <li><p>Interactive Shiny applets.</p></li>
 </ol>
+<p>Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.</p>
+<div id="hello-tutor" class="section level3">
+<h3>Hello, Tutor!</h3>
 <p>To create a tutorial, just use <code>library(tutor)</code> within your Rmd file to activate tutorial mode, then use the <code>exercise = TRUE</code> attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.</p>
 <p>For example, here’s a very simple tutorial:</p>
 <div id="hellotutor">
@@ -348,6 +351,7 @@ div.tocify {
 <script type="text/javascript">loadSnippet('hellotutor')</script>
 <p>This is what the running tutorial document looks like after the user has entered their answer:</p>
 <p><img src="images/hello.png"  width="879" height="279" style="border: solid 1px #cccccc;"/></p>
+</div>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
@@ -388,7 +392,7 @@ div.tocify {
 <h2>Exercises</h2>
 <p>Exercises are interactive R code chunks that allow readers to directly execute R code and see it’s results:</p>
 <p><img src="images/exercises.png" width=770 height=922 style="border: solid 1px #cccccc;"></p>
-<p>Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The <a href="exercises.html">Exercises</a> page includes a more in depth discussion of exercies and their various available options and behaviors.</p>
+<p>Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The <a href="exercises.html">Exercises</a> page includes a more in depth discussion of exercises and their various available options and behaviors.</p>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
@@ -402,13 +406,13 @@ div.tocify {
 <p><img src="images/question.png" width=729 height=227></p>
 <p>The <a href="quesiton.html">Questions</a> page includes additional information on using questions within tutorials.</p>
 </div>
-<div id="including-videos" class="section level2">
-<h2>Including Videos</h2>
+<div id="videos" class="section level2">
+<h2>Videos</h2>
 <p>You can include videos published on either <a href="https://www.youtube.com">YouTube</a> or <a href="https://vimeo.com">Vimeo</a> within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:</p>
-<div id="videos">
+<div id="tutorvideos">
 
 </div>
-<script type="text/javascript">loadSnippet('videos', 'markdown')</script>
+<script type="text/javascript">loadSnippet('tutorvideos', 'markdown')</script>
 <div id="video-size" class="section level3">
 <h3>Video Size</h3>
 <p>Videos are responsively displayed at 100% of their container’s width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.</p>
@@ -480,6 +484,24 @@ Any other files (e.g. downloadable datasets)
 </table>
 <p>The reason that all files within the directory of the main Rmd can’t be referenced from within the web document is that you may not want all files within your tutorial’s directory to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.</p>
 </div>
+<div id="preserving-work" class="section level2">
+<h2>Preserving Work</h2>
+<p>Tutorials store the various pieces of work done within them (exercise input and output, answers to questions, etc.) and automatically restore it when users revisit them. Locally run tutorials store user work in the local filesystem and tutorials run from a server store user work within the storage provided by the end user’s web browser.</p>
+<div id="managing-changes" class="section level3">
+<h3>Managing Changes</h3>
+<p>One thing to keep in mind about preserved work is that if your tutorial changes significantly then the work restored may no longer match up well with the contents of your tutorial! (e.g. the nature and content of exercises and/or questions may have changed).</p>
+<p>Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label.</p>
+<div id="tutorial-identifiers" class="section level4">
+<h4>Tutorial Identifiers</h4>
+<p>You can also invalidate stored work by changing the ID or version of your tutorial. If you publish tutorials within R packages then the version is automatically derived from the version of the package. You can also explicitly set the ID and version of a tutorial using YAML metadata, for example:</p>
+<div id="tutoryamlids">
+
+</div>
+<script type="text/javascript">loadSnippet('tutoryamlids', 'markdown')</script>
+<p>When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It’s therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).</p>
+</div>
+</div>
+</div>
 <div id="tutorial-formats" class="section level2">
 <h2>Tutorial Formats</h2>
 <p>You aren’t limited to the default <code>html_document</code> format when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
@@ -495,8 +517,8 @@ Any other files (e.g. downloadable datasets)
 <div id="publishing" class="section level2">
 <h2>Publishing</h2>
 <p>Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io.</p>
-<p>The most straightforward way to deploy a tutorial is to include it within an R package and have users run it directly via the <code>tutor::run_tutorial</code> function.</p>
-<p>The <a href="deployment.html">Deployment</a> page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.</p>
+<p>The most straightforward way to deploy a tutorial is to include it within an <a href="publishing.html#r-package">R package</a> and have users run it directly via the <code>tutor::run_tutorial</code> function.</p>
+<p>The <a href="publishing.html">Publishing</a> page includes an in-depth discussion of the various publishing options as well as some special considerations around resources, concurrent usage, and security which come into play when deploying tutorials on a server.</p>
 </div>
 
 

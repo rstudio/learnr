@@ -16,6 +16,10 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 
 5. Interactive Shiny applets.
 
+Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.
+
+### Hello, Tutor! 
+
 To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
 For example, here's a very simple tutorial:
@@ -80,7 +84,7 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <img src="images/exercises.png" width=770 height=922 style="border: solid 1px #cccccc;">
 
 
-Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The [Exercises](exercises.html) page includes a more in depth discussion of exercies and their various available options and behaviors.
+Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The [Exercises](exercises.html) page includes a more in depth discussion of exercises and their various available options and behaviors.
 
 ## Questions
 
@@ -97,12 +101,12 @@ Here's what the above question would look like within a tutorial:
 
 The [Questions](quesiton.html) page includes additional information on using questions within tutorials.
 
-## Including Videos
+## Videos
 
 You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:
 
-<div id="videos"></div>
-<script type="text/javascript">loadSnippet('videos', 'markdown')</script>
+<div id="tutorvideos"></div>
+<script type="text/javascript">loadSnippet('tutorvideos', 'markdown')</script>
 
 ### Video Size
 
@@ -158,6 +162,26 @@ You may wish to include external resources (images, videos, CSS, etc.) within yo
 
 The reason that all files within the directory of the main Rmd can't be referenced from within the web document is that you may not want all files within your tutorial's directory to be downloadable by end users. By restricting the files which can be referenced to the above directories you can control which files are downloadable and which are not.
 
+## Preserving Work
+
+Tutorials store the various pieces of work done within them (exercise input and output, answers to questions, etc.) and automatically restore it when users revisit them. Locally run tutorials store user work in the local filesystem and tutorials run from a server store user work within the storage provided by the end user's web browser.
+
+### Managing Changes
+
+One thing to keep in mind about preserved work is that if your tutorial changes significantly then the work restored may no longer match up well with the contents of your tutorial! (e.g. the nature and content of exercises and/or questions may have changed).
+
+Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label. 
+
+#### Tutorial Identifiers
+
+You can also invalidate stored work by changing the ID or version of your tutorial. If you publish tutorials within R packages then the version is automatically derived from the version of the package. You can also explicitly set the ID and version of a tutorial using YAML metadata, for example:
+
+<div id="tutoryamlids"></div>
+<script type="text/javascript">loadSnippet('tutoryamlids', 'markdown')</script>
+
+When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It's therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).
+
+
 ## Tutorial Formats
 
 You aren't limited to the default `html_document` format when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
@@ -180,9 +204,10 @@ You can use the **tutor** package with any R Markdown format that:
 
 Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
 
-The most straightforward way to deploy a tutorial is to include it within an R package and have users run it directly via the `tutor::run_tutorial` function.
+The most straightforward way to deploy a tutorial is to include it within an [R package](publishing.html#r-package) and have users run it directly via the `tutor::run_tutorial` function.
 
-The [Deployment](deployment.html) page includes an in-depth discussion of the various deployment options as well as some special considerations resources, concurrent usage, and security which come into play when deploying tutorials on a server.
+The [Publishing](publishing.html) page includes an in-depth discussion of the various publishing options as well as some special considerations around resources, concurrent usage, and security which come into play when deploying tutorials on a server.
+
 
 
 
