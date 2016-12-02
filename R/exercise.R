@@ -7,8 +7,19 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   if (exercise$restore) {
     object <- get_exercise_submission(session = get("session", envir = envir),
                                       label = exercise$label)
-    if (!is.null(object) && !is.null(object$data$output))
-      return(object$data$output)
+    if (!is.null(object) && !is.null(object$data$output)) {
+     
+      # get the output
+      output <- object$data$output
+       
+      # ensure that html dependencies only reference package files
+      dependencies <- htmltools::htmlDependencies(output)
+      if (!is.null(dependencies))
+        htmltools::htmlDependencies(output) <- filter_dependencies(dependencies)
+      
+      # return the output
+      return(output)
+    }
   }
   
   # get timelimit option (either from chunk option or from global option)
@@ -187,24 +198,10 @@ evaluate_exercise <- function(exercise, envir) {
     ))
   }
   
-  # capture the dependenies
+  # capture and filter dependencies
   dependencies <- attr(output_file, "knit_meta")
+  dependencies <- filter_dependencies(dependencies)
   
-  # purge dependencies that aren't in a package (to close off reading of
-  # artibtary filesystem locations)
-  dependencies <- Filter(x = dependencies, function(dependency) {
-    if (!is.null(dependency$package)) {
-      TRUE
-    }
-    else {
-      ! is.null(tryCatch(
-        rprojroot::find_root(rprojroot::is_r_package, 
-                             path = dependency$src$file),
-        error = function(e) NULL
-      ))
-    }
-  })
-
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
@@ -255,3 +252,22 @@ evaluate_exercise <- function(exercise, envir) {
     html_output = html_output
   )
 }
+
+
+filter_dependencies <- function(dependencies) {
+  # purge dependencies that aren't in a package (to close off reading of
+  # artibtary filesystem locations)
+  Filter(x = dependencies, function(dependency) {
+    if (!is.null(dependency$package)) {
+      TRUE
+    }
+    else {
+      ! is.null(tryCatch(
+        rprojroot::find_root(rprojroot::is_r_package, 
+                             path = dependency$src$file),
+        error = function(e) NULL
+      ))
+    }
+  })
+}
+
