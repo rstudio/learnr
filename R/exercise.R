@@ -2,21 +2,13 @@
 # run an exercise and return HTML UI
 handle_exercise <- function(exercise, envir = parent.frame()) {
   
-  # short circult for restore
+  # short circult for restore (we restore some outputs like errors so that
+  # they are not re-executed when bringing the tutorial back up)
   if (exercise$restore) {
-    
-    # try to restore the object from storage
     object <- get_exercise_submission(session = get("session", envir = envir),
                                       label = exercise$label)
-    if (!is.null(object))
-      output <- object$data$output
-    else 
-      output <- ""  
-    
-    # TODO: strip html_dependencies which have files outside of pkgs
-    
-    # return the output
-    return(output)
+    if (!is.null(object) && !is.null(object$data$output))
+      return(object$data$output)
   }
   
   # get timelimit option (either from chunk option or from global option)
