@@ -4,7 +4,7 @@
 function Tutor() {
   
   // Function to record an event
-  this.record_event = function(label, event, data) {
+  this.recordEvent = function(label, event, data) {
     var params = {
       label: label,
       event: event,
