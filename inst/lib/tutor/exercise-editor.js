@@ -129,7 +129,6 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     }
     bindExecutionKey("execute1", "Ctrl+Enter");
     bindExecutionKey("execute2", "Ctrl+Shift+Enter");
-    bindExecutionKey("execute3", "Ctrl+R");
     
     // re-focus the editor on run button click
     run_button.on('click', function() {
