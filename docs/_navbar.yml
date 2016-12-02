@@ -7,6 +7,8 @@ left:
     href: exercises.html
   - text: "Questions"
     href: questions.html
+  - text: "Formats"
+    href: formats.html
   - text: "Publishing"
     href: publishing.html
 right:
