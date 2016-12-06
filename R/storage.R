@@ -1,9 +1,10 @@
 
 
-save_question_submission <- function(session, label, question, answers) {
+save_question_submission <- function(session, label, question, answers, correct) {
   save_object(session, label, tutor_object("question_submission", list(
     question = question,
-    answers = answers
+    answers = answers,
+    correct = correct
   )))
 }
 
