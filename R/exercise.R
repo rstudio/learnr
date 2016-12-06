@@ -74,7 +74,7 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
       code = exercise$code,
       output = result$evaluate_output,
       checked = !is.null(exercise$check),
-      correct = ifelse(is.null(result$feedback), NA, result$feedback$correct)
+      correct = ifelse(is.null(result$feedback), NULL, result$feedback$correct)
     )
   }
   
