@@ -10,16 +10,6 @@ function Tutor() {
   // Alias this
   var thiz = this;
   
-  // API: Record an event
-  this.recordEvent = function(label, event, data) {
-    var params = {
-      label: label,
-      event: event,
-      data: data
-    };
-    thiz.$serverRequest("record_event", params, null);
-  };
-  
   // API: Start the tutorial over
   this.startOver = function() {
     thiz.$removeState(function() {
@@ -48,6 +38,16 @@ Tutor.prototype.$serverRequest = function (type, data, success) {
     dataType: "json",
     success: success
   });
+};
+
+ // Record an event
+Tutor.prototype.$recordEvent = function(label, event, data) {
+  var params = {
+    label: label,
+    event: event,
+    data: data
+  };
+  this.$serverRequest("record_event", params, null);
 };
 
 Tutor.prototype.$scrollIntoView = function(element) {
@@ -493,7 +493,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   
   // helper function to record solution/hint requests
   function recordHintRequest(index) {
-    tutor.recordEvent(label, "exercise_hint", {
+    thiz.$recordEvent(label, "exercise_hint", {
       type: solution !== null ? "solution" : "hint",
       index: hintIndex
     });
