@@ -231,9 +231,12 @@ filesystem_storage <- function(dir, compress = TRUE) {
 # in memory table for retreival
 client_storage <- function(session) {
   
-  # helper to form a unique tutorial context id
-  tutorial_context_id <- function(tutorial_id, tutorial_version, user_id) {
-    paste(tutorial_id, tutorial_version, user_id, sep = "-")
+  
+  # helper to form a unique tutorial context id (note that we don't utilize the user_id
+  # as there is no concept of server-side user in client_storage, user scope is 100% 
+  # determined by connecting user agent)
+  tutorial_context_id <- function(tutorial_id, tutorial_version) {
+    paste(tutorial_id, tutorial_version, sep = "-")
   }
   
   # get a reference to the session object cache for a gvien tutorial context
@@ -262,7 +265,7 @@ client_storage <- function(session) {
     save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
       
       # save the object to our in-memory store
-      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       assign(object_id, data, envir = store)
      
@@ -275,7 +278,7 @@ client_storage <- function(session) {
     },
     
     get_object = function(tutorial_id, tutorial_version, user_id, object_id) {
-      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       if (exists(object_id, envir = store))
         get(object_id, envir = store)
@@ -284,7 +287,7 @@ client_storage <- function(session) {
     },
     
     get_objects = function(tutorial_id, tutorial_version, user_id) { 
-      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       objects <- list()
       for (object in ls(store))
@@ -294,14 +297,14 @@ client_storage <- function(session) {
     
     remove_all_objects = function(tutorial_id, tutorial_version, user_id) {
       # remove on server side (client side is handled on client)
-      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       rm(list = ls(store), envir = store)
     },
     
     # function called from initialize to prime object storage from the browser db
     initialize_objects_from_client = function(tutorial_id, tutorial_version, user_id, objects) {
-      context_id <- tutorial_context_id(tutorial_id, tutorial_version, user_id)
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       for (object_id in names(objects)) {
         data <- jsonlite::unserializeJSON(objects[[object_id]])
