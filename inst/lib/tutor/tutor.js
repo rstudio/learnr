@@ -10,6 +10,12 @@ function Tutor() {
   // Alias this
   var thiz = this;
   
+  // API: subscribe to progress events
+  this.onProgress = function(handler) {
+    this.$progressCallbacks.add(handler);
+  };
+  
+  
   // API: Start the tutorial over
   this.startOver = function() {
     thiz.$removeState(function() {
@@ -25,6 +31,52 @@ function Tutor() {
   thiz.$initializeServer();
 }
 
+
+/* Progress callbacks */
+
+Tutor.prototype.$progressCallbacks = $.Callbacks();
+  
+Tutor.prototype.$fireProgress = function(label, event, correct) {
+  
+  // Alias this
+  var thiz = this;
+  
+  // find element
+  var element = $('.tutor-exercise[data-label="' + label + '"]')
+             .add('.quiz[data-label="' + label + '"]');
+  
+  // fire event
+  if (element.length > 0) {
+    thiz.$progressCallbacks.fire({
+      element: element.get(0),
+      label: label,
+      event: event,
+      correct: correct
+    });
+  }
+};  
+  
+Tutor.prototype.$initializeProgress = function(progress_events) {
+ 
+  // Alias this
+  var thiz = this;
+  
+  // replay progress messages from previous state
+  for (var i = 0; i<progress_events.length; i++) {
+    var progress = progress_events[i];
+    progress.label = progress.label[0];
+    progress.event = progress.event[0];
+    if (progress.correct !== null)
+      progress.correct = progress.correct[0];
+    thiz.$fireProgress(progress.label, progress.event, progress.correct);
+  }
+  
+  // handle susequent progress messages
+  Shiny.addCustomMessageHandler("tutor.progress_event", function(progress) {
+    thiz.$fireProgress(progress.label, progress.event, progress.correct);
+  });
+}; 
+  
 
 /* Shared utility functions */
 
@@ -843,6 +895,9 @@ Tutor.prototype.$restoreState = function(objects) {
   
   // retreive state from server
   this.$serverRequest("restore_state", objects, function(data) {
+    
+    // initialize progress
+    thiz.$initializeProgress(data.progress_events);
     
     // get submissions
     var submissions = data.submissions;

@@ -25,6 +25,15 @@ tutor_options(
 )
 ```
 
+
+```{js}
+$(document).ready(function() {
+  window.tutor.onProgress(console.log);
+});
+
+```
+
+
 ## flights
 
 ```{r filter, exercise=TRUE}

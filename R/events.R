@@ -14,18 +14,33 @@ record_event <- function(session, label, event, data) {
 }
 
 
+broadcast_progress_event_to_client <- function(session, event, label, correct) {
+  session$sendCustomMessage("tutor.progress_event", list(
+    event = event,
+    label = label,
+    correct = correct
+  ))
+}
+
+
 question_submission_event <- function(session,
                                       label,
                                       question,
                                       answers,
                                       correct) {
-  # notify listeners
+  # notify server-side listeners
   record_event(session = session,
                label = label,
                event = "question_submission",
                data = list(question = question,
                            answers = answers,
                            correct = correct))
+  
+  # notify client side listeners
+  broadcast_progress_event_to_client(session = session, 
+                                     event = "question_submission", 
+                                     label = label, 
+                                     correct = correct)
   
   # store submission for later replay
   save_question_submission(session = session, 
@@ -42,7 +57,7 @@ exercise_submission_event <- function(session,
                                       error_message,
                                       checked = FALSE, 
                                       feedback = NULL) {
-  # notify listeners
+  # notify server-side listeners
   record_event(session = session,
                label = label,
                event = "exercise_submission",
@@ -51,6 +66,16 @@ exercise_submission_event <- function(session,
                            error_message = error_message,
                            checked = checked,
                            feedback = feedback))
+  
+  # notify client side listeners
+  if (checked)
+    correct <- feedback$correct
+  else
+    correct <- NULL
+  broadcast_progress_event_to_client(session = session, 
+                                     event = "exercise_submission", 
+                                     label = label, 
+                                     correct = correct)
   
   # save submission for later replay
   save_exercise_submission(

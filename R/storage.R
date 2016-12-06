@@ -53,6 +53,34 @@ get_all_submissions <- function(session, exercise_output = TRUE) {
   objects
 }
 
+progress_events_from_submissions <- function(submissions) {
+  
+  progress_events <- list()
+  
+  sapply(submissions, function(submission) {
+    if (submission$type %in% c("question_submission", "exercise_submission")) {
+      if (submission$type == "question_submission") {
+        correct <- submission$data$correct
+      }
+      else if (submission$type == "exercise_submission") {
+        if (!is.null(submission$data$feedback))
+          correct <- submission$data$feedback$correct
+        else
+          correct <- NULL
+      }
+    }
+   
+    event <- list(label = submission$id, 
+                  event = submission$type,
+                  correct = correct)
+    
+    progress_events[[length(progress_events) + 1]] <<- event
+    
+  })
+  
+  progress_events
+}
+
 
 
 save_object <- function(session, object_id, data) {
