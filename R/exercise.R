@@ -58,34 +58,14 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   # get session which serves as context for recording
   session <- get("session", envir = envir)
   
-  # fire event depending on whether this was an error
-  if (!is.null(result$error_message)) {
-    exercise_error_event(
-      session = session,
-      label = exercise$label,
-      code = exercise$code,
-      message = result$error_message
-    )
-  }
-  else {
-    exercise_submission_event(
-      session = session,
-      label = exercise$label,
-      code = exercise$code,
-      output = result$evaluate_output,
-      checked = !is.null(exercise$check),
-      correct = ifelse(is.null(result$feedback), NULL, result$feedback$correct)
-    )
-  }
-  
-  # save submission for later replay
-  save_exercise_submission(
+  # fire event
+  exercise_submission_event(
     session = session,
     label = exercise$label,
     code = exercise$code,
     output = result$html_output,
-    checked = !is.null(exercise$check),
     error_message = result$error_message,
+    checked = !is.null(exercise$check),
     feedback = result$feedback
   )
   

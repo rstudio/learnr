@@ -13,41 +13,55 @@ record_event <- function(session, label, event, data) {
   invisible(NULL)
 }
 
-exercise_error_event <- function(session, label, code, message) {
-  record_event(session = session,
-               label = label,
-               event = "exercise_error",
-               data = list(
-                code = code,
-                message = message))
-}
 
 question_submission_event <- function(session,
                                       label,
                                       question,
                                       answers,
                                       correct) {
+  # notify listeners
   record_event(session = session,
                label = label,
                event = "question_submission",
                data = list(question = question,
                            answers = answers,
                            correct = correct))
+  
+  # store submission for later replay
+  save_question_submission(session = session, 
+                           label = label, 
+                           question = question, 
+                           answers = answers,
+                           correct = correct)
 }
 
 exercise_submission_event <- function(session,
                                       label, 
                                       code, 
                                       output, 
+                                      error_message,
                                       checked = FALSE, 
-                                      correct = NULL) {
+                                      feedback = NULL) {
+  # notify listeners
   record_event(session = session,
                label = label,
                event = "exercise_submission",
                data = list(code = code,
                            output = output,
+                           error_message = error_message,
                            checked = checked,
-                           correct = correct))
+                           feedback = feedback))
+  
+  # save submission for later replay
+  save_exercise_submission(
+    session = session,
+    label = label,
+    code = code,
+    output = output,
+    error_message = error_message,
+    checked = checked,
+    feedback = feedback
+  )
 }
 
 

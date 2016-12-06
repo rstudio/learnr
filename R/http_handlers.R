@@ -68,13 +68,6 @@ register_http_handlers <- function(session, metadata) {
                               question = question,
                               answers = answers,
                               correct = correct)
-    
-    # store for later replay
-    save_question_submission(session = session, 
-                             label = label, 
-                             question = question, 
-                             answers = answers,
-                             correct = correct)
   }))
   
   # help handler
