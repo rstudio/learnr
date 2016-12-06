@@ -84,6 +84,7 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
     label = exercise$label,
     code = exercise$code,
     output = result$html_output,
+    checked = !is.null(exercise$check),
     error_message = result$error_message,
     feedback = result$feedback
   )

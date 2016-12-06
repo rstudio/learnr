@@ -730,10 +730,10 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
         binding.check = ev.target.hasAttribute('data-check');
         callback(true);
       });
-      $(el).on('restore.exerciseInputBinding', function(ev) {
+      $(el).on('restore.exerciseInputBinding', function(ev, options) {
         binding.restore = true;
         binding.clicked = false;
-        binding.check = false;
+        binding.check = options.check;
         callback(true);
       });
     },
@@ -817,8 +817,7 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
   thiz.$store = localforage.createInstance({ 
     name: "Tutorial-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
-                           identifiers.tutorial_version + 
-                           identifiers.user_id)
+                           identifiers.tutorial_version)
   });
   
   // custom message handler to update store
@@ -858,8 +857,9 @@ Tutor.prototype.$restoreState = function(objects) {
       // exercise submissions
       if (type === "exercise_submission") {
         
-        // get code
+        // get code and checked status
         var code = submission.data.code[0];
+        var checked = submission.data.checked[0];
       
         // find the editor 
         var editorContainer = thiz.$exerciseEditor(label);
@@ -873,7 +873,9 @@ Tutor.prototype.$restoreState = function(objects) {
           // restoring flag on the exercise so we don't scroll it
           // into view after restoration)
           thiz.$exerciseForLabel(label).data('restoring', true);
-          editorContainer.trigger('restore');
+          editorContainer.trigger('restore', {
+            check: checked
+          });
         }
       }
       

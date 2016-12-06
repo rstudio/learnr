@@ -7,7 +7,7 @@ save_question_submission <- function(session, label, question, answers) {
   )))
 }
 
-save_exercise_submission <- function(session, label, code, output, error_message, feedback) {
+save_exercise_submission <- function(session, label, code, output, checked, error_message, feedback) {
   
   # for client storage we only forward error output. this is because we want
   # to replay errors back into the client with no execution (in case they were 
@@ -25,6 +25,7 @@ save_exercise_submission <- function(session, label, code, output, error_message
   save_object(session, label, tutor_object("exercise_submission", list(
     code = code,
     output = output,
+    checked = checked,
     feedback = feedback
   )))  
 }
