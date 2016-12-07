@@ -26,48 +26,126 @@ handle_exercise <- function(session, exercise, envir = parent.frame()) {
   if (is.null(timelimit))
     timelimit <- getOption("tutor.exercise.timelimit", default = 30)
   
-  # define exercise evaluator (allow replacement via global option)
-  evaluator <- getOption("tutor.exercise.evaluator", function(expr, timelimit) {
+  # get exercise evaluator factory function (allow replacement via global option)
+  evaluator_factory <- getOption("tutor.exercise.evaluator", default = NULL)
+  if (is.null(evaluator_factory)) {
+    if (!is_windows() && !is_macos())
+      evaluator_factory <- forked_evaluator
+    else
+      evaluator_factory <- inline_evaluator
+  }
+  
+  # create exercise evaluator
+  evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
+
+  # start it
+  evaluator$start()
+  
+  # poll for result
+  reactive({
     
-    # enforce time limit for the duration of this function call
-    setTimeLimit(elapsed=timelimit, transient=TRUE);
-    on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
-    
-    # evaluate using mcparallel to isolate the code into a forked child process
-    # do this only on traditional server platforms since windows doesn't support
-    # parallel::mcparallel and OSX has problems w/ ggplot2 when forking a 
-    # CoreFoundation process
-    if (!is_windows() && !is_macos()) {
+    # check for completed 
+    if (evaluator$completed()) {
       
-      # create a parallel job and evaluate the expression within it
-      job <- parallel::mcparallel(expr, mc.interactive = FALSE)
-      parallel::mccollect(job, wait = TRUE)[[1]]
+      # get the result
+      result <- evaluator$result()
       
+      # side-effect: fire event
+      exercise_submission_event(
+        session = session,
+        label = exercise$label,
+        code = exercise$code,
+        output = result$html_output,
+        error_message = result$error_message,
+        checked = !is.null(exercise$check),
+        feedback = result$feedback
+      )
+      
+      # return the html output
+      result$html_output 
+      
+    } else {
+      # call ourselves back in 100ms
+      invalidateLater(100, session = session)
     }
-    else {
-      
-      # evaluate the expression
-      force(expr)
-    }
-  })
-  
-  # evaluate the exercise 
-  result <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
-  
-  # fire event
-  exercise_submission_event(
-    session = session,
-    label = exercise$label,
-    code = exercise$code,
-    output = result$html_output,
-    error_message = result$error_message,
-    checked = !is.null(exercise$check),
-    feedback = result$feedback
-  )
-  
-  # return the html output
-  result$html_output
+  })()
 }
+
+
+# inline execution evaluator
+inline_evaluator <- function(expr, timelimit) {
+  
+  result <- NULL
+  
+  list(
+    start = function() {
+      
+      # setTimeLimit -- if the timelimit is exceeeded an error will occur
+      # during knit which we will catch and format within evaluate_exercise
+      setTimeLimit(elapsed=timelimit, transient=TRUE);
+      on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
+      
+      # execute and capture result
+      result <<- force(expr)
+    },
+    
+    completed = function() {
+      TRUE
+    },
+    
+    result = function() {
+      result
+    }
+  )
+}
+
+# forked execution evaluator
+forked_evaluator <- function(expr, timelimit) {
+  
+  job <- NULL
+  start_time <- NULL
+  result <- NULL
+  
+  list(
+    
+    start = function() {
+      start_time <<- Sys.time()
+      job <<- parallel::mcparallel(expr, mc.interactive = FALSE)
+    },
+    
+    completed = function() {
+      
+      # attempt to collect the result
+      collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = timelimit)
+      
+      # got result, reap and return
+      if (!is.null(collect)) {
+        result <<- collect[[1]]
+        parallel::mccollect(jobs = job, wait = FALSE)
+        TRUE
+      } 
+      
+      # hit timeout, kill/reap child and return timeout error
+      else if ((Sys.time() - start_time) >= timelimit) {
+        
+        # TODO: kill child
+        
+        result <<- error_result(timeout_error_message())
+        TRUE
+      }
+      
+      # not yet completed
+      else {
+        FALSE
+      }
+    },
+    
+    result = function() {
+      result
+    }
+  )
+}
+
 
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
@@ -159,21 +237,11 @@ evaluate_exercise <- function(exercise, envir) {
     error_message <<- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, error_message) != -1L) {
-      error_message <- paste("Error: Your code ran longer than the permitted time", 
-                             "limit for this exercise.")
+      error_message <<- timeout_error_message()
     } 
-    
-    # provide error html
-    error_html <<- error_message_html(error_message)
   })
-  if (!is.null(error_html)) {
-    return(list(
-      feedback = NULL,
-      evaluate_output = NULL,
-      error_message = error_message,
-      html_output = error_html
-    ))
-  }
+  if (!is.null(error_message))
+    return(error_result(error_message))
   
   # capture and filter dependencies
   dependencies <- attr(output_file, "knit_meta")
@@ -230,6 +298,20 @@ evaluate_exercise <- function(exercise, envir) {
   )
 }
 
+error_result <- function(error_message) {
+  list(
+    feedback = NULL,
+    evaluate_output = NULL,
+    error_message = error_message,
+    html_output = error_message_html(error_message)
+  )
+}
+
+timeout_error_message <- function() {
+  paste("Error: Your code ran longer than the permitted time", 
+        "limit for this exercise.")
+}
+
 
 filter_dependencies <- function(dependencies) {
   # purge dependencies that aren't in a package (to close off reading of
@@ -247,4 +329,6 @@ filter_dependencies <- function(dependencies) {
     }
   })
 }
+
+
 
