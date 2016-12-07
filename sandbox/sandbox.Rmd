@@ -15,7 +15,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
-options(tutor.event_recorder = tutor:::debug_event_recorder)
+#options(tutor.event_recorder = tutor:::debug_event_recorder)
 tutor_options(
   exercise.eval = FALSE, 
   exercise.cap = "Try it Out",
@@ -75,7 +75,7 @@ nycflights <- filter(nycflights, month == 2)
 
 Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
 
-```{r cars, exercise=TRUE, exercise.eval=TRUE, exercise.timelimit=1}
+```{r cars, exercise=TRUE, exercise.eval=TRUE}
 head(mtcars, n = 5)
 ```
 
