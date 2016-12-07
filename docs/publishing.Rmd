@@ -66,32 +66,11 @@ To limit the time taken for the execution of exercises you can use the `exercise
 
 You can use various features of [RStudio Connect](https://www.rstudio.com/products/connect/) and [Shiny Server Pro]([Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/)) to run tutorials within a resource and/or filesystem sandbox. 
 
-### Concurrent Users
-
-If you have multiple users accessing a tutorial at the same time their R code will by default be executed within a single R process. This means that if exercises take a long time to complete and many users are submitting them at once there could be a long wait for some users. 
-
-The `exercise.timelimit` option described above is a way to prevent this problem in some cases, but in other cases you may need to run your tutorial using multiple R processes. This is possible using [shinyapps.io](http://docs.rstudio.com/shinyapps.io/applications.html#ApplicationInstances), [Shiny Server Pro](http://docs.rstudio.com/shiny-server/#utilization-scheduler), and [RStudio Connect](http://docs.rstudio.com/connect/admin/appendix-configuration.html#appendix-configuration-scheduler) (see the linked documentation for the various products for additional details).
-
 ### Security Considerations
 
 Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and/or other system resources.
 
-By default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process.
-
-The **tutor** package can also have it's exercise evaluation function replaced with one based on the [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package. Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor:
-
-1. Install and configure the **RAppArmor** package as described here: https://github.com/jeroenooms/RAppArmor#readme
-
-2. Add the following line to the `/etc/apparmor.d/rapparmor.d/r-user` profile (this is required so that the default AppArmor profile also support calling the pandoc markdown renderer):
-
-    ```
-    /usr/lib/rstudio/bin/pandoc/* rix,
-    ```
-
-3. Define an evaluator function that uses `RAppArmor::eval.secure` and set it as the `tutor.exercise.evaluator` global options (you'd do this in e.g. the `Rprofile.site`):
-
-    <div id="exerciseevaluator"></div>
-    <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
+Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process.
 
 ## Hosting Services
 
