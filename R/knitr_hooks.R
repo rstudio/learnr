@@ -211,7 +211,7 @@ exercise_server_chunk <- function(label) {
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
 'output$`tutor-exercise-%s-output` <- renderUI({
-    tutor:::handle_exercise(req(input$`tutor-exercise-%s-code-editor`))
+    tutor:::handle_exercise(session, req(input$`tutor-exercise-%s-code-editor`))
 })', label, label, label))
 }
 

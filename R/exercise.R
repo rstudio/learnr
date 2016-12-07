@@ -1,12 +1,11 @@
 
 # run an exercise and return HTML UI
-handle_exercise <- function(exercise, envir = parent.frame()) {
+handle_exercise <- function(session, exercise, envir = parent.frame()) {
   
   # short circult for restore (we restore some outputs like errors so that
   # they are not re-executed when bringing the tutorial back up)
   if (exercise$restore) {
-    object <- get_exercise_submission(session = get("session", envir = envir),
-                                      label = exercise$label)
+    object <- get_exercise_submission(session = session, label = exercise$label)
     if (!is.null(object) && !is.null(object$data$output)) {
      
       # get the output
@@ -54,9 +53,6 @@ handle_exercise <- function(exercise, envir = parent.frame()) {
   
   # evaluate the exercise 
   result <- evaluator(evaluate_exercise(exercise, envir), timelimit = timelimit)
-  
-  # get session which serves as context for recording
-  session <- get("session", envir = envir)
   
   # fire event
   exercise_submission_event(
