@@ -145,6 +145,11 @@ forked_evaluator <- function(expr, timelimit) {
         
         # return result
         result <<- collect[[1]]
+        
+        # check if it's an error and convert it to an error if it is
+        if(inherits(result, "try-error"))
+          result <<- error_result(result)
+        
         TRUE
       } 
       
