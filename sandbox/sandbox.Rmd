@@ -28,7 +28,9 @@ tutor_options(
 
 ```{js}
 $(document).ready(function() {
-  window.tutor.onProgress(console.log);
+  window.tutor.onProgress(function(message) { 
+    console.log(message);
+  });
 });
 
 ```
