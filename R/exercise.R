@@ -129,7 +129,16 @@ forked_evaluator <- function(expr, timelimit) {
     
     start = function() {
       start_time <<- Sys.time()
-      job <<- parallel::mcparallel(expr, mc.interactive = FALSE)
+      job <<- parallel::mcparallel(mc.interactive = FALSE, {
+        
+        # close all connections
+        closeAllConnections()
+        
+        # TODO: call process execution envelope hook
+        
+        # evaluate the expression
+        force(expr)
+      })
     },
     
     completed = function() {
@@ -158,6 +167,8 @@ forked_evaluator <- function(expr, timelimit) {
         
         # kill the child process
         system(paste("kill -9", job$pid))
+        
+        # TODO: call process cleanup hook
         
         # return error result
         result <<- error_result(timeout_error_message())
