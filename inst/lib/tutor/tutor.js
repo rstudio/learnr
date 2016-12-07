@@ -866,7 +866,7 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
   // with storage since the entire behavior is a nice-to-have (i.e. we automatically
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
-  thiz.$store = localforage.createInstance({ 
+  thiz.$store = window.localforage.createInstance({ 
     name: "Tutorial-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version)
