@@ -1,74 +1,96 @@
 
-# run an exercise and return HTML UI
-handle_exercise <- function(session, exercise, envir = parent.frame()) {
-  
-  # short circult for restore (we restore some outputs like errors so that
-  # they are not re-executed when bringing the tutorial back up)
-  if (exercise$restore) {
-    object <- get_exercise_submission(session = session, label = exercise$label)
-    if (!is.null(object) && !is.null(object$data$output)) {
-     
-      # get the output
-      output <- object$data$output
-       
-      # ensure that html dependencies only reference package files
-      dependencies <- htmltools::htmlDependencies(output)
-      if (!is.null(dependencies))
-        htmltools::htmlDependencies(output) <- filter_dependencies(dependencies)
-      
-      # return the output
-      return(output)
-    }
-  }
-  
-  # get timelimit option (either from chunk option or from global option)
-  timelimit <- exercise$options$exercise.timelimit
-  if (is.null(timelimit))
-    timelimit <- getOption("tutor.exercise.timelimit", default = 30)
-  
-  # get exercise evaluator factory function (allow replacement via global option)
-  evaluator_factory <- getOption("tutor.exercise.evaluator", default = NULL)
-  if (is.null(evaluator_factory)) {
-    if (!is_windows() && !is_macos())
-      evaluator_factory <- forked_evaluator
-    else
-      evaluator_factory <- inline_evaluator
-  }
-  
-  # create exercise evaluator
-  evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
 
-  # start it
-  evaluator$start()
+# NOTE: may to manually showProgress for the restore case
+
+# run an exercise and return HTML UI
+setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame()) {
   
-  # poll for result
-  reactive({
+  # setup reactive values for return
+  rv <- shiny::reactiveValues(triggered = 0, result = NULL)
+  
+  # observe input
+  shiny::observeEvent(exercise_rx(), {
     
-    # check for completed 
-    if (evaluator$completed()) {
-      
-      # get the result
-      result <- evaluator$result()
-      
-      # side-effect: fire event
-      exercise_submission_event(
-        session = session,
-        label = exercise$label,
-        code = exercise$code,
-        output = result$html_output,
-        error_message = result$error_message,
-        checked = !is.null(exercise$check),
-        feedback = result$feedback
-      )
-      
-      # return the html output
-      result$html_output 
-      
-    } else {
-      # call ourselves back in 100ms
-      invalidateLater(100, session = session)
+    # get exercise
+    exercise <- exercise_rx()
+    
+    # short circult for restore (we restore some outputs like errors so that
+    # they are not re-executed when bringing the tutorial back up)
+    if (exercise$restore) {
+      object <- get_exercise_submission(session = session, label = exercise$label)
+      if (!is.null(object) && !is.null(object$data$output)) {
+        
+        # get the output
+        output <- object$data$output
+        
+        # ensure that html dependencies only reference package files
+        dependencies <- htmltools::htmlDependencies(output)
+        if (!is.null(dependencies))
+          htmltools::htmlDependencies(output) <- filter_dependencies(dependencies)
+        
+        # assign to rv and return
+        rv$result <- output
+        return()
+      }
     }
-  })()
+    
+    # get timelimit option (either from chunk option or from global option)
+    timelimit <- exercise$options$exercise.timelimit
+    if (is.null(timelimit))
+      timelimit <- getOption("tutor.exercise.timelimit", default = 30)
+    
+    # get exercise evaluator factory function (allow replacement via global option)
+    evaluator_factory <- getOption("tutor.exercise.evaluator", default = NULL)
+    if (is.null(evaluator_factory)) {
+      if (!is_windows() && !is_macos())
+        evaluator_factory <- forked_evaluator
+      else
+        evaluator_factory <- inline_evaluator
+    }
+    
+    # create exercise evaluator
+    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
+    
+    # start it
+    evaluator$start()
+    
+    # poll for completion
+    o <- observe({
+      
+      if (evaluator$completed()) {
+        
+        # get the result
+        result <- evaluator$result()
+        
+        # side-effect: fire event
+        exercise_submission_event(
+          session = session,
+          label = exercise$label,
+          code = exercise$code,
+          output = result$html_output,
+          error_message = result$error_message,
+          checked = !is.null(exercise$check),
+          feedback = result$feedback
+        )
+        
+        # assign reactive result value
+        rv$triggered <- isolate({ rv$triggered + 1})
+        rv$result <- result$html_output
+        
+        # destroy the observer
+        o$destroy()
+        
+      } else {
+        invalidateLater(100, session)
+      }
+    })
+  })
+  
+  # return reactive
+  reactive({
+    rv$triggered 
+    req(rv$result)
+  })
 }
 
 
@@ -116,20 +138,26 @@ forked_evaluator <- function(expr, timelimit) {
     completed = function() {
       
       # attempt to collect the result
-      collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = timelimit)
+      collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
       
-      # got result, reap and return
+      # got result
       if (!is.null(collect)) {
-        result <<- collect[[1]]
+        
+        # final reaping of process
         parallel::mccollect(jobs = job, wait = FALSE)
+        
+        # return result
+        result <<- collect[[1]]
         TRUE
       } 
       
-      # hit timeout, kill/reap child and return timeout error
+      # hit timeout
       else if ((Sys.time() - start_time) >= timelimit) {
         
-        # TODO: kill child
+        # kill the child process
+        system(paste("kill -9", job$pid))
         
+        # return error result
         result <<- error_result(timeout_error_message())
         TRUE
       }
