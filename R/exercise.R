@@ -40,8 +40,8 @@ handle_exercise <- function(session, exercise, envir = parent.frame()) {
     if (!is_windows() && !is_macos()) {
       
       # create a parallel job and evaluate the expression within it
-      job <- parallel::mcparallel(expr)
-      parallel::mccollect(job, wait = TRUE, timeout = timelimit)[[1]]
+      job <- parallel::mcparallel(expr, mc.interactive = FALSE)
+      parallel::mccollect(job, wait = TRUE)[[1]]
       
     }
     else {
