@@ -26,8 +26,8 @@ localforage_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "localforage",
     version = "1.4.3",
-    src = system.file("lib/localForage", package = "tutor"),
-    script = "localForage.min.js"
+    src = system.file("lib/localforage", package = "tutor"),
+    script = "localforage.min.js"
   )
 }
 
