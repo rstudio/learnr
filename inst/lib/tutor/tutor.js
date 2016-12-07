@@ -296,12 +296,16 @@ Tutor.prototype.$exerciseContainer = function(el) {
 };
 
 // show progress for exercise
-Tutor.prototype.$showExerciseProgress = function(el, button, show) {
+Tutor.prototype.$showExerciseProgress = function(label, button, show) {
   
   // references to various UI elements
-  var exercise = this.$exerciseContainer(el);
+  var exercise = this.$exerciseForLabel(label);
   var outputFrame = exercise.children('.tutor-exercise-output-frame');
   var runButtons = exercise.find('.btn-tutor-run');
+  
+  // if the button is "run" then use the run button
+  if (button === "run")
+    button = exercise.find('.btn-tutor-run').last();
   
   // show/hide progress UI
   var spinner = 'fa-spinner fa-spin fa-fw';
@@ -431,7 +435,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
       button.attr('data-icon', icon);
       button.on('click', function() {
         thiz.$removeSolution(exercise);
-        thiz.$showExerciseProgress(output_frame, button, true);
+        thiz.$showExerciseProgress(label, button, true);
       });
       panel_heading.append(button);
       return button;
@@ -844,7 +848,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     },
     
     showProgress: function(el, show) {
-      thiz.$showExerciseProgress(el, null, show);
+      thiz.$showExerciseProgress(exerciseLabel(el), null, show);
     },
     
     outputFrame: function(el) {
@@ -928,6 +932,7 @@ Tutor.prototype.$restoreState = function(objects) {
           // restoring flag on the exercise so we don't scroll it
           // into view after restoration)
           thiz.$exerciseForLabel(label).data('restoring', true);
+          thiz.$showExerciseProgress(label, 'run', true);
           editorContainer.trigger('restore', {
             check: checked
           });
