@@ -1,7 +1,4 @@
 
-
-# NOTE: may to manually showProgress for the restore case
-
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame()) {
   
