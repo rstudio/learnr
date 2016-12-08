@@ -147,6 +147,10 @@ What the code within the "-check" chunk actually does will vary depending on whi
 <td><code>evaluate_result</code></td>
 <td>The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.</td>
 </tr>
+<tr class="odd">
+<td><code>feedback</code></td>
+<td>Function to call to provide visual feedback to the user (see below for documentation).</td>
+</tr>
 </tbody>
 </table>
 
@@ -157,7 +161,7 @@ You can use the `feedback` function to return the appropriate feedback after per
 
 Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
 
-In addition to a text message the call to the `tutor::feedback` function also specifies whether the code submitted for the exercise should be considered correct or incorrect.
+In addition to a text message the call to the `feedback` function also specifies whether the code submitted for the exercise should be considered correct or incorrect.
 
 ## Exercise Caption
 

@@ -1,5 +1,5 @@
 ```r
-checker <- function(label, user_code, check_code, envir_result, evaluate_result, ...) {
-  tutor::feedback("Great job!", correct = TRUE, location = "append")
+checker <- function(label, user_code, check_code, envir_result, evaluate_result, feedback, ...) {
+  feedback("Great job!", correct = TRUE, location = "append")
 }
 ```

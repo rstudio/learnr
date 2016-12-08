@@ -212,29 +212,30 @@ evaluate_exercise <- function(exercise, envir) {
     checker <- function(...) { NULL }
   
   # call the checker 
-  feedback <- checker(
+  checker_feedback <- checker(
     label = exercise$label,
     user_code = exercise$code,
     solution_code = exercise$solution,
     check_code = exercise$check,
     envir_result = envir,
-    evaluate_result = evaluate_result
+    evaluate_result = evaluate_result,
+    feedback = feedback
   )
   
   # amend output with feedback as required
-  if (!is.null(feedback)) {
-    feedback_html <- htmltools::as.tags(feedback)
-    if (feedback$location == "append")
+  if (!is.null(checker_feedback)) {
+    feedback_html <- htmltools::as.tags(checker_feedback)
+    if (checker_feedback$location == "append")
       html_output <- htmltools::tagList(html_output, feedback_html)
-    else if (feedback$location == "prepend")
+    else if (checker_feedback$location == "prepend")
       html_output <- htmltools::tagList(feedback_html, html_output)
-    else if (feedback$location == "replace")
+    else if (checker_feedback$location == "replace")
       html_output <- feedback_html
   }
   
   # return a list with the various results of the expression
   list(
-    feedback = feedback,
+    feedback = checker_feedback,
     evaluate_output = evaluate_result,
     error_message = NULL,
     html_output = html_output
