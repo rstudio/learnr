@@ -455,7 +455,10 @@ R object to be saved
 </div>
 <div id="exercise-execution" class="section level3">
 <h3>Exercise Execution</h3>
-<p>The <strong>tutor</strong> package can also have it’s exercise evaluation environment customized using <code>onstart</code> and <code>oncleanup</code> hooks. Within these hooks you can use functions from <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package or another package that provides interfaces to system resource management functions.</p>
+<p>Note that by default when running on UNIX systems the <strong>tutor</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.</p>
+<div id="start-and-cleanup-hooks" class="section level4">
+<h4>Start and Cleanup Hooks</h4>
+<p>The <strong>tutor</strong> package can have it’s exercise evaluation environment customized using <code>onstart</code> and <code>oncleanup</code> hooks. Within these hooks you can use functions from <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package or another package that provides interfaces to system resource management functions.</p>
 <p>Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the <code>onstart</code> and <code>oncleanup</code> hooks:</p>
 <ol style="list-style-type: decimal">
 <li><p>Install and configure the <strong>RAppArmor</strong> package as described here: <a href="https://github.com/jeroenooms/RAppArmor#readme" class="uri">https://github.com/jeroenooms/RAppArmor#readme</a></p></li>
@@ -468,6 +471,17 @@ R object to be saved
 <script type="text/javascript">loadSnippet('exerciseevaluator')</script></li>
 </ol>
 <p>You’d likely set these options within <code>Rprofile.site</code> or another R source file that is evaluated prior to running the tutorial with <code>rmarkdown::run</code>.</p>
+</div>
+<div id="fully-custom-evaluator" class="section level4">
+<h4>Fully Custom Evaluator</h4>
+<p>You can replace the default exercise evaluation code entirely with your own via the <code>tutor.exercise.evaluator</code> global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (<code>start</code>, <code>completed</code>, and <code>result</code>) to use for execution .</p>
+<p>The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):</p>
+<ol style="list-style-type: decimal">
+<li><p><code>inline_evaluator</code> — Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).</p></li>
+<li><p><code>forked_evaluator</code> — Evaluate exercises within a forked child process (this is the default on UNIX systems).</p></li>
+</ol>
+<p>You can see the source code for these evaluators here: <a href="https://github.com/rstudio/tutor/blob/master/R/evaluators.R" class="uri">https://github.com/rstudio/tutor/blob/master/R/evaluators.R</a>.</p>
+</div>
 </div>
 <div id="recording-events" class="section level3">
 <h3>Recording Events</h3>

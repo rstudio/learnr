@@ -131,7 +131,11 @@ The parameters passed to the storage provider's functions are as follows (note t
 
 ### Exercise Execution
 
-The **tutor** package can also have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
+Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.
+
+#### Start and Cleanup Hooks
+
+The **tutor** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
 
 Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the `onstart` and `oncleanup` hooks:
 
@@ -149,6 +153,18 @@ Using this method you can apply time limits, resource limits, and filesystem lim
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
     
 You'd likely set these options within `Rprofile.site` or another R source file that is evaluated prior to running the tutorial with `rmarkdown::run`.
+
+#### Fully Custom Evaluator
+
+You can replace the default exercise evaluation code entirely with your own via the `tutor.exercise.evaluator` global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (`start`, `completed`, and `result`) to use for execution .
+
+The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):
+
+1. `inline_evaluator` --- Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).
+
+2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
+
+You can see the source code for these evaluators here: <https://github.com/rstudio/tutor/blob/master/R/evaluators.R>.
 
 ### Recording Events
 
