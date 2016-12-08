@@ -3,10 +3,10 @@
 setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame()) {
   
   # setup reactive values for return
-  rv <- shiny::reactiveValues(triggered = 0, result = NULL)
+  rv <- reactiveValues(triggered = 0, result = NULL)
   
   # observe input
-  shiny::observeEvent(exercise_rx(), {
+  observeEvent(exercise_rx(), {
     
     # get exercise
     exercise <- exercise_rx()
