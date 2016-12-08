@@ -372,11 +372,12 @@ tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</
 <p>Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine).</p>
 <p>To limit the time taken for the execution of exercises you can use the <code>exercise.timelimit</code> option. see the documentation on <a href="exercises.html#time-limits">Exercise Time Limits</a> for additional details.</p>
 <p>You can use various features of <a href="https://www.rstudio.com/products/connect/">RStudio Connect</a> and <a href="%5BShiny%20Server%5D(https://www.rstudio.com/products/shiny/shiny-server/)">Shiny Server Pro</a> to run tutorials within a resource and/or filesystem sandbox.</p>
+<p>See also the section below on <a href="#exercise-execution">Exercise Execution</a> for details on further customizing the evaluation environment for exercises.</p>
 </div>
 <div id="security-considerations" class="section level3">
 <h3>Security Considerations</h3>
 <p>Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it’s access to the filesystem and/or other system resources.</p>
-<p>Note that by default when running on UNIX systems the <strong>tutor</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process.</p>
+<p>Note that by default when running on UNIX systems the <strong>tutor</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).</p>
 </div>
 </div>
 <div id="hosting-services" class="section level2">
@@ -451,6 +452,22 @@ R object to be saved
 </tbody>
 </table>
 </div>
+</div>
+<div id="exercise-execution" class="section level3">
+<h3>Exercise Execution</h3>
+<p>The <strong>tutor</strong> package can also have it’s exercise evaluation environment customized using <code>onstart</code> and <code>oncleanup</code> hooks. Within these hooks you can use functions from <a href="https://cran.r-project.org/web/packages/RAppArmor/index.html">RAppArmor</a> package or another package that provides interfaces to system resource management functions.</p>
+<p>Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the <code>onstart</code> and <code>oncleanup</code> hooks:</p>
+<ol style="list-style-type: decimal">
+<li><p>Install and configure the <strong>RAppArmor</strong> package as described here: <a href="https://github.com/jeroenooms/RAppArmor#readme" class="uri">https://github.com/jeroenooms/RAppArmor#readme</a></p></li>
+<li><p>Add the following line to the <code>/etc/apparmor.d/rapparmor.d/r-user</code> profile (this is required so that the default AppArmor profile also support calling the pandoc markdown renderer):</p>
+<pre><code>/usr/lib/rstudio/bin/pandoc/* rix,</code></pre></li>
+<li><p>Define <code>onstart</code> and <code>oncleaup</code> hooks by setting the <code>tutor.exercise.evaluator.onstart</code> and <code>tutor.exercise.evaluator.oncleanup</code> global options. For example:</p>
+<div id="exerciseevaluator">
+
+</div>
+<script type="text/javascript">loadSnippet('exerciseevaluator')</script></li>
+</ol>
+<p>You’d likely set these options within <code>Rprofile.site</code> or another R source file that is evaluated prior to running the tutorial with <code>rmarkdown::run</code>.</p>
 </div>
 <div id="recording-events" class="section level3">
 <h3>Recording Events</h3>
