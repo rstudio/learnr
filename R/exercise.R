@@ -121,9 +121,24 @@ inline_evaluator <- function(expr, timelimit) {
 # forked execution evaluator
 forked_evaluator <- function(expr, timelimit) {
   
+  # closure members
   job <- NULL
   start_time <- NULL
   result <- NULL
+  
+  # helper to call a hook function
+  call_hook <- function(name, default = NULL) {
+    hook <- getOption(paste0("tutor.exercise.evaluator.", name))
+    if (!is.null(hook))
+      hook(job$pid)
+    else if (!is.null(default))
+      default(job$pid)
+  }
+  
+  # default cleanup function
+  default_cleanup <- function(pid) {
+    system(paste("kill -9", pid))
+  }
   
   list(
     
@@ -134,8 +149,9 @@ forked_evaluator <- function(expr, timelimit) {
         # close all connections
         closeAllConnections()
         
-        # TODO: call process execution envelope hook
-        
+        # call onstart hook
+        call_hook("onstart")
+      
         # evaluate the expression
         force(expr)
       })
@@ -152,6 +168,9 @@ forked_evaluator <- function(expr, timelimit) {
         # final reaping of process
         parallel::mccollect(jobs = job, wait = FALSE)
         
+        # call cleanup hook
+        call_hook("oncleanup", default = default_cleanup)
+        
         # return result
         result <<- collect[[1]]
         
@@ -165,10 +184,8 @@ forked_evaluator <- function(expr, timelimit) {
       # hit timeout
       else if ((Sys.time() - start_time) >= timelimit) {
         
-        # kill the child process
-        system(paste("kill -9", job$pid))
-        
-        # TODO: call process cleanup hook
+        # call cleanup hook
+        call_hook("oncleanup", default = default_cleanup)
         
         # return error result
         result <<- error_result(timeout_error_message())
