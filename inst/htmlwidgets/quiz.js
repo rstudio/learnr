@@ -9,6 +9,18 @@ HTMLWidgets.widget({
     return {
 
       renderValue: function(x) {
+        this.doRenderValue(el, x);
+      },
+
+      doRenderValue: function(el, x) {
+        
+        // alias this
+        var thiz = this;
+        
+        // alias/clone for "Try Again"
+        var el_this = $(el);
+        var el_clone = $(el).clone();
+        var x_clone = $.extend({}, x);
         
         // helper function to record an answer
         function recordAnswer(correct) {
@@ -37,14 +49,15 @@ HTMLWidgets.widget({
           checkAnswer: function() {
         
             // add checked and text-success class to correct answers
-            $(el).find('ul.answers').find('li.correct').addClass('checked text-success');
+            if (!x.allowRetry)
+              $(el).find('ul.answers').find('li.correct').addClass('checked text-success');
             
             // check whether the answer is correct
             var correct = correctItem.css('display') == 'list-item';
             
             // look for custom messages
             var msg_class = correct ? '.correct' : '.incorrect';
-            var message = $(el).find('.responses').children(msg_class).text();
+            var message = $(el).find('.responses').children(msg_class).children('div').text();
             var messages = $(el).find('.answers').children(msg_class + '[data-message]');
             messages.each(function() {
               if ($(this).children('input').is(':checked')) {
@@ -52,9 +65,7 @@ HTMLWidgets.widget({
                  message = message + ' ' + data_message;
               }
             });
-            
-            // display custom messages
-            $(el).find('.responses').children(msg_class).html(message);
+            $(el).find('.responses').children(msg_class).children('div').text(message);
             
             // record answer if we aren't restoring
             if (!$(el).data('restoring'))
@@ -82,11 +93,23 @@ HTMLWidgets.widget({
         
         // get the correctItem and apply bg-success to it
         var correctItem = $(el).find('ul.responses').find('li.correct');
-        correctItem.addClass('alert alert-success');
+        correctItem.wrapInner('<div class="alert alert-success"></div>');
             
         // get the incorrectItem and apply bg-danger to it
         var incorrectItem = $(el).find('ul.responses').find('li.incorrect');
-        incorrectItem.addClass('alert alert-danger');
+        incorrectItem.wrapInner('<div class="alert alert-danger"></div>');
+        
+        // create try again button
+        if (x.allowRetry) {
+          var button = $('<button class="btn btn-primary btn-md tryAgainButton"></button>');
+          button.text('Try Again');
+          button.on('click', function() {
+            el_clone.insertAfter(el_this);
+            $(el_this).remove();
+            thiz.doRenderValue(el_clone.get(0), x_clone);
+          });
+          incorrectItem.append(button);
+        }
         
         // make check answer a proper button
         var checkAnswer = $(el).find(".checkAnswer");

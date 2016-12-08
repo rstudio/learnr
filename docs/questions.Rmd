@@ -43,6 +43,14 @@ Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This i
 <img src="images/question-math.png" width=732 height=262>
 
 
+## Retrying Questions
+
+By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the `allow_retry` option, for example:
+
+<div id="questionretry"></div>
+<script type="text/javascript">loadSnippet('questionretry')</script>
+
+
 ## Random Answer Order
 
 If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:

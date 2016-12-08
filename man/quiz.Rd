@@ -9,7 +9,7 @@
 quiz(..., caption = "Quiz")
 
 question(text, ..., type = c("auto", "single", "multiple"),
-  correct = "Correct!", incorrect = "Incorrect.",
+  correct = "Correct!", incorrect = "Incorrect.", allow_retry = FALSE,
   random_answer_order = FALSE)
 
 answer(text, correct = FALSE, message = NULL)
@@ -32,6 +32,8 @@ to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
 \item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect.")}
+
+\item{allow_retry}{Allow retry for incorrect answers.}
 
 \item{random_answer_order}{Display answers in a random order.}
 

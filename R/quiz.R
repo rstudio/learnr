@@ -15,6 +15,7 @@
 #' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
 #' @param message Additional message to display along with correct/incorrect feedback.
 #' @param ... One or more questions or answers 
+#' @param allow_retry Allow retry for incorrect answers.
 #' @param random_answer_order Display answers in a random order.
 #' 
 #' @examples 
@@ -65,6 +66,7 @@ question <- function(text,
                      type = c("auto", "single", "multiple"),
                      correct = "Correct!", 
                      incorrect = "Incorrect.",
+                     allow_retry = FALSE,
                      random_answer_order = FALSE) {
   
   # one time tutor initialization
@@ -107,6 +109,7 @@ question <- function(text,
   x$disableRanking <- TRUE
   x$nextQuestionText <- ""
   x$checkAnswerText <- "Submit Answer"
+  x$allowRetry <- allow_retry
   x$randomSortAnswers = random_answer_order
   x$json <- list(
     info = list(
