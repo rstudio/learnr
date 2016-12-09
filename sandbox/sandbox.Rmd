@@ -1,15 +1,6 @@
 ---
 title: "Tutor"
-output: 
-  html_document:
-    theme: default
-    highlight: textmate
-    fig_width: 6.5
-    fig_height: 4
-    toc: true
-    toc_float: true
-    toc_level: 3
-    df_print: paged
+output: tutor::tutorial
 runtime: shiny_prerendered
 ---
 
