@@ -123,7 +123,7 @@ install_knitr_hooks <- function() {
         class <- paste0("exercise", suffix)
         lines <- ifelse(is.numeric(options$exercise.lines), 
                         options$exercise.lines, 0)
-        caption <- ifelse(is.null(options$exercise.cap), "Exercise", options$exercise.cap)
+        caption <- ifelse(is.null(options$exercise.cap), "R Code", options$exercise.cap)
         paste0('<div class="tutor-', class, 
                '" data-label="', options$label, 
                '" data-caption="', caption, 

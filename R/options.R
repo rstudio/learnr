@@ -4,7 +4,7 @@
 #' Set various tutor options that control the display and evaluation of 
 #' exercises.
 #' 
-#' @param exercise.cap Caption for exercise chunk (defaults to \code{"Exercise")}.
+#' @param exercise.cap Caption for exercise chunk (defaults to \code{"R Code")}.
 #' @param exercise.eval Whether to pre-evaluate the exercise so the reader can 
 #'   see some default output (defaults to \code{FALSE}).
 #' @param exercise.timelimit Number of seconds to limit execution time to 
@@ -14,7 +14,7 @@
 #' @param exercise.checker Function used to check exercise answers.
 #' 
 #' @export
-tutor_options <- function(exercise.cap = "Exercise",
+tutor_options <- function(exercise.cap = "R Code",
                           exercise.eval = FALSE,
                           exercise.timelimit = 30,
                           exercise.lines = NULL,
