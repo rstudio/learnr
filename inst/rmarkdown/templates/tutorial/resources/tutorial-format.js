@@ -9,7 +9,7 @@ $(document).ready(function() {
     var button = $('<button class="btn btn-light btn-sm"></button>');
     var icon = $('<i class="fa fa-refresh"></i>');
     button.append(icon);
-    button.append("Restart Tutorial");
+    button.append("Start Tutorial Over");
     button.on('click', function() {
       tutor.startOver();
     });
