@@ -57,8 +57,85 @@ Tutor.prototype.$fireInit = function() {
 Tutor.prototype.$progressCallbacks = $.Callbacks();
 
 Tutor.prototype.$progressEvents = [];
+
+Tutor.prototype.$hasProgressEvent = function(element) {
+  var thiz = this;
+  for (var e = 0; e<thiz.$progressEvents.length; e++) {
+    var event = thiz.$progressEvents[e];
+    if ($(event.element).is($(element)))
+      return true;
+  }
+  return false;
+};
   
-Tutor.prototype.$fireProgress = function(label, event, correct) {
+Tutor.prototype.$fireProgress = function(event) {
+  
+  // record it
+  this.$progressEvents.push(event);
+
+  // fire event
+  try {
+    this.$progressCallbacks.fire(event);
+  } catch (e) {
+    console.log(e);
+  }
+};
+  
+Tutor.prototype.$fireSectionCompleted = function(element) {
+  
+  // Alias this
+  var thiz = this;
+  
+  // helper function to fire section completed
+  function fireCompleted(el) {
+    var event = {
+      element: el,
+      event: "section_completed"
+    };
+    thiz.$fireProgress(event);
+  }
+  
+  // find closest containing section (bail if there is none)
+  var section = $(element).parent().closest('.section');
+  if (section.length === 0)
+    return;
+  
+  // get all interactive components in the section
+  var components = section.find('.tutor-exercise, .quiz');
+  
+  // are they all submitted?
+  var allSubmitted = true;
+  for (var c = 0; c<components.length; c++) {
+    var component = components.get(c);
+    if (!thiz.$hasProgressEvent(component)) {
+      allSubmitted = false;
+      break;
+    }
+  }
+
+  // if they are then fire event
+  if (allSubmitted) {
+  
+    // fire the event
+    fireCompleted($(section).get(0));
+   
+    // fire for preceding siblings if they have no interactive components
+    var previousSections = section.prevAll('.section');
+    previousSections.each(function() {
+      var components = $(this).find('.tutor-exercise, .quiz');
+      if (components.length === 0)
+        fireCompleted(this);
+    });
+    
+    // if there is another section above us then process it
+    var parentSection = section.parent().closest('.section');
+    if (parentSection.length > 0) 
+      this.$fireSectionCompleted(section);
+  }
+}; 
+
+
+Tutor.prototype.$fireSubmissionProgress = function(label, event, correct) {
   
   // Alias this
   var thiz = this;
@@ -81,19 +158,11 @@ Tutor.prototype.$fireProgress = function(label, event, correct) {
     this.$progressEvents.push(progressEvent);
   
     // fire event
-    try {
-      thiz.$progressCallbacks.fire(progressEvent);
-    } catch (e) {
-      console.log(e);
-    }
+    this.$fireProgress(progressEvent);
     
-     // synthesize higher level section completed event
-     
+    // synthesize higher level section completed events
+    thiz.$fireSectionCompleted(progressEvent.element);
   }
-  
- 
-  
-  
 };  
   
 Tutor.prototype.$initializeProgress = function(progress_events) {
@@ -108,12 +177,12 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
     progress.event = progress.event[0];
     if (progress.correct !== null)
       progress.correct = progress.correct[0];
-    thiz.$fireProgress(progress.label, progress.event, progress.correct);
+    thiz.$fireSubmissionProgress(progress.label, progress.event, progress.correct);
   }
   
   // handle susequent progress messages
   Shiny.addCustomMessageHandler("tutor.progress_event", function(progress) {
-    thiz.$fireProgress(progress.label, progress.event, progress.correct);
+    thiz.$fireSubmissionProgress(progress.label, progress.event, progress.correct);
   });
 }; 
   
