@@ -42,7 +42,7 @@ This is what the running tutorial document looks like after the user has entered
     devtools::install_github("rstudio/tutor", auth_token = "33cdbf9d899fe6eff5022e67e21f08964f7c7b19")
     ```
 
-2. Install the current [RStudio Daily Build](https://dailies.rstudio.com) (v1.0.114 or higher) as it includes tools for easily running and previewing tutorials.
+2. Install the current [RStudio Preview Release](https://www.rstudio.com/products/rstudio/download/preview/) (v1.0.136 or higher) as it includes tools for easily running and previewing tutorials.
 
 ### Creating a Tutorial
 
@@ -52,16 +52,22 @@ A tutorial is just a standard R Markdown document that has three additional attr
 2. Includes one or more interactive components (exercises, quiz questions, etc.).
 3. Uses the `runtime: shiny_prerendered` directive in the YAML header.
 
+The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
+
+#### Tutorial Format
+
+While you can use tutorial elements with any Bootstrap compatible R Markdown format, the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in your tutorials. You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
+
+![](images/create-new-tutorial.png){width=609 height=482}
+
+#### Chunk Labels
+
 There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled `addition`:
 
 <div id="addition"></div>
 <script type="text/javascript">loadSnippet('addition')</script>
 
 This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.
-
-The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
-
-You can copy and paste the simple "Hello, Tutor!" example from above to get started creating your own tutorials.
 
 ### Running Tutorials
 

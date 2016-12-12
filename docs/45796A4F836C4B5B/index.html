@@ -360,7 +360,7 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li><p>Install the development version of the <strong>tutor</strong> package from GitHub as follows:</p>
 <pre class="r"><code>devtools::install_github(&quot;rstudio/tutor&quot;, auth_token = &quot;33cdbf9d899fe6eff5022e67e21f08964f7c7b19&quot;)</code></pre></li>
-<li><p>Install the current <a href="https://dailies.rstudio.com">RStudio Daily Build</a> (v1.0.114 or higher) as it includes tools for easily running and previewing tutorials.</p></li>
+<li><p>Install the current <a href="https://www.rstudio.com/products/rstudio/download/preview/">RStudio Preview Release</a> (v1.0.136 or higher) as it includes tools for easily running and previewing tutorials.</p></li>
 </ol>
 </div>
 <div id="creating-a-tutorial" class="section level3">
@@ -371,14 +371,24 @@ div.tocify {
 <li>Includes one or more interactive components (exercises, quiz questions, etc.).</li>
 <li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</li>
 </ol>
+<p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
+<div id="tutorial-format" class="section level4">
+<h4>Tutorial Format</h4>
+<p>While you can use tutorial elements with any R Markdown formats, the <strong>tutor</strong> package also includes a custom <code>tutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in your tutorials. You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
+<div class="figure">
+<img src="images/create-new-tutorial.png" width="609" height="482" />
+
+</div>
+</div>
+<div id="chunk-labels" class="section level4">
+<h4>Chunk Labels</h4>
 <p>There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled <code>addition</code>:</p>
 <div id="addition">
 
 </div>
 <script type="text/javascript">loadSnippet('addition')</script>
 <p>This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.</p>
-<p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
-<p>You can copy and paste the simple “Hello, Tutor!” example from above to get started creating your own tutorials.</p>
+</div>
 </div>
 <div id="running-tutorials" class="section level3">
 <h3>Running Tutorials</h3>
