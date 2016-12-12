@@ -179,6 +179,8 @@ You can also invalidate stored work by changing the ID or version of your tutori
 <div id="tutoryamlids"></div>
 <script type="text/javascript">loadSnippet('tutoryamlids', 'markdown')</script>
 
+Note that we use a reversed domain name for the tutorial id (`com.example.tutorials.my-first-tutorial`). This is to ensure that it is globally unique when deployed on a server with other tutorials. You could also choose to use a Universally Unique Identifier (UUID) created using the [**uuid**](https://cran.rstudio.com/web/packages/uuid/index.html) package.
+
 When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It's therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).
 
 
