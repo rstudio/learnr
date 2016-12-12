@@ -10,7 +10,12 @@ function Tutor() {
   // Alias this
   var thiz = this;
   
-  // API: subscribe to progress events
+  // API: provide init event
+  this.onInit = function(handler) {
+    this.$initCallbacks.add(handler);
+  };
+  
+  // API: provide progress events
   this.onProgress = function(handler) {
     this.$progressCallbacks.add(handler);
   };
@@ -31,6 +36,21 @@ function Tutor() {
   thiz.$initializeServer();
 }
 
+/* Init callbacks */
+Tutor.prototype.$initCallbacks = $.Callbacks();
+
+Tutor.prototype.$fireInit = function() {
+  
+  // Alias this
+  var thiz = this;
+  
+  // fire event
+  try {
+    thiz.$initCallbacks.fire();
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 /* Progress callbacks */
 
@@ -919,6 +939,9 @@ Tutor.prototype.$restoreState = function(objects) {
   
   // retreive state from server
   this.$serverRequest("restore_state", objects, function(data) {
+    
+    // fire init event
+    thiz.$fireInit();
     
     // initialize progress
     thiz.$initializeProgress(data.progress_events);

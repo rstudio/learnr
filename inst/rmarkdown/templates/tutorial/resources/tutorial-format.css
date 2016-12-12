@@ -1,0 +1,15 @@
+
+
+#section-TOC .toc-controls {
+  margin-bottom: 8px;
+  margin-top: 2px;
+}
+
+#section-TOC button {
+  margin: auto;
+  display: block;
+}
+
+#section-TOC button>i {
+  margin-right: 8px;
+}
