@@ -16,7 +16,7 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <tbody>
 <tr class="odd">
 <td><code>exercise.cap</code></td>
-<td>Caption for exercise chunk (defaults to "R Code")</td>
+<td>Caption for exercise chunk (defaults to "Code")</td>
 </tr>
 <tr class="even">
 <td><code>exercise.eval</code></td>
@@ -165,7 +165,7 @@ In addition to a text message the call to the `feedback` function also specifies
 
 ## Exercise Caption
 
-By default exercises are displayed with caption of "R Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. "Exercise" or Sandbox"). For example:
+By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. "Exercise" or Sandbox"). For example:
 
 <div id="exercisecaption"></div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>

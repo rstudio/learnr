@@ -4,11 +4,11 @@
 \alias{tutor_options}
 \title{Set tutor options}
 \usage{
-tutor_options(exercise.cap = "R Code", exercise.eval = FALSE,
+tutor_options(exercise.cap = "Code", exercise.eval = FALSE,
   exercise.timelimit = 30, exercise.lines = NULL, exercise.checker = NULL)
 }
 \arguments{
-\item{exercise.cap}{Caption for exercise chunk (defaults to \code{"R Code")}.}
+\item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
 
 \item{exercise.eval}{Whether to pre-evaluate the exercise so the reader can 
 see some default output (defaults to \code{FALSE}).}
