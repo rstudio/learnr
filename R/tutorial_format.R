@@ -1,5 +1,3 @@
-
-
 #' Tutorial document format
 #' 
 #' Long-form tutorial which includes narrative, figures, videos, exercises, and quesitons.
@@ -59,5 +57,6 @@ tutorial <- function(toc = TRUE,
   # return new output format
   rmarkdown::output_format(knitr = NULL,
                            pandoc = NULL,
+                           clean_supporting = FALSE,
                            base_format = base_format)
 }
