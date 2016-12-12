@@ -25,7 +25,7 @@ function Tutor() {
   this.startOver = function() {
     thiz.$removeState(function() {
       thiz.$serverRequest("remove_state", null, function() {
-        window.location.replace(window.location.href);
+        window.location.replace(window.location.origin + window.location.pathname);
       });
     });
   };
