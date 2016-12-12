@@ -35,6 +35,8 @@ function Tutor() {
 /* Progress callbacks */
 
 Tutor.prototype.$progressCallbacks = $.Callbacks();
+
+Tutor.prototype.$progressEvents = [];
   
 Tutor.prototype.$fireProgress = function(label, event, correct) {
   
@@ -45,15 +47,33 @@ Tutor.prototype.$fireProgress = function(label, event, correct) {
   var element = $('.tutor-exercise[data-label="' + label + '"]')
              .add('.quiz[data-label="' + label + '"]');
   
-  // fire event
-  if (element.length > 0) {
-    thiz.$progressCallbacks.fire({
+   if (element.length > 0) {
+  
+    // create event
+    var progressEvent = {
       element: element.get(0),
       label: label,
       event: event,
       correct: correct
-    });
+    };
+    
+    // record it
+    this.$progressEvents.push(progressEvent);
+  
+    // fire event
+    try {
+      thiz.$progressCallbacks.fire(progressEvent);
+    } catch (e) {
+      console.log(e);
+    }
+    
+     // synthesize higher level section completed event
+     
   }
+  
+ 
+  
+  
 };  
   
 Tutor.prototype.$initializeProgress = function(progress_events) {
