@@ -1,4 +1,21 @@
 
+#' Tutor HTML dependency
+#' 
+#' @details HTML dependency for core tutor JS and CSS. This should be included as a 
+#' dependency for custom tutorial formats that wish to ensure that that
+#' tutor.js and tutor.css are loaded prior their own scripts and stylesheets.
+#' 
+#' @export
+tutor_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "tutor",
+    version = utils::packageVersion("tutor"),
+    src = html_dependency_src("lib", "tutor"),
+    script = "tutor.js",
+    stylesheet = "tutor.css"
+  )
+}
+
 
 html_dependency_src <- function(...) {
   if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
@@ -11,16 +28,6 @@ html_dependency_src <- function(...) {
   }
 }
 
-
-tutor_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "tutor",
-    version = utils::packageVersion("tutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor.js",
-    stylesheet = "tutor.css"
-  )
-}
 
 localforage_html_dependency <- function() {
   htmltools::htmlDependency(

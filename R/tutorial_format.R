@@ -27,6 +27,19 @@ tutorial <- function(toc = TRUE,
                      pandoc_args = NULL,
                      ...) {
   
+  
+  # additional tutorial-format js and css
+  extra_dependencies <- append(extra_dependencies, list(
+    tutor_html_dependency(),
+    htmltools::htmlDependency(
+      name = "tutor-tutorial-format",
+      version = utils::packageVersion("tutor"),
+      src = system.file("rmarkdown/templates/tutorial/resources", package = "tutor"),
+      script = "tutorial-format.js",
+      stylesheet = "tutorial-format.css"
+    )
+  ))
+  
   # create base document format using standard html_document
   base_format <- rmarkdown::html_document(
     toc = toc,
