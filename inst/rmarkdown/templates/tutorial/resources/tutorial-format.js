@@ -12,7 +12,7 @@ $(document).ready(function() {
        dataUnique = dataUnique.attr('data-unique');
        var tocEntry = $("#section-TOC").find('li[data-unique="' + dataUnique + '"]');
        var check = $('<div class="pull-right"></div>');
-       var icon = $('<i class="fa fa-check"></i>');
+       var icon = $('<i class="fa fa-check progress-check"></i>');
        check.append(icon);
        check.append("&nbsp;");
        tocEntry.append(check);

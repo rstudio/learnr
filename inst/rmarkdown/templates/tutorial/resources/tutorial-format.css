@@ -13,5 +13,14 @@
 }
 
 #section-TOC button>i {
-  margin-right: 8px;
+  margin-right: 12px;
 }
+
+#section-TOC .progress-check {
+  color: #ccc;
+}
+
+#section-TOC .active .progress-check {
+  color: white;
+}
+
