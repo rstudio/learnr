@@ -3,14 +3,12 @@
 #section-TOC .toc-controls {
   margin-bottom: 10px;
   margin-top: 4px;
-  padding-left: 14px;
-  padding-right: 14px;
-  border-top: 1px solid #ccc;
+  padding-left: 13px;
+  padding-right: 13px;
 }
 
 #section-TOC button {
-  width: 100%;
-  margin-top: 10px;
+  margin-top: 4px;
   color: #777;
 }
 
