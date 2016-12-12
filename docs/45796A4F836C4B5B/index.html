@@ -374,7 +374,8 @@ div.tocify {
 <p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
 <div id="tutorial-format" class="section level4">
 <h4>Tutorial Format</h4>
-<p>While you can use tutorial elements with any R Markdown formats, the <strong>tutor</strong> package also includes a custom <code>tutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in your tutorials. You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
+<p>While you can use tutorial elements many different R Markdown formats (see the <a href="#tutorial-formats">Tutorial Formats</a> section below for details), the <strong>tutor</strong> package also includes a custom <code>tutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
+<p>You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
 <div class="figure">
 <img src="images/create-new-tutorial.png" width="609" height="482" />
 
@@ -515,7 +516,7 @@ Any other files (e.g. downloadable datasets)
 </div>
 <div id="tutorial-formats" class="section level2">
 <h2>Tutorial Formats</h2>
-<p>You aren’t limited to the default <code>html_document</code> format when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
+<p>You aren’t limited to the default <code>html_document</code> or <code>tutor::tutorial</code> formats when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
 <p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
 <p>You can run a live version of this example with:</p>
 <pre class="r"><code>tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>

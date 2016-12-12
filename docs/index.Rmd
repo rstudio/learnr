@@ -56,7 +56,9 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 #### Tutorial Format
 
-While you can use tutorial elements with any Bootstrap compatible R Markdown format, the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in your tutorials. You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
+While you can use tutorial elements many different R Markdown formats (see the [Tutorial Formats] section below for details), the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
+
+You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
 ![](images/create-new-tutorial.png){width=609 height=482}
 
@@ -192,7 +194,7 @@ When you change the ID or version of a tutorial all stored work associated with 
 
 ## Tutorial Formats
 
-You aren't limited to the default `html_document` format when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
+You aren't limited to the default `html_document` or `tutor::tutorial` formats when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
 
 <img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/>
 
