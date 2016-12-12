@@ -16,15 +16,6 @@ tutor_options(
 ```
 
 
-```{js}
-$(document).ready(function() {
-  window.tutor.onProgress(function(message) { 
-    console.log(message);
-  });
-});
-
-```
-
 ## intro
 
 This is the intro to the whole ball of wax.
