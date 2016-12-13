@@ -374,7 +374,7 @@ div.tocify {
 <p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
 <div id="tutorial-format" class="section level4">
 <h4>Tutorial Format</h4>
-<p>While you can use tutorial elements many different R Markdown formats (see the <a href="#tutorial-formats">Tutorial Formats</a> section below for details), the <strong>tutor</strong> package also includes a custom <code>tutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
+<p>While you can use tutorial elements many different R Markdown formats (see the article on <a href="formats.html">Tutorial Formats</a> for details), the <strong>tutor</strong> package also includes a custom <code>tutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
 <p>You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
 <div class="figure">
 <img src="images/create-new-tutorial.png" width="609" height="482" />
@@ -514,18 +514,6 @@ Any other files (e.g. downloadable datasets)
 <p>When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It’s therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).</p>
 </div>
 </div>
-</div>
-<div id="tutorial-formats" class="section level2">
-<h2>Tutorial Formats</h2>
-<p>You aren’t limited to the default <code>html_document</code> or <code>tutor::tutorial</code> formats when creating tutorials. Here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
-<p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
-<p>You can run a live version of this example with:</p>
-<pre class="r"><code>tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
-<p>You can use the <strong>tutor</strong> package with any R Markdown format that:</p>
-<ol style="list-style-type: decimal">
-<li><p>Inherits from the <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> format (this includes <a href="http://rmarkdown.rstudio.com/html_document_format.html"><code>html_document</code></a>, <a href="http://rmarkdown.rstudio.com/ioslides_presentation_format.html"><code>ioslides_presentation</code></a>, <a href="http://rmarkdown.rstudio.com/slidy_presentation_format.html"><code>slidy_presentation</code></a>, and many others).</p></li>
-<li><p>Is marked as <code>boostrap_compatible</code>. This is a parameter of <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> which indicates that it’s safe to inject <a href="http://getbootstrap.com/">Booststrap</a> CSS into the document.</p></li>
-</ol>
 </div>
 <div id="publishing" class="section level2">
 <h2>Publishing</h2>

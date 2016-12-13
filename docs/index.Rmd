@@ -56,7 +56,7 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 #### Tutorial Format
 
-While you can use tutorial elements many different R Markdown formats (see the [Tutorial Formats] section below for details), the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
+While you can use tutorial elements many different R Markdown formats (see the article on [Tutorial Formats](formats.html) for details), the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
 
 You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
@@ -192,25 +192,6 @@ You can also invalidate stored work by changing the ID or version of your tutori
 Note that we use a reversed domain name for the tutorial id (`com.example.tutorials.my-first-tutorial`). This is to ensure that it is globally unique when deployed on a server with other tutorials. You could also choose to use a Universally Unique Identifier (UUID) created using the [**uuid**](https://cran.rstudio.com/web/packages/uuid/index.html) package.
 
 When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It's therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).
-
-
-## Tutorial Formats
-
-You aren't limited to the default `html_document` or `tutor::tutorial` formats when creating tutorials. Here's an example of embedding a tutorial within a `slidy_presentation`:
-
-<img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/>
-
-You can run a live version of this example with:
-
-```r
-tutor::run_tutorial("slidy", package = "tutor")
-```
-
-You can use the **tutor** package with any R Markdown format that:
-
-1. Inherits from the [`html_document_base`](https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base) format (this includes [`html_document`](http://rmarkdown.rstudio.com/html_document_format.html), [`ioslides_presentation`](http://rmarkdown.rstudio.com/ioslides_presentation_format.html), [`slidy_presentation`](http://rmarkdown.rstudio.com/slidy_presentation_format.html), and many others).
-
-2. Is marked as `boostrap_compatible`. This is a parameter of [`html_document_base`](https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base) which indicates that it's safe to inject [Booststrap](http://getbootstrap.com/) CSS into the document.
 
 ## Publishing
 
