@@ -7,10 +7,10 @@ left:
     href: exercises.html
   - text: "Questions"
     href: questions.html
-  - text: "Formats"
-    href: formats.html
   - text: "Publishing"
     href: publishing.html
+  - text: "Formats"
+    href: formats.html
 right:
   - icon: fa-github
     href: https://github.com/rstudio/tutor
