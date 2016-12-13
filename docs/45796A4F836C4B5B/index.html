@@ -365,7 +365,7 @@ div.tocify {
 </div>
 <div id="creating-a-tutorial" class="section level3">
 <h3>Creating a Tutorial</h3>
-<p>A tutorial is just a standard R Markdown document that has three additional attributes:</p>
+<p>A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:</p>
 <ol style="list-style-type: decimal">
 <li>Loads the <strong>tutor</strong> package.</li>
 <li>Includes one or more interactive components (exercises, quiz questions, etc.).</li>
@@ -380,6 +380,7 @@ div.tocify {
 <img src="images/create-new-tutorial.png" width="609" height="482" />
 
 </div>
+<p>Note that tutorials aren’t just the Rmd source file, rather they are directories that contain the Rmd source file as well as other supporting files (e.g. figures and other images). As a result the default behavior is to create new tutorials within their own directory.</p>
 </div>
 <div id="chunk-labels" class="section level4">
 <h4>Chunk Labels</h4>

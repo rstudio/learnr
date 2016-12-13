@@ -46,7 +46,7 @@ This is what the running tutorial document looks like after the user has entered
 
 ### Creating a Tutorial
 
-A tutorial is just a standard R Markdown document that has three additional attributes:
+A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:
 
 1. Loads the **tutor** package.
 2. Includes one or more interactive components (exercises, quiz questions, etc.).
@@ -61,6 +61,8 @@ While you can use tutorial elements many different R Markdown formats (see the [
 You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
 ![](images/create-new-tutorial.png){width=609 height=482}
+
+Note that tutorials aren't just the Rmd source file, rather they are directories that contain the Rmd source file as well as other supporting files (e.g. figures and other images). As a result the default behavior is to create new tutorials within their own directory.
 
 #### Chunk Labels
 
