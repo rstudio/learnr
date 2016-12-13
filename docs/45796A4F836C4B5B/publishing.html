@@ -347,9 +347,7 @@ tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
 tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
 <div id="exercise-checkers" class="section level3 toc-ignore">
 <h3>Exercise Checkers</h3>
-<p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should either add that package as an <code>Imports</code> dependency of your package (so it’s installed automatically) or simply ask users to install that package alongside <strong>tutor</strong> package. For example:</p>
-<pre class="r"><code>install.packages(c(&quot;tutor&quot;, &quot;checkr&quot;))
-tutor::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
+<p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should be sure to add the package you use for checking as an <code>Imports</code> dependency of your package so it’s installed automatically along with your package.</p>
 <p>Note that it’s likely that the <strong>tutor</strong> package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.</p>
 </div>
 </div>

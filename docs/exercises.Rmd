@@ -100,7 +100,7 @@ You can also provide a sequence of hints that reveal progressively more of the s
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 
     
-## Checking Exercises
+## Exercise Checking
 
 The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example:
 
@@ -112,6 +112,8 @@ When you provide a "-check" chunk for an exercise, an additional "Submit Answer"
 <img src="images/exercise-submit.png"  width="730" height="92"/>
     
 This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.
+
+### Checker Function
 
 What the code within the "-check" chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user's exercise input:
 
@@ -162,6 +164,12 @@ You can use the `feedback` function to return the appropriate feedback after per
 Note that the `...` argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.
 
 In addition to a text message the call to the `feedback` function also specifies whether the code submitted for the exercise should be considered correct or incorrect.
+
+### Code Checking Packages
+
+The **[checkr](https://github.com/dtkaplan/checkr)** package currently provides code checking functions that are compatible with **tutor**. 
+
+We expect that additional tutor compatible checking packages will be developed and will update this section as they become available.
 
 ## Exercise Caption
 

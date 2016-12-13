@@ -33,12 +33,7 @@ tutor::run_tutorial("introduction", package = "mypackage")
 
 ### Exercise Checkers {.toc-ignore}
 
-Note that if your tutorial performs [exercise checking](exercises.html#checking-exercises) via an external package then you should either add that package as an `Imports` dependency of your package (so it's installed automatically) or simply ask users to install that package alongside **tutor** package. For example:
-
-```r
-install.packages(c("tutor", "checkr"))
-tutor::run_tutorial("introduction", package = "mypackage")
-```
+Note that if your tutorial performs [exercise checking](exercises.html#checking-exercises) via an external package then you should be sure to add the package you use for checking as an `Imports` dependency of your package so it's installed automatically along with your package.
 
 Note that it's likely that the **tutor** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
 

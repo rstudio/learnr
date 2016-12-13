@@ -448,8 +448,8 @@ Function used to check exercise answers.
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 </div>
 </div>
-<div id="checking-exercises" class="section level2">
-<h2>Checking Exercises</h2>
+<div id="exercise-checking" class="section level2">
+<h2>Exercise Checking</h2>
 <p>The <strong>tutor</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example:</p>
 <div id="exercisecheck">
 
@@ -458,6 +458,8 @@ Function used to check exercise answers.
 <p>When you provide a “-check” chunk for an exercise, an additional “Submit Answer” button is added to the exercise editor:</p>
 <p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
 <p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
+<div id="checker-function" class="section level3">
+<h3>Checker Function</h3>
 <p>What the code within the “-check” chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user’s exercise input:</p>
 <table>
 <thead>
@@ -536,6 +538,12 @@ Function to call to provide visual feedback to the user (see below for documenta
 <script type="text/javascript">loadSnippet('exercisefeedback')</script>
 <p>Note that the <code>...</code> argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.</p>
 <p>In addition to a text message the call to the <code>feedback</code> function also specifies whether the code submitted for the exercise should be considered correct or incorrect.</p>
+</div>
+<div id="code-checking-packages" class="section level3">
+<h3>Code Checking Packages</h3>
+<p>The <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> package currently provides code checking functions that are compatible with <strong>tutor</strong>.</p>
+<p>We expect that additional tutor compatible checking packages will be developed and will update this section as they become available.</p>
+</div>
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
