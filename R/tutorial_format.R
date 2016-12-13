@@ -28,7 +28,10 @@ tutorial <- function(toc = TRUE,
                      ...) {
   
   
-  # additional tutorial-format js and css
+  # additional tutorial-format js and css. note that we also include the 
+  # tutor_html_dependency() within our list of dependencies to ensure that
+  # tutor.js (and the API it provides) is always loaded prior to our
+  # tutorial-format.js file.
   extra_dependencies <- append(extra_dependencies, list(
     tutor_html_dependency(),
     htmltools::htmlDependency(
