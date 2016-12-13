@@ -37,8 +37,6 @@ $(document).ready(function() {
     $("#section-TOC").append(tocControls);
   }
   
-
-  
   // initialize components within tutor.onInit event
   tutor.onInit(function() {
     
