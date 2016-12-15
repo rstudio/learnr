@@ -72,34 +72,36 @@ get_all_state_objects <- function(session, exercise_output = TRUE) {
   objects
 }
 
-progress_events_from_state_objects <- function(state_objects) {
-  
-  progress_events <- list()
-  
-  sapply(state_objects, function(object) {
-    if (object$type %in% c("question_submission", "exercise_submission")) {
-      if (object$type == "question_submission") {
-        correct <- object$data$correct
-      }
-      else if (object$type == "exercise_submission") {
-        if (!is.null(object$data$feedback))
-          correct <- object$data$feedback$correct
-        else
-          correct <- NULL
-      }
-   
-      event <- list(label = object$id, 
-                    event = object$type,
-                    correct = correct)
-      
-      progress_events[[length(progress_events) + 1]] <<- event
-    }
+filter_state_objects <- function(state_objects, types) {
+  Filter(x = state_objects, function(object) {
+    object$type %in% types
   })
-  
-  progress_events
 }
 
+submissions_from_state_objects <- function(state_objects) {
+  filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
+}
 
+progress_events_from_state_objects <- function(state_objects) {
+
+  submissions <- submissions_from_state_objects(state_objects)
+  
+  lapply(submissions, function(submission) {
+    if (submission$type == "question_submission") {
+      correct <- submission$data$correct
+    }
+    else if (submission$type == "exercise_submission") {
+      if (!is.null(submission$data$feedback))
+        correct <- submission$data$feedback$correct
+      else
+        correct <- NULL
+    }
+    
+    list(label = submission$id, 
+         event = submission$type,
+         correct = correct)
+  })
+}
 
 save_object <- function(session, object_id, data) {
   tutorial_id <- read_request(session, "tutor.tutorial_id")

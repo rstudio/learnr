@@ -37,12 +37,15 @@ register_http_handlers <- function(session, metadata) {
     # get state objects
     state_objects <- get_all_state_objects(session, exercise_output = FALSE)
     
-    # create progress events from submissions
+    # create submissions from state objects
+    submissions <- submissions_from_state_objects(state_objects)
+    
+    # create progress events from state objects
     progress_events <- progress_events_from_state_objects(state_objects)
     
     # return data
     list(
-      state_objects = state_objects,
+      submissions = submissions,
       progress_events = progress_events
     )
   }))
