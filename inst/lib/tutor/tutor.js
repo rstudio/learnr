@@ -1131,22 +1131,23 @@ Tutor.prototype.$restoreState = function(objects) {
     // initialize progress
     thiz.$initializeProgress(data.progress_events);
     
-    // get submissions
-    var submissions = data.submissions;
+    // get state objects
+    var state_objects = data.state_objects;
     
     // work through each piece of state
-    for (var i = 0; i < submissions.length; i++) {
+    for (var i = 0; i < state_objects.length; i++) {
       
-      var submission = submissions[i];
-      var type = submission.type[0];
-      var label = submission.id[0];
+      var object = state_objects[i];
+      var type = object.type[0];
+      var id = object.id[0];
      
       // exercise submissions
       if (type === "exercise_submission") {
         
         // get code and checked status
-        var code = submission.data.code[0];
-        var checked = submission.data.checked[0];
+        var label = id;
+        var code = object.data.code[0];
+        var checked = object.data.checked[0];
       
         // find the editor 
         var editorContainer = thiz.$exerciseEditor(label);
@@ -1171,17 +1172,18 @@ Tutor.prototype.$restoreState = function(objects) {
       else if (type === "question_submission") {
         
         // find the quiz 
+        var label = id;
         var quiz = $('.quiz[data-label="' + label + '"]');
         
         // if we have answers then restore them
-        if (submission.data.answers.length > 0) {
+        if (object.data.answers.length > 0) {
           
           // select answers
           var answers = quiz.find('.answers').children('li');
           for (var a = 0; a < answers.length; a++) {
             var answer = $(answers[a]);
             var answerText = answer.children('label').attr('data-answer');
-            if (submission.data.answers.indexOf(answerText) != -1)
+            if (object.data.answers.indexOf(answerText) != -1)
               answer.children('input').prop('checked', true); 
           }
           

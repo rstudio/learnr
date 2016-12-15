@@ -103,9 +103,6 @@ video_progress_event <- function(session, video_url, time, total_time) {
 
   
   # save for later replay
-  
-  # TODO: change terminology from "submissions" to "objects"
-  
   save_video_progress(session, video_url, time, total_time)
 }
 

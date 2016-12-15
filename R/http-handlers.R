@@ -34,15 +34,15 @@ register_http_handlers <- function(session, metadata) {
     if (!is.null(input))
       initialize_objects_from_client(session, input)
     
-    # get submissions
-    submissions <- get_all_submissions(session, exercise_output = FALSE)
+    # get state objects
+    state_objects <- get_all_state_objects(session, exercise_output = FALSE)
     
     # create progress events from submissions
-    progress_events <- progress_events_from_submissions(submissions)
+    progress_events <- progress_events_from_state_objects(state_objects)
     
     # return data
     list(
-      submissions = submissions,
+      objects = state_objects,
       progress_events = progress_events
     )
   }))

@@ -55,7 +55,7 @@ get_exercise_submission <- function(session, label) {
 }
 
 
-get_all_submissions <- function(session, exercise_output = TRUE) {
+get_all_state_objects <- function(session, exercise_output = TRUE) {
   
   # get all of the objects
   objects <- get_objects(session)
@@ -72,24 +72,24 @@ get_all_submissions <- function(session, exercise_output = TRUE) {
   objects
 }
 
-progress_events_from_submissions <- function(submissions) {
+progress_events_from_state_objects <- function(state_objects) {
   
   progress_events <- list()
   
-  sapply(submissions, function(submission) {
-    if (submission$type %in% c("question_submission", "exercise_submission")) {
-      if (submission$type == "question_submission") {
-        correct <- submission$data$correct
+  sapply(state_objects, function(object) {
+    if (object$type %in% c("question_submission", "exercise_submission")) {
+      if (object$type == "question_submission") {
+        correct <- object$data$correct
       }
-      else if (submission$type == "exercise_submission") {
-        if (!is.null(submission$data$feedback))
-          correct <- submission$data$feedback$correct
+      else if (object$type == "exercise_submission") {
+        if (!is.null(object$data$feedback))
+          correct <- object$data$feedback$correct
         else
           correct <- NULL
       }
    
-      event <- list(label = submission$id, 
-                    event = submission$type,
+      event <- list(label = object$id, 
+                    event = object$type,
                     correct = correct)
       
       progress_events[[length(progress_events) + 1]] <<- event
