@@ -431,8 +431,12 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
           // function to call on state changed
           function onStateChange() {
             
-            // get current state
-            var state = player.getPlayerState();
+            // get current state. this can fail if the browser blocked
+            // the video player so we try/catch it
+            var state = null;
+            try { state = player.getPlayerState(); } catch(e) {}
+            if (state == null)
+              return;
            
             // don't report for unstarted & queued
             if (state == -1 || state == YT.PlayerState.CUED) {
