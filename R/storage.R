@@ -87,14 +87,13 @@ progress_events_from_submissions <- function(submissions) {
         else
           correct <- NULL
       }
-    }
    
-    event <- list(label = submission$id, 
-                  event = submission$type,
-                  correct = correct)
-    
-    progress_events[[length(progress_events) + 1]] <<- event
-    
+      event <- list(label = submission$id, 
+                    event = submission$type,
+                    correct = correct)
+      
+      progress_events[[length(progress_events) + 1]] <<- event
+    }
   })
   
   progress_events

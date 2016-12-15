@@ -77,6 +77,21 @@ register_http_handlers <- function(session, metadata) {
                               correct = correct)
   }))
   
+  # video progress handler
+  session$registerDataObj("video_progress", NULL, rpc_handler(function(input) {
+    
+    # extract inputs
+    video_url <- input$video_url
+    time <- input$time
+    total_time <- input$total_time
+    
+    # fire event
+    video_progress_event(session = session,
+                         video_url = video_url,
+                         time = time,
+                         total_time = total_time)
+  }))
+  
   # help handler
   session$registerDataObj("help",  NULL, rpc_handler(function(input) {
     

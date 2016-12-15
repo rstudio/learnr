@@ -95,7 +95,7 @@ video_progress_event <- function(session, video_url, time, total_time) {
                event = "video_progress",
                data = list(video_url = video_url,
                            time = time,
-                           total_time = time))
+                           total_time = total_time))
   
   # notify client side listeners
   
@@ -103,6 +103,9 @@ video_progress_event <- function(session, video_url, time, total_time) {
 
   
   # save for later replay
+  
+  # TODO: change terminology from "submissions" to "objects"
+  
   save_video_progress(session, video_url, time, total_time)
 }
 
@@ -115,6 +118,8 @@ debug_event_recorder <- function(tutorial_id,
                                  data) {
   cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
   cat("event: ", event, "\n", sep = "")
+  str(data)
+  cat("\n")
 }
 
 

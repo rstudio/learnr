@@ -358,34 +358,64 @@ Tutor.prototype.$initializeVideos = function() {
 };
 
 Tutor.prototype.$initializeYouTubePlayers = function() {
-  
+
   // YouTube JavaScript API
   // https://developers.google.com/youtube/iframe_api_reference
   
-  function onReady(event) {
-    var player = event.target;
-    console.log('Video Ready: ' + player.getVideoUrl());
-  }
+  // alias this
+  var thiz = this;
   
-  function onStateChange(event) {
-    var player = event.target;
-    if (event.data == YT.PlayerState.PLAYING)
-      console.log("Now Playing " + player.getVideoUrl());
-    else if (event.data == YT.PlayerState.ENDED)
-      console.log("Ended " + player.getVideoUrl());
-  }
-  
+  // attach to youtube videos
   var videos = $('iframe.tutor-video-youtube');
   if (videos.length > 0) {
     this.$injectScript('https://www.youtube.com/iframe_api', function() {
+      
       YT.ready(function() {
+        
         videos.each(function() {
-          var player = new YT.Player(this, {
-            events: {
-              'onReady': onReady,
-              'onStateChange': onStateChange
+          
+          // video and player
+          var video = $(this);
+          var player = null;
+          var lastState = -1;
+          
+           // helper to report progress to the server
+          function reportProgress() {
+            thiz.$reportVideoProgress(player.getVideoUrl(),
+                                      player.getCurrentTime(),
+                                      player.getDuration());
+          }
+          
+          // function to call on state changed
+          function onStateChange() {
+            
+            // get current state
+            var state = player.getPlayerState();
+           
+            // don't report for unstarted & queued
+            if (state == -1 || state == YT.PlayerState.CUED) {
+            
             }
-          });
+            
+            // always report progress for playing
+            else if (state == YT.PlayerState.PLAYING) {
+              reportProgress();
+            }
+            
+            // report for other states as long as they aren't duplicates
+            else if (state != lastState) {
+              reportProgress();
+            }
+            
+            // update last state
+            lastState = state;
+          }
+          
+          // create the player
+          player = new YT.Player(this, { events: { 'onStateChange': onStateChange } });
+        
+          // poll for state change every 5 seconds
+          window.setInterval(onStateChange, 5000);
         });
       });
     });
@@ -410,6 +440,14 @@ Tutor.prototype.$initializeVimeoPlayers = function() {
       });
     });
   }
+};
+
+Tutor.prototype.$reportVideoProgress = function(video_url, time, total_time) {
+  this.$serverRequest("video_progress", {
+    "video_url": video_url,
+    "time": time,
+    "total_time": total_time
+  });
 };
 
 
