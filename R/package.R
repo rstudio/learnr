@@ -7,7 +7,6 @@
 #' @importFrom markdown markdownToHTML markdownExtensions
 #' @importFrom evaluate evaluate
 #' @importFrom withr with_envvar
-#' @importFrom parallel mcparallel mccollect
 #' @importFrom rprojroot find_root is_r_package
 #' @importFrom shiny reactiveValues observeEvent req isolate invalidateLater isolate observe reactive
 NULL
