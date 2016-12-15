@@ -40,12 +40,16 @@ register_http_handlers <- function(session, metadata) {
     # create submissions from state objects
     submissions <- submissions_from_state_objects(state_objects)
     
+    # create video progress from state objects
+    video_progress <- video_progress_from_state_objects(state_objects)
+    
     # create progress events from state objects
     progress_events <- progress_events_from_state_objects(state_objects)
     
     # return data
     list(
       submissions = submissions,
+      video_progress = video_progress,
       progress_events = progress_events
     )
   }))

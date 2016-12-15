@@ -97,11 +97,8 @@ video_progress_event <- function(session, video_url, time, total_time) {
                            time = time,
                            total_time = total_time))
   
-  # notify client side listeners
-  
-  # TODO, need to evolve schema to accomodate video_progress
+  # TODO: notify client side listeners (evolve schema to accomodate video_progress)
 
-  
   # save for later replay
   save_video_progress(session, video_url, time, total_time)
 }

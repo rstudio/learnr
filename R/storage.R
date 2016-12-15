@@ -82,6 +82,10 @@ submissions_from_state_objects <- function(state_objects) {
   filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
 }
 
+video_progress_from_state_objects <- function(state_objects) {
+  filter_state_objects(state_objects, c("video_progress"))
+}
+
 progress_events_from_state_objects <- function(state_objects) {
 
   submissions <- submissions_from_state_objects(state_objects)

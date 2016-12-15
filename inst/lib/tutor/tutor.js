@@ -351,13 +351,31 @@ Tutor.prototype.$initializeVideos = function() {
     });
   });
   
-  // initialize video player APIs
-  this.$initializeYouTubePlayers();
-  this.$initializeVimeoPlayers();
+  // we'll initialize video player APIs off of $restoreState
+};
+
+Tutor.prototype.$initializeVideoPlayers = function(video_progress) {
+  
+  this.$initializeYouTubePlayers(video_progress);
+  this.$initializeVimeoPlayers(video_progress);
   
 };
 
-Tutor.prototype.$initializeYouTubePlayers = function() {
+Tutor.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
+  for (var v = 0; v<video_progress.length; v++) {
+    var id = video_progress[v].id[0];
+    if (src == id) {
+      var time = video_progress[v].data.time[0];
+      var total_time = video_progress[v].data.total_time[0];
+      // don't return a restore time if we are within 5 seconds of the end of the video
+      if (time > 0 && ((total_time - time) > 5))
+        return time;
+    }
+  }
+  return 0;
+};
+
+Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
 
   // YouTube JavaScript API
   // https://developers.google.com/youtube/iframe_api_reference
@@ -376,14 +394,35 @@ Tutor.prototype.$initializeYouTubePlayers = function() {
           
           // video and player
           var video = $(this);
+          var videoUrl = video.attr('src');
           var player = null;
           var lastState = -1;
           
            // helper to report progress to the server
           function reportProgress() {
-            thiz.$reportVideoProgress(player.getVideoUrl(),
+            thiz.$reportVideoProgress(videoUrl,
                                       player.getCurrentTime(),
                                       player.getDuration());
+          }
+          
+          // helper to restore video time. attempt to restore to 10 seconds prior
+          // to the last save point (to recapture frame of reference)
+          function restoreTime() {
+            var restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, video_progress);
+            if (restoreTime > 10) {
+              player.mute();
+              player.seekTo(restoreTime - 10, true);
+              player.playVideo();
+              setTimeout(function() {
+                player.pauseVideo();
+                player.unMute();
+              }, 1000);
+            }
+          }
+          
+          // function to call onReady
+          function onReady() {
+            restoreTime();  
           }
           
           // function to call on state changed
@@ -412,7 +451,11 @@ Tutor.prototype.$initializeYouTubePlayers = function() {
           }
           
           // create the player
-          player = new YT.Player(this, { events: { 'onStateChange': onStateChange } });
+          player = new YT.Player(this, { events: { 
+              'onReady': onReady,
+              'onStateChange': onStateChange 
+            }
+          });
         
           // poll for state change every 5 seconds
           window.setInterval(onStateChange, 5000);
@@ -422,7 +465,7 @@ Tutor.prototype.$initializeYouTubePlayers = function() {
   }
 };
 
-Tutor.prototype.$initializeVimeoPlayers = function() {
+Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
   
   // Vimeo JavaScript API
   // https://github.com/vimeo/player.js
@@ -1134,6 +1177,8 @@ Tutor.prototype.$restoreState = function(objects) {
     // restore exercise and question submissions
     thiz.$restoreSubmissions(data.submissions);
     
+    // initialize video players
+    thiz.$initializeVideoPlayers(data.video_progress);
     
   });
 };
