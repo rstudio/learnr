@@ -40,6 +40,13 @@ filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
 ```
 
 
+![](https://www.youtube.com/watch?v=TJmNvfhLCoI)
+
+Foo
+
+![](https://player.vimeo.com/video/76979871)
+
+
 ### in between 
 
 In betwixt and in between.
