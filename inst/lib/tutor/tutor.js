@@ -1131,77 +1131,86 @@ Tutor.prototype.$restoreState = function(objects) {
     // initialize progress
     thiz.$initializeProgress(data.progress_events);
     
-    // get submissions
-    var submissions = data.submissions;
+    // restore exercise and question submissions
+    thiz.$restoreSubmissions(data.submissions);
     
-    // work through each piece of state
-    for (var i = 0; i < submissions.length; i++) {
+    
+  });
+};
+
+
+Tutor.prototype.$restoreSubmissions = function(submissions) {
+ 
+  // alias this
+  var thiz = this;
+ 
+  for (var i = 0; i < submissions.length; i++) {
+    
+    var submission = submissions[i];
+    var type = submission.type[0];
+    var id = submission.id[0];
+   
+    // exercise submissions
+    if (type === "exercise_submission") {
       
-      var submission = submissions[i];
-      var type = submission.type[0];
-      var id = submission.id[0];
-     
-      // exercise submissions
-      if (type === "exercise_submission") {
+      // get code and checked status
+      var label = id;
+      var code = submission.data.code[0];
+      var checked = submission.data.checked[0];
+    
+      // find the editor 
+      var editorContainer = thiz.$exerciseEditor(label);
+      if (editorContainer.length > 0) {
         
-        // get code and checked status
-        var label = id;
-        var code = submission.data.code[0];
-        var checked = submission.data.checked[0];
-      
-        // find the editor 
-        var editorContainer = thiz.$exerciseEditor(label);
-        if (editorContainer.length > 0) {
-          
-          // restore code
-          var editor = ace.edit(editorContainer.attr('id'));
-          editor.setValue(code, -1);
-          
-          // fire restore event on the container (also set
-          // restoring flag on the exercise so we don't scroll it
-          // into view after restoration)
-          thiz.$exerciseForLabel(label).data('restoring', true);
-          thiz.$showExerciseProgress(label, 'run', true);
-          editorContainer.trigger('restore', {
-            check: checked
-          });
-        }
+        // restore code
+        var editor = ace.edit(editorContainer.attr('id'));
+        editor.setValue(code, -1);
+        
+        // fire restore event on the container (also set
+        // restoring flag on the exercise so we don't scroll it
+        // into view after restoration)
+        thiz.$exerciseForLabel(label).data('restoring', true);
+        thiz.$showExerciseProgress(label, 'run', true);
+        editorContainer.trigger('restore', {
+          check: checked
+        });
       }
+    }
+    
+    // quesiton submissions
+    else if (type === "question_submission") {
       
-      // quesiton submissions
-      else if (type === "question_submission") {
+      // find the quiz 
+      var label = id;
+      var quiz = $('.quiz[data-label="' + label + '"]');
+      
+      // if we have answers then restore them
+      if (submission.data.answers.length > 0) {
         
-        // find the quiz 
-        var label = id;
-        var quiz = $('.quiz[data-label="' + label + '"]');
+        // select answers
+        var answers = quiz.find('.answers').children('li');
+        for (var a = 0; a < answers.length; a++) {
+          var answer = $(answers[a]);
+          var answerText = answer.children('label').attr('data-answer');
+          if (submission.data.answers.indexOf(answerText) != -1)
+            answer.children('input').prop('checked', true); 
+        }
         
-        // if we have answers then restore them
-        if (submission.data.answers.length > 0) {
+        // click submit button if we applied an answer
+        if (answers.find('input:checked').length > 0) {
           
-          // select answers
-          var answers = quiz.find('.answers').children('li');
-          for (var a = 0; a < answers.length; a++) {
-            var answer = $(answers[a]);
-            var answerText = answer.children('label').attr('data-answer');
-            if (submission.data.answers.indexOf(answerText) != -1)
-              answer.children('input').prop('checked', true); 
-          }
+          // set restoring flag on quiz element
+          quiz.data('restoring', true);
           
-          // click submit button if we applied an answer
-          if (answers.find('input:checked').length > 0) {
-            
-            // set restoring flag on quiz element
-            quiz.data('restoring', true);
-            
-            // click the button
-            var checkAnswer = quiz.find('.checkAnswer'); 
-            checkAnswer.trigger('click');
-          }
+          // click the button
+          var checkAnswer = quiz.find('.checkAnswer'); 
+          checkAnswer.trigger('click');
         }
       }
     }
-  });
+  }  
 };
+
 
 Tutor.prototype.$removeState = function(completed) {
   this.$store.clear()
