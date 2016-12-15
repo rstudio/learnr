@@ -227,6 +227,14 @@ Tutor.prototype.$countLines = function(str) {
 };
 
 
+Tutor.prototype.$injectScript = function(src, onload) {
+  var script = document.createElement('script');
+  script.src = src;
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+  $(script).load(onload);
+};
+
 
 
 /* Videos */
@@ -237,9 +245,15 @@ Tutor.prototype.$initializeVideos = function() {
   var youtubeRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   var vimeoRegex = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
   
-  // check a url for a video
+  // check a url for video typtes
+  function isYouTubeVideo(src) {
+    return src.match(youtubeRegex);
+  }
+  function isVimeoVideo(src) {
+    return src.match(vimeoRegex);
+  }
   function isVideo(src) {
-    return src.match(youtubeRegex) || src.match(vimeoRegex);
+    return isYouTubeVideo(src) || isVimeoVideo(src);
   }
   
   // function to normalize a video src url (web view -> embed)
@@ -248,8 +262,8 @@ Tutor.prototype.$initializeVideos = function() {
     // youtube
     var youtubeMatch = src.match(youtubeRegex);
     if (youtubeMatch)
-      return "https://www.youtube.com/embed/" + youtubeMatch[2];
-   
+      return "https://www.youtube.com/embed/" + youtubeMatch[2] + "?enablejsapi=1";
+    
     // vimeo
     var vimeoMatch = src.match(vimeoRegex);
     if (vimeoMatch)
@@ -297,7 +311,8 @@ Tutor.prototype.$initializeVideos = function() {
   $("img").each(function() {
     
     // skip if this isn't a video
-    if (!isVideo($(this).attr('src')))
+    var videoSrc = $(this).attr('src');
+    if (!isVideo(videoSrc))
       return;
       
     // hide while we process
@@ -319,10 +334,14 @@ Tutor.prototype.$initializeVideos = function() {
         attrs[attr.nodeName] = attr.nodeValue;
     });
     
-    // create and initialize iframe
+    // replace the image with the iframe inside a video container
     $(this).replaceWith(function() {
       var iframe = $('<iframe/>', attrs);
       iframe.addClass('tutor-video');
+      if (isYouTubeVideo(videoSrc))
+        iframe.addClass('tutor-video-youtube');
+      else if (isVimeoVideo(videoSrc))
+        iframe.addClass('tutor-video-vimeo');
       iframe.attr('allowfullscreen', '');
       iframe.css('display', '');
       var container = $('<div class="tutor-video-container"></div>');
@@ -331,8 +350,67 @@ Tutor.prototype.$initializeVideos = function() {
       return container;
     });
   });
+  
+  // initialize video player APIs
+  this.$initializeYouTubePlayers();
+  this.$initializeVimeoPlayers();
+  
 };
 
+Tutor.prototype.$initializeYouTubePlayers = function() {
+  
+  // YouTube JavaScript API
+  // https://developers.google.com/youtube/iframe_api_reference
+  
+  function onReady(event) {
+    var player = event.target;
+    console.log('Video Ready: ' + player.getVideoUrl());
+  }
+  
+  function onStateChange(event) {
+    var player = event.target;
+    if (event.data == YT.PlayerState.PLAYING)
+      console.log("Now Playing " + player.getVideoUrl());
+    else if (event.data == YT.PlayerState.ENDED)
+      console.log("Ended " + player.getVideoUrl());
+  }
+  
+  var videos = $('iframe.tutor-video-youtube');
+  if (videos.length > 0) {
+    this.$injectScript('https://www.youtube.com/iframe_api', function() {
+      YT.ready(function() {
+        videos.each(function() {
+          var player = new YT.Player(this, {
+            events: {
+              'onReady': onReady,
+              'onStateChange': onStateChange
+            }
+          });
+        });
+      });
+    });
+  }
+};
+
+Tutor.prototype.$initializeVimeoPlayers = function() {
+  
+  // Vimeo JavaScript API
+  // https://github.com/vimeo/player.js
+  
+  var videos = $('iframe.tutor-video-vimeo');
+  if (videos.length > 0) {
+    this.$injectScript('https://player.vimeo.com/api/player.js', function() {
+      videos.each(function() {
+        var player = new Vimeo.Player(this);
+        player.ready().then(function() {
+          player.getVideoUrl().then(function(url) {
+            console.log('Vimeo Ready: ' + url);
+          });
+        });
+      });
+    });
+  }
+};
 
 
 /* Exercise initialization and shared utility functions */ 
