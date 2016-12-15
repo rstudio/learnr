@@ -362,16 +362,21 @@ Tutor.prototype.$initializeVideoPlayers = function(video_progress) {
 };
 
 Tutor.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
+  
+  // find a restore time for this video
   for (var v = 0; v<video_progress.length; v++) {
     var id = video_progress[v].id[0];
     if (src == id) {
       var time = video_progress[v].data.time[0];
       var total_time = video_progress[v].data.total_time[0];
-      // don't return a restore time if we are within 5 seconds of the end of the video
-      if (time > 0 && ((total_time - time) > 5))
+      // don't return a restore time if we are within 10 seconds of the beginning
+      // or the end of the video.
+      if (time > 10 && ((total_time - time) > 10))
         return time;
     }
   }
+  
+  // no time to restore, return 0
   return 0;
 };
 
@@ -409,15 +414,13 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
           // to the last save point (to recapture frame of reference)
           function restoreTime() {
             var restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, video_progress);
-            if (restoreTime > 10) {
-              player.mute();
-              player.seekTo(restoreTime - 10, true);
-              player.playVideo();
-              setTimeout(function() {
-                player.pauseVideo();
-                player.unMute();
-              }, 1000);
-            }
+            player.mute();
+            player.playVideo();
+            setTimeout(function() {
+              player.pauseVideo();
+              player.seekTo(restoreTime, true);
+              player.unMute();
+            }, 2000);
           }
           
           // function to call onReady
@@ -467,6 +470,9 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
 
 Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
   
+  // alias this
+  var thiz = this;
+  
   // Vimeo JavaScript API
   // https://github.com/vimeo/player.js
   
@@ -474,11 +480,48 @@ Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
   if (videos.length > 0) {
     this.$injectScript('https://player.vimeo.com/api/player.js', function() {
       videos.each(function() {
+        
+        // video and player
+        var video = $(this)
+        var videoUrl = video.attr('src');
         var player = new Vimeo.Player(this);
+        var lastReportedTime = null;
+        
+        // restore time if we can
         player.ready().then(function() {
-          player.getVideoUrl().then(function(url) {
-            console.log('Vimeo Ready: ' + url);
-          });
+          var restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, video_progress);
+          if (restoreTime > 0) {
+            player.setCurrentTime(restoreTime).then(function(seconds) {
+              player.pause();
+            }); 
+          }
+        });
+        
+        // helper function to report progress
+        function reportProgress(data, throttle) {
+          
+          // default throttle to false
+          if (throttle === undefined)
+            throttle = false;
+          
+          // if we are throttling then don't report if the last
+          // reported time is within 5 seconds
+          if (throttle && (lastReportedTime != null) && 
+              ((data.seconds - lastReportedTime) < 5)) {
+            return;
+          }
+          
+          // report progress
+          thiz.$reportVideoProgress(videoUrl, data.seconds, data.duration);
+          lastReportedTime = data.seconds;
+        }
+        
+        // report progress on various events
+        player.on('play', reportProgress);
+        player.on('pause', reportProgress);
+        player.on('ended', reportProgress);
+        player.on('timeupdate', function(data) {
+          reportProgress(data, true);
         });
       });
     });
