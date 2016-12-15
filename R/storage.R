@@ -1,11 +1,15 @@
 
 
 save_question_submission <- function(session, label, question, answers, correct) {
-  save_object(session, label, tutor_object("question_submission", list(
-    question = question,
-    answers = answers,
-    correct = correct
-  )))
+  save_object(
+    session = session, 
+    object_id = label, 
+    tutor_object("question_submission", list(
+      question = question,
+      answers = answers,
+      correct = correct
+    ))
+  )
 }
 
 save_exercise_submission <- function(session, label, code, output, error_message, checked, feedback) {
@@ -23,12 +27,27 @@ save_exercise_submission <- function(session, label, code, output, error_message
   }
    
   # save object
-  save_object(session, label, tutor_object("exercise_submission", list(
-    code = code,
-    output = output,
-    checked = checked,
-    feedback = feedback
-  )))  
+  save_object(
+    session = session, 
+    object_id = label, 
+    tutor_object("exercise_submission", list(
+      code = code,
+      output = output,
+      checked = checked,
+      feedback = feedback
+    ))
+  )  
+}
+
+save_video_progress <- function(session, video_url, time, total_time) {
+  save_object(
+    session = session, 
+    object_id = video_url, 
+    tutor_object("video_progress", list(
+      time = time,
+      total_time = total_time
+    ))
+  )
 }
 
 get_exercise_submission <- function(session, label) {

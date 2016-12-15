@@ -1,12 +1,11 @@
 
 
-record_event <- function(session, label, event, data) {
+record_event <- function(session, event, data) {
   recorder <- getOption("tutor.event_recorder", default = NULL)
   if (!is.null(recorder)) {
     recorder(tutorial_id = read_request(session, "tutor.tutorial_id"), 
              tutorial_version = read_request(session, "tutor.tutorial_version"),
              user_id = read_request(session, "tutor.user_id"), 
-             label = label,
              event = event, 
              data = data)
   }
@@ -30,9 +29,9 @@ question_submission_event <- function(session,
                                       correct) {
   # notify server-side listeners
   record_event(session = session,
-               label = label,
                event = "question_submission",
-               data = list(question = question,
+               data = list(label = label,
+                           question = question,
                            answers = answers,
                            correct = correct))
   
@@ -59,9 +58,9 @@ exercise_submission_event <- function(session,
                                       feedback = NULL) {
   # notify server-side listeners
   record_event(session = session,
-               label = label,
                event = "exercise_submission",
-               data = list(code = code,
+               data = list(label = label,
+                           code = code,
                            output = output,
                            error_message = error_message,
                            checked = checked,
@@ -89,16 +88,33 @@ exercise_submission_event <- function(session,
   )
 }
 
+video_progress_event <- function(session, video_url, time, total_time) {
+  
+  # notify server side listeners
+  record_event(session = session,
+               event = "video_progress",
+               data = list(video_url = video_url,
+                           time = time,
+                           total_time = time))
+  
+  # notify client side listeners
+  
+  # TODO, need to evolve schema to accomodate video_progress
+
+  
+  # save for later replay
+  save_video_progress(session, video_url, time, total_time)
+}
+
 
 
 debug_event_recorder <- function(tutorial_id, 
                                  tutorial_version,
                                  user_id, 
-                                 label, 
                                  event, 
                                  data) {
   cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
-  cat(label, ": ", event, "\n", sep = "")
+  cat("event: ", event, "\n", sep = "")
 }
 
 
