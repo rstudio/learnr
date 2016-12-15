@@ -42,7 +42,7 @@ register_http_handlers <- function(session, metadata) {
     
     # return data
     list(
-      objects = state_objects,
+      state_objects = state_objects,
       progress_events = progress_events
     )
   }))
