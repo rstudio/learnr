@@ -371,6 +371,10 @@ Tutor.prototype.$initializeVideos = function() {
 
 Tutor.prototype.$initializeVideoPlayers = function(video_progress) {
   
+  // don't interact with video player APIs in Qt
+  if (/\bQt\//.test(window.navigator.userAgent))
+    return;
+    
   this.$initializeYouTubePlayers(video_progress);
   this.$initializeVimeoPlayers(video_progress);
   
