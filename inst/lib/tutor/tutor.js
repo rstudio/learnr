@@ -235,6 +235,21 @@ Tutor.prototype.$injectScript = function(src, onload) {
   $(script).load(onload);
 };
 
+Tutor.prototype.$debounce = function(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
 
 
 /* Videos */
@@ -1223,6 +1238,9 @@ Tutor.prototype.$restoreState = function(objects) {
     // initialize video players
     thiz.$initializeVideoPlayers(data.video_progress);
     
+    // initialize client state
+    thiz.$initializeClientState(data.client_state);
+    
   });
 };
 
@@ -1307,6 +1325,40 @@ Tutor.prototype.$removeState = function(completed) {
       console.log(err);
       completed();
     });
+};
+
+Tutor.prototype.$initializeClientState = function(client_state) {
+  
+  // alias this
+  var thiz = this;
+  
+  // client state object
+  var last_client_state = {
+    scroll_position: [0]
+  };
+  
+  // debounced checker for scroll position
+  var maybePersistClientState = this.$debounce(function() {
+  
+    // get current client state
+    var current_client_state = {
+      'scroll_position': [$(window).scrollTop()]
+    };
+	  
+    // if it changed then persist it and upate last
+    if (current_client_state.scroll_position[0] != 
+        last_client_state.scroll_position[0]) {
+      thiz.$serverRequest("set_client_state", current_client_state, null);
+      last_client_state = current_client_state;
+    }
+  }, 1000);
+  
+  // check for client state on scroll position changed
+  $(window).scroll(maybePersistClientState);
+  
+  // restore scroll position
+  if (client_state.scroll_position)
+    $(window).scrollTop(client_state.scroll_position);
 };
 
 

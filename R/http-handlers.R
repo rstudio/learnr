@@ -46,8 +46,12 @@ register_http_handlers <- function(session, metadata) {
     # create progress events from state objects
     progress_events <- progress_events_from_state_objects(state_objects)
     
+    # get client state
+    client_state <- get_client_state(session)
+    
     # return data
     list(
+      client_state = client_state,
       submissions = submissions,
       video_progress = video_progress,
       progress_events = progress_events
@@ -97,6 +101,11 @@ register_http_handlers <- function(session, metadata) {
                          video_url = video_url,
                          time = time,
                          total_time = total_time)
+  }))
+  
+  # client state handler
+  session$registerDataObj("set_client_state",  NULL, rpc_handler(function(input) {
+    save_client_state(session, input)
   }))
   
   # help handler

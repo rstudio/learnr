@@ -50,6 +50,24 @@ save_video_progress <- function(session, video_url, time, total_time) {
   )
 }
 
+client_state_object_id <- "tutor-client-state-825E9CBB-FF7A-4C2C-A201-A075AB758F34"
+
+save_client_state <- function(session, data) {
+  save_object(
+    session = session,
+    object_id = client_state_object_id,
+    tutor_object("client_state", data)
+  )
+}
+
+get_client_state <- function(session) {
+  object <- get_object(session, client_state_object_id)
+  if (!is.null(object))
+    object$data
+  else
+    NULL
+}
+
 get_exercise_submission <- function(session, label) {
   get_object(session = session, object_id = label)
 }
