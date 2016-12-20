@@ -11,11 +11,13 @@ $(document).ready(function() {
        // find toc entry w/ this data-unique and add a check to it
        dataUnique = dataUnique.attr('data-unique');
        var tocEntry = $("#section-TOC").find('li[data-unique="' + dataUnique + '"]');
-       var check = $('<div class="pull-right"></div>');
-       var icon = $('<i class="fa fa-check progress-check"></i>');
-       check.append(icon);
-       check.append("&nbsp;");
-       tocEntry.append(check);
+       if (tocEntry.find('i.progress-check').length === 0) {
+         var check = $('<div class="pull-right"></div>');
+         var icon = $('<i class="fa fa-check progress-check"></i>');
+         check.append(icon);
+         check.append("&nbsp;");
+         tocEntry.append(check);
+       }
     }
   }
   
