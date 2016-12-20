@@ -1102,9 +1102,11 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
       value.solution = thiz.$exerciseSupportCode(label + "-solution");  
         
       // check
-      if (this.check)
+      if (this.check) {
+        value.code_check = thiz.$exerciseSupportCode(label + "-code-check");
         value.check = thiz.$exerciseCheckCode(label);
-
+      }
+      
       // some randomness to ensure we re-execute on button clicks
       value.timestamp = new Date().getTime();
       

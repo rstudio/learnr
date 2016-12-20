@@ -27,6 +27,7 @@ install_knitr_hooks <- function() {
                                                           "hint",
                                                           "hint-\\d+",
                                                           "solution", 
+                                                          "code-check",
                                                           "check")) {
     support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")
     if (grepl(support_regex, options$label)) {
