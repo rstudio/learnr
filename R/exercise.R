@@ -238,7 +238,6 @@ evaluate_exercise <- function(exercise, envir) {
   # return a list with the various results of the expression
   list(
     feedback = checker_feedback,
-    evaluate_output = evaluate_result,
     error_message = NULL,
     html_output = html_output
   )
