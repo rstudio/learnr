@@ -510,9 +510,13 @@ Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
         player.ready().then(function() {
           var restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, video_progress);
           if (restoreTime > 0) {
-            player.setCurrentTime(restoreTime).then(function(seconds) {
-              player.pause();
-            }); 
+            player.getVolume().then(function(volume) {
+              player.setCurrentTime(restoreTime).then(function() {
+                player.pause().then(function() {
+                  player.setVolume(volume);
+                });
+              }); 
+            });
           }
         });
         
