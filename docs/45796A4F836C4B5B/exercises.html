@@ -584,8 +584,18 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </tbody>
 </table>
 </div>
-<div id="code-checking-packages" class="section level3">
-<h3>Code Checking Packages</h3>
+<div id="code-checking" class="section level3">
+<h3>Code Checking</h3>
+<p>You can also choose to check the user’s code <em>prior</em> to it being submitted to R. To do this, include a “-code-check” chunk in addition to a “-check” chunk. The checker function will be called prior to the execution of the chunk with the <code>envir_result</code> and <code>evaluate_result</code> parameters set to <code>NULL</code>. If it returns “incorrect” feedback it is displayed and R code chunk is not executed.</p>
+<p>Here’s how we’d update the example checking function to also perform code checking:</p>
+<div id="codefeedback">
+
+</div>
+<script type="text/javascript">loadSnippet('codefeedback')</script>
+<p>Here the <code>is_bad_code</code> function is a proxy for whatever logic your code checking provides to validate user source code.</p>
+</div>
+<div id="checking-packages" class="section level3">
+<h3>Checking Packages</h3>
 <p>The <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> package currently provides code checking functions that are compatible with <strong>tutor</strong>.</p>
 <p>We expect that additional tutor compatible checking packages will be developed and will update this section as they become available.</p>
 </div>

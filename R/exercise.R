@@ -66,7 +66,7 @@ setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame())
           code = exercise$code,
           output = result$html_output,
           error_message = result$error_message,
-          checked = !is.null(exercise$check),
+          checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback
         )
         
@@ -92,6 +92,35 @@ setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame())
 
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
+  
+  # see if we need to do code checking
+  if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
+    
+    # get the checker
+    checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
+    
+    # call the checker 
+    checker_feedback <- checker(
+      label = exercise$label,
+      user_code = exercise$code,
+      solution_code = exercise$solution,
+      check_code = exercise$code_check,
+      envir_result = NULL,
+      evaluate_result = NULL
+    )
+    
+    # if it's an 'incorrect' feedback result then return it
+    if (is.list(checker_feedback)) {
+      feedback_validated(checker_feedback)
+      if (!checker_feedback$correct) {
+        return(list(
+          feedback = checker_feedback,
+          error_message = NULL,
+          html_output = feedback_as_html(checker_feedback)
+        ))
+      }
+    }
+  }
   
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "tutor-exercise")
@@ -246,7 +275,6 @@ evaluate_exercise <- function(exercise, envir) {
 error_result <- function(error_message) {
   list(
     feedback = NULL,
-    evaluate_output = NULL,
     error_message = error_message,
     html_output = error_message_html(error_message)
   )

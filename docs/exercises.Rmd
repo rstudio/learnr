@@ -190,8 +190,18 @@ The fields within this list and their valid values include:
 </tbody>
 </table>
 
+### Code Checking
 
-### Code Checking Packages
+You can also choose to check the user's code *prior* to it being submitted to R. To do this, include a "-code-check" chunk in addition to a "-check" chunk. The checker function will be called prior to the execution of the chunk with the `envir_result` and `evaluate_result` parameters set to `NULL`. If it returns "incorrect" feedback it is displayed and R code chunk is not executed.
+
+Here's how we'd update the example checking function to also perform code checking:
+
+<div id="codefeedback"></div>
+<script type="text/javascript">loadSnippet('codefeedback')</script>
+
+Here the `is_bad_code` function is a proxy for whatever logic your code checking provides to validate user source code.
+
+### Checking Packages
 
 The **[checkr](https://github.com/dtkaplan/checkr)** package currently provides code checking functions that are compatible with **tutor**. 
 
