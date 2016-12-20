@@ -65,7 +65,7 @@ HTMLWidgets.widget({
                  message = message + ' ' + data_message;
               }
             });
-            $(el).find('.responses').children(msg_class).children('div').text(message);
+            $(el).find('.responses').children(msg_class).children('div').html(message);
             
             // record answer if we aren't restoring
             if (!$(el).data('restoring'))
