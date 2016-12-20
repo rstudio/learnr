@@ -9,8 +9,10 @@ library(tutor)
 options(tutor.event_recorder = tutor:::debug_event_recorder)
 tutor_options(
   exercise.eval = FALSE, 
-  exercise.checker = function(feedback, ...) {
-    feedback("Nice job!", correct = TRUE, location = "append")
+  exercise.checker = function(...) {
+    list(message = "Nice job!", 
+         correct = TRUE, 
+         location = "append")
   }
 )
 ```

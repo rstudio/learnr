@@ -1,29 +1,10 @@
 
-#' Provide exercise feedback
-#' 
-#' @param message Feedback message. This can be either plain text or a set of HTML tags
-#'   created using the \pkg{htmltools} package.
-#' @param correct Was the answer to the exercise correct.
-#' @param type Type of feedback. The standard types are "success", "info", "error", and "warning".
-#'   Each of these types will result in the feedback text being enclosed in a colored
-#'   panel. A value of "auto" will result in "success" when \code{correct == TRUE} and
-#'   "error" otherwise. Pass "custom" to pass the feedback message through without any 
-#'   decoration.
-#' @param location Location of feedback relative to output.
-#' 
-#' @export
-feedback <- function(message,
-                     correct,
-                     type = c("auto", "success", "info", "warning", "error", "custom"),
-                     location = c("append", "prepend", "replace")) {
+
+# Provide exercise feedback
+feedback <- function(message, correct, type, location) {
   
-  # resolve type
-  type <- match.arg(type)
-  if (identical(type, "auto"))
-    type <- ifelse(correct, "success", "error")
-  
-  # return feedback
-  structure(class = "tutor_feedback", list(
+  # return validated feedback 
+  feeback_validated(list(
     message = message,
     correct = correct,
     type = type,
@@ -31,19 +12,50 @@ feedback <- function(message,
   ))
 }
 
+# return feedback if it's valid, otherwise throw an error
+feedback_validated <- function(feedback) {
+  
+  if (is.null(feedback))
+    return(feedback)
+  
+  if (!is.character(feedback$message))
+    stop("Feedback must include a 'message' character vector", call. = FALSE)
+  
+  if (!is.logical(feedback$correct))
+    stop("Feedback must include a 'correct' logical value", call. = FALSE)
+  
+  feedback_types <- c("auto", "success", "info", "warning", "error", "custom")
+  if (is.null(feedback$type))
+    feedback$type <- "auto"
+  if (!feedback$type %in% feedback_types)
+    stop("Feedback 'type' field must be one of these values: ", 
+         paste(feedback_types, collapse = ", "), call. = FALSE)
+  
+  feedback_locations <- c("append", "prepend", "replace")
+  if (is.null(feedback$location))
+    feedback$location <- "append"
+  if (!feedback$location %in% feedback_locations)
+    stop("Feedback 'location' field must be one of these values: ",
+         paste(feedback_locations, collapse = ", "), call. = FALSE)
+  
+  feedback
+}
 
-#' @importFrom htmltools as.tags
-#' @export
-as.tags.tutor_feedback <- function(x, ...) {
-  if (x$type == "custom") {
-    div(x$message)
+# return feedback as html
+feedback_as_html <- function(feedback) {
+  
+  if (is.null(feedback$type) || identical(feedback$type, "auto"))
+    feedback$type <- ifelse(feedback$correct, "success", "error")
+    
+  if (feedback$type == "custom") {
+    div(feedback$message)
   }
-  else if (x$type %in% c("success", "info", "warning", "error")) {
-    if (x$type == "error")
-      x$type <- "danger"
-    div(class = paste0("alert alert-", x$type), 
+  else if (feedback$type %in% c("success", "info", "warning", "error")) {
+    if (feedback$type == "error")
+      feedback$type <- "danger"
+    div(class = paste0("alert alert-", feedback$type), 
         role = "alert", 
-        x$message
+        feedback$message
     )
   }
   else {

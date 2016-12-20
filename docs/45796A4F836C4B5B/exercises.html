@@ -521,23 +521,68 @@ The R environment after the execution of the chunk.
 The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.
 </td>
 </tr>
-<tr class="odd">
+<tr class="pdd">
 <td>
-<code>feedback</code>
+<code>…</code>
 </td>
 <td>
-Function to call to provide visual feedback to the user (see below for documentation).
+Unused (include for compatibility with parameters to be added in the future)
 </td>
 </tr>
 </tbody>
 </table>
-<p>You can use the <code>feedback</code> function to return the appropriate feedback after performing whatever checks are specified. For example:</p>
+<p>The checker function should return an R list which contains several fields indicating the result of the check. For example:</p>
 <div id="exercisefeedback">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisefeedback')</script>
-<p>Note that the <code>...</code> argument is included so that the checker function remains compatible if additional arguments are subsequently added to the API.</p>
-<p>In addition to a text message the call to the <code>feedback</code> function also specifies whether the code submitted for the exercise should be considered correct or incorrect.</p>
+<p>The fields within this list and their valid values include:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Field
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>message</code>
+</td>
+<td>
+Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html">htmltools</a> package.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>correct</code>
+</td>
+<td>
+TRUE/FALSE logical value indicating whether the submitted answer was correct.
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>type</code>
+</td>
+<td>
+Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>location</code>
+</td>
+<td>
+Location for feedback (“append”, “prepend”, or “replace”).
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="code-checking-packages" class="section level3">
 <h3>Code Checking Packages</h3>

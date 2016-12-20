@@ -218,13 +218,15 @@ evaluate_exercise <- function(exercise, envir) {
     solution_code = exercise$solution,
     check_code = exercise$check,
     envir_result = envir,
-    evaluate_result = evaluate_result,
-    feedback = feedback
+    evaluate_result = evaluate_result
   )
+  
+  # validate the feedback
+  feedback_validated(checker_feedback)
   
   # amend output with feedback as required
   if (!is.null(checker_feedback)) {
-    feedback_html <- htmltools::as.tags(checker_feedback)
+    feedback_html <- feedback_as_html(checker_feedback)
     if (checker_feedback$location == "append")
       html_output <- htmltools::tagList(html_output, feedback_html)
     else if (checker_feedback$location == "prepend")
