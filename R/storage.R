@@ -65,7 +65,7 @@ get_client_state <- function(session) {
   if (!is.null(object))
     object$data
   else
-    NULL
+    list()
 }
 
 get_exercise_submission <- function(session, label) {
