@@ -13,11 +13,10 @@ record_event <- function(session, event, data) {
 }
 
 
-broadcast_progress_event_to_client <- function(session, event, label, correct) {
+broadcast_progress_event_to_client <- function(session, event, data) {
   session$sendCustomMessage("tutor.progress_event", list(
     event = event,
-    label = label,
-    correct = correct
+    data = data
   ))
 }
 
@@ -38,8 +37,7 @@ question_submission_event <- function(session,
   # notify client side listeners
   broadcast_progress_event_to_client(session = session, 
                                      event = "question_submission", 
-                                     label = label, 
-                                     correct = correct)
+                                     data = list(label = label, correct = correct))
   
   # store submission for later replay
   save_question_submission(session = session, 
@@ -70,11 +68,10 @@ exercise_submission_event <- function(session,
   if (checked)
     correct <- feedback$correct
   else
-    correct <- NULL
+    correct <- TRUE
   broadcast_progress_event_to_client(session = session, 
-                                     event = "exercise_submission", 
-                                     label = label, 
-                                     correct = correct)
+                                     event = "exercise_submission",
+                                     data = list(label = label, correct = correct))
   
   # save submission for later replay
   save_exercise_submission(
@@ -90,14 +87,20 @@ exercise_submission_event <- function(session,
 
 video_progress_event <- function(session, video_url, time, total_time) {
   
+  # data for event
+  data <- list(
+    video_url = video_url,
+    time = time,
+    total_time = total_time
+  )
+  
   # notify server side listeners
   record_event(session = session,
                event = "video_progress",
-               data = list(video_url = video_url,
-                           time = time,
-                           total_time = total_time))
+               data = data)
   
-  # TODO: notify client side listeners (evolve schema to accomodate video_progress)
+  # notify client side listeners 
+  broadcast_progress_event_to_client(session, "video_progress", data)
 
   # save for later replay
   save_video_progress(session, video_url, time, total_time)

@@ -106,9 +106,9 @@ video_progress_from_state_objects <- function(state_objects) {
 
 progress_events_from_state_objects <- function(state_objects) {
 
+  # first submissions
   submissions <- submissions_from_state_objects(state_objects)
-  
-  lapply(submissions, function(submission) {
+  progress_events <- lapply(submissions, function(submission) {
     if (submission$type == "question_submission") {
       correct <- submission$data$correct
     }
@@ -116,13 +116,29 @@ progress_events_from_state_objects <- function(state_objects) {
       if (!is.null(submission$data$feedback))
         correct <- submission$data$feedback$correct
       else
-        correct <- NULL
+        correct <- TRUE
     }
     
-    list(label = submission$id, 
-         event = submission$type,
-         correct = correct)
+    list(event = submission$type,
+         data = list(
+           label = submission$id, 
+           correct = correct
+         ))
   })
+  
+  # now video_progress
+  video_progress <- video_progress_from_state_objects(state_objects)
+  video_progress_events <- lapply(video_progress, function(progress) {
+    list(event = "video_progress",
+         data = list(
+           video_url = progress$id,
+           time = progress$data$time,
+           total_time = progress$data$total_time
+         ))
+  })
+  
+  # return lists appended together
+  append(progress_events, video_progress_events)
 }
 
 save_object <- function(session, object_id, data) {

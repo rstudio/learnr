@@ -58,12 +58,14 @@ Tutor.prototype.$progressCallbacks = $.Callbacks();
 
 Tutor.prototype.$progressEvents = [];
 
-Tutor.prototype.$hasProgressEvent = function(element) {
+Tutor.prototype.$hasCompletedProgressEvent = function(element) {
   var thiz = this;
   for (var e = 0; e<thiz.$progressEvents.length; e++) {
     var event = thiz.$progressEvents[e];
-    if ($(event.element).is($(element)))
-      return true;
+    if ($(event.element).is($(element))) {
+      if (event.completed)
+        return true;
+    }
   }
   return false;
 };
@@ -101,20 +103,20 @@ Tutor.prototype.$fireSectionCompleted = function(element) {
     return;
   
   // get all interactive components in the section
-  var components = section.find('.tutor-exercise, .quiz');
+  var components = section.find('.tutor-exercise, .quiz, .tutor-video');
   
-  // are they all submitted?
-  var allSubmitted = true;
+  // are they all completed?
+  var allCompleted = true;
   for (var c = 0; c<components.length; c++) {
     var component = components.get(c);
-    if (!thiz.$hasProgressEvent(component)) {
-      allSubmitted = false;
+    if (!thiz.$hasCompletedProgressEvent(component)) {
+      allCompleted = false;
       break;
     }
   }
 
   // if they are then fire event
-  if (allSubmitted) {
+  if (allCompleted) {
   
     // fire the event
     fireCompleted($(section).get(0));
@@ -135,24 +137,35 @@ Tutor.prototype.$fireSectionCompleted = function(element) {
 }; 
 
 
-Tutor.prototype.$fireSubmissionProgress = function(label, event, correct) {
+Tutor.prototype.$fireProgressEvent = function(event, data) {
   
   // Alias this
   var thiz = this;
   
-  // find element
-  var element = $('.tutor-exercise[data-label="' + label + '"]')
-             .add('.quiz[data-label="' + label + '"]');
+  // progress event to fire
+  var progressEvent = { event: event, data: data };
   
-   if (element.length > 0) {
+  // determine element and completed status
+  if (event == "exercise_submission" || event == "question_submission") {
+    
+    var element = $('.tutor-exercise[data-label="' + data.label + '"]').add(
+                    '.quiz[data-label="' + data.label + '"]');
+    if (element.length > 0) {
+      progressEvent.element = element;
+      progressEvent.completed = true;  
+    }
+    
+  }
+  else if (event == "video_progress") {
+    var videoElement = $('iframe[src="' + data.video_url + '"]');
+    if (videoElement.length > 0) {
+      progressEvent.element = videoElement;
+      progressEvent.completed = (2*data.time) > data.total_time;
+    }
+  }
   
-    // create event
-    var progressEvent = {
-      element: element.get(0),
-      label: label,
-      event: event,
-      correct: correct
-    };
+  // fire it if we found an element
+  if (progressEvent.element) {
     
     // record it
     this.$progressEvents.push(progressEvent);
@@ -172,17 +185,29 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
   
   // replay progress messages from previous state
   for (var i = 0; i<progress_events.length; i++) {
+    
+    // get event
     var progress = progress_events[i];
-    progress.label = progress.label[0];
-    progress.event = progress.event[0];
-    if (progress.correct !== null)
-      progress.correct = progress.correct[0];
-    thiz.$fireSubmissionProgress(progress.label, progress.event, progress.correct);
+    var progressEvent = progress.event[0];
+    
+    // determine data
+    var progressEventData = {};
+    if (progressEvent == "exercise_submission" || progressEvent == "quesiton_submission") {
+      progressEventData.label = progress.data.label[0];
+      progressEventData.correct = progress.data.correct[0];
+    }
+    else if (progressEvent == "video_progress") {
+      progressEventData.video_url = progress.data.video_url[0];
+      progressEventData.time = progress.data.time[0];
+      progressEventData.total_time = progress.data.total_time[0];
+    }
+    
+    thiz.$fireProgressEvent(progressEvent, progressEventData);
   }
   
   // handle susequent progress messages
   Shiny.addCustomMessageHandler("tutor.progress_event", function(progress) {
-    thiz.$fireSubmissionProgress(progress.label, progress.event, progress.correct);
+    thiz.$fireProgressEvent(progress.event, progress.data);
   });
 }; 
   
