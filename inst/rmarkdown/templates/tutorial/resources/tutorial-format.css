@@ -8,12 +8,16 @@
 }
 
 #section-TOC button {
-  margin-top: 4px;
   color: #777;
+  padding-right: 30px;
+  padding-left: 25px;
+  margin: auto;
+  display: block;
+  margin-top: 15px;
 }
 
 #section-TOC button>i {
-  margin-right: 12px;
+  margin-right: 8px;
 }
 
 #section-TOC .progress-check {
