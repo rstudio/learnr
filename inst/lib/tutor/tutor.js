@@ -458,13 +458,15 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
           // to the last save point (to recapture frame of reference)
           function restoreTime() {
             var restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, video_progress);
-            player.mute();
-            player.playVideo();
-            setTimeout(function() {
-              player.pauseVideo();
-              player.seekTo(restoreTime, true);
-              player.unMute();
-            }, 2000);
+            if (restoreTime > 0) {
+              player.mute();
+              player.playVideo();
+              setTimeout(function() {
+                player.pauseVideo();
+                player.seekTo(restoreTime, true);
+                player.unMute();
+              }, 2000);
+            }
           }
           
           // function to call onReady
