@@ -432,16 +432,29 @@ Function used to check exercise answers.
 </div>
 <div id="hints-and-solutions" class="section level2">
 <h2>Hints and Solutions</h2>
-<p>You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. To do this simply create a new code chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
+<p>You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. Hints can be based on either R code snippets or on custom markdown/HTML content.</p>
+<div id="r-code-hints" class="section level3">
+<h3>R Code Hints</h3>
+<p>To create a hint or solution based on R code simply create a new code chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
 <div id="exercisesolution">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesolution')</script>
 <p>A “Hint” or “Solution” button is added to the left side of the exercise header region:</p>
 <p><img src="images/solution.png"  width="732" height="183"/></p>
+</div>
+<div id="markdown-hints" class="section level3">
+<h3>Markdown Hints</h3>
+<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
+<div id="exercisehintdiv">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisehintdiv', 'markdown')</script>
+<p>The content within the <code>&lt;div&gt;</code> will be displayed underneath the R code editor for the exercise whenever the user presses the “Hint” button.</p>
+</div>
 <div id="multiple-hints" class="section level3">
 <h3>Multiple Hints</h3>
-<p>You can also provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3“, etc.) for your exercise chunk. For example:</p>
+<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3“, etc.) for your exercise chunk. For example:</p>
 <div id="exercisehints">
 
 </div>
