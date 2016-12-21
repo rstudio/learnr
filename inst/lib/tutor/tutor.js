@@ -623,6 +623,19 @@ Tutor.prototype.$exerciseCheckCode = function(label) {
   return this.$exerciseSupportCode(label + "-check");
 };
 
+Tutor.prototype.$exerciseHintDiv = function(label) {
+  
+  // look for a div w/ hint id
+  var id = "section-" + label + "-hint";
+  var hintDiv = $('div#' + id);
+  
+  // ensure it isn't a section then return
+  if (hintDiv.length > 0 && !hintDiv.hasClass('section'))
+    return hintDiv;
+  else
+    return null;
+};
+
 Tutor.prototype.$exerciseHintsCode = function(label) {
   
   // look for a single hint
@@ -905,6 +918,18 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
     hints.push(solution);
     solution = null;
   }
+  var hintDiv = thiz.$exerciseHintDiv(label);
+  
+  // helper function to add a hint button
+  function addHintButton(caption) {
+    var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
+    button.attr('role', 'button');
+    button.attr('title', caption);
+    button.append($('<i class="fa fa-lightbulb-o"></i>'));
+    button.append(' ' + caption); 
+    panel_heading.append(button); 
+    return button;
+  }
   
   // helper function to record solution/hint requests
   function recordHintRequest(index) {
@@ -914,8 +939,34 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
     });
   }
 
-  // if we have a solution or a hint
-  if (solution || hints) {
+  // if we have a hint div
+  if (hintDiv != null) {
+    
+    // mark the div as a hint and hide it
+    hintDiv.addClass('tutor-hint');
+    hintDiv.css('display', 'none');
+    
+    // create hint button
+    var button = addHintButton("Hint");
+   
+    // handle showing and hiding the hint
+    button.on('click', function() {
+      
+      // record the request
+      recordHintRequest(0);
+      
+      // prepend it to the output frame (if a hint isn't already in there)
+      var outputFrame = exercise.children('.tutor-exercise-output-frame');
+      if (outputFrame.children('.tutor-hint').length == 0) {
+        var hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit');
+        outputFrame.prepend(hintDivClone);
+      }
+    });
+    
+  }
+  
+  // else if we have a solution or hints
+  else if (solution || hints) {
     
     // determine caption
     var caption = null;
@@ -942,13 +993,8 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
     var hintIndex = 0;
     
     // create solution buttion
-    var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
-    button.attr('role', 'button');
-    button.attr('title', caption);
-    button.append($('<i class="fa fa-lightbulb-o"></i>'));
-    button.append(' ' + caption); 
-    panel_heading.append(button);      
-    
+    var button = addHintButton(caption);
+   
     // handle showing and hiding the popover
     button.on('click', function() {
       

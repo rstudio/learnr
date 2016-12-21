@@ -71,7 +71,11 @@
 }
 
 .tutor-solution-popover.top>.arrow {
-  margin-left: 0px;
+  margin-left: 0;
+}
+
+.tutor-hint {
+  margin-bottom: 20px;
 }
 
 .ace-tm {
