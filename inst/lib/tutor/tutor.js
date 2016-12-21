@@ -188,18 +188,18 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
     
     // get event
     var progress = progress_events[i];
-    var progressEvent = progress.event[0];
+    var progressEvent = progress.event;
     
     // determine data
     var progressEventData = {};
     if (progressEvent == "exercise_submission" || progressEvent == "quesiton_submission") {
-      progressEventData.label = progress.data.label[0];
-      progressEventData.correct = progress.data.correct[0];
+      progressEventData.label = progress.data.label;
+      progressEventData.correct = progress.data.correct;
     }
     else if (progressEvent == "video_progress") {
-      progressEventData.video_url = progress.data.video_url[0];
-      progressEventData.time = progress.data.time[0];
-      progressEventData.total_time = progress.data.total_time[0];
+      progressEventData.video_url = progress.data.video_url;
+      progressEventData.time = progress.data.time;
+      progressEventData.total_time = progress.data.total_time;
     }
     
     thiz.$fireProgressEvent(progressEvent, progressEventData);
@@ -409,10 +409,10 @@ Tutor.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
   
   // find a restore time for this video
   for (var v = 0; v<video_progress.length; v++) {
-    var id = video_progress[v].id[0];
+    var id = video_progress[v].id;
     if (src == id) {
-      var time = video_progress[v].data.time[0];
-      var total_time = video_progress[v].data.total_time[0];
+      var time = video_progress[v].data.time;
+      var total_time = video_progress[v].data.total_time;
       // don't return a restore time if we are within 10 seconds of the beginning
       // or the end of the video.
       if (time > 10 && ((total_time - time) > 10))
@@ -1288,16 +1288,16 @@ Tutor.prototype.$restoreSubmissions = function(submissions) {
   for (var i = 0; i < submissions.length; i++) {
     
     var submission = submissions[i];
-    var type = submission.type[0];
-    var id = submission.id[0];
+    var type = submission.type;
+    var id = submission.id;
    
     // exercise submissions
     if (type === "exercise_submission") {
       
       // get code and checked status
       var label = id;
-      var code = submission.data.code[0];
-      var checked = submission.data.checked[0];
+      var code = submission.data.code;
+      var checked = submission.data.checked;
     
       // find the editor 
       var editorContainer = thiz.$exerciseEditor(label);
@@ -1369,7 +1369,7 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   
   // client state object
   var last_client_state = {
-    scroll_position: [0]
+    scroll_position: 0
   };
   
   // debounced checker for scroll position
@@ -1377,12 +1377,12 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   
     // get current client state
     var current_client_state = {
-      'scroll_position': [$(window).scrollTop()]
+      'scroll_position': $(window).scrollTop()
     };
 	  
     // if it changed then persist it and upate last
-    if (current_client_state.scroll_position[0] != 
-        last_client_state.scroll_position[0]) {
+    if (current_client_state.scroll_position != 
+        last_client_state.scroll_position) {
       thiz.$serverRequest("set_client_state", current_client_state, null);
       last_client_state = current_client_state;
     }
