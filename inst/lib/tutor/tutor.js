@@ -1391,9 +1391,10 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   // check for client state on scroll position changed
   $(window).scroll(maybePersistClientState);
   
-  // restore scroll position
-  if (client_state.scroll_position)
-    $(window).scrollTop(client_state.scroll_position);
+  // restore scroll position (don't currently do this because it
+  // seems janky to do so)
+  // if (client_state.scroll_position)
+  //  $(window).scrollTop(client_state.scroll_position);
 };
 
 
