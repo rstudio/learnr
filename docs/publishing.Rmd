@@ -51,7 +51,7 @@ For the first two methods you can use the RStudio IDE's integrated [one-click pu
 
 ![](images/shinyapps-deploy-faithful.png){width=669 height=421}
 
-Note that you should install the current [Preview Release](https://www.rstudio.com/products/rstudio/download/preview/) of RStudio before attempting to use one-click publishing with tutorials.
+Note that you should install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or higher) before attempting to use one-click publishing with tutorials.
 
 ### Resource Usage
 

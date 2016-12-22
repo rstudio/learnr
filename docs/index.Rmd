@@ -42,7 +42,7 @@ This is what the running tutorial document looks like after the user has entered
     devtools::install_github("rstudio/tutor", auth_token = "33cdbf9d899fe6eff5022e67e21f08964f7c7b19")
     ```
 
-2. Install the current [RStudio Preview Release](https://www.rstudio.com/products/rstudio/download/preview/) (v1.0.136 or higher) as it includes tools for easily running and previewing tutorials.
+2. Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.
 
 ### Creating a Tutorial
 
