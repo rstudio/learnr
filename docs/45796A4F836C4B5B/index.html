@@ -400,6 +400,17 @@ div.tocify {
 <pre class="r"><code>tutor::run_tutorial(&quot;hello&quot;, package = &quot;tutor&quot;)</code></pre>
 </div>
 </div>
+<div id="tutorial-types" class="section level2">
+<h2>Tutorial Types</h2>
+<p>There are two main types of tutorial documents:</p>
+<ol style="list-style-type: decimal">
+<li><p>Tutorials which are mostly narrative and/or video content which also include some runnable code chunks. These documents are very similar to vignettes in that their principal goal is communicating concepts. The interactive tutorial features are then used to allow further experimentation by the reader.</p></li>
+<li><p>Tutorials which provide a structured learning experience with multiple exercises, quiz questions, and tailored feedback.</p></li>
+</ol>
+<p>The first type of tutorial is of course much easier to author while still being very useful. These documents will typically add <code>exercise = TRUE</code> to selected code chunks and also set <code>exercise.eval = TRUE</code> so the chunk output is visible by default. The reader can simply look at the R code and move on or can play with it to reinforce their understanding.</p>
+<p>The second type of tutorial provides much richer feedback and assessment but of course considerably more effort to author. If you are primarily interested in this sort of tutorial there are many features to support it including exercise <a href="exercises.html#hints-and-solutions">hints and solutions</a>, automated exercise <a href="exercises.html#exercise-checking">checkers</a>, and multiple choice <a href="questions.html">quizzes</a> with custom feedback.</p>
+<p>The most straightforward path is to start with the first type of tutorial (executable chunks with pre-evaluated output) and then move into more sophisticated assessment and feedback over time.</p>
+</div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
 <p>Exercises are interactive R code chunks that allow readers to directly execute R code and see it’s results:</p>

@@ -87,6 +87,20 @@ If your tutorial is included within an R package you can also run it via the `tu
 tutor::run_tutorial("hello", package = "tutor")
 ```
 
+## Tutorial Types
+
+There are two main types of tutorial documents:
+
+1. Tutorials which are mostly narrative and/or video content which also include some runnable code chunks. These documents are very similar to vignettes in that their principal goal is communicating concepts. The interactive tutorial features are then used to allow further experimentation by the reader.
+
+2. Tutorials which provide a structured learning experience with multiple exercises, quiz questions, and tailored feedback.
+
+The first type of tutorial is of course much easier to author while still being very useful. These documents will typically add `exercise = TRUE` to selected code chunks and also set `exercise.eval = TRUE` so the chunk output is visible by default. The reader can simply look at the R code and move on or can play with it to reinforce their understanding.
+
+The second type of tutorial provides much richer feedback and assessment but of course considerably more effort to author. If you are primarily interested in this sort of tutorial there are many features to support it including exercise [hints and solutions](exercises.html#hints-and-solutions), automated exercise [checkers](exercises.html#exercise-checking), and multiple choice [quizzes](questions.html) with custom feedback.
+
+The most straightforward path is to start with the first type of tutorial (executable chunks with pre-evaluated output) and then move into more sophisticated assessment and feedback over time.
+
 ## Exercises
 
 Exercises are interactive R code chunks that allow readers to directly execute R code and see it's results:
