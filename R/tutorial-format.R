@@ -9,7 +9,7 @@
 #' @export
 tutorial <- function(toc = TRUE,
                      toc_depth = 3,
-                     toc_float = TRUE,
+                     toc_float = list(collapsed = FALSE),
                      fig_width = 6.5,
                      fig_height = 4,
                      fig_retina = 2,
