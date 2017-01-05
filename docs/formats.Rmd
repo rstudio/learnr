@@ -50,6 +50,16 @@ Here's what a `tutor::tutorial` document looks like by default:
 
 Note the check marks within the table of contents indicating which sections the user has completed work within.
 
+### Table of Contents
+
+The `tutor::tutorial` format provides a floating table of contents by default. This helps the user both navigate through the tutorial as well as see what sections they have already completed. 
+
+By default, all level 2 and 3 headers are expanded within the table of contents so the user can clearly see all of the sections in the document. However, if you have a large number of sections this might cause the table of contents to get too large. In this case, you will want to set the `collapsed` option of `toc_float` to `true`. You can do this as follows:
+
+<div id="tutorialtoccollapsed"></div>
+<script type="text/javascript">loadSnippet('tutorialtoccollapsed', 'markdown')</script>
+
+
 ## Custom Formats
 
 The **tutor** package exposes a JavaScript API which can be used to create new R Markdown formats that include progress tracking similar to that which is provided by the `tutor::tutorial` format.
