@@ -4,9 +4,9 @@
 \alias{tutorial}
 \title{Tutorial document format}
 \usage{
-tutorial(toc = TRUE, toc_depth = 3, toc_float = TRUE, fig_width = 6.5,
-  fig_height = 4, fig_retina = 2, fig_caption = TRUE, dev = "png",
-  df_print = "paged", smart = TRUE, theme = "cerulean",
+tutorial(toc = TRUE, toc_depth = 3, toc_float = list(collapsed = FALSE),
+  fig_width = 6.5, fig_height = 4, fig_retina = 2, fig_caption = TRUE,
+  dev = "png", df_print = "paged", smart = TRUE, theme = "cerulean",
   highlight = "textmate", mathjax = "default", extra_dependencies = NULL,
   css = NULL, includes = NULL, md_extensions = NULL, pandoc_args = NULL,
   ...)

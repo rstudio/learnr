@@ -4,7 +4,7 @@
 feedback <- function(message, correct, type, location) {
   
   # return validated feedback 
-  feeback_validated(list(
+  feedback_validated(list(
     message = message,
     correct = correct,
     type = type,
