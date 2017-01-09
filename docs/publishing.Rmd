@@ -27,7 +27,7 @@ Once you've done this users can run your tutorial as follows (note they should b
 Users would then simply install tutor directly before running your tutorial, for example:
 
 ```r
-devtools::install_github("rstudio/tutor", auth_token = "33cdbf9d899fe6eff5022e67e21f08964f7c7b19")
+devtools::install_github("rstudio/tutor")
 tutor::run_tutorial("introduction", package = "mypackage")
 ```
 

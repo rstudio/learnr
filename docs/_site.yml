@@ -1,5 +1,5 @@
 name: "tutor-docs"
-output_dir: "45796A4F836C4B5B"
+output_dir: "."
 output:
   html_document:
     theme: cosmo

@@ -39,7 +39,7 @@ This is what the running tutorial document looks like after the user has entered
 1. Install the development version of the **tutor** package from GitHub as follows:
 
     ```r
-    devtools::install_github("rstudio/tutor", auth_token = "847aef612e531fcd03f8ee05a7793f15a4bce6bb")
+    devtools::install_github("rstudio/tutor")
     ```
 
 2. Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.

@@ -9,10 +9,14 @@ library(tutor)
 options(tutor.event_recorder = tutor:::debug_event_recorder)
 tutor_options(
   exercise.eval = FALSE, 
-  exercise.checker = function(...) {
-    list(message = "Nice job!", 
-         correct = TRUE, 
-         location = "append")
+  exercise.checker = function(label, user_code, envir_result, ...)  {
+    if (is.null(envir_result))
+      list(message = "Bad code!",
+           correct = FALSE)
+    else
+      list(message = "Nice job!", 
+           correct = TRUE, 
+           location = "append")
   }
 )
 ```
@@ -41,10 +45,11 @@ filter(flights, UniqueCarrier=="AA")
 filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
 ```
 
+### YouTube Video
 
 ![](https://www.youtube.com/watch?v=TJmNvfhLCoI)
 
-Foo
+### Vimeo Video
 
 ![](https://player.vimeo.com/video/76979871)
 
@@ -65,9 +70,11 @@ nycflights <- nycflights13::flights
 nycflights <- filter(nycflights, month == 1)
 ```
 
-```{r exercise1-solution}
-nycflights <- filter(nycflights, month == 2)
-```
+<div id="exercise1-hint">
+
+This is the hint for the exercise which I just provided.
+
+</div>
 
 
 ## Viewing Data
@@ -86,6 +93,10 @@ mtcars <- head(mtcars, n = 5)
 print(mtcars)
 mtcars <- head(mtcars, n = 5)
 print(mtcars)
+```
+
+```{r cars-code-check}
+#
 ```
 
 ```{r cars-check}

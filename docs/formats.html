@@ -11,7 +11,7 @@
 
 
 
-<title>Questions</title>
+<title>Formats</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +27,6 @@
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
-<meta name="robots" content="noindex">
 
 <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
@@ -325,70 +324,66 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Questions</h1>
+<h1 class="title toc-ignore">Formats</h1>
 
 </div>
 
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
-<p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
-<div id="question">
+<p>The <strong>tutor</strong> package is designed to be used with a wide variety of R Markdown formats. A tutorial is simply a directory containing an R Markdown document which:</p>
+<ol style="list-style-type: decimal">
+<li><p>Loads the <strong>tutor</strong> package.</p></li>
+<li><p>Includes one or more interactive components (exercises, quiz questions, etc.).</p></li>
+<li><p>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</p></li>
+<li><p>Uses a format which inherits from the <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> format and is marked as <code>boostrap_compatible</code> (this is a parameter of <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> which indicates that it’s safe to inject Booststrap CSS into the document).</p></li>
+</ol>
+<p>This means you can use <strong>tutor</strong> with the <a href="http://rmarkdown.rstudio.com/html_document_format.html"><code>html_document</code></a>, <a href="http://rmarkdown.rstudio.com/ioslides_presentation_format.html"><code>ioslides_presentation</code></a>, and <a href="http://rmarkdown.rstudio.com/slidy_presentation_format.html"><code>slidy_presentation</code></a> formats as well as many others.</p>
+<p>We’ve shown plenty of examples that use <code>html_document</code>, here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
+<p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
+<p>You can run a live version of this example with:</p>
+<pre class="r"><code>tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
+</div>
+<div id="tutorial-format" class="section level2">
+<h2>Tutorial Format</h2>
+<p>The <strong>tutor</strong> package includes a <code>tutor::tutorial</code> R Markdown format which which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
+<p>You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
+<div class="figure">
+<img src="images/create-new-tutorial.png" width="609" height="482" />
 
 </div>
-<script type="text/javascript">loadSnippet('question')</script>
-<p>The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:</p>
-<div id="questionmultiple">
+<p>The benefits of using the <code>tutor::tutorial</code> format include:</p>
+<ol style="list-style-type: decimal">
+<li><p>More appropriate defaults are provided for various things including figure sizes and data frame printing.</p></li>
+<li><p>A floating table of contents for easy navigation between sections is provided by default.</p></li>
+<li><p>Visual adornments are added to the table of contents indicating which parts of the tutorial have been completed.</p></li>
+<li><p>A “Start Over” button is added to the table of contents regsion to allow users to clear previous work within the tutorial.</p></li>
+</ol>
+<p>Here’s what a <code>tutor::tutorial</code> document looks like by default:</p>
+<div class="figure">
+<img src="images/tutorial-format.png" style="border: solid 1px #cccccc; margin-bottom: 12px;" width="910" height="782" />
 
 </div>
-<script type="text/javascript">loadSnippet('questionmultiple')</script>
-<p>Note that for the examples above we specify the <code>echo = FALSE</code> option on the R code chunks that produce the questions. This is required to ensure that the R source code for the questions is not printed within the document.</p>
-<p>This is what the above example quiz questions would look like within a tutorial:</p>
-<p><img src="images/questions.png" width=731 height=521></p>
-</div>
-<div id="custom-messages" class="section level2">
-<h2>Custom Messages</h2>
-<p>You can add answer-specific correct/incorrect messages using the <code>message</code> option. For example:</p>
-<div id="questionmessages">
+<p>Note the check marks within the table of contents indicating which sections the user has completed work within.</p>
+<div id="table-of-contents" class="section level3">
+<h3>Table of Contents</h3>
+<p>The <code>tutor::tutorial</code> format provides a floating table of contents by default. This helps the user both navigate through the tutorial as well as see what sections they have already completed.</p>
+<p>By default, all level 2 and 3 headers are expanded within the table of contents so the user can clearly see all of the sections in the document. However, if you have a large number of sections this might cause the table of contents to get too large. In this case, you will want to set the <code>collapsed</code> option of <code>toc_float</code> to <code>true</code>. You can do this as follows:</p>
+<div id="tutorialtoccollapsed">
 
 </div>
-<script type="text/javascript">loadSnippet('questionmessages')</script>
-<p><img src="images/questions-message.png" width=730 height=254></p>
+<script type="text/javascript">loadSnippet('tutorialtoccollapsed', 'markdown')</script>
 </div>
-<div id="formatting-and-math" class="section level2">
-<h2>Formatting and Math</h2>
-<p>You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the <code>$</code> delimiter. For example:</p>
-<div id="questionmath">
-
 </div>
-<script type="text/javascript">loadSnippet('questionmath')</script>
-<p>Note the use of a double-backslash (<code>\\</code>) as the prefix for LaTeX macros. This is necessary to “escape” the single-backslash so that R doesn’t interpret it as a special character. Here’s what this example would look like within a tutorial:</p>
-<p><img src="images/question-math.png" width=732 height=262></p>
-</div>
-<div id="retrying-questions" class="section level2">
-<h2>Retrying Questions</h2>
-<p>By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the <code>allow_retry</code> option, for example:</p>
-<div id="questionretry">
-
-</div>
-<script type="text/javascript">loadSnippet('questionretry')</script>
-</div>
-<div id="random-answer-order" class="section level2">
-<h2>Random Answer Order</h2>
-<p>If you want the answers to questions to be randomly arranged, you can add the <code>random_answer_order</code> option. For example:</p>
-<div id="questionrandom">
-
-</div>
-<script type="text/javascript">loadSnippet('questionrandom')</script>
-</div>
-<div id="groups-of-questions" class="section level2">
-<h2>Groups of Questions</h2>
-<p>You can present a group of related questions as a quiz by wrapping your questions within the <code>quiz</code> function. For example:</p>
-<div id="questionquiz">
-
-</div>
-<script type="text/javascript">loadSnippet('questionquiz')</script>
+<div id="custom-formats" class="section level2">
+<h2>Custom Formats</h2>
+<p>The <strong>tutor</strong> package exposes a JavaScript API which can be used to create new R Markdown formats that include progress tracking similar to that which is provided by the <code>tutor::tutorial</code> format.</p>
+<p>The implementation of the <code>tutor::tutorial</code> format is extremely straightforward and provides a template for creating additional new formats via the API:</p>
+<ol style="list-style-type: decimal">
+<li><p>The <strong><a href="https://github.com/rstudio/tutor/blob/master/R/tutorial-format.R">tutorial-format.R</a></strong> file includes the definition of the custom R Markdown format function.</p></li>
+<li><p>The <strong><a href="https://github.com/rstudio/tutor/blob/master/inst/rmarkdown/templates/tutorial/resources/tutorial-format.js">tutorial-format.js</a></strong> file demonstrates the use of the tutor JavaScript API to add progress tracking features to the default R Markdown floating table of contents.</p></li>
+<li><p>The <strong><a href="https://github.com/rstudio/tutor/tree/master/inst/rmarkdown/templates/tutorial">inst/rmarkdown/templates/tutorial</a></strong> directory includes all the files and configuration required to make the format available as a custom R Markdown template within the RStudio IDE.</p></li>
+</ol>
 </div>
 
 
