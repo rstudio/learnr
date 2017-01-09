@@ -9,7 +9,7 @@ Authors@R: c(
   person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),
   person("Julie", "Cameron", role = "ctb", comment = "SlickQuiz library"),
   person(family = "Quicken Loans", role = "cph", comment = "SlickQuiz library"),
-  person(family = "Mozila", role = c("ctb", "cph"), comment = "localforage library")
+  person(family = "Mozilla", role = c("ctb", "cph"), comment = "localforage library")
   )
 Description: Create interactive tutorials using R Markdown. Use a combination 
   of narrative, figures, videos, exercises, and quizzes to create self-paced
