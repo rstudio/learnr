@@ -192,7 +192,7 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
     
     // determine data
     var progressEventData = {};
-    if (progressEvent == "exercise_submission" || progressEvent == "quesiton_submission") {
+    if (progressEvent == "exercise_submission" || progressEvent == "question_submission") {
       progressEventData.label = progress.data.label;
       progressEventData.correct = progress.data.correct;
     }
@@ -1370,7 +1370,7 @@ Tutor.prototype.$restoreSubmissions = function(submissions) {
       }
     }
     
-    // quesiton submissions
+    // question submissions
     else if (type === "question_submission") {
       
       // find the quiz 

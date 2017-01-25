@@ -123,7 +123,7 @@ Here's what the above question would look like within a tutorial:
 
 <img src="images/question.png" width=729 height=227>
 
-The [Questions](quesiton.html) page includes additional information on using questions within tutorials.
+The [Questions](question.html) page includes additional information on using questions within tutorials.
 
 ## Videos
 

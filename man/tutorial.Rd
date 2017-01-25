@@ -81,6 +81,6 @@ additional details.}
 \item{...}{Forward parameters to html_document}
 }
 \description{
-Long-form tutorial which includes narrative, figures, videos, exercises, and quesitons.
+Long-form tutorial which includes narrative, figures, videos, exercises, and questions.
 }
 

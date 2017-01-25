@@ -6,6 +6,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(tutor)
+library(nycflights13)
 options(tutor.event_recorder = tutor:::debug_event_recorder)
 tutor_options(
   exercise.eval = FALSE, 
@@ -61,7 +62,7 @@ In betwixt and in between.
 ### solution {style="margin-top: 50px;"}
 
 ```{r exercise1-setup}
-library(dyplr)
+library(dplyr)
 nycflights <- nycflights13::flights
 ```
 

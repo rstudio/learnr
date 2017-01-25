@@ -1,6 +1,6 @@
 #' Tutorial document format
 #' 
-#' Long-form tutorial which includes narrative, figures, videos, exercises, and quesitons.
+#' Long-form tutorial which includes narrative, figures, videos, exercises, and questions.
 #' 
 #' @inheritParams rmarkdown::html_document
 #' 
