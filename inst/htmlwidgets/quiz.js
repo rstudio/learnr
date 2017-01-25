@@ -88,7 +88,8 @@ HTMLWidgets.widget({
         
         // add data-answer attributes to answers
         $(el).find('.answers').children('li').each(function(i) {
-          $(this).children('label').attr('data-answer', x.answers[i].option);  
+          var label = $(this).children('label');
+          label.attr('data-answer', label.text());  
         });
         
         // get the correctItem and apply bg-success to it
