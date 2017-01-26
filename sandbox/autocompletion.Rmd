@@ -25,6 +25,5 @@ tutor_options(
 ## Autocompletion Sandbox
 
 ```{r autocompletion, exercise=TRUE}
-# Try typing stuff here
-
+# Try typing here
 ```
