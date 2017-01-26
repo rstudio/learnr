@@ -114,7 +114,39 @@ register_http_handlers <- function(session, metadata) {
   
   # completion handler
   session$registerDataObj("completion",  NULL, rpc_handler(function(input) {
-    # TODO: completions here
+    
+    # read params
+    line <- input
+    Encoding(line) <- "UTF-8"
+    
+    # set completion settings
+    original <- rc.options()
+    rc.options(package.suffix = "::",
+               funarg.suffix = " = ",
+               function.suffix = "(")
+    on.exit(
+      rc.options(package.suffix = original$package.suffix,
+                 funarg.suffix = original$funarg.suffix,
+                 function.suffix = original$function.suffix),
+      add = TRUE
+    )
+    
+    # update rcompgen state
+    completions <- character()
+    try(silent = TRUE, {
+      utils:::.assignLinebuffer(line)
+      utils:::.assignEnd(nchar(line))
+      token <- utils:::.guessTokenFromLine()
+      utils:::.completeToken()
+      completions <- as.character(utils:::.retrieveCompletions())
+    })
+    
+    # remove a leading '::', ':::' from autocompletion results, as
+    # those won't be inserted as expected in Ace
+    completions <- gsub("[^:]+:{2,3}", "", completions)
+    
+    # return completions
+    as.list(completions)
   }))
   
   # diagnostics handler

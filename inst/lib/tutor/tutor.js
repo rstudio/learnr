@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   // register autocompletion if available
   if (typeof TutorCompleter !== "undefined")
-    tutor.completer = new TutorCompleter();
+    tutor.completer = new TutorCompleter(tutor);
 
   window.tutor = tutor;
 });
