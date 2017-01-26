@@ -19,7 +19,8 @@ initialize_tutor <- function() {
       rmarkdown::html_dependency_jquery(),
       rmarkdown::html_dependency_font_awesome(),
       localforage_html_dependency(),
-      tutor_html_dependency()
+      tutor_html_dependency(),
+      tutor_autocompletion_html_dependency()
     ))
   
     # session initialization (forward tutorial metadata)

@@ -16,9 +16,17 @@ tutor_html_dependency <- function() {
   )
 }
 
+tutor_autocompletion_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "tutor-autocompletion",
+    version = utils::packageVersion("tutor"),
+    src = html_dependency_src("lib", "tutor"),
+    script = "tutor-autocompletion.js"
+  )
+}
 
 html_dependency_src <- function(...) {
-  if(nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
+  if (nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
     r_dir <- utils::getSrcDirectory(html_dependency_src, unique = TRUE)
     pkg_dir <- dirname(r_dir)
     file.path(pkg_dir, "inst", ...)
@@ -54,6 +62,15 @@ ace_html_dependency <- function() {
     version = "1.2.3",
     src = system.file("lib/ace", package = "tutor"),
     script = "ace.js"
+  )
+}
+
+ace_language_tools_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "ace-language-tools",
+    version = "1.2.3",
+    src = system.file("lib/ace", package = "tutor"),
+    script = "ext-language_tools.js"
   )
 }
 

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Autocompletion</title>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#section-TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#section-TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#section-TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="section-TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="section-header">
+
+
+
+<h1 class="title toc-ignore">Autocompletion</h1>
+
+</div>
+
+
+<div id="section-autocompletion-sandbox" class="section level2">
+<h2>Autocompletion Sandbox</h2>
+<div class="tutor-exercise" data-label="autocompletion" data-caption="Code" data-lines="0">
+<pre class="text"><code># Try typing stuff here</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":["function (label, user_code, envir_result, ...) ","{","    if (is.null(envir_result)) ","        list(message = \"Bad code!\", correct = FALSE)","    else list(message = \"Nice job!\", correct = TRUE, location = \"append\")","}"]}</script>
+</div>
+
+<script type="application/shiny-prerendered" data-context="server-start">
+library(tutor)
+library(nycflights13)
+options(tutor.event_recorder = tutor:::debug_event_recorder)
+tutor_options(
+  exercise.eval = FALSE, 
+  exercise.checker = function(label, user_code, envir_result, ...)  {
+    if (is.null(envir_result))
+      list(message = "Bad code!",
+           correct = FALSE)
+    else
+      list(message = "Nice job!", 
+           correct = TRUE, 
+           location = "append")
+  }
+)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+tutor:::register_http_handlers(session, metadata = NULL)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutor-exercise-autocompletion-result` <- tutor:::setup_exercise_handler(reactive(req(input$`tutor-exercise-autocompletion-code-editor`)), session)
+output$`tutor-exercise-autocompletion-output` <- renderUI({
+  `tutor-exercise-autocompletion-result`()
+})
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutor"]},{"type":"character","attributes":{},"value":["0.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutor"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tutor.js"]},{"type":"character","attributes":{},"value":["tutor.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutor-autocompletion"]},{"type":"character","attributes":{},"value":["0.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutor"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tutor-autocompletion.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutor-tutorial-format"]},{"type":"character","attributes":{},"value":["0.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jqueryui"]},{"type":"character","attributes":{},"value":["1.11.4"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jqueryui-1.11.4"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery-ui.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tocify"]},{"type":"character","attributes":{},"value":["1.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/tocify-1.9.1"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery.tocify.js"]},{"type":"character","attributes":{},"value":["jquery.tocify.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs-1.1"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["rmarkdown"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.4.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutor"]},{"type":"character","attributes":{},"value":["0.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutor"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tutor.js"]},{"type":"character","attributes":{},"value":["tutor.css"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutor-autocompletion"]},{"type":"character","attributes":{},"value":["0.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutor"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["tutor-autocompletion.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace-language-tools"]},{"type":"character","attributes":{},"value":["1.2.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["ext-language_tools.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","all_files","package"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL","attributes":{},"value":{}},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"NULL","attributes":{},"value":{}},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["tutor"]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -114,7 +114,7 @@ register_http_handlers <- function(session, metadata) {
   
   # completion handler
   session$registerDataObj("completion",  NULL, rpc_handler(function(input) {
-    
+    # TODO: completions here
   }))
   
   # diagnostics handler

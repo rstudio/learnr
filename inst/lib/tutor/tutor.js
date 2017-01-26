@@ -2,7 +2,13 @@
 /* Tutor construction and initialization */
 
 $(document).ready(function() {
-  window.tutor = new Tutor();
+  var tutor = new Tutor();
+
+  // register autocompletion if available
+  if (typeof TutorCompleter !== "undefined")
+    tutor.completer = new TutorCompleter();
+
+  window.tutor = tutor;
 });
 
 function Tutor() {
