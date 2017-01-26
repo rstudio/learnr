@@ -143,7 +143,8 @@ register_http_handlers <- function(session, metadata) {
     
     # remove a leading '::', ':::' from autocompletion results, as
     # those won't be inserted as expected in Ace
-    completions <- gsub("[^:]+:{2,3}", "", completions)
+    completions <- gsub("[^:]+:{2,3}(.)", "\\1", completions)
+    completions <- completions[nzchar(completions)]
     
     # return completions
     as.list(completions)
