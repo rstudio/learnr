@@ -6,10 +6,14 @@ function TutorCompleter(tutor) {
     clearTimeout(this.$autocompletionTimerId);
     data = data || {};
 
-    var popup = this.completer.popup;
+    // NOTE: Ace completer is initialized lazily and
+    // so may not be available when Ace is first initialized
+    var popup = (this.completer || {}).popup;
     if (popup && popup.isOpen)
       return;
 
+    // only perform live autocompletion while user
+    // is typing (ie, single-character text insertions)
     if (data.action !== "insert")
       return;
 
@@ -20,11 +24,21 @@ function TutorCompleter(tutor) {
     var text = lines[0];
     if (text.length !== 1)
       return;
+
+    // generate a live autocompleter for this editor if
+    // not yet available
+    if (typeof this.$liveAutocompleter === "undefined") {
+      this.$liveAutocompleter = function() {
+        this.execCommand("startAutocomplete");
+      }.bind(this);
+    }
+
+    // immediately autocomplete following '$', '@'
+    if (text == "$" || text == "@")
+      return this.$liveAutocompleter();
     
-    var self = this;
-    this.$autocompletionTimerId = setTimeout(function() {
-      self.execCommand("startAutocomplete");
-    }, 300);
+    // otherwise, autocomplete after a delay
+    this.$autocompletionTimerId = setTimeout(this.$liveAutocompleter, 300);
   };
  
   var MODIFIER_NONE  = 0;
@@ -63,7 +77,6 @@ function TutorCompleter(tutor) {
   }
 
   function initializeCompletionEngine(editor) {
-
     editor.completers = editor.completers || [];
     editor.completers.push({
 
@@ -98,7 +111,6 @@ function TutorCompleter(tutor) {
       enableBasicAutocompletion: true,
       enableLiveAutocompletion: false
     });
-
   }
 
   var ensureInitialized = function(editor) {
@@ -111,24 +123,28 @@ function TutorCompleter(tutor) {
     editor.$autocompletionInitialized = 1;
   }
 
+  var findActiveAceInstance = function() {
+    var el = document.activeElement;
+    while (el != null) {
+      if (el.env && el.env.editor)
+        return el.env.editor;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
   var autocomplete = function() {
 
     // find active Ace instance
-    var editor = null;
-    var el = document.activeElement;
-    while (el != null) {
-      if (el.env && el.env.editor) {
-        editor = el.env.editor;
-        break;
-      }
-      el = el.parentElement;
-    }
-
+    var editor = findActiveAceInstance();
     if (editor == null)
       return;
     
     // ensure completion engine initialized
     ensureInitialized(editor);
+
+    // cancel any pending live autocompletion
+    clearTimeout(editor.$autocompletionTimerId);
 
     // manually handle event
     event.stopPropagation();
@@ -137,6 +153,12 @@ function TutorCompleter(tutor) {
   }
 
   document.addEventListener("keydown", function(event) {
+
+    // TODO: find more appropriate place for one-time initialization
+    var editor = findActiveAceInstance();
+    if (editor != null)
+      ensureInitialized(editor);
+
     var keys = new KeyCombination(event);
     if (keys.keyCode == KEYCODE_TAB && keys.modifier == MODIFIER_NONE)
        return autocomplete();
