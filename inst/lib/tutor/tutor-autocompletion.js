@@ -89,18 +89,33 @@ function TutorCompleter(tutor) {
           // parenthesis insertion, and so on
           var completer = {
             insertMatch: function(editor, data) {
-              // TODO: for now, just delegate back to default behavior
-              delete data["completer"];
-              editor.completer.insertMatch(data);
+
+              // remove prefix
+              var ranges = editor.selection.getAllRanges();
+              var completions = editor.completer.completions;
+              var n = completions.filterText.length;
+              for (var i = 0; i < ranges.length; i++) {
+                ranges[i].start.column -= n;
+                editor.session.remove(ranges[i]);
+              }
+              
+              // insert completion term (add parentheses for functions)
+              var term = data.value + (data.is_function ? "()" : "");
+              editor.execCommand("insertstring", term)
+
+              // move cursor backwards for functions
+              if (data.is_function)
+                editor.navigateLeft(1);
             }
           };
 
-          var completions = data.map(function(value) {
+          var completions = data.map(function(el) {
             return {
-              caption: value,
-              value: value,
+              caption: el[0] + (el[1] ? "()" : ""),
+              value: el[0],
               score: 0,
-              meta: "r",
+              meta: "R",
+              is_function: el[1],
               completer: completer
             };
           });
