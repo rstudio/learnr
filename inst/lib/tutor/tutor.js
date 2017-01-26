@@ -842,6 +842,18 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     // activate the ace editor
     var editor = thiz.$attachAceEditor(code_id, code);
     
+    // add setup code for this exercise to the editor instance
+    var setup_code = null;
+    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
+    if (chunk_options["exercise.setup"])
+        setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);     
+      else
+        setup_code = thiz.$exerciseSupportCode(label + "-setup");
+    editor.tutorial = {
+      label: label,
+      setup_code: setup_code
+    };
+    
     // bind execution keys 
     function bindExecutionKey(name, key) {
       var macKey = key.replace("Ctrl+", "Command+");
