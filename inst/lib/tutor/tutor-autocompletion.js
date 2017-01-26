@@ -25,14 +25,6 @@ function TutorCompleter(tutor) {
     if (text.length !== 1)
       return;
 
-    // generate a live autocompleter for this editor if
-    // not yet available
-    if (typeof this.$liveAutocompleter === "undefined") {
-      this.$liveAutocompleter = function() {
-        this.execCommand("startAutocomplete");
-      }.bind(this);
-    }
-
     // immediately autocomplete following '$', '@'
     if (text == "$" || text == "@")
       return this.$liveAutocompleter();
@@ -92,12 +84,24 @@ function TutorCompleter(tutor) {
         self.$tutor.$serverRequest("completion", contents, function(data) {
           
           data = data || [];
+
+          // define a custom completer -- used for e.g. automatic
+          // parenthesis insertion, and so on
+          var completer = {
+            insertMatch: function(editor, data) {
+              // TODO: for now, just delegate back to default behavior
+              delete data["completer"];
+              editor.completer.insertMatch(data);
+            }
+          };
+
           var completions = data.map(function(value) {
             return {
               caption: value,
               value: value,
               score: 0,
-              meta: "r"
+              meta: "r",
+              completer: completer
             };
           });
 
@@ -119,6 +123,14 @@ function TutorCompleter(tutor) {
 
     initializeAceEventListeners(editor);
     initializeCompletionEngine(editor);
+    
+    // generate a live autocompleter for this editor if
+    // not yet available
+    if (typeof editor.$liveAutocompleter === "undefined") {
+      editor.$liveAutocompleter = function() {
+        this.execCommand("startAutocomplete");
+      }.bind(editor);
+    }
 
     editor.$autocompletionInitialized = 1;
   }
