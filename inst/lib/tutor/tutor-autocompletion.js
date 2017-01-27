@@ -47,7 +47,7 @@ function TutorCompleter(tutor) {
     this.modifier |= event.ctrlKey  ? MODIFIER_CTRL  : 0;
     this.modifier |= event.altKey   ? MODIFIER_ALT   : 0;
     this.modifier |= event.shiftKey ? MODIFIER_SHIFT : 0;
-  }
+  };
 
   function initializeAceEventListeners(editor) {
 
@@ -101,7 +101,7 @@ function TutorCompleter(tutor) {
               
               // insert completion term (add parentheses for functions)
               var term = data.value + (data.is_function ? "()" : "");
-              editor.execCommand("insertstring", term)
+              editor.execCommand("insertstring", term);
 
               // move cursor backwards for functions
               if (data.is_function)
@@ -121,7 +121,7 @@ function TutorCompleter(tutor) {
           });
 
           callback(null, completions);
-        })
+        });
       }
 
     });
@@ -148,7 +148,7 @@ function TutorCompleter(tutor) {
     }
 
     editor.$autocompletionInitialized = 1;
-  }
+  };
 
   var findActiveAceInstance = function() {
     var el = document.activeElement;
@@ -158,7 +158,7 @@ function TutorCompleter(tutor) {
       el = el.parentElement;
     }
     return null;
-  }
+  };
 
   var autocomplete = function() {
 
@@ -177,7 +177,7 @@ function TutorCompleter(tutor) {
     event.stopPropagation();
     event.preventDefault();
     editor.execCommand("startAutocomplete");
-  }
+  };
 
   document.addEventListener("keydown", function(event) {
 
