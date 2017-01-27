@@ -720,6 +720,7 @@ Tutor.prototype.$attachAceEditor = function(target, code) {
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);
   editor.setShowFoldWidgets(false);
+  editor.setBehavioursEnabled(true);
   editor.renderer.setDisplayIndentGuides(false);
   editor.setTheme("ace/theme/textmate");
   editor.$blockScrolling = Infinity;
