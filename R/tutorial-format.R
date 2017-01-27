@@ -34,6 +34,7 @@ tutorial <- function(toc = TRUE,
   # tutorial-format.js file.
   extra_dependencies <- append(extra_dependencies, list(
     tutor_html_dependency(),
+    tutor_autocompletion_html_dependency(),
     htmltools::htmlDependency(
       name = "tutor-tutorial-format",
       version = utils::packageVersion("tutor"),

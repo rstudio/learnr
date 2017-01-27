@@ -2,7 +2,13 @@
 /* Tutor construction and initialization */
 
 $(document).ready(function() {
-  window.tutor = new Tutor();
+  var tutor = new Tutor();
+
+  // register autocompletion if available
+  if (typeof TutorCompleter !== "undefined")
+    tutor.completer = new TutorCompleter(tutor);
+
+  window.tutor = tutor;
 });
 
 function Tutor() {
@@ -714,6 +720,7 @@ Tutor.prototype.$attachAceEditor = function(target, code) {
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);
   editor.setShowFoldWidgets(false);
+  editor.setBehavioursEnabled(true);
   editor.renderer.setDisplayIndentGuides(false);
   editor.setTheme("ace/theme/textmate");
   editor.$blockScrolling = Infinity;

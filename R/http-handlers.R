@@ -3,6 +3,9 @@
 
 register_http_handlers <- function(session, metadata) {
   
+  # environment used for hosting state (e.g. for chunks)
+  state <- new.env(parent = emptyenv())
+  
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
     
@@ -112,9 +115,85 @@ register_http_handlers <- function(session, metadata) {
     
   }))
   
-  # completion handler
-  session$registerDataObj("completion",  NULL, rpc_handler(function(input) {
+  # setup chunk handler
+  session$registerDataObj("initialize_chunk", NULL, rpc_handler(function(input) {
+    params <- input
     
+    # evaluate setup code to prime environment
+    label <- as.character(params$label)
+    code <- paste(params$setup_code, collapse = "\n")
+    
+    # no setup chunk / label? nothing to do
+    if (!(nzchar(label) && nzchar(code)))
+      return()
+    
+    # evaluate code in environment to prime
+    Encoding(code) <- "UTF-8"
+    state[[label]] <- new.env()
+    eval(parse(text = code, encoding = "UTF-8"), envir = state[[label]])
+    
+  }))
+  
+  # completion handler
+  session$registerDataObj("completion", NULL, rpc_handler(function(input) {
+    
+    # read params
+    line <- as.character(input$contents)
+    label <- as.character(input$label)
+    
+    Encoding(line) <- "UTF-8"
+    
+    # set completion settings
+    options <- rc.options()
+    rc.options(package.suffix = "::",
+               funarg.suffix = " = ",
+               function.suffix = "(")
+    on.exit(do.call(rc.options, as.list(options)), add = TRUE)
+    
+    settings <- rc.settings()
+    rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
+                ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
+                argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
+    on.exit(do.call(rc.settings, as.list(settings)), add = TRUE)
+    
+    # temporarily attach environment state to search path
+    # for R completion engine
+    if (nzchar(label) && is.environment(state[[label]])) {
+      attach(state[[label]], name = "tutor:state")
+      on.exit(detach("tutor:state"), add = TRUE)
+    }
+    
+    completions <- character()
+    try(silent = TRUE, {
+      utils:::.assignLinebuffer(line)
+      utils:::.assignEnd(nchar(line))
+      utils:::.guessTokenFromLine()
+      utils:::.completeToken()
+      completions <- as.character(utils:::.retrieveCompletions())
+    })
+    
+    # detect functions
+    splat <- strsplit(completions, ":{2,3}")
+    fn <- vapply(splat, function(el) {
+      n <- length(el)
+      envir  <- if (n == 1) .GlobalEnv else asNamespace(el[[1]])
+      symbol <- if (n == 2) el[[2]] else el[[1]]
+      tryCatch(
+        is.function(get(symbol, envir = envir)),
+        error = function(e) FALSE
+      )
+    }, logical(1))
+    
+    # remove a leading '::', ':::' from autocompletion results, as
+    # those won't be inserted as expected in Ace
+    completions <- gsub("[^:]+:{2,3}(.)", "\\1", completions)
+    completions <- completions[nzchar(completions)]
+    
+    # zip together
+    result <- Map(list, completions, fn, USE.NAMES = FALSE)
+    
+    # return completions
+    as.list(result)
   }))
   
   # diagnostics handler
