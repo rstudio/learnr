@@ -24,6 +24,10 @@ tutor_options(
 
 ## Autocompletion Sandbox
 
-```{r autocompletion, exercise=TRUE}
+```{r autocompletion-setup}
+autocompletion <- list(apple = 1, banana = 2, cherry = 3)
+```
+
+```{r autocompletion, exercise=TRUE, exercise.setup="autocompletion-setup"}
 # Try typing here
 ```

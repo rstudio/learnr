@@ -214,9 +214,12 @@ div.tocify {
 
 <div id="section-autocompletion-sandbox" class="section level2">
 <h2>Autocompletion Sandbox</h2>
+<div class="tutor-exercise-support" data-label="autocompletion-setup" data-caption="Code" data-lines="0">
+<pre class="text"><code>autocompletion &lt;- list(apple = 1, banana = 2, cherry = 3)</code></pre>
+</div>
 <div class="tutor-exercise" data-label="autocompletion" data-caption="Code" data-lines="0">
 <pre class="text"><code># Try typing here</code></pre>
-<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":["function (label, user_code, envir_result, ...) ","{","    if (is.null(envir_result)) ","        list(message = \"Bad code!\", correct = FALSE)","    else list(message = \"Nice job!\", correct = TRUE, location = \"append\")","}"]}</script>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"autocompletion-setup","exercise.checker":["function (label, user_code, envir_result, ...) ","{","    if (is.null(envir_result)) ","        list(message = \"Bad code!\", correct = FALSE)","    else list(message = \"Nice job!\", correct = TRUE, location = \"append\")","}"]}</script>
 </div>
 
 <script type="application/shiny-prerendered" data-context="server-start">

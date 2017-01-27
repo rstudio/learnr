@@ -4,7 +4,7 @@
 register_http_handlers <- function(session, metadata) {
   
   # environment used for hosting state (e.g. for chunks)
-  state <- new.env()
+  state <- new.env(parent = emptyenv())
   
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
@@ -129,7 +129,7 @@ register_http_handlers <- function(session, metadata) {
     
     # evaluate code in environment to prime
     Encoding(code) <- "UTF-8"
-    state[[label]] <- new.env(parent = parent.env(state))
+    state[[label]] <- new.env(parent = emptyenv())
     eval(parse(text = code, encoding = "UTF-8"), envir = state[[label]])
     
   }))
@@ -158,7 +158,7 @@ register_http_handlers <- function(session, metadata) {
     
     # temporarily attach environment state to search path
     # for R completion engine
-    if (nzchar(label)) {
+    if (nzchar(label) && is.environment(state[[label]])) {
       attach(state[[label]], name = "tutor:state")
       on.exit(detach("tutor:state"), add = TRUE)
     }
