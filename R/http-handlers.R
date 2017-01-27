@@ -129,7 +129,7 @@ register_http_handlers <- function(session, metadata) {
     
     # evaluate code in environment to prime
     Encoding(code) <- "UTF-8"
-    state[[label]] <- new.env(parent = emptyenv())
+    state[[label]] <- new.env()
     eval(parse(text = code, encoding = "UTF-8"), envir = state[[label]])
     
   }))
