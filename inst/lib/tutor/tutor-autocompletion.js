@@ -6,12 +6,6 @@ function TutorCompleter(tutor) {
     clearTimeout(this.$autocompletionTimerId);
     data = data || {};
 
-    // NOTE: Ace completer is initialized lazily and
-    // so may not be available when Ace is first initialized
-    var popup = (this.completer || {}).popup;
-    if (popup && popup.isOpen)
-      return;
-
     // only perform live autocompletion while user
     // is typing (ie, single-character text insertions)
     if (data.action !== "insert")
@@ -21,16 +15,27 @@ function TutorCompleter(tutor) {
     if (lines.length !== 1)
       return;
     
-    var text = lines[0];
-    if (text.length !== 1)
+    // NOTE: Ace has already updated the document line at this point
+    // so we can just look at the state of that line
+    var pos = this.getCursorPosition();
+    var line = this.session.getLine(pos.row);
+
+    // NOTE: we allow new autocompletion sessions following a
+    // ':' insertion just to enable cases where the user is
+    // typing e.g. 'stats::rnorm()' while the popup is visible
+    var popup = (this.completer || {}).popup;
+    if (popup && popup.isOpen && !/::$/.test(line))
       return;
 
-    // immediately autocomplete following '$', '@'
-    if (text == "$" || text == "@")
-      return this.$liveAutocompleter();
-    
-    // otherwise, autocomplete after a delay
-    this.$autocompletionTimerId = setTimeout(this.$liveAutocompleter, 300);
+    // figure out appropriate delay -- want to autocomplete
+    // immediately after a '$' or '@' insertion, but need to
+    // execute on timeout to allow Ace to finish processing
+    // events (if any)
+    var delayMs = 300;
+    if (/[$@]$|::$/.test(line))
+      delayMs = 10;
+
+    this.$autocompletionTimerId = setTimeout(this.$liveAutocompleter, delayMs);
   };
  
   var MODIFIER_NONE  = 0;
