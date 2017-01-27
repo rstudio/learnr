@@ -81,7 +81,12 @@ function TutorCompleter(tutor) {
           end: position
         });
 
-        self.$tutor.$serverRequest("completion", contents, function(data) {
+        var payload = {
+          contents: contents,
+          label: editor.tutorial.label
+        };
+
+        self.$tutor.$serverRequest("completion", payload, function(data) {
           
           data = data || [];
 
@@ -132,12 +137,18 @@ function TutorCompleter(tutor) {
     });
   }
 
+  function initializeSetupChunk(editor) {
+    var data = editor.tutorial;
+    self.$tutor.$serverRequest("initialize_chunk", data);
+  }
+
   var ensureInitialized = function(editor) {
     if (editor.$autocompletionInitialized)
       return;
 
     initializeAceEventListeners(editor);
     initializeCompletionEngine(editor);
+    initializeSetupChunk(editor);
     
     // generate a live autocompleter for this editor if
     // not yet available

@@ -3,6 +3,9 @@
 
 register_http_handlers <- function(session, metadata) {
   
+  # environment used for hosting state (e.g. for chunks)
+  state <- new.env()
+  
   # initialize handler
   session$registerDataObj("initialize", NULL,  function(data, req) {
     
@@ -112,11 +115,32 @@ register_http_handlers <- function(session, metadata) {
     
   }))
   
+  # setup chunk handler
+  session$registerDataObj("initialize_chunk", NULL, rpc_handler(function(input) {
+    params <- input
+    
+    # evaluate setup code to prime environment
+    label <- as.character(params$label)
+    code <- paste(params$setup_code, collapse = "\n")
+    
+    # no setup chunk / label? nothing to do
+    if (!(nzchar(label) && nzchar(code)))
+      return()
+    
+    # evaluate code in environment to prime
+    Encoding(code) <- "UTF-8"
+    state[[label]] <- new.env(parent = parent.env(state))
+    eval(parse(text = code, encoding = "UTF-8"), envir = state[[label]])
+    
+  }))
+  
   # completion handler
-  session$registerDataObj("completion",  NULL, rpc_handler(function(input) {
+  session$registerDataObj("completion", NULL, rpc_handler(function(input) {
     
     # read params
-    line <- input
+    line <- as.character(input$contents)
+    label <- as.character(input$label)
+    
     Encoding(line) <- "UTF-8"
     
     # set completion settings
@@ -132,11 +156,18 @@ register_http_handlers <- function(session, metadata) {
                 argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
     on.exit(do.call(rc.settings, as.list(settings)), add = TRUE)
     
+    # temporarily attach environment state to search path
+    # for R completion engine
+    if (nzchar(label)) {
+      attach(state[[label]], name = "tutor:state")
+      on.exit(detach("tutor:state"), add = TRUE)
+    }
+    
     completions <- character()
     try(silent = TRUE, {
       utils:::.assignLinebuffer(line)
       utils:::.assignEnd(nchar(line))
-      token <- utils:::.guessTokenFromLine()
+      utils:::.guessTokenFromLine()
       utils:::.completeToken()
       completions <- as.character(utils:::.retrieveCompletions())
     })
