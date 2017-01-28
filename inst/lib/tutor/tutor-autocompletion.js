@@ -74,6 +74,7 @@ function TutorCompleter(tutor) {
   }
 
   function initializeCompletionEngine(editor) {
+    
     editor.completers = editor.completers || [];
     editor.completers.push({
 
@@ -148,6 +149,11 @@ function TutorCompleter(tutor) {
   }
 
   var ensureInitialized = function(editor) {
+    
+    // bail if completions are disabled for this editor
+    if (!editor.tutorial.completion)
+      return;
+    
     if (editor.$autocompletionInitialized)
       return;
 
@@ -182,6 +188,10 @@ function TutorCompleter(tutor) {
     var editor = findActiveAceInstance();
     if (editor == null)
       return;
+      
+    // bail if completions are disabled for this editor
+    if (!editor.tutorial.completion)
+      return;
     
     // ensure completion engine initialized
     ensureInitialized(editor);
@@ -199,8 +209,12 @@ function TutorCompleter(tutor) {
 
     // TODO: find more appropriate place for one-time initialization
     var editor = findActiveAceInstance();
-    if (editor != null)
+    if (editor !== null)
       ensureInitialized(editor);
+
+    // bail if completions are disabled for this editor
+    if (editor !== null && !editor.tutorial.completion)
+      return;
 
     var keys = new KeyCombination(event);
     if (keys.keyCode == KEYCODE_TAB && keys.modifier == MODIFIER_NONE)

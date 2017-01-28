@@ -34,6 +34,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.checker</code></td>
 <td>Function used to check exercise answers.</td>
 </tr>
+<tr class="even">
+<td><code>exercise.completion</code></td>
+<td>Whether to enable code completion in the exercise editor.</td>
+</tr>
 </tbody>
 </table>
 
@@ -226,6 +230,18 @@ By default exercises are displayed with caption of "Code". However, in some case
 
 <div id="exercisecaption"></div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>
+
+## Code Assistance
+
+By default, code completions are automatically provided as users type within the exercise editor:
+
+<img src="images/exercise-completion.png" width=749 height=213>
+
+You can optionally disable code completion (either globally or on a per-chunk basis) using the `exercise.completion` option. For example, the following illustrates turning off completions globally then enabling them for an individual chunk:
+
+<div id="exercisecompletion"></div>
+<script type="text/javascript">loadSnippet('exercisecompletion')</script>
+
 
 ## Editor Size
 

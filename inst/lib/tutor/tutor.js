@@ -849,16 +849,22 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     // activate the ace editor
     var editor = thiz.$attachAceEditor(code_id, code);
     
-    // add setup code for this exercise to the editor instance
+    // get setup_code (if any)
     var setup_code = null;
     var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
     if (chunk_options["exercise.setup"])
         setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);     
       else
         setup_code = thiz.$exerciseSupportCode(label + "-setup");
+        
+    // use code completion
+    var completion = exercise.attr('data-completion') === "1";
+        
+    // set tutorial options
     editor.tutorial = {
       label: label,
-      setup_code: setup_code
+      setup_code: setup_code,
+      completion: completion
     };
     
     // bind execution keys 

@@ -384,6 +384,14 @@ Number of seconds to limit execution time to (defaults to 30).
 Function used to check exercise answers.
 </td>
 </tr>
+<tr class="even">
+<td>
+<code>exercise.completion</code>
+</td>
+<td>
+Whether to enable code completion in the exercise editor.
+</td>
+</tr>
 </tbody>
 </table>
 <p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the <code>setup</code> chunk and also sets some local options on the <code>addition</code> chunk:</p>
@@ -619,6 +627,16 @@ Location for feedback (“append”, “prepend”, or “replace”).
 
 </div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>
+</div>
+<div id="code-assistance" class="section level2">
+<h2>Code Assistance</h2>
+<p>By default, code completions are automatically provided as users type within the exercise editor:</p>
+<p><img src="images/exercise-completion.png" width=749 height=213></p>
+<p>You can optionally disable code completion (either globally or on a per-chunk basis) using the <code>exercise.completion</code> option. For example, the following illustrates turning off completions globally then enabling them for an individual chunk:</p>
+<div id="exercisecompletion">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisecompletion')</script>
 </div>
 <div id="editor-size" class="section level2">
 <h2>Editor Size</h2>
