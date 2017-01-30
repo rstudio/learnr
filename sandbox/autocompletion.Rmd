@@ -18,7 +18,8 @@ tutor_options(
       list(message = "Nice job!", 
            correct = TRUE, 
            location = "append")
-  }
+  },
+  exercise.completion=TRUE
 )
 ```
 
@@ -28,6 +29,12 @@ tutor_options(
 autocompletion <- list(apple = 1, banana = 2, cherry = 3)
 ```
 
-```{r autocompletion, exercise=TRUE, exercise.setup="autocompletion-setup"}
+```{r autocompletion, exercise=TRUE, exercise.completion = TRUE, exercise.setup="autocompletion-setup"}
 # Try typing here
 ```
+
+```{r autocompletion2, exercise=TRUE}
+# Try typing here
+```
+
+

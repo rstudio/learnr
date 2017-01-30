@@ -12,13 +12,15 @@
 #' @param exercise.lines Lines of code for exercise editor (defaults to the 
 #'   number of lines in the code chunk).
 #' @param exercise.checker Function used to check exercise answers.
+#' @param exercise.completion Use code completion in exercise editor
 #' 
 #' @export
 tutor_options <- function(exercise.cap = "Code",
                           exercise.eval = FALSE,
                           exercise.timelimit = 30,
                           exercise.lines = NULL,
-                          exercise.checker = NULL) {
+                          exercise.checker = NULL,
+                          exercise.completion = TRUE) {
   
   # string to evalute for setting chunk options  %1$s
   set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
@@ -29,4 +31,5 @@ tutor_options <- function(exercise.cap = "Code",
   eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
   eval(parse(text = sprintf(set_option_code, "exercise.lines")))
   eval(parse(text = sprintf(set_option_code, "exercise.checker")))
+  eval(parse(text = sprintf(set_option_code, "exercise.completion")))
 }
