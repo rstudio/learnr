@@ -27,16 +27,30 @@ var TutorDiagnostics = function(tutor) {
       type: "error",
       text: "unexpected " + symbol + " '" + token.value + "'"
     };
-  }
+  };
 
   var isSymbol = function(token) {
-    var type = token.type;
+    var type = token.type || "";
     return type == "string" ||
            type == "constant.numeric" ||
            type == "constant.language.boolean" ||
            type == "identifier" ||
            type == "keyword" ||
            type == "variable.language";
+  };
+
+  var isOperator = function(token) {
+    var type = token.type || "";
+    return type == "keyword.operator";
+  };
+
+  var isUnaryOperator = function(token) {
+    var value = token.value || "";
+    return value == "+" ||
+           value == "-" ||
+           value == "~" ||
+           value == "!" ||
+           value == "?";
   };
 
   var diagnose = function() {
@@ -127,13 +141,19 @@ var TutorDiagnostics = function(tutor) {
         }
       }
 
-      // if we have two symbols in a row with no binary operator inbetween, syntax error
       if (i > 0) {
         var lhs = tokens[i - 1];
         var rhs = tokens[i];
 
+        // if we have two symbols in a row with no binary operator inbetween, syntax error
         if (lhs.position.row == rhs.position.row && isSymbol(lhs) && isSymbol(rhs)) {
           diagnostics.push(unexpected("symbol", rhs));
+          continue;
+        }
+
+        // if we have an operator followed by a binary-only operator, syntax error
+        if (lhs.position.row == rhs.position.row && isOperator(lhs) && isOperator(rhs) && !isUnaryOperator(rhs)) {
+          diagnostics.push(unexpected("operator", rhs));
           continue;
         }
       }
