@@ -8,6 +8,10 @@ $(document).ready(function() {
   if (typeof TutorCompleter !== "undefined")
     tutor.$completer = new TutorCompleter(tutor);
 
+  // register diagnostics if available
+  if (typeof TutorDiagnostics !== "undefined")
+    tutor.$diagnostics = new TutorDiagnostics(tutor);
+
   window.tutor = tutor;
 });
 

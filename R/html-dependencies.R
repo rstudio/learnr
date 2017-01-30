@@ -25,6 +25,16 @@ tutor_autocompletion_html_dependency <- function() {
   )
 }
 
+tutor_diagnostics_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "tutor-diagnostics",
+    version = utils::packageVersion("tutor"),
+    src = html_dependency_src("lib", "tutor"),
+    script = "tutor-diagnostics.js"
+  )
+}
+
+
 html_dependency_src <- function(...) {
   if (nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
     r_dir <- utils::getSrcDirectory(html_dependency_src, unique = TRUE)
