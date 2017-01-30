@@ -20,11 +20,11 @@ var TutorDiagnostics = function(tutor) {
     };
   };
 
-  var unexpected = function(symbol, token) {
+  var unexpected = function(symbol, token, type) {
     return {
       row: token.position.row,
       column: token.position.column,
-      type: "error",
+      type: type || "error",
       text: "unexpected " + symbol + " '" + token.value + "'"
     };
   };
@@ -69,6 +69,21 @@ var TutorDiagnostics = function(tutor) {
         rule[i].merge = false;
       }
     }
+
+    // fix up rules
+    rules["start"].unshift({
+      token: "keyword.operator",
+      regex: ":::|::|:=|%%|>=|<=|==|!=|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?",
+      merge: false,
+      next: "start"
+    });
+
+    rules["start"].unshift({
+      token: "punctuation",
+      regex: "[;,]",
+      next: "start"
+    });
+
     var tokenizer = new Tokenizer(rules);
 
     // clear old diagnostics
@@ -96,7 +111,7 @@ var TutorDiagnostics = function(tutor) {
 
     // remove whitespace, comments (not relevant for syntax diagnostics)
     tokens = tokens.filter(function(token) {
-      return token.type !== "text" && token.type !== "comment";
+      return token.type !== "comment" && !/\s+/.test(token.value);
     });
 
     // state related to our simple diagnostics engine
