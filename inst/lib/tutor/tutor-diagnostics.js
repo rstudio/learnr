@@ -72,16 +72,17 @@ var TutorDiagnostics = function(tutor) {
 
     // fix up rules
     rules["start"].unshift({
-      token: "keyword.operator",
-      regex: ":::|::|:=|%%|>=|<=|==|!=|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?",
-      merge: false,
-      next: "start"
+      token : "keyword.operator",
+      regex : ":::|::|:=|%%|>=|<=|==|!=|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?",
+      merge : false,
+      next  : "start"
     });
 
     rules["start"].unshift({
-      token: "punctuation",
-      regex: "[;,]",
-      next: "start"
+      token : "punctuation",
+      regex : "[;,]",
+      merge : false,
+      next  : "start"
     });
 
     var tokenizer = new Tokenizer(rules);
@@ -159,6 +160,7 @@ var TutorDiagnostics = function(tutor) {
       if (i > 0) {
         var lhs = tokens[i - 1];
         var rhs = tokens[i];
+        var bracket = bracketStack[bracketStack.length - 1] || {};
 
         // if we have two symbols in a row with no binary operator inbetween, syntax error
         if (lhs.position.row == rhs.position.row && isSymbol(lhs) && isSymbol(rhs)) {
@@ -169,6 +171,18 @@ var TutorDiagnostics = function(tutor) {
         // if we have an operator followed by a binary-only operator, syntax error
         if (lhs.position.row == rhs.position.row && isOperator(lhs) && isOperator(rhs) && !isUnaryOperator(rhs)) {
           diagnostics.push(unexpected("operator", rhs));
+          continue;
+        }
+
+        // if we have multiple commas in a row within a parenthetical context, warn
+        if (lhs.value == "," && rhs.value == "," && bracket.value == "(") {
+          diagnostics.push(unexpected("comma", rhs, "warning"));
+          continue;
+        }
+
+        // if we have a comma preceding a closing bracket, warn
+        if (lhs.value == "," && (rhs.value == "}" || rhs.value == ")" || rhs.value == "]")) {
+          diagnostics.push(unexpected("comma", lhs, "warning"));
           continue;
         }
       }
@@ -223,6 +237,7 @@ var TutorDiagnostics = function(tutor) {
       return;
 
     clearTimeout(this.$diagnosticsTimerId);
+    this.session.clearAnnotations();
     var delayMs = 1000;
     this.$diagnosticsTimerId = setTimeout(this.$liveDiagnostics, 1000);
   };
