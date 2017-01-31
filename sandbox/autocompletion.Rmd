@@ -19,7 +19,8 @@ tutor_options(
            correct = TRUE, 
            location = "append")
   },
-  exercise.completion=TRUE
+  exercise.completion = TRUE,
+  exercise.diagnostics = TRUE
 )
 ```
 
@@ -37,4 +38,11 @@ autocompletion <- list(apple = 1, banana = 2, cherry = 3)
 # Try typing here
 ```
 
+```{r no-diagnostics, exercise=TRUE, exercise.diagnostics=FALSE}
+# no diagnostics here
+```
+
+```{r diagnostics, exercise=TRUE}
+# diagnostics here
+```
 

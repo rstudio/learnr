@@ -199,6 +199,9 @@ var TutorDiagnostics = function(tutor) {
     if (editor.$diagnosticsInitialized)
       return;
 
+    if (!editor.tutorial.diagnostics)
+      return;
+
     // register handlers
     var handlers = {};
     handlers["change"] = self.$onChange.bind(editor);
@@ -216,6 +219,9 @@ var TutorDiagnostics = function(tutor) {
   };
 
   this.$onChange = function(data) {
+    if (!this.tutorial.diagnostics)
+      return;
+
     clearTimeout(this.$diagnosticsTimerId);
     var delayMs = 1000;
     this.$diagnosticsTimerId = setTimeout(this.$liveDiagnostics, 1000);

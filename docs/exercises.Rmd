@@ -38,6 +38,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.completion</code></td>
 <td>Whether to enable code completion in the exercise editor.</td>
 </tr>
+<tr class="odd">
+<td><code>exercise.diagnostics</code></td>
+<td>Whether to enable code diagnostics in the exercise editor.</td>
+</tr>
 </tbody>
 </table>
 
@@ -242,6 +246,7 @@ You can optionally disable code completion (either globally or on a per-chunk ba
 <div id="exercisecompletion"></div>
 <script type="text/javascript">loadSnippet('exercisecompletion')</script>
 
+Similarily, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the `exercise.diagnostics` option.
 
 ## Editor Size
 
