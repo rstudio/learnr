@@ -153,7 +153,6 @@ install_knitr_hooks <- function() {
         # inject ace and clipboardjs dependencies
         knitr::knit_meta_add(list(
           list(ace_html_dependency()),
-          list(ace_language_tools_html_dependency()),
           list(clipboardjs_html_dependency())
         ))
         

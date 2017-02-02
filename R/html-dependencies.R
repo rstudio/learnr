@@ -69,18 +69,9 @@ clipboardjs_html_dependency <- function() {
 ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
-    version = "1.2.3",
+    version = ACE_VERSION,
     src = system.file("lib/ace", package = "tutor"),
     script = "ace.js"
-  )
-}
-
-ace_language_tools_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "ace-language-tools",
-    version = "1.2.3",
-    src = system.file("lib/ace", package = "tutor"),
-    script = "ext-language_tools.js"
   )
 }
 
