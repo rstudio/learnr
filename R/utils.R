@@ -1,4 +1,4 @@
-
+"%||%" <- function(x, y) if (is.null(x)) y else x
 
 is_windows <- function() {
   .Platform$OS.type == 'windows'

@@ -25,6 +25,16 @@ tutor_autocompletion_html_dependency <- function() {
   )
 }
 
+tutor_diagnostics_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "tutor-diagnostics",
+    version = utils::packageVersion("tutor"),
+    src = html_dependency_src("lib", "tutor"),
+    script = "tutor-diagnostics.js"
+  )
+}
+
+
 html_dependency_src <- function(...) {
   if (nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
     r_dir <- utils::getSrcDirectory(html_dependency_src, unique = TRUE)
@@ -59,18 +69,9 @@ clipboardjs_html_dependency <- function() {
 ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
-    version = "1.2.3",
+    version = ACE_VERSION,
     src = system.file("lib/ace", package = "tutor"),
     script = "ace.js"
-  )
-}
-
-ace_language_tools_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "ace-language-tools",
-    version = "1.2.3",
-    src = system.file("lib/ace", package = "tutor"),
-    script = "ext-language_tools.js"
   )
 }
 

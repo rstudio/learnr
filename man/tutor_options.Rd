@@ -5,7 +5,8 @@
 \title{Set tutor options}
 \usage{
 tutor_options(exercise.cap = "Code", exercise.eval = FALSE,
-  exercise.timelimit = 30, exercise.lines = NULL, exercise.checker = NULL)
+  exercise.timelimit = 30, exercise.lines = NULL, exercise.checker = NULL,
+  exercise.completion = TRUE, exercise.diagnostics = TRUE)
 }
 \arguments{
 \item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
@@ -20,6 +21,10 @@ see some default output (defaults to \code{FALSE}).}
 number of lines in the code chunk).}
 
 \item{exercise.checker}{Function used to check exercise answers.}
+
+\item{exercise.completion}{Use code completion in exercise editors.}
+
+\item{exercise.diagnostics}{Show diagnostics in exercise editors.}
 }
 \description{
 Set various tutor options that control the display and evaluation of 

@@ -5,6 +5,7 @@
 ^design$
 ^docs$
 ^sandbox$
+^tools$
 ^.*/skeleton/skeleton.html
 
 

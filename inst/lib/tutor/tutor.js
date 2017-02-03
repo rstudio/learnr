@@ -8,6 +8,10 @@ $(document).ready(function() {
   if (typeof TutorCompleter !== "undefined")
     tutor.$completer = new TutorCompleter(tutor);
 
+  // register diagnostics if available
+  if (typeof TutorDiagnostics !== "undefined")
+    tutor.$diagnostics = new TutorDiagnostics(tutor);
+
   window.tutor = tutor;
 });
 
@@ -858,13 +862,15 @@ Tutor.prototype.$initializeExerciseEditors = function() {
         setup_code = thiz.$exerciseSupportCode(label + "-setup");
         
     // use code completion
-    var completion = exercise.attr('data-completion') === "1";
+    var completion  = exercise.attr('data-completion') === "1";
+    var diagnostics = exercise.attr('data-diagnostics') === "1";
         
     // set tutorial options
     editor.tutorial = {
       label: label,
       setup_code: setup_code,
-      completion: completion
+      completion: completion,
+      diagnostics: diagnostics
     };
     
     // bind execution keys 

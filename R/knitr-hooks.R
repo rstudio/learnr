@@ -124,15 +124,14 @@ install_knitr_hooks <- function() {
         class <- paste0("exercise", suffix)
         lines <- ifelse(is.numeric(options$exercise.lines), 
                         options$exercise.lines, 0)
-        if (!is.null(options$exercise.completion))
-          completion <- ifelse(isTRUE(options$exercise.completion), 1, 0)
-        else
-          completion <- 1
+        completion  <- as.numeric(options$exercise.completion %||% 0 > 0)
+        diagnostics <- as.numeric(options$exercise.diagnostics %||% 0 > 0)
         caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
         paste0('<div class="tutor-', class, 
                '" data-label="', options$label, 
                '" data-caption="', caption, 
                '" data-completion="', completion,
+               '" data-diagnostics="', diagnostics,
                '" data-lines="', lines, '">')
       }
       # after exercise
@@ -154,7 +153,6 @@ install_knitr_hooks <- function() {
         # inject ace and clipboardjs dependencies
         knitr::knit_meta_add(list(
           list(ace_html_dependency()),
-          list(ace_language_tools_html_dependency()),
           list(clipboardjs_html_dependency())
         ))
         
