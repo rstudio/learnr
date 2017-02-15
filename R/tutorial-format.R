@@ -27,9 +27,6 @@ tutorial <- function(fig_width = 6.5,
   # base pandoc options 
   args <- c()
   
-  # build pandoc args
-  args <- c("--standalone")
-  
   # use section divs
   args <- c(args, "--section-divs")
   
