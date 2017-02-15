@@ -20,4 +20,3 @@ as a backing store. The direcotry will contain tutorial
 state data partitioned by user_id, tutorial_id, and 
 tutorial_version (in that order)
 }
-

@@ -30,4 +30,3 @@ number of lines in the code chunk).}
 Set various tutor options that control the display and evaluation of 
 exercises.
 }
-

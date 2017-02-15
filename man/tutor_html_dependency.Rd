@@ -14,4 +14,3 @@ HTML dependency for core tutor JS and CSS. This should be included as a
 dependency for custom tutorial formats that wish to ensure that that
 tutor.js and tutor.css are loaded prior their own scripts and stylesheets.
 }
-

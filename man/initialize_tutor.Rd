@@ -11,4 +11,3 @@ One time initialization of R Markdown extensions required by the
 \pkg{tutor} package. This function is typically called automatically 
 as a result of using exercises or questions.
 }
-

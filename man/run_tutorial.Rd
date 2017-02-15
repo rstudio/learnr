@@ -24,4 +24,3 @@ Note that when running a tutorial Rmd file with \code{run_tutorial}
   development of the package (i.e. the correponding tutorial .html file for 
   the .Rmd file must exist).
 }
-
