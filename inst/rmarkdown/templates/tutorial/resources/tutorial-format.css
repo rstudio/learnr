@@ -1,30 +1,5 @@
 
 
-#section-TOC .toc-controls {
-  margin-bottom: 10px;
-  margin-top: 4px;
-  padding-left: 13px;
-  padding-right: 13px;
+.robby-container {
+  padding: 20px;
 }
-
-#section-TOC button {
-  color: #777;
-  padding-right: 30px;
-  padding-left: 25px;
-  margin: auto;
-  display: block;
-  margin-top: 15px;
-}
-
-#section-TOC button>i {
-  margin-right: 8px;
-}
-
-#section-TOC .progress-check {
-  color: #ccc;
-}
-
-#section-TOC .active .progress-check {
-  color: white;
-}
-

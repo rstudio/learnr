@@ -7,10 +7,7 @@
 #' @param ... Forward parameters to html_document
 #' 
 #' @export
-tutorial <- function(toc = TRUE,
-                     toc_depth = 3,
-                     toc_float = list(collapsed = FALSE),
-                     fig_width = 6.5,
+tutorial <- function(fig_width = 6.5,
                      fig_height = 4,
                      fig_retina = 2,
                      fig_caption = TRUE,
@@ -26,6 +23,22 @@ tutorial <- function(toc = TRUE,
                      md_extensions = NULL,
                      pandoc_args = NULL,
                      ...) {
+  
+  # base pandoc options 
+  args <- c()
+  
+  # content includes
+  args <- c(args, includes_to_pandoc_args(includes))
+  
+  # pagedtables
+  if (identical(df_print, "paged")) {
+    extra_dependencies <- append(extra_dependencies,
+                                 list(html_dependency_pagedtable()))
+  }
+  
+  # additional css
+  for (css_file in css)
+    args <- c(args, "--css", pandoc_path_arg(css_file))
   
   
   # additional tutorial-format js and css. note that we also include the 
@@ -45,36 +58,62 @@ tutorial <- function(toc = TRUE,
     )
   ))
   
+  
+  # knitr and pandoc options
+  knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
+  pandoc_options <- pandoc_options(to = "html",
+                                   from = from_rmarkdown(fig_caption, md_extensions),
+                                   args = args)
+  
   # create base document format using standard html_document
-  base_format <- rmarkdown::html_document(
-    toc = toc,
-    toc_depth = toc_depth,
-    toc_float = toc_float,
-    fig_width = fig_width,
-    fig_height = fig_height,
-    fig_retina = fig_retina,
-    fig_caption = fig_caption,
-    dev = dev,
-    df_print = df_print,
-    code_folding = "none",
-    code_download = FALSE,
+  base_format <- rmarkdown::html_document_base(
     smart = smart,
     theme = theme,
-    highlight = highlight,
-    mathjax = mathjax,
-    extra_dependencies = extra_dependencies,
-    css = css,
-    includes = includes,
-    keep_md = FALSE,
     lib_dir = NULL,
-    md_extensions = md_extensions,
+    mathjax = mathjax,
     pandoc_args = pandoc_args,
+    template = system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
+                           package = "tutor"),
+    extra_dependencies = extra_dependencies,
+    bootstrap_compatible = TRUE,
     ...
   )
   
   # return new output format
-  rmarkdown::output_format(knitr = NULL,
-                           pandoc = NULL,
+  rmarkdown::output_format(knitr = knitr_options,
+                           pandoc = pandoc_options,
                            clean_supporting = FALSE,
+                           df_print = df_print,
                            base_format = base_format)
 }
+
+
+# NOTE: get these two functions from rmarkdown once new version hits CRAN
+
+# pandoc options for rmarkdown input
+from_rmarkdown <- function(implicit_figures = TRUE, extensions = NULL) {
+  
+  # paste extensions together and remove whitespace
+  extensions <- paste0(extensions, collapse = "")
+  extensions <- gsub(" ", "", extensions)
+  
+  # exclude implicit figures unless the user has added them back
+  if (!implicit_figures && !grepl("implicit_figures", extensions))
+    extensions <- paste0("-implicit_figures", extensions)
+  
+  rmarkdown_format(extensions)
+}
+
+
+# create an html_dependency for pagedtable
+html_dependency_pagedtable <- function() {
+  htmlDependency(
+    "pagedtable",
+    version = "1.1",
+    src = system.file("rmd/h/pagedtable-1.1", package = "rmarkdown"),
+    script = "js/pagedtable.js",
+    stylesheet = "css/pagedtable.css"
+  )
+}
+
+

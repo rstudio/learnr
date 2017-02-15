@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$>
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+$for(author-meta)$
+<meta name="author" content="$author-meta$" />
+$endfor$
+
+$if(date-meta)$
+<meta name="date" content="$date-meta$" />
+$endif$
+
+<title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+<!-- begin highlightjs -->
+$if(highlightjs)$ 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+$endif$ 
+<!-- end highlightjs -->
+
+
+<!-- begin highlighting-css -->
+$if(highlighting-css)$
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+$highlighting-css$
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+$endif$
+<!-- end highlighting-css -->
+
+
+$for(css)$
+<link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
+$endfor$
+
+</head>
+
+<body>
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata" style="display:none">
+$if(title)$
+<h1 class="title toc-ignore">$title$</h1>
+$if(subtitle)$
+<h3 class="subtitle"><em>$subtitle$</em></h3>
+$endif$
+$for(author)$
+$if(author.name)$
+<h4 class="author"><em>$author.name$</em></h4>
+$if(author.affiliation)$
+<address class="author_afil">
+$author.affiliation$<br>$endif$
+$if(author.email)$
+<a class="author_email" href="mailto:#">$author.email$</a>
+</address>
+$endif$
+$else$
+<h4 class="author"><em>$author$</em></h4>
+$endif$
+$endfor$
+$if(date)$
+<h4 class="date"><em>$date$</em></h4>
+$endif$
+$if(abstract)$
+<div class="abstract">
+<p class="abstract">Abstract</p>
+$abstract$
+</div>
+$endif$
+$endif$
+</div>
+<!-- end doc-metadata -->
+
+
+$body$
+
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $$('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+$if(mathjax-url)$
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "$mathjax-url$";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+$endif$
+
+</body>
+
+</html>

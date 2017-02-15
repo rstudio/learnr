@@ -4,23 +4,13 @@
 \alias{tutorial}
 \title{Tutorial document format}
 \usage{
-tutorial(toc = TRUE, toc_depth = 3, toc_float = list(collapsed = FALSE),
-  fig_width = 6.5, fig_height = 4, fig_retina = 2, fig_caption = TRUE,
-  dev = "png", df_print = "paged", smart = TRUE, theme = "cerulean",
-  highlight = "textmate", mathjax = "default", extra_dependencies = NULL,
-  css = NULL, includes = NULL, md_extensions = NULL, pandoc_args = NULL,
-  ...)
+tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
+  fig_caption = TRUE, dev = "png", df_print = "paged", smart = TRUE,
+  theme = "cerulean", highlight = "textmate", mathjax = "default",
+  extra_dependencies = NULL, css = NULL, includes = NULL,
+  md_extensions = NULL, pandoc_args = NULL, ...)
 }
 \arguments{
-\item{toc}{\code{TRUE} to include a table of contents in the output}
-
-\item{toc_depth}{Depth of headers to include in table of contents}
-
-\item{toc_float}{\code{TRUE} to float the table of contents to the left of the
-main document content. Rather than \code{TRUE} you may also pass a list of
-options that control the behavior of the floating table of contents. See the
-\emph{Floating Table of Contents} section below for details.}
-
 \item{fig_width}{Default width (in inches) for figures}
 
 \item{fig_height}{Default width (in inches) for figures}
@@ -83,4 +73,3 @@ additional details.}
 \description{
 Long-form tutorial which includes narrative, figures, videos, exercises, and questions.
 }
-
