@@ -81,6 +81,7 @@ tutorial <- function(fig_width = 6.5,
     lib_dir = NULL,
     mathjax = mathjax,
     pandoc_args = pandoc_args,
+    template = NULL,
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
     ...
