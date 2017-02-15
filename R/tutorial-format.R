@@ -30,6 +30,12 @@ tutorial <- function(fig_width = 6.5,
   # use section divs
   args <- c(args, "--section-divs")
   
+  # template
+  args <- c(args, "--template", pandoc_path_arg(
+    system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
+                package = "tutor")
+  ))
+  
   # content includes
   args <- c(args, includes_to_pandoc_args(includes))
   
@@ -75,8 +81,6 @@ tutorial <- function(fig_width = 6.5,
     lib_dir = NULL,
     mathjax = mathjax,
     pandoc_args = pandoc_args,
-    template = system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
-                           package = "tutor"),
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
     ...
