@@ -2,94 +2,94 @@
 
 $(document).ready(function() {
 
-    var titleText = '';
-    var currentTopicIndex = -1;
-    var topics = [];
+  var titleText = '';
+  var currentTopicIndex = -1;
+  var topics = [];
 
-    function setCurrentTopic(topicIndex) {
-      if (topicIndex == currentTopicIndex) return;
+  function setCurrentTopic(topicIndex) {
+    if (topicIndex == currentTopicIndex) return;
 
-      if (currentTopicIndex != -1) {
-        $(topics[currentTopicIndex].jqElement).removeClass('current');
-        $(topics[currentTopicIndex].jqListElement).removeClass('current');
-      }
-
-      $(topics[topicIndex].jqElement).addClass('current');
-      $(topics[topicIndex].jqListElement).addClass('current');
-      currentTopicIndex = topicIndex;
+    if (currentTopicIndex != -1) {
+      $(topics[currentTopicIndex].jqElement).removeClass('current');
+      $(topics[currentTopicIndex].jqListElement).removeClass('current');
     }
 
-    function handleTopicClick(event) {
-      setCurrentTopic(this.getAttribute('index'));
-      hideFloatingTopics();
-    }
+    $(topics[topicIndex].jqElement).addClass('current');
+    $(topics[topicIndex].jqListElement).addClass('current');
+    currentTopicIndex = topicIndex;
+  }
 
-    function showFloatingTopics() {
-      $('.topicsList').removeClass('hideFloating');
-    }
+  function handleTopicClick(event) {
+    setCurrentTopic(this.getAttribute('index'));
+    hideFloatingTopics();
+  }
 
-    function hideFloatingTopics() {
-      $('.topicsList').addClass('hideFloating');
-    }
+  function showFloatingTopics() {
+    $('.topicsList').removeClass('hideFloating');
+  }
 
-    function buildTopicsList() {
-      var topicsList = $('<div class="topicsList hideFloating"></div>');
+  function hideFloatingTopics() {
+    $('.topicsList').addClass('hideFloating');
+  }
 
-      var topicsHeader = $('<div class="topicsHeader"></div>');
-      topicsHeader.append($('<div class="tutorialTitle">' + titleText + '</div>'));
-      var topicsCloser = $('<div class="paneCloser"></div>');
-      topicsCloser.on('click', hideFloatingTopics);
-      topicsHeader.append(topicsCloser);
-      topicsList.append(topicsHeader);
+  function buildTopicsList() {
+    var topicsList = $('<div class="topicsList hideFloating"></div>');
 
-      var topicsDOM = $('.section.level2');
-      topicsDOM.each( function(i, element) {
-        var topic = {};
-        topic.jqElement = element;
-        topic.jqTitleElement = $(element).children('h2')[0];
-        topic.titleText = topic.jqTitleElement.innerText;
-        jqTopic = $('<div class="topic" index="' + i + '">' + topic.titleText + '</div>');
-        jqTopic.on('click', handleTopicClick);
-        topic.jqListElement = jqTopic;
-        $(topicsList).append(jqTopic);
-        topics.push(topic);
-      });
+    var topicsHeader = $('<div class="topicsHeader"></div>');
+    topicsHeader.append($('<div class="tutorialTitle">' + titleText + '</div>'));
+    var topicsCloser = $('<div class="paneCloser"></div>');
+    topicsCloser.on('click', hideFloatingTopics);
+    topicsHeader.append(topicsCloser);
+    topicsList.append(topicsHeader);
 
-      var bandContent = $('<div class="bandContent"></div>');
-      bandContent.append(topicsList);
+    var topicsDOM = $('.section.level2');
+    topicsDOM.each( function(i, element) {
+      var topic = {};
+      topic.jqElement = element;
+      topic.jqTitleElement = $(element).children('h2')[0];
+      topic.titleText = topic.jqTitleElement.innerText;
+      jqTopic = $('<div class="topic" index="' + i + '">' + topic.titleText + '</div>');
+      jqTopic.on('click', handleTopicClick);
+      topic.jqListElement = jqTopic;
+      $(topicsList).append(jqTopic);
+      topics.push(topic);
+    });
 
-      var band = $('<div class="band"></div>');
-      band.append(bandContent);
+    var bandContent = $('<div class="bandContent"></div>');
+    bandContent.append(topicsList);
 
-      var topicsPositioner = $('<div class="topicsPositioner"></div>');
-      topicsPositioner.append(band);
+    var band = $('<div class="band"></div>');
+    band.append(bandContent);
 
-      var topicsContainer = $('<div class="topicsContainer"></div>');
-      topicsContainer.append(topicsPositioner);
+    var topicsPositioner = $('<div class="topicsPositioner"></div>');
+    topicsPositioner.append(band);
 
-      return topicsContainer;
+    var topicsContainer = $('<div class="topicsContainer"></div>');
+    topicsContainer.append(topicsPositioner);
 
-    }
+    return topicsContainer;
 
-    // transform the DOM here, e.g.
-    var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
-    $(document.body).wrapInner(container);
+  }
 
-    titleText = $('title')[0].innerText;
-    var tutorialTitle = $('<div class="tutorialTitle">' + titleText + '</div>');
-    tutorialTitle.on('click', showFloatingTopics);
-    $('.topics').prepend(tutorialTitle);
+  // transform the DOM here, e.g.
+  var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
+  $(document.body).wrapInner(container);
 
-    $('.bandContent').append(buildTopicsList());
+  titleText = $('title')[0].innerText;
+  var tutorialTitle = $('<div class="tutorialTitle">' + titleText + '</div>');
+  tutorialTitle.on('click', showFloatingTopics);
+  $('.topics').prepend(tutorialTitle);
 
-    setCurrentTopic(0);
+  $('.bandContent').append(buildTopicsList());
 
-    function handleResize() {
-      $('.topicsList').css("max-height", window.innerHeight - 30);
-    }
+  setCurrentTopic(0);
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+  function handleResize() {
+    $('.topicsList').css("max-height", window.innerHeight - 30);
+  }
+
+  handleResize();
+  window.addEventListener("resize", handleResize);
 
 
   // update navigation w/ progress
