@@ -22,8 +22,7 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
-<!-- begin highlightjs -->
-$if(highlightjs)$ 
+<!-- highlightjs -->
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -37,23 +36,6 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
    }, 0);
 }
 </script>
-$endif$ 
-<!-- end highlightjs -->
-
-
-<!-- begin highlighting-css -->
-$if(highlighting-css)$
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-$highlighting-css$
-</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-$endif$
-<!-- end highlighting-css -->
 
 
 $for(css)$
@@ -63,6 +45,7 @@ $endfor$
 </head>
 
 <body>
+
 
 $for(include-before)$
 $include-before$

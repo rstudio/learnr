@@ -15,7 +15,6 @@ tutorial <- function(fig_width = 6.5,
                      df_print = "paged",
                      smart = TRUE,
                      theme = "cerulean",
-                     highlight = "textmate",
                      mathjax = "default",
                      extra_dependencies = NULL,
                      css = NULL,
@@ -45,6 +44,12 @@ tutorial <- function(fig_width = 6.5,
                                  list(html_dependency_pagedtable()))
   }
   
+  # no pandoc highlighting
+  args <- c(args, "--no-highlight")
+  
+  # add highlight.js html_dependency
+  extra_dependencies <- append(extra_dependencies, list(html_dependency_highlightjs("textmate")))
+    
   # additional css
   for (css_file in css)
     args <- c(args, "--css", pandoc_path_arg(css_file))
@@ -81,6 +86,7 @@ tutorial <- function(fig_width = 6.5,
     lib_dir = NULL,
     mathjax = mathjax,
     pandoc_args = pandoc_args,
+    template = NULL,
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
     ...
@@ -95,7 +101,7 @@ tutorial <- function(fig_width = 6.5,
 }
 
 
-# NOTE: get these two functions from rmarkdown once new version hits CRAN
+# NOTE: get these three functions from rmarkdown once new version hits CRAN
 
 # pandoc options for rmarkdown input
 from_rmarkdown <- function(implicit_figures = TRUE, extensions = NULL) {
@@ -123,4 +129,13 @@ html_dependency_pagedtable <- function() {
   )
 }
 
+html_dependency_highlightjs <- function(highlight) {
+  htmlDependency(
+    "highlightjs",
+    version = "1.1",
+    src = system.file("rmd/h/highlightjs-1.1", package = "rmarkdown"),
+    script = "highlight.js",
+    stylesheet = paste0(highlight, ".css")
+  )
+}
 
