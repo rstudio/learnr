@@ -1,4 +1,15 @@
 
+/*
+
+To Do
+
+- Next/Previous Topic buttons
+- Progress Bar
+- Incremental Reveal
+-- Skip Exercise
+- Start over button
+
+*/
 
 $(document).ready(function() {
 
@@ -75,7 +86,7 @@ $(document).ready(function() {
   var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
   $(document.body).wrapInner(container);
 
-  titleText = $('head > title')[0].innerText;
+  titleText = $('title')[0].innerText;
   var tutorialTitle = $('<div class="tutorialTitle">' + titleText + '</div>');
   tutorialTitle.on('click', showFloatingTopics);
   $('.topics').prepend(tutorialTitle);
