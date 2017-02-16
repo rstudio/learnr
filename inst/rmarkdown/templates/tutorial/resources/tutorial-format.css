@@ -1,5 +1,146 @@
 
+.pageContent {
+  padding-top: 20px;
+}
 
-.robby-container {
-  padding: 30px;
+.band {
+  padding-left: 5%;
+  padding-right: 5%;
+  position: relative;
+}
+
+.bandContent {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.bandContent.page {
+  display: flex;
+  justify-content: space-between;
+  display: -ms-flexbox;
+  -ms-flex-pack: justify;
+  flex-direction: row-reverse;
+}
+
+.tutorialTitle {
+  font-size: 20px;
+  line-height: 50px;
+}
+
+.topics {
+  width: 75%;
+  overflow-x: auto;
+}
+
+.topics .tutorialTitle {
+  display: none;
+}
+
+.topics .section.level2 {
+  display: none;
+}
+
+.topics .section.level2.current {
+  display: block;
+}
+
+.topicsContainer {
+  width: 23%;
+  min-width: 270px;
+}
+
+.topicsPositioner {
+  position: fixed;
+  left: 0px;
+  width: 100%;
+  height: 0px;
+  background-color: pink;
+}
+
+.topicsList {
+  float: left;
+  padding-right: 10px;
+  position: relative;
+  width: 23%;
+  min-width: 270px;
+  overflow: auto;
+  height: auto;
+}
+.topicsHeader {
+  display: flex;
+  justify-content: space-between;
+  display: -ms-flexbox;
+  -ms-flex-pack: justify;
+}
+
+.topicsList .topic {
+  line-height: 40px;
+  font-size: 15px;
+  padding-left: 10px;
+  cursor: pointer;
+
+  background-repeat: no-repeat;
+  background-size: 2px 80px;
+  background-position: left 100%;
+  background-image: url(images/topicProgress.png);
+  border-bottom: 1px solid #f8f8f8;
+}
+
+.topicsList .topic:hover {
+  background-color: #fcfcfc;
+}
+
+.topicsList .topic.current {
+  background-color: #f8f8f8;
+}
+
+.section.level3 {
+  margin-bottom: 40px;
+}
+
+.paneCloser {
+  display: none;
+  height: 30px;
+  width: 30px;
+  background: url(images/close.svg) no-repeat center center;
+  background-size: 30px 30px;
+  border-radius: 15px;
+  position: relative;
+  top: 8px;
+}
+
+.paneCloser:hover {
+  background-color: rgba( 0, 0, 0, .05);
+}
+
+@media screen and (max-width: 767px) {
+  .topics {
+    width: 99%;
+  }
+
+  .topics .tutorialTitle {
+    display: block;
+    cursor: pointer;
+  }
+
+  .topicsContainer {
+    width: 1%;
+    min-width: 1px;
+  }
+
+  .topicsList {
+    padding: 0px 10px 20px 1%;
+    background-color: rgba(255, 255, 255, 0.9);
+
+    box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
+  }
+
+  .topicsList.hideFloating {
+    display: none;
+  }
+
+  .paneCloser {
+    display: inline-block;
+  }
 }

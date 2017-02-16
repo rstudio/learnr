@@ -78,3 +78,28 @@ quiz(
 )
 ```
 
+
+## Topic 3
+
+### Exercise 1
+
+*Here's another simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r two-plus-two-2, exercise=TRUE}
+
+```
+
+### Exercise 2
+
+*Here's another exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+
+Now write a function that adds any two numbers and then call it:
+
+```{r add-function-2, exercise=TRUE, exercise.lines = 5}
+add <- function() {
+  
+}
+```
+
