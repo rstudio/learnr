@@ -1,0 +1,18 @@
+
+  /* Stuff that needs to go into our css for CloudyR */
+  
+h2, h3 {
+  margin: 0;
+  font-weight: normal;
+  color: inherit;
+}
+  
+h2 {
+  font-size: 20px;
+  line-height: 50px;
+}
+  
+h3 {
+  font-size: 16px;
+  line-height: 40px;
+}

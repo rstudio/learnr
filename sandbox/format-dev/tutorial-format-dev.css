@@ -1,5 +1,64 @@
 
 
-.robby-container {
-  padding: 30px;
+.page-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 5%;
+
+  display: flex;
+  justify-content: space-between;
+
+  display: -ms-flexbox;
+  -ms-flex-pack: justify;
+
+  flex-direction: row-reverse;
+}
+
+.tutorialTitle {
+  font-size: 20px;
+  line-height: 50px;
+}
+
+.topics {
+  width: 75%;
+}
+
+.topics .section.level2 {
+  display: none;
+}
+
+.topics .section.level2.current {
+  display: block;
+}
+
+.topicsList {
+  width: 23%;
+  min-width: 270px;
+  float: left;
+  padding-right: 10px;
+}
+
+.topicsList .topic {
+  line-height: 40px;
+  font-size: 15px;
+  padding-left: 10px;
+  cursor: pointer;
+
+  background-repeat: no-repeat;
+  background-size: 2px 80px;
+  background-position: left 100%;
+  background-image: url(topicProgress.png);
+  border-bottom: 1px solid #f8f8f8;
+}
+  
+.topicsList .topic:hover {
+  background-color: #fcfcfc;
+}
+  
+.topicsList .topic.current {
+  background-color: #f8f8f8;
+}
+  
+.section.level3 {
+  margin-bottom: 40px;
 }
