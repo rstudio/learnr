@@ -2,10 +2,7 @@
 /*
 
 To Do
-- Optional Skip Exercise
--- allow-skip
--- not completed, not skipped
-- Next/Previous Topic buttons
+- Handle topic with no exercises
 - Start over button
 
 */
@@ -18,6 +15,8 @@ $(document).ready(function() {
   var topics = [];
 
   function setCurrentTopic(topicIndex) {
+    topicIndex = topicIndex * 1;  // convert strings to a number
+
     if (topicIndex == currentTopicIndex) return;
 
     if (currentTopicIndex != -1) {
@@ -65,8 +64,11 @@ $(document).ready(function() {
       showExercise = (showExercise && (exercise.completed || exercise.skipped));
     });
 
-    if (showExercise) { // all exercises are either completed or skipped, so show topic actions
-
+    if (!progressiveExerciseReveal || showExercise) { // all exercises are either completed or skipped
+      $(topic.jqElement).removeClass('hideActions');
+    }
+    else {
+      $(topic.jqElement).addClass('hideActions');
     }
   }
 
@@ -97,6 +99,13 @@ $(document).ready(function() {
     exerciseSkipped(this.getAttribute('topic-index'), this.getAttribute('index'));
   }
 
+  function handleNextTopicClick(event) {
+    setCurrentTopic(currentTopicIndex + 1);
+  }
+
+  function handlePreviousTopicClick(event) {
+    setCurrentTopic(currentTopicIndex - 1);
+  }
 
   // build the list of topics in the document
   // and create/adorn the DOM for them as needed
@@ -104,7 +113,7 @@ $(document).ready(function() {
     var topicsList = $('<div class="topicsList hideFloating"></div>');
 
     var topicsHeader = $('<div class="topicsHeader"></div>');
-    topicsHeader.append($('<div class="tutorialTitle">' + titleText + '</div>'));
+    topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'));
     var topicsCloser = $('<div class="paneCloser"></div>');
     topicsCloser.on('click', hideFloatingTopics);
     topicsHeader.append(topicsCloser);
@@ -123,12 +132,25 @@ $(document).ready(function() {
       topic.jqListElement = jqTopic;
       $(topicsList).append(jqTopic);
 
+      var topicActions = $('<div class="topicActions"></div>');
+      if (topicIndex > 0) {
+        var prevButton = $('<button class="btn btn-default">Previous Topic</button>');
+        prevButton.on('click', handlePreviousTopicClick);
+        topicActions.append(prevButton);
+      }
+      if (topicIndex < topicsDOM.length - 1) {
+        var nextButton = $('<button class="btn btn-primary">Next Topic</button>');
+        nextButton.on('click', handleNextTopicClick);
+        topicActions.append(nextButton);
+      }
+      $(element).append(topicActions);
+
       topic.exercises = [];
       var exercisesDOM = $(element).children('.section.level3');
       exercisesDOM.each( function( exerciseIndex, element) {
         // add skip button as needed
         if ($(element).attr('allow-skip')) {
-          var skipButton = $('<button class="skip" topic-index="' + topicIndex + '" index="' + exerciseIndex + '">Skip</button>');
+          var skipButton = $('<button class="btn btn-default skip" topic-index="' + topicIndex + '" index="' + exerciseIndex + '">Skip</button>');
           skipButton.on('click', handleSkipClick);
           var actions = $('<div class="exerciseActions"></div>');
           actions.append(skipButton);
@@ -168,7 +190,7 @@ $(document).ready(function() {
   $(document.body).wrapInner(container);
 
   titleText = $('title')[0].innerText;
-  var tutorialTitle = $('<div class="tutorialTitle">' + titleText + '</div>');
+  var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
   tutorialTitle.on('click', showFloatingTopics);
   $('.topics').prepend(tutorialTitle);
 

@@ -22,11 +22,6 @@
   flex-direction: row-reverse;
 }
 
-.tutorialTitle {
-  font-size: 20px;
-  line-height: 50px;
-}
-
 .topics {
   width: 75%;
   overflow-x: auto;
@@ -141,6 +136,14 @@
 
 .showSkip .skip {
   display: inline-block;
+}
+
+.topicActions button {
+  margin-right: 10px;
+}
+
+.section.level2.hideActions .topicActions {
+  display: none;
 }
 
 @media screen and (max-width: 767px) {
