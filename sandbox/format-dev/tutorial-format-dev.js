@@ -2,11 +2,8 @@
 /*
 
 To Do
-
+- Optional Skip Exercise
 - Next/Previous Topic buttons
-- Progress Bar
-- Incremental Reveal
--- Skip Exercise
 - Start over button
 
 */
@@ -15,6 +12,7 @@ $(document).ready(function() {
 
   var titleText = '';
   var currentTopicIndex = -1;
+  var progressiveExerciseReveal = true;
   var topics = [];
 
   function setCurrentTopic(topicIndex) {
@@ -43,6 +41,42 @@ $(document).ready(function() {
     $('.topicsList').addClass('hideFloating');
   }
 
+  function updateVisibilityOfTopicElements(topicIndex) {
+    if (!progressiveExerciseReveal) return;
+
+    var topic = topics[topicIndex];
+
+    var showExercise = true;
+    _.forEach(topic.exercises, function (exercise, i) {
+      if (showExercise) {
+        $(exercise.jqElement).removeClass('hide');
+      }
+      else {
+        $(exercise.jqElement).addClass('hide');
+      }
+      showExercise = (showExercise && (exercise.completed || exercise.skipped));
+    });
+
+    if (showExercise) { // all exercises are either completed or skipped, so show topic actions
+
+    }
+  }
+
+  function exerciseCompleted(topicIndex, exerciseIndex) {
+    // update the topic's progress Bar
+    var topic = topics[topicIndex];
+    topic.exercisesCompleted++;
+
+    $(topic.jqListElement).css('background-position-y', (1 - topic.exercisesCompleted/topic.exercises.length) * 100 + '%' );
+
+    // update the exercise
+    $(topic.exercises[exerciseIndex].jqElement).addClass('done');
+    topic.exercises[exerciseIndex].completed = true;
+
+    // update visibility of topic's exercises and actions
+    updateVisibilityOfTopicElements(topicIndex);
+  }
+
   function buildTopicsList() {
     var topicsList = $('<div class="topicsList hideFloating"></div>');
 
@@ -55,7 +89,9 @@ $(document).ready(function() {
 
     var topicsDOM = $('.section.level2');
     topicsDOM.each( function(i, element) {
+
       var topic = {};
+      topic.exercisesCompleted = 0;
       topic.jqElement = element;
       topic.jqTitleElement = $(element).children('h2')[0];
       topic.titleText = topic.jqTitleElement.innerText;
@@ -63,8 +99,21 @@ $(document).ready(function() {
       jqTopic.on('click', handleTopicClick);
       topic.jqListElement = jqTopic;
       $(topicsList).append(jqTopic);
+
+      topic.exercises = [];
+      var exercisesDOM = $(element).children('.section.level3');
+      exercisesDOM.each( function( i, element) {
+        var exercise = {};
+        exercise.completed = false;
+        exercise.skipped = false;
+        exercise.jqElement = element;
+        topic.exercises.push(exercise);
+      });
+
       topics.push(topic);
     });
+
+    console.log(topics);
 
     var bandContent = $('<div class="bandContent"></div>');
     bandContent.append(topicsList);
@@ -93,6 +142,11 @@ $(document).ready(function() {
 
   $('.bandContent').append(buildTopicsList());
 
+  // initialize visibility of all topics' elements
+  for (var t = 0; t < topics.length; t++) {
+    updateVisibilityOfTopicElements(t);
+  }
+
   setCurrentTopic(0);
 
   function handleResize() {
@@ -101,5 +155,18 @@ $(document).ready(function() {
 
   handleResize();
   window.addEventListener("resize", handleResize);
+
+  // TEMP - complete some exercises
+  window.setTimeout(function() {
+    exerciseCompleted(0, 0);
+    exerciseCompleted(0, 1);
+    exerciseCompleted(0, 2);
+    exerciseCompleted(0, 3);
+    exerciseCompleted(0, 4);
+    exerciseCompleted(0, 5);
+    exerciseCompleted(0, 6);
+    exerciseCompleted(1, 0);
+    exerciseCompleted(1, 1);
+  }, 10);
 
 });

@@ -66,6 +66,7 @@
   overflow: auto;
   height: auto;
 }
+
 .topicsHeader {
   display: flex;
   justify-content: space-between;
@@ -84,6 +85,11 @@
   background-position: left 100%;
   background-image: url(images/topicProgress.png);
   border-bottom: 1px solid #f8f8f8;
+
+  -webkit-transition-property: background-position;
+  transition-property: background-position;
+  -webkit-transition-duration: 0.25s;
+  transition-duration: 0.25s;
 }
 
 .topicsList .topic:hover {
@@ -111,6 +117,18 @@
 
 .paneCloser:hover {
   background-color: rgba( 0, 0, 0, .05);
+}
+
+.section.level3.hide {
+  display: none;
+}
+
+.section.level3.done h3 {
+  padding-left: 25px;
+  background-image: url(images/exerciseDone.svg);
+  background-size: 20px 20px;
+  background-position: left center;
+  background-repeat: no-repeat;
 }
 
 @media screen and (max-width: 767px) {
