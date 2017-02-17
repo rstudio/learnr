@@ -3,6 +3,8 @@
 
 To Do
 - Optional Skip Exercise
+-- allow-skip
+-- not completed, not skipped
 - Next/Previous Topic buttons
 - Start over button
 
@@ -50,6 +52,12 @@ $(document).ready(function() {
     _.forEach(topic.exercises, function (exercise, i) {
       if (showExercise) {
         $(exercise.jqElement).removeClass('hide');
+        if (exercise.completed || exercise.skipped) {
+          $(exercise.jqElement).removeClass('showSkip');
+        }
+        else {
+          $(exercise.jqElement).addClass('showSkip');
+        }
       }
       else {
         $(exercise.jqElement).addClass('hide');
@@ -77,6 +85,21 @@ $(document).ready(function() {
     updateVisibilityOfTopicElements(topicIndex);
   }
 
+  function exerciseSkipped(topicIndex, exerciseIndex) {
+    var topic = topics[topicIndex];
+    topic.exercises[exerciseIndex].skipped = true;
+
+    // update visibility of topic's exercises and actions
+    updateVisibilityOfTopicElements(topicIndex);
+  }
+
+  function handleSkipClick(event) {
+    exerciseSkipped(this.getAttribute('topic-index'), this.getAttribute('index'));
+  }
+
+
+  // build the list of topics in the document
+  // and create/adorn the DOM for them as needed
   function buildTopicsList() {
     var topicsList = $('<div class="topicsList hideFloating"></div>');
 
@@ -88,21 +111,30 @@ $(document).ready(function() {
     topicsList.append(topicsHeader);
 
     var topicsDOM = $('.section.level2');
-    topicsDOM.each( function(i, element) {
+    topicsDOM.each( function(topicIndex, element) {
 
       var topic = {};
       topic.exercisesCompleted = 0;
       topic.jqElement = element;
       topic.jqTitleElement = $(element).children('h2')[0];
       topic.titleText = topic.jqTitleElement.innerText;
-      jqTopic = $('<div class="topic" index="' + i + '">' + topic.titleText + '</div>');
+      jqTopic = $('<div class="topic" index="' + topicIndex + '">' + topic.titleText + '</div>');
       jqTopic.on('click', handleTopicClick);
       topic.jqListElement = jqTopic;
       $(topicsList).append(jqTopic);
 
       topic.exercises = [];
       var exercisesDOM = $(element).children('.section.level3');
-      exercisesDOM.each( function( i, element) {
+      exercisesDOM.each( function( exerciseIndex, element) {
+        // add skip button as needed
+        if ($(element).attr('allow-skip')) {
+          var skipButton = $('<button class="skip" topic-index="' + topicIndex + '" index="' + exerciseIndex + '">Skip</button>');
+          skipButton.on('click', handleSkipClick);
+          var actions = $('<div class="exerciseActions"></div>');
+          actions.append(skipButton);
+          $(element).append(actions);
+        }
+
         var exercise = {};
         exercise.completed = false;
         exercise.skipped = false;

@@ -131,6 +131,18 @@
   background-repeat: no-repeat;
 }
 
+.exerciseActions {
+  margin: 20px 0;
+}
+
+.skip {
+  display: none;
+}
+
+.showSkip .skip {
+  display: inline-block;
+}
+
 @media screen and (max-width: 767px) {
   .topics {
     width: 99%;
