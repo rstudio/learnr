@@ -2,7 +2,6 @@
 /*
 
 To Do
-- Handle topic with no exercises
 - Start over button
 
 */
@@ -48,7 +47,10 @@ $(document).ready(function() {
     var topic = topics[topicIndex];
 
     var showExercise = true;
-    _.forEach(topic.exercises, function (exercise, i) {
+
+    for (i = 0; i < topic.exercises.length; i++ ) {
+      var exercise = topic.exercises[i];
+
       if (showExercise) {
         $(exercise.jqElement).removeClass('hide');
         if (exercise.completed || exercise.skipped) {
@@ -62,7 +64,7 @@ $(document).ready(function() {
         $(exercise.jqElement).addClass('hide');
       }
       showExercise = (showExercise && (exercise.completed || exercise.skipped));
-    });
+    }
 
     if (!progressiveExerciseReveal || showExercise) { // all exercises are either completed or skipped
       $(topic.jqElement).removeClass('hideActions');
@@ -186,8 +188,6 @@ $(document).ready(function() {
 
       topics.push(topic);
     });
-
-    console.log(topics);
 
     var bandContent = $('<div class="bandContent"></div>');
     bandContent.append(topicsList);

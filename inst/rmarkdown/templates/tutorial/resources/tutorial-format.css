@@ -22,11 +22,6 @@
   flex-direction: row-reverse;
 }
 
-.tutorialTitle {
-  font-size: 20px;
-  line-height: 50px;
-}
-
 .topics {
   width: 75%;
   overflow-x: auto;
@@ -34,6 +29,7 @@
 
 .topics .tutorialTitle {
   display: none;
+  border-bottom: 3px dotted #f0f0f0;
 }
 
 .topics .section.level2 {
@@ -66,6 +62,7 @@
   overflow: auto;
   height: auto;
 }
+
 .topicsHeader {
   display: flex;
   justify-content: space-between;
@@ -84,6 +81,11 @@
   background-position: left 100%;
   background-image: url(images/topicProgress.png);
   border-bottom: 1px solid #f8f8f8;
+
+  -webkit-transition-property: background-position;
+  transition-property: background-position;
+  -webkit-transition-duration: 0.25s;
+  transition-duration: 0.25s;
 }
 
 .topicsList .topic:hover {
@@ -113,6 +115,42 @@
   background-color: rgba( 0, 0, 0, .05);
 }
 
+.section.level3.hide {
+  display: none;
+}
+
+.section.level3.done h3 {
+  padding-left: 25px;
+  background-image: url(images/exerciseDone.svg);
+  background-size: 20px 20px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+.exerciseActions {
+  margin: 20px 0;
+}
+
+.skip {
+  display: none;
+}
+
+.showSkip .skip {
+  display: inline-block;
+}
+
+.topicActions {
+  margin-top: 20px;
+}
+
+.topicActions button {
+  margin-right: 10px;
+}
+
+.section.level2.hideActions .topicActions {
+  display: none;
+}
+
 @media screen and (max-width: 767px) {
   .topics {
     width: 99%;
@@ -130,7 +168,7 @@
 
   .topicsList {
     padding: 0px 10px 20px 1%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.98);
 
     box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
