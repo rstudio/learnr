@@ -72,12 +72,28 @@ $(document).ready(function() {
     }
   }
 
+  function updateTopicProgressBar(topicIndex) {
+    var topic = topics[topicIndex];
+
+    var percentToDo;
+    if (topic.exercises.length == 0) {
+      percentToDo = !topic.topicCompleted * 100;
+    }
+    else {
+      percentToDo = (1 - topic.exercisesCompleted/topic.exercises.length) * 100;
+    }
+
+    $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
+
+
+  }
+
   function exerciseCompleted(topicIndex, exerciseIndex) {
     // update the topic's progress Bar
     var topic = topics[topicIndex];
     topic.exercisesCompleted++;
 
-    $(topic.jqListElement).css('background-position-y', (1 - topic.exercisesCompleted/topic.exercises.length) * 100 + '%' );
+    updateTopicProgressBar(topicIndex);
 
     // update the exercise
     $(topic.exercises[exerciseIndex].jqElement).addClass('done');
@@ -100,6 +116,9 @@ $(document).ready(function() {
   }
 
   function handleNextTopicClick(event) {
+    var topic = topics[currentTopicIndex];
+    topic.topicCompleted = true;
+    updateTopicProgressBar(currentTopicIndex);
     setCurrentTopic(currentTopicIndex + 1);
   }
 
@@ -124,6 +143,7 @@ $(document).ready(function() {
 
       var topic = {};
       topic.exercisesCompleted = 0;
+      topic.topicCompleted = false; // set by pressing Next Topic button and only relevant if topic has 0 exercises
       topic.jqElement = element;
       topic.jqTitleElement = $(element).children('h2')[0];
       topic.titleText = topic.jqTitleElement.innerText;

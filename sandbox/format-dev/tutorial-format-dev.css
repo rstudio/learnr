@@ -29,6 +29,7 @@
 
 .topics .tutorialTitle {
   display: none;
+  border-bottom: 3px dotted #f0f0f0;
 }
 
 .topics .section.level2 {
@@ -138,6 +139,10 @@
   display: inline-block;
 }
 
+.topicActions {
+  margin-top: 20px;
+}
+
 .topicActions button {
   margin-right: 10px;
 }
@@ -163,7 +168,7 @@
 
   .topicsList {
     padding: 0px 10px 20px 1%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.98);
 
     box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 5px 25px 0px rgba(0, 0, 0, 0.15);
