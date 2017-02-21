@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     var titleText = '';
     var currentTopicIndex = -1;
-    var progressiveExerciseReveal = true;
+    var progressiveExerciseReveal = false;
     var topics = [];
 
     function setCurrentTopic(topicIndex) {
