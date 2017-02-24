@@ -990,7 +990,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
       
       // prepend it to the output frame (if a hint isn't already in there)
       var outputFrame = exercise.children('.tutor-exercise-output-frame');
-      if (outputFrame.children('.tutor-hint').length == 0) {
+      if (outputFrame.find('.tutor-hint').length == 0) {
         var panel = $('<div class="panel panel-default"></div>');
         var panelBody = $('<div class="panel-body"></div>');
         var hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit');
