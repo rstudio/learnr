@@ -914,7 +914,14 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
     // add solution button if necessary
     thiz.$addSolution(exercise, panel_heading, editor);
-
+    
+    
+    exercise.parents('.section').on('shown', function() {
+      editor.resize(true);
+    });
+    
+    
+    
   });  
 };
 

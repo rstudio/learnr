@@ -13,11 +13,17 @@ $(document).ready(function() {
       if (topicIndex == currentTopicIndex) return;
 
       if (currentTopicIndex != -1) {
-        $(topics[currentTopicIndex].jqElement).removeClass('current');
+        var el = $(topics[currentTopicIndex].jqElement);
+        el.trigger('hide');
+        el.removeClass('current');
+        el.trigger('hidden');
         $(topics[currentTopicIndex].jqListElement).removeClass('current');
       }
 
-      $(topics[topicIndex].jqElement).addClass('current');
+      var currentEl = $(topics[topicIndex].jqElement);
+      currentEl.trigger('show');
+      currentEl.addClass('current');
+      currentEl.trigger('shown');
       $(topics[topicIndex].jqListElement).addClass('current');
       currentTopicIndex = topicIndex;
     }
@@ -200,6 +206,7 @@ $(document).ready(function() {
     }
 
     // transform the DOM here, e.g.
+  function transformDOM() {
     var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
     $(document.body).wrapInner(container);
 
@@ -224,6 +231,9 @@ $(document).ready(function() {
     handleResize();
     window.addEventListener("resize", handleResize);
 
+  }
+
+  transformDOM();
 
   // update navigation w/ progress
   function showProgress(section) {

@@ -34,6 +34,7 @@
 
 .topics .section.level2 {
   display: none;
+  margin-bottom: 40px;
 }
 
 .topics .section.level2.current {
