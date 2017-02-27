@@ -238,6 +238,8 @@ $(document).ready(function() {
     tutor.onProgress(function(progressEvent) {
       if (progressEvent.event === "section_completed")
         showProgress($(progressEvent.element));
+      else if (progressEvent.event === "exercise_skipped")
+        console.log("exercise_skipped: " + progressEvent.element.attr('data-label'));
     });
 
   });

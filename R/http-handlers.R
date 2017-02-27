@@ -105,6 +105,17 @@ register_http_handlers <- function(session, metadata) {
                          total_time = total_time)
   }))
   
+  # exercise skipped event
+  session$registerDataObj("exercise_skipped", NULL, rpc_handler(function(input) {
+    
+    # extract inputs
+    label <- input$label
+    
+    # fire event
+    exercise_skipped_event(session = session, label = label)
+    
+  }))
+  
   # client state handler
   session$registerDataObj("set_client_state",  NULL, rpc_handler(function(input) {
     save_client_state(session, input)
