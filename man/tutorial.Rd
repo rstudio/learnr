@@ -5,10 +5,10 @@
 \title{Tutorial document format}
 \usage{
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
-  fig_caption = TRUE, dev = "png", df_print = "paged", smart = TRUE,
-  theme = "cerulean", highlight = "textmate", mathjax = "default",
-  extra_dependencies = NULL, css = NULL, includes = NULL,
-  md_extensions = NULL, pandoc_args = NULL, ...)
+  fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
+  dev = "png", df_print = "paged", smart = TRUE, theme = "cerulean",
+  mathjax = "default", extra_dependencies = NULL, css = NULL,
+  includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
 }
 \arguments{
 \item{fig_width}{Default width (in inches) for figures}
@@ -22,6 +22,13 @@ prevent retina scaling. Note that this will always be \code{NULL} when
 outputting HTML directly into the markdown document).}
 
 \item{fig_caption}{\code{TRUE} to render figures with captions}
+
+\item{progressive}{Display sub-topics progresively (i.e. wait until previous
+topics are either completed or skipped before displaying subsequent
+topics).}
+
+\item{allow_skip}{Allow users to skip sub-topics (especially useful when
+\code{progressive} is \code{TRUE}).}
 
 \item{dev}{Graphics device to use for figure output (defaults to png)}
 
@@ -45,10 +52,6 @@ ellipses.}
 "simplex", or "yeti"). Pass \code{NULL} for no theme (in this case you can
 use the \code{css} parameter to add your own styles).}
 
-\item{highlight}{Syntax highlighting style. Supported styles include
-"default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn",
-"haddock", and "textmate". Pass \code{NULL} to prevent syntax highlighting.}
-
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from
 the official MathJax CDN. The "local" option uses a local version of MathJax
 (which is copied into the output directory). You can pass an alternate URL
@@ -71,5 +74,6 @@ additional details.}
 \item{...}{Forward parameters to html_document}
 }
 \description{
-Long-form tutorial which includes narrative, figures, videos, exercises, and questions.
+Long-form tutorial which includes narrative, figures, videos, exercises, and
+questions.
 }

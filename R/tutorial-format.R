@@ -1,16 +1,25 @@
 #' Tutorial document format
 #' 
-#' Long-form tutorial which includes narrative, figures, videos, exercises, and questions.
+#' Long-form tutorial which includes narrative, figures, videos, exercises, and
+#' questions.
 #' 
 #' @inheritParams rmarkdown::html_document
-#' 
+#'   
+#' @param progressive Display sub-topics progresively (i.e. wait until previous
+#'   topics are either completed or skipped before displaying subsequent
+#'   topics).
+#' @param allow_skip Allow users to skip sub-topics (especially useful when
+#'   \code{progressive} is \code{TRUE}).   
+#'
 #' @param ... Forward parameters to html_document
-#' 
+#'   
 #' @export
 tutorial <- function(fig_width = 6.5,
                      fig_height = 4,
                      fig_retina = 2,
                      fig_caption = TRUE,
+                     progressive = FALSE,
+                     allow_skip = FALSE,
                      dev = "png",
                      df_print = "paged",
                      smart = TRUE,
@@ -72,6 +81,10 @@ tutorial <- function(fig_width = 6.5,
     )
   ))
   
+  # additional pandoc variables
+  jsbool <- function(value) ifelse(value, "true", "false")
+  args <- c(args, pandoc_variable_arg("progressive", jsbool(progressive)))
+  args <- c(args, pandoc_variable_arg("allow-skip", jsbool(allow_skip)))
   
   # knitr and pandoc options
   knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
