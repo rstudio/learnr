@@ -147,7 +147,7 @@ progress_events_from_state_objects <- function(state_objects) {
            label = skipped$id
          ))
   })
-  progress_events <- append(progress_events, exercise_skipped_progress)
+  progress_events <- append(progress_events, exercise_skipped_progress_events)
   
   # now video_progress
   video_progress <- video_progress_from_state_objects(state_objects)
