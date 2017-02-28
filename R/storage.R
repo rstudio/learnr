@@ -39,6 +39,14 @@ save_exercise_submission <- function(session, label, code, output, error_message
   )  
 }
 
+save_exercise_skipped <- function(session, label) {
+  save_object(
+    session = session,
+    object_id = label,
+    tutor_object("exercise_skipped", list())
+  )
+}
+
 save_video_progress <- function(session, video_url, time, total_time) {
   save_object(
     session = session, 
@@ -104,6 +112,11 @@ video_progress_from_state_objects <- function(state_objects) {
   filter_state_objects(state_objects, c("video_progress"))
 }
 
+exercise_skipped_progress_from_state_objects <- function(state_objects) {
+  filter_state_objects(state_objects, c("exercise_skipped"))
+}
+
+
 progress_events_from_state_objects <- function(state_objects) {
 
   # first submissions
@@ -126,6 +139,16 @@ progress_events_from_state_objects <- function(state_objects) {
          ))
   })
   
+  # now exercises skipped
+  exercise_skipped_progress <- exercise_skipped_progress_from_state_objects(state_objects)
+  exercise_skipped_progress_events <- lapply(exercise_skipped_progress, function(skipped) {
+    list(event = "exercise_skipped",
+         data = list(
+           label = skipped$id
+         ))
+  })
+  progress_events <- append(progress_events, exercise_skipped_progress_events)
+  
   # now video_progress
   video_progress <- video_progress_from_state_objects(state_objects)
   video_progress_events <- lapply(video_progress, function(progress) {
@@ -136,9 +159,10 @@ progress_events_from_state_objects <- function(state_objects) {
            total_time = progress$data$total_time
          ))
   })
+  progress_events <- append(progress_events, video_progress_events)
   
-  # return lists appended together
-  append(progress_events, video_progress_events)
+  # return progress events
+  progress_events
 }
 
 save_object <- function(session, object_id, data) {

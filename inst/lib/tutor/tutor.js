@@ -40,6 +40,11 @@ function Tutor() {
     });
   };
   
+  // API: Skip an exercise
+  this.skipExercise = function(label) {
+    thiz.$serverRequest("exercise_skipped", { label: label }, null);
+  };
+  
   // Initialization
   thiz.$initializeVideos();  
   thiz.$initializeExercises();
@@ -166,6 +171,11 @@ Tutor.prototype.$fireProgressEvent = function(event, data) {
     }
     
   }
+  else if (event == "exercise_skipped") {
+     var exerciseElement = $('.tutor-exercise[data-label="' + data.label + '"]');
+     progressEvent.element = exerciseElement;
+     progressEvent.completed = false;
+  }
   else if (event == "video_progress") {
     var videoElement = $('iframe[src="' + data.video_url + '"]');
     if (videoElement.length > 0) {
@@ -205,6 +215,10 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
     if (progressEvent == "exercise_submission" || progressEvent == "question_submission") {
       progressEventData.label = progress.data.label;
       progressEventData.correct = progress.data.correct;
+    }
+    else if (progressEvent == "exercise_skipped") {
+      progressEventData.label = progress.data.label;
+      progressEventData.correct = false;
     }
     else if (progressEvent == "video_progress") {
       progressEventData.video_url = progress.data.video_url;
