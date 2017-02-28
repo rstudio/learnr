@@ -1,5 +1,8 @@
 ---
 title: "Tutorial"
+tutorial:
+    id: "testy1"
+    version: 1.52
 output: 
   tutor::tutorial:
     theme: cerulean
@@ -17,7 +20,7 @@ Be sure to add a chunk label to all of your interactive chunks (e.g. `two-plus-t
 
 ## Topic 1
 
-### Exercise 1
+### Exercise 1 {allow-skip=TRUE}
 
 *Here's a simple exercise with an empty code chunk provided for entering the answer.*
 
@@ -27,7 +30,7 @@ Write the R code required to add two plus two:
 
 ```
 
-### Exercise 2
+### Exercise 2 {allow-skip=TRUE}
 
 *Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 
@@ -41,7 +44,7 @@ add <- function() {
 
 ## Topic 2
 
-### Exercise 1
+### Exercise 1 {allow-skip=TRUE}
 
 *Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
 
@@ -55,7 +58,7 @@ mtcars
 head(mtcars)
 ```
 
-### Quiz 1
+### Quiz 1 {allow-skip=TRUE}
 
 *You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
 
@@ -81,7 +84,7 @@ quiz(
 
 ## Topic 3
 
-### Exercise 1
+### Exercise 1 {allow-skip=TRUE}
 
 *Here's another simple exercise with an empty code chunk provided for entering the answer.*
 
@@ -91,7 +94,7 @@ Write the R code required to add two plus two:
 
 ```
 
-### Exercise 2
+### Exercise 2 {allow-skip=TRUE}
 
 *Here's another exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 
