@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 
-## Topic 1  {progressive=TRUE}
+## Topic 1  {data-progressive=TRUE}
 
 This is an interactive R tutorial. R code chunks can be made into exercises by adding the `exercise=TRUE` chunk option. By default, R code within exercise chunks is not pre-evaluated, however you can change this behavior using the `exercise.eval` chunk option.
 
@@ -34,7 +34,7 @@ Write the R code required to add two plus two:
 
 ```
 
-### Exercise 2 {allow-skip=FALSE}
+### Exercise 2 {data-allow-skip=FALSE}
 
 *Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 

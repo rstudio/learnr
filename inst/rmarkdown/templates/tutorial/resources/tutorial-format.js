@@ -142,7 +142,7 @@ $(document).ready(function() {
         topic.jqElement = topicElement;
         topic.jqTitleElement = $(topicElement).children('h2')[0];
         topic.titleText = topic.jqTitleElement.innerText;
-        var progressiveAttr = $(topicElement).attr('progressive');
+        var progressiveAttr = $(topicElement).attr('data-progressive');
         if (typeof progressiveAttr !== typeof undefined && progressiveAttr !== false) {
           topic.progressiveReveal = (progressiveAttr == 'true' || progressiveAttr == 'TRUE');
         }
@@ -176,7 +176,7 @@ $(document).ready(function() {
           var exerciseDataLabel = $(actualExerciseElement).attr('data-label');
 
           // add skip button as needed
-          var allowSkipAttr = $(exerciseElement).attr('allow-skip');
+          var allowSkipAttr = $(exerciseElement).attr('data-allow-skip');
           var addSkipThisExerciseButton = docAllowSkip;
           if (typeof allowSkipAttr !== typeof undefined && allowSkipAttr !== false) {
             addSkipThisExerciseButton = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
