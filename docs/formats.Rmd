@@ -1,5 +1,8 @@
 ---
 title: "Formats"
+output:
+  html_document:
+    toc_depth: 3
 ---
 
 ## Overview
@@ -16,7 +19,7 @@ The **tutor** package is designed to be used with a wide variety of R Markdown f
 
 This means you can use **tutor** with the [`html_document`](http://rmarkdown.rstudio.com/html_document_format.html), [`ioslides_presentation`](http://rmarkdown.rstudio.com/ioslides_presentation_format.html), and [`slidy_presentation`](http://rmarkdown.rstudio.com/slidy_presentation_format.html) formats as well as many others. 
 
-We've shown plenty of examples that use `html_document`, here's an example of embedding a tutorial within a `slidy_presentation`:
+We've shown plenty of examples of the default format, here's an example of embedding a tutorial within a `slidy_presentation`:
 
 <img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/>
 
@@ -29,6 +32,10 @@ tutor::run_tutorial("slidy", package = "tutor")
 ## Tutorial Format
 
 The **tutor** package includes a `tutor::tutorial` R Markdown format which which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
+
+The format also includes features for progressively revealing sections and allowing users to optionally skip exercises they are having trouble with (both of these features are described below).
+
+### Creating a Tutorial
 
 You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
@@ -46,18 +53,14 @@ The benefits of using the `tutor::tutorial` format include:
 
 Here's what a `tutor::tutorial` document looks like by default:
 
-![](images/tutorial-format.png){width=910 height=782 style="border: solid 1px #cccccc; margin-bottom: 12px;"}
+![](images/tutorial-format.png){width=1184 height=737 style="border: solid 1px #cccccc; margin-bottom: 12px;"}
 
-Note the check marks within the table of contents indicating which sections the user has completed work within.
+### Progressive Reveal
 
-### Table of Contents
 
-The `tutor::tutorial` format provides a floating table of contents by default. This helps the user both navigate through the tutorial as well as see what sections they have already completed. 
 
-By default, all level 2 and 3 headers are expanded within the table of contents so the user can clearly see all of the sections in the document. However, if you have a large number of sections this might cause the table of contents to get too large. In this case, you will want to set the `collapsed` option of `toc_float` to `true`. You can do this as follows:
+### Exercise Skipping
 
-<div id="tutorialtoccollapsed"></div>
-<script type="text/javascript">loadSnippet('tutorialtoccollapsed', 'markdown')</script>
 
 
 ## Custom Formats

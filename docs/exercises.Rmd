@@ -120,7 +120,14 @@ For R code hints you can provide a sequence of hints that reveal progressively m
 <div id="exercisehints"></div>
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 
-    
+## Exercise Visibility
+
+If you are using the [`tutor::tutorial`](formats.html#tutorial-format) R Markdown format then there are some additional options available to control the visibility of exercises.
+
+You can specify the [`progressive`](formats.html#progressive-reveal) option to display sub-topics progressively (i.e. the next sub-topic is only revealed once the current one has been completed).
+
+You can also specify the [`allow_skip`](formats.html#exercise-skipping) option to allow users to skip through exercises that they can't quite figure out the answer to (this is especially useful along with the `progressive` option).
+
 ## Exercise Checking
 
 The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example:

@@ -1,6 +1,8 @@
 ---
 title: "Hello, Tutor!"
-output: html_document
+author: "J.J. Allaire"
+date: "March 1st, 2017"
+output: tutor::tutorial
 runtime: shiny_prerendered
 ---
 

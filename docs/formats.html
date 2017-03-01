@@ -187,7 +187,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -339,7 +339,7 @@ div.tocify {
 <li><p>Uses a format which inherits from the <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> format and is marked as <code>boostrap_compatible</code> (this is a parameter of <a href="https://www.rdocumentation.org/packages/rmarkdown/topics/html_document_base"><code>html_document_base</code></a> which indicates that it’s safe to inject Booststrap CSS into the document).</p></li>
 </ol>
 <p>This means you can use <strong>tutor</strong> with the <a href="http://rmarkdown.rstudio.com/html_document_format.html"><code>html_document</code></a>, <a href="http://rmarkdown.rstudio.com/ioslides_presentation_format.html"><code>ioslides_presentation</code></a>, and <a href="http://rmarkdown.rstudio.com/slidy_presentation_format.html"><code>slidy_presentation</code></a> formats as well as many others.</p>
-<p>We’ve shown plenty of examples that use <code>html_document</code>, here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
+<p>We’ve shown plenty of examples of the default format, here’s an example of embedding a tutorial within a <code>slidy_presentation</code>:</p>
 <p><img src="images/slidy.png" width="650" height="474" style="border: solid 1px #cccccc;"/></p>
 <p>You can run a live version of this example with:</p>
 <pre class="r"><code>tutor::run_tutorial(&quot;slidy&quot;, package = &quot;tutor&quot;)</code></pre>
@@ -347,6 +347,9 @@ div.tocify {
 <div id="tutorial-format" class="section level2">
 <h2>Tutorial Format</h2>
 <p>The <strong>tutor</strong> package includes a <code>tutor::tutorial</code> R Markdown format which which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
+<p>The format also includes features for progressively revealing sections and allowing users to optionally skip exercises they are having trouble with (both of these features are described below).</p>
+<div id="creating-a-tutorial" class="section level3">
+<h3>Creating a Tutorial</h3>
 <p>You can create a new <code>tutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
 <div class="figure">
 <img src="images/create-new-tutorial.png" width="609" height="482" />
@@ -361,18 +364,15 @@ div.tocify {
 </ol>
 <p>Here’s what a <code>tutor::tutorial</code> document looks like by default:</p>
 <div class="figure">
-<img src="images/tutorial-format.png" style="border: solid 1px #cccccc; margin-bottom: 12px;" width="910" height="782" />
+<img src="images/tutorial-format.png" style="border: solid 1px #cccccc; margin-bottom: 12px;" width="1184" height="737" />
 
 </div>
-<p>Note the check marks within the table of contents indicating which sections the user has completed work within.</p>
-<div id="table-of-contents" class="section level3">
-<h3>Table of Contents</h3>
-<p>The <code>tutor::tutorial</code> format provides a floating table of contents by default. This helps the user both navigate through the tutorial as well as see what sections they have already completed.</p>
-<p>By default, all level 2 and 3 headers are expanded within the table of contents so the user can clearly see all of the sections in the document. However, if you have a large number of sections this might cause the table of contents to get too large. In this case, you will want to set the <code>collapsed</code> option of <code>toc_float</code> to <code>true</code>. You can do this as follows:</p>
-<div id="tutorialtoccollapsed">
-
 </div>
-<script type="text/javascript">loadSnippet('tutorialtoccollapsed', 'markdown')</script>
+<div id="progressive-reveal" class="section level3">
+<h3>Progressive Reveal</h3>
+</div>
+<div id="exercise-skipping" class="section level3">
+<h3>Exercise Skipping</h3>
 </div>
 </div>
 <div id="custom-formats" class="section level2">
