@@ -253,7 +253,7 @@ $(document).ready(function() {
     }
 
     function handleResize() {
-      $('.topicsList').css("max-height", window.innerHeight - 30);
+      $('.topicsList').css("max-height", window.innerHeight);
     }
 
     handleResize();

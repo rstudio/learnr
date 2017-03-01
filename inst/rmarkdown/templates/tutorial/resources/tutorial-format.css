@@ -1,6 +1,5 @@
 
 .pageContent {
-  padding-top: 20px;
 }
 
 .band {
@@ -44,6 +43,8 @@
 .topicsContainer {
   width: 23%;
   min-width: 270px;
+  margin-right: 2%;
+  z-index: 10000;
 }
 
 .topicsPositioner {
@@ -56,7 +57,6 @@
 
 .topicsList {
   float: left;
-  padding-right: 10px;
   position: relative;
   width: 23%;
   min-width: 270px;
@@ -180,6 +180,7 @@
   .topicsContainer {
     width: 1%;
     min-width: 1px;
+    margin-right: 0;
   }
 
   .topicsList {
