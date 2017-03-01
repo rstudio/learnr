@@ -71,6 +71,21 @@
   -ms-flex-pack: justify;
 }
 
+.topicsFooter {
+  margin-top: 10px;
+}
+
+.topicsFooter .resetButton {
+  padding-left: 10px;
+  font-size: .66em;
+  cursor: pointer;
+  opacity: .7;
+}
+
+.topicsFooter .resetButton:hover {
+  opacity: 1;
+}
+
 .topicsList .topic {
   line-height: 40px;
   font-size: 15px;

@@ -202,6 +202,17 @@ $(document).ready(function() {
         topics.push(topic);
       });
 
+
+      var topicsFooter = $('<div class="topicsFooter"></div>');
+
+      var resetButton = $('<span class="resetButton">Start Over</span>');
+      resetButton.on('click', function() {
+        if (window.confirm("Are you sure you want to start over? (all exercise progress will be reset)"))
+          tutor.startOver();
+      });
+      topicsFooter.append(resetButton);
+      topicsList.append(topicsFooter);
+
       var bandContent = $('<div class="bandContent"></div>');
       bandContent.append(topicsList);
 
