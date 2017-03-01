@@ -16,11 +16,13 @@ library(tutor)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+
+
+## Topic 1  {progressive=TRUE}
+
 This is an interactive R tutorial. R code chunks can be made into exercises by adding the `exercise=TRUE` chunk option. By default, R code within exercise chunks is not pre-evaluated, however you can change this behavior using the `exercise.eval` chunk option.
 
 Be sure to add a chunk label to all of your interactive chunks (e.g. `two-plus-two` and `add-function` in the sample exercises below). This provides a unique identifer for interactive components which is used for restoring progress, recording work, etc.
-
-## Topic 1  {progressive=TRUE}
 
 ### Exercise 1
 

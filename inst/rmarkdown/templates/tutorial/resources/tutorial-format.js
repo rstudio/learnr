@@ -27,11 +27,21 @@ $(document).ready(function() {
       currentEl.trigger('shown');
       $(topics[topicIndex].jqListElement).addClass('current');
       currentTopicIndex = topicIndex;
+
+      // always start a topic with a the scroll pos at the top
+      // we do this in part to prevent the scroll to view behavior of hash navigation
+      setTimeout(function() {$(document).scrollTop(0);}, 0);
+    }
+
+    function updateLocation(topicIndex) {
+      var baseUrl = window.location.href.replace(window.location.hash,"");
+      var href = baseUrl + '#' + topics[topicIndex].id;
+      window.location = href;
     }
 
     function handleTopicClick(event) {
-      setCurrentTopic(this.getAttribute('index'));
       hideFloatingTopics();
+      updateLocation(this.getAttribute('index'));
     }
 
     function showFloatingTopics() {
@@ -103,11 +113,11 @@ $(document).ready(function() {
     }
 
     function handleNextTopicClick(event) {
-      setCurrentTopic(currentTopicIndex + 1);
+      updateLocation(currentTopicIndex + 1);
     }
 
     function handlePreviousTopicClick(event) {
-      setCurrentTopic(currentTopicIndex - 1);
+      updateLocation(currentTopicIndex - 1);
     }
 
     // build the list of topics in the document
@@ -231,8 +241,6 @@ $(document).ready(function() {
       updateVisibilityOfTopicElements(t);
     }
 
-    setCurrentTopic(0);
-
     function handleResize() {
       $('.topicsList').css("max-height", window.innerHeight - 30);
     }
@@ -242,7 +250,32 @@ $(document).ready(function() {
 
   }
 
-  transformDOM();
+  // support bookmarking of topics
+  function handleLocationHash() {
+
+    function findTopicIndexFromHash() {
+      var hash = window.location.hash;
+      var topicIndex = 0;
+      if (hash.length > 0) {
+        $.each(topics, function( ti, t) {
+          if ('#' + t.id == hash) {
+            topicIndex = ti;
+            return false;
+          }
+        });
+      }
+      return topicIndex;
+    }
+
+    // select topic from hash on the url
+    setCurrentTopic(findTopicIndexFromHash());
+
+    // navigate to a topic when the history changes
+    window.addEventListener("popstate", function(e) {
+      setCurrentTopic(findTopicIndexFromHash());
+    });
+
+  }
 
   // update UI after a section gets completed
   // it might be an exercise or it might be an entire topic
@@ -306,9 +339,7 @@ $(document).ready(function() {
         // update visibility of topic's exercises and actions
         updateVisibilityOfTopicElements(topicIndex);
       }
-
     }
-
   }
 
   // update the UI after an exercise gets skipped
@@ -340,6 +371,9 @@ $(document).ready(function() {
     updateVisibilityOfTopicElements(topicIndex);
   }
 
+
+  transformDOM();
+  handleLocationHash();
 
   // initialize components within tutor.onInit event
   tutor.onInit(function() {
