@@ -9,11 +9,9 @@ library(tutor)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-This is an interactive R tutorial. R code chunks can be made into exercises by adding the `exercise=TRUE` chunk option. By default, R code within exercise chunks is not pre-evaluated, however you can change this behavior using the `exercise.eval` chunk option.
+## Topic 1
 
-Be sure to add a chunk label to all of your interactive chunks (e.g. `two-plus-two` and `add-function` in the sample exercises below). This provides a unique identifer for interactive components which is used for restoring progress, recording work, etc.
-
-## Exercise 1
+### Exercise 
 
 *Here's a simple exercise with an empty code chunk provided for entering the answer.*
 
@@ -23,7 +21,7 @@ Write the R code required to add two plus two:
 
 ```
 
-## Exercise 2
+### Exercise with Code
 
 *Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 
@@ -35,7 +33,9 @@ add <- function() {
 }
 ```
 
-## Exercise 3
+## Topic 2
+
+### Exercise with Hint
 
 *Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
 
@@ -49,7 +49,7 @@ mtcars
 head(mtcars)
 ```
 
-## Quiz
+### Quiz
 
 *You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
 
