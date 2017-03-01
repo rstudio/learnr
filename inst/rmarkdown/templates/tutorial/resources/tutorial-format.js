@@ -4,7 +4,8 @@ $(document).ready(function() {
 
     var titleText = '';
     var currentTopicIndex = -1;
-    var progressiveExerciseReveal = true;
+    var docProgressiveReveal = false;
+    var docAllowSkip = false;
     var topics = [];
 
     function setCurrentTopic(topicIndex) {
@@ -42,9 +43,9 @@ $(document).ready(function() {
     }
 
     function updateVisibilityOfTopicElements(topicIndex) {
-      if (!progressiveExerciseReveal) return;
-
       var topic = topics[topicIndex];
+
+      if (!topic.progressiveReveal) return;
 
       var showExercise = true;
 
@@ -71,7 +72,7 @@ $(document).ready(function() {
         showExercise = (showExercise && (exercise.completed || exercise.skipped));
       }
 
-      if (!progressiveExerciseReveal || showExercise) { // all exercises are either completed or skipped
+      if (!topic.progressiveReveal || showExercise) { // all exercises are either completed or skipped
         $(topic.jqElement).removeClass('hideActions');
       }
       else {
@@ -131,6 +132,14 @@ $(document).ready(function() {
         topic.jqElement = topicElement;
         topic.jqTitleElement = $(topicElement).children('h2')[0];
         topic.titleText = topic.jqTitleElement.innerText;
+        var progressiveAttr = $(topicElement).attr('progressive');
+        if (typeof progressiveAttr !== typeof undefined && progressiveAttr !== false) {
+          topic.progressiveReveal = (progressiveAttr == 'true' || progressiveAttr == 'TRUE');
+        }
+        else {
+          topic.progressiveReveal = docProgressiveReveal;
+        }
+
         jqTopic = $('<div class="topic" index="' + topicIndex + '">' + topic.titleText + '</div>');
         jqTopic.on('click', handleTopicClick);
         topic.jqListElement = jqTopic;
@@ -157,7 +166,13 @@ $(document).ready(function() {
           var exerciseDataLabel = $(actualExerciseElement).attr('data-label');
 
           // add skip button as needed
-          if ($(exerciseElement).attr('allow-skip')) {
+          var allowSkipAttr = $(exerciseElement).attr('allow-skip');
+          var addSkipThisExerciseButton = docAllowSkip;
+          if (typeof allowSkipAttr !== typeof undefined && allowSkipAttr !== false) {
+            addSkipThisExerciseButton = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
+          }
+
+          if (addSkipThisExerciseButton) {
             var skipButton = $('<button class="btn btn-default skip" exercise-data-label="' + exerciseDataLabel + '">Skip</button>');
             skipButton.on('click', handleSkipClick);
             var actions = $('<div class="exerciseActions"></div>');
@@ -193,12 +208,18 @@ $(document).ready(function() {
 
     }
 
-    // transform the DOM here, e.g.
+    // transform the DOM here
   function transformDOM() {
     var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
     $(document.body).wrapInner(container);
 
     titleText = $('title')[0].innerText;
+
+    var progAttr = $('meta[name=progressive]').attr("content");
+    docProgressiveReveal = (progAttr == 'true' || progAttr == 'TRUE');
+    var allowSkipAttr = $('meta[name=allow-skip]').attr("content");
+    docAllowSkip = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
+
     var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
     tutorialTitle.on('click', showFloatingTopics);
     $('.topics').prepend(tutorialTitle);
