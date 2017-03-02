@@ -57,6 +57,17 @@ Here's what a `tutor::tutorial` document looks like by default:
 
 ### Progressive Reveal
 
+You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the `progressive` option then all Level 3 headings (`###`) will be revealed progressively. For example:
+
+<div id="tutorialyaml-progressive"></div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive')</script>
+
+You can also specify this option on a per sub-topic bases using the `data-progressive` attribute. For example, the following code enables progressive rendering for a single sub-topic:
+
+
+
+
+You can also use this attribute to disable progressive rendering for a topic if the global `progressive` option is `TRUE`.
 
 
 ### Exercise Skipping
