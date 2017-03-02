@@ -216,26 +216,12 @@ $(document).ready(function() {
       topicsFooter.append(resetButton);
       topicsList.append(topicsFooter);
 
-      var bandContent = $('<div class="bandContent"></div>');
-      bandContent.append(topicsList);
-
-      var band = $('<div class="band"></div>');
-      band.append(bandContent);
-
-      var topicsPositioner = $('<div class="topicsPositioner"></div>');
-      topicsPositioner.append(band);
-
-      var topicsContainer = $('<div class="topicsContainer"></div>');
-      topicsContainer.append(topicsPositioner);
-
-      return topicsContainer;
+      return topicsList;
 
     }
 
     // transform the DOM here
   function transformDOM() {
-    var container = $('<div class="pageContent band"><div class="bandContent page"><div class="topics"></div></div></div>');
-    $(document.body).wrapInner(container);
 
     titleText = $('title')[0].innerText;
 
@@ -248,7 +234,7 @@ $(document).ready(function() {
     tutorialTitle.on('click', showFloatingTopics);
     $('.topics').prepend(tutorialTitle);
 
-    $('.bandContent').append(buildTopicsList());
+    $('.bandContent.topicsListContainer').append(buildTopicsList());
 
     // initialize visibility of all topics' elements
     for (var t = 0; t < topics.length; t++) {
