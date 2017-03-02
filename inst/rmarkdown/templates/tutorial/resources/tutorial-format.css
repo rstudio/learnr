@@ -62,6 +62,7 @@
   min-width: 270px;
   overflow: auto;
   height: auto;
+  scroll-behavior: smooth;
 }
 
 .topicsHeader {
@@ -73,6 +74,7 @@
 
 .topicsFooter {
   margin-top: 10px;
+  padding-bottom: 20px;
 }
 
 .topicsFooter .resetButton {
@@ -165,6 +167,27 @@
 
 .section.level2.hideActions .topicActions {
   display: none;
+}
+
+#doc-metadata {
+  margin-bottom: 10px;
+  line-height: 1.6em;
+}
+
+#doc-metadata h3 {
+  margin: 0;
+  font-size: 1.2em;
+  line-height: 2em;
+}
+
+#doc-metadata h4 {
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.6em;
+}
+
+#doc-metadata em {
+  font-style: normal;
 }
 
 @media screen and (max-width: 767px) {

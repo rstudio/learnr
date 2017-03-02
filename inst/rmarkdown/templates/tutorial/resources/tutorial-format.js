@@ -132,6 +132,9 @@ $(document).ready(function() {
       topicsHeader.append(topicsCloser);
       topicsList.append(topicsHeader);
 
+      $('#doc-metadata').appendTo(topicsList);
+
+
       var topicsDOM = $('.section.level2');
       topicsDOM.each( function(topicIndex, topicElement) {
 
