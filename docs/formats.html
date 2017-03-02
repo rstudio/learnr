@@ -370,9 +370,32 @@ div.tocify {
 </div>
 <div id="progressive-reveal" class="section level3">
 <h3>Progressive Reveal</h3>
+<p>You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the <code>progressive</code> option then all Level 3 headings (<code>###</code>) will be revealed progressively. For example:</p>
+<div id="tutorialyaml-progressive">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script>
+<p>You can also specify this option on a per topic basis using the <code>data-progressive</code> attribute. For example, the following code enables progressive rendering for a single topic:</p>
+<div id="tutorialyaml-progressive-topic">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
+<p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
 </div>
 <div id="exercise-skipping" class="section level3">
 <h3>Exercise Skipping</h3>
+<p>You may want to allow users of your tutorials to skip through exercises that they can’t quite figure out the right to. This might especially be true if you are using <code>progressive</code> option and you want users to be able to optionally see the next exercise even if they haven’t completed the prior one.</p>
+<p>If you specify the <code>allow_skip</code> option then all exercises will include a <strong>Skip</strong> button that will mark the exercise as skipped and allow progression to the next one. For example:</p>
+<div id="tutorialyaml-allowskip">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
+<p>You can also specify this option on a per sub-topic basis using the <code>data-allow-skip</code> attribute. For example, the following code enables exercise skipping within a single sub-topic:</p>
+<div id="tutorialyaml-allowskip-topic">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script>
+<p>You can also use <code>data-allow-skip=FALSE</code> to disable exercise skipping rendering for an individual sub-topic if the global <code>allow-skip</code> option is <code>TRUE</code>.</p>
 </div>
 </div>
 <div id="custom-formats" class="section level2">
