@@ -15,10 +15,16 @@
 
 .bandContent.page {
   display: flex;
-  justify-content: space-between;
   display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
+
   flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
 }
 
 .topics {
@@ -67,8 +73,12 @@
 
 .topicsHeader {
   display: flex;
-  justify-content: space-between;
   display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
 }
 
