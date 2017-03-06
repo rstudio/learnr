@@ -69,6 +69,7 @@
   overflow: auto;
   height: auto;
   scroll-behavior: smooth;
+  transform: translateZ(0); /* force repaint to work on older browser used in the IDE */
 }
 
 .topicsHeader {
