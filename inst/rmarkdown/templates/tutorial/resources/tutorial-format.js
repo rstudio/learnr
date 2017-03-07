@@ -173,13 +173,20 @@ $(document).ready(function() {
 
         topic.exercises = [];
         var exercisesDOM = $(topicElement).children('.section.level3');
-        exercisesDOM.each( function( exerciseIndex, exerciseElement) {
+        exercisesDOM.each( function( exerciseIndex, exerciseSection) {
           // find the actual exercise element within the exercise section
-          var actualExerciseElement = $(exerciseElement).children('.tutor-exercise');
-          var exerciseDataLabel = $(actualExerciseElement).attr('data-label');
+          var actualExerciseElement = $(exerciseSection).children('.tutor-exercise');
+          var exerciseDataLabel;
+          if (actualExerciseElement.length)
+          {
+            exerciseDataLabel = $(actualExerciseElement).attr('data-label');
+          }
+          else { /* we're skipping a section with no exercise in it - use the section id */
+            exerciseDataLabel = exerciseSection.id;
+          }
 
           // add skip button as needed
-          var allowSkipAttr = $(exerciseElement).attr('data-allow-skip');
+          var allowSkipAttr = $(exerciseSection).attr('data-allow-skip');
           var addSkipThisExerciseButton = docAllowSkip;
           if (typeof allowSkipAttr !== typeof undefined && allowSkipAttr !== false) {
             addSkipThisExerciseButton = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
@@ -190,15 +197,15 @@ $(document).ready(function() {
             skipButton.on('click', handleSkipClick);
             var actions = $('<div class="exerciseActions"></div>');
             actions.append(skipButton);
-            $(exerciseElement).append(actions);
+            $(exerciseSection).append(actions);
           }
 
           var exercise = {};
-          exercise.id = $(exerciseElement).attr('id');
+          exercise.id = exerciseSection.id;
           exercise.dataLabel = exerciseDataLabel;
           exercise.completed = false;
           exercise.skipped = false;
-          exercise.jqElement = exerciseElement;
+          exercise.jqElement = exerciseSection;
           topic.exercises.push(exercise);
         });
 
@@ -342,10 +349,16 @@ $(document).ready(function() {
     }
   }
 
-  // update the UI after an exercise gets skipped
+  // update the UI after an exercise or section gets skipped
   function exerciseSkipped(exerciseElement) {
+    var exerciseSkippedLabel;
+    if (exerciseElement.length) {
+      exerciseSkippedLabel = exerciseElement.attr('data-label');
+    }
+    else {  /* we're skipping a section with no exercise in it - use the selector data-label string */
+      exerciseSkippedLabel = $(exerciseElement).selector.split('"')[1];
+    }
 
-    var exerciseSkippedLabel = exerciseElement.attr('data-label')
 
     var topicIndex = -1;
     var exerciseIndex = -1;
