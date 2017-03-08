@@ -20,6 +20,7 @@ BugReports: https://github.com/rstudio/tutor/issues
 Imports:
   utils,
   parallel,
+  tibble,
   withr,
   rappdirs,
   rprojroot,

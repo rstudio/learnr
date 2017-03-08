@@ -11,6 +11,8 @@
 #' @param allow_skip Allow users to skip sub-topics (especially useful when
 #'   \code{progressive} is \code{TRUE}).   
 #'
+#' @import tibble
+#'
 #' @param ... Forward parameters to html_document
 #'   
 #' @export
@@ -21,7 +23,7 @@ tutorial <- function(fig_width = 6.5,
                      progressive = FALSE,
                      allow_skip = FALSE,
                      dev = "png",
-                     df_print = "paged",
+                     df_print = "tibble",
                      smart = TRUE,
                      theme = "cerulean",
                      mathjax = "default",
