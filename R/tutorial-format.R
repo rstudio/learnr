@@ -11,8 +11,6 @@
 #' @param allow_skip Allow users to skip sub-topics (especially useful when
 #'   \code{progressive} is \code{TRUE}).   
 #'
-#' @import tibble
-#'
 #' @param ... Forward parameters to html_document
 #'   
 #' @export
@@ -23,7 +21,7 @@ tutorial <- function(fig_width = 6.5,
                      progressive = FALSE,
                      allow_skip = FALSE,
                      dev = "png",
-                     df_print = "tibble",
+                     df_print = "paged",
                      smart = TRUE,
                      theme = "cerulean",
                      mathjax = "default",
@@ -93,6 +91,9 @@ tutorial <- function(fig_width = 6.5,
   pandoc_options <- pandoc_options(to = "html",
                                    from = from_rmarkdown(fig_caption, md_extensions),
                                    args = args)
+  
+  # set 1000 as the default maximum number of rows in paged tables
+  knitr_options$opts_chunk$max.print <- 1000
   
   # create base document format using standard html_document
   base_format <- rmarkdown::html_document_base(

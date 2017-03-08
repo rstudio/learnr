@@ -6,7 +6,7 @@
 \usage{
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
   fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
-  dev = "png", df_print = "tibble", smart = TRUE, theme = "cerulean",
+  dev = "png", df_print = "paged", smart = TRUE, theme = "cerulean",
   mathjax = "default", extra_dependencies = NULL, css = NULL,
   includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
 }
