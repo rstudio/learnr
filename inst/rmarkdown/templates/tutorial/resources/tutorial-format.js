@@ -57,32 +57,31 @@ $(document).ready(function() {
 
       if (!topic.progressiveReveal) return;
 
-      var showExercise = true;
+      var showSection = true;
 
-      for (i = 0; i < topic.exercises.length; i++ ) {
-        var exercise = topic.exercises[i];
-        var exerciseEl = $(exercise.jqElement);
-        if (showExercise) {
-          var exerciseEl =
-          exerciseEl.trigger('show');
-          exerciseEl.removeClass('hide');
-          exerciseEl.trigger('shown');
-          if (exercise.completed || exercise.skipped) {
-            exerciseEl.removeClass('showSkip');
+      for (i = 0; i < topic.sections.length; i++ ) {
+        var section = topic.sections[i];
+        var sectionEl = $(section.jqElement);
+        if (showSection) {
+          sectionEl.trigger('show');
+          sectionEl.removeClass('hide');
+          sectionEl.trigger('shown');
+          if (section.skipped) {
+            sectionEl.removeClass('showSkip');
           }
           else {
-            exerciseEl.addClass('showSkip');
+            sectionEl.addClass('showSkip');
           }
         }
         else {
-          exerciseEl.trigger('hide');
-          exerciseEl.addClass('hide');
-          exerciseEl.trigger('hidden');
+          sectionEl.trigger('hide');
+          sectionEl.addClass('hide');
+          sectionEl.trigger('hidden');
         }
-        showExercise = (showExercise && (exercise.completed || exercise.skipped));
+        showSection = (showSection && section.skipped);
       }
 
-      if (!topic.progressiveReveal || showExercise) { // all exercises are either completed or skipped
+      if (!topic.progressiveReveal || showSection) { // all sections are visible
         $(topic.jqElement).removeClass('hideActions');
       }
       else {
@@ -94,22 +93,44 @@ $(document).ready(function() {
       var topic = topics[topicIndex];
 
       var percentToDo;
-      if (topic.exercises.length == 0) {
+      if (topic.sections.length == 0) {
         percentToDo = !topic.topicCompleted * 100;
       }
       else {
-        percentToDo = (1 - topic.exercisesCompleted/topic.exercises.length) * 100;
+        percentToDo = (1 - topic.sectionsSkipped/topic.sections.length) * 100;
       }
 
       $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
 
-
     }
 
     function handleSkipClick(event) {
-    //  exerciseSkipped(this.getAttribute('topic-index'), this.getAttribute('index'));
-
-      tutor.skipExercise(this.getAttribute('exercise-data-label'));
+      var sectionId = this.getAttribute('data-section-id');
+      // get the topic & section indexes
+      var topicIndex = -1;
+      var sectionIndex = -1;
+      var topic;
+      var section;
+      $.each(topics, function( ti, t) {
+        $.each(t.sections, function( si, s) {
+          if (sectionId == s.id) {
+            topicIndex = ti;
+            sectionIndex = si;
+            topic = t;
+            section = s;
+            return false;
+          }
+        })
+        return topicIndex == -1;
+      })
+      // if the section has exercises and is not complete, don't skip - put up message
+      if (section.exercises.length && !section.completed && !section.allowSkip) {
+        var exs = section.exercises.length == 1 ? 'exercise' : 'exercises';
+        window.alert("You must complete the " + exs + " in this section before continuing.");
+      }
+      else {
+        tutor.skipExercise(sectionId);
+      }
     }
 
     function handleNextTopicClick(event) {
@@ -141,6 +162,8 @@ $(document).ready(function() {
         var topic = {};
         topic.id = $(topicElement).attr('id');
         topic.exercisesCompleted = 0;
+        topic.sectionsCompleted = 0;
+        topic.sectionsSkipped = 0;
         topic.topicCompleted = false; // only relevant if topic has 0 exercises
         topic.jqElement = topicElement;
         topic.jqTitleElement = $(topicElement).children('h2')[0];
@@ -171,40 +194,46 @@ $(document).ready(function() {
         }
         $(topicElement).append(topicActions);
 
-        topic.exercises = [];
-        var exercisesDOM = $(topicElement).children('.section.level3');
-        exercisesDOM.each( function( exerciseIndex, exerciseElement) {
-          // find the actual exercise element within the exercise section
-          var actualExerciseElement = $(exerciseElement).children('.tutor-exercise');
-          var exerciseDataLabel = $(actualExerciseElement).attr('data-label');
+        topic.sections = [];
+        var sectionsDOM = $(topicElement).children('.section.level3');
+        sectionsDOM.each( function( sectionIndex, sectionElement) {
 
-          // add skip button as needed
-          var allowSkipAttr = $(exerciseElement).attr('data-allow-skip');
-          var addSkipThisExerciseButton = docAllowSkip;
-          if (typeof allowSkipAttr !== typeof undefined && allowSkipAttr !== false) {
-            addSkipThisExerciseButton = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
-          }
-
-          if (addSkipThisExerciseButton) {
-            var skipButton = $('<button class="btn btn-default skip" exercise-data-label="' + exerciseDataLabel + '">Skip</button>');
-            skipButton.on('click', handleSkipClick);
+          if (topic.progressiveReveal) {
+            var continueButton = $('<button class="btn btn-default skip" data-section-id="' + sectionElement.id + '">Continue</button>');
+            continueButton.on('click', handleSkipClick);
             var actions = $('<div class="exerciseActions"></div>');
-            actions.append(skipButton);
-            $(exerciseElement).append(actions);
+            actions.append(continueButton);
+            $(sectionElement).append(actions);
           }
 
-          var exercise = {};
-          exercise.id = $(exerciseElement).attr('id');
-          exercise.dataLabel = exerciseDataLabel;
-          exercise.completed = false;
-          exercise.skipped = false;
-          exercise.jqElement = exerciseElement;
-          topic.exercises.push(exercise);
+          var section = {};
+          section.exercises = [];
+          var exercisesDOM = $(sectionElement).children('.tutor-exercise');
+          exercisesDOM.each(function(exerciseIndex, exerciseElement) {
+            var exercise = {};
+            exercise.dataLabel = $(exerciseElement).attr('data-label');
+            exercise.completed = false;
+            exercise.jqElement = exerciseElement;
+            section.exercises.push(exercise);
+          });
+
+          var allowSkipAttr = $(sectionElement).attr('data-allow-skip');
+          var sectionAllowSkip = docAllowSkip;
+          if (typeof allowSkipAttr !== typeof undefined && allowSkipAttr !== false) {
+            sectionAllowSkip = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
+          }
+
+          section.id = sectionElement.id;
+          section.completed = false;
+          section.allowSkip = sectionAllowSkip;
+          section.skipped = false;
+          section.jqElement = sectionElement;
+          topic.sections.push(section);
+
         });
 
         topics.push(topic);
       });
-
 
       var topicsFooter = $('<div class="topicsFooter"></div>');
 
@@ -312,29 +341,29 @@ $(document).ready(function() {
       updateTopicProgressBar(topicIndex);
     }
     else {                        // exercise completed
-      var exerciseIndex = -1;
-      var exerciseId = jqSection.attr('id');
-      $.each(topic.exercises, function(ei, e ) {
-        if (e.id == exerciseId) {
-          exerciseIndex = ei;
+      var sectionIndex = -1;
+      var sectionId = jqSection.attr('id');
+      $.each(topic.sections, function(si, s ) {
+        if (s.id == sectionId) {
+          sectionIndex = si;
           return false;
         }
       })
-      if (exerciseIndex == -1) {
-        console.log('completed exercise"' + exerciseId + '"not found');
+      if (sectionIndex == -1) {
+        console.log('completed section"' + sectionId + '"not found');
         return;
       }
 
-      // update the UI if the exercise isn't already marked completed
-      var exercise = topic.exercises[exerciseIndex];
-      if (!exercise.completed) {
-        topic.exercisesCompleted++;
+      // update the UI if the section isn't already marked completed
+      var section = topic.sections[sectionIndex];
+      if (!section.completed) {
+        topic.sectionsCompleted++;
 
         updateTopicProgressBar(topicIndex);
 
         // update the exercise
-        $(exercise.jqElement).addClass('done');
-        exercise.completed = true;
+        $(section.jqElement).addClass('done');
+        section.completed = true;
 
         // update visibility of topic's exercises and actions
         updateVisibilityOfTopicElements(topicIndex);
@@ -342,31 +371,42 @@ $(document).ready(function() {
     }
   }
 
-  // update the UI after an exercise gets skipped
+  // update the UI after a section gets skipped
   function exerciseSkipped(exerciseElement) {
+    var sectionSkippedLabel;
+    if (exerciseElement.length) {
+      console.log('something changed in tutor ...');
+      return;
+    //  sectionSkippedLabel = exerciseElement.attr('data-label');
+    }
+    else {  // fish out the id of the section that got skipped skipped
+      sectionSkippedLabel = $(exerciseElement).selector.split('"')[1];
+    }
 
-    var exerciseSkippedLabel = exerciseElement.attr('data-label')
 
     var topicIndex = -1;
-    var exerciseIndex = -1;
+    var sectionIndex = -1;
     $.each(topics, function( ti, t) {
-      $.each(t.exercises, function( ei, e) {
-        if (exerciseSkippedLabel == e.dataLabel) {
+      $.each(t.sections, function( si, s) {
+        if (sectionSkippedLabel == s.id) {
           topicIndex = ti;
-          exerciseIndex = ei;
+          sectionIndex = si;
           return false;
         }
       })
       return topicIndex == -1;
     })
 
-    if (topicIndex == -1 || exerciseIndex == -1) {
-      console.log('skipped exercise not found');
+    if (topicIndex == -1 || sectionIndex == -1) {
+      console.log('skipped section not found');
       return;
     }
 
-    topics[topicIndex].exercises[exerciseIndex].skipped = true;
-
+    var topic = topics[topicIndex];
+    topic.sections[sectionIndex].skipped = true;
+    topic.sectionsSkipped++;
+    // update the progress bar
+    updateTopicProgressBar(topicIndex);
     // update visibility of topic's exercises and actions
     updateVisibilityOfTopicElements(topicIndex);
   }
