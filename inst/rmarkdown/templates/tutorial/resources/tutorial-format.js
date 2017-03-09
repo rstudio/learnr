@@ -9,6 +9,8 @@ $(document).ready(function() {
     var topics = [];
 
     function setCurrentTopic(topicIndex) {
+      if (topics.length === 0) return;
+      
       topicIndex = topicIndex * 1;  // convert strings to a number
 
       if (topicIndex == currentTopicIndex) return;
