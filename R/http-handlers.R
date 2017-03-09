@@ -1,6 +1,5 @@
 
 
-
 register_http_handlers <- function(session, metadata) {
   
   # environment used for hosting state (e.g. for chunks)
@@ -155,17 +154,17 @@ register_http_handlers <- function(session, metadata) {
     Encoding(line) <- "UTF-8"
     
     # set completion settings
-    options <- rc.options()
-    rc.options(package.suffix = "::",
-               funarg.suffix = " = ",
-               function.suffix = "(")
-    on.exit(do.call(rc.options, as.list(options)), add = TRUE)
+    options <- utils::rc.options()
+    utils::rc.options(package.suffix = "::",
+                      funarg.suffix = " = ",
+                      function.suffix = "(")
+    on.exit(do.call(utils::rc.options, as.list(options)), add = TRUE)
     
-    settings <- rc.settings()
-    rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
-                ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
-                argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
-    on.exit(do.call(rc.settings, as.list(settings)), add = TRUE)
+    settings <- utils::rc.settings()
+    utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
+                       ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
+                       argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
+    on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
     
     # temporarily attach environment state to search path
     # for R completion engine

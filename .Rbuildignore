@@ -6,6 +6,7 @@
 ^docs$
 ^sandbox$
 ^tools$
+^issues$
 ^.*/skeleton/skeleton.html
 
 
