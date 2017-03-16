@@ -141,7 +141,15 @@ $(document).ready(function() {
         window.alert("You must complete the " + exs + " in this section before continuing.");
       }
       else {
-        scrollLastSectionToView = true;
+        if (sectionIndex == topic.sections.length - 1) {
+          // last section on the page
+          if (topicIndex < topics.length - 1) {
+            updateLocation(currentTopicIndex + 1);
+          }
+        }
+        else {
+          scrollLastSectionToView = true;
+        }
         tutor.skipExercise(sectionId);
       }
     }
