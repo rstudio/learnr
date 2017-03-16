@@ -155,6 +155,10 @@ $(document).ready(function() {
     }
 
     function handleNextTopicClick(event) {
+      // any sections in this topic? if not, mark it as skipped
+      if (topics[currentTopicIndex].sections.length == 0) {
+        tutor.skipExercise(topics[currentTopicIndex].id);
+      }
       updateLocation(currentTopicIndex + 1);
     }
 
@@ -392,7 +396,7 @@ $(document).ready(function() {
     }
   }
 
-  // update the UI after a section gets skipped
+  // update the UI after a section or topic (with 0 sections) gets skipped
   function exerciseSkipped(exerciseElement) {
     var sectionSkippedLabel;
     if (exerciseElement.length) {
@@ -406,26 +410,23 @@ $(document).ready(function() {
 
 
     var topicIndex = -1;
-    var sectionIndex = -1;
-    $.each(topics, function( ti, t) {
-      $.each(t.sections, function( si, s) {
-        if (sectionSkippedLabel == s.id) {
+    $.each(topics, function( ti, topic) {
+      if (sectionSkippedLabel == topic.id) {
+        topicIndex = ti;
+        topic.topicCompleted = true;
+        return false;
+      }
+      $.each(topic.sections, function( si, section) {
+        if (sectionSkippedLabel == section.id) {
           topicIndex = ti;
-          sectionIndex = si;
+          section.skipped = true;
+          topic.sectionsSkipped++;
           return false;
         }
       })
       return topicIndex == -1;
     })
 
-    if (topicIndex == -1 || sectionIndex == -1) {
-      console.log('skipped section not found');
-      return;
-    }
-
-    var topic = topics[topicIndex];
-    topic.sections[sectionIndex].skipped = true;
-    topic.sectionsSkipped++;
     // update the progress bar
     updateTopicProgressBar(topicIndex);
     // update visibility of topic's exercises and actions
