@@ -27,8 +27,8 @@ h4 {
   margin: .75em 0 .5em 0; }
 
 p {
-  line-height: 2em;
-  margin-bottom: .25em; }
+  line-height: 1.6em;
+  margin-bottom: 1em; }
 
 ul {
   line-height: 2em;
@@ -66,4 +66,3 @@ ul {
 .panel, pre {
   border-radius: 0;
   border-color: #e0e0e0; }
-  
