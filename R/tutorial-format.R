@@ -5,6 +5,10 @@
 #' 
 #' @inheritParams rmarkdown::html_document
 #'   
+#' @param theme Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
+#'  "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
+#'  "simplex", or "yeti"). 
+#'  
 #' @param progressive Display sub-topics progresively (i.e. wait until previous
 #'   topics are either completed or skipped before displaying subsequent
 #'   topics).
@@ -23,7 +27,7 @@ tutorial <- function(fig_width = 6.5,
                      dev = "png",
                      df_print = "paged",
                      smart = TRUE,
-                     theme = "cerulean",
+                     theme = "rstudio",
                      mathjax = "default",
                      extra_dependencies = NULL,
                      css = NULL,
@@ -63,7 +67,13 @@ tutorial <- function(fig_width = 6.5,
   for (css_file in css)
     args <- c(args, "--css", pandoc_path_arg(css_file))
   
-  
+  # resolve theme (ammend base stylesheet for "rstudio" theme
+  stylesheets <- "tutorial-format.css"
+  if (identical(theme, "rstudio")) {
+    stylesheets <- c(stylesheets, "rstudio-theme.css")
+    theme <- "cerulean"
+  }
+
   # additional tutorial-format js and css. note that we also include the 
   # tutor_html_dependency() within our list of dependencies to ensure that
   # tutor.js (and the API it provides) is always loaded prior to our
@@ -77,7 +87,7 @@ tutorial <- function(fig_width = 6.5,
       version = utils::packageVersion("tutor"),
       src = system.file("rmarkdown/templates/tutorial/resources", package = "tutor"),
       script = "tutorial-format.js",
-      stylesheet = "tutorial-format.css"
+      stylesheet = stylesheets
     )
   ))
   
