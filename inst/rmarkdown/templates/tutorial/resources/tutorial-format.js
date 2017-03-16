@@ -8,9 +8,11 @@ $(document).ready(function() {
     var docAllowSkip = false;
     var topics = [];
 
+    var scrollLastSectionToView = false;
+
     function setCurrentTopic(topicIndex) {
       if (topics.length === 0) return;
-      
+
       topicIndex = topicIndex * 1;  // convert strings to a number
 
       if (topicIndex == currentTopicIndex) return;
@@ -61,6 +63,8 @@ $(document).ready(function() {
 
       var showSection = true;
 
+      var lastVisibleSection = null;
+
       for (i = 0; i < topic.sections.length; i++ ) {
         var section = topic.sections[i];
         var sectionEl = $(section.jqElement);
@@ -73,6 +77,7 @@ $(document).ready(function() {
           }
           else {
             sectionEl.addClass('showSkip');
+            lastVisibleSection = sectionEl;
           }
         }
         else {
@@ -89,6 +94,11 @@ $(document).ready(function() {
       else {
         $(topic.jqElement).addClass('hideActions');
       }
+
+      if (scrollLastSectionToView && lastVisibleSection) {
+        document.body.scrollTop = lastVisibleSection.offset().top - 20;
+      }
+      scrollLastSectionToView = false;
     }
 
     function updateTopicProgressBar(topicIndex) {
@@ -131,6 +141,7 @@ $(document).ready(function() {
         window.alert("You must complete the " + exs + " in this section before continuing.");
       }
       else {
+        scrollLastSectionToView = true;
         tutor.skipExercise(sectionId);
       }
     }
