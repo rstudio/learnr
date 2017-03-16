@@ -45,6 +45,18 @@ function Tutor() {
     thiz.$serverRequest("exercise_skipped", { label: label }, null);
   };
   
+  // API: scroll an element into view
+  this.scrollIntoView = function(element) {
+    element = $(element);
+    var rect = element[0].getBoundingClientRect();
+    if (rect.top < 0 || rect.bottom > $(window).height()) {
+      if (element[0].scrollIntoView) {
+        element[0].scrollIntoView(false);
+        document.body.scrollTop += 20;
+      }  
+    }
+};
+  
   // Initialization
   thiz.$initializeVideos();  
   thiz.$initializeExercises();
@@ -260,16 +272,6 @@ Tutor.prototype.$recordEvent = function(label, event, data) {
   this.$serverRequest("record_event", params, null);
 };
 
-Tutor.prototype.$scrollIntoView = function(element) {
-  element = $(element);
-  var rect = element[0].getBoundingClientRect();
-  if (rect.top < 0 || rect.bottom > $(window).height()) {
-    if (element[0].scrollIntoView) {
-      element[0].scrollIntoView(false);
-      document.body.scrollTop += 20;
-    }  
-  }
-};
 
 Tutor.prototype.$countLines = function(str) { 
   return str.split(/\r\n|\r|\n/).length; 
@@ -1137,7 +1139,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
         popoverArrow.css('left', button.position().left + (button.outerWidth()/2) + 'px');
 
         // scroll into view if necessary
-        thiz.$scrollIntoView(popoverElement);
+        thiz.scrollIntoView(popoverElement);
       }
       else {
         thiz.$removeSolution(exercise);
@@ -1181,7 +1183,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     var exerciseEl = thiz.$exerciseContainer(el)[0];
 
     // ensure visibility
-    thiz.$scrollIntoView(exerciseEl);
+    thiz.scrollIntoView(exerciseEl);
   }
   
   // register a shiny input binding for code editors
