@@ -406,7 +406,8 @@ $(document).ready(function() {
       sectionSkippedId = exerciseElement[0].id;
     }
     else {  // error
-      console.log('section' + $(exerciseElement).selector.split('"')[1] +'not found')
+      console.log('section ' + $(exerciseElement).selector.split('"')[1] +' not found');
+      return;
     }
 
 
