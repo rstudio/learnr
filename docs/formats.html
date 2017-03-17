@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -381,11 +381,13 @@ div.tocify {
 </div>
 <script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
 <p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
+<p>Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (<code>###</code>). This can be useful when a second exercises builds on the first, giving away the answer to the first.</p>
 </div>
 <div id="exercise-skipping" class="section level3">
 <h3>Exercise Skipping</h3>
-<p>You may want to allow users of your tutorials to skip through exercises that they can’t quite figure out the right to. This might especially be true if you are using <code>progressive</code> option and you want users to be able to optionally see the next exercise even if they haven’t completed the prior one.</p>
-<p>If you specify the <code>allow_skip</code> option then all exercises will include a <strong>Skip</strong> button that will mark the exercise as skipped and allow progression to the next one. For example:</p>
+<p>When the <code>progressive</code> option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.</p>
+<p>You may want to allow users of your tutorials to skip through exercises that they can’t quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven’t completed the prior one.</p>
+<p>If you specify the <code>allow_skip</code> option then students will be able to advance through a sub-section without completing the exercises. For example:</p>
 <div id="tutorialyaml-allowskip">
 
 </div>

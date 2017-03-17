@@ -69,11 +69,15 @@ You can also specify this option on a per topic basis using the `data-progressiv
 
 You can also use `data-progressive=FALSE` to disable progressive rendering for an individual topic if the global `progressive` option is `TRUE`.
 
+Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
+
 ### Exercise Skipping
 
-You may want to allow users of your tutorials to skip through exercises that they can't quite figure out the right to. This might especially be true if you are using `progressive` option and you want users to be able to optionally see the next exercise even if they haven't completed the prior one.
+When the `progressive` option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.
 
-If you specify the `allow_skip` option then all exercises will include a **Skip** button that will mark the exercise as skipped and allow progression to the next one. For example:
+You may want to allow users of your tutorials to skip through exercises that they can't quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven't completed the prior one.
+
+If you specify the `allow_skip` option then students will be able to advance through a sub-section without completing the exercises. For example:
 
 <div id="tutorialyaml-allowskip"></div>
 <script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
