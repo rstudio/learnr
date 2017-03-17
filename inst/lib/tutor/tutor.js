@@ -40,9 +40,9 @@ function Tutor() {
     });
   };
   
-  // API: Skip an exercise
-  this.skipExercise = function(label) {
-    thiz.$serverRequest("exercise_skipped", { label: label }, null);
+  // API: Skip a section
+  this.skipSection = function(sectionId) {
+    thiz.$serverRequest("section_skipped", { sectionId: sectionId }, null);
   };
   
   // API: scroll an element into view
@@ -183,8 +183,8 @@ Tutor.prototype.$fireProgressEvent = function(event, data) {
     }
     
   }
-  else if (event == "exercise_skipped") {
-     var exerciseElement = $('.tutor-exercise[data-label="' + data.label + '"]');
+  else if (event == "section_skipped") {
+     var exerciseElement = $('#' + data.sectionId);
      progressEvent.element = exerciseElement;
      progressEvent.completed = false;
   }
@@ -228,8 +228,8 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
       progressEventData.label = progress.data.label;
       progressEventData.correct = progress.data.correct;
     }
-    else if (progressEvent == "exercise_skipped") {
-      progressEventData.label = progress.data.label;
+    else if (progressEvent == "section_skipped") {
+      progressEventData.sectionId = progress.data.sectionId;
       progressEventData.correct = false;
     }
     else if (progressEvent == "video_progress") {

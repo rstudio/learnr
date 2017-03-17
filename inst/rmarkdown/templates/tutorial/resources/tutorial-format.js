@@ -150,14 +150,14 @@ $(document).ready(function() {
         else {
           scrollLastSectionToView = true;
         }
-        tutor.skipExercise(sectionId);
+        tutor.skipSection(sectionId);
       }
     }
 
     function handleNextTopicClick(event) {
       // any sections in this topic? if not, mark it as skipped
       if (topics[currentTopicIndex].sections.length == 0) {
-        tutor.skipExercise(topics[currentTopicIndex].id);
+        tutor.skipSection(topics[currentTopicIndex].id);
       }
       updateLocation(currentTopicIndex + 1);
     }
@@ -400,27 +400,25 @@ $(document).ready(function() {
   }
 
   // update the UI after a section or topic (with 0 sections) gets skipped
-  function exerciseSkipped(exerciseElement) {
-    var sectionSkippedLabel;
+  function sectionSkipped(exerciseElement) {
+    var sectionSkippedId;
     if (exerciseElement.length) {
-      console.log('something changed in tutor ...');
-      return;
-    //  sectionSkippedLabel = exerciseElement.attr('data-label');
+      sectionSkippedId = exerciseElement[0].id;
     }
-    else {  // fish out the id of the section that got skipped skipped
-      sectionSkippedLabel = $(exerciseElement).selector.split('"')[1];
+    else {  // error
+      console.log('section' + $(exerciseElement).selector.split('"')[1] +'not found')
     }
 
 
     var topicIndex = -1;
     $.each(topics, function( ti, topic) {
-      if (sectionSkippedLabel == topic.id) {
+      if (sectionSkippedId == topic.id) {
         topicIndex = ti;
         topic.topicCompleted = true;
         return false;
       }
       $.each(topic.sections, function( si, section) {
-        if (sectionSkippedLabel == section.id) {
+        if (sectionSkippedId == section.id) {
           topicIndex = ti;
           section.skipped = true;
           topic.sectionsSkipped++;
@@ -447,8 +445,8 @@ $(document).ready(function() {
     tutor.onProgress(function(progressEvent) {
       if (progressEvent.event === "section_completed")
         sectionCompleted(progressEvent.element);
-      else if (progressEvent.event === "exercise_skipped")
-        exerciseSkipped($(progressEvent.element));
+      else if (progressEvent.event === "section_skipped")
+        sectionSkipped(progressEvent.element);
     });
 
   });

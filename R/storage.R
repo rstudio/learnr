@@ -39,11 +39,12 @@ save_exercise_submission <- function(session, label, code, output, error_message
   )  
 }
 
-save_exercise_skipped <- function(session, label) {
+
+save_section_skipped <- function(session, sectionId) {
   save_object(
     session = session,
-    object_id = label,
-    tutor_object("exercise_skipped", list())
+    object_id = ns_wrap("section_skipped", sectionId),
+    tutor_object("section_skipped", list())
   )
 }
 
@@ -112,8 +113,8 @@ video_progress_from_state_objects <- function(state_objects) {
   filter_state_objects(state_objects, c("video_progress"))
 }
 
-exercise_skipped_progress_from_state_objects <- function(state_objects) {
-  filter_state_objects(state_objects, c("exercise_skipped"))
+section_skipped_progress_from_state_objects <- function(state_objects) {
+  filter_state_objects(state_objects, c("section_skipped"))
 }
 
 
@@ -139,15 +140,15 @@ progress_events_from_state_objects <- function(state_objects) {
          ))
   })
   
-  # now exercises skipped
-  exercise_skipped_progress <- exercise_skipped_progress_from_state_objects(state_objects)
-  exercise_skipped_progress_events <- lapply(exercise_skipped_progress, function(skipped) {
-    list(event = "exercise_skipped",
+  # now sections skipped
+  section_skipped_progress <- section_skipped_progress_from_state_objects(state_objects)
+  section_skipped_progress_events <- lapply(section_skipped_progress, function(skipped) {
+    list(event = "section_skipped",
          data = list(
-           label = skipped$id
+           sectionId = ns_unwrap("section_skipped", skipped$id)
          ))
   })
-  progress_events <- append(progress_events, exercise_skipped_progress_events)
+  progress_events <- append(progress_events, section_skipped_progress_events)
   
   # now video_progress
   video_progress <- video_progress_from_state_objects(state_objects)
@@ -210,6 +211,14 @@ tutor_object <- function(type, data) {
     type = type,
     data = data
   )
+}
+
+ns_wrap <- function(ns, id) {
+  paste0(ns, id)
+}
+
+ns_unwrap <- function(ns, id) {
+  substring(id, nchar(ns) + 1)
 }
 
 
