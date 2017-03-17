@@ -169,7 +169,7 @@ register_http_handlers <- function(session, metadata) {
     # temporarily attach environment state to search path
     # for R completion engine
     if (nzchar(label) && is.environment(state[[label]])) {
-      attach(state[[label]], name = "tutor:state")
+      do.call("attach", list(state[[label]], name = "tutor:state"))
       on.exit(detach("tutor:state"), add = TRUE)
     }
     
