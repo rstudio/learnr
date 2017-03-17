@@ -51,7 +51,7 @@
   width: 23%;
   min-width: 270px;
   margin-right: 2%;
-  z-index: 10000;
+  z-index: 100;
 }
 
 .topicsPositioner {
