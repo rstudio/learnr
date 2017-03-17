@@ -14,7 +14,7 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 
 4. Videos (supported services include YouTube and Vimeo).
 
-5. Interactive Shiny applets.
+5. Interactive Shiny components.
 
 Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.
 
@@ -147,7 +147,7 @@ You can specify an alternate percentage for the video's width or an alternate fi
 <div id="videos-size"></div>
 <script type="text/javascript">loadSnippet('videos-size', 'markdown')</script>
 
-## Shiny Applets
+## Shiny Components
 
 The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
 

@@ -14,6 +14,6 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 
 4. Quiz questions.
 
-5. Interactive Shiny applets.
+5. Interactive Shiny components.
 
 You can find documentation on using the **tutor** package here: <https://rstudio.github.com/tutor/>

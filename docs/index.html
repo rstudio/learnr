@@ -337,7 +337,7 @@ div.tocify {
 <li><p>Code exercises (R code chunks that users can edit and execute directly).</p></li>
 <li><p>Quiz questions.</p></li>
 <li><p>Videos (supported services include YouTube and Vimeo).</p></li>
-<li><p>Interactive Shiny applets.</p></li>
+<li><p>Interactive Shiny components.</p></li>
 </ol>
 <p>Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.</p>
 <div id="hello-tutor" class="section level3">
@@ -450,8 +450,8 @@ div.tocify {
 <script type="text/javascript">loadSnippet('videos-size', 'markdown')</script>
 </div>
 </div>
-<div id="shiny-applets" class="section level2">
-<h2>Shiny Applets</h2>
+<div id="shiny-components" class="section level2">
+<h2>Shiny Components</h2>
 <p>The <strong>tutor</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
 <p>The basic technique is to add a <code>context=&quot;server&quot;</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
 <div id="shiny">
