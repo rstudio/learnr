@@ -175,11 +175,12 @@ register_http_handlers <- function(session, metadata) {
     
     completions <- character()
     try(silent = TRUE, {
-      utils:::.assignLinebuffer(line)
-      utils:::.assignEnd(nchar(line))
-      utils:::.guessTokenFromLine()
-      utils:::.completeToken()
-      completions <- as.character(utils:::.retrieveCompletions())
+      utils <- asNamespace("utils")
+      utils$.assignLinebuffer(line)
+      utils$.assignEnd(nchar(line))
+      utils$.guessTokenFromLine()
+      utils$.completeToken()
+      completions <- as.character(utils$.retrieveCompletions())
     })
     
     # detect functions
