@@ -6,7 +6,7 @@
 \usage{
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
   fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
-  dev = "png", df_print = "paged", smart = TRUE, theme = "cerulean",
+  dev = "png", df_print = "paged", smart = TRUE, theme = "rstudio",
   mathjax = "default", extra_dependencies = NULL, css = NULL,
   includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
 }
@@ -47,10 +47,9 @@ by setting the option \code{rmarkdown.df_print} to \code{FALSE}.}
 quotes to curly quotes, --- to em-dashes, -- to en-dashes, and ... to
 ellipses.}
 
-\item{theme}{Visual theme ("default", "cerulean", "journal", "flatly",
+\item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
-"simplex", or "yeti"). Pass \code{NULL} for no theme (in this case you can
-use the \code{css} parameter to add your own styles).}
+"simplex", or "yeti").}
 
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from
 the official MathJax CDN. The "local" option uses a local version of MathJax
