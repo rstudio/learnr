@@ -143,7 +143,7 @@
             if (typeof console != 'undefined') {
                 console.warn(depMsg);
             } else {
-                alert(depMsg);
+                 bootbox.alert(depMsg);
             }
         }
         // End of deprecation reassignment
@@ -457,7 +457,7 @@
                 });
 
                 if (plugin.config.preventUnanswered && selectedAnswers.length === 0) {
-                    alert(plugin.config.preventUnansweredText);
+                    bootbox.alert(plugin.config.preventUnansweredText);
                     return false;
                 }
 

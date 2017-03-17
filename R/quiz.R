@@ -123,10 +123,11 @@ question <- function(text,
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
     rmarkdown::html_dependency_bootstrap(theme = "default"),
+    bootbox_html_dependency(),
+    localforage_html_dependency(),
     tutor_html_dependency(),
     tutor_autocompletion_html_dependency(),
     tutor_diagnostics_html_dependency(),
-    localforage_html_dependency(),
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",

@@ -138,7 +138,7 @@ $(document).ready(function() {
       // if the section has exercises and is not complete, don't skip - put up message
       if (section.exercises.length && !section.completed && !section.allowSkip) {
         var exs = section.exercises.length == 1 ? 'exercise' : 'exercises';
-        window.alert("You must complete the " + exs + " in this section before continuing.");
+        bootbox.alert("You must complete the " + exs + " in this section before continuing.");
       }
       else {
         if (sectionIndex == topic.sections.length - 1) {
@@ -264,8 +264,11 @@ $(document).ready(function() {
 
       var resetButton = $('<span class="resetButton">Start Over</span>');
       resetButton.on('click', function() {
-        if (window.confirm("Are you sure you want to start over? (all exercise progress will be reset)"))
-          tutor.startOver();
+        bootbox.confirm("Are you sure you want to start over? (all exercise progress will be reset)",
+                        function(result) {
+                          if (result)
+                            tutor.startOver();
+                        });
       });
       topicsFooter.append(resetButton);
       topicsList.append(topicsFooter);

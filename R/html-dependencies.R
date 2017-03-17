@@ -56,6 +56,15 @@ localforage_html_dependency <- function() {
   )
 }
 
+bootbox_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "bootbox",
+    version = "4.4.0",
+    src = system.file("lib/bootbox", package = "tutor"),
+    script = "bootbox.min.js"
+  )
+}
+
 clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
