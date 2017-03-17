@@ -105,13 +105,13 @@ register_http_handlers <- function(session, metadata) {
   }))
   
   # exercise skipped event
-  session$registerDataObj("exercise_skipped", NULL, rpc_handler(function(input) {
+  session$registerDataObj("section_skipped", NULL, rpc_handler(function(input) {
     
     # extract inputs
-    label <- input$label
+    sectionId <- input$sectionId
     
     # fire event
-    exercise_skipped_event(session = session, label = label)
+    section_skipped_event(session = session, sectionId = sectionId)
     
   }))
   

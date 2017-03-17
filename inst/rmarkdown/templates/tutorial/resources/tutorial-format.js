@@ -150,14 +150,14 @@ $(document).ready(function() {
         else {
           scrollLastSectionToView = true;
         }
-        tutor.skipExercise(sectionId);
+        tutor.skipSection(sectionId);
       }
     }
 
     function handleNextTopicClick(event) {
       // any sections in this topic? if not, mark it as skipped
       if (topics[currentTopicIndex].sections.length == 0) {
-        tutor.skipExercise(topics[currentTopicIndex].id);
+        tutor.skipSection(topics[currentTopicIndex].id);
       }
       updateLocation(currentTopicIndex + 1);
     }
@@ -447,8 +447,8 @@ $(document).ready(function() {
     tutor.onProgress(function(progressEvent) {
       if (progressEvent.event === "section_completed")
         sectionCompleted(progressEvent.element);
-      else if (progressEvent.event === "exercise_skipped")
-        exerciseSkipped($(progressEvent.element));
+      else if (progressEvent.event === "section_skipped")
+        sectionCompleted(progressEvent.element);
     });
 
   });

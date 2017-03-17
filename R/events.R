@@ -48,20 +48,23 @@ question_submission_event <- function(session,
 }
 
 
-exercise_skipped_event <- function(session, label) {
+section_skipped_event <- function(session, sectionId) {
+  
+  # event data
+  event_data <- list(sectionId = sectionId)
   
   # notify server-side listeners
   record_event(session = session,
-               event = "exercise_skipped",
-               data = list(label = label))
+               event = "section_skipped",
+               data = event_data)
   
   # notify client side listeners
   broadcast_progress_event_to_client(session = session, 
-                                     event = "exercise_skipped",
-                                     data = list(label = label))
+                                     event = "section_skipped",
+                                     data = event_data)
   
   # save for later replay
-  save_exercise_skipped(session = session, label = label)
+  save_section_skipped(session = session, sectionId = sectionId)
 }
 
 exercise_submission_event <- function(session,
