@@ -1,8 +1,13 @@
 ---
 title: "Tutor"
-output: tutor::tutorial
+output: 
+  tutor::tutorial:
+    progressive: true
+    allow_skip: true
 runtime: shiny_prerendered
 ---
+
+
 
 ```{r setup, include=FALSE}
 library(tutor)

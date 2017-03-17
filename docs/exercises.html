@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -476,11 +476,37 @@ Whether to enable code diagnostics in the exercise editor.
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 </div>
 </div>
-<div id="exercise-visibility" class="section level2">
-<h2>Exercise Visibility</h2>
-<p>If you are using the <a href="formats.html#tutorial-format"><code>tutor::tutorial</code></a> R Markdown format then there are some additional options available to control the visibility of exercises.</p>
-<p>You can specify the <a href="formats.html#progressive-reveal"><code>progressive</code></a> option to display sub-topics progressively (i.e. the next sub-topic is only revealed once the current one has been completed).</p>
-<p>You can also specify the <a href="formats.html#exercise-skipping"><code>allow_skip</code></a> option to allow users to skip through exercises that they can’t quite figure out the answer to (this is especially useful along with the <code>progressive</code> option).</p>
+<div id="progressive-reveal" class="section level2">
+<h2>Progressive Reveal</h2>
+<p>You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the <code>progressive</code> option then all Level 3 headings (<code>###</code>) will be revealed progressively. For example:</p>
+<div id="tutorialyaml-progressive">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script>
+<p>You can also specify this option on a per topic basis using the <code>data-progressive</code> attribute. For example, the following code enables progressive rendering for a single topic:</p>
+<div id="tutorialyaml-progressive-topic">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
+<p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
+<p>Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (<code>###</code>). This can be useful when a second exercises builds on the first, giving away the answer to the first.</p>
+<p>Note that this feature is only available if you are using the <a href="formats.html#tutorial-format"><code>tutor::tutorial</code></a> R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).</p>
+<div id="exercise-skipping" class="section level3">
+<h3>Exercise Skipping</h3>
+<p>When the <code>progressive</code> option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.</p>
+<p>You may want to allow users of your tutorials to skip through exercises that they can’t quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven’t completed the prior one.</p>
+<p>If you specify the <code>allow_skip</code> option then students will be able to advance through a sub-section without completing the exercises. For example:</p>
+<div id="tutorialyaml-allowskip">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
+<p>You can also specify this option on a per sub-topic basis using the <code>data-allow-skip</code> attribute. For example, the following code enables exercise skipping within a single sub-topic:</p>
+<div id="tutorialyaml-allowskip-topic">
+
+</div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script>
+<p>You can also use <code>data-allow-skip=FALSE</code> to disable exercise skipping rendering for an individual sub-topic if the global <code>allow-skip</code> option is <code>TRUE</code>.</p>
+</div>
 </div>
 <div id="exercise-checking" class="section level2">
 <h2>Exercise Checking</h2>

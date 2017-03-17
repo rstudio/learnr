@@ -120,13 +120,41 @@ For R code hints you can provide a sequence of hints that reveal progressively m
 <div id="exercisehints"></div>
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 
-## Exercise Visibility
+## Progressive Reveal
 
-If you are using the [`tutor::tutorial`](formats.html#tutorial-format) R Markdown format then there are some additional options available to control the visibility of exercises.
+You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the `progressive` option then all Level 3 headings (`###`) will be revealed progressively. For example:
 
-You can specify the [`progressive`](formats.html#progressive-reveal) option to display sub-topics progressively (i.e. the next sub-topic is only revealed once the current one has been completed).
+<div id="tutorialyaml-progressive"></div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script>
 
-You can also specify the [`allow_skip`](formats.html#exercise-skipping) option to allow users to skip through exercises that they can't quite figure out the answer to (this is especially useful along with the `progressive` option).
+You can also specify this option on a per topic basis using the `data-progressive` attribute. For example, the following code enables progressive rendering for a single topic:
+
+<div id="tutorialyaml-progressive-topic"></div>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
+
+You can also use `data-progressive=FALSE` to disable progressive rendering for an individual topic if the global `progressive` option is `TRUE`.
+
+Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
+
+Note that this feature is only available if you are using the [`tutor::tutorial`](formats.html#tutorial-format) R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).
+
+### Exercise Skipping
+
+When the `progressive` option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.
+
+You may want to allow users of your tutorials to skip through exercises that they can't quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven't completed the prior one.
+
+If you specify the `allow_skip` option then students will be able to advance through a sub-section without completing the exercises. For example:
+
+<div id="tutorialyaml-allowskip"></div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
+
+You can also specify this option on a per sub-topic basis using the `data-allow-skip` attribute. For example, the following code enables exercise skipping within a single sub-topic:
+
+<div id="tutorialyaml-allowskip-topic"></div>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script>
+
+You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering for an individual sub-topic if the global `allow-skip` option is `TRUE`.
 
 ## Exercise Checking
 

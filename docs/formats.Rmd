@@ -35,8 +35,6 @@ The **tutor** package includes a `tutor::tutorial` R Markdown format which which
 
 The format also includes features for progressively revealing sections and allowing users to optionally skip exercises they are having trouble with (both of these features are described below).
 
-### Creating a Tutorial
-
 You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
 ![](images/create-new-tutorial.png){width=609 height=482}
@@ -54,40 +52,6 @@ The benefits of using the `tutor::tutorial` format include:
 Here's what a `tutor::tutorial` document looks like by default:
 
 ![](images/tutorial-format.png){width=1184 height=737 style="border: solid 1px #cccccc; margin-bottom: 12px;"}
-
-### Progressive Reveal
-
-You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the `progressive` option then all Level 3 headings (`###`) will be revealed progressively. For example:
-
-<div id="tutorialyaml-progressive"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script>
-
-You can also specify this option on a per topic basis using the `data-progressive` attribute. For example, the following code enables progressive rendering for a single topic:
-
-<div id="tutorialyaml-progressive-topic"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
-
-You can also use `data-progressive=FALSE` to disable progressive rendering for an individual topic if the global `progressive` option is `TRUE`.
-
-Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
-
-### Exercise Skipping
-
-When the `progressive` option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.
-
-You may want to allow users of your tutorials to skip through exercises that they can't quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven't completed the prior one.
-
-If you specify the `allow_skip` option then students will be able to advance through a sub-section without completing the exercises. For example:
-
-<div id="tutorialyaml-allowskip"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
-
-You can also specify this option on a per sub-topic basis using the `data-allow-skip` attribute. For example, the following code enables exercise skipping within a single sub-topic:
-
-<div id="tutorialyaml-allowskip-topic"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script>
-
-You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering for an individual sub-topic if the global `allow-skip` option is `TRUE`.
 
 
 ## Custom Formats
