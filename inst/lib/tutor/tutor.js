@@ -42,7 +42,8 @@ function Tutor() {
   
   // API: Skip a section
   this.skipSection = function(sectionId) {
-    thiz.$serverRequest("section_skipped", { sectionId: sectionId }, null);
+    if (thiz.$isServerAvailable())
+      thiz.$serverRequest("section_skipped", { sectionId: sectionId }, null);
   };
   
   // API: scroll an element into view
@@ -1506,6 +1507,10 @@ Tutor.prototype.$initializeClientState = function(client_state) {
 
 /* Server initialization */
 
+Tutor.prototype.$isServerAvailable = function() {
+  return typeof ((Shiny || {}).shinyapp || {}).config !== "undefined";
+}
+
 Tutor.prototype.$initializeServer = function() {
   
   // one-shot function to initialize server (wait for Shiny.shinyapp
@@ -1513,7 +1518,7 @@ Tutor.prototype.$initializeServer = function() {
   var thiz = this;
   function initializeServer() {
     // wait for shiny config to be available (required for $serverRequest)
-    if (typeof ((Shiny || {}).shinyapp || {}).config !== "undefined")  {
+    if (thiz.$isServerAvailable()) {
       thiz.$serverRequest("initialize", { location: window.location }, 
         function(identifiers) {
           // initialize storage then restore state
