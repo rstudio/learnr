@@ -1,0 +1,19 @@
+---
+title: "Examples"
+output:
+  html_document:
+    toc_float: false
+---
+
+Some examples of tutorials created using the **tutor** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/ggtutorials/blob/master/tutorials/.
+
+<br/>
+
+```{r setup, include=FALSE}
+source("utils.R")
+```
+
+```{r, echo=FALSE}
+examples()
+```
+

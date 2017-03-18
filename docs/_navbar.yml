@@ -11,6 +11,8 @@ left:
     href: publishing.html
   - text: "Formats"
     href: formats.html
+  - text: "Examples"
+    href: examples.html
 right:
   - icon: fa-github
     href: https://github.com/rstudio/tutor
