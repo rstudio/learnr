@@ -2,6 +2,11 @@
 title: "tutor: Interactive tutorials for R"
 ---
 
+```{r setup, include=FALSE}
+source("utils.R")
+```
+
+
 ## Overview
 
 The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
@@ -17,6 +22,14 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 5. Interactive Shiny components.
 
 Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.
+
+### Examples
+
+Here are some simple examples of tutorials created with the **tutor** package:
+
+```{r, echo=FALSE}
+examples(showcaseOnly = TRUE)
+```
 
 ### Hello, Tutor! 
 
