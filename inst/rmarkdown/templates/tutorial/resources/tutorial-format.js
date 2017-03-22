@@ -9,6 +9,7 @@ $(document).ready(function() {
     var topics = [];
 
     var scrollLastSectionToView = false;
+    var scrollLastSectionPosition = 0;
 
     function setCurrentTopic(topicIndex) {
       if (topics.length === 0) return;
@@ -96,7 +97,12 @@ $(document).ready(function() {
       }
 
       if (scrollLastSectionToView && lastVisibleSection) {
-        document.body.scrollTop = lastVisibleSection.offset().top - 20;
+        scrollLastSectionPosition = lastVisibleSection.offset().top - 28;
+        setTimeout(function() {
+          $('html, body').animate({
+            scrollTop: scrollLastSectionPosition
+          }, 300);
+        }, 60)
       }
       scrollLastSectionToView = false;
     }
