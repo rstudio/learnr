@@ -1368,6 +1368,9 @@ Tutor.prototype.$restoreState = function(objects) {
   // retreive state from server
   this.$serverRequest("restore_state", objects, function(data) {
     
+    // initialize client state
+    thiz.$initializeClientState(data.client_state);
+    
     // fire init event
     thiz.$fireInit();
     
@@ -1379,10 +1382,6 @@ Tutor.prototype.$restoreState = function(objects) {
     
     // initialize video players
     thiz.$initializeVideoPlayers(data.video_progress);
-    
-    // initialize client state
-    thiz.$initializeClientState(data.client_state);
-    
   });
 };
 
@@ -1476,7 +1475,8 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   
   // client state object
   var last_client_state = {
-    scroll_position: 0
+    scroll_position: 0,
+    hash: ''
   };
   
   // debounced checker for scroll position
@@ -1484,23 +1484,30 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   
     // get current client state
     var current_client_state = {
-      'scroll_position': $(window).scrollTop()
+      'scroll_position': $(window).scrollTop(),
+      'hash': window.location.hash
     };
 	  
     // if it changed then persist it and upate last
-    if (current_client_state.scroll_position != 
-        last_client_state.scroll_position) {
+    if ((current_client_state.scroll_position != last_client_state.scroll_position) ||
+         current_client_state.hash != last_client_state.hash) {
       thiz.$serverRequest("set_client_state", current_client_state, null);
       last_client_state = current_client_state;
     }
   }, 1000);
   
-  // check for client state on scroll position changed
+  // check for client state on scroll position changed and hash changed
   $(window).scroll(maybePersistClientState);
+  window.addEventListener("popstate", maybePersistClientState);
   
-  // restore scroll position (don't currently do this because it
-  // seems janky to do so)
-  // if (client_state.scroll_position)
+  // restore hash if there wasn't a hash already
+  if (!window.location.hash && client_state.hash) {
+    window.location.hash = client_state.hash;
+  }
+  
+  // restore scroll position (don't do this for now as it ends up being 
+  // kind of janky)
+  //if (client_state.scroll_position)
   //  $(window).scrollTop(client_state.scroll_position);
 };
 
