@@ -30,7 +30,7 @@ Imports:
   evaluate,
   knitr (>= 1.14),
   markdown,
-  rmarkdown (>= 1.2),
+  rmarkdown (>= 1.4),
   shiny (>= 1.0)
 Encoding: UTF-8
 LazyData: true
