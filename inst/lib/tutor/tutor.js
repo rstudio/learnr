@@ -1501,8 +1501,9 @@ Tutor.prototype.$initializeClientState = function(client_state) {
   window.addEventListener("popstate", maybePersistClientState);
   
   // restore hash if there wasn't a hash already
-  if (!window.location.hash && client_state.hash)
-    history.pushState(null, null, client_state.hash);
+  if (!window.location.hash && client_state.hash) {
+    window.location.hash = client_state.hash;
+  }
   
   // restore scroll position
   if (client_state.scroll_position)
