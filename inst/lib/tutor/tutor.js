@@ -1505,9 +1505,10 @@ Tutor.prototype.$initializeClientState = function(client_state) {
     window.location.hash = client_state.hash;
   }
   
-  // restore scroll position
-  if (client_state.scroll_position)
-    $(window).scrollTop(client_state.scroll_position);
+  // restore scroll position (don't do this for now as it ends up being 
+  // kind of janky)
+  //if (client_state.scroll_position)
+  //  $(window).scrollTop(client_state.scroll_position);
 };
 
 
