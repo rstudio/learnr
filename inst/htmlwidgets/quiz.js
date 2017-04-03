@@ -25,7 +25,7 @@ HTMLWidgets.widget({
         // helper function to record an answer
         function recordAnswer(correct) {
           
-          if (window.tutor && x.label) {
+          if (window.teachdown && x.label) {
             var answers = [];
             var checkedInputs = $(el).find('.answers').find('input:checked');
             checkedInputs.each(function() {
@@ -40,7 +40,7 @@ HTMLWidgets.widget({
               answers: answers,
               correct: correct
             };
-            window.tutor.$serverRequest("question_submission", params, null);
+            window.teachdown.$serverRequest("question_submission", params, null);
           }
         }
         

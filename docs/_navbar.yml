@@ -1,4 +1,4 @@
-title: "tutor for R"
+title: "teachdown for R"
 type: inverse
 left:
   - text: "Home"
@@ -15,7 +15,7 @@ left:
     href: examples.html
 right:
   - icon: fa-github
-    href: https://github.com/rstudio/tutor
+    href: https://github.com/rstudio/teachdown
 
 
 

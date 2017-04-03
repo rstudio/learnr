@@ -1,14 +1,14 @@
 ---
 title: "Autocompletion"
-output: tutor::tutorial
+output: teachdown::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(tutor)
+library(teachdown)
 library(nycflights13)
-options(tutor.event_recorder = tutor:::debug_event_recorder)
-tutor_options(
+options(teachdown.event_recorder = teachdown:::debug_event_recorder)
+teachdown_options(
   exercise.eval = FALSE, 
   exercise.checker = function(label, user_code, envir_result, ...)  {
     if (is.null(envir_result))

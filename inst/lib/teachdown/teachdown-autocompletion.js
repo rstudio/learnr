@@ -1,5 +1,5 @@
-function TutorCompleter(tutor) {
-  this.$tutor = tutor;
+function TeachdownCompleter(teachdown) {
+  this.$teachdown = teachdown;
   var self = this;
 
   this.$onChange = function(data) {
@@ -92,7 +92,7 @@ function TutorCompleter(tutor) {
           label: editor.tutorial.label
         };
 
-        self.$tutor.$serverRequest("completion", payload, function(data) {
+        self.$teachdown.$serverRequest("completion", payload, function(data) {
           
           data = data || [];
 
@@ -145,7 +145,7 @@ function TutorCompleter(tutor) {
 
   function initializeSetupChunk(editor) {
     var data = editor.tutorial;
-    self.$tutor.$serverRequest("initialize_chunk", data);
+    self.$teachdown.$serverRequest("initialize_chunk", data);
   }
 
   var ensureInitialized = function(editor) {

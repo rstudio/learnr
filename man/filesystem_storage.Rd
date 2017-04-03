@@ -12,7 +12,7 @@ filesystem_storage(dir, compress = TRUE)
 \item{compress}{Should \code{.rds} files be compressed?}
 }
 \value{
-Storage handler suitable for \code{options(tutor.storage = ...)}
+Storage handler suitable for \code{options(teachdown.storage = ...)}
 }
 \description{
 Tutorial state storage handler that uses the filesystem

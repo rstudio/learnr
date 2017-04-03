@@ -5,7 +5,7 @@
 #  /usr/lib/rstudio/bin/pandoc/* rix,
 #
 
-options(tutor.exercise.evaluator.onstart = function(pid) {
+options(teachdown.exercise.evaluator.onstart = function(pid) {
 
   # import RAppArmor
   require(RAppArmor, quietly = TRUE)
@@ -24,7 +24,7 @@ options(tutor.exercise.evaluator.onstart = function(pid) {
   aa_change_profile("r-user")
 })
 
-options(tutor.exercise.evaluator.oncleanup = function(pid) {
+options(teachdown.exercise.evaluator.oncleanup = function(pid) {
   
   # import RAppArmor
   require(RAppArmor, quietly = TRUE)

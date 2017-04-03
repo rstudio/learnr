@@ -1,21 +1,21 @@
 
-.tutor-exercise-support {
+.teachdown-exercise-support {
   display: none;
 }
 
-.slide .tutor-exercise {
+.slide .teachdown-exercise {
   line-height: 1.4;
 }
 
-.tutor-exercise {
+.teachdown-exercise {
   position: relative;
 }
 
-.tutor-exercise-input {
+.teachdown-exercise-input {
   margin-top: 15px;
 }
 
-.tutor-panel-heading {
+.teachdown-panel-heading {
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 8px;
@@ -25,7 +25,7 @@
   width: 100%;
 }
 
-.tutor-exercise-input .btn-xs {
+.teachdown-exercise-input .btn-xs {
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
@@ -40,41 +40,41 @@
   border-color: #ccc;
 }
 
-.tutor-exercise-input .btn-tutor-solution {
+.teachdown-exercise-input .btn-teachdown-solution {
   margin-left: 15px;  
 }
 
-.tutor-exercise-input .btn-tutor-next-hint {
+.teachdown-exercise-input .btn-teachdown-next-hint {
   margin-left: 15px;
   padding-right: 4px;
 }
 
-.tutor-exercise-input .btn-xs i {
+.teachdown-exercise-input .btn-xs i {
   width: 10px;
   margin-right: 1px;
 }
 
 
-.tutor-exercise-input .panel-body {
+.teachdown-exercise-input .panel-body {
   padding: 0;
 }
 
 
-.tutor-exercise-code-editor {
+.teachdown-exercise-code-editor {
   width: 100%;
 }
 
 
-.tutor-solution-popover {
+.teachdown-solution-popover {
   max-width: none;
   width: 100%;
 }
 
-.tutor-solution-popover.top>.arrow {
+.teachdown-solution-popover.top>.arrow {
   margin-left: 0;
 }
 
-.tutor-hint {
+.teachdown-hint {
 
 }
 
@@ -84,18 +84,18 @@
 }
 
 
-.tutor-video-container {
+.teachdown-video-container {
   position: relative;
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
-.tutor-exercise-output>pre {
+.teachdown-exercise-output>pre {
   max-height: 500px;
   overflow-y: auto;
 }
 
-.tutor-video {
+.teachdown-video {
   position: absolute;
   top: 0;
   left: 0;

@@ -12,7 +12,7 @@ initialize_tutor <- function() {
   
   # helper function for one time initialization
   if (isTRUE(getOption("knitr.in.progress")) &&
-      !isTRUE(knitr::opts_knit$get("tutor.initialized"))) {
+      !isTRUE(knitr::opts_knit$get("teachdown.initialized"))) {
     
     # html dependencies
     knitr::knit_meta_add(list(
@@ -20,21 +20,21 @@ initialize_tutor <- function() {
       rmarkdown::html_dependency_font_awesome(),
       bootbox_html_dependency(),
       localforage_html_dependency(),
-      tutor_html_dependency(),
-      tutor_autocompletion_html_dependency(),
-      tutor_diagnostics_html_dependency()
+      teachdown_html_dependency(),
+      teachdown_autocompletion_html_dependency(),
+      teachdown_diagnostics_html_dependency()
     ))
   
     # session initialization (forward tutorial metadata)
     rmarkdown::shiny_prerendered_chunk(
       'server', 
-      sprintf('tutor:::register_http_handlers(session, metadata = %s)', 
+      sprintf('teachdown:::register_http_handlers(session, metadata = %s)', 
               deparse(rmarkdown::metadata$tutorial, control = c("keepInteger"))),
       singleton = TRUE
     )
     
     # set initialized flag to ensure single initialization
-    knitr::opts_knit$set(tutor.initialized = TRUE)
+    knitr::opts_knit$set(teachdown.initialized = TRUE)
   }
 }
 

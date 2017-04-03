@@ -9,11 +9,11 @@ Tutorials can be published all of the same ways that Shiny applications can, inc
 
 ## R Package
 
-A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the `tutor::run_tutorial` function. For example, the following functions runs the "hello" and "slidy" sample tutorials built in to the **tutor** package:
+A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the `teachdown::run_tutorial` function. For example, the following functions runs the "hello" and "slidy" sample tutorials built in to the **teachdown** package:
 
 ```r
-tutor::run_tutorial("hello", package = "tutor")
-tutor::run_tutorial("slidy", package = "tutor")
+teachdown::run_tutorial("hello", package = "teachdown")
+teachdown::run_tutorial("slidy", package = "teachdown")
 ```
 
 To bundle a tutorial into an R package and make it available for running via the `run_tutorial` function you should:
@@ -22,20 +22,20 @@ To bundle a tutorial into an R package and make it available for running via the
 
 2. Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development & preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).
 
-Once you've done this users can run your tutorial as follows (note they should be sure to install the **tutor** package before attempting to run the tutorial):
+Once you've done this users can run your tutorial as follows (note they should be sure to install the **teachdown** package before attempting to run the tutorial):
 
 Users would then simply install tutor directly before running your tutorial, for example:
 
 ```r
-devtools::install_github("rstudio/tutor")
-tutor::run_tutorial("introduction", package = "mypackage")
+devtools::install_github("rstudio/teachdown")
+teachdown::run_tutorial("introduction", package = "mypackage")
 ```
 
 ### Exercise Checkers {.toc-ignore}
 
 Note that if your tutorial performs [exercise checking](exercises.html#checking-exercises) via an external package then you should be sure to add the package you use for checking as an `Imports` dependency of your package so it's installed automatically along with your package.
 
-Note that it's likely that the **tutor** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
+Note that it's likely that the **teachdown** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
 
 ## Shiny Server
 
@@ -67,13 +67,13 @@ See also the section below on [Exercise Execution] for details on further custom
 
 Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and/or other system resources.
 
-Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
+Note that by default when running on UNIX systems the **teachdown** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
 
 ## Hosting Services
 
 Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.). 
 
-The **tutor** package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.
+The **teachdown** package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.
 
 ### Tutorial Storage
 
@@ -85,7 +85,7 @@ For server deployed tutorials the state is saved within the per-domain storage p
 
 Hosting services will typically want to provide a custom implementation for the storage of tutorial state which is tied to their tutorial provisioning  and user identity system.
 
-A custom storage provider is specified by assigning an R list which includes the storage functions to the `tutor.storage` global option. For example, here is a "no-op" storage provider:
+A custom storage provider is specified by assigning an R list which includes the storage functions to the `teachdown.storage` global option. For example, here is a "no-op" storage provider:
 
 <div id="tutorstorage"></div>
 <script type="text/javascript">loadSnippet('tutorstorage')</script>
@@ -126,11 +126,11 @@ The parameters passed to the storage provider's functions are as follows (note t
 
 ### Exercise Execution
 
-Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.
+Note that by default when running on UNIX systems the **teachdown** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.
 
 #### Start and Cleanup Hooks
 
-The **tutor** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
+The **teachdown** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
 
 Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the `onstart` and `oncleanup` hooks:
 
@@ -142,7 +142,7 @@ Using this method you can apply time limits, resource limits, and filesystem lim
     /usr/lib/rstudio/bin/pandoc/* rix,
     ```
  
-3. Define `onstart` and `oncleaup` hooks by setting the `tutor.exercise.evaluator.onstart` and `tutor.exercise.evaluator.oncleanup` global options. For example: 
+3. Define `onstart` and `oncleaup` hooks by setting the `teachdown.exercise.evaluator.onstart` and `teachdown.exercise.evaluator.oncleanup` global options. For example: 
  
     <div id="exerciseevaluator"></div>
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
@@ -151,7 +151,7 @@ You'd likely set these options within `Rprofile.site` or another R source file t
 
 #### Fully Custom Evaluator
 
-You can replace the default exercise evaluation code entirely with your own via the `tutor.exercise.evaluator` global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (`start`, `completed`, and `result`) to use for execution .
+You can replace the default exercise evaluation code entirely with your own via the `teachdown.exercise.evaluator` global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (`start`, `completed`, and `result`) to use for execution .
 
 The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):
 
@@ -159,7 +159,7 @@ The two built-in evaluators (used for Windows/MacOS and UNIX systems respectivel
 
 2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
 
-You can see the source code for these evaluators here: <https://github.com/rstudio/tutor/blob/master/R/evaluators.R>.
+You can see the source code for these evaluators here: <https://github.com/rstudio/teachdown/blob/master/R/evaluators.R>.
 
 ### Recording Events
 
@@ -167,7 +167,7 @@ As part of deploying a tutorial you might want to record the various user events
 
 #### Event Recorder Function
 
-You can capture events by using a custom event recorder function. This function is specified via the `tutor.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
+You can capture events by using a custom event recorder function. This function is specified via the `teachdown.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
 
 <div id="tutorrecorder"></div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script>
@@ -282,7 +282,7 @@ In addition, tutorial authors can use YAML metadata to provide custom tutorial I
 
 #### Custom Identifiers
 
-Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the `tutor.http_header_tutorial_id`, `tutor.http_header_tutorial_version` and `tutor.http_header_user_id` global options. For example:
+Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the `teachdown.http_header_tutorial_id`, `teachdown.http_header_tutorial_version` and `teachdown.http_header_user_id` global options. For example:
 
 <div id="tutorids"></div>
 <script type="text/javascript">loadSnippet('tutorids')</script>

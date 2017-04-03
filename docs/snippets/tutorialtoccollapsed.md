@@ -1,7 +1,7 @@
 ---
-title: "Hello, Tutor!"
+title: "Hello, Tutorial!"
 output: 
-  tutor::tutorial:
+  teachdown::tutorial:
     toc_float:
       collapsed: true
 runtime: shiny_prerendered

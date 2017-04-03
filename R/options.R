@@ -1,7 +1,7 @@
 
-#' Set tutor options
+#' Set teachdown options
 #' 
-#' Set various tutor options that control the display and evaluation of 
+#' Set various teachdown options that control the display and evaluation of 
 #' exercises.
 #' 
 #' @param exercise.cap Caption for exercise chunk (defaults to \code{"Code")}.
@@ -16,13 +16,13 @@
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' 
 #' @export
-tutor_options <- function(exercise.cap = "Code",
-                          exercise.eval = FALSE,
-                          exercise.timelimit = 30,
-                          exercise.lines = NULL,
-                          exercise.checker = NULL,
-                          exercise.completion = TRUE,
-                          exercise.diagnostics = TRUE)
+teachdown_options <- function(exercise.cap = "Code",
+                              exercise.eval = FALSE,
+                              exercise.timelimit = 30,
+                              exercise.lines = NULL,
+                              exercise.checker = NULL,
+                              exercise.completion = TRUE,
+                              exercise.diagnostics = TRUE)
 {
   # string to evalute for setting chunk options  %1$s
   set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'

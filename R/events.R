@@ -1,11 +1,11 @@
 
 
 record_event <- function(session, event, data) {
-  recorder <- getOption("tutor.event_recorder", default = NULL)
+  recorder <- getOption("teachdown.event_recorder", default = NULL)
   if (!is.null(recorder)) {
-    recorder(tutorial_id = read_request(session, "tutor.tutorial_id"), 
-             tutorial_version = read_request(session, "tutor.tutorial_version"),
-             user_id = read_request(session, "tutor.user_id"), 
+    recorder(tutorial_id = read_request(session, "teachdown.tutorial_id"), 
+             tutorial_version = read_request(session, "teachdown.tutorial_version"),
+             user_id = read_request(session, "teachdown.user_id"), 
              event = event, 
              data = data)
   }
@@ -14,7 +14,7 @@ record_event <- function(session, event, data) {
 
 
 broadcast_progress_event_to_client <- function(session, event, data) {
-  session$sendCustomMessage("tutor.progress_event", list(
+  session$sendCustomMessage("teachdown.progress_event", list(
     event = event,
     data = data
   ))

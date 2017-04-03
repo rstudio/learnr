@@ -1,36 +1,36 @@
 
 #' Tutor HTML dependency
 #' 
-#' @details HTML dependency for core tutor JS and CSS. This should be included as a 
+#' @details HTML dependency for core teachdown JS and CSS. This should be included as a 
 #' dependency for custom tutorial formats that wish to ensure that that
-#' tutor.js and tutor.css are loaded prior their own scripts and stylesheets.
+#' teachdown.js and teachdown.css are loaded prior their own scripts and stylesheets.
 #' 
 #' @export
-tutor_html_dependency <- function() {
+teachdown_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor",
-    version = utils::packageVersion("tutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor.js",
-    stylesheet = "tutor.css"
+    name = "teachdown",
+    version = utils::packageVersion("teachdown"),
+    src = html_dependency_src("lib", "teachdown"),
+    script = "teachdown.js",
+    stylesheet = "teachdown.css"
   )
 }
 
-tutor_autocompletion_html_dependency <- function() {
+teachdown_autocompletion_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor-autocompletion",
-    version = utils::packageVersion("tutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor-autocompletion.js"
+    name = "teachdown-autocompletion",
+    version = utils::packageVersion("teachdown"),
+    src = html_dependency_src("lib", "teachdown"),
+    script = "teachdown-autocompletion.js"
   )
 }
 
-tutor_diagnostics_html_dependency <- function() {
+teachdown_diagnostics_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor-diagnostics",
-    version = utils::packageVersion("tutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor-diagnostics.js"
+    name = "teachdown-diagnostics",
+    version = utils::packageVersion("teachdown"),
+    src = html_dependency_src("lib", "teachdown"),
+    script = "teachdown-diagnostics.js"
   )
 }
 
@@ -42,7 +42,7 @@ html_dependency_src <- function(...) {
     file.path(pkg_dir, "inst", ...)
   }
   else {
-    system.file(..., package = "tutor")
+    system.file(..., package = "teachdown")
   }
 }
 
@@ -51,7 +51,7 @@ localforage_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "localforage",
     version = "1.4.3",
-    src = system.file("lib/localforage", package = "tutor"),
+    src = system.file("lib/localforage", package = "teachdown"),
     script = "localforage.min.js"
   )
 }
@@ -60,7 +60,7 @@ bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
     version = "4.4.0",
-    src = system.file("lib/bootbox", package = "tutor"),
+    src = system.file("lib/bootbox", package = "teachdown"),
     script = "bootbox.min.js"
   )
 }
@@ -69,7 +69,7 @@ clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
     version = "1.5.15",
-    src = system.file("lib/clipboardjs", package = "tutor"),
+    src = system.file("lib/clipboardjs", package = "teachdown"),
     script = "clipboard.min.js"
   )
 }
@@ -79,7 +79,7 @@ ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
     version = ACE_VERSION,
-    src = system.file("lib/ace", package = "tutor"),
+    src = system.file("lib/ace", package = "teachdown"),
     script = "ace.js"
   )
 }

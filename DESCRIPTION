@@ -1,4 +1,4 @@
-Package: tutor
+Package: teachdown
 Type: Package
 Title: Interactive Tutorials for R
 Version: 0.5
@@ -16,8 +16,8 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
 License: Apache License 2.0 | file LICENSE
-URL: https://rstudio.github.io/tutor/
-BugReports: https://github.com/rstudio/tutor/issues
+URL: https://rstudio.github.io/teachdown/
+BugReports: https://github.com/rstudio/teachdown/issues
 Imports:
   utils,
   parallel,

@@ -1,7 +1,7 @@
 ---
-title: "Hello, Tutor!"
+title: "Hello, Tutorial!"
 output: 
-  tutor::tutorial:
+  teachdown::tutorial:
     progressive: true
 runtime: shiny_prerendered
 ---

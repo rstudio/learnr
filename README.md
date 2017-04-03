@@ -1,8 +1,8 @@
 
-tutor: Interactive tutorials for R
-----------------------------------
+teachdown: Interactive tutorials for R
+--------------------------------------
 
-The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
+The **teachdown** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
 
 1.  Narrative, figures, illustrations, and equations.
 
@@ -14,4 +14,4 @@ The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rs
 
 5.  Interactive Shiny components.
 
-You can find documentation on using the **tutor** package here: <https://rstudio.github.com/tutor/>
+You can find documentation on using the **teachdown** package here: <https://rstudio.github.com/teachdown/>

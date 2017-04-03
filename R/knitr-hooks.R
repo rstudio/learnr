@@ -127,7 +127,7 @@ install_knitr_hooks <- function() {
         completion  <- as.numeric(options$exercise.completion %||% 0 > 0)
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 0 > 0)
         caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
-        paste0('<div class="tutor-', class, 
+        paste0('<div class="teachdown-', class, 
                '" data-label="', options$label, 
                '" data-caption="', caption, 
                '" data-completion="', completion,
@@ -215,9 +215,9 @@ exercise_server_chunk <- function(label) {
 
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
-'`tutor-exercise-%s-result` <- tutor:::setup_exercise_handler(reactive(req(input$`tutor-exercise-%s-code-editor`)), session)
-output$`tutor-exercise-%s-output` <- renderUI({
-  `tutor-exercise-%s-result`()
+'`teachdown-exercise-%s-result` <- teachdown:::setup_exercise_handler(reactive(req(input$`teachdown-exercise-%s-code-editor`)), session)
+output$`teachdown-exercise-%s-output` <- renderUI({
+  `teachdown-exercise-%s-result`()
 })', label, label, label, label))
 }
 

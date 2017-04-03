@@ -156,14 +156,14 @@ $(document).ready(function() {
         else {
           scrollLastSectionToView = true;
         }
-        tutor.skipSection(sectionId);
+        teachdown.skipSection(sectionId);
       }
     }
 
     function handleNextTopicClick(event) {
       // any sections in this topic? if not, mark it as skipped
       if (topics[currentTopicIndex].sections.length == 0) {
-        tutor.skipSection(topics[currentTopicIndex].id);
+        teachdown.skipSection(topics[currentTopicIndex].id);
       }
       updateLocation(currentTopicIndex + 1);
     }
@@ -239,7 +239,7 @@ $(document).ready(function() {
 
           var section = {};
           section.exercises = [];
-          var exercisesDOM = $(sectionElement).children('.tutor-exercise');
+          var exercisesDOM = $(sectionElement).children('.teachdown-exercise');
           exercisesDOM.each(function(exerciseIndex, exerciseElement) {
             var exercise = {};
             exercise.dataLabel = $(exerciseElement).attr('data-label');
@@ -273,7 +273,7 @@ $(document).ready(function() {
         bootbox.confirm("Are you sure you want to start over? (all exercise progress will be reset)",
                         function(result) {
                           if (result)
-                            tutor.startOver();
+                            teachdown.startOver();
                         });
       });
       topicsFooter.append(resetButton);
@@ -445,11 +445,11 @@ $(document).ready(function() {
   transformDOM();
   handleLocationHash();
 
-  // initialize components within tutor.onInit event
-  tutor.onInit(function() {
+  // initialize components within teachdown.onInit event
+  teachdown.onInit(function() {
 
     // handle progress events
-    tutor.onProgress(function(progressEvent) {
+    teachdown.onProgress(function(progressEvent) {
       if (progressEvent.event === "section_completed")
         sectionCompleted(progressEvent.element);
       else if (progressEvent.event === "section_skipped")

@@ -45,7 +45,7 @@ tutorial <- function(fig_width = 6.5,
   # template
   args <- c(args, "--template", pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
-                package = "tutor")
+                package = "teachdown")
   ))
   
   # content includes
@@ -75,17 +75,17 @@ tutorial <- function(fig_width = 6.5,
   }
 
   # additional tutorial-format js and css. note that we also include the 
-  # tutor_html_dependency() within our list of dependencies to ensure that
-  # tutor.js (and the API it provides) is always loaded prior to our
+  # teachdown_html_dependency() within our list of dependencies to ensure that
+  # teachdown.js (and the API it provides) is always loaded prior to our
   # tutorial-format.js file.
   extra_dependencies <- append(extra_dependencies, list(
-    tutor_html_dependency(),
-    tutor_autocompletion_html_dependency(),
-    tutor_diagnostics_html_dependency(),
+    teachdown_html_dependency(),
+    teachdown_autocompletion_html_dependency(),
+    teachdown_diagnostics_html_dependency(),
     htmltools::htmlDependency(
-      name = "tutor-tutorial-format",
-      version = utils::packageVersion("tutor"),
-      src = system.file("rmarkdown/templates/tutorial/resources", package = "tutor"),
+      name = "teachdown-tutorial-format",
+      version = utils::packageVersion("teachdown"),
+      src = system.file("rmarkdown/templates/tutorial/resources", package = "teachdown"),
       script = "tutorial-format.js",
       stylesheet = stylesheets
     )

@@ -53,7 +53,7 @@ quiz <- function(..., caption = "Quiz") {
  
   
   htmltools::browsable(div(class = "panel panel-default",
-    div(class = "panel-heading tutor-panel-heading", caption),
+    div(class = "panel-heading teachdown-panel-heading", caption),
     tags$table(class = "table quiz-table", questions)
   ))
 }
@@ -125,9 +125,9 @@ question <- function(text,
     rmarkdown::html_dependency_bootstrap(theme = "default"),
     bootbox_html_dependency(),
     localforage_html_dependency(),
-    tutor_html_dependency(),
-    tutor_autocompletion_html_dependency(),
-    tutor_diagnostics_html_dependency(),
+    teachdown_html_dependency(),
+    teachdown_autocompletion_html_dependency(),
+    teachdown_diagnostics_html_dependency(),
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",

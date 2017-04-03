@@ -1,5 +1,5 @@
 ---
-title: "Hello, Tutor!"
-output: tutor::tutorial
+title: "Hello, Tutorial!"
+output: teachdown::tutorial
 runtime: shiny_prerendered
 ---
