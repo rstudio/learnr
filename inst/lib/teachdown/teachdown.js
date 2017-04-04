@@ -1339,7 +1339,7 @@ Teachdown.prototype.$initializeStorage = function(identifiers, success) {
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
   thiz.$store = window.localforage.createInstance({ 
-    name: "Tutorial-Storage", 
+    name: "Teachdown-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version)
   });
