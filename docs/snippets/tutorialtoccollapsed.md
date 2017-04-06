@@ -1,7 +1,7 @@
 ---
 title: "Hello, Tutor!"
 output: 
-  tutor::tutorial:
+  rtutor::tutorial:
     toc_float:
       collapsed: true
 runtime: shiny_prerendered

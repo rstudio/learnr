@@ -2,12 +2,12 @@
 title: "Hello, Tutor!"
 author: "J.J. Allaire"
 date: "March 1st, 2017"
-output: tutor::tutorial
+output: rtutor::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(tutor)
+library(rtutor)
 ```
     
 The following code computes the answer to 1+1. Change it so it computes 2 + 2:

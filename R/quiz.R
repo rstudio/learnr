@@ -149,7 +149,7 @@ question <- function(text,
                                              knitr.defaultHeight = "auto",
                                              viewer.defaultWidth = "100%",
                                              viewer.defaultHeight = "auto"),
-    package = 'tutor'
+    package = 'rtutor'
   )
 }
 

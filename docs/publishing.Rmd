@@ -9,11 +9,11 @@ Tutorials can be published all of the same ways that Shiny applications can, inc
 
 ## R Package
 
-A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the `tutor::run_tutorial` function. For example, the following functions runs the "hello" and "slidy" sample tutorials built in to the **tutor** package:
+A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the `rtutor::run_tutorial` function. For example, the following functions runs the "hello" and "slidy" sample tutorials built in to the **rtutor** package:
 
 ```r
-tutor::run_tutorial("hello", package = "tutor")
-tutor::run_tutorial("slidy", package = "tutor")
+rtutor::run_tutorial("hello", package = "rtutor")
+rtutor::run_tutorial("slidy", package = "rtutor")
 ```
 
 To bundle a tutorial into an R package and make it available for running via the `run_tutorial` function you should:
@@ -22,20 +22,20 @@ To bundle a tutorial into an R package and make it available for running via the
 
 2. Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development & preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).
 
-Once you've done this users can run your tutorial as follows (note they should be sure to install the **tutor** package before attempting to run the tutorial):
+Once you've done this users can run your tutorial as follows (note they should be sure to install the **rtutor** package before attempting to run the tutorial):
 
 Users would then simply install tutor directly before running your tutorial, for example:
 
 ```r
-devtools::install_github("rstudio/tutor")
-tutor::run_tutorial("introduction", package = "mypackage")
+devtools::install_github("rstudio/rtutor")
+rtutor::run_tutorial("introduction", package = "mypackage")
 ```
 
 ### Exercise Checkers {.toc-ignore}
 
 Note that if your tutorial performs [exercise checking](exercises.html#checking-exercises) via an external package then you should be sure to add the package you use for checking as an `Imports` dependency of your package so it's installed automatically along with your package.
 
-Note that it's likely that the **tutor** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
+Note that it's likely that the **rtutor** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
 
 ## Shiny Server
 
@@ -67,13 +67,13 @@ See also the section below on [Exercise Execution] for details on further custom
 
 Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and/or other system resources.
 
-Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
+Note that by default when running on UNIX systems the **rtutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
 
 ## Hosting Services
 
 Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.). 
 
-The **tutor** package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.
+The **rtutor** package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.
 
 ### Tutorial Storage
 
@@ -126,11 +126,11 @@ The parameters passed to the storage provider's functions are as follows (note t
 
 ### Exercise Execution
 
-Note that by default when running on UNIX systems the **tutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.
+Note that by default when running on UNIX systems the **rtutor** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. The section below describe the various ways of further customizing exercise execution.
 
 #### Start and Cleanup Hooks
 
-The **tutor** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
+The **rtutor** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
 
 Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the `onstart` and `oncleanup` hooks:
 
@@ -159,7 +159,7 @@ The two built-in evaluators (used for Windows/MacOS and UNIX systems respectivel
 
 2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
 
-You can see the source code for these evaluators here: <https://github.com/rstudio/tutor/blob/master/R/evaluators.R>.
+You can see the source code for these evaluators here: <https://github.com/rstudio/rtutor/blob/master/R/evaluators.R>.
 
 ### Recording Events
 

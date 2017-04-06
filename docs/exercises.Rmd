@@ -136,7 +136,7 @@ You can also use `data-progressive=FALSE` to disable progressive rendering for a
 
 Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
 
-Note that this feature is only available if you are using the [`tutor::tutorial`](formats.html#tutorial-format) R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).
+Note that this feature is only available if you are using the [`rtutor::tutorial`](formats.html#tutorial-format) R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).
 
 ### Exercise Skipping
 
@@ -158,7 +158,7 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 ## Exercise Checking
 
-The **tutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example:
+The **rtutor** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example:
 
 <div id="exercisecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
@@ -259,7 +259,7 @@ Here the `is_bad_code` function is a proxy for whatever logic your code checking
 
 ### Checking Packages
 
-The **[checkr](https://github.com/dtkaplan/checkr)** package currently provides code checking functions that are compatible with **tutor**. 
+The **[checkr](https://github.com/dtkaplan/checkr)** package currently provides code checking functions that are compatible with **rtutor**. 
 
 We expect that additional tutor compatible checking packages will be developed and will update this section as they become available.
 

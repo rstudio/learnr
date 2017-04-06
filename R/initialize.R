@@ -28,7 +28,7 @@ initialize_tutor <- function() {
     # session initialization (forward tutorial metadata)
     rmarkdown::shiny_prerendered_chunk(
       'server', 
-      sprintf('tutor:::register_http_handlers(session, metadata = %s)', 
+      sprintf('rtutor:::register_http_handlers(session, metadata = %s)', 
               deparse(rmarkdown::metadata$tutorial, control = c("keepInteger"))),
       singleton = TRUE
     )

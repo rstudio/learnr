@@ -1,5 +1,5 @@
 ---
-title: "tutor: Interactive tutorials for R"
+title: "Interactive Tutorials for R"
 ---
 
 ```{r setup, include=FALSE}
@@ -9,7 +9,7 @@ source("utils.R")
 
 ## Overview
 
-The **tutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
+The **rtutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
 
 1. Narrative, figures, illustrations, and equations.
 
@@ -25,7 +25,7 @@ Tutorials automatically preserve work done within them, so if a user works on a 
 
 ### Examples
 
-Here are some simple examples of tutorials created with the **tutor** package:
+Here are some simple examples of tutorials created with the **rtutor** package:
 
 ```{r, echo=FALSE}
 examples(showcaseOnly = TRUE)
@@ -33,7 +33,7 @@ examples(showcaseOnly = TRUE)
 
 ### Hello, Tutor! 
 
-To create a tutorial, just use `library(tutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
+To create a tutorial, just use `library(rtutor)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
 For example, here's a very simple tutorial:
 
@@ -49,10 +49,10 @@ This is what the running tutorial document looks like after the user has entered
 
 ### Installation
 
-1. Install the development version of the **tutor** package from GitHub as follows:
+1. Install the development version of the **rtutor** package from GitHub as follows:
 
     ```r
-    devtools::install_github("rstudio/tutor")
+    devtools::install_github("rstudio/rtutor")
     ```
 
 2. Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.
@@ -61,7 +61,7 @@ This is what the running tutorial document looks like after the user has entered
 
 A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:
 
-1. Loads the **tutor** package.
+1. Loads the **rtutor** package.
 2. Includes one or more interactive components (exercises, quiz questions, etc.).
 3. Uses the `runtime: shiny_prerendered` directive in the YAML header.
 
@@ -69,9 +69,9 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 #### Tutorial Format
 
-While you can use tutorial elements many different R Markdown formats (see the article on [Tutorial Formats](formats.html) for details), the **tutor** package also includes a custom `tutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
+While you can use tutorial elements many different R Markdown formats (see the article on [Tutorial Formats](formats.html) for details), the **rtutor** package also includes a custom `rtutor::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
 
-You can create a new `tutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
+You can create a new `rtutor::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
 ![](images/create-new-tutorial.png){width=609 height=482}
 
@@ -100,10 +100,10 @@ Tutorials are Shiny applications that are run using the `rmarkdown::run` functio
 rmarkdown::run("tutorial.Rmd")
 ```
 
-If your tutorial is included within an R package you can also run it via the `tutor::run_tutorial` function. For example, you can run a live version of the "Hello, Tutor" example provided above with:
+If your tutorial is included within an R package you can also run it via the `rtutor::run_tutorial` function. For example, you can run a live version of the "Hello, Tutor" example provided above with:
 
 ```r
-tutor::run_tutorial("hello", package = "tutor")
+rtutor::run_tutorial("hello", package = "rtutor")
 ```
 
 ## Tutorial Types
@@ -162,7 +162,7 @@ You can specify an alternate percentage for the video's width or an alternate fi
 
 ## Shiny Components
 
-The **tutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
+The **rtutor** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
 
 The basic technique is to add a `context="server"` attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:
 
@@ -230,7 +230,7 @@ When you change the ID or version of a tutorial all stored work associated with 
 
 Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
 
-The most straightforward way to deploy a tutorial is to include it within an [R package](publishing.html#r-package) and have users run it directly via the `tutor::run_tutorial` function.
+The most straightforward way to deploy a tutorial is to include it within an [R package](publishing.html#r-package) and have users run it directly via the `rtutor::run_tutorial` function.
 
 The [Publishing](publishing.html) page includes an in-depth discussion of the various publishing options as well as some special considerations around resources, concurrent usage, and security which come into play when deploying tutorials on a server.
 

@@ -9,7 +9,7 @@
 tutor_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "tutor",
-    version = utils::packageVersion("tutor"),
+    version = utils::packageVersion("rtutor"),
     src = html_dependency_src("lib", "tutor"),
     script = "tutor.js",
     stylesheet = "tutor.css"
@@ -19,7 +19,7 @@ tutor_html_dependency <- function() {
 tutor_autocompletion_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "tutor-autocompletion",
-    version = utils::packageVersion("tutor"),
+    version = utils::packageVersion("rtutor"),
     src = html_dependency_src("lib", "tutor"),
     script = "tutor-autocompletion.js"
   )
@@ -28,7 +28,7 @@ tutor_autocompletion_html_dependency <- function() {
 tutor_diagnostics_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "tutor-diagnostics",
-    version = utils::packageVersion("tutor"),
+    version = utils::packageVersion("rtutor"),
     src = html_dependency_src("lib", "tutor"),
     script = "tutor-diagnostics.js"
   )
@@ -42,7 +42,7 @@ html_dependency_src <- function(...) {
     file.path(pkg_dir, "inst", ...)
   }
   else {
-    system.file(..., package = "tutor")
+    system.file(..., package = "rtutor")
   }
 }
 
@@ -51,7 +51,7 @@ localforage_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "localforage",
     version = "1.4.3",
-    src = system.file("lib/localforage", package = "tutor"),
+    src = system.file("lib/localforage", package = "rtutor"),
     script = "localforage.min.js"
   )
 }
@@ -60,7 +60,7 @@ bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
     version = "4.4.0",
-    src = system.file("lib/bootbox", package = "tutor"),
+    src = system.file("lib/bootbox", package = "rtutor"),
     script = "bootbox.min.js"
   )
 }
@@ -69,7 +69,7 @@ clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
     version = "1.5.15",
-    src = system.file("lib/clipboardjs", package = "tutor"),
+    src = system.file("lib/clipboardjs", package = "rtutor"),
     script = "clipboard.min.js"
   )
 }
@@ -79,7 +79,7 @@ ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
     version = ACE_VERSION,
-    src = system.file("lib/ace", package = "tutor"),
+    src = system.file("lib/ace", package = "rtutor"),
     script = "ace.js"
   )
 }

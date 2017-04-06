@@ -45,7 +45,7 @@ tutorial <- function(fig_width = 6.5,
   # template
   args <- c(args, "--template", pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
-                package = "tutor")
+                package = "rtutor")
   ))
   
   # content includes
@@ -84,8 +84,8 @@ tutorial <- function(fig_width = 6.5,
     tutor_diagnostics_html_dependency(),
     htmltools::htmlDependency(
       name = "tutor-tutorial-format",
-      version = utils::packageVersion("tutor"),
-      src = system.file("rmarkdown/templates/tutorial/resources", package = "tutor"),
+      version = utils::packageVersion("rtutor"),
+      src = system.file("rmarkdown/templates/tutorial/resources", package = "rtutor"),
       script = "tutorial-format.js",
       stylesheet = stylesheets
     )

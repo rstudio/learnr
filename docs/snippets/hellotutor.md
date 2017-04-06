@@ -1,11 +1,11 @@
 ---
 title: "Hello, Tutor!"
-output: tutor::tutorial
+output: rtutor::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(tutor)
+library(rtutor)
 ```
 
 This code computes the answer to one plus one, change it so it computes two plus two:

@@ -1,5 +1,5 @@
 ```{r setup, include=FALSE}
-library(tutor)
+library(rtutor)
 tutor_options(exercise.completion = FALSE)
 ```
 
