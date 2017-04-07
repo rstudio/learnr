@@ -30,8 +30,8 @@ Imports:
   evaluate,
   knitr (>= 1.14),
   markdown,
-  rmarkdown (>= 1.4.0.9001),
-  shiny (>= 1.0)
+  shiny (>= 1.0),
+  rmarkdown (>= 1.4.0.9001)
 Remotes:
   rstudio/rmarkdown
 Encoding: UTF-8
