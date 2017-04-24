@@ -64,6 +64,13 @@ function Tutor() {
   thiz.$initializeServer();
 }
 
+/* Utilities */
+
+Tutor.prototype.$idSelector = function(id) {
+  return "#" + id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
+};
+
+
 /* Init callbacks */
 Tutor.prototype.$initCallbacks = $.Callbacks();
 
@@ -185,7 +192,7 @@ Tutor.prototype.$fireProgressEvent = function(event, data) {
     
   }
   else if (event == "section_skipped") {
-     var exerciseElement = $('#' + data.sectionId);
+     var exerciseElement = $(thiz.$idSelector(data.sectionId));
      progressEvent.element = exerciseElement;
      progressEvent.completed = false;
   }
