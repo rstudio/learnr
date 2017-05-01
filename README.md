@@ -1,8 +1,8 @@
 
-rtutor: Interactive tutorials for R
+learnr: Interactive tutorials for R
 -----------------------------------
 
-The **rtutor** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
+The **learnr** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
 
 1.  Narrative, figures, illustrations, and equations.
 
@@ -14,4 +14,4 @@ The **rtutor** package makes it easy to turn any [R Markdown](http://rmarkdown.r
 
 5.  Interactive Shiny components.
 
-You can find documentation on using the **rtutor** package here: <https://rstudio.github.com/rtutor/>
+You can find documentation on using the **learnr** package here: <https://rstudio.github.com/learnr/>

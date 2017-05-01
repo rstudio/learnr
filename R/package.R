@@ -14,7 +14,7 @@ NULL
 # install knitr hooks when package is attached to search path
 .onAttach <- function(libname, pkgname) {
   install_knitr_hooks()
-  initialize_tutor()
+  initialize_tutorial()
 }
 
 # remove knitr hooks when package is detached from search path

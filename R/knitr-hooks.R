@@ -1,10 +1,10 @@
 
 install_knitr_hooks <- function() {
   
-  # set global tutor option which we can use as a basis for hooks
+  # set global tutorial option which we can use as a basis for hooks
   # (this is so we don't collide with hooks set by the user or
   # by other packages or Rmd output formats)
-  knitr::opts_chunk$set(tutor = TRUE)
+  knitr::opts_chunk$set(tutorial = TRUE)
   
   # helper to check for runtime: shiny_prerendered being active
   is_shiny_prerendered_active <- function() {
@@ -46,7 +46,7 @@ install_knitr_hooks <- function() {
   }
  
   # hook to turn off evaluation/highlighting for exercise related chunks
-  knitr::opts_hooks$set(tutor = function(options) {
+  knitr::opts_hooks$set(tutorial = function(options) {
     
     # check for chunk type
     exercise_chunk <- is_exercise_chunk(options)
@@ -63,7 +63,7 @@ install_knitr_hooks <- function() {
     if (exercise_chunk) {
       
       # one time tutor initialization
-      initialize_tutor()
+      initialize_tutorial()
       
       options$echo <- TRUE
       options$include <- TRUE
@@ -113,7 +113,7 @@ install_knitr_hooks <- function() {
   })
   
   # hook to amend output for exercise related chunks
-  knitr::knit_hooks$set(tutor = function(before, options, envir) {
+  knitr::knit_hooks$set(tutorial = function(before, options, envir) {
     
     # helper to produce an exercise wrapper div w/ the specified class
     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
@@ -127,7 +127,7 @@ install_knitr_hooks <- function() {
         completion  <- as.numeric(options$exercise.completion %||% 0 > 0)
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 0 > 0)
         caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
-        paste0('<div class="tutor-', class, 
+        paste0('<div class="tutorial-', class, 
                '" data-label="', options$label, 
                '" data-caption="', caption, 
                '" data-completion="', completion,
@@ -148,7 +148,7 @@ install_knitr_hooks <- function() {
       if (before) {
         
         # verify the chunk has a label if required
-        verify_tutor_chunk_label()
+        verify_tutorial_chunk_label()
       
         # inject ace and clipboardjs dependencies
         knitr::knit_meta_add(list(
@@ -207,22 +207,22 @@ install_knitr_hooks <- function() {
 }
 
 remove_knitr_hooks <- function() {
-  knitr::opts_hooks$set(tutor = NULL)
-  knitr::knit_hooks$set(tutor = NULL)
+  knitr::opts_hooks$set(tutorial = NULL)
+  knitr::knit_hooks$set(tutorial = NULL)
 }
 
 exercise_server_chunk <- function(label) {
 
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
-'`tutor-exercise-%s-result` <- rtutor:::setup_exercise_handler(reactive(req(input$`tutor-exercise-%s-code-editor`)), session)
-output$`tutor-exercise-%s-output` <- renderUI({
-  `tutor-exercise-%s-result`()
+'`tutorial-exercise-%s-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-%s-code-editor`)), session)
+output$`tutorial-exercise-%s-output` <- renderUI({
+  `tutorial-exercise-%s-result`()
 })', label, label, label, label))
 }
 
 
-verify_tutor_chunk_label <- function() {
+verify_tutorial_chunk_label <- function() {
   label <- knitr::opts_current$get('label')
   unnamed_label <- knitr::opts_knit$get('unnamed.chunk.label')
   if (isTRUE(grepl(paste0('^', unnamed_label), label))) {

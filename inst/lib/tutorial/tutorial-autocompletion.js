@@ -1,5 +1,5 @@
-function TutorCompleter(tutor) {
-  this.$tutor = tutor;
+function TutorialCompleter(tutorial) {
+  this.$tutorial = tutorial;
   var self = this;
 
   this.$onChange = function(data) {
@@ -58,7 +58,7 @@ function TutorCompleter(tutor) {
 
     // NOTE: each Ace instance gets its own handlers, so
     // we don't store these as instance variables on the
-    // TutorCompleter instance (as we have 1 TutorCompleter
+    // TutorialCompleter instance (as we have 1 TutorialCompleter
     // handling completions for all Ace instances)
     var handlers = {};
 
@@ -92,7 +92,7 @@ function TutorCompleter(tutor) {
           label: editor.tutorial.label
         };
 
-        self.$tutor.$serverRequest("completion", payload, function(data) {
+        self.$tutorial.$serverRequest("completion", payload, function(data) {
           
           data = data || [];
 
@@ -145,7 +145,7 @@ function TutorCompleter(tutor) {
 
   function initializeSetupChunk(editor) {
     var data = editor.tutorial;
-    self.$tutor.$serverRequest("initialize_chunk", data);
+    self.$tutorial.$serverRequest("initialize_chunk", data);
   }
 
   var ensureInitialized = function(editor) {

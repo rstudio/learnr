@@ -1,6 +1,6 @@
 ```{r setup, include=FALSE}
-library(rtutor)
-tutor_options(exercise.checker = checkthat::check_exercise)
+library(learnr)
+tutorial_options(exercise.checker = checkthat::check_exercise)
 ```
  
 ```{r exercise1-check}

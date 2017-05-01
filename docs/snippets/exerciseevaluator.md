@@ -1,4 +1,4 @@
-options(tutor.exercise.evaluator.onstart = function(pid) {
+options(tutorial.exercise.evaluator.onstart = function(pid) {
 
   # import RAppArmor
   require(RAppArmor, quietly = TRUE)
@@ -17,7 +17,7 @@ options(tutor.exercise.evaluator.onstart = function(pid) {
   aa_change_profile("r-user")
 })
 
-options(tutor.exercise.evaluator.oncleanup = function(pid) {
+options(tutorial.exercise.evaluator.oncleanup = function(pid) {
   
   # import RAppArmor
   require(RAppArmor, quietly = TRUE)

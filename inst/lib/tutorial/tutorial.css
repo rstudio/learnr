@@ -1,21 +1,21 @@
 
-.tutor-exercise-support {
+.tutorial-exercise-support {
   display: none;
 }
 
-.slide .tutor-exercise {
+.slide .tutorial-exercise {
   line-height: 1.4;
 }
 
-.tutor-exercise {
+.tutorial-exercise {
   position: relative;
 }
 
-.tutor-exercise-input {
+.tutorial-exercise-input {
   margin-top: 15px;
 }
 
-.tutor-panel-heading {
+.tutorial-panel-heading {
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 8px;
@@ -25,7 +25,7 @@
   width: 100%;
 }
 
-.tutor-exercise-input .btn-xs {
+.tutorial-exercise-input .btn-xs {
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
@@ -40,41 +40,41 @@
   border-color: #ccc;
 }
 
-.tutor-exercise-input .btn-tutor-solution {
+.tutorial-exercise-input .btn-tutorial-solution {
   margin-left: 15px;  
 }
 
-.tutor-exercise-input .btn-tutor-next-hint {
+.tutorial-exercise-input .btn-tutorial-next-hint {
   margin-left: 15px;
   padding-right: 4px;
 }
 
-.tutor-exercise-input .btn-xs i {
+.tutorial-exercise-input .btn-xs i {
   width: 10px;
   margin-right: 1px;
 }
 
 
-.tutor-exercise-input .panel-body {
+.tutorial-exercise-input .panel-body {
   padding: 0;
 }
 
 
-.tutor-exercise-code-editor {
+.tutorial-exercise-code-editor {
   width: 100%;
 }
 
 
-.tutor-solution-popover {
+.tutorial-solution-popover {
   max-width: none;
   width: 100%;
 }
 
-.tutor-solution-popover.top>.arrow {
+.tutorial-solution-popover.top>.arrow {
   margin-left: 0;
 }
 
-.tutor-hint {
+.tutorial-hint {
 
 }
 
@@ -84,18 +84,18 @@
 }
 
 
-.tutor-video-container {
+.tutorial-video-container {
   position: relative;
   margin-top: 15px;
   margin-bottom: 15px;
 }
 
-.tutor-exercise-output>pre {
+.tutorial-exercise-output>pre {
   max-height: 500px;
   overflow-y: auto;
 }
 
-.tutor-video {
+.tutorial-video {
   position: absolute;
   top: 0;
   left: 0;

@@ -4,7 +4,7 @@ runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(rtutor)
+library(learnr)
 library(dygraphs)
 ```
 

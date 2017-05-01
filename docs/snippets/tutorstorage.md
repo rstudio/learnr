@@ -1,4 +1,4 @@
-options(tutor.storage = list(
+options(tutorial.storage = list(
 
   # save an arbitrary R object "data" to storage
   save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {

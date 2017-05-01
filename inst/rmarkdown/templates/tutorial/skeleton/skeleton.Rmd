@@ -1,11 +1,11 @@
 ---
 title: "Tutorial"
-output: rtutor::tutorial
+output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(rtutor)
+library(learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 

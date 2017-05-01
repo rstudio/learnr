@@ -1,6 +1,6 @@
 ```{r setup, include=FALSE}
-library(rtutor)
-tutor_options(exercise.eval = TRUE)
+library(learnr)
+tutorial_options(exercise.eval = TRUE)
 ```
 
 ```{r filter, exercise=TRUE, exercise.eval=FALSE}

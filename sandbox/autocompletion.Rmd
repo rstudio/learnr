@@ -1,14 +1,14 @@
 ---
 title: "Autocompletion"
-output: rtutor::tutorial
+output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-library(rtutor)
+library(learnr)
 library(nycflights13)
-options(tutor.event_recorder = rtutor:::debug_event_recorder)
-tutor_options(
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
+tutorial_options(
   exercise.eval = FALSE, 
   exercise.checker = function(label, user_code, envir_result, ...)  {
     if (is.null(envir_result))

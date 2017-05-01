@@ -1,5 +1,5 @@
 options(
-  tutor.http_header_tutorial_id = "X-Tutor-TutorialID",
-  tutor.http_header_tutorial_version = "X-Tutor-TutorialVersion",
-  tutor.http_header_user_id = "X-Tutor-UserID"
+  tutorial.http_header_tutorial_id = "X-Tutorial-ID",
+  tutorial.http_header_tutorial_version = "X-Tutorial-Version",
+  tutorial.http_header_user_id = "X-Tutorial-UserID"
 })

@@ -53,7 +53,7 @@ quiz <- function(..., caption = "Quiz") {
  
   
   htmltools::browsable(div(class = "panel panel-default",
-    div(class = "panel-heading tutor-panel-heading", caption),
+    div(class = "panel-heading tutorial-panel-heading", caption),
     tags$table(class = "table quiz-table", questions)
   ))
 }
@@ -70,17 +70,17 @@ question <- function(text,
                      random_answer_order = FALSE) {
   
   # one time tutor initialization
-  initialize_tutor()
+  initialize_tutorial()
   
   # capture/validate answers
   answers <- list(...)
   lapply(answers, function(answer) {
-    if (!inherits(answer, "tutor_quiz_answer"))
+    if (!inherits(answer, "tutorial_quiz_answer"))
       stop("Object which is not an answer passed to question function")
   })
   
   # verify chunk label if necessary
-  verify_tutor_chunk_label()
+  verify_tutorial_chunk_label()
   
   # create question
   question <- list(
@@ -125,15 +125,15 @@ question <- function(text,
     rmarkdown::html_dependency_bootstrap(theme = "default"),
     bootbox_html_dependency(),
     localforage_html_dependency(),
-    tutor_html_dependency(),
-    tutor_autocompletion_html_dependency(),
-    tutor_diagnostics_html_dependency(),
+    tutorial_html_dependency(),
+    tutorial_autocompletion_html_dependency(),
+    tutorial_diagnostics_html_dependency(),
     htmltools::htmlDependency(
       name = "slickquiz",
       version = "1.5.20",
       src = html_dependency_src("htmlwidgets", "lib", "slickquiz"),
       script = "js/slickQuiz.js",
-      stylesheet = c("css/slickQuiz.css", "css/slickQuizTutor.css")
+      stylesheet = c("css/slickQuiz.css", "css/slickQuizTutorial.css")
     )
   )
   
@@ -149,14 +149,14 @@ question <- function(text,
                                              knitr.defaultHeight = "auto",
                                              viewer.defaultWidth = "100%",
                                              viewer.defaultHeight = "auto"),
-    package = 'rtutor'
+    package = 'learnr'
   )
 }
 
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
-  structure(class = "tutor_quiz_answer", list(
+  structure(class = "tutorial_quiz_answer", list(
     option = quiz_text(text),
     correct = correct,
     message = quiz_text(message)

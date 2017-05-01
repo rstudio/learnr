@@ -13,14 +13,14 @@ initialize_session_state <- function(session, metadata, location, request) {
   initialize_identifer <- function(identifier, default) {
     
     # determine whether a custom header provides the value (fallback to default)
-    header <- as_rook_header(getOption(sprintf("tutor.http_header_%s", identifier)))
+    header <- as_rook_header(getOption(sprintf("tutorial.http_header_%s", identifier)))
     if (!is.null(header) && exists(header, envir = request))
       value <- get(header, envir = request)
     else
       value <- default
     
     # write it into the request for reading later on
-    write_request(session, sprintf("tutor.%s", identifier), value)
+    write_request(session, sprintf("tutorial.%s", identifier), value)
     
     # return the value
     value
@@ -65,7 +65,7 @@ initialize_session_state <- function(session, metadata, location, request) {
   }
   
   # save the location for later reading
-  write_request(session, "tutor.http_location", location)
+  write_request(session, "tutorial.http_location", location)
  
   # initialize and return identifiers
   list(
