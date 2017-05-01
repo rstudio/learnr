@@ -37,7 +37,7 @@ The format also includes features for progressively revealing sections and allow
 
 You can create a new `learnr::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
-![](images/create-new-tutorial.png){width=609 height=482}
+![](images/create-new-tutorial.png){width=565 height=461}
 
 The benefits of using the `learnr::tutorial` format include:
 

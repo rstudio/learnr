@@ -42,7 +42,7 @@ For example, here's a very simple tutorial:
 
 This is what the running tutorial document looks like after the user has entered their answer:
 
-<img src="images/hello.png"  width="879" height="279" style="border: solid 1px #cccccc;"/>
+<img src="images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>
 
 
 ## Getting Started
@@ -73,7 +73,7 @@ While you can use tutorial elements many different R Markdown formats (see the a
 
 You can create a new `learnr::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
-![](images/create-new-tutorial.png){width=609 height=482}
+![](images/create-new-tutorial.png){width=565 height=461}
 
 This is what the YAML metadata looks like for an Rmd file that uses the tutorial format:
 
