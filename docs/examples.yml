@@ -1,23 +1,23 @@
 - title: "Setting Up R"
   img: images/tutorial-example-setup.png
   href: https://jjallaire.shinyapps.io/learnr-tutorial-00-setup/
-  source: https://github.com/rstudio/learnr/tree/master/examples/00-setup/
+  source: https://github.com/rstudio/ggtutorials/blob/master/tutorials/00-setup/
 - title: "Data Basics"
   img: images/tutorial-example-data-basics.png
   href: https://jjallaire.shinyapps.io/learnr-tutorial-01-data-basics/
-  source: https://github.com/rstudio/learnr/tree/master/examples/01-data-basics
+  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/01-data-basics
   showcase: true
 - title: "Filtering Observations"
   img: images/tutorial-example-filter.png
   href: https://jjallaire.shinyapps.io/learnr-tutorial-03a-data-manip-filter/
-  source: https://github.com/rstudio/learnr/tree/master/examples/03a-data-manip-filter
+  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03a-data-manip-filter
   showcase: true
 - title: "Summarizing Data"
   img: images/tutorial-example-summarize.png
   href: https://jjallaire.shinyapps.io/learnr-tutorial-03c-data-manip-summarise
-  source: https://github.com/rstudio/learnr/tree/master/examples/03c-data-manip-summarise
+  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03c-data-manip-summarise
   showcase: true
 - title: "Creating New Variables"
   img: images/tutorial-example-mutate.png
   href: https://jjallaire.shinyapps.io/learnr-tutorial-03b-data-manip-mutate/
-  source: https://github.com/rstudio/learnr/tree/master/examples/03b-data-manip-mutate
+  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03b-data-manip-mutate
