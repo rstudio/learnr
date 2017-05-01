@@ -1,4 +1,4 @@
-title: "rtutor"
+title: "learnr"
 type: inverse
 left:
   - text: "Home"
@@ -15,7 +15,7 @@ left:
     href: examples.html
 right:
   - icon: fa-github
-    href: https://github.com/rstudio/rtutor
+    href: https://github.com/rstudio/learnr
 
 
 

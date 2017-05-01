@@ -1,8 +1,8 @@
 ---
-title: "Hello, Tutor!"
+title: "Hello, Tutorial!"
 tutorial:
   id: "com.example.tutorials.my-first-tutorial"
   version: 2.1
-output: rtutor::tutorial
+output: learnr::tutorial
 runtime: shiny_prerendered
 ---

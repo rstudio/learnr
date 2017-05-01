@@ -1,4 +1,4 @@
 ```r
-rtutor::run_tutorial("hello", package = "rtutor")
-rtutor::run_tutorial("slidy", package = "rtutor")
+learnr::run_tutorial("hello", package = "learnr")
+learnr::run_tutorial("slidy", package = "learnr")
 ```

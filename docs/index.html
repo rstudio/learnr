@@ -289,7 +289,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">rtutor</a>
+      <a class="navbar-brand" href="index.html">learnr</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -314,7 +314,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/rstudio/rtutor">
+  <a href="https://github.com/rstudio/learnr">
     <span class="fa fa-github"></span>
      
   </a>
@@ -335,7 +335,7 @@ div.tocify {
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>The <strong>rtutor</strong> package makes it easy to turn any <a href="http://rmarkdown.rstudio.com">R Markdown</a> document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:</p>
+<p>The <strong>learnr</strong> package makes it easy to turn any <a href="http://rmarkdown.rstudio.com">R Markdown</a> document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:</p>
 <ol style="list-style-type: decimal">
 <li><p>Narrative, figures, illustrations, and equations.</p></li>
 <li><p>Code exercises (R code chunks that users can edit and execute directly).</p></li>
@@ -346,7 +346,7 @@ div.tocify {
 <p>Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.</p>
 <div id="examples" class="section level3">
 <h3>Examples</h3>
-<p>Here are some simple examples of tutorials created with the <strong>rtutor</strong> package:</p>
+<p>Here are some simple examples of tutorials created with the <strong>learnr</strong> package:</p>
 <div class="row">
 <div class="col-sm-4">
 <a class="thumbnail" title="Data Basics" href="https://tutorials.shinyapps.io/01-data-basics/">
@@ -370,7 +370,7 @@ div.tocify {
 </div>
 <div id="hello-tutor" class="section level3">
 <h3>Hello, Tutor!</h3>
-<p>To create a tutorial, just use <code>library(rtutor)</code> within your Rmd file to activate tutorial mode, then use the <code>exercise = TRUE</code> attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.</p>
+<p>To create a tutorial, just use <code>library(learnr)</code> within your Rmd file to activate tutorial mode, then use the <code>exercise = TRUE</code> attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.</p>
 <p>For example, here’s a very simple tutorial:</p>
 <div id="hellotutor">
 
@@ -385,8 +385,8 @@ div.tocify {
 <div id="installation" class="section level3">
 <h3>Installation</h3>
 <ol style="list-style-type: decimal">
-<li><p>Install the development version of the <strong>rtutor</strong> package from GitHub as follows:</p>
-<pre class="r"><code>devtools::install_github(&quot;rstudio/rtutor&quot;)</code></pre></li>
+<li><p>Install the development version of the <strong>learnr</strong> package from GitHub as follows:</p>
+<pre class="r"><code>devtools::install_github(&quot;rstudio/learnr&quot;)</code></pre></li>
 <li><p>Install the <a href="https://www.rstudio.com/products/rstudio/download/">latest release of RStudio</a> (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.</p></li>
 </ol>
 </div>
@@ -394,15 +394,15 @@ div.tocify {
 <h3>Creating a Tutorial</h3>
 <p>A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:</p>
 <ol style="list-style-type: decimal">
-<li>Loads the <strong>rtutor</strong> package.</li>
+<li>Loads the <strong>learnr</strong> package.</li>
 <li>Includes one or more interactive components (exercises, quiz questions, etc.).</li>
 <li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</li>
 </ol>
 <p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
 <div id="tutorial-format" class="section level4">
 <h4>Tutorial Format</h4>
-<p>While you can use tutorial elements many different R Markdown formats (see the article on <a href="formats.html">Tutorial Formats</a> for details), the <strong>rtutor</strong> package also includes a custom <code>rtutor::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
-<p>You can create a new <code>rtutor::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
+<p>While you can use tutorial elements many different R Markdown formats (see the article on <a href="formats.html">Tutorial Formats</a> for details), the <strong>learnr</strong> package also includes a custom <code>learnr::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
+<p>You can create a new <code>learnr::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
 <div class="figure">
 <img src="images/create-new-tutorial.png" width="609" height="482" />
 
@@ -428,8 +428,8 @@ div.tocify {
 <h3>Running Tutorials</h3>
 <p>Tutorials are Shiny applications that are run using the <code>rmarkdown::run</code> function rather than the <code>shiny::runApp</code> function. For example:</p>
 <pre class="r"><code>rmarkdown::run(&quot;tutorial.Rmd&quot;)</code></pre>
-<p>If your tutorial is included within an R package you can also run it via the <code>rtutor::run_tutorial</code> function. For example, you can run a live version of the “Hello, Tutor” example provided above with:</p>
-<pre class="r"><code>rtutor::run_tutorial(&quot;hello&quot;, package = &quot;rtutor&quot;)</code></pre>
+<p>If your tutorial is included within an R package you can also run it via the <code>learnr::run_tutorial</code> function. For example, you can run a live version of the “Hello, Tutor” example provided above with:</p>
+<pre class="r"><code>learnr::run_tutorial(&quot;hello&quot;, package = &quot;learnr&quot;)</code></pre>
 </div>
 </div>
 <div id="tutorial-types" class="section level2">
@@ -480,7 +480,7 @@ div.tocify {
 </div>
 <div id="shiny-components" class="section level2">
 <h2>Shiny Components</h2>
-<p>The <strong>rtutor</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
+<p>The <strong>learnr</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
 <p>The basic technique is to add a <code>context=&quot;server&quot;</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
 <div id="shiny">
 
@@ -561,7 +561,7 @@ Any other files (e.g. downloadable datasets)
 <div id="publishing" class="section level2">
 <h2>Publishing</h2>
 <p>Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user’s machine or running on a Shiny Server or hosting service like shinyapps.io.</p>
-<p>The most straightforward way to deploy a tutorial is to include it within an <a href="publishing.html#r-package">R package</a> and have users run it directly via the <code>rtutor::run_tutorial</code> function.</p>
+<p>The most straightforward way to deploy a tutorial is to include it within an <a href="publishing.html#r-package">R package</a> and have users run it directly via the <code>learnr::run_tutorial</code> function.</p>
 <p>The <a href="publishing.html">Publishing</a> page includes an in-depth discussion of the various publishing options as well as some special considerations around resources, concurrent usage, and security which come into play when deploying tutorials on a server.</p>
 </div>
 

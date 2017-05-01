@@ -1,21 +1,21 @@
 
-/* Tutor construction and initialization */
+/* Tutorial construction and initialization */
 
 $(document).ready(function() {
-  var tutor = new Tutor();
+  var tutorial = new Tutorial();
 
   // register autocompletion if available
-  if (typeof TutorCompleter !== "undefined")
-    tutor.$completer = new TutorCompleter(tutor);
+  if (typeof TutorialCompleter !== "undefined")
+    tutorial.$completer = new TutorialCompleter(tutorial);
 
   // register diagnostics if available
-  if (typeof TutorDiagnostics !== "undefined")
-    tutor.$diagnostics = new TutorDiagnostics(tutor);
+  if (typeof TutorialDiagnostics !== "undefined")
+    tutorial.$diagnostics = new TutorialDiagnostics(tutorial);
 
-  window.tutor = tutor;
+  window.tutorial = tutorial;
 });
 
-function Tutor() {
+function Tutorial() {
   
   // Alias this
   var thiz = this;
@@ -66,15 +66,15 @@ function Tutor() {
 
 /* Utilities */
 
-Tutor.prototype.$idSelector = function(id) {
+Tutorial.prototype.$idSelector = function(id) {
   return "#" + id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
 };
 
 
 /* Init callbacks */
-Tutor.prototype.$initCallbacks = $.Callbacks();
+Tutorial.prototype.$initCallbacks = $.Callbacks();
 
-Tutor.prototype.$fireInit = function() {
+Tutorial.prototype.$fireInit = function() {
   
   // Alias this
   var thiz = this;
@@ -89,11 +89,11 @@ Tutor.prototype.$fireInit = function() {
 
 /* Progress callbacks */
 
-Tutor.prototype.$progressCallbacks = $.Callbacks();
+Tutorial.prototype.$progressCallbacks = $.Callbacks();
 
-Tutor.prototype.$progressEvents = [];
+Tutorial.prototype.$progressEvents = [];
 
-Tutor.prototype.$hasCompletedProgressEvent = function(element) {
+Tutorial.prototype.$hasCompletedProgressEvent = function(element) {
   var thiz = this;
   for (var e = 0; e<thiz.$progressEvents.length; e++) {
     var event = thiz.$progressEvents[e];
@@ -105,7 +105,7 @@ Tutor.prototype.$hasCompletedProgressEvent = function(element) {
   return false;
 };
   
-Tutor.prototype.$fireProgress = function(event) {
+Tutorial.prototype.$fireProgress = function(event) {
   
   // record it
   this.$progressEvents.push(event);
@@ -118,7 +118,7 @@ Tutor.prototype.$fireProgress = function(event) {
   }
 };
   
-Tutor.prototype.$fireSectionCompleted = function(element) {
+Tutorial.prototype.$fireSectionCompleted = function(element) {
   
   // Alias this
   var thiz = this;
@@ -138,7 +138,7 @@ Tutor.prototype.$fireSectionCompleted = function(element) {
     return;
   
   // get all interactive components in the section
-  var components = section.find('.tutor-exercise, .quiz, .tutor-video');
+  var components = section.find('.tutorial-exercise, .quiz, .tutorial-video');
   
   // are they all completed?
   var allCompleted = true;
@@ -159,7 +159,7 @@ Tutor.prototype.$fireSectionCompleted = function(element) {
     // fire for preceding siblings if they have no interactive components
     var previousSections = section.prevAll('.section');
     previousSections.each(function() {
-      var components = $(this).find('.tutor-exercise, .quiz');
+      var components = $(this).find('.tutorial-exercise, .quiz');
       if (components.length === 0)
         fireCompleted(this);
     });
@@ -172,7 +172,7 @@ Tutor.prototype.$fireSectionCompleted = function(element) {
 }; 
 
 
-Tutor.prototype.$fireProgressEvent = function(event, data) {
+Tutorial.prototype.$fireProgressEvent = function(event, data) {
   
   // Alias this
   var thiz = this;
@@ -183,7 +183,7 @@ Tutor.prototype.$fireProgressEvent = function(event, data) {
   // determine element and completed status
   if (event == "exercise_submission" || event == "question_submission") {
     
-    var element = $('.tutor-exercise[data-label="' + data.label + '"]').add(
+    var element = $('.tutorial-exercise[data-label="' + data.label + '"]').add(
                     '.quiz[data-label="' + data.label + '"]');
     if (element.length > 0) {
       progressEvent.element = element;
@@ -218,7 +218,7 @@ Tutor.prototype.$fireProgressEvent = function(event, data) {
   }
 };  
   
-Tutor.prototype.$initializeProgress = function(progress_events) {
+Tutorial.prototype.$initializeProgress = function(progress_events) {
  
   // Alias this
   var thiz = this;
@@ -250,7 +250,7 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
   }
   
   // handle susequent progress messages
-  Shiny.addCustomMessageHandler("tutor.progress_event", function(progress) {
+  Shiny.addCustomMessageHandler("tutorial.progress_event", function(progress) {
     thiz.$fireProgressEvent(progress.event, progress.data);
   });
 }; 
@@ -258,7 +258,7 @@ Tutor.prototype.$initializeProgress = function(progress_events) {
 
 /* Shared utility functions */
 
-Tutor.prototype.$serverRequest = function (type, data, success) {
+Tutorial.prototype.$serverRequest = function (type, data, success) {
   return $.ajax({
     type: "POST",
     url: "session/" + Shiny.shinyapp.config.sessionId + 
@@ -271,7 +271,7 @@ Tutor.prototype.$serverRequest = function (type, data, success) {
 };
 
  // Record an event
-Tutor.prototype.$recordEvent = function(label, event, data) {
+Tutorial.prototype.$recordEvent = function(label, event, data) {
   var params = {
     label: label,
     event: event,
@@ -281,12 +281,12 @@ Tutor.prototype.$recordEvent = function(label, event, data) {
 };
 
 
-Tutor.prototype.$countLines = function(str) { 
+Tutorial.prototype.$countLines = function(str) { 
   return str.split(/\r\n|\r|\n/).length; 
 };
 
 
-Tutor.prototype.$injectScript = function(src, onload) {
+Tutorial.prototype.$injectScript = function(src, onload) {
   var script = document.createElement('script');
   script.src = src;
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -294,7 +294,7 @@ Tutor.prototype.$injectScript = function(src, onload) {
   $(script).load(onload);
 };
 
-Tutor.prototype.$debounce = function(func, wait, immediate) {
+Tutorial.prototype.$debounce = function(func, wait, immediate) {
   var timeout;
   return function() {
     var context = this, args = arguments;
@@ -313,7 +313,7 @@ Tutor.prototype.$debounce = function(func, wait, immediate) {
 
 /* Videos */
 
-Tutor.prototype.$initializeVideos = function() {
+Tutorial.prototype.$initializeVideos = function() {
   
   // regexes for video types
   var youtubeRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -411,14 +411,14 @@ Tutor.prototype.$initializeVideos = function() {
     // replace the image with the iframe inside a video container
     $(this).replaceWith(function() {
       var iframe = $('<iframe/>', attrs);
-      iframe.addClass('tutor-video');
+      iframe.addClass('tutorial-video');
       if (isYouTubeVideo(videoSrc))
-        iframe.addClass('tutor-video-youtube');
+        iframe.addClass('tutorial-video-youtube');
       else if (isVimeoVideo(videoSrc))
-        iframe.addClass('tutor-video-vimeo');
+        iframe.addClass('tutorial-video-vimeo');
       iframe.attr('allowfullscreen', '');
       iframe.css('display', '');
-      var container = $('<div class="tutor-video-container"></div>');
+      var container = $('<div class="tutorial-video-container"></div>');
       setContainerSize(container, width, height);
       container.append(iframe);
       return container;
@@ -428,7 +428,7 @@ Tutor.prototype.$initializeVideos = function() {
   // we'll initialize video player APIs off of $restoreState
 };
 
-Tutor.prototype.$initializeVideoPlayers = function(video_progress) {
+Tutorial.prototype.$initializeVideoPlayers = function(video_progress) {
   
   // don't interact with video player APIs in Qt
   if (/\bQt\//.test(window.navigator.userAgent))
@@ -439,7 +439,7 @@ Tutor.prototype.$initializeVideoPlayers = function(video_progress) {
   
 };
 
-Tutor.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
+Tutorial.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
   
   // find a restore time for this video
   for (var v = 0; v<video_progress.length; v++) {
@@ -458,7 +458,7 @@ Tutor.prototype.$videoPlayerRestoreTime = function(src, video_progress) {
   return 0;
 };
 
-Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
+Tutorial.prototype.$initializeYouTubePlayers = function(video_progress) {
 
   // YouTube JavaScript API
   // https://developers.google.com/youtube/iframe_api_reference
@@ -467,7 +467,7 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
   var thiz = this;
   
   // attach to youtube videos
-  var videos = $('iframe.tutor-video-youtube');
+  var videos = $('iframe.tutorial-video-youtube');
   if (videos.length > 0) {
     this.$injectScript('https://www.youtube.com/iframe_api', function() {
       
@@ -548,7 +548,7 @@ Tutor.prototype.$initializeYouTubePlayers = function(video_progress) {
   }
 };
 
-Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
+Tutorial.prototype.$initializeVimeoPlayers = function(video_progress) {
   
   // alias this
   var thiz = this;
@@ -556,7 +556,7 @@ Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
   // Vimeo JavaScript API
   // https://github.com/vimeo/player.js
   
-  var videos = $('iframe.tutor-video-vimeo');
+  var videos = $('iframe.tutorial-video-vimeo');
   if (videos.length > 0) {
     this.$injectScript('https://player.vimeo.com/api/player.js', function() {
       videos.each(function() {
@@ -612,7 +612,7 @@ Tutor.prototype.$initializeVimeoPlayers = function(video_progress) {
   }
 };
 
-Tutor.prototype.$reportVideoProgress = function(video_url, time, total_time) {
+Tutorial.prototype.$reportVideoProgress = function(video_url, time, total_time) {
   this.$serverRequest("video_progress", {
     "video_url": video_url,
     "time": time,
@@ -623,7 +623,7 @@ Tutor.prototype.$reportVideoProgress = function(video_url, time, total_time) {
 
 /* Exercise initialization and shared utility functions */ 
 
-Tutor.prototype.$initializeExercises = function() {
+Tutorial.prototype.$initializeExercises = function() {
   
   this.$initializeExerciseEditors();
   this.$initializeExerciseSolutions();
@@ -631,19 +631,19 @@ Tutor.prototype.$initializeExercises = function() {
   
 };
 
-Tutor.prototype.$exerciseForLabel = function(label) {
-  return $('.tutor-exercise[data-label="' + label + '"]');
+Tutorial.prototype.$exerciseForLabel = function(label) {
+  return $('.tutorial-exercise[data-label="' + label + '"]');
 };
 
-Tutor.prototype.$forEachExercise = function(operation) {
-  return $(".tutor-exercise").each(function() {
+Tutorial.prototype.$forEachExercise = function(operation) {
+  return $(".tutorial-exercise").each(function() {
     var exercise = $(this);
     operation(exercise);
   });
 };
 
-Tutor.prototype.$exerciseSupportCode = function(label) {
-  var selector = '.tutor-exercise-support[data-label="' + label + '"]';
+Tutorial.prototype.$exerciseSupportCode = function(label) {
+  var selector = '.tutorial-exercise-support[data-label="' + label + '"]';
   var code = $(selector).children('pre').children('code');
   if (code.length > 0)
     return code.text();
@@ -651,15 +651,15 @@ Tutor.prototype.$exerciseSupportCode = function(label) {
     return null;
 };
 
-Tutor.prototype.$exerciseSolutionCode = function(label) {
+Tutorial.prototype.$exerciseSolutionCode = function(label) {
   return this.$exerciseSupportCode(label + "-solution");
 };
 
-Tutor.prototype.$exerciseCheckCode = function(label) {
+Tutorial.prototype.$exerciseCheckCode = function(label) {
   return this.$exerciseSupportCode(label + "-check");
 };
 
-Tutor.prototype.$exerciseHintDiv = function(label) {
+Tutorial.prototype.$exerciseHintDiv = function(label) {
   
   // look for a div w/ hint id
   var id = "section-" + label + "-hint";
@@ -672,7 +672,7 @@ Tutor.prototype.$exerciseHintDiv = function(label) {
     return null;
 };
 
-Tutor.prototype.$exerciseHintsCode = function(label) {
+Tutorial.prototype.$exerciseHintsCode = function(label) {
   
   // look for a single hint
   var hint = this.$exerciseSupportCode(label + "-hint");
@@ -699,21 +699,21 @@ Tutor.prototype.$exerciseHintsCode = function(label) {
 };
 
 // get the exercise container of an element
-Tutor.prototype.$exerciseContainer = function(el) {
-  return $(el).closest(".tutor-exercise");
+Tutorial.prototype.$exerciseContainer = function(el) {
+  return $(el).closest(".tutorial-exercise");
 };
 
 // show progress for exercise
-Tutor.prototype.$showExerciseProgress = function(label, button, show) {
+Tutorial.prototype.$showExerciseProgress = function(label, button, show) {
   
   // references to various UI elements
   var exercise = this.$exerciseForLabel(label);
-  var outputFrame = exercise.children('.tutor-exercise-output-frame');
-  var runButtons = exercise.find('.btn-tutor-run');
+  var outputFrame = exercise.children('.tutorial-exercise-output-frame');
+  var runButtons = exercise.find('.btn-tutorial-run');
   
   // if the button is "run" then use the run button
   if (button === "run")
-    button = exercise.find('.btn-tutor-run').last();
+    button = exercise.find('.btn-tutorial-run').last();
   
   // show/hide progress UI
   var spinner = 'fa-spinner fa-spin fa-fw';
@@ -740,10 +740,10 @@ Tutor.prototype.$showExerciseProgress = function(label, button, show) {
 
 
 // behavior constants
-Tutor.prototype.kMinLines = 3;
+Tutorial.prototype.kMinLines = 3;
 
 // edit code within an ace editor
-Tutor.prototype.$attachAceEditor = function(target, code) {
+Tutorial.prototype.$attachAceEditor = function(target, code) {
   var editor = ace.edit(target);
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);
@@ -761,11 +761,11 @@ Tutor.prototype.$attachAceEditor = function(target, code) {
 
 /* Exercise editor */
 
-Tutor.prototype.$exerciseEditor = function(label) {
-  return this.$exerciseForLabel(label).find('.tutor-exercise-code-editor');
+Tutorial.prototype.$exerciseEditor = function(label) {
+  return this.$exerciseForLabel(label).find('.tutorial-exercise-code-editor');
 };
 
-Tutor.prototype.$initializeExerciseEditors = function() {
+Tutorial.prototype.$initializeExerciseEditors = function() {
   
   // alias this
   var thiz = this;
@@ -778,13 +778,13 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
     // helper to create an id
     function create_id(suffix) {
-      return "tutor-exercise-" + label + "-" + suffix;
+      return "tutorial-exercise-" + label + "-" + suffix;
     } 
 
 
     // when we receive focus hide solutions in other exercises
     exercise.on('focusin', function() {
-      $('.btn-tutor-solution').each(function() {
+      $('.btn-tutorial-solution').each(function() {
         if (exercise.has($(this)).length === 0)
           thiz.$removeSolution(thiz.$exerciseContainer($(this)));
       });
@@ -811,15 +811,15 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var options_script = exercise.children('script[data-opts-chunk="1"]').detach();
     
     // wrap the remaining elements in an output frame div
-    exercise.wrapInner('<div class="tutor-exercise-output-frame"></div>');
-    var output_frame = exercise.children('.tutor-exercise-output-frame');
+    exercise.wrapInner('<div class="tutorial-exercise-output-frame"></div>');
+    var output_frame = exercise.children('.tutorial-exercise-output-frame');
     
     // create input div
-    var input_div = $('<div class="tutor-exercise-input panel panel-default"></div>');
+    var input_div = $('<div class="tutorial-exercise-input panel panel-default"></div>');
     input_div.attr('id', create_id('input'));
 
     // creating heading
-    var panel_heading = $('<div class="panel-heading tutor-panel-heading"></div>');
+    var panel_heading = $('<div class="panel-heading tutorial-panel-heading"></div>');
     panel_heading.text(caption);
     input_div.append(panel_heading);
 
@@ -829,7 +829,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     
     // function to add a submit button
     function add_submit_button(icon, style, text, check) {
-      var button = $('<a class="btn ' + style + ' btn-xs btn-tutor-run ' + 
+      var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run ' + 
                        'pull-right"></a>');
       button.append($('<i class="fa ' + icon + '"></i>'));
       button.attr('type', 'button');
@@ -858,7 +858,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false);
     
     // create code div and add it to the input div
-    var code_div = $('<div class="tutor-exercise-code-editor"></div>');
+    var code_div = $('<div class="tutorial-exercise-code-editor"></div>');
     var code_id = create_id('code-editor');
     code_div.attr('id', code_id);
     panel_body.append(code_div);
@@ -870,7 +870,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
     exercise.prepend(input_div);
     
     // create an output div and append it to the output_frame
-    var output_div = $('<div class="tutor-exercise-output"></div>');
+    var output_div = $('<div class="tutorial-exercise-output"></div>');
     output_div.attr('id', create_id('output'));
     output_frame.append(output_div);
       
@@ -951,7 +951,7 @@ Tutor.prototype.$initializeExerciseEditors = function() {
 
 /* Exercise solutions */
 
-Tutor.prototype.$initializeExerciseSolutions = function() {
+Tutorial.prototype.$initializeExerciseSolutions = function() {
   
   // alias this
   var thiz = this;
@@ -967,7 +967,7 @@ Tutor.prototype.$initializeExerciseSolutions = function() {
 
 
 // add a solution for the specified exercise label
-Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
+Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // alias this
   var thiz = this;
@@ -986,7 +986,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   
   // helper function to add a hint button
   function addHintButton(caption) {
-    var button = $('<a class="btn btn-light btn-xs btn-tutor-solution"></a>');
+    var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
     button.append($('<i class="fa fa-lightbulb-o"></i>'));
@@ -1007,7 +1007,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
   if (hintDiv != null) {
     
     // mark the div as a hint and hide it
-    hintDiv.addClass('tutor-hint');
+    hintDiv.addClass('tutorial-hint');
     hintDiv.css('display', 'none');
     
     // create hint button
@@ -1020,8 +1020,8 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
       recordHintRequest(0);
       
       // prepend it to the output frame (if a hint isn't already in there)
-      var outputFrame = exercise.children('.tutor-exercise-output-frame');
-      if (outputFrame.find('.tutor-hint').length == 0) {
+      var outputFrame = exercise.children('.tutorial-exercise-output-frame');
+      if (outputFrame.find('.tutorial-hint').length == 0) {
         var panel = $('<div class="panel panel-default"></div>');
         var panelBody = $('<div class="panel-body"></div>');
         var hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit');
@@ -1076,9 +1076,9 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
       if (!visible) {
         var popover = button.popover({
           placement: 'top',
-          template: '<div class="popover tutor-solution-popover" role="tooltip">' + 
+          template: '<div class="popover tutorial-solution-popover" role="tooltip">' + 
                     '<div class="arrow"></div>' + 
-                    '<div class="popover-title tutor-panel-heading"></div>' + 
+                    '<div class="popover-title tutorial-panel-heading"></div>' + 
                     '<div class="popover-content"></div>' + 
                     '</div>',
           content: solutionText,
@@ -1105,7 +1105,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
           
           // add next hint button if we have > 1 hint
           if (solution === null && hints.length > 1) {
-            var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutor-next-hint"></a>');
+            var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutorial-next-hint"></a>');
             nextHintButton.append("Next Hint ");
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
             nextHintButton.on('click', function() {
@@ -1122,7 +1122,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
           
           // add copy button
           var copyButton = $('<a class="btn btn-info btn-xs ' + 
-                             'btn-tutor-copy-solution pull-right"></a>');
+                             'btn-tutorial-copy-solution pull-right"></a>');
           copyButton.append($('<i class="fa fa-copy"></i>'));
           copyButton.append(" Copy to Clipboard");
           popoverTitle.append(copyButton);
@@ -1141,7 +1141,7 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
         button.popover('show');
         
         // left position of popover and arrow
-        var popoverElement = exercise.find('.tutor-solution-popover');
+        var popoverElement = exercise.find('.tutorial-solution-popover');
         popoverElement.css('left', '0');
         var popoverArrow = popoverElement.find('.arrow');
         popoverArrow.css('left', button.position().left + (button.outerWidth()/2) + 'px');
@@ -1162,20 +1162,20 @@ Tutor.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
 
 // remove a solution for an exercise
-Tutor.prototype.$removeSolution = function(exercise) {
+Tutorial.prototype.$removeSolution = function(exercise) {
   // destory clipboardjs object if we've got one
-  var solutionButton = exercise.find('.btn-tutor-copy-solution');
+  var solutionButton = exercise.find('.btn-tutorial-copy-solution');
   if (solutionButton.length > 0)
     solutionButton.data('clipboard').destroy();
     
   // destroy popover
-  exercise.find('.btn-tutor-solution').popover('destroy');
+  exercise.find('.btn-tutorial-solution').popover('destroy');
 };
 
 
 /* Exercise evaluation */
 
-Tutor.prototype.$initializeExerciseEvaluation = function() {
+Tutorial.prototype.$initializeExerciseEvaluation = function() {
   
   // alias this
   var thiz = this;
@@ -1199,7 +1199,7 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
   $.extend(exerciseInputBinding, {
     
     find: function(scope) {
-      return $(scope).find('.tutor-exercise-code-editor');
+      return $(scope).find('.tutorial-exercise-code-editor');
     },
     
     getValue: function(el) {
@@ -1275,21 +1275,21 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     
     runButtons: function(el) {
       var exercise = thiz.$exerciseContainer(el);
-      return exercise.find('.btn-tutor-run');
+      return exercise.find('.btn-tutorial-run');
     },
     
     restore: false,
     clicked: false,
     check: false
   });
-  Shiny.inputBindings.register(exerciseInputBinding, 'tutor.exerciseInput');
+  Shiny.inputBindings.register(exerciseInputBinding, 'tutorial.exerciseInput');
   
   // register an output binding for exercise output
   var exerciseOutputBinding = new Shiny.OutputBinding();
   $.extend(exerciseOutputBinding, {
     
     find: function find(scope) {
-      return $(scope).find('.tutor-exercise-output');
+      return $(scope).find('.tutorial-exercise-output');
     },
     
     onValueError: function onValueError(el, err) {
@@ -1327,16 +1327,16 @@ Tutor.prototype.$initializeExerciseEvaluation = function() {
     },
     
     outputFrame: function(el) {
-      return $(el).closest('.tutor-exercise-output-frame');
+      return $(el).closest('.tutorial-exercise-output-frame');
     }
   });
-  Shiny.outputBindings.register(exerciseOutputBinding, 'tutor.exerciseOutput');
+  Shiny.outputBindings.register(exerciseOutputBinding, 'tutorial.exerciseOutput');
 };
 
 
 /* Storage */
 
-Tutor.prototype.$initializeStorage = function(identifiers, success) {
+Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   
   // alias this
   var thiz = this;
@@ -1346,13 +1346,13 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
   thiz.$store = window.localforage.createInstance({ 
-    name: "Tutorial-Storage", 
+    name: "Learnr-Tutorial-Storage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version)
   });
   
   // custom message handler to update store
-  Shiny.addCustomMessageHandler("tutor.store_object", function(message) {
+  Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
     thiz.$store.setItem(message.id, message.data);
   });
   
@@ -1367,7 +1367,7 @@ Tutor.prototype.$initializeStorage = function(identifiers, success) {
 };
 
 
-Tutor.prototype.$restoreState = function(objects) {
+Tutorial.prototype.$restoreState = function(objects) {
   
   // alias this
   var thiz = this;
@@ -1393,7 +1393,7 @@ Tutor.prototype.$restoreState = function(objects) {
 };
 
 
-Tutor.prototype.$restoreSubmissions = function(submissions) {
+Tutorial.prototype.$restoreSubmissions = function(submissions) {
  
   // alias this
   var thiz = this;
@@ -1466,7 +1466,7 @@ Tutor.prototype.$restoreSubmissions = function(submissions) {
 };
 
 
-Tutor.prototype.$removeState = function(completed) {
+Tutorial.prototype.$removeState = function(completed) {
   this.$store.clear()
     .then(completed)
     .catch(function(err) {
@@ -1475,7 +1475,7 @@ Tutor.prototype.$removeState = function(completed) {
     });
 };
 
-Tutor.prototype.$initializeClientState = function(client_state) {
+Tutorial.prototype.$initializeClientState = function(client_state) {
   
   // alias this
   var thiz = this;
@@ -1521,11 +1521,11 @@ Tutor.prototype.$initializeClientState = function(client_state) {
 
 /* Server initialization */
 
-Tutor.prototype.$isServerAvailable = function() {
+Tutorial.prototype.$isServerAvailable = function() {
   return typeof ((Shiny || {}).shinyapp || {}).config !== "undefined";
 }
 
-Tutor.prototype.$initializeServer = function() {
+Tutorial.prototype.$initializeServer = function() {
   
   // one-shot function to initialize server (wait for Shiny.shinyapp
   // to be available before attempting to call server)

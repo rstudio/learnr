@@ -34,10 +34,10 @@ setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame())
     # get timelimit option (either from chunk option or from global option)
     timelimit <- exercise$options$exercise.timelimit
     if (is.null(timelimit))
-      timelimit <- getOption("tutor.exercise.timelimit", default = 30)
+      timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
     
     # get exercise evaluator factory function (allow replacement via global option)
-    evaluator_factory <- getOption("tutor.exercise.evaluator", default = NULL)
+    evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
       if (!is_windows() && !is_macos())
         evaluator_factory <- forked_evaluator
@@ -123,7 +123,7 @@ evaluate_exercise <- function(exercise, envir) {
   }
   
   # create temp dir for execution (remove on exit)
-  exercise_dir <- tempfile(pattern = "tutor-exercise")
+  exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
   dir.create(exercise_dir)
   oldwd <- setwd(exercise_dir)
   on.exit({

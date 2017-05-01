@@ -1,4 +1,4 @@
-Package: rtutor
+Package: learnr
 Type: Package
 Title: Interactive Tutorials for R
 Version: 0.7
@@ -16,8 +16,8 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
 License: Apache License 2.0 | file LICENSE
-URL: https://rstudio.github.io/rtutor/
-BugReports: https://github.com/rstudio/rtutor/issues
+URL: https://rstudio.github.io/learnr/
+BugReports: https://github.com/rstudio/learnr/issues
 Imports:
   utils,
   parallel,

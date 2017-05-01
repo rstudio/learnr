@@ -1,4 +1,4 @@
 ```{r setup, include=FALSE}
-library(rtutor)
-tutor_options(exercise.cap = "Sandbox")
+library(learnr)
+tutorial_options(exercise.cap = "Sandbox")
 ```

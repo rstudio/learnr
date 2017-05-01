@@ -1,4 +1,4 @@
-name: "tutor-docs"
+name: "learnr-docs"
 output_dir: "."
 output:
   html_document:

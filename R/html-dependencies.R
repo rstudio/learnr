@@ -1,36 +1,36 @@
 
-#' Tutor HTML dependency
+#' Tutorial HTML dependency
 #' 
-#' @details HTML dependency for core tutor JS and CSS. This should be included as a 
+#' @details HTML dependency for core tutorial JS and CSS. This should be included as a 
 #' dependency for custom tutorial formats that wish to ensure that that
-#' tutor.js and tutor.css are loaded prior their own scripts and stylesheets.
+#' tutorial.js and tutorial.css are loaded prior their own scripts and stylesheets.
 #' 
 #' @export
-tutor_html_dependency <- function() {
+tutorial_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor",
-    version = utils::packageVersion("rtutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor.js",
-    stylesheet = "tutor.css"
+    name = "tutorial",
+    version = utils::packageVersion("learnr"),
+    src = html_dependency_src("lib", "tutorial"),
+    script = "tutorial.js",
+    stylesheet = "tutorial.css"
   )
 }
 
-tutor_autocompletion_html_dependency <- function() {
+tutorial_autocompletion_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor-autocompletion",
-    version = utils::packageVersion("rtutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor-autocompletion.js"
+    name = "tutorial-autocompletion",
+    version = utils::packageVersion("learnr"),
+    src = html_dependency_src("lib", "tutorial"),
+    script = "tutorial-autocompletion.js"
   )
 }
 
-tutor_diagnostics_html_dependency <- function() {
+tutorial_diagnostics_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "tutor-diagnostics",
-    version = utils::packageVersion("rtutor"),
-    src = html_dependency_src("lib", "tutor"),
-    script = "tutor-diagnostics.js"
+    name = "tutorial-diagnostics",
+    version = utils::packageVersion("learnr"),
+    src = html_dependency_src("lib", "tutorial"),
+    script = "tutorial-diagnostics.js"
   )
 }
 
@@ -42,7 +42,7 @@ html_dependency_src <- function(...) {
     file.path(pkg_dir, "inst", ...)
   }
   else {
-    system.file(..., package = "rtutor")
+    system.file(..., package = "learnr")
   }
 }
 
@@ -51,7 +51,7 @@ localforage_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "localforage",
     version = "1.4.3",
-    src = system.file("lib/localforage", package = "rtutor"),
+    src = system.file("lib/localforage", package = "learnr"),
     script = "localforage.min.js"
   )
 }
@@ -60,7 +60,7 @@ bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
     version = "4.4.0",
-    src = system.file("lib/bootbox", package = "rtutor"),
+    src = system.file("lib/bootbox", package = "learnr"),
     script = "bootbox.min.js"
   )
 }
@@ -69,7 +69,7 @@ clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
     version = "1.5.15",
-    src = system.file("lib/clipboardjs", package = "rtutor"),
+    src = system.file("lib/clipboardjs", package = "learnr"),
     script = "clipboard.min.js"
   )
 }
@@ -79,7 +79,7 @@ ace_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "ace",
     version = ACE_VERSION,
-    src = system.file("lib/ace", package = "rtutor"),
+    src = system.file("lib/ace", package = "learnr"),
     script = "ace.js"
   )
 }

@@ -36,7 +36,7 @@ forked_evaluator <- function(expr, timelimit) {
   
   # helper to call a hook function
   call_hook <- function(name, default = NULL) {
-    hook <- getOption(paste0("tutor.exercise.evaluator.", name))
+    hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
     if (!is.null(hook))
       hook(job$pid)
     else if (!is.null(default))

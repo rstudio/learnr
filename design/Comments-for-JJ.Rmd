@@ -140,7 +140,7 @@ And maybe a supporting system for producing the little question packages, e.g.
 
     ---
     title: "Calc I Questions"
-    output: tutor_archive
+    output: tutorial_archive
     ---
     
 ## Recording student work

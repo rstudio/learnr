@@ -289,7 +289,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">rtutor</a>
+      <a class="navbar-brand" href="index.html">learnr</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -314,7 +314,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/rstudio/rtutor">
+  <a href="https://github.com/rstudio/learnr">
     <span class="fa fa-github"></span>
      
   </a>
@@ -494,7 +494,7 @@ Whether to enable code diagnostics in the exercise editor.
 <script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
 <p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
 <p>Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (<code>###</code>). This can be useful when a second exercises builds on the first, giving away the answer to the first.</p>
-<p>Note that this feature is only available if you are using the <a href="formats.html#tutorial-format"><code>rtutor::tutorial</code></a> R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).</p>
+<p>Note that this feature is only available if you are using the <a href="formats.html#tutorial-format"><code>learnr::tutorial</code></a> R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).</p>
 <div id="exercise-skipping" class="section level3">
 <h3>Exercise Skipping</h3>
 <p>When the <code>progressive</code> option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.</p>
@@ -514,7 +514,7 @@ Whether to enable code diagnostics in the exercise editor.
 </div>
 <div id="exercise-checking" class="section level2">
 <h2>Exercise Checking</h2>
-<p>The <strong>rtutor</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example:</p>
+<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example:</p>
 <div id="exercisecheck">
 
 </div>
@@ -660,7 +660,7 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </div>
 <div id="checking-packages" class="section level3">
 <h3>Checking Packages</h3>
-<p>The <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> package currently provides code checking functions that are compatible with <strong>rtutor</strong>.</p>
+<p>The <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> package currently provides code checking functions that are compatible with <strong>learnr</strong>.</p>
 <p>We expect that additional tutor compatible checking packages will be developed and will update this section as they become available.</p>
 </div>
 </div>
@@ -694,13 +694,13 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </div>
 <div id="time-limits" class="section level2">
 <h2>Time Limits</h2>
-<p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutor.exercise.timelimit</code> option.</p>
+<p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutorial.exercise.timelimit</code> option.</p>
 <p>The following demonstrates setting a 10 second time limit as a global option, document level option, and chunk level option:</p>
 <div id="exercisetimelimit">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisetimelimit')</script>
-<p>Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for <code>tutor.exercise.timelimit</code> if not otherwise specified is 30 seconds.</p>
+<p>Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for <code>tutorial.exercise.timelimit</code> if not otherwise specified is 30 seconds.</p>
 </div>
 
 

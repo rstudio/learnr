@@ -1,5 +1,5 @@
-var TutorDiagnostics = function(tutor) {
-  this.$tutor = tutor;
+var TutorialDiagnostics = function(tutorial) {
+  this.$tutorial = tutorial;
   var self = this;
 
   var unmatchedClosingBracket = function(token) {
