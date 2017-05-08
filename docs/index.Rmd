@@ -49,10 +49,10 @@ This is what the running tutorial document looks like after the user has entered
 
 ### Installation
 
-1. Install the development version of the **learnr** package from GitHub as follows:
+1. Install the **learnr** package from CRAN as follows:
 
     ```r
-    devtools::install_github("rstudio/learnr")
+    install.packages("learnr")
     ```
 
 2. Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.

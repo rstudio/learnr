@@ -27,7 +27,7 @@ Once you've done this users can run your tutorial as follows (note they should b
 Users would then simply install tutor directly before running your tutorial, for example:
 
 ```r
-devtools::install_github("rstudio/learnr")
+install.packages("learnr")
 learnr::run_tutorial("introduction", package = "mypackage")
 ```
 
