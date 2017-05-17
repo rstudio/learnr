@@ -1,6 +1,6 @@
 
 # run an exercise and return HTML UI
-setup_exercise_handler <- function(exercise_rx, session, envir = parent.frame()) {
+setup_exercise_handler <- function(exercise_rx, session, envir = parent.env()) {
   
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
