@@ -1,6 +1,6 @@
 
 # run an exercise and return HTML UI
-setup_exercise_handler <- function(exercise_rx, session, envir = parent.env()) {
+setup_exercise_handler <- function(exercise_rx, session, parent_envir) {
   
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
@@ -46,6 +46,7 @@ setup_exercise_handler <- function(exercise_rx, session, envir = parent.env()) {
     }
     
     # create exercise evaluator
+    envir <- new.env(parent = parent_envir)
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
     
     # start it
