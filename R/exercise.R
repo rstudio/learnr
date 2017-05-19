@@ -1,6 +1,14 @@
 
 # run an exercise and return HTML UI
-setup_exercise_handler <- function(exercise_rx, session, parent_envir) {
+setup_exercise_handler <- function(exercise_rx, session) {
+  
+  # determine parent environment. we don't want to use the parent.frame because 
+  # that includes all of the shiny housekeeping (e.g. inputs, output, etc.)
+  # so we skip one environment above this. this will be an empty environment
+  # (https://github.com/rstudio/rmarkdown/blob/54bf8fc70122c6a435bba2ffcac8944d04498541/R/shiny_prerendered.R#L10)
+  # that is parented by the shiny_prerendered server_envir (which has all of
+  # the shared setup, data chunks executed).
+  parent_envir <- parent.env(parent.frame())
   
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
