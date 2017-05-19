@@ -2,6 +2,10 @@
 
 register_http_handlers <- function(session, metadata) {
   
+  # parent environment for completions (see discussion in setup_exercise_handler
+  # for why this is chosen as the completion/execution parent)
+  server_envir <- parent.env(parent.env(parent.frame()))
+  
   # environment used for hosting state (e.g. for chunks)
   state <- new.env(parent = emptyenv())
   
@@ -165,6 +169,11 @@ register_http_handlers <- function(session, metadata) {
                        ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
                        argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
     on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
+    
+    # temporarily attach global setup to search path
+    # for R completion engine
+    do.call("attach", list(server_envir, name = "tutorial:setup"))
+    on.exit(detach("tutorial:setup"), add = TRUE)
     
     # temporarily attach environment state to search path
     # for R completion engine
