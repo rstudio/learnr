@@ -72,6 +72,20 @@ var TutorialDiagnostics = function(tutorial) {
 
     // fix up rules
     rules["start"].unshift({
+      token : "string",
+      regex : '"(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
+      merge : false,
+      next  : "start"
+    });
+    
+    rules["start"].unshift({
+      token : "string",
+      regex : "'(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
+      merge : false,
+      next  : "start"
+    });
+    
+    rules["start"].unshift({
       token : "keyword.operator",
       regex : ":::|::|:=|%%|>=|<=|==|!=|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?",
       merge : false,
