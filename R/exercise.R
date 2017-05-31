@@ -2,13 +2,13 @@
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
   
-  # determine parent environment. we don't want to use the parent.frame because 
-  # that includes all of the shiny housekeeping (e.g. inputs, output, etc.)
-  # so we skip one environment above this. this will be an empty environment
+  # get the environment where shared setup and data is located. one environment up
+  # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two 
+  # environments up will be an empty environment 
   # (https://github.com/rstudio/rmarkdown/blob/54bf8fc70122c6a435bba2ffcac8944d04498541/R/shiny_prerendered.R#L10)
   # that is parented by the shiny_prerendered server_envir (which has all of
   # the shared setup, data chunks executed).
-  parent_envir <- parent.env(parent.frame())
+  server_envir <- parent.env(parent.env(parent.frame()))
   
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
@@ -53,8 +53,14 @@ setup_exercise_handler <- function(exercise_rx, session) {
         evaluator_factory <- inline_evaluator
     }
     
+    # create a new environment parented by the global environment 
+    envir <- new.env(parent = globalenv())
+    
+    # transfer all of the objects in the server_envir (i.e. setup and data chunks)
+    for (object in ls(envir = server_envir))
+      envir[[object]] <- server_envir[[object]]
+    
     # create exercise evaluator
-    envir <- new.env(parent = parent_envir)
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
     
     # start it
