@@ -888,13 +888,18 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
     var diagnostics = exercise.attr('data-diagnostics') === "1";
+    
+    // support startover
+    var startover_code = exercise.attr('data-startover') === "1" ? code : null;
+    
         
-    // set tutorial options
+    // set tutorial options/data
     editor.tutorial = {
       label: label,
       setup_code: setup_code,
       completion: completion,
-      diagnostics: diagnostics
+      diagnostics: diagnostics,
+      startover_code: startover_code
     };
     
     // bind execution keys 
@@ -936,10 +941,9 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     updateAceHeight();
     editor.getSession().on('change', updateAceHeight);
 
-    // add solution button if necessary
+    // add hint/solution/startover buttons if necessary
     thiz.$addSolution(exercise, panel_heading, editor);
-    
-    
+  
     exercise.parents('.section').on('shown', function() {
       editor.resize(true);
     });
@@ -984,15 +988,20 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   }
   var hintDiv = thiz.$exerciseHintDiv(label);
   
-  // helper function to add a hint button
-  function addHintButton(caption) {
+  // function to add a helper button
+  function addHelperButton(icon, caption) {
     var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
-    button.append($('<i class="fa fa-lightbulb-o"></i>'));
+    button.append($('<i class="fa ' + icon + '"></i>'));
     button.append(' ' + caption); 
     panel_heading.append(button); 
     return button;
+  }
+  
+  // function to add a hint button
+  function addHintButton(caption) {
+    return addHelperButton("fa-lightbulb-o", caption);  
   }
   
   // helper function to record solution/hint requests
@@ -1002,7 +1011,15 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
       index: hintIndex
     });
   }
-
+  
+  // add a startover button
+  if (editor.tutorial.startover_code !== null) {
+    var startOverButton = addHelperButton("fa-refresh", "Start Over");
+    startOverButton.on('click', function() {
+      editor.setValue(editor.tutorial.startover_code, -1);
+    });
+  }
+  
   // if we have a hint div
   if (hintDiv != null) {
     

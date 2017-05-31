@@ -42,6 +42,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.diagnostics</code></td>
 <td>Whether to enable code diagnostics in the exercise editor.</td>
 </tr>
+<tr class="even">
+<td><code>exercise.startover</code></td>
+<td>Whether to include a "Start Over" button for the exercise.</td>
+</tr>
 </tbody>
 </table>
 

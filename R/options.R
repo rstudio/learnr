@@ -14,6 +14,7 @@
 #' @param exercise.checker Function used to check exercise answers.
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
+#' @param exercise.startover Show "Start Over" button on exercise.
 #' 
 #' @export
 tutorial_options <- function(exercise.cap = "Code",
@@ -22,7 +23,8 @@ tutorial_options <- function(exercise.cap = "Code",
                              exercise.lines = NULL,
                              exercise.checker = NULL,
                              exercise.completion = TRUE,
-                             exercise.diagnostics = TRUE)
+                             exercise.diagnostics = TRUE,
+                             exercise.startover = TRUE)
 {
   # string to evalute for setting chunk options  %1$s
   set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
@@ -35,4 +37,5 @@ tutorial_options <- function(exercise.cap = "Code",
   eval(parse(text = sprintf(set_option_code, "exercise.checker")))
   eval(parse(text = sprintf(set_option_code, "exercise.completion")))
   eval(parse(text = sprintf(set_option_code, "exercise.diagnostics")))
+  eval(parse(text = sprintf(set_option_code, "exercise.startover")))
 }

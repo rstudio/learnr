@@ -6,7 +6,8 @@
 \usage{
 tutorial_options(exercise.cap = "Code", exercise.eval = FALSE,
   exercise.timelimit = 30, exercise.lines = NULL, exercise.checker = NULL,
-  exercise.completion = TRUE, exercise.diagnostics = TRUE)
+  exercise.completion = TRUE, exercise.diagnostics = TRUE,
+  exercise.startover = TRUE)
 }
 \arguments{
 \item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
@@ -25,6 +26,8 @@ number of lines in the code chunk).}
 \item{exercise.completion}{Use code completion in exercise editors.}
 
 \item{exercise.diagnostics}{Show diagnostics in exercise editors.}
+
+\item{exercise.startover}{Show "Start Over" button on exercise.}
 }
 \description{
 Set various tutorial options that control the display and evaluation of 
