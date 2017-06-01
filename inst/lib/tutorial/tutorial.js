@@ -1040,12 +1040,14 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
       // prepend it to the output frame (if a hint isn't already in there)
       var outputFrame = exercise.children('.tutorial-exercise-output-frame');
       if (outputFrame.find('.tutorial-hint').length == 0) {
-        var panel = $('<div class="panel panel-default"></div>');
+        var panel = $('<div class="panel panel-default tutorial-hint-panel"></div>');
         var panelBody = $('<div class="panel-body"></div>');
         var hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit');
         panelBody.append(hintDivClone);
         panel.append(panelBody);
         outputFrame.prepend(panel);
+      } else {
+        outputFrame.find('.tutorial-hint-panel').remove();
       }
     });
     
