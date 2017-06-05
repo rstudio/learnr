@@ -202,6 +202,10 @@
   font-style: normal;
 }
 
+.hideSectionHeader h3 {
+  display: none;
+}
+
 @media screen and (max-width: 767px) {
   .topics {
     width: 99%;
