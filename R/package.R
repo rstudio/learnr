@@ -3,6 +3,7 @@
 #' @importFrom htmltools htmlDependency attachDependencies HTML div tags
 #' @importFrom knitr opts_chunk opts_knit opts_hooks knit_hooks knit_meta_add all_labels spin
 #' @importFrom jsonlite serializeJSON unserializeJSON
+#' @importFrom jsonlite base64_dec base64_enc
 #' @importFrom htmlwidgets createWidget
 #' @importFrom markdown markdownToHTML markdownExtensions
 #' @importFrom evaluate evaluate

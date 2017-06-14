@@ -1373,7 +1373,7 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
   thiz.$store = window.localforage.createInstance({ 
-    name: "Learnr-Tutorial-Storage", 
+    name: "LearnrTutorialClientStorage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version)
   });

@@ -394,7 +394,7 @@ client_storage <- function(session) {
       session$sendCustomMessage("tutorial.store_object", list(
         context = context_id,
         id = object_id,
-        data = jsonlite::serializeJSON(data)
+        data = base64_enc(serialize(data, connection = NULL))
       ))
     },
     
@@ -428,7 +428,7 @@ client_storage <- function(session) {
       context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       for (object_id in names(objects)) {
-        data <- jsonlite::unserializeJSON(objects[[object_id]])
+        data <- unserialize(base64_dec(objects[[object_id]]))
         assign(object_id, data, envir = store)
       }
     }
