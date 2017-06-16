@@ -1378,6 +1378,7 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
                            identifiers.tutorial_version)
   });
   
+  var objects = {};
   if (thiz.$store) {
   
     // custom message handler to update store
@@ -1386,19 +1387,17 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
     });
     
     // retreive the currently stored objects then pass them down to restore_state
-    var objects = {};
-    thiz.$store.iterate(function(value, key, iterationNumber) {
-      objects = objects || {};
-      objects[key] = value;
-    }).then(function() {
-      success(objects);
-    }).catch(function(err) {
-      // This code runs if there were any errors
-      console.log(err);
-      success(objects);
-    });
+    thiz.$store.iterate(
+      function(value, key, iterationNumber) {
+        objects = objects || {};
+        objects[key] = value;
+      },
+      function() {
+        success(objects);
+      }
+    );
   } else {
-    success({});
+    success(objects);
   }
 };
 
@@ -1504,12 +1503,9 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
 Tutorial.prototype.$removeState = function(completed) {
   if (this.$store) {
-    this.$store.clear()
-      .then(completed)
-      .catch(function(err) {
-        console.log(err);
-        completed();
-      });
+    this.$store.clear(function() {
+      completed();
+    });
   } else {
     completed();
   }
