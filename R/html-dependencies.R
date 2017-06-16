@@ -50,7 +50,7 @@ html_dependency_src <- function(...) {
 localforage_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "localforage",
-    version = "1.4.3",
+    version = "1.5",
     src = system.file("lib/localforage", package = "learnr"),
     script = "localforage.min.js"
   )
