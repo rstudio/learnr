@@ -1374,8 +1374,7 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   // state we had stored)
   thiz.$store = window.localforage.createInstance({ 
     name: "LearnrTutorialClientStorage", 
-    storeName: window.btoa(identifiers.tutorial_id + 
-                           identifiers.tutorial_version)
+    storeName: "localforagestore"
   });
   
   var objects = {};
