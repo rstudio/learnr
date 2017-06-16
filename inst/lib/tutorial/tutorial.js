@@ -1561,9 +1561,9 @@ Tutorial.prototype.$initializeServer = function() {
     // wait for shiny config to be available (required for $serverRequest)
     if (thiz.$isServerAvailable()) {
       thiz.$serverRequest("initialize", { location: window.location }, 
-        function(identifiers) {
+        function(response) {
           // initialize storage then restore state
-          thiz.$initializeStorage(identifiers, function(objects) {
+          thiz.$initializeStorage(response.identifiers, function(objects) {
             thiz.$restoreState(objects);
           });
         }
