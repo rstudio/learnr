@@ -52,7 +52,7 @@ localforage_html_dependency <- function() {
     name = "localforage",
     version = "1.5",
     src = system.file("lib/localforage", package = "learnr"),
-    script = "localforage.nopromises.min.js"
+    script = "localforage.min.js"
   )
 }
 
