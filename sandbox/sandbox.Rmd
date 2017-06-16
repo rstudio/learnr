@@ -169,6 +169,16 @@ quiz(
 )
 ```
 
+## diagnostics buglet
+
+```{r diagnostics-comma, exercise=TRUE}
+# a false 'unexpected comma' diagnostic was printed at the end of line 4 below
+GapMinderPlot(
+  LifeExpectency, 
+  countries = c("Germany", "United States", "New Zealand", "China",
+                 "India", "Japan"))
+GapMinderPlot(LifeExpectency)
+```
 
 
 
