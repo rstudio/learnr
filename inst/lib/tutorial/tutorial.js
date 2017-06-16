@@ -1412,7 +1412,9 @@ Tutorial.prototype.$restoreState = function(objects) {
     thiz.$initializeProgress(data.progress_events);
     
     // restore exercise and question submissions
+    console.log("restoring submissions");
     thiz.$restoreSubmissions(data.submissions);
+    console.log("restored submissions");
     
     // initialize video players
     thiz.$initializeVideoPlayers(data.video_progress);
@@ -1564,6 +1566,7 @@ Tutorial.prototype.$initializeServer = function() {
         function(response) {
           // initialize storage then restore state
           thiz.$initializeStorage(response.identifiers, function(objects) {
+            console.log("restoring state");
             thiz.$restoreState(objects);
           });
         }
