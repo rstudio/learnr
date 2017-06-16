@@ -1378,19 +1378,28 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
                            identifiers.tutorial_version)
   });
   
-  // custom message handler to update store
-  Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
-    thiz.$store.setItem(message.id, message.data);
-  });
+  if (thiz.$store) {
   
-  // retreive the currently stored objects then pass them down to restore_state
-  var objects = null;
-  thiz.$store.iterate(function(value, key, iterationNumber) {
-    objects = objects || {};
-    objects[key] = value;
-  }).then(function() {
-    success(objects);
-  });
+    // custom message handler to update store
+    Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
+      thiz.$store.setItem(message.id, message.data);
+    });
+    
+    // retreive the currently stored objects then pass them down to restore_state
+    var objects = {};
+    thiz.$store.iterate(function(value, key, iterationNumber) {
+      objects = objects || {};
+      objects[key] = value;
+    }).then(function() {
+      success(objects);
+    }).catch(function(err) {
+      // This code runs if there were any errors
+      console.log(err);
+      success(objects);
+    });
+  } else {
+    success({});
+  }
 };
 
 
@@ -1494,12 +1503,16 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
 
 Tutorial.prototype.$removeState = function(completed) {
-  this.$store.clear()
-    .then(completed)
-    .catch(function(err) {
-      console.log(err);
-      completed();
-    });
+  if (this.$store) {
+    this.$store.clear()
+      .then(completed)
+      .catch(function(err) {
+        console.log(err);
+        completed();
+      });
+  } else {
+    completed();
+  }
 };
 
 Tutorial.prototype.$initializeClientState = function(client_state) {
