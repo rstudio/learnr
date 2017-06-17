@@ -1369,25 +1369,17 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   // alias this
   var thiz = this;
   
-  // temporarily disable local storage while we figure out why it doesn't work on shinyapps.io
-  thiz.$store = null;
-  
   // initialize data store. note that we simply ignore errors for interactions
   // with storage since the entire behavior is a nice-to-have (i.e. we automatically
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
-  /*
   thiz.$store = window.localforage.createInstance({ 
-    name: "LearnrTutorialClientStorage", 
-    storeName: window.btoa(identifiers.tutorial_id + 
+    name: "LearnrTutorialStorage", 
+    storeName: window.btoa("Store_" + identifiers.tutorial_id + 
                            identifiers.tutorial_version)
   });
-  */
-  
-  
   
   var objects = {};
-
   if (thiz.$store) {
   
     // custom message handler to update store
@@ -1396,15 +1388,15 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
     });
     
     // retreive the currently stored objects then pass them down to restore_state
-    thiz.$store.iterate(
-      function(value, key, iterationNumber) {
-        objects = objects || {};
-        objects[key] = value;
-      },
-      function() {
-        success(objects);
-      }
-    );
+    thiz.$store.iterate(function(value, key, iterationNumber) {
+      objects = objects || {};
+      objects[key] = value;
+    }).then(function() {
+      success(objects);
+    }).catch(function(err) {
+      console.log(err);
+      success(objects);
+    });
   } else {
     success(objects);
   }
@@ -1512,9 +1504,12 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
 Tutorial.prototype.$removeState = function(completed) {
   if (this.$store) {
-    this.$store.clear(function() {
-      completed();
-    });
+    this.$store.clear()
+      .then(completed)
+      .catch(function(err) {
+        console.log(err);
+        completed();
+      });
   } else {
     completed();
   }
