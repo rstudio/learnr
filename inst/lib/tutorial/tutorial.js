@@ -1369,23 +1369,16 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   // alias this
   var thiz = this;
   
-  // temporarily disable local storage while we figure out why it doesn't work on shinyapps.io
-  thiz.$store = null;
-  
   // initialize data store. note that we simply ignore errors for interactions
   // with storage since the entire behavior is a nice-to-have (i.e. we automatically
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
-  /*
   thiz.$store = window.localforage.createInstance({ 
     name: "LearnrTutorialClientStorage", 
     storeName: window.btoa(identifiers.tutorial_id + 
                            identifiers.tutorial_version)
   });
-  */
-  
-  
-  
+
   var objects = {};
 
   if (thiz.$store) {
