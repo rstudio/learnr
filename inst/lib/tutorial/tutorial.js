@@ -1383,8 +1383,6 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
 
   if (thiz.$store) {
   
-    thiz.$store.ready()
-  
     // custom message handler to update store
     Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
       thiz.$store.setItem(message.id, message.data);
