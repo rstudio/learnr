@@ -31,7 +31,7 @@ Imports:
   knitr (>= 1.14),
   markdown,
   shiny (>= 1.0),
-  rmarkdown (>= 1.5)
+  rmarkdown (>= 1.6)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
