@@ -20,6 +20,9 @@ function Tutorial() {
   // Alias this
   var thiz = this;
   
+  // Init timing log
+  this.$initTimingLog();
+  
   // API: provide init event
   this.onInit = function(handler) {
     this.$initCallbacks.add(handler);
@@ -65,6 +68,40 @@ function Tutorial() {
 }
 
 /* Utilities */
+
+Tutorial.prototype.$initTimingLog = function() {
+  try {
+    if (performance.mark !== undefined) {
+      performance.mark("tutorial-start-mark");
+    }
+  } catch(e) {
+    console.log("Error initializing log timing: " + e.message);
+  }
+};
+
+Tutorial.prototype.$logTiming = function(name) {
+  try {
+    if (performance.mark !== undefined && 
+        performance.measure !== undefined &&
+        performance.getEntriesByName !== undefined &&
+        this.queryVar('log-timings') === '1') {
+      performance.mark(name + "-mark");
+      performance.measure(name, "tutorial-start-mark", name + "-mark");
+      var entries = performance.getEntriesByName(name);
+      console.log("(Timing) " + name + ": " + Math.round(entries[0].duration) + "ms");
+    }
+  } catch(e) {
+    console.log("Error logging timing: " + e.message);
+  }
+};
+
+Tutorial.prototype.queryVar = function(name) {
+  return decodeURI(window.location.search.replace(
+    new RegExp("^(?:.*[&\\?]" +
+               encodeURI(name).replace(/[\.\+\*]/g, "\\$&") +
+               "(?:\\=([^&]*))?)?.*$", "i"),
+    "$1"));
+};
 
 Tutorial.prototype.$idSelector = function(id) {
   return "#" + id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
@@ -426,6 +463,7 @@ Tutorial.prototype.$initializeVideos = function() {
   });
   
   // we'll initialize video player APIs off of $restoreState
+  this.$logTiming("initialized-videos");
 };
 
 Tutorial.prototype.$initializeVideoPlayers = function(video_progress) {
@@ -629,6 +667,7 @@ Tutorial.prototype.$initializeExercises = function() {
   this.$initializeExerciseSolutions();
   this.$initializeExerciseEvaluation();
   
+  this.$logTiming("initialized-exercises");
 };
 
 Tutorial.prototype.$exerciseForLabel = function(label) {
@@ -1339,6 +1378,8 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       if (!restoring) {
         ensureExerciseVisible(el);
         thiz.$exerciseContainer(el).data('restoring', false);
+      } else {
+        thiz.$logTiming("restored-exericse-" + exerciseLabel(el));
       }
     },
     
@@ -1409,7 +1450,10 @@ Tutorial.prototype.$restoreState = function(objects) {
   var thiz = this;
   
   // retreive state from server
+  thiz.$logTiming("restoring-state");
   this.$serverRequest("restore_state", objects, function(data) {
+    
+    thiz.$logTiming("state-received");
     
     // initialize client state
     thiz.$initializeClientState(data.client_state);
@@ -1447,6 +1491,8 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
       var label = id;
       var code = submission.data.code;
       var checked = submission.data.checked;
+      
+      thiz.$logTiming("restoring-exercise-" + label);
     
       // find the editor 
       var editorContainer = thiz.$exerciseEditor(label);
@@ -1570,13 +1616,17 @@ Tutorial.prototype.$initializeServer = function() {
   // one-shot function to initialize server (wait for Shiny.shinyapp
   // to be available before attempting to call server)
   var thiz = this;
+  thiz.$logTiming("wait-server-available");
   function initializeServer() {
     // wait for shiny config to be available (required for $serverRequest)
     if (thiz.$isServerAvailable()) {
+      thiz.$logTiming("server-available");
       thiz.$serverRequest("initialize", { location: window.location }, 
         function(response) {
+          thiz.$logTiming("server-initialized");
           // initialize storage then restore state
           thiz.$initializeStorage(response.identifiers, function(objects) {
+            thiz.$logTiming("storage-initialized");
             thiz.$restoreState(objects);
           });
         }
