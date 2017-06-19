@@ -295,7 +295,7 @@ Tutorial.prototype.$initializeProgress = function(progress_events) {
 
 /* Shared utility functions */
 
-Tutorial.prototype.$serverRequest = function (type, data, success) {
+Tutorial.prototype.$serverRequest = function (type, data, success, error) {
   return $.ajax({
     type: "POST",
     url: "session/" + Shiny.shinyapp.config.sessionId + 
@@ -303,7 +303,8 @@ Tutorial.prototype.$serverRequest = function (type, data, success) {
     contentType: "application/json",
     data: JSON.stringify(data),
     dataType: "json",
-    success: success
+    success: success,
+    error: error
   });
 };
 
@@ -1618,6 +1619,14 @@ Tutorial.prototype.$initializeServer = function() {
   var thiz = this;
   thiz.$logTiming("wait-server-available");
   function initializeServer() {
+    
+    // retry after a delay
+    function retry(delay) {
+      setTimeout(function(){
+        initializeServer();
+      }, delay);  
+    }
+    
     // wait for shiny config to be available (required for $serverRequest)
     if (thiz.$isServerAvailable()) {
       thiz.$logTiming("server-available");
@@ -1629,13 +1638,17 @@ Tutorial.prototype.$initializeServer = function() {
             thiz.$logTiming("storage-initialized");
             thiz.$restoreState(objects);
           });
+        },
+        function (jqXHR) {
+          // look for standard error indicating shiny server is not quite ready
+          if ((jqXHR.status == 500) && (jqXHR.responseText == "ERROR: attempt to apply non-function" )) {
+            retry(2000);
+          }
         }
       );
     }
     else {
-      setTimeout(function(){
-        initializeServer();
-      },250);
+      retry(250);
     }
   }
   
