@@ -6,11 +6,11 @@ checker <- function(label, user_code, check_code, envir_result, evaluate_result,
     if (is_bad_code(user_code, check_code))
       return(list(message = "Code wasn't right!", correct = FALSE))
     else
-      return TRUE
+      return(TRUE)
   } 
   
-  # this is a fullly evaluated chunk check
-  else if (user_code == check_code) {
+  # this is a fully evaluated chunk check
+  else {
      list(message = "Great job!", correct = TRUE, location = "append")
   }
 }
