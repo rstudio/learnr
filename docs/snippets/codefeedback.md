@@ -10,7 +10,7 @@ checker <- function(label, user_code, check_code, envir_result, evaluate_result,
   } 
   
   # this is a fullly evaluated chunk check
-  else if {
+  else if (user_code == check_code) {
      list(message = "Great job!", correct = TRUE, location = "append")
   }
 }
