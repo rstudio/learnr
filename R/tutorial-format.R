@@ -98,9 +98,10 @@ tutorial <- function(fig_width = 6.5,
   
   # knitr and pandoc options
   knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
-  pandoc_options <- pandoc_options(to = "html",
-                                   from = from_rmarkdown(fig_caption, md_extensions),
-                                   args = args)
+  pandoc_options <- pandoc_options(to = "html4",
+    from = from_rmarkdown(fig_caption, md_extensions),
+    args = args,
+    ext = ".html")
   
   # set 1000 as the default maximum number of rows in paged tables
   knitr_options$opts_chunk$max.print <- 1000
