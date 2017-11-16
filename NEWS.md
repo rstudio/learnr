@@ -1,4 +1,4 @@
-learnr 0.9.0.9000
+learnr 0.9.1
 ===========
 
 * Fixed a compability issue, so that existing tutorials don't break when using Pandoc 2.0. ([#130](https://github.com/rstudio/learnr/pull/130))
