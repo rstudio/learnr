@@ -1,3 +1,8 @@
+learnr 0.9.2
+===========
+
+* Fixed a highlight.js issue from rmarkdown 1.8 (#133).
+
 learnr 0.9.1
 ===========
 
