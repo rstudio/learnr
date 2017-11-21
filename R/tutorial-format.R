@@ -54,14 +54,14 @@ tutorial <- function(fig_width = 6.5,
   # pagedtables
   if (identical(df_print, "paged")) {
     extra_dependencies <- append(extra_dependencies,
-                                 list(html_dependency_pagedtable()))
+                                 list(rmarkdown::html_dependency_pagedtable()))
   }
   
   # no pandoc highlighting
   args <- c(args, "--no-highlight")
   
   # add highlight.js html_dependency
-  extra_dependencies <- append(extra_dependencies, list(html_dependency_highlightjs("textmate")))
+  extra_dependencies <- append(extra_dependencies, list(rmarkdown::html_dependency_highlightjs("textmate")))
     
   # additional css
   for (css_file in css)
@@ -99,7 +99,7 @@ tutorial <- function(fig_width = 6.5,
   # knitr and pandoc options
   knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
   pandoc_options <- pandoc_options(to = "html4",
-    from = from_rmarkdown(fig_caption, md_extensions),
+    from = rmarkdown::from_rmarkdown(fig_caption, md_extensions),
     args = args,
     ext = ".html")
   
@@ -126,43 +126,3 @@ tutorial <- function(fig_width = 6.5,
                            df_print = df_print,
                            base_format = base_format)
 }
-
-
-# NOTE: get these three functions from rmarkdown once new version hits CRAN
-
-# pandoc options for rmarkdown input
-from_rmarkdown <- function(implicit_figures = TRUE, extensions = NULL) {
-  
-  # paste extensions together and remove whitespace
-  extensions <- paste0(extensions, collapse = "")
-  extensions <- gsub(" ", "", extensions)
-  
-  # exclude implicit figures unless the user has added them back
-  if (!implicit_figures && !grepl("implicit_figures", extensions))
-    extensions <- paste0("-implicit_figures", extensions)
-  
-  rmarkdown_format(extensions)
-}
-
-
-# create an html_dependency for pagedtable
-html_dependency_pagedtable <- function() {
-  htmlDependency(
-    "pagedtable",
-    version = "1.1",
-    src = system.file("rmd/h/pagedtable-1.1", package = "rmarkdown"),
-    script = "js/pagedtable.js",
-    stylesheet = "css/pagedtable.css"
-  )
-}
-
-html_dependency_highlightjs <- function(highlight) {
-  htmlDependency(
-    "highlightjs",
-    version = "1.1",
-    src = system.file("rmd/h/highlightjs-1.1", package = "rmarkdown"),
-    script = "highlight.js",
-    stylesheet = paste0(highlight, ".css")
-  )
-}
-
