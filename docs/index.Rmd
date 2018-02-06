@@ -174,7 +174,7 @@ You can learn more by reading the [Prerendered Shiny Documents](http://rmarkdown
 
 ## External Resources
 
-You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:
+You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny application, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:
 
 <table>
 <thead>
