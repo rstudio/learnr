@@ -3,6 +3,8 @@ learnr 0.9.2
 
 * Fixed a highlight.js issue from rmarkdown 1.8 (#133).
 
+* Fixed an false positive in the diagnostics system (#141).
+
 learnr 0.9.1
 ===========
 
