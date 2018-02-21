@@ -30,6 +30,13 @@ var TutorialDiagnostics = function(tutorial) {
   };
 
   var isSymbol = function(token) {
+    
+    // this is a cludge so that 'in' is treated as though it were an
+    // operator by the diagnostics system
+    var value = token.value || "";
+    if (value == "in")
+      return false;
+      
     var type = token.type || "";
     return type == "string" ||
            type == "constant.numeric" ||

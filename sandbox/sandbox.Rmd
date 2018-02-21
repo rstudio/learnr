@@ -180,7 +180,11 @@ GapMinderPlot(
 GapMinderPlot(LifeExpectency)
 ```
 
+## for in
 
-
-
+```{r diagnostics-for, exercise=TRUE}
+for (i in seq(1,5)){
+     x <- i
+ }
+```
 
