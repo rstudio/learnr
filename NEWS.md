@@ -3,9 +3,9 @@ learnr 0.9.2
 
 * Improved documentation for deploying `learnr` tutorials in Shiny Server. ([142](https://github.com/rstudio/learnr/issues/142))
 
-* Fixed a highlight.js issue from rmarkdown 1.8 (([#133](https://github.com/rstudio/learnr/issues/133))).
+* Fixed a highlight.js issue from rmarkdown 1.8. ([#133](https://github.com/rstudio/learnr/issues/133))
 
-* Fixed an false positive in the diagnostics system (([#141](https://github.com/rstudio/learnr/issues/141))).
+* Fixed an false positive in the diagnostics system. ([#141](https://github.com/rstudio/learnr/issues/141))
 
 learnr 0.9.1
 ===========
