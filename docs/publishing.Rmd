@@ -37,21 +37,35 @@ Note that if your tutorial performs [exercise checking](exercises.html#checking-
 
 Note that it's likely that the **learnr** package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.
 
-## Shiny Server
+## Tutorial deployment
 
-You can also deploy tutorials on a server as you'd deploy any other Shiny application. There are several ways to do this:
+### RStudio Connect and shinyapps.io
+
+You can also deploy tutorials on a server as you'd deploy any other Shiny application. There are several ways to do this, two of which are:
 
 1. Publish to the [shinyapps.io](http://www.shinyapps.io/) cloud service.
 
 2. Publish to an [RStudio Connect](https://www.rstudio.com/products/connect/) server.
 
-3. Publish to a [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
-
-For the first two methods you can use the RStudio IDE's integrated [one-click publishing](https://support.rstudio.com/hc/en-us/articles/228270928-Push-button-publishing-to-RStudio-Connect) to publish directly from your desktop:
+For both of these methods, you can use the RStudio IDE's integrated [one-click publishing](https://support.rstudio.com/hc/en-us/articles/228270928-Push-button-publishing-to-RStudio-Connect) to publish directly from your desktop:
 
 ![](images/shinyapps-deploy-faithful.png){width=669 height=421}
 
 Note that you should install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or higher) before attempting to use one-click publishing with tutorials.
+
+### Shiny Server (Open Source and Pro versions)
+
+A third way of publishing your tutorial is to serve it as a `.Rmd` document in a hosted directory of [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
+
+Shiny Server fully supports interactive R Markdown documents. To take advantage of this capability, you will need to make sure that `rmarkdown` is installed and available for all users. You can do so by running the following command:
+
+```sh
+sudo su - -c "R -e \"install.packages('rmarkdown')\""
+```
+
+If a hosted directory does not include an `app.R` or a `server.R` file, Shiny Server will look to see if it contains any `.Rmd` files. If so, Shiny Server will host that directory in "R Markdown" mode using `rmarkdown::run()`.
+
+Particular `.Rmd` files can be accessed by referencing their full path including the filename, e.g., http://myserver.org/mydocs/hello.Rmd. (Note that you need to finish the url with `.Rmd`, not `.html`). If a request is made to a directory rather than to a particular `.Rmd` file, Shiny Server will attempt to serve the file `index.Rmd`. If that file does not exist, the user will get an error alerting them that the file is not available.
 
 ### Resource Usage
 
