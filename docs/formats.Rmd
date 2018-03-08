@@ -47,7 +47,7 @@ The benefits of using the `learnr::tutorial` format include:
 
 3. Visual adornments are added to the table of contents indicating which parts of the tutorial have been completed.
 
-4. A "Start Over" button is added to the table of contents regsion to allow users to clear previous work within the tutorial.
+4. A "Start Over" button is added to the table of contents region to allow users to clear previous work within the tutorial.
 
 Here's what a `learnr::tutorial` document looks like by default:
 
