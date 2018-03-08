@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 
@@ -46,10 +46,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -403,10 +405,7 @@ div.tocify {
 <h4>Tutorial Format</h4>
 <p>While you can use tutorial elements many different R Markdown formats (see the article on <a href="formats.html">Tutorial Formats</a> for details), the <strong>learnr</strong> package also includes a custom <code>learnr::tutorial</code> format which provides some default layout and behavior (including progress tracking) which you’ll likely want to use in many of your tutorials.</p>
 <p>You can create a new <code>learnr::tutorial</code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
-<div class="figure">
-<img src="images/create-new-tutorial.png" width="565" height="461" />
-
-</div>
+<p><img src="images/create-new-tutorial.png" width="565" height="461" /></p>
 <p>This is what the YAML metadata looks like for an Rmd file that uses the tutorial format:</p>
 <div id="tutorialyaml">
 
@@ -490,7 +489,7 @@ div.tocify {
 </div>
 <div id="external-resources" class="section level2">
 <h2>External Resources</h2>
-<p>You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny applications, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:</p>
+<p>You may wish to include external resources (images, videos, CSS, etc.) within your tutorial documents. Since the tutorial will be deployed as a Shiny application, you need to ensure that these resources are placed within one of several directories which are reachable by the Shiny web server:</p>
 <table>
 <thead>
 <tr class="header">
