@@ -57,7 +57,7 @@ HTMLWidgets.widget({
             
             // look for custom messages
             var msg_class = correct ? '.correct' : '.incorrect';
-            var message = $(el).find('.responses').children(msg_class).children('div').text();
+            var message = $(el).find('.responses').children(msg_class).children('div').html();
             var messages = $(el).find('.answers').children(msg_class + '[data-message]');
             messages.each(function() {
               if ($(this).children('input').is(':checked')) {
