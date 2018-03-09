@@ -1,7 +1,9 @@
 learnr 0.9.2
 ===========
 
-* Improved documentation for deploying `learnr` tutorials in Shiny Server. ([142](https://github.com/rstudio/learnr/issues/142))
+* Fixed [#136](https://github.com/rstudio/learnr/issues/136) by displaying full HTML messages (rather than just the text) if provided by the `incorrect` or the `correct` args to `question()`. ([#146](https://github.com/rstudio/learnr/pull/146))
+
+* Improved documentation for deploying `learnr` tutorials in Shiny Server. ([#142](https://github.com/rstudio/learnr/issues/142))
 
 * Fixed a highlight.js issue from rmarkdown 1.8. ([#133](https://github.com/rstudio/learnr/issues/133))
 
