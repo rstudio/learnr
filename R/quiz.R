@@ -24,7 +24,9 @@
 #'   answer("8"),
 #'   answer("14"),
 #'   answer("1", correct = TRUE),
-#'   answer("23")
+#'   answer("23"),
+#'   incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
+#'   allow_retry = TRUE
 #' )
 #' 
 #' question("Where are you right now? (select ALL that apply)",
