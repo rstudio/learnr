@@ -1,10 +1,12 @@
 name: learnr-tutorial-00-setup
 title: learnr-tutorial-00-setup
+username:
 account: jjallaire
 server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
 appId: 176928
-bundleId: 810945
+bundleId: 1284316
 url: https://jjallaire.shinyapps.io/learnr-tutorial-00-setup/
-when: 1493668687.02781
+when: 1521814731.39492
 asMultiple: FALSE
 asStatic: FALSE

@@ -443,10 +443,6 @@ batters %&gt;%
     geom_point() + 
     geom_smooth(se = FALSE)</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;gam&#39;</code></pre>
-<pre><code>## Warning in seq.default(0, 1, length = nk): partial argument match of
-## &#39;length&#39; to &#39;length.out&#39;</code></pre>
-<pre><code>## Warning in model.matrix.default(Terms[[i]], mf, contrasts = object
-## $contrasts): partial argument match of &#39;contrasts&#39; to &#39;contrasts.arg&#39;</code></pre>
 <p><img src="03c-data-manip-summarise_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
 <p>This also has important implications for ranking. If you look closely, the people with the best batting averages are clearly lucky, not skilled.</p>
 <p>You can find a good explanation of this problem at <a href="http://varianceexplained.org/r/empirical_bayes_baseball/" class="uri">http://varianceexplained.org/r/empirical_bayes_baseball/</a> and <a href="http://www.evanmiller.org/how-not-to-sort-by-average-rating.html" class="uri">http://www.evanmiller.org/how-not-to-sort-by-average-rating.html</a>.</p>

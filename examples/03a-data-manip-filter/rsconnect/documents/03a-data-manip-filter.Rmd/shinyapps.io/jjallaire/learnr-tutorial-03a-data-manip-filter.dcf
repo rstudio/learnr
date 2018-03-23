@@ -1,10 +1,12 @@
 name: learnr-tutorial-03a-data-manip-filter
 title: learnr-tutorial-03a-data-manip-filter
+username:
 account: jjallaire
 server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
 appId: 176933
-bundleId: 810950
+bundleId: 1284355
 url: https://jjallaire.shinyapps.io/learnr-tutorial-03a-data-manip-filter/
-when: 1493668898.2232
+when: 1521815816.00744
 asMultiple: FALSE
 asStatic: FALSE

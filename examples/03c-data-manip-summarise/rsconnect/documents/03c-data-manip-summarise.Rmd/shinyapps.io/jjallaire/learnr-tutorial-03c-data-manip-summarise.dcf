@@ -1,10 +1,12 @@
 name: learnr-tutorial-03c-data-manip-summarise
 title: learnr-tutorial-03c-data-manip-summarise
+username:
 account: jjallaire
 server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
 appId: 176941
-bundleId: 810958
+bundleId: 1284371
 url: https://jjallaire.shinyapps.io/learnr-tutorial-03c-data-manip-summarise/
-when: 1493669363.62125
+when: 1521816535.79041
 asMultiple: FALSE
 asStatic: FALSE
