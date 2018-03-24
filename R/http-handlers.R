@@ -1,7 +1,6 @@
 
 
 register_http_handlers <- function(session, metadata) {
-  message("Got to session", session$token)
   # parent environment for completions (see discussion in setup_exercise_handler
   # for why this is chosen as the completion/execution parent)
   server_envir <- parent.env(parent.env(parent.frame()))
@@ -221,6 +220,7 @@ register_http_handlers <- function(session, metadata) {
     
   }))
   
+  session$sendCustomMessage("isTutorialReady", "true")
 }
 
 

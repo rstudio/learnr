@@ -1607,9 +1607,17 @@ Tutorial.prototype.$initializeClientState = function(client_state) {
 
 
 /* Server initialization */
+var isTutorialReady = false;
+Shiny.addCustomMessageHandler("isTutorialReady", function(message) {
+  console.log("message: " + message);
+  if (message === "true") isTutorialReady = true;
+})
 
 Tutorial.prototype.$isServerAvailable = function() {
-  return typeof ((Shiny || {}).shinyapp || {}).config !== "undefined";
+  // receive message tutorial.ready from the R side
+  return(isTutorialReady)
+  
+  // return typeof ((Shiny || {}).shinyapp || {}).config !== "undefined";
 }
 
 Tutorial.prototype.$initializeServer = function() {
@@ -1628,6 +1636,7 @@ Tutorial.prototype.$initializeServer = function() {
     }
     
     // wait for shiny config to be available (required for $serverRequest)
+    console.log("isTutorialReady: " + isTutorialReady);
     if (thiz.$isServerAvailable()) {
       thiz.$logTiming("server-available");
       thiz.$serverRequest("initialize", { location: window.location }, 
@@ -1639,6 +1648,8 @@ Tutorial.prototype.$initializeServer = function() {
             thiz.$restoreState(objects);
           });
         },
+        // remove this once we know our fix works (the responseText has changed from
+        // 'attempt to apply non-function' to the sanitized version by default)
         function (jqXHR) {
           // look for standard error indicating shiny server is not quite ready
           if ((jqXHR.status == 500) && (jqXHR.responseText == "ERROR: attempt to apply non-function" )) {
