@@ -1,7 +1,6 @@
 
 
 register_http_handlers <- function(session, metadata) {
-  
   # parent environment for completions (see discussion in setup_exercise_handler
   # for why this is chosen as the completion/execution parent)
   server_envir <- parent.env(parent.env(parent.frame()))
@@ -221,6 +220,9 @@ register_http_handlers <- function(session, metadata) {
     
   }))
   
+  # this is a "bat signal" to let the JS side know that the Shiny
+  # server is ready to handle http requests
+  session$sendCustomMessage("tutorial_isServerAvailable", "true")
 }
 
 
