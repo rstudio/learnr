@@ -15,6 +15,9 @@ $(document).ready(function() {
   window.tutorial = tutorial;
 });
 
+// this var lets us know if the Shiny server is ready to handle http requests
+var tutorial_isServerAvailable = false;
+
 function Tutorial() {
   
   // Alias this
@@ -45,7 +48,8 @@ function Tutorial() {
   
   // API: Skip a section
   this.skipSection = function(sectionId) {
-    if (thiz.$isServerAvailable())
+    // wait for shiny config to be available (required for $serverRequest)
+    if (tutorial_isServerAvailable)
       thiz.$serverRequest("section_skipped", { sectionId: sectionId }, null);
   };
   
@@ -1607,18 +1611,13 @@ Tutorial.prototype.$initializeClientState = function(client_state) {
 
 
 /* Server initialization */
-var isTutorialReady = false;
-Shiny.addCustomMessageHandler("isTutorialReady", function(message) {
-  console.log("message: " + message);
-  if (message === "true") isTutorialReady = true;
-})
 
-Tutorial.prototype.$isServerAvailable = function() {
-  // receive message tutorial.ready from the R side
-  return(isTutorialReady)
-  
-  // return typeof ((Shiny || {}).shinyapp || {}).config !== "undefined";
-}
+// once we receive this message from the R side, we know that
+// `register_http_handlers()` has been run, indicating that the 
+// Shiny server is ready to handle http requests
+Shiny.addCustomMessageHandler("tutorial_isServerAvailable", function(message) {
+  tutorial_isServerAvailable = true;
+})
 
 Tutorial.prototype.$initializeServer = function() {
   
@@ -1636,8 +1635,7 @@ Tutorial.prototype.$initializeServer = function() {
     }
     
     // wait for shiny config to be available (required for $serverRequest)
-    console.log("isTutorialReady: " + isTutorialReady);
-    if (thiz.$isServerAvailable()) {
+    if (tutorial_isServerAvailable) {
       thiz.$logTiming("server-available");
       thiz.$serverRequest("initialize", { location: window.location }, 
         function(response) {
@@ -1647,14 +1645,6 @@ Tutorial.prototype.$initializeServer = function() {
             thiz.$logTiming("storage-initialized");
             thiz.$restoreState(objects);
           });
-        },
-        // remove this once we know our fix works (the responseText has changed from
-        // 'attempt to apply non-function' to the sanitized version by default)
-        function (jqXHR) {
-          // look for standard error indicating shiny server is not quite ready
-          if ((jqXHR.status == 500) && (jqXHR.responseText == "ERROR: attempt to apply non-function" )) {
-            retry(2000);
-          }
         }
       );
     }

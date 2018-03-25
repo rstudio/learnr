@@ -220,7 +220,9 @@ register_http_handlers <- function(session, metadata) {
     
   }))
   
-  session$sendCustomMessage("isTutorialReady", "true")
+  # this is a "bat signal" to let the JS side know that the Shiny
+  # server is ready to handle http requests
+  session$sendCustomMessage("tutorial_isServerAvailable", "true")
 }
 
 
