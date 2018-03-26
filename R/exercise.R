@@ -205,7 +205,8 @@ evaluate_exercise <- function(exercise, envir) {
     knitr = knitr_options,
     pandoc = NULL,
     base_format = rmarkdown::html_fragment(
-                    df_print = exercise$options$exercise.df_print
+                    df_print = exercise$options$exercise.df_print,
+                    pandoc_args = c("--metadata", "pagetitle=PREVIEW")
                   )
   )
   
