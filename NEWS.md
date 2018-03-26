@@ -1,3 +1,8 @@
+learnr 0.9.3
+===========
+
+* Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
+
 learnr 0.9.2
 ===========
 
