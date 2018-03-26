@@ -24,6 +24,12 @@ Source: CRAN
 Version: 7.3-49
 Hash: 01a2feb0d02f446a8337f5fa310fb498
 
+Package: PKI
+Source: CRAN
+Version: 0.1-5.1
+Hash: 8c194fb34ebaab38a13e43ce84feedee
+Requires: base64enc
+
 Package: R6
 Source: CRAN
 Version: 2.2.2
@@ -33,6 +39,17 @@ Package: RColorBrewer
 Source: CRAN
 Version: 1.1-2
 Hash: c0d56cd15034f395874c870141870c25
+
+Package: RCurl
+Source: CRAN
+Version: 1.95-4.10
+Hash: 06af5153f969a90c6cd6c87ee57baa44
+Requires: bitops
+
+Package: RJSONIO
+Source: CRAN
+Version: 1.3-0
+Hash: fb672e20eb6f3010a3639f855d8ef6de
 
 Package: Rcpp
 Source: CRAN
@@ -65,11 +82,22 @@ Version: 0.2
 Hash: 6ef3d65e20b4399fd863f33f494173c3
 Requires: Rcpp, bindr, plogr
 
+Package: bitops
+Source: CRAN
+Version: 1.0-6
+Hash: 67d0775189fd0041d95abca618c5c07e
+
 Package: broom
 Source: CRAN
 Version: 0.4.2
 Hash: 7ebcffa46afb467e3f3c5687946f6e1a
 Requires: dplyr, nlme, plyr, psych, reshape2, stringr, tidyr
+
+Package: caTools
+Source: CRAN
+Version: 1.17.1
+Hash: 97cb6f6293cd18d17df77a6383cc6763
+Requires: bitops
 
 Package: callr
 Source: CRAN
@@ -435,6 +463,12 @@ Source: CRAN
 Version: 1.3-2
 Hash: a25c3f70c166fb3fbabc410eb32b6366
 Requires: backports
+
+Package: rsconnect
+Source: CRAN
+Version: 0.8.8
+Hash: 65aaa7b253eda0ec1dcd1b1352c7b3ee
+Requires: PKI, RCurl, RJSONIO, digest, packrat, rstudioapi, yaml
 
 Package: rstudioapi
 Source: CRAN
