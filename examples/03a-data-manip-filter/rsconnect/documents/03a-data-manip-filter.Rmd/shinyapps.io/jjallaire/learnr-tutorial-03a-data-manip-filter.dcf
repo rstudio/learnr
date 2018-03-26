@@ -5,8 +5,8 @@ account: jjallaire
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 176933
-bundleId: 1284355
+bundleId: 1288601
 url: https://jjallaire.shinyapps.io/learnr-tutorial-03a-data-manip-filter/
-when: 1521815816.00744
+when: 1522075464.06247
 asMultiple: FALSE
 asStatic: FALSE

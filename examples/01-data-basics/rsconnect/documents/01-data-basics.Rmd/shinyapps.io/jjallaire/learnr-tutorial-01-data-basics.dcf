@@ -5,8 +5,8 @@ account: jjallaire
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 176930
-bundleId: 1284336
+bundleId: 1288597
 url: https://jjallaire.shinyapps.io/learnr-tutorial-01-data-basics/
-when: 1521815382.26068
+when: 1522075291.56135
 asMultiple: FALSE
 asStatic: FALSE
