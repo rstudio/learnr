@@ -37,7 +37,7 @@ To create a tutorial, just use `library(learnr)` within your Rmd file to activat
 
 For example, here's a very simple tutorial:
 
-<div id="hellowtutor"></div>
+<div id="hellotutor"></div>
 <script type="text/javascript">loadSnippet('hellotutor')</script>
 
 This is what the running tutorial document looks like after the user has entered their answer:
