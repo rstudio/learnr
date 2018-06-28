@@ -1,10 +1,11 @@
 Package: learnr
 Type: Package
 Title: Interactive Tutorials for R
-Version: 0.9.2
+Version: 0.9.2.1
 Authors@R: c(
-  person("Barbara", "Borges", role = c("aut", "cre"), email = "barbara@rstudio.com"),
+  person("Barret", "Schloerke", role = c("aut", "cre"), email = "barret@rstudio.com"),
   person("JJ", "Allaire", role = "aut", email = "jj@rstudio.com"),
+  person("Barbara", "Borges", role = c("aut"), email = "barb.b.ribeiro@gmail.com"),
   person(family = "RStudio, Inc.", role = "cph"),
   person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
   person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),

@@ -1,3 +1,8 @@
+learnr 0.9.2.1
+===========
+
+* Change maintainer
+
 learnr 0.9.2
 ===========
 
