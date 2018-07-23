@@ -66,3 +66,9 @@ ul {
 .panel, pre {
   border-radius: 0;
   border-color: #e0e0e0; }
+
+code {
+  color: darkslategray;
+}
+
+
