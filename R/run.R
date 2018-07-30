@@ -51,6 +51,9 @@ safe_env <- function() {
 callr_try_catch <- function(...) {
   tryCatch(
     ...,
+    # TODO when processx 3.2.0 is released, _downgrade_ to "interrupt" call instead of "system_command_interrupt".
+    # https://github.com/r-lib/processx/issues/148
+
     # if a user sends an interrupt, return silently
     system_command_interrupt = function() invisible(NULL)
   )
