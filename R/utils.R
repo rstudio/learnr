@@ -17,3 +17,12 @@ is_localhost <- function(location) {
   else
     FALSE
 }
+
+
+# Create an new, 'twin' environment with the same objects and same parent.
+twin_env <- function(envir, parent = parent.env(envir)) {
+  new_envir <- new.env(parent = parent)
+  for (object in ls(envir = envir))
+    new_envir[[object]] <- envir[[object]]
+  new_envir
+}
