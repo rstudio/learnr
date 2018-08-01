@@ -4,7 +4,7 @@
 \alias{run_tutorial}
 \title{Run a tutorial}
 \usage{
-run_tutorial(name, package, shiny_args = NULL, safe_session = FALSE)
+run_tutorial(name, package, shiny_args = NULL)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
@@ -14,9 +14,6 @@ directory of installed package).}
 
 \item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}
-
-\item{safe_session}{Boolean that determines if the exercises are evaluated
-in a new, safe R session.  Should only be necessary when locally deployed.}
 }
 \description{
 Run a tutorial which is contained within an R package.
@@ -26,4 +23,7 @@ Note that when running a tutorial Rmd file with \code{run_tutorial}
   the tutorial Rmd should have already been rendered as part of the
   development of the package (i.e. the correponding tutorial .html file for
   the .Rmd file must exist).
+}
+\seealso{
+\code{\link{safe}}
 }

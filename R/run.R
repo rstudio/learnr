@@ -8,16 +8,15 @@
 #' @param package Name of package
 #' @param shiny_args Additional arguments to forward to
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
-#' @param safe_session Boolean that determines if the exercises are evaluated
-#'   in a new, safe R session.  Should only be necessary when locally deployed.
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
 #'   development of the package (i.e. the correponding tutorial .html file for
 #'   the .Rmd file must exist).
 #'
+#' @seealso \code{\link{safe}}
 #' @export
-run_tutorial <- function(name, package, shiny_args = NULL, safe_session = FALSE) {
+run_tutorial <- function(name, package, shiny_args = NULL) {
 
   # get path to tutorial
   tutorial_path <- system.file("tutorials", name, package = package)
@@ -35,13 +34,19 @@ run_tutorial <- function(name, package, shiny_args = NULL, safe_session = FALSE)
   # run within tutorial wd and ensure we don't call rmarkdown::render
   withr::with_dir(tutorial_path, {
     withr::with_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"), {
-      render_fn <- if (isTRUE(safe_session)) run_safe else rmarkdown::run
-      render_fn(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
+      rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
     })
   })
 }
 
 
+#' Safe R CMD environment
+#'
+#' By default, \code{callr::\link[callr]{rcmd_safe_env}} suppresses the ability
+#' to open a browser window.  This is the default execution evnironment within
+#' \code{callr::\link[callr]{r}}.  However, opening a browser is expected
+#' behavior within the learnr package and should not be suppressed.
+#' @export
 safe_env <- function() {
   envs <- callr::rcmd_safe_env()
   envs[!(names(envs) %in% c("R_BROWSER"))]
@@ -59,40 +64,46 @@ callr_try_catch <- function(...) {
   )
 }
 
-#' Render or Run documents in a new, safe R environment
+
+#' Execute R code in a safe R environment
 #'
-#' When rendering (or running) a document with R markdown, it inherits the current R Global environment.  This will produce unexpected behaviors, such as poisoning the R Global environment with existing variables.  By rendering the document in a new, safe R environment, a \emph{vanilla}, rendered document is produced.
+#' When rendering (or running) a document with R markdown, it inherits the
+#' current R Global environment.  This will produce unexpected behaviors,
+#' such as poisoning the R Global environment with existing variables.  By
+#' rendering the document in a new, safe R environment, a \emph{vanilla},
+#' rendered document is produced.
 #'
-#' @param input,file Input file (R script, Rmd, or plain markdown).
-#' @param ... extra arguements to be passed to \code{rmarkdown::\link[rmarkdown]{render}} or
-#'   \code{rmarkdown::\link[rmarkdown]{run}}
-#' @param show Logical, whether to show the standard output on the screen while the child process
-#'   is running. Defaults to \code{TRUE}.
+#' Using \code{safe} should only be necessary when locally deployed.
+#'
+#' @param expr expression that contains all the necessary library calls to
+#'   execute.  Expressions within callr do not inherit the existing,
+#'   loaded libraries.
 #' @export
-#' @rdname render_safe
-render_safe <- function(input, ..., show = TRUE) {
+#' @examples
+#' \dontrun{
+#' # Direct usage
+#' safe({learnr::run_tutorial("slidy", package = "learnr")})
+#'
+#' # Programmatic usage
+#' library(rlang)
+#'
+#' expr <- quote(learnr::run_tutorial("slidy", package = "learnr"))
+#' safe(!!expr)
+#'
+#' tutorial <- "slidy"
+#' safe({learnr::run_tutorial(!!tutorial, package = "learnr")})
+#' }
+safe <- function(expr, ..., show = TRUE, env = safe_env()) {
+  expr <- rlang::enquo(expr)
   callr_try_catch({
     callr::r(
-      function(...) {
-        rmarkdown::render(...)
+      function(exp) {
+        rlang::eval_tidy(exp)
       },
-      list(input = input, ...),
+      list(exp = expr),
+      ...,
       show = show,
-      env = safe_env()
-    )
-  })
-}
-#' @export
-#' @rdname render_safe
-run_safe <- function(file, ..., show = TRUE) {
-  callr_try_catch({
-    callr::r(
-      function(...) {
-        rmarkdown::run(...)
-      },
-      list(file = file, ...),
-      show = show,
-      env = safe_env()
+      env = env
     )
   })
 }
