@@ -37,8 +37,8 @@ is_localhost <- function(location) {
 #' new_envir <- duplicate_env(envir)
 #' "key" %in% ls(envir = new_envir) # TRUE
 duplicate_env <- function(envir, parent = parent.env(envir)) {
-  new_envir <- new.env(parent = parent)
-  for (object in ls(envir = envir))
-    new_envir[[object]] <- envir[[object]]
-  new_envir
+  list2env(
+    as.list.environment(envir, all.names = TRUE, sorted = FALSE),
+    parent = parent
+  )
 }
