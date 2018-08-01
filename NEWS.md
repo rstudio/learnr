@@ -3,6 +3,8 @@ learnr 0.9.3
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
 
+* Added a new function, `safe`, which evaluates code in a new, safe R environment. ([#174](https://github.com/rstudio/learnr/pull/174))
+
 learnr 0.9.2
 ===========
 
