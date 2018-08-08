@@ -28,8 +28,12 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
   # provide launch_browser if it's not specified in the shiny_args
   if (is.null(shiny_args))
     shiny_args <- list()
-  if (is.null(shiny_args$launch.browser))
-    shiny_args$launch.browser <- interactive()
+  if (is.null(shiny_args$launch.browser)) {
+    shiny_args$launch.browser <- (
+      interactive() ||
+      identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
+    )
+  }
 
   # run within tutorial wd and ensure we don't call rmarkdown::render
   withr::with_dir(tutorial_path, {
@@ -60,7 +64,7 @@ callr_try_catch <- function(...) {
     # https://github.com/r-lib/processx/issues/148
 
     # if a user sends an interrupt, return silently
-    system_command_interrupt = function() invisible(NULL)
+    system_command_interrupt = function(...) invisible(NULL)
   )
 }
 
@@ -73,6 +77,9 @@ callr_try_catch <- function(...) {
 #' rendering the document in a new, safe R environment, a \emph{vanilla},
 #' rendered document is produced.
 #'
+#' The environment variable \code{LEARNR_INTERACTIVE} will be set to \code{"1"}
+#' or \code{"0"} depending on if the calling session is interactive or not.
+#'
 #' Using \code{safe} should only be necessary when locally deployed.
 #'
 #' @param expr expression that contains all the necessary library calls to
@@ -82,28 +89,37 @@ callr_try_catch <- function(...) {
 #' @examples
 #' \dontrun{
 #' # Direct usage
-#' safe({learnr::run_tutorial("slidy", package = "learnr")})
+#' safe(run_tutorial("hello", package = "learnr"))
 #'
 #' # Programmatic usage
 #' library(rlang)
 #'
-#' expr <- quote(learnr::run_tutorial("slidy", package = "learnr"))
+#' expr <- quote(run_tutorial("hello", package = "learnr"))
 #' safe(!!expr)
 #'
-#' tutorial <- "slidy"
-#' safe({learnr::run_tutorial(!!tutorial, package = "learnr")})
+#' tutorial <- "hello"
+#' safe(run_tutorial(!!tutorial, package = "learnr"))
 #' }
 safe <- function(expr, ..., show = TRUE, env = safe_env()) {
   expr <- rlang::enquo(expr)
+
+  # "0" or "1"
+  learnr_interactive = as.character(as.numeric(isTRUE(interactive())))
+
   callr_try_catch({
-    callr::r(
-      function(exp) {
-        rlang::eval_tidy(exp)
-      },
-      list(exp = expr),
-      ...,
-      show = show,
-      env = env
-    )
+    withr::with_envvar(c(LEARNR_INTERACTIVE = learnr_interactive), {
+      callr::r(
+        function(.exp) {
+          library("learnr", character.only = TRUE, quietly = TRUE)
+          rlang::eval_tidy(.exp)
+        },
+        list(
+          .exp = expr
+        ),
+        ...,
+        show = show,
+        env = env
+      )
+    })
   })
 }

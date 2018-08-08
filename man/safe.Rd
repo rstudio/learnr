@@ -19,20 +19,23 @@ rendering the document in a new, safe R environment, a \emph{vanilla},
 rendered document is produced.
 }
 \details{
+The environment variable \code{LEARNR_INTERACTIVE} will be set to \code{"1"}
+or \code{"0"} depending on if the calling session is interactive or not.
+
 Using \code{safe} should only be necessary when locally deployed.
 }
 \examples{
 \dontrun{
 # Direct usage
-safe({learnr::run_tutorial("slidy", package = "learnr")})
+safe(run_tutorial("hello", package = "learnr"))
 
 # Programmatic usage
 library(rlang)
 
-expr <- quote(learnr::run_tutorial("slidy", package = "learnr"))
+expr <- quote(run_tutorial("hello", package = "learnr"))
 safe(!!expr)
 
-tutorial <- "slidy"
-safe({learnr::run_tutorial(!!tutorial, package = "learnr")})
+tutorial <- "hello"
+safe(run_tutorial(!!tutorial, package = "learnr"))
 }
 }
