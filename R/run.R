@@ -101,7 +101,9 @@ callr_try_catch <- function(...) {
 #' safe(run_tutorial(!!tutorial, package = "learnr"))
 #' }
 safe <- function(expr, ..., show = TRUE, env = safe_env()) {
-  expr <- rlang::enquo(expr)
+  # do not make a quosure as the attached env is not passed.
+  # should be evaluated in a clean global context
+  expr <- rlang::enexpr(expr)
 
   # "0" or "1"
   learnr_interactive = as.character(as.numeric(isTRUE(interactive())))
@@ -111,7 +113,7 @@ safe <- function(expr, ..., show = TRUE, env = safe_env()) {
       callr::r(
         function(.exp) {
           library("learnr", character.only = TRUE, quietly = TRUE)
-          rlang::eval_tidy(.exp)
+          base::eval(.exp)
         },
         list(
           .exp = expr
