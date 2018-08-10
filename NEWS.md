@@ -1,7 +1,10 @@
-learnr 0.9.3
+learnr 0.9.3 (unreleased)
 ===========
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
+
+* Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment ([#179](https://github.com/rstudio/learnr/pull/179) and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
+
 
 learnr 0.9.2
 ===========
