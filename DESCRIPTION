@@ -33,7 +33,7 @@ Imports:
   knitr (>= 1.14),
   markdown,
   shiny (>= 1.0),
-  rmarkdown (>= 1.11)
+  rmarkdown (> 1.10)
 Remotes:
   rstudio/rmarkdown#1420
 Encoding: UTF-8
