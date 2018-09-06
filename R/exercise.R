@@ -52,14 +52,11 @@ setup_exercise_handler <- function(exercise_rx, session) {
       else
         evaluator_factory <- inline_evaluator
     }
-    
-    # create a new environment parented by the global environment 
-    envir <- new.env(parent = globalenv())
-    
+
+    # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
-    for (object in ls(envir = server_envir))
-      envir[[object]] <- server_envir[[object]]
-    
+    envir <- duplicate_env(server_envir, parent = globalenv())
+
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
     
@@ -107,7 +104,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
-  
+
+  # capture a copy of the envir before any execution is done
+  envir_prep <- duplicate_env(envir)
+
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
     
@@ -121,7 +121,8 @@ evaluate_exercise <- function(exercise, envir) {
       solution_code = exercise$solution,
       check_code = exercise$code_check,
       envir_result = NULL,
-      evaluate_result = NULL
+      evaluate_result = NULL,
+      envir_prep = envir_prep
     )
     
     # if it's an 'incorrect' feedback result then return it
@@ -263,7 +264,8 @@ evaluate_exercise <- function(exercise, envir) {
     solution_code = exercise$solution,
     check_code = exercise$check,
     envir_result = envir,
-    evaluate_result = evaluate_result
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep
   )
   
   # validate the feedback

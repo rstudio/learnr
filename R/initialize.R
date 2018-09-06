@@ -29,7 +29,8 @@ initialize_tutorial <- function() {
     rmarkdown::shiny_prerendered_chunk(
       'server', 
       sprintf('learnr:::register_http_handlers(session, metadata = %s)', 
-              deparse(rmarkdown::metadata$tutorial, control = c("keepInteger"))),
+              deparse(rmarkdown::metadata$tutorial, 
+                      control = c("keepInteger", "niceNames"))),
       singleton = TRUE
     )
     
@@ -37,9 +38,3 @@ initialize_tutorial <- function() {
     knitr::opts_knit$set(tutorial.initialized = TRUE)
   }
 }
-
-
-
-
-
-
