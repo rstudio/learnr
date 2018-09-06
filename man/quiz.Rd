@@ -9,8 +9,8 @@
 quiz(..., caption = "Quiz")
 
 question(text, ..., type = c("auto", "single", "multiple"),
-  correct = "Correct!", incorrect = "Incorrect.", allow_retry = FALSE,
-  random_answer_order = FALSE)
+  correct = "Correct!", incorrect = "Incorrect.",
+  allow_retry = FALSE, random_answer_order = FALSE)
 
 answer(text, correct = FALSE, message = NULL)
 }

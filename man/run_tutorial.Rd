@@ -7,12 +7,12 @@
 run_tutorial(name, package, shiny_args = NULL)
 }
 \arguments{
-\item{name}{Tutorial name (subdirectory within \code{tutorials/} 
+\item{name}{Tutorial name (subdirectory within \code{tutorials/}
 directory of installed package).}
 
 \item{package}{Name of package}
 
-\item{shiny_args}{Additional arguments to forward to 
+\item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}
 }
 \description{
@@ -20,7 +20,10 @@ Run a tutorial which is contained within an R package.
 }
 \details{
 Note that when running a tutorial Rmd file with \code{run_tutorial}
-  the tutorial Rmd should have already been rendered as part of the 
-  development of the package (i.e. the correponding tutorial .html file for 
+  the tutorial Rmd should have already been rendered as part of the
+  development of the package (i.e. the correponding tutorial .html file for
   the .Rmd file must exist).
+}
+\seealso{
+\code{\link{safe}}
 }

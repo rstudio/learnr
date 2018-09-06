@@ -5,9 +5,9 @@
 \title{Set tutorial options}
 \usage{
 tutorial_options(exercise.cap = "Code", exercise.eval = FALSE,
-  exercise.timelimit = 30, exercise.lines = NULL, exercise.checker = NULL,
-  exercise.completion = TRUE, exercise.diagnostics = TRUE,
-  exercise.startover = TRUE)
+  exercise.timelimit = 30, exercise.lines = NULL,
+  exercise.checker = NULL, exercise.completion = TRUE,
+  exercise.diagnostics = TRUE, exercise.startover = TRUE)
 }
 \arguments{
 \item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
