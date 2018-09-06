@@ -55,7 +55,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
-    envir <- twin_env(server_envir, parent = globalenv())
+    envir <- duplicate_env(server_envir, parent = globalenv())
 
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
@@ -106,7 +106,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 evaluate_exercise <- function(exercise, envir) {
 
   # capture a copy of the envir before any execution is done
-  envir_prep <- twin_env(envir)
+  envir_prep <- duplicate_env(envir)
 
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {

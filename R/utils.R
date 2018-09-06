@@ -19,10 +19,26 @@ is_localhost <- function(location) {
 }
 
 
-# Create an new, 'twin' environment with the same objects and same parent.
-twin_env <- function(envir, parent = parent.env(envir)) {
-  new_envir <- new.env(parent = parent)
-  for (object in ls(envir = envir))
-    new_envir[[object]] <- envir[[object]]
-  new_envir
+#' Create a duplicate of an environment
+#'
+#' Copy all items from the environment to a new environment.
+#' By default, the new environment will share the same parent environment.
+#' @param envir environment to duplicate
+#' @param parent parent environment to set for the new environment.  Defaults to the parent environment of \code{envir}.
+#' @export
+#' @examples
+#' # Make a new environment with the object 'key'
+#' envir <- new.env()
+#' envir$key <- "value"
+#' "key" %in% ls() # FALSE
+#' "key" %in% ls(envir = envir) # TRUE
+#'
+#' # Duplicate the envir and show it contains 'key'
+#' new_envir <- duplicate_env(envir)
+#' "key" %in% ls(envir = new_envir) # TRUE
+duplicate_env <- function(envir, parent = parent.env(envir)) {
+  list2env(
+    as.list.environment(envir, all.names = TRUE, sorted = FALSE),
+    parent = parent
+  )
 }
