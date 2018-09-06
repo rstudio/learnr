@@ -35,8 +35,12 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
     )
   }
 
-  # run within tutorial wd and ensure we don't call rmarkdown::render
+  # run within tutorial wd
   withr::with_dir(tutorial_path, {
+    if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {
+      # is currently running in a server, do not allow for prerender (rmarkdown::render)
+      withr::local_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"))
+    }
     rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
   })
 }
