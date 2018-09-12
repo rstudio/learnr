@@ -10,6 +10,12 @@ safe(expr, ..., show = TRUE, env = safe_env())
 \item{expr}{expression that contains all the necessary library calls to
 execute.  Expressions within callr do not inherit the existing,
 loaded libraries.}
+
+\item{...}{parameters passed to \code{callr::\link[callr]{r}}}
+
+\item{show}{Logical that determines if output should be displayed}
+
+\item{env}{Environment to evaluate the document in}
 }
 \description{
 When rendering (or running) a document with R markdown, it inherits the

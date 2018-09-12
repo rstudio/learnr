@@ -85,6 +85,9 @@ callr_try_catch <- function(...) {
 #' @param expr expression that contains all the necessary library calls to
 #'   execute.  Expressions within callr do not inherit the existing,
 #'   loaded libraries.
+#' @param ... parameters passed to \code{callr::\link[callr]{r}}
+#' @param show Logical that determines if output should be displayed
+#' @param env Environment to evaluate the document in
 #' @export
 #' @examples
 #' \dontrun{
