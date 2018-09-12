@@ -13,7 +13,13 @@
 #'   topics are either completed or skipped before displaying subsequent
 #'   topics).
 #' @param allow_skip Allow users to skip sub-topics (especially useful when
-#'   \code{progressive} is \code{TRUE}).   
+#'   \code{progressive} is \code{TRUE}).
+#' @param highlight Syntax highlighting style. Supported styles include
+#'        "default", "tango", "pygments", "kate", "monochrome",
+#'        "espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
+#'        to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.
+#' @param ace_theme Ace theme supplied to the ace code editor for all exercises.
+#'        See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
 #'
 #' @param ... Forward parameters to html_document
 #'   
@@ -29,6 +35,7 @@ tutorial <- function(fig_width = 6.5,
                      smart = TRUE,
                      theme = "rstudio",
                      highlight = "textmate",
+                     ace_theme = "textmate",
                      mathjax = "default",
                      extra_dependencies = NULL,
                      css = NULL,
@@ -65,6 +72,12 @@ tutorial <- function(fig_width = 6.5,
   # add highlight.js html_dependency if required
   if (rmarkdown_is_highlightjs(highlight)) {
     extra_dependencies <- append(extra_dependencies, list(rmarkdown::html_dependency_highlightjs(highlight)))
+  }
+
+  # ace theme
+  if (!identical(ace_theme, "textmate")) {
+    ace_theme <- match.arg(ace_theme, ACE_THEMES)
+    args <- c(args, "--variable", paste0("ace-theme=", ace_theme))
   }
 
 

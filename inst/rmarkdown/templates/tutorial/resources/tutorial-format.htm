@@ -159,6 +159,16 @@ $if(mathjax-url)$
 </script>
 $endif$
 
+$if(ace-theme)$
+<script>
+$$(document).ready(function () {
+  $$(".ace_editor").each(function(i, el) {
+    window.ace.edit(el).setTheme("ace/theme/$ace-theme$")
+  });
+});
+</script>
+$endif$
+
 </body>
 
 </html>
