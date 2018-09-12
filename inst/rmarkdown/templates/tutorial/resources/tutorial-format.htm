@@ -32,13 +32,6 @@ $endfor$
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
-}
-</script>
 
 
 $for(css)$
@@ -124,6 +117,11 @@ function bootstrapStylePandocTables() {
 }
 $$(document).ready(function () {
   bootstrapStylePandocTables();
+});
+</script>
+<script type="text/javascript">
+$$(document).ready(function () {
+  hljs.initHighlighting();
 });
 </script>
 
