@@ -7,8 +7,9 @@
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
   fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
   dev = "png", df_print = "paged", smart = TRUE, theme = "rstudio",
-  mathjax = "default", extra_dependencies = NULL, css = NULL,
-  includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
+  highlight = "textmate", mathjax = "default",
+  extra_dependencies = NULL, css = NULL, includes = NULL,
+  md_extensions = NULL, pandoc_args = NULL, ...)
 }
 \arguments{
 \item{fig_width}{Default width (in inches) for figures}
@@ -50,6 +51,10 @@ ellipses.}
 \item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
 "simplex", or "yeti").}
+
+\item{highlight}{Syntax highlighting style. Supported styles include
+"default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn",
+"haddock", and "textmate". Pass \code{NULL} to prevent syntax highlighting.}
 
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is

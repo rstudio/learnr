@@ -26,13 +26,39 @@ $header-includes$
 $endfor$
 
 <!-- highlightjs -->
+$if(highlightjs)$
 <style type="text/css">code{white-space: pre;}</style>
+$if(theme)$
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+$endif$
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+$endif$
 
+$if(highlighting-css)$
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+$highlighting-css$
+</style>
+$if(theme)$
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+$endif$
+$endif$
 
 $for(css)$
 <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
@@ -117,11 +143,6 @@ function bootstrapStylePandocTables() {
 }
 $$(document).ready(function () {
   bootstrapStylePandocTables();
-});
-</script>
-<script type="text/javascript">
-$$(document).ready(function () {
-  hljs.initHighlighting();
 });
 </script>
 
