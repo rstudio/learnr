@@ -36,4 +36,6 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
-Suggests: testthat
+Suggests: testthat,
+  callr,
+  rlang
