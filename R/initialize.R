@@ -27,14 +27,21 @@ initialize_tutorial <- function() {
   
     # session initialization (forward tutorial metadata)
     rmarkdown::shiny_prerendered_chunk(
-      'server', 
-      sprintf('learnr:::register_http_handlers(session, metadata = %s)', 
-              deparse(rmarkdown::metadata$tutorial, 
-                      control = c("keepInteger", "niceNames"))),
+      'server',
+      sprintf('learnr:::register_http_handlers(session, metadata = %s)',
+              list_to_string(rmarkdown::metadata$tutorial)),
       singleton = TRUE
     )
     
     # set initialized flag to ensure single initialization
     knitr::opts_knit$set(tutorial.initialized = TRUE)
   }
+}
+
+
+list_to_string <- function(x) {
+  conn <- textConnection("list_to_string", "w")
+  on.exit({close(conn)})
+  dput(x, file = conn)
+  paste0(textConnectionValue(conn), collapse = "")
 }
