@@ -19,6 +19,8 @@ Description: Create interactive tutorials using R Markdown. Use a combination
 License: Apache License 2.0 | file LICENSE
 URL: https://rstudio.github.io/learnr/
 BugReports: https://github.com/rstudio/learnr/issues
+Depends:
+  R (>= 3.5.0)
 Imports:
   utils,
   parallel,
