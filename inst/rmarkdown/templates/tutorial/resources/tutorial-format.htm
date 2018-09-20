@@ -26,20 +26,39 @@ $header-includes$
 $endfor$
 
 <!-- highlightjs -->
+$if(highlightjs)$
 <style type="text/css">code{white-space: pre;}</style>
+$if(theme)$
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+$endif$
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
+$endif$
 
+$if(highlighting-css)$
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+$highlighting-css$
+</style>
+$if(theme)$
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+$endif$
+$endif$
 
 $for(css)$
 <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
@@ -137,6 +156,16 @@ $if(mathjax-url)$
     script.src  = "$mathjax-url$";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
+</script>
+$endif$
+
+$if(ace-theme)$
+<script>
+$$(document).ready(function () {
+  $$(".ace_editor").each(function(i, el) {
+    window.ace.edit(el).setTheme("ace/theme/$ace-theme$")
+  });
+});
 </script>
 $endif$
 
