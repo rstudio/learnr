@@ -295,6 +295,7 @@ question_to_shiny <- function(question) {
   switch(question$type,
     single = radio_question_to_shiny(question),
     multiple = checkbox_question_to_shiny(question),
+    text = text_question_to_shiny(question),
     stop("shiny app not implemented!")
   )
 }
@@ -357,7 +358,7 @@ radio_question_to_shiny <- function(question) {
         ))
       }
     }
-    return(list(is_correct = FALSE, message = NULL))
+    return(list(is_correct = FALSE, messages = NULL))
   }
 
   final_answer_input <- function(answer_input_id, answer_input, answers) {
@@ -515,6 +516,74 @@ checkbox_question_to_shiny <- function(question) {
 }
 
 
+
+
+
+text_question_to_shiny <- function(question) {
+
+  init_answer_input <- function(answer_input_id, answers) {
+    shiny::textInput(
+      answer_input_id,
+      label = question$question,
+      placeholder = "Enter answer here..."
+    )
+  }
+
+  # # returns
+  # list(
+  #   is_correct = LOGICAL,
+  #   message = c(CHARACTER)
+  # )
+  answer_input_is_correct <- function(answer_input, answers) {
+
+    trim <- function(x) {
+      x %>%
+        as.character() %>%
+        sub("^\\s+", "", .) %>%
+        sub("\\s$", "", .)
+    }
+
+    answer_input <- trim(answer_input)
+
+    for (ans in answers) {
+      if (isTRUE(all.equal(trim(ans$label), answer_input))) {
+        return(list(
+          is_correct = ans$is_correct,
+          messages = ans$message
+        ))
+      }
+    }
+    return(list(is_correct = FALSE, messages = NULL))
+  }
+
+  final_answer_input <- function(answer_input_id, answer_input, answers) {
+    shiny::textInput(
+      answer_input_id,
+      label = question$question,
+      value = answer_input
+    )
+  }
+
+  assert_valid_answer_input <- function(answer_input) {
+    if (is.null(answer_input) || nchar(answer_input) == 0) {
+      showNotification("Please select an answer before submitting", type = "error")
+      req(answer_input)
+    }
+  }
+
+  disable_css_selector <- function(answer_input_id) {
+    paste0("#", answer_input_id)
+  }
+
+  question_shiny_wrapper(
+    question,
+    init_answer_input,
+    answer_input_is_correct,
+    final_answer_input,
+    assert_valid_answer_input,
+    disable_css_selector
+  )
+}
 
 
 
