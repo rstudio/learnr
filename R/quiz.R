@@ -661,23 +661,30 @@ update_button_label <- function(session, question, label_type = "submit") {
 # update message area below input / above submit button
 update_messages <- function(output, question, messages, is_correct, is_done) {
 
-  # set default txt value
-  if (is.null(messages)) {
-    messages <-
-      if (is_correct) {
-        question$messages$correct
+  # Always display the incorrect, correct, or try again messages
+  default_message <-
+    if (is_correct) {
+      question$messages$correct
+    } else {
+      # not correct
+      if (is_done) {
+        question$messages$incorrect
       } else {
-        # not correct
-        if (is_done) {
-          question$messages$incorrect
-        } else {
-          question$messages$try_again
-        }
+        question$messages$try_again
       }
+    }
+
+  if (!is.null(messages) && !is.list(messages)) {
+    messages <- list(messages)
+  }
+
+  # display the default messages first
+  if (!is.null(default_message)) {
+    messages <- append(list(default_message), messages)
   }
 
   # get regular message
-  if (is.null(message)) {
+  if (is.null(messages)) {
     message_alert <- NULL
   } else {
     alert_class <- if (is_correct) "alert-success" else "alert-danger"
