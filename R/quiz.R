@@ -205,6 +205,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
     stop("Non-string `text` values are not allowed as an answer")
   }
   structure(class = "tutorial_quiz_answer", list(
+    option = text,
     label = quiz_text(text),
     is_correct = isTRUE(correct),
     message = quiz_text(message)
@@ -518,7 +519,6 @@ checkbox_question_to_shiny <- function(question) {
 
 
 
-
 text_question_to_shiny <- function(question) {
 
   init_answer_input <- function(answer_input_id, answers) {
@@ -584,6 +584,7 @@ text_question_to_shiny <- function(question) {
     disable_css_selector
   )
 }
+
 
 
 
