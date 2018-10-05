@@ -219,7 +219,8 @@ quiz_text <- function(text) {
       text = text,
       options = c("use_xhtml", "fragment_only", "mathjax"),
       extensions = markdown::markdownExtensions(),
-      fragment.only = TRUE
+      fragment.only = TRUE,
+      encoding = "UTF-8"
     )
     # remove leading and trailing paragraph
     md <- sub("^<p>", "", md)
