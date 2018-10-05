@@ -28,6 +28,9 @@
 .answers .checked::after {
   content: " \2713 ";
 }
+.answers .invalid::after {
+  content: " \1F5F4 ";
+}
 
 .responses .alert {
   padding: 6px 12px;
@@ -56,4 +59,6 @@
   margin-top: 10px;
 }
 
-
+.alert {
+  width: fit-content;
+}

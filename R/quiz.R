@@ -1,3 +1,9 @@
+# TODO - make messages functions
+
+
+
+
+
 #' Tutorial quiz questions
 #'
 #' Add interative multiple choice quiz questions to a tutorial.
@@ -9,16 +15,16 @@
 #'   multiple correct answers are specified that inputs which include only one correct
 #'   answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
 #'   (as opposed to radio buttons) even though only once correct answer was provided.
-#' @param correct For \code{question}, text to print for a correct answer (defaults 
+#' @param correct For \code{question}, text to print for a correct answer (defaults
 #'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
 #' @param message Additional message to display along with correct/incorrect feedback.
-#' @param ... One or more questions or answers 
+#' @param ... One or more questions or answers
 #' @param allow_retry Allow retry for incorrect answers.
 #' @param random_answer_order Display answers in a random order.
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' question("What number is the letter A in the alphabet?",
 #'   answer("8"),
@@ -28,7 +34,7 @@
 #'   incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
 #'   allow_retry = TRUE
 #' )
-#' 
+#'
 #' question("Where are you right now? (select ALL that apply)",
 #'   answer("Planet Earth", correct = TRUE),
 #'   answer("Pluto"),
@@ -42,7 +48,7 @@
 #' @name quiz
 #' @export
 quiz <- function(..., caption = "Quiz") {
-  
+
   # create table rows from questions
   index <- 1
   questions <- lapply(list(...), function(question) {
@@ -50,77 +56,113 @@ quiz <- function(..., caption = "Quiz") {
       question$x$label <- paste(question$x$label, index, sep="-")
       index <<- index + 1
     }
-    tags$tr(tags$td(question))
+    question
   })
- 
-  
-  htmltools::browsable(div(class = "panel panel-default",
-    div(class = "panel-heading tutorial-panel-heading", caption),
-    tags$table(class = "table quiz-table", questions)
-  ))
+
+  questions
 }
 
 
 #' @rdname quiz
 #' @export
-question <- function(text, 
-                     ..., 
-                     type = c("auto", "single", "multiple"),
-                     correct = "Correct!", 
-                     incorrect = "Incorrect.",
+question <- function(text,
+                     ...,
+                     type = c("auto", "single", "multiple", "text"),
+                     correct_message = random_praise(),
+                     try_again_message = random_encouragement(),
+                     incorrect_message = "Incorrect",
+                     post_message = NULL,
+                     submit_button = "Submit Answer",
+                     try_again_button = "Try Again",
                      allow_retry = FALSE,
-                     random_answer_order = FALSE) {
-  
+                     random_answer_order = FALSE
+                   ) {
+
+
   # one time tutor initialization
   initialize_tutorial()
-  
+
   # capture/validate answers
   answers <- list(...)
   lapply(answers, function(answer) {
     if (!inherits(answer, "tutorial_quiz_answer"))
       stop("Object which is not an answer passed to question function")
   })
-  
+
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
-  
-  # create question
-  question <- list(
-    q = quiz_text(text),
-    a = answers,
-    correct = quiz_text(correct),
-    incorrect = quiz_text(incorrect)
-  )
+
+  # # create question
+  # question <- list(
+  #   q = quiz_text(text),
+  #   a = answers,
+  #   correct = quiz_text(correct),
+  #   incorrect = quiz_text(incorrect),
+  # )
   type <- match.arg(type)
-  if (type == "single")
-    question$select_any <- TRUE
-  if (type == "multiple")
-    question$force_checkbox <- TRUE
-  
-  # save all state/options into "x"
-  x <- list()
-  x$question <- quiz_text(text)
-  x$answers <- answers
-  x$label <- knitr::opts_current$get('label')
-  x$skipStartButton <- TRUE
-  x$perQuestionResponseAnswers <- TRUE
-  x$perQuestionResponseMessaging <- TRUE
-  x$preventUnanswered <- TRUE
-  x$displayQuestionCount <- FALSE
-  x$displayQuestionNumber <- FALSE
-  x$disableRanking <- TRUE
-  x$nextQuestionText <- ""
-  x$checkAnswerText <- "Submit Answer"
-  x$allowRetry <- allow_retry
-  x$randomSortAnswers = random_answer_order
-  x$json <- list(
-    info = list(
-      name = "",
-      main = ""
+
+  total_correct <- sum(vapply(answers, function(ans) { ans$is_correct }, logical(1)))
+  if (total_correct == 0) {
+    stop("At least one correct answer must be supplied")
+  }
+  if (type == "auto") {
+    if (total_correct > 1) {
+      type <- "multiple"
+    } else {
+      type <- "single"
+    }
+  }
+
+  return(list(
+    label = knitr::opts_current$get('label'),
+    question = quiz_text(text),
+    answers = answers,
+    button_labels = list(
+      correct = "Correct!",
+      incorrect = "Incorrect",
+      submit = quiz_text(submit_button),
+      try_again = quiz_text(try_again_button)
     ),
-    questions = list(question)
-  )
- 
+    messages = list(
+      correct = quiz_text(correct_message),
+      try_again = quiz_text(try_again_message),
+      incorrect = quiz_text(incorrect_message),
+      post_message = quiz_text(post_message)
+    ),
+    type = type,
+    random_answer_order = random_answer_order,
+    allow_retry = allow_retry
+  ))
+
+  # if (type == "single")
+  #   question$select_any <- TRUE
+  # if (type == "multiple")
+  #   question$force_checkbox <- TRUE
+
+  # # save all state/options into "x"
+  # x <- list()
+  # x$question <- quiz_text(text)
+  # x$answers <- answers
+  # x$label <- knitr::opts_current$get('label')
+  # x$skipStartButton <- TRUE # no start
+  # x$perQuestionResponseAnswers <- TRUE
+  # x$perQuestionResponseMessaging <- TRUE
+  # x$preventUnanswered <- TRUE
+  # x$displayQuestionCount <- FALSE
+  # x$displayQuestionNumber <- FALSE
+  # x$disableRanking <- TRUE
+  # x$nextQuestionText <- ""
+  # x$checkAnswerText <- "Submit Answer"
+  # x$allowRetry <- allow_retry
+  # x$randomSortAnswers = random_answer_order
+  # x$json <- list(
+  #   info = list(
+  #     name = "",
+  #     main = ""
+  #   ),
+  #   questions = list(question)
+  # )
+
   # define dependencies
   dependencies <- list(
     rmarkdown::html_dependency_jquery(),
@@ -138,7 +180,7 @@ question <- function(text,
       stylesheet = c("css/slickQuiz.css", "css/slickQuizTutorial.css")
     )
   )
-  
+
   # create widget
   htmlwidgets::createWidget(
     name = 'quiz',
@@ -146,21 +188,25 @@ question <- function(text,
     width = "100%",
     height = "auto",
     dependencies = dependencies,
-    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE, 
-                                             knitr.defaultWidth = "100%", 
+    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE,
+                                             knitr.defaultWidth = "100%",
                                              knitr.defaultHeight = "auto",
                                              viewer.defaultWidth = "100%",
                                              viewer.defaultHeight = "auto"),
     package = 'learnr'
   )
+
 }
 
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
+  if (!is.character(text)) {
+    stop("Non-string `text` values are not allowed as an answer")
+  }
   structure(class = "tutorial_quiz_answer", list(
-    option = quiz_text(text),
-    correct = correct,
+    label = quiz_text(text),
+    is_correct = isTRUE(correct),
     message = quiz_text(message)
   ))
 }
@@ -178,7 +224,7 @@ quiz_text <- function(text) {
     # remove leading and trailing paragraph
     md <- sub("^<p>", "", md)
     md <- sub("</p>\n?$", "", md)
-    md
+    HTML(md)
   }
   else {
     NULL
@@ -186,6 +232,7 @@ quiz_text <- function(text) {
 }
 
 
+# used to print the html for a quiz
 quiz_html <- function(id, style, class, ...) {
   htmltools::HTML(sprintf('
 <div id="%s" style="%s", class = "%s">
@@ -198,3 +245,362 @@ quiz_html <- function(id, style, class, ...) {
 }
 
 
+#
+#
+#
+#
+#
+# text_box_quiz_html <- function(id, style, class, ...) {
+#   htmltools::HTML(glue::glue_data(
+#     list(id = id, style = style, class = class),
+# '
+# <div id="{id}" style="{style}", class = "{class}">
+# <div class="panel panel-default">
+# <div class="panel-body quizArea">
+# </div>
+# </div>
+# </div>
+# '
+#   ))
+# }
+
+
+# quiz_to_shiny <- function(quiz) {
+#
+#   lapply(quiz$questions, question_to_shiny)
+# }
+
+random_question_id <- function() {
+  random_id("question")
+}
+random_answer_id <- function() {
+  random_id("answer")
+}
+random_id <- function(txt) {
+  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
+
+shuffle <- function(x) {
+  sample(x, length(x))
+}
+
+question_to_shiny <- function(question) {
+
+  question$answers <- lapply(question$answers, function(ans) {
+    ans$random_id <- random_answer_id()
+    ans
+  })
+
+  switch(question$type,
+    single = question_radio_to_shiny(question),
+    stop("shiny app not implemented!")
+  )
+}
+
+
+# TODO-shiny app to shiny module
+# return a call to the module UI
+
+question_ui <- function(id, ..., extra_args) {
+  ns <- NS(id)
+
+  tagList(
+    ...
+  )
+}
+
+question_mod <- function(input, output, session) {
+
+}
+
+question_radio_to_shiny2 <- function(question) {
+  q_id <- random_question_id()
+  callModule(question_mod, q_id)
+  question_ui(q_id)
+}
+
+
+question_radio_to_shiny <- function(question) {
+  q_id <- random_question_id()
+  q_select <- paste0(q_id, "-select")
+  q_action <- paste0(q_id, "-action")
+
+  answers <- question$answers
+
+  select <- shiny::radioButtons(
+    "radioSelect",
+    label = question$question,
+    choiceNames = "loading...",
+    choiceValues = "loading",
+    selected = FALSE
+  )
+  action <- shiny::actionButton(
+    "action",
+    "loading..."
+  )
+
+  shiny::shinyApp(
+    ui = shiny::fluidPage(
+      includeCSS("inst/htmlwidgets/lib/slickquiz/css/slickQuiz.css"),
+      includeCSS("inst/htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css"),
+      shinyjs::useShinyjs(),  # Set up shinyjs
+      select,
+      uiOutput("message"),
+      shinyjs::disabled(action)
+    ),
+    server = function(input, output, session) {
+
+      choiceNames <- NULL
+      choiceValues <- NULL
+
+      button_label_type <- "submit"
+      update_button_label <- function(label_type = "submit") {
+
+        valid_button_types <- list(submit = "submit", try_again = "try_again", correct = "correct", incorrect = "incorrect")
+        button_label_type <<- match.arg(label_type, unlist(unname(valid_button_types)))
+        button_label <- question$button_labels[[label_type]]
+        updateActionButton(session, "action", label = button_label)
+
+        default_class <- "btn-primary"
+        warning_class <- "btn-warning"
+
+        if (label_type == valid_button_types$submit) {
+          shinyjs::delay(1, {
+            shinyjs::removeClass("action", warning_class)
+            shinyjs::addClass("action", default_class)
+            shinyjs::disable("action")
+          })
+        } else if (label_type == valid_button_types$try_again) {
+          shinyjs::delay(1, {
+            shinyjs::removeClass("action", default_class)
+            shinyjs::addClass("action", warning_class)
+            shinyjs::enable("action")
+          })
+        } else if (label_type == valid_button_types$correct) {
+          shinyjs::delay(1, {
+            shinyjs::removeClass("action", default_class)
+            shinyjs::removeClass("action", warning_class)
+            shinyjs::addClass("action", "btn-success")
+            shinyjs::addClass("action", "hidden")
+            shinyjs::disable("action")
+          })
+        } else if (label_type == valid_button_types$incorrect) {
+          shinyjs::delay(1, {
+            shinyjs::removeClass("action", default_class)
+            shinyjs::removeClass("action", warning_class)
+            shinyjs::addClass("action", "btn-danger")
+            shinyjs::addClass("action", "hidden")
+            shinyjs::disable("action")
+          })
+        }
+      }
+      update_message <- function(txt, is_correct, is_done) {
+        is_correct <- isTRUE(is_correct)
+
+        # set default txt value
+        if (is.null(txt)) {
+          txt <-
+            if (is_correct) {
+              question$messages$correct
+            } else {
+              if (is_done) {
+                question$messages$incorrect
+              } else {
+                question$messages$try_again
+              }
+            }
+        }
+
+        if (is.null(txt)) {
+          txt_alert <- NULL
+        } else {
+          alert_class <-
+            if (is_correct) {
+              "alert-success"
+            } else {
+              "alert-danger"
+            }
+          txt_alert <- tags$div(
+            class = paste0("alert ", alert_class),
+            txt
+          )
+        }
+
+        if (isTRUE(is_done) && !is.null(question$messages$post_message)) {
+          post_alert <- tags$div(
+            class = "alert alert-info",
+            question$messages$post_message
+          )
+        } else {
+          post_alert <- NULL
+        }
+
+        if (is.null(txt_alert) && is.null(post_alert)) {
+          output$message <- NULL
+        } else {
+          output$message <- renderUI(tags$div(txt_alert, post_alert))
+        }
+      }
+
+      init_question <- function() {
+        if (question$random_answer_order) {
+          answers <<- shuffle(answers)
+        }
+
+        choiceNames <<- lapply(answers, function(ans) {
+          ans$label
+        })
+        choiceValues <<- lapply(answers, function(ans) {
+          ans$random_id
+        })
+        updateRadioButtons(session, "radioSelect", choiceNames = choiceNames, choiceValues = choiceValues, selected = FALSE)
+
+        output$message <- NULL
+        update_button_label("submit")
+      }
+      init_question()
+
+      observeEvent(input$radioSelect, {
+        shinyjs::enable("action")
+      })
+
+      output$message <- NULL
+
+      observeEvent(input$action, {
+        # TODO add logging of answer / correct / user / question
+        # SEE question_submission_event
+
+        if (button_label_type == "try_again") {
+          init_question()
+          return()
+        }
+
+        if (is.null(input$radioSelect)) {
+          showNotification("Please select an answer before submitting", type = "error")
+          req(input$radioSelect)
+        }
+
+        selectedValue <- input$radioSelect
+        # only one answer can be chosen
+        for (ans in answers) {
+          if (ans$random_id == selectedValue) {
+            # chosen_answer(ans)
+
+            if (ans$is_correct) {
+              update_button_label("correct")
+
+            } else {
+              # not correct
+              if (isTRUE(question$allow_retry)) {
+                # not correct, but may try again
+
+                update_button_label("try_again")
+              } else {
+                # not correct and can not try again
+                update_button_label("incorrect")
+              }
+            }
+            break
+          }
+        }
+
+        selectedAnswer <- answers[[which(choiceValues %in% selectedValue)[1]]]
+        is_done <- (!isTRUE(question$allow_retry)) || selectedAnswer$is_correct
+        update_message(selectedAnswer$message, selectedAnswer$is_correct, is_done)
+        shinyjs::delay(1, {
+          shinyjs::disable(selector = "#radioSelect .radio")
+        })
+        if (is_done) {
+          # update select answers to have X or √
+          choiceNamesFinal <- lapply(answers, function(ans) {
+            if (ans$is_correct) {
+              tag <- " &#10003; "
+              tagClass <- "correct"
+            } else {
+              tag <- " &#10007; "
+              tagClass <- "incorrect"
+            }
+            tags$span(ans$label, HTML(tag), class = tagClass)
+          })
+
+          updateRadioButtons(session, "radioSelect", selected = selectedValue, choiceValues = choiceValues, choiceNames = choiceNamesFinal)
+        }
+
+      })
+    }
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.praise <- c(
+  "Absolutely fabulous!",
+  "Amazing!",
+  "Awesome!",
+  "Beautiful!",
+  "Bravo!",
+  "Cool job!",
+  "Delightful!",
+  "Excellent!",
+  "Fantastic!",
+  "Great work!",
+  "I couldn't have done it better myself.",
+  "Impressive work!",
+  "Lovely job!",
+  "Magnificent!",
+  "Nice job!",
+  "Out of this world!",
+  "Resplendent!",
+  "Smashing!",
+  "Someone knows what they're doing :)",
+  "Spectacular job!",
+  "Splendid!",
+  "Success!",
+  "Super job!",
+  "Superb work!",
+  "Swell job!",
+  "Terrific!",
+  "That's a first-class answer!",
+  "That's glorious!",
+  "That's marvelous!",
+  "Very good!",
+  "Well done!",
+  "What first-rate work!",
+  "Wicked smaht!",
+  "Wonderful!",
+  "You aced it!",
+  "You rock!",
+  "You should be proud.",
+  ":)"
+)
+
+  # Encouragement messages
+.encourage <- c(
+  "Please try again.",
+  "Give it another try.",
+  "Let's try it again.",
+  "Try it again; next time's the charm!",
+  "Don't give up now, try it one more time.",
+  "But no need to fret, try it again.",
+  "Try it again. I have a good feeling about this.",
+  "Try it again. You get better each time.",
+  "Try it again. Perseverence is the key to success.",
+  "That's okay: you learn more from mistakes than successes. Let's do it one more time."
+)
+
+random_praise <- function() {
+  quiz_text(paste0("Correct! ", sample(.praise, 1)))
+}
+random_encouragement <- function() {
+  quiz_text(sample(.encourage, 1))
+}
