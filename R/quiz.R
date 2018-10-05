@@ -294,6 +294,7 @@ question_to_shiny <- function(question) {
 
   switch(question$type,
     single = radio_question_to_shiny(question),
+    multiple = checkbox_question_to_shiny(question),
     stop("shiny app not implemented!")
   )
 }
@@ -342,8 +343,7 @@ radio_question_to_shiny <- function(question) {
   # # returns
   # list(
   #   is_correct = LOGICAL,
-  #   message = CHARACTER,
-  #   selected = list(ANSWER, ANSWER, ...)
+  #   message = CHARACTER
   # )
   answer_input_is_correct <- function(answer_input, answers) {
     for (ans in answers) {
@@ -360,7 +360,7 @@ radio_question_to_shiny <- function(question) {
     return(list(is_correct = FALSE, message = NULL))
   }
 
-  final_answer_input <- function(answer_input_id, answers, selected_answers) {
+  final_answer_input <- function(answer_input_id, answer_input, answers) {
 
     choice_values <- lapply(answers, function(ans) {
       ans$random_id
@@ -383,7 +383,7 @@ radio_question_to_shiny <- function(question) {
       label = question$question,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
-      selected = selected_answers[[1]]$random_id
+      selected = answer_input
     )
   }
 
@@ -395,7 +395,7 @@ radio_question_to_shiny <- function(question) {
   }
 
   disable_css_selector <- function(answer_input_id) {
-    paste0(answer_input_id, " .radio")
+    paste0("#", answer_input_id, " .radio")
   }
 
   question_shiny_wrapper(
@@ -407,6 +407,128 @@ radio_question_to_shiny <- function(question) {
     disable_css_selector
   )
 }
+
+
+
+
+
+
+checkbox_question_to_shiny <- function(question) {
+
+  init_answer_input <- function(answer_input_id, answers) {
+    choice_names <- lapply(answers, function(ans) {
+      ans$label
+    })
+    choice_values <- lapply(answers, function(ans) {
+      ans$random_id
+    })
+
+    shiny::checkboxGroupInput(
+      answer_input_id,
+      label = question$question,
+      choiceNames = choice_names,
+      choiceValues = choice_values,
+      selected = FALSE
+    )
+  }
+
+  # # returns
+  # list(
+  #   is_correct = LOGICAL,
+  #   message = c(CHARACTER)
+  # )
+  answer_input_is_correct <- function(answer_input, answers) {
+    is_correct <- TRUE
+
+    correct_messages <- c()
+    incorrect_messages <- c()
+
+    for (ans in answers) {
+      ans_is_checked <- ans$random_id %in% answer_input
+      submission_is_correct <-
+        (ans_is_checked && ans$is_correct) ||
+        ((!ans_is_checked) && (!ans$is_correct))
+
+      if (submission_is_correct) {
+        # only append messages if the box was checked
+        if (ans_is_checked) {
+          correct_messages <- append(correct_messages, ans$message)
+        }
+      } else {
+        is_correct <- FALSE
+        incorrect_messages <- append(incorrect_messages, ans$message)
+      }
+    }
+
+    return(list(
+      is_correct = is_correct,
+      messages = if (is_correct) correct_messages else incorrect_messages
+    ))
+  }
+
+  final_answer_input <- function(answer_input_id, answer_input, answers) {
+
+    choice_values <- lapply(answers, function(ans) {
+      ans$random_id
+    })
+
+    # update select answers to have X or √
+    choice_names_final <- lapply(answers, function(ans) {
+      if (ans$is_correct) {
+        tag <- " &#10003; "
+        tagClass <- "correct"
+      } else {
+        tag <- " &#10007; "
+        tagClass <- "incorrect"
+      }
+      tags$span(ans$label, HTML(tag), class = tagClass)
+    })
+
+    shiny::checkboxGroupInput(
+      answer_input_id,
+      label = question$question,
+      choiceValues = choice_values,
+      choiceNames = choice_names_final,
+      selected = answer_input
+    )
+  }
+
+  assert_valid_answer_input <- function(answer_input) {
+    if (is.null(answer_input)) {
+      showNotification("Please select an answer before submitting", type = "error")
+      req(answer_input)
+    }
+  }
+
+  disable_css_selector <- function(answer_input_id) {
+    paste0("#", answer_input_id, " .checkbox")
+  }
+
+  question_shiny_wrapper(
+    question,
+    init_answer_input,
+    answer_input_is_correct,
+    final_answer_input,
+    assert_valid_answer_input,
+    disable_css_selector
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 question_shiny_wrapper <- function(question, init_answer_input, answer_input_is_correct, final_answer_input, assert_valid_answer_input, disable_css_selector) {
   # q_id <- random_question_id()
@@ -480,11 +602,11 @@ question_shiny_wrapper <- function(question, init_answer_input, answer_input_is_
 
         # present all messages
         is_done <- (!isTRUE(question$allow_retry)) || is_correct_info$is_correct
-        update_messages(output, question, is_correct_info$message, is_correct_info$is_correct, is_done)
+        update_messages(output, question, is_correct_info$messages, is_correct_info$is_correct, is_done)
         if (is_done) {
-          output[[answer_input_id]] <- renderUI({final_answer_input(answer_input_id, answers, is_correct_info$selected)})
+          output[[answer_input_id]] <- renderUI({final_answer_input(answer_input_id, input[[answer_input_id]], answers)})
         }
-        shinyjs::delay(1, {
+        shinyjs::delay(250, {
           shinyjs::disable(selector = disable_css_selector(answer_input_id))
         })
       })
