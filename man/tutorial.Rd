@@ -7,6 +7,7 @@
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
   fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
   dev = "png", df_print = "paged", smart = TRUE, theme = "rstudio",
+  highlight = "textmate", ace_theme = "textmate",
   mathjax = "default", extra_dependencies = NULL, css = NULL,
   includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
 }
@@ -50,6 +51,14 @@ ellipses.}
 \item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
 "simplex", or "yeti").}
+
+\item{highlight}{Syntax highlighting style. Supported styles include
+"default", "tango", "pygments", "kate", "monochrome",
+"espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
+to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.}
+
+\item{ace_theme}{Ace theme supplied to the ace code editor for all exercises.
+See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.}
 
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is
