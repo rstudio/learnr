@@ -273,10 +273,10 @@ quiz_html <- function(id, style, class, ...) {
 # }
 
 random_question_id <- function() {
-  random_id("question")
+  random_id("lnr_ques")
 }
 random_answer_id <- function() {
-  random_id("answer")
+  random_id("lnr_ans")
 }
 random_id <- function(txt) {
   paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
@@ -293,35 +293,17 @@ question_to_shiny <- function(question) {
     ans
   })
 
+  # TODO make into a s3 method
   switch(question$type,
     single = radio_question_to_shiny(question),
     multiple = checkbox_question_to_shiny(question),
     text = text_question_to_shiny(question),
+    # TODO-barret handle question type as s3 method
+    carson = carson_question_to_shiny(question),
     stop("shiny app not implemented!")
   )
 }
 
-
-# # TODO-shiny app to shiny module
-# # return a call to the module UI
-#
-# question_ui <- function(id, ..., extra_args) {
-#   ns <- NS(id)
-#
-#   tagList(
-#     ...
-#   )
-# }
-#
-# question_mod <- function(input, output, session) {
-#
-# }
-#
-# question_radio_to_shiny2 <- function(question) {
-#   q_id <- random_question_id()
-#   callModule(question_mod, q_id)
-#   question_ui(q_id)
-# }
 
 radio_question_to_shiny <- function(question) {
 
@@ -595,93 +577,149 @@ text_question_to_shiny <- function(question) {
 
 
 
+# # TODO-shiny app to shiny module
+# # return a call to the module UI
+#
+# question_ui <- function(id, ..., extra_args) {
+#   ns <- NS(id)
+#
+#   tagList(
+#     ...
+#   )
+# }
+#
+# question_mod <- function(input, output, session) {
+#
+# }
+#
+# question_radio_to_shiny2 <- function(question) {
+#   q_id <- random_question_id()
+#   callModule(question_mod, q_id)
+#   question_ui(q_id)
+# }
 
 
 
 
-
-question_shiny_wrapper <- function(question, init_answer_input, answer_input_is_correct, final_answer_input, assert_valid_answer_input, disable_css_selector) {
-  # q_id <- random_question_id()
-  # q_select <- paste0(q_id, "-select")
-  # q_action <- paste0(q_id, "-action")
+question_shiny_wrapper <- function(
+  question,
+  init_answer_input,
+  answer_input_is_correct,
+  final_answer_input,
+  assert_valid_answer_input,
+  disable_css_selector
+) {
 
   answer_input_id <- "answer_input"
 
-  shiny::shinyApp(
-    ui = shiny::fluidPage(
-      shiny::includeCSS("inst/htmlwidgets/lib/slickquiz/css/slickQuiz.css"),
-      shiny::includeCSS("inst/htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css"),
-      shinyjs::useShinyjs(),  # Set up shinyjs
-      shiny::uiOutput(answer_input_id),
-      shiny::uiOutput("message"),
-      shinyjs::disabled(
-        shiny::actionButton("action", "loading...")
-      )
-    ),
-    server = function(input, output, session) {
-
-      answers <- question$answers
-
-      button_label_type <- "submit"
-      update_button_label_ <- function(label_type) {
-        button_label_type <<- update_button_label(session, question, label_type)
-      }
-
-      init_question_ <- function() {
-        if (question$random_answer_order) {
-          answers <<- shuffle(answers)
-        }
-        output[[answer_input_id]] <- renderUI({init_answer_input(answer_input_id, answers)})
-
-        output$message <- NULL
-        update_button_label_("submit")
-      }
-      init_question_()
-
-      # when a value changes, enable the action button
-      observeEvent(input[[answer_input_id]], {
-        shinyjs::enable("action")
-      })
-
-      observeEvent(input$action, {
-        # TODO add logging of answer / correct / user / question
-        # SEE question_submission_event
-
-        if (button_label_type == "try_again") {
-          init_question_()
-          return()
-        }
-
-        assert_valid_answer_input(input[[answer_input_id]])
-
-        is_correct_info <- answer_input_is_correct(input[[answer_input_id]], answers)
-
-        # update the submit button label
-        if (is_correct_info$is_correct) {
-          update_button_label_("correct")
-        } else {
-          # not correct
-          if (isTRUE(question$allow_retry)) {
-            # not correct, but may try again
-            update_button_label_("try_again")
-          } else {
-            # not correct and can not try again
-            update_button_label_("incorrect")
-          }
-        }
-
-        # present all messages
-        is_done <- (!isTRUE(question$allow_retry)) || is_correct_info$is_correct
-        update_messages(output, question, is_correct_info$messages, is_correct_info$is_correct, is_done)
-        if (is_done) {
-          output[[answer_input_id]] <- renderUI({final_answer_input(answer_input_id, input[[answer_input_id]], answers)})
-        }
-        shinyjs::delay(250, {
-          shinyjs::disable(selector = disable_css_selector(answer_input_id))
-        })
-      })
-    }
+  id <- random_question_id()
+  ui <- question_module_ui(id, answer_input_id)
+  # knitr::set_chunkattr(echo = FALSE)
+  # rmarkdown::shiny_prerendered_chunk('server', sprintf('radio_question_to_shiny(\'IDIDID\', dput(question))'))
+  
+  callModule(
+    question_module_server,
+    id,
+    question = question,
+    init_answer_input = init_answer_input,
+    answer_input_is_correct = answer_input_is_correct,
+    final_answer_input = final_answer_input,
+    assert_valid_answer_input = assert_valid_answer_input,
+    disable_css_selector = disable_css_selector,
+    answer_input_id = answer_input_id
   )
+  ui
+}
+
+question_module_ui <- function(id, answer_input_id) {
+  ns <- NS(id)
+  tagList(
+    shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuiz.css", package = "learnr")),
+    shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css", package = "learnr")),
+    shinyjs::useShinyjs(),  # Set up shinyjs
+    shiny::uiOutput(ns(answer_input_id)),
+    shiny::uiOutput(ns("message")),
+    shinyjs::disabled(
+      shiny::actionButton(ns("action"), "loading...")
+    )
+  )
+}
+
+question_module_server <- function(
+  input, output, session,
+  question,
+  init_answer_input,
+  answer_input_is_correct,
+  final_answer_input,
+  assert_valid_answer_input,
+  disable_css_selector,
+  answer_input_id
+) {
+
+  # Functions that end in "_" are functions that are
+  #   locally defined functions that wrap input functions with the same name
+  #   and take minimal arguments
+
+  answers <- question$answers
+
+  button_label_type <- "submit"
+  update_button_label_ <- function(label_type) {
+    button_label_type <<- update_button_label(session, question, label_type)
+  }
+
+  init_question_ <- function() {
+    if (question$random_answer_order) {
+      answers <<- shuffle(answers)
+    }
+    output[[answer_input_id]] <- renderUI({init_answer_input(answer_input_id, answers)})
+
+    output$message <- NULL
+    update_button_label_("submit")
+  }
+  init_question_()
+
+  # when a value changes, enable the action button
+  observeEvent(input[[answer_input_id]], {
+    shinyjs::enable("action")
+  })
+
+  observeEvent(input$action, {
+    # TODO add logging of answer / correct / user / question
+    # SEE question_submission_event
+
+    if (button_label_type == "try_again") {
+      init_question_()
+      return()
+    }
+
+    assert_valid_answer_input(input[[answer_input_id]])
+
+    is_correct_info <- answer_input_is_correct(input[[answer_input_id]], answers)
+
+    # update the submit button label
+    if (is_correct_info$is_correct) {
+      update_button_label_("correct")
+    } else {
+      # not correct
+      if (isTRUE(question$allow_retry)) {
+        # not correct, but may try again
+        update_button_label_("try_again")
+      } else {
+        # not correct and can not try again
+        update_button_label_("incorrect")
+      }
+    }
+
+    # present all messages
+    is_done <- (!isTRUE(question$allow_retry)) || is_correct_info$is_correct
+    update_messages(output, question, is_correct_info$messages, is_correct_info$is_correct, is_done)
+    if (is_done) {
+      output[[answer_input_id]] <- renderUI({final_answer_input(answer_input_id, input[[answer_input_id]], answers)})
+    }
+    shinyjs::delay(250, {
+      shinyjs::disable(selector = disable_css_selector(answer_input_id))
+    })
+  })
 }
 
 
