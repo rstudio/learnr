@@ -1,4 +1,5 @@
 # TODO - make messages functions
+# TODO-barret remove shinyjs
 
 
 
@@ -67,7 +68,7 @@ quiz <- function(..., caption = "Quiz") {
 #' @export
 question <- function(text,
                      ...,
-                     type = c("auto", "single", "multiple", "text"),
+                     type = c("auto", "single", "multiple", "radio", "checkbox", "text"),
                      correct_message = random_praise(),
                      try_again_message = random_encouragement(),
                      incorrect_message = "Incorrect",
@@ -92,19 +93,13 @@ question <- function(text,
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  # # create question
-  # question <- list(
-  #   q = quiz_text(text),
-  #   a = answers,
-  #   correct = quiz_text(correct),
-  #   incorrect = quiz_text(incorrect),
-  # )
-  type <- match.arg(type)
-
   total_correct <- sum(vapply(answers, function(ans) { ans$is_correct }, logical(1)))
   if (total_correct == 0) {
     stop("At least one correct answer must be supplied")
   }
+    
+  ## no partial matching for s3 methods
+  # type <- match.arg(type)
   if (type == "auto") {
     if (total_correct > 1) {
       type <- "multiple"
@@ -112,89 +107,111 @@ question <- function(text,
       type <- "single"
     }
   }
+  type <- switch(type, 
+    "single" = "radio",
+    "multiple" = "checkbox",
+    # allows for s3 methods
+    type
+  )
+  
+  q_id <- random_question_id()
+  ns <- NS(q_id)
 
-  return(list(
-    label = knitr::opts_current$get('label'),
-    question = quiz_text(text),
-    answers = answers,
-    button_labels = list(
-      correct = "Correct!",
-      incorrect = "Incorrect",
-      submit = quiz_text(submit_button),
-      try_again = quiz_text(try_again_button)
-    ),
-    messages = list(
-      correct = quiz_text(correct_message),
-      try_again = quiz_text(try_again_message),
-      incorrect = quiz_text(incorrect_message),
-      post_message = quiz_text(post_message)
-    ),
-    type = type,
-    random_answer_order = random_answer_order,
-    allow_retry = allow_retry
-  ))
-
-  # if (type == "single")
-  #   question$select_any <- TRUE
-  # if (type == "multiple")
-  #   question$force_checkbox <- TRUE
-
-  # # save all state/options into "x"
-  # x <- list()
-  # x$question <- quiz_text(text)
-  # x$answers <- answers
-  # x$label <- knitr::opts_current$get('label')
-  # x$skipStartButton <- TRUE # no start
-  # x$perQuestionResponseAnswers <- TRUE
-  # x$perQuestionResponseMessaging <- TRUE
-  # x$preventUnanswered <- TRUE
-  # x$displayQuestionCount <- FALSE
-  # x$displayQuestionNumber <- FALSE
-  # x$disableRanking <- TRUE
-  # x$nextQuestionText <- ""
-  # x$checkAnswerText <- "Submit Answer"
-  # x$allowRetry <- allow_retry
-  # x$randomSortAnswers = random_answer_order
-  # x$json <- list(
-  #   info = list(
-  #     name = "",
-  #     main = ""
-  #   ),
-  #   questions = list(question)
-  # )
-
-  # define dependencies
-  dependencies <- list(
-    rmarkdown::html_dependency_jquery(),
-    rmarkdown::html_dependency_bootstrap(theme = "default"),
-    bootbox_html_dependency(),
-    localforage_html_dependency(),
-    tutorial_html_dependency(),
-    tutorial_autocompletion_html_dependency(),
-    tutorial_diagnostics_html_dependency(),
-    htmltools::htmlDependency(
-      name = "slickquiz",
-      version = "1.5.20",
-      src = html_dependency_src("htmlwidgets", "lib", "slickquiz"),
-      script = "js/slickQuiz.js",
-      stylesheet = c("css/slickQuiz.css", "css/slickQuizTutorial.css")
+  return(
+    structure(
+      class = c(type, "question"),
+      list(
+        type = type,
+        label = knitr::opts_current$get('label'),
+        question = quiz_text(text),
+        answers = answers,
+        button_labels = list(
+          correct = "Correct!",
+          incorrect = "Incorrect",
+          submit = quiz_text(submit_button),
+          try_again = quiz_text(try_again_button)
+        ),
+        messages = list(
+          correct = quiz_text(correct_message),
+          try_again = quiz_text(try_again_message),
+          incorrect = quiz_text(incorrect_message),
+          post_message = quiz_text(post_message)
+        ),
+        ids = list(
+          action_button = ns("action_button"),
+          answer = ns("answer"),
+          question = q_id,
+          answer_container = ns("answer_container"),
+          action_button_container = ns("action_button_container"),
+          message_container = ns("message_container")
+        ),
+        random_answer_order = random_answer_order,
+        allow_retry = allow_retry
+      )
     )
   )
 
-  # create widget
-  htmlwidgets::createWidget(
-    name = 'quiz',
-    x = x,
-    width = "100%",
-    height = "auto",
-    dependencies = dependencies,
-    sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE,
-                                             knitr.defaultWidth = "100%",
-                                             knitr.defaultHeight = "auto",
-                                             viewer.defaultWidth = "100%",
-                                             viewer.defaultHeight = "auto"),
-    package = 'learnr'
-  )
+  # # if (type == "single")
+  # #   question$select_any <- TRUE
+  # # if (type == "multiple")
+  # #   question$force_checkbox <- TRUE
+  # 
+  # # # save all state/options into "x"
+  # # x <- list()
+  # # x$question <- quiz_text(text)
+  # # x$answers <- answers
+  # # x$label <- knitr::opts_current$get('label')
+  # # x$skipStartButton <- TRUE # no start
+  # # x$perQuestionResponseAnswers <- TRUE
+  # # x$perQuestionResponseMessaging <- TRUE
+  # # x$preventUnanswered <- TRUE
+  # # x$displayQuestionCount <- FALSE
+  # # x$displayQuestionNumber <- FALSE
+  # # x$disableRanking <- TRUE
+  # # x$nextQuestionText <- ""
+  # # x$checkAnswerText <- "Submit Answer"
+  # # x$allowRetry <- allow_retry
+  # # x$randomSortAnswers = random_answer_order
+  # # x$json <- list(
+  # #   info = list(
+  # #     name = "",
+  # #     main = ""
+  # #   ),
+  # #   questions = list(question)
+  # # )
+  # 
+  # # define dependencies
+  # dependencies <- list(
+  #   rmarkdown::html_dependency_jquery(),
+  #   rmarkdown::html_dependency_bootstrap(theme = "default"),
+  #   bootbox_html_dependency(),
+  #   localforage_html_dependency(),
+  #   tutorial_html_dependency(),
+  #   tutorial_autocompletion_html_dependency(),
+  #   tutorial_diagnostics_html_dependency(),
+  #   htmltools::htmlDependency(
+  #     name = "slickquiz",
+  #     version = "1.5.20",
+  #     src = html_dependency_src("htmlwidgets", "lib", "slickquiz"),
+  #     script = "js/slickQuiz.js",
+  #     stylesheet = c("css/slickQuiz.css", "css/slickQuizTutorial.css")
+  #   )
+  # )
+  # 
+  # # create widget
+  # htmlwidgets::createWidget(
+  #   name = 'quiz',
+  #   x = x,
+  #   width = "100%",
+  #   height = "auto",
+  #   dependencies = dependencies,
+  #   sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE,
+  #                                            knitr.defaultWidth = "100%",
+  #                                            knitr.defaultHeight = "auto",
+  #                                            viewer.defaultWidth = "100%",
+  #                                            viewer.defaultHeight = "auto"),
+  #   package = 'learnr'
+  # )
 
 }
 
@@ -205,6 +222,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
     stop("Non-string `text` values are not allowed as an answer")
   }
   structure(class = "tutorial_quiz_answer", list(
+    id = random_answer_id(),
     option = text,
     label = quiz_text(text),
     is_correct = isTRUE(correct),
@@ -288,108 +306,147 @@ shuffle <- function(x) {
 
 question_to_shiny <- function(question) {
 
-  question$answers <- lapply(question$answers, function(ans) {
-    ans$random_id <- random_answer_id()
-    ans
+  ui <- question_module_ui(question$ids$question)
+  
+  # knitr::set_chunkattr(echo = FALSE)
+  rmarkdown::shiny_prerendered_chunk(
+    'server',
+    sprintf(
+      'learnr:::question_prerendered_chunk(%s)',
+      dput_to_string(question)
+    )
+  )
+  
+  ui
+}
+
+
+
+
+# question_methods <- function(question, ids, ...) {
+#   # class(question) <- c(question$type, class(question))
+#   dispatch <- "tmp_obj"
+#   class(dispatch) <- question$type
+#   UseMethod("question_methods", dispatch)
+# }
+# question_methods.default <- function(question, ids, ...) {
+#   stop("`question_methods.", question$type, "(question, ids, ...)` has not been implemented")
+# }
+
+
+
+# returns shinyUI component
+question_initialize_input <- function(question, ...) {
+  UseMethod("question_initialize_input", question)
+}
+question_completed_input <- function(question, ...) {
+  UseMethod("question_completed_input", question)
+}
+question_is_valid <- function(question, answer_input, ...) {
+  UseMethod("question_is_valid", question)
+}
+# # uses req() to determine if results are ok
+# # returns
+# list(
+#   is_correct = LOGICAL,
+#   message = CHARACTER,
+#   selected = LIST(ANSWER)
+# )
+question_is_correct <- function(question, answer_input, ...) {
+  UseMethod("question_is_correct", question)
+}
+# css selector of elements to disable
+question_disable_selector <- function(question, ...) {
+  UseMethod("question_disable_selector", question)
+}
+
+
+question_stop <- function(name, question) {
+  stop(
+    "`", name, ".", class(question[1]), "(question, ...)` has not been implemented", 
+    .call = FALSE
+  )
+}
+question_initialize_input.default <- function(question, ...) {
+  question_stop("question_initialize_input", question)
+}
+question_completed_input.default <- function(question, ...) {
+  question_stop("question_completed_input", question)
+}
+question_is_valid.default <- function(question, answer_input, ...) {
+  question_stop("question_is_valid", question)
+}
+question_is_correct.default <- function(question, answer_input, ...) {
+  question_stop("question_is_correct", question)
+}
+question_disable_selector.default <- function(question, ...) {
+  question_stop("question_disable_selector", question)
+}
+
+
+question_initialize_input.radio <- function(question, ...) {
+  choice_names <- lapply(question$answers, `[[`, "label")
+  choice_values <- lapply(question$answers, `[[`, "id")
+
+  shiny::radioButtons(
+    question$ids$answer,
+    label = question$question,
+    choiceNames = choice_names,
+    choiceValues = choice_values,
+    selected = FALSE
+  )
+}
+
+
+question_is_valid.radio <- function(question, answer_input, notify, ...) {
+  !is.null(answer_input)
+}
+
+question_is_correct.radio <- function(question, answer_input, ...) {
+  if (is.null(answer_input)) {
+    showNotification("Please select an answer before submitting", type = "error")
+    req(answer_input)
+  }
+  for (ans in question$answers) {
+    if (ans$id == answer_input) {
+      return(list(
+        is_correct = ans$is_correct,
+        messages = ans$message,
+        selected = list(
+          ans
+        )
+      ))
+    }
+  }
+  return(list(is_correct = FALSE, messages = NULL, selected = list()))
+}
+
+question_completed_input.radio <- function(question, answer_input, ...) {
+  choice_values <- lapply(question$answers, `[[`, "id")
+
+  # update select answers to have X or √
+  choice_names_final <- lapply(question$answers, function(ans) {
+    if (ans$is_correct) {
+      tag <- " &#10003; "
+      tagClass <- "correct"
+    } else {
+      tag <- " &#10007; "
+      tagClass <- "incorrect"
+    }
+    tags$span(ans$label, HTML(tag), class = tagClass)
   })
 
-  # TODO make into a s3 method
-  switch(question$type,
-    single = radio_question_to_shiny(question),
-    multiple = checkbox_question_to_shiny(question),
-    text = text_question_to_shiny(question),
-    # TODO-barret handle question type as s3 method
-    carson = carson_question_to_shiny(question),
-    stop("shiny app not implemented!")
+  shiny::radioButtons(
+    question$ids$answer,
+    label = question$question,
+    choiceValues = choice_values,
+    choiceNames = choice_names_final,
+    selected = answer_input
   )
 }
 
-
-radio_question_to_shiny <- function(question) {
-
-  init_answer_input <- function(answer_input_id, answers) {
-    choice_names <- lapply(answers, function(ans) {
-      ans$label
-    })
-    choice_values <- lapply(answers, function(ans) {
-      ans$random_id
-    })
-
-    shiny::radioButtons(
-      answer_input_id,
-      label = question$question,
-      choiceNames = choice_names,
-      choiceValues = choice_values,
-      selected = FALSE
-    )
-  }
-
-  # # returns
-  # list(
-  #   is_correct = LOGICAL,
-  #   message = CHARACTER
-  # )
-  answer_input_is_correct <- function(answer_input, answers) {
-    for (ans in answers) {
-      if (ans$random_id == answer_input) {
-        return(list(
-          is_correct = ans$is_correct,
-          messages = ans$message,
-          selected = list(
-            ans
-          )
-        ))
-      }
-    }
-    return(list(is_correct = FALSE, messages = NULL))
-  }
-
-  final_answer_input <- function(answer_input_id, answer_input, answers) {
-
-    choice_values <- lapply(answers, function(ans) {
-      ans$random_id
-    })
-
-    # update select answers to have X or √
-    choice_names_final <- lapply(answers, function(ans) {
-      if (ans$is_correct) {
-        tag <- " &#10003; "
-        tagClass <- "correct"
-      } else {
-        tag <- " &#10007; "
-        tagClass <- "incorrect"
-      }
-      tags$span(ans$label, HTML(tag), class = tagClass)
-    })
-
-    shiny::radioButtons(
-      answer_input_id,
-      label = question$question,
-      choiceValues = choice_values,
-      choiceNames = choice_names_final,
-      selected = answer_input
-    )
-  }
-
-  assert_valid_answer_input <- function(answer_input) {
-    if (is.null(answer_input)) {
-      showNotification("Please select an answer before submitting", type = "error")
-      req(answer_input)
-    }
-  }
-
-  disable_css_selector <- function(answer_input_id) {
-    paste0("#", answer_input_id, " .radio")
-  }
-
-  question_shiny_wrapper(
-    question,
-    init_answer_input,
-    answer_input_is_correct,
-    final_answer_input,
-    assert_valid_answer_input,
-    disable_css_selector
-  )
+disable_selector <- function(question, ...) {
+  paste0("#", question$ids$answer, " .radio")
 }
 
 
@@ -397,18 +454,18 @@ radio_question_to_shiny <- function(question) {
 
 
 
-checkbox_question_to_shiny <- function(question) {
+question_methods.checkbox <- function(question, ids, ...) {
 
-  init_answer_input <- function(answer_input_id, answers) {
+  initialize_input <- function(answers) {
     choice_names <- lapply(answers, function(ans) {
       ans$label
     })
     choice_values <- lapply(answers, function(ans) {
-      ans$random_id
+      ans$id
     })
 
     shiny::checkboxGroupInput(
-      answer_input_id,
+      ids$answer,
       label = question$question,
       choiceNames = choice_names,
       choiceValues = choice_values,
@@ -421,14 +478,14 @@ checkbox_question_to_shiny <- function(question) {
   #   is_correct = LOGICAL,
   #   message = c(CHARACTER)
   # )
-  answer_input_is_correct <- function(answer_input, answers) {
+  is_correct <- function(answer_input, answers) {
     is_correct <- TRUE
 
     correct_messages <- c()
     incorrect_messages <- c()
 
     for (ans in answers) {
-      ans_is_checked <- ans$random_id %in% answer_input
+      ans_is_checked <- ans$id %in% answer_input
       submission_is_correct <-
         (ans_is_checked && ans$is_correct) ||
         ((!ans_is_checked) && (!ans$is_correct))
@@ -450,11 +507,9 @@ checkbox_question_to_shiny <- function(question) {
     ))
   }
 
-  final_answer_input <- function(answer_input_id, answer_input, answers) {
+  completed_input <- function(answer_input, answers) {
 
-    choice_values <- lapply(answers, function(ans) {
-      ans$random_id
-    })
+    choice_values <- lapply(answers, `[[`, "id")
 
     # update select answers to have X or √
     choice_names_final <- lapply(answers, function(ans) {
@@ -469,7 +524,7 @@ checkbox_question_to_shiny <- function(question) {
     })
 
     shiny::checkboxGroupInput(
-      answer_input_id,
+      ids$answer,
       label = question$question,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
@@ -477,35 +532,35 @@ checkbox_question_to_shiny <- function(question) {
     )
   }
 
-  assert_valid_answer_input <- function(answer_input) {
+  is_valid <- function(answer_input) {
     if (is.null(answer_input)) {
       showNotification("Please select an answer before submitting", type = "error")
       req(answer_input)
     }
   }
 
-  disable_css_selector <- function(answer_input_id) {
-    paste0("#", answer_input_id, " .checkbox")
+  disable_selector <- function() {
+    paste0("#", ids$answer, " .checkbox")
   }
 
-  question_shiny_wrapper(
-    question,
-    init_answer_input,
-    answer_input_is_correct,
-    final_answer_input,
-    assert_valid_answer_input,
-    disable_css_selector
+  list(
+    initialize_input = initialize_input,
+    is_correct = is_correct,
+    completed_input = completed_input,
+    is_valid = is_valid,
+    disable_selector = disable_selector
   )
 }
 
 
 
 
-text_question_to_shiny <- function(question) {
-
-  init_answer_input <- function(answer_input_id, answers) {
+question_methods.text <- function(question, ids, ...) {
+  ns <- shiny::NS(ids$question)
+  
+  initialize_input <- function(answers) {
     shiny::textInput(
-      answer_input_id,
+      ids$answer,
       label = question$question,
       placeholder = "Enter answer here..."
     )
@@ -516,7 +571,7 @@ text_question_to_shiny <- function(question) {
   #   is_correct = LOGICAL,
   #   message = c(CHARACTER)
   # )
-  answer_input_is_correct <- function(answer_input, answers) {
+  is_correct <- function(answer_input, answers) {
 
     trim <- function(x) {
       x %>%
@@ -538,41 +593,33 @@ text_question_to_shiny <- function(question) {
     return(list(is_correct = FALSE, messages = NULL))
   }
 
-  final_answer_input <- function(answer_input_id, answer_input, answers) {
+  completed_input <- function(answer_input, answers) {
     shiny::textInput(
-      answer_input_id,
+      ids$answer,
       label = question$question,
       value = answer_input
     )
   }
 
-  assert_valid_answer_input <- function(answer_input) {
+  is_valid <- function(answer_input) {
     if (is.null(answer_input) || nchar(answer_input) == 0) {
-      showNotification("Please select an answer before submitting", type = "error")
+      showNotification("Please enter some text before submitting", type = "error")
       req(answer_input)
     }
   }
 
-  disable_css_selector <- function(answer_input_id) {
-    paste0("#", answer_input_id)
+  disable_selector <- function() {
+    paste0("#", ids$answer)
   }
-
-  question_shiny_wrapper(
-    question,
-    init_answer_input,
-    answer_input_is_correct,
-    final_answer_input,
-    assert_valid_answer_input,
-    disable_css_selector
+  
+  list(
+    initialize_input = initialize_input,
+    is_correct = is_correct,
+    completed_input = completed_input,
+    is_valid = is_valid,
+    disable_selector = disable_selector
   )
 }
-
-
-
-
-
-
-
 
 
 
@@ -599,175 +646,154 @@ text_question_to_shiny <- function(question) {
 # }
 
 
-
-
-question_shiny_wrapper <- function(
-  question,
-  init_answer_input,
-  answer_input_is_correct,
-  final_answer_input,
-  assert_valid_answer_input,
-  disable_css_selector
-) {
-
-  answer_input_id <- "answer_input"
-
-  id <- random_question_id()
-  ui <- question_module_ui(id, answer_input_id)
-  # knitr::set_chunkattr(echo = FALSE)
-  # rmarkdown::shiny_prerendered_chunk('server', sprintf('radio_question_to_shiny(\'IDIDID\', dput(question))'))
-  
+question_prerendered_chunk <- function(question, ...) {
   callModule(
     question_module_server,
-    id,
-    question = question,
-    init_answer_input = init_answer_input,
-    answer_input_is_correct = answer_input_is_correct,
-    final_answer_input = final_answer_input,
-    assert_valid_answer_input = assert_valid_answer_input,
-    disable_css_selector = disable_css_selector,
-    answer_input_id = answer_input_id
+    question$ids$question,
+    question = question
   )
-  ui
+  invisible(TRUE)
 }
 
-question_module_ui <- function(id, answer_input_id) {
+
+
+question_module_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    # TODO as html dependency
     shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuiz.css", package = "learnr")),
     shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css", package = "learnr")),
-    shinyjs::useShinyjs(),  # Set up shinyjs
-    shiny::uiOutput(ns(answer_input_id)),
-    shiny::uiOutput(ns("message")),
-    shinyjs::disabled(
-      shiny::actionButton(ns("action"), "loading...")
-    )
+    # shiny::uiOutput(ns("shinyjs_container")),  # Set up shinyjs
+    # shiny::textInput(ns("barret"), "barret", "barret", 50),
+    shiny::uiOutput(ns("answer_container")),
+    shiny::uiOutput(ns("message_container")),
+    shiny::uiOutput(ns("action_button_container"))
   )
 }
 
 question_module_server <- function(
   input, output, session,
-  question,
-  init_answer_input,
-  answer_input_is_correct,
-  final_answer_input,
-  assert_valid_answer_input,
-  disable_css_selector,
-  answer_input_id
+  question
 ) {
-
+  
+  ns <- getDefaultReactiveDomain()$ns
+  
   # Functions that end in "_" are functions that are
   #   locally defined functions that wrap input functions with the same name
   #   and take minimal arguments
 
-  answers <- question$answers
-
-  button_label_type <- "submit"
-  update_button_label_ <- function(label_type) {
-    button_label_type <<- update_button_label(session, question, label_type)
-  }
-
-  init_question_ <- function() {
-    if (question$random_answer_order) {
-      answers <<- shuffle(answers)
-    }
-    output[[answer_input_id]] <- renderUI({init_answer_input(answer_input_id, answers)})
-
-    output$message <- NULL
-    update_button_label_("submit")
-  }
-  init_question_()
-
-  # when a value changes, enable the action button
-  observeEvent(input[[answer_input_id]], {
-    shinyjs::enable("action")
+  button_type <- reactiveVal("submit", label = "button type")
+  output$action_button_container <- renderUI({
+    question_button_label(
+      question,
+      button_type(), 
+      question_is_valid(question, input$answer)
+    )
   })
+  
+  answer_container <- reactiveVal(NULL, label = "answer container")
+  output$answer_container <- renderUI({
+    answer_container()
+  })
+  
+  message_container_info <- reactiveVal(NULL, label = "message container info")
+  output$message_container <- renderUI({
+    question_messages(question, req(message_container_info()))
+  })
+  
 
-  observeEvent(input$action, {
-    # TODO add logging of answer / correct / user / question
+  init_question <- function() {
+    if (question$random_answer_order) {
+      question$answers <<- shuffle(question$answers)
+    }
+    
+    answer_container(question_initialize_input(question))
+    message_container_info(NULL)
+    button_type("submit")
+  }
+  init_question()
+  
+  observeEvent(input$action_button, {
+    # TODO-barret add logging of answer / correct / user / question
     # SEE question_submission_event
 
-    if (button_label_type == "try_again") {
-      init_question_()
+    if (button_type() == "try_again") {
+      init_question()
       return()
     }
-
-    assert_valid_answer_input(input[[answer_input_id]])
-
-    is_correct_info <- answer_input_is_correct(input[[answer_input_id]], answers)
+    
+    # must be submit button
+    is_correct_info <- question_is_correct(question, input$answer)
 
     # update the submit button label
     if (is_correct_info$is_correct) {
-      update_button_label_("correct")
+      button_type("correct")
     } else {
       # not correct
       if (isTRUE(question$allow_retry)) {
         # not correct, but may try again
-        update_button_label_("try_again")
+        button_type("try_again")
       } else {
         # not correct and can not try again
-        update_button_label_("incorrect")
+        button_type("incorrect")
       }
     }
 
     # present all messages
     is_done <- (!isTRUE(question$allow_retry)) || is_correct_info$is_correct
-    update_messages(output, question, is_correct_info$messages, is_correct_info$is_correct, is_done)
+    message_container_info(list(
+      messages = is_correct_info$messages, 
+      is_correct = is_correct_info$is_correct, 
+      is_done = is_done
+    ))
     if (is_done) {
-      output[[answer_input_id]] <- renderUI({final_answer_input(answer_input_id, input[[answer_input_id]], answers)})
+      answer_container(question_completed_input(question, input$answer))
     }
-    shinyjs::delay(250, {
-      shinyjs::disable(selector = disable_css_selector(answer_input_id))
-    })
+    # TODO-barret disable the buttons and output
+    # shinyjs::delay(1, {
+    #   # namespace the selector to the answer module so someone can not disable other parts of the tutorial
+    #   selector = paste0("#", ns("answer_container"), " ", question_disable_selector(question))
+    #   # shinyjs::disable(selector = selector, asis = TRUE)
+    #   # b/c there is no 'asis' param
+    #   session$sendCustomMessage(type = "shinyjs-disable", message = list(selector = question_disable_selector(question)))
+    # })
+    cat("done with finalize!\n")
   })
+    
 }
 
 
-update_button_label <- function(session, question, label_type = "submit") {
-  valid_button_types <- list(submit = "submit", try_again = "try_again", correct = "correct", incorrect = "incorrect")
-  label_type <- match.arg(label_type, unlist(unname(valid_button_types)))
+# TODO-barret make reactive button layout
+question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
+  label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
   button_label <- question$button_labels[[label_type]]
-  updateActionButton(session, "action", label = button_label)
-
+  is_valid <- isTRUE(is_valid)
+  
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
-
-  if (label_type == valid_button_types$submit) {
-    shinyjs::delay(1, {
-      shinyjs::removeClass("action", warning_class)
-      shinyjs::addClass("action", default_class)
-      shinyjs::disable("action")
-    })
-  } else if (label_type == valid_button_types$try_again) {
-    shinyjs::delay(1, {
-      shinyjs::removeClass("action", default_class)
-      shinyjs::addClass("action", warning_class)
-      shinyjs::enable("action")
-    })
-  } else if (label_type == valid_button_types$correct) {
-    shinyjs::delay(1, {
-      shinyjs::removeClass("action", default_class)
-      shinyjs::removeClass("action", warning_class)
-      shinyjs::addClass("action", "btn-success")
-      shinyjs::addClass("action", "hidden")
-      shinyjs::disable("action")
-    })
-  } else if (label_type == valid_button_types$incorrect) {
-    shinyjs::delay(1, {
-      shinyjs::removeClass("action", default_class)
-      shinyjs::removeClass("action", warning_class)
-      shinyjs::addClass("action", "btn-danger")
-      shinyjs::addClass("action", "hidden")
-      shinyjs::disable("action")
-    })
+    
+  if (label_type == "submit") {
+    shiny::actionButton(question$ids$action_button, button_label, class = default_class)
+    # TODO-barret use is_valid to show if disabled or not
+  } else if (label_type == "try_again") {
+    shiny::actionButton(question$ids$action_button, button_label, class = warning_class)
+    # TODO-barret update css to work with btn-default
+    # shinyjs::delay(1, {
+    #   # make it show up orange
+    #   shinyjs::removeClass("action_button", "btn-default")
+    # })
+  } else if (
+    label_type == "correct" || 
+    label_type == "incorrect"
+  ) {
+    NULL
   }
-
-  return(label_type)
 }
 
-
-# update message area below input / above submit button
-update_messages <- function(output, question, messages, is_correct, is_done) {
+question_messages <- function(question, message_info) {
+  messages <- message_info$messages
+  is_correct <- message_info$is_correct
+  is_done <- message_info$is_done
 
   # Always display the incorrect, correct, or try again messages
   default_message <-
@@ -816,9 +842,9 @@ update_messages <- function(output, question, messages, is_correct, is_done) {
 
   # set UI message
   if (is.null(message_alert) && is.null(post_alert)) {
-    output$message <- NULL
+    NULL
   } else {
-    output$message <- renderUI(tags$div(message_alert, post_alert))
+    tags$div(message_alert, post_alert)
   }
 }
 
@@ -898,3 +924,20 @@ random_praise <- function() {
 random_encouragement <- function() {
   quiz_text(sample(.encourage, 1))
 }
+
+
+
+
+# 
+# buttons <- shiny::radioButtons("123", "Barret", c("A", "B", "C"))
+# 
+# 
+# 
+# mutate_tags <- function() {
+# 
+# }
+# 
+# mutate_tags_recursive <- function() {
+# 
+# }
+# 
