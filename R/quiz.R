@@ -349,8 +349,7 @@ question_is_valid <- function(question, answer_input, ...) {
 # # returns
 # list(
 #   is_correct = LOGICAL,
-#   message = CHARACTER,
-#   selected = LIST(ANSWER)
+#   message = CHARACTER
 # )
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
@@ -384,6 +383,11 @@ question_disable_selector.default <- function(question, ...) {
 }
 
 
+
+
+
+
+
 question_initialize_input.radio <- function(question, ...) {
   choice_names <- lapply(question$answers, `[[`, "label")
   choice_values <- lapply(question$answers, `[[`, "id")
@@ -397,8 +401,7 @@ question_initialize_input.radio <- function(question, ...) {
   )
 }
 
-
-question_is_valid.radio <- function(question, answer_input, notify, ...) {
+question_is_valid.radio <- function(question, answer_input, ...) {
   !is.null(answer_input)
 }
 
@@ -411,14 +414,11 @@ question_is_correct.radio <- function(question, answer_input, ...) {
     if (ans$id == answer_input) {
       return(list(
         is_correct = ans$is_correct,
-        messages = ans$message,
-        selected = list(
-          ans
-        )
+        messages = ans$message
       ))
     }
   }
-  return(list(is_correct = FALSE, messages = NULL, selected = list()))
+  return(list(is_correct = FALSE, messages = NULL))
 }
 
 question_completed_input.radio <- function(question, answer_input, ...) {
@@ -445,7 +445,7 @@ question_completed_input.radio <- function(question, answer_input, ...) {
   )
 }
 
-disable_selector <- function(question, ...) {
+question_disable_selector.radio <- function(question, ...) {
   paste0("#", question$ids$answer, " .radio")
 }
 
@@ -454,196 +454,167 @@ disable_selector <- function(question, ...) {
 
 
 
-question_methods.checkbox <- function(question, ids, ...) {
+question_initialize_input.checkbox <- function(question, ...) {
+  choice_names <- lapply(question$answers, `[[`, "label")
+  choice_values <- lapply(question$answers, `[[`, "id")
 
-  initialize_input <- function(answers) {
-    choice_names <- lapply(answers, function(ans) {
-      ans$label
-    })
-    choice_values <- lapply(answers, function(ans) {
-      ans$id
-    })
-
-    shiny::checkboxGroupInput(
-      ids$answer,
-      label = question$question,
-      choiceNames = choice_names,
-      choiceValues = choice_values,
-      selected = FALSE
-    )
-  }
-
-  # # returns
-  # list(
-  #   is_correct = LOGICAL,
-  #   message = c(CHARACTER)
-  # )
-  is_correct <- function(answer_input, answers) {
-    is_correct <- TRUE
-
-    correct_messages <- c()
-    incorrect_messages <- c()
-
-    for (ans in answers) {
-      ans_is_checked <- ans$id %in% answer_input
-      submission_is_correct <-
-        (ans_is_checked && ans$is_correct) ||
-        ((!ans_is_checked) && (!ans$is_correct))
-
-      if (submission_is_correct) {
-        # only append messages if the box was checked
-        if (ans_is_checked) {
-          correct_messages <- append(correct_messages, ans$message)
-        }
-      } else {
-        is_correct <- FALSE
-        incorrect_messages <- append(incorrect_messages, ans$message)
-      }
-    }
-
-    return(list(
-      is_correct = is_correct,
-      messages = if (is_correct) correct_messages else incorrect_messages
-    ))
-  }
-
-  completed_input <- function(answer_input, answers) {
-
-    choice_values <- lapply(answers, `[[`, "id")
-
-    # update select answers to have X or √
-    choice_names_final <- lapply(answers, function(ans) {
-      if (ans$is_correct) {
-        tag <- " &#10003; "
-        tagClass <- "correct"
-      } else {
-        tag <- " &#10007; "
-        tagClass <- "incorrect"
-      }
-      tags$span(ans$label, HTML(tag), class = tagClass)
-    })
-
-    shiny::checkboxGroupInput(
-      ids$answer,
-      label = question$question,
-      choiceValues = choice_values,
-      choiceNames = choice_names_final,
-      selected = answer_input
-    )
-  }
-
-  is_valid <- function(answer_input) {
-    if (is.null(answer_input)) {
-      showNotification("Please select an answer before submitting", type = "error")
-      req(answer_input)
-    }
-  }
-
-  disable_selector <- function() {
-    paste0("#", ids$answer, " .checkbox")
-  }
-
-  list(
-    initialize_input = initialize_input,
-    is_correct = is_correct,
-    completed_input = completed_input,
-    is_valid = is_valid,
-    disable_selector = disable_selector
+  shiny::checkboxGroupInput(
+    question$ids$answer,
+    label = question$question,
+    choiceNames = choice_names,
+    choiceValues = choice_values,
+    selected = FALSE
   )
+}
+
+question_is_valid.checkbox <- function(question, answer_input, ...) {
+  !is.null(answer_input)
+}
+
+# # returns
+# list(
+#   is_correct = LOGICAL,
+#   message = c(CHARACTER)
+# )
+question_is_correct.checkbox <- function(question, answer_input, ...) {
+  if (is.null(answer_input)) {
+    showNotification("Please select an answer before submitting", type = "error")
+    req(answer_input)
+  }
+  
+  append_message <- function(x, ans) {
+    message <- ans$message
+    if (is.null(message)) {
+      return(x)
+    }
+    if (!is.list(message))  {
+      message <- list(message)
+    }
+    if (length(x) == 0) {
+      message
+    } else {
+      append(x, message)
+    }
+  }
+
+  is_correct <- TRUE
+  correct_messages <- list()
+  incorrect_messages <- list()
+
+  for (ans in question$answers) {
+    ans_is_checked <- ans$id %in% answer_input
+    submission_is_correct <-
+      # is checked and is correct
+      (ans_is_checked && ans$is_correct) ||
+      # is not checked and is not correct
+      ((!ans_is_checked) && (!ans$is_correct))
+
+    if (submission_is_correct) {
+      # only append messages if the box was checked
+      if (ans_is_checked) {
+        correct_messages <- append_message(correct_messages, ans)
+      }
+    } else {
+      is_correct <- FALSE
+      incorrect_messages <- append_message(incorrect_messages, ans)
+    }
+  }
+  
+  return(list(
+    is_correct = is_correct,
+    messages = if (is_correct) correct_messages else incorrect_messages
+  ))
+}
+
+question_completed_input.checkbox <- function(question, answer_input, ...) {
+
+  choice_values <- lapply(question$answers, `[[`, "id")
+
+  # update select answers to have X or √
+  choice_names_final <- lapply(question$answers, function(ans) {
+    if (ans$is_correct) {
+      tag <- " &#10003; "
+      tagClass <- "correct"
+    } else {
+      tag <- " &#10007; "
+      tagClass <- "incorrect"
+    }
+    tags$span(ans$label, HTML(tag), class = tagClass)
+  })
+
+  shiny::checkboxGroupInput(
+    question$ids$answer,
+    label = question$question,
+    choiceValues = choice_values,
+    choiceNames = choice_names_final,
+    selected = answer_input
+  )
+}
+
+question_disable_selector.checkbox <- function(question, ...) {
+  paste0("#", question$ids$answer, " .checkbox")
 }
 
 
 
 
-question_methods.text <- function(question, ids, ...) {
-  ns <- shiny::NS(ids$question)
-  
-  initialize_input <- function(answers) {
-    shiny::textInput(
-      ids$answer,
-      label = question$question,
-      placeholder = "Enter answer here..."
-    )
-  }
-
-  # # returns
-  # list(
-  #   is_correct = LOGICAL,
-  #   message = c(CHARACTER)
-  # )
-  is_correct <- function(answer_input, answers) {
-
-    trim <- function(x) {
-      x %>%
-        as.character() %>%
-        sub("^\\s+", "", .) %>%
-        sub("\\s$", "", .)
-    }
-
-    answer_input <- trim(answer_input)
-
-    for (ans in answers) {
-      if (isTRUE(all.equal(trim(ans$label), answer_input))) {
-        return(list(
-          is_correct = ans$is_correct,
-          messages = ans$message
-        ))
-      }
-    }
-    return(list(is_correct = FALSE, messages = NULL))
-  }
-
-  completed_input <- function(answer_input, answers) {
-    shiny::textInput(
-      ids$answer,
-      label = question$question,
-      value = answer_input
-    )
-  }
-
-  is_valid <- function(answer_input) {
-    if (is.null(answer_input) || nchar(answer_input) == 0) {
-      showNotification("Please enter some text before submitting", type = "error")
-      req(answer_input)
-    }
-  }
-
-  disable_selector <- function() {
-    paste0("#", ids$answer)
-  }
-  
-  list(
-    initialize_input = initialize_input,
-    is_correct = is_correct,
-    completed_input = completed_input,
-    is_valid = is_valid,
-    disable_selector = disable_selector
+question_initialize_input.text <- function(question, ...) {
+  shiny::textInput(
+    question$ids$answer,
+    label = question$question,
+    placeholder = "Enter answer here..."
   )
+}
+
+question_is_valid.text <- function(question, answer_input, ...) {
+  !(is.null(answer_input) || nchar(answer_input) == 0)
+}
+# # returns
+# list(
+#   is_correct = LOGICAL,
+#   message = c(CHARACTER)
+# )
+question_is_correct.text <- function(question, answer_input, ...) {
+
+  if (is.null(answer_input) || nchar(answer_input) == 0) {
+    showNotification("Please enter some text before submitting", type = "error")
+    req(answer_input)
+  }
+
+  trim <- function(x) {
+    x %>%
+      as.character() %>%
+      sub("^\\s+", "", .) %>%
+      sub("\\s$", "", .)
+  }
+
+  answer_input <- trim(answer_input)
+
+  for (ans in question$answers) {
+    if (isTRUE(all.equal(trim(ans$label), answer_input))) {
+      return(list(
+        is_correct = ans$is_correct,
+        messages = ans$message
+      ))
+    }
+  }
+  return(list(is_correct = FALSE, messages = NULL))
+}
+
+question_completed_input.text <- function(question, answer_input, ...) {
+  shiny::textInput(
+    question$ids$answer,
+    label = question$question,
+    value = answer_input
+  )
+}
+
+question_disable_selector.text <- function(question, ...) {
+  paste0("#", question$ids$answer)
 }
 
 
 
-
-# # TODO-shiny app to shiny module
-# # return a call to the module UI
-#
-# question_ui <- function(id, ..., extra_args) {
-#   ns <- NS(id)
-#
-#   tagList(
-#     ...
-#   )
-# }
-#
-# question_mod <- function(input, output, session) {
-#
-# }
-#
-# question_radio_to_shiny2 <- function(question) {
-#   q_id <- random_question_id()
-#   callModule(question_mod, q_id)
-#   question_ui(q_id)
-# }
 
 
 question_prerendered_chunk <- function(question, ...) {
@@ -655,16 +626,12 @@ question_prerendered_chunk <- function(question, ...) {
   invisible(TRUE)
 }
 
-
-
 question_module_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # TODO as html dependency
+    # TODO-barret as html dependency
     shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuiz.css", package = "learnr")),
     shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css", package = "learnr")),
-    # shiny::uiOutput(ns("shinyjs_container")),  # Set up shinyjs
-    # shiny::textInput(ns("barret"), "barret", "barret", 50),
     shiny::uiOutput(ns("answer_container")),
     shiny::uiOutput(ns("message_container")),
     shiny::uiOutput(ns("action_button_container"))
@@ -678,10 +645,6 @@ question_module_server <- function(
   
   ns <- getDefaultReactiveDomain()$ns
   
-  # Functions that end in "_" are functions that are
-  #   locally defined functions that wrap input functions with the same name
-  #   and take minimal arguments
-
   button_type <- reactiveVal("submit", label = "button type")
   output$action_button_container <- renderUI({
     question_button_label(
@@ -757,7 +720,6 @@ question_module_server <- function(
     #   # b/c there is no 'asis' param
     #   session$sendCustomMessage(type = "shinyjs-disable", message = list(selector = question_disable_selector(question)))
     # })
-    cat("done with finalize!\n")
   })
     
 }
@@ -807,7 +769,7 @@ question_messages <- function(question, message_info) {
         question$messages$try_again
       }
     }
-
+  
   if (!is.null(messages) && !is.list(messages)) {
     messages <- list(messages)
   }
