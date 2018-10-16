@@ -609,9 +609,6 @@ question_prerendered_chunk <- function(question, ...) {
 question_module_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # TODO-barret as html dependency
-    shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuiz.css", package = "learnr")),
-    shiny::includeCSS(system.file("htmlwidgets/lib/slickquiz/css/slickQuizTutorial.css", package = "learnr")),
     shiny::uiOutput(ns("answer_container")),
     shiny::uiOutput(ns("message_container")),
     shiny::uiOutput(ns("action_button_container"))
