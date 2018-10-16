@@ -153,68 +153,6 @@ question <- function(text,
     )
   )
 
-  # # if (type == "single")
-  # #   question$select_any <- TRUE
-  # # if (type == "multiple")
-  # #   question$force_checkbox <- TRUE
-  # 
-  # # # save all state/options into "x"
-  # # x <- list()
-  # # x$question <- quiz_text(text)
-  # # x$answers <- answers
-  # # x$label <- knitr::opts_current$get('label')
-  # # x$skipStartButton <- TRUE # no start
-  # # x$perQuestionResponseAnswers <- TRUE
-  # # x$perQuestionResponseMessaging <- TRUE
-  # # x$preventUnanswered <- TRUE
-  # # x$displayQuestionCount <- FALSE
-  # # x$displayQuestionNumber <- FALSE
-  # # x$disableRanking <- TRUE
-  # # x$nextQuestionText <- ""
-  # # x$checkAnswerText <- "Submit Answer"
-  # # x$allowRetry <- allow_retry
-  # # x$randomSortAnswers = random_answer_order
-  # # x$json <- list(
-  # #   info = list(
-  # #     name = "",
-  # #     main = ""
-  # #   ),
-  # #   questions = list(question)
-  # # )
-  # 
-  # # define dependencies
-  # dependencies <- list(
-  #   rmarkdown::html_dependency_jquery(),
-  #   rmarkdown::html_dependency_bootstrap(theme = "default"),
-  #   bootbox_html_dependency(),
-  #   localforage_html_dependency(),
-  #   tutorial_html_dependency(),
-  #   tutorial_autocompletion_html_dependency(),
-  #   tutorial_diagnostics_html_dependency(),
-  #   htmltools::htmlDependency(
-  #     name = "slickquiz",
-  #     version = "1.5.20",
-  #     src = html_dependency_src("htmlwidgets", "lib", "slickquiz"),
-  #     script = "js/slickQuiz.js",
-  #     stylesheet = c("css/slickQuiz.css", "css/slickQuizTutorial.css")
-  #   )
-  # )
-  # 
-  # # create widget
-  # htmlwidgets::createWidget(
-  #   name = 'quiz',
-  #   x = x,
-  #   width = "100%",
-  #   height = "auto",
-  #   dependencies = dependencies,
-  #   sizingPolicy = htmlwidgets::sizingPolicy(knitr.figure = FALSE,
-  #                                            knitr.defaultWidth = "100%",
-  #                                            knitr.defaultHeight = "auto",
-  #                                            viewer.defaultWidth = "100%",
-  #                                            viewer.defaultHeight = "auto"),
-  #   package = 'learnr'
-  # )
-
 }
 
 #' @rdname quiz
@@ -234,6 +172,9 @@ answer <- function(text, correct = FALSE, message = NULL) {
 
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
+  if (inherits(text, "html")) {
+    return(text)
+  }
   if (!is.null(text)) {
     # convert markdown
     md <- markdown::markdownToHTML(
@@ -875,10 +816,10 @@ question_messages <- function(question, message_info) {
 )
 
 random_praise <- function() {
-  quiz_text(paste0("Correct! ", sample(.praise, 1)))
+  paste0("Correct! ", sample(.praise, 1))
 }
 random_encouragement <- function() {
-  quiz_text(sample(.encourage, 1))
+  sample(.encourage, 1)
 }
 
 
