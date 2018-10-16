@@ -1016,6 +1016,7 @@ mutate_tags.numeric <- function(ele, selector, fn, ...) { ele }
 mutate_tags.logical <- function(ele, selector, fn, ...) { ele }
 mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
 
+
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   if (inherits(selector, "character")) {
     # if there is a set of selectors
@@ -1028,27 +1029,34 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
       return(ele)
     }
   }
+  
+  # make sure it's a selector
   selector <- as_selector_list(selector)
+  # grab the first element
   cur_selector <- selector[[1]]
   
   is_match <- TRUE
   if (!cur_selector$match_everything) {
+    # match on element
     if (is_match && !is.null(cur_selector$element)) {
       is_match <- ele$name == cur_selector$element
     }
+    # match on id
     if (is_match && !is.null(cur_selector$id)) {
       is_match <- (ele$attribs$id %||% "") == cur_selector$id
     }
-    if (is_match && !is.null(cur_selector$class)) {
+    # match on class values
+    if (is_match && !is.null(cur_selector$classes)) {
       is_match <- all(strsplit(ele$attribs$class %||% "", " ")[[1]] %in% cur_selector$classes)
     }
     
+    # if it is a match, drop a selector
     if (is_match) {
       selector <- selector[-1]
     }
   }
   
-  # if there are children, recurse through
+  # if there are children and remaining selectors, recurse through
   if (length(selector) > 0 && length(ele$children) > 0) {
     for (i in seq_along(ele$children)) {
       ele$children[[i]] <- mutate_tags(ele$children[[i]], selector, fn, ...)
@@ -1057,15 +1065,17 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   
   # if it was a match
   if (is_match) {
-    # and it is a "leaf" match
     if (
+      # it is a "leaf" match
       length(selector) == 0 ||
+      # or should match everything
       cur_selector$match_everything
     ) {
       # update it
-      ele <- fn(ele)
+      ele <- fn(ele, ...)
     }
   }
-  
+    
+  # return the updated element
   ele
 }
