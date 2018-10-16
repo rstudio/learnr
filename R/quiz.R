@@ -1,7 +1,4 @@
-# TODO - make messages functions
-# TODO-barret remove shinyjs
-
-
+# TODO-barret allow for messages to be functions
 
 
 
@@ -100,19 +97,24 @@ question <- function(text,
     
   ## no partial matching for s3 methods
   # type <- match.arg(type)
-  if (type == "auto") {
+  if (missing(type)) {
+    type <- "auto"
+  }
+  if (isTRUE(all.equal(type, "auto"))) {
     if (total_correct > 1) {
       type <- "multiple"
     } else {
       type <- "single"
     }
   }
-  type <- switch(type, 
-    "single" = "radio",
-    "multiple" = "checkbox",
-    # allows for s3 methods
-    type
-  )
+  if (length(type) == 1) {
+    type <- switch(type, 
+      "single" = "radio",
+      "multiple" = "checkbox",
+      # allows for s3 methods
+      type
+    )
+  }
   
   q_id <- random_question_id()
   ns <- NS(q_id)
@@ -336,7 +338,7 @@ question_to_shiny <- function(question) {
 
 
 # returns shinyUI component
-question_initialize_input <- function(question, ...) {
+question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
 }
 question_completed_input <- function(question, ...) {
@@ -354,10 +356,6 @@ question_is_valid <- function(question, answer_input, ...) {
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
-# css selector of elements to disable
-question_disable_selector <- function(question, ...) {
-  UseMethod("question_disable_selector", question)
-}
 
 
 question_stop <- function(name, question) {
@@ -366,7 +364,7 @@ question_stop <- function(name, question) {
     .call = FALSE
   )
 }
-question_initialize_input.default <- function(question, ...) {
+question_initialize_input.default <- function(question, answer_input, ...) {
   question_stop("question_initialize_input", question)
 }
 question_completed_input.default <- function(question, ...) {
@@ -378,9 +376,6 @@ question_is_valid.default <- function(question, answer_input, ...) {
 question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
 }
-question_disable_selector.default <- function(question, ...) {
-  question_stop("question_disable_selector", question)
-}
 
 
 
@@ -388,7 +383,7 @@ question_disable_selector.default <- function(question, ...) {
 
 
 
-question_initialize_input.radio <- function(question, ...) {
+question_initialize_input.radio <- function(question, answer_input, ...) {
   choice_names <- lapply(question$answers, `[[`, "label")
   choice_values <- lapply(question$answers, `[[`, "id")
 
@@ -397,7 +392,7 @@ question_initialize_input.radio <- function(question, ...) {
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
-    selected = FALSE
+    selected = answer_input %||% FALSE # setting to NULL, selects the first item
   )
 }
 
@@ -445,16 +440,13 @@ question_completed_input.radio <- function(question, answer_input, ...) {
   )
 }
 
-question_disable_selector.radio <- function(question, ...) {
-  paste0("#", question$ids$answer, " .radio")
-}
 
 
 
 
 
 
-question_initialize_input.checkbox <- function(question, ...) {
+question_initialize_input.checkbox <- function(question, answer_input, ...) {
   choice_names <- lapply(question$answers, `[[`, "label")
   choice_values <- lapply(question$answers, `[[`, "id")
 
@@ -463,7 +455,7 @@ question_initialize_input.checkbox <- function(question, ...) {
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
-    selected = FALSE
+    selected = answer_input
   )
 }
 
@@ -551,18 +543,16 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
   )
 }
 
-question_disable_selector.checkbox <- function(question, ...) {
-  paste0("#", question$ids$answer, " .checkbox")
-}
 
 
 
 
-question_initialize_input.text <- function(question, ...) {
+question_initialize_input.text <- function(question, answer_input, ...) {
   shiny::textInput(
     question$ids$answer,
     label = question$question,
-    placeholder = "Enter answer here..."
+    placeholder = "Enter answer here...",
+    value = answer_input
   )
 }
 
@@ -581,17 +571,10 @@ question_is_correct.text <- function(question, answer_input, ...) {
     req(answer_input)
   }
 
-  trim <- function(x) {
-    x %>%
-      as.character() %>%
-      sub("^\\s+", "", .) %>%
-      sub("\\s$", "", .)
-  }
-
-  answer_input <- trim(answer_input)
+  answer_input <- str_trim(answer_input)
 
   for (ans in question$answers) {
-    if (isTRUE(all.equal(trim(ans$label), answer_input))) {
+    if (isTRUE(all.equal(str_trim(ans$label), answer_input))) {
       return(list(
         is_correct = ans$is_correct,
         messages = ans$message
@@ -609,9 +592,6 @@ question_completed_input.text <- function(question, answer_input, ...) {
   )
 }
 
-question_disable_selector.text <- function(question, ...) {
-  paste0("#", question$ids$answer)
-}
 
 
 
@@ -669,8 +649,7 @@ question_module_server <- function(
     if (question$random_answer_order) {
       question$answers <<- shuffle(question$answers)
     }
-    
-    answer_container(question_initialize_input(question))
+    answer_container(question_initialize_input(question, NULL))
     message_container_info(NULL)
     button_type("submit")
   }
@@ -710,22 +689,38 @@ question_module_server <- function(
       is_done = is_done
     ))
     if (is_done) {
-      answer_container(question_completed_input(question, input$answer))
+      # if the question is 'done', display the final input ui and disable everything
+      answer_container({
+        question_completed_input(question, input$answer) %>%
+          disable_all_tags()
+      })
+    } else {
+      # if the question is NOT 'done', disable the current UI 
+      #   until it is reset with the try again button
+      answer_container({
+        question_initialize_input(question, input$answer) %>%
+          disable_all_tags()
+      })
     }
-    # TODO-barret disable the buttons and output
-    # shinyjs::delay(1, {
-    #   # namespace the selector to the answer module so someone can not disable other parts of the tutorial
-    #   selector = paste0("#", ns("answer_container"), " ", question_disable_selector(question))
-    #   # shinyjs::disable(selector = selector, asis = TRUE)
-    #   # b/c there is no 'asis' param
-    #   session$sendCustomMessage(type = "shinyjs-disable", message = list(selector = question_disable_selector(question)))
-    # })
   })
     
 }
 
+disable_element_fn <- function(ele) {
+  ele %>%
+    tagAppendAttributes(
+      class = "disabled",
+      disabled = NA
+    )
+}
+disable_tags <- function(ele, selector) {
+  mutate_tags(ele, selector, disable_element_fn)
+}
+disable_all_tags <- function(ele) {
+  mutate_tags(ele, "*", disable_element_fn)
+}
 
-# TODO-barret make reactive button layout
+
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
   label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
   button_label <- question$button_labels[[label_type]]
@@ -733,17 +728,19 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
-    
+  
   if (label_type == "submit") {
-    shiny::actionButton(question$ids$action_button, button_label, class = default_class)
-    # TODO-barret use is_valid to show if disabled or not
+    button <- shiny::actionButton(question$ids$action_button, button_label, class = default_class)
+    if (!is_valid) {
+      button <- disable_all_tags(button)
+    }
+    button
   } else if (label_type == "try_again") {
-    shiny::actionButton(question$ids$action_button, button_label, class = warning_class)
-    # TODO-barret update css to work with btn-default
-    # shinyjs::delay(1, {
-    #   # make it show up orange
-    #   shinyjs::removeClass("action_button", "btn-default")
-    # })
+    shiny::actionButton(question$ids$action_button, button_label, class = warning_class) %>%
+      mutate_tags(paste0("#", question$ids$action_button), function(ele) {
+        ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
+        ele
+      })
   } else if (
     label_type == "correct" || 
     label_type == "incorrect"
@@ -891,15 +888,187 @@ random_encouragement <- function() {
 
 
 # 
-# buttons <- shiny::radioButtons("123", "Barret", c("A", "B", "C"))
-# 
-# 
-# 
-# mutate_tags <- function() {
-# 
-# }
-# 
-# mutate_tags_recursive <- function() {
-# 
-# }
-# 
+buttons <- shiny::radioButtons("123", "Barret", c("A", "B", "C"))
+
+
+str_trim <- function(x) {
+  x %>%
+    as.character() %>%
+    sub("^\\s+", "", .) %>%
+    sub("\\s$", "", .)
+}
+
+if_no_match_return_null <- function(x) {
+  if (length(x) == 0) {
+    NULL
+  } else {
+    x
+  }
+}
+str_match <- function(x, pattern) {
+  if_no_match_return_null(
+    regmatches(x, regexpr(pattern, x))
+  )
+  
+}
+str_match_all <- function(x, pattern) {
+  if_no_match_return_null(
+    regmatches(x, gregexpr(pattern, x))[[1]]
+  )
+}
+str_replace <- function(x, pattern, replacement) {
+  if (is.null(x)) return(NULL)
+  sub(pattern, replacement, x)
+}
+str_remove <- function(x, pattern) {
+  str_replace(x, pattern, "")
+}
+
+# only handles id and classes
+as_selector <- function(selector) {
+  if (inherits(selector, "shiny_selector") || inherits(selector, "shiny_selector_list")) {
+    return(selector)
+  }
+    
+  # make sure it's a trimmed string
+  selector <- str_trim(selector)
+  
+  # yell if there is a comma
+  if (grepl(",", selector, fixed = TRUE)) {
+    stop("Do not know how to handle comma separatated selector values")
+  }
+
+  # if it contains multiple elements, recurse
+  if (grepl(" ", selector)) {
+    strsplit(selector, "\\s+") %>%
+      lapply(as_selector) %>%
+      structure(class = "shiny_selector_list", .) %>% 
+      {return(.)}
+  }
+  
+  match_everything <- isTRUE(all.equal(selector, "*"))
+  
+  element <- str_match(selector, "^([^#.]+)")
+  selector <- str_remove(selector, "^[^#.]+")
+  
+  id <- str_remove(str_match(selector, "^#([^.]+)"), "#")
+  selector <- str_remove(selector, "^#[^.]+")
+  
+  classes <- str_remove(str_match_all(selector, "\\.([^.]+)"), "^\\.")
+  
+  structure(class = "shiny_selector", list(
+    element = element,
+    id = id, 
+    classes = classes,
+    match_everything = match_everything
+  ))
+}
+
+as_selector_list <- function(selector) {
+  selector <- as_selector(selector)
+  if (inherits(selector, "shiny_selector")) {
+    selector <- structure(class = "shiny_selector_list", list(selector))
+  }
+  selector
+}
+
+format.shiny_selector <- function(x, ...) {
+  if (x$match_everything) {
+    paste0("* // match everything")
+  } else {
+    paste0(x$element, if (!is.null(x$id)) paste0("#", x$id), paste0(".", x$classes, collapse = ""))
+  }
+}
+format.shiny_selector_list <- function(x, ...) {
+  paste0(unlist(lapply(x, format, ...)), collapse = " ")
+}
+
+print.shiny_selector <- function(x, ...) {
+  cat("// css selector\n")
+  cat(format(x, ...), "\n")
+}
+print.shiny_selector_list <- function(x, ...) {
+  cat("// css selector list\n")
+  cat(format(x, ...), "\n")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mutate_tags <- function(ele, selector, fn, ...) {
+  UseMethod("mutate_tags", ele)
+}
+mutate_tags.default <- function(ele, selector, fn, ...) {
+  stop("`mutate_tags.", class(ele)[1], "(x, selector, ...)` is not implemented")
+}
+
+# no-ops for basic types
+mutate_tags.NULL <- function(ele, selector, fn, ...) { ele }
+mutate_tags.character <- function(ele, selector, fn, ...) { ele }
+mutate_tags.numeric <- function(ele, selector, fn, ...) { ele }
+mutate_tags.logical <- function(ele, selector, fn, ...) { ele }
+mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
+
+mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
+  if (inherits(selector, "character")) {
+    # if there is a set of selectors
+    if (grepl(",", selector)) {
+      selectors <- strsplit(selector, ",")[[1]]
+      # serially mutate the tags for each indep selector
+      for (selector_i in selectors) {
+        ele <- mutate_tags(ele, selector_i, fn, ...)
+      }
+      return(ele)
+    }
+  }
+  selector <- as_selector_list(selector)
+  cur_selector <- selector[[1]]
+  
+  is_match <- TRUE
+  if (!cur_selector$match_everything) {
+    if (is_match && !is.null(cur_selector$element)) {
+      is_match <- ele$name == cur_selector$element
+    }
+    if (is_match && !is.null(cur_selector$id)) {
+      is_match <- (ele$attribs$id %||% "") == cur_selector$id
+    }
+    if (is_match && !is.null(cur_selector$class)) {
+      is_match <- all(strsplit(ele$attribs$class %||% "", " ")[[1]] %in% cur_selector$classes)
+    }
+    
+    if (is_match) {
+      selector <- selector[-1]
+    }
+  }
+  
+  # if there are children, recurse through
+  if (length(selector) > 0 && length(ele$children) > 0) {
+    for (i in seq_along(ele$children)) {
+      ele$children[[i]] <- mutate_tags(ele$children[[i]], selector, fn, ...)
+    }
+  }
+  
+  # if it was a match
+  if (is_match) {
+    # and it is a "leaf" match
+    if (
+      length(selector) == 0 ||
+      cur_selector$match_everything
+    ) {
+      # update it
+      ele <- fn(ele)
+    }
+  }
+  
+  ele
+}
