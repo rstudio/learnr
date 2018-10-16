@@ -1,4 +1,5 @@
 # TODO-barret allow for messages to be functions
+# TODO-question-to-shiny to function
 
 
 
@@ -247,7 +248,8 @@ shuffle <- function(x) {
   sample(x, length(x))
 }
 
-question_to_shiny <- function(question) {
+
+knit_print.question <- function(question, ...) {
 
   ui <- question_module_ui(question$ids$question)
   
@@ -260,7 +262,8 @@ question_to_shiny <- function(question) {
     )
   )
   
-  ui
+  # regular knit print the UI
+  knitr::knit_print(ui)
 }
 
 

@@ -36,7 +36,8 @@ ul {
 
 .btn {
   padding: 10px 20px;
-  border-radius: 3px; }
+  border-radius: 3px; 
+  margin-bottom: 20px; }
 
 .btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
