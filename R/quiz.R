@@ -1,5 +1,12 @@
+# TODO-barret restore answers
+# TODO-barret pass R cmd check
+# TODO-barret revert to old params names in question
+  ## or deprecate old names and use new names
 # TODO-barret allow for messages to be functions
-# TODO-question-to-shiny to function
+# TODO-barret make sure multiple questions can be put into a quiz
+  ## may need to have it's own server render method for a quiz object
+# TODO-barret remove slick quiz library completely
+# TODO-barret documentation of s3 methods for a question
 
 
 
