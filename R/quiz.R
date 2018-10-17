@@ -307,6 +307,9 @@ question_is_valid <- function(question, answer_input, ...) {
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
+question_answer_to_value <- function(question, answer_input, ...) {
+  UseMethod("question_answer_to_value", question)
+}
 
 
 question_stop <- function(name, question) {
@@ -326,6 +329,10 @@ question_is_valid.default <- function(question, answer_input, ...) {
 }
 question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
+}
+
+question_answer_to_value.default <- function(question, answer_input, ...) {
+  as.character(answer_input)
 }
 
 
@@ -390,7 +397,14 @@ question_completed_input.radio <- function(question, answer_input, ...) {
     selected = answer_input
   )
 }
-
+question_answer_to_value.radio <- function(question, answer_input, ...) {
+  for (ans in questioN$answers) {
+    if (ans$id == answer_input) {
+      return(as.character(ans$option))
+    }
+  }
+  return(NULL)
+}
 
 
 
@@ -492,6 +506,15 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
     choiceNames = choice_names_final,
     selected = answer_input
   )
+}
+question_answer_to_value.checkbox <- function(question, answer_input, ...) {
+  ret <- c()
+  for (ans in questioN$answers) {
+    if (ans$id == answer_input) {
+      ret <- c(ret, as.character(ans$option))
+    }
+  }
+  return(NULL)
 }
 
 
@@ -650,6 +673,16 @@ question_module_server <- function(
           disable_all_tags()
       })
     }
+
+    # submit question to server
+    question_submission_event(
+      session = session,
+      label = question$label,
+      question = question$question,
+      answers = question_answer_to_value(input$answer),
+      correct = is_correct_info$is_correct
+    )
+
   })
     
 }
