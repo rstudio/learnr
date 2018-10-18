@@ -595,91 +595,139 @@ question_module_server <- function(
   
   ns <- getDefaultReactiveDomain()$ns
   
-  button_type <- reactiveVal("submit", label = "button type")
-  output$action_button_container <- renderUI({
-    question_button_label(
-      question,
-      button_type(), 
+  # only set when a submit button has been pressed
+  # (or reset when try again is hit)
+  # (or reset when restoring)
+  submitted_answer <- reactiveVal(NULL, label = "submitted_answer")
+  
+  is_correct_info <- reactive(label = "is_correct_info", {
+    # question has not been submitted
+    if (is.null(submitted_answer())) return(NULL)
+    # find out if answer is right
+    question_is_correct(question, submitted_answer())
+  })
+  
+  # present all messages?
+  is_done <- reactive(label = "is_done", {
+    if (is.null(is_correct_info())) return(NULL)
+    (!isTRUE(question$allow_retry)) || is_correct_info()$is_correct
+  })
+
+  
+  button_type <- reactive(label = "button type", {
+    if (is.null(submitted_answer())) {
+      "submit"
+    } else {
+      req(!is.null(is_correct_info()))
+      # update the submit button label
+      if (is_correct_info()$is_correct) {
+        "correct"
+      } else {
+        # not correct
+        if (isTRUE(question$allow_retry)) {
+          # not correct, but may try again
+          "try_again"
+        } else {
+          # not correct and can not try again
+          "incorrect"
+        }
+      }
+    }
+  })
+  
+  # disable / enable for every input$answer change
+  answer_is_valid <- reactive(label = "answer_is_valid", {
+    if (is.null(submitted_answer())) {
       question_is_valid(question, input$answer)
-    )
-  })
-  
-  answer_container <- reactiveVal(NULL, label = "answer container")
-  output$answer_container <- renderUI({
-    answer_container()
-  })
-  
-  message_container_info <- reactiveVal(NULL, label = "message container info")
-  output$message_container <- renderUI({
-    question_messages(question, req(message_container_info()))
+    } else {
+      question_is_valid(question, submitted_answer())
+    }
   })
   
 
-  init_question <- function() {
+  init_question <- function(restoreValue = NULL) {
     if (question$random_answer_order) {
       question$answers <<- shuffle(question$answers)
     }
-    answer_container(question_initialize_input(question, NULL))
-    message_container_info(NULL)
-    button_type("submit")
+    submitted_answer(restoreValue)
   }
-  init_question()
   
-  observeEvent(input$action_button, {
-    # TODO-barret add logging of answer / correct / user / question
-    # SEE question_submission_event
+  # TODO-barret get storage state
+  
+  past_submission <- retrieve_question_submission(session, question$label)
+  if (is.null(past_submission)) {
+    # initialize like normal... nothing has been submitted
+    init_question(NULL)
+  } else {
+    # initialize with the past answer
+    #  this should cascade throughout the app to display correct answers and final outputs
+    init_question(past_submission$data$answers)
+  }
+  
 
-    if (button_type() == "try_again") {
-      init_question()
-      return()
-    }
-    
-    # must be submit button
-    is_correct_info <- question_is_correct(question, input$answer)
+  output$action_button_container <- renderUI({
+    question_button_label(
+      question,
+      button_type(),
+      answer_is_valid()
+    )
+  })
 
-    # update the submit button label
-    if (is_correct_info$is_correct) {
-      button_type("correct")
+  output$message_container <- renderUI({
+    req(!is.null(is_correct_info()), !is.null(is_done()))
+
+    question_messages(
+      question, 
+      messages = is_correct_info()$messages, 
+      is_correct = is_correct_info()$is_correct, 
+      is_done = is_done()
+    )
+  })
+  
+  output$answer_container <- renderUI({
+    if (is.null(submitted_answer())) {
+      # has not submitted, show regular answers
+      return(
+        question_initialize_input(question, submitted_answer())
+      )
     } else {
-      # not correct
-      if (isTRUE(question$allow_retry)) {
-        # not correct, but may try again
-        button_type("try_again")
+      # has submitted
+      if (is.null(is_done())) return(NULL)
+      if (is_done()) {
+        # if the question is 'done', display the final input ui and disable everything
+        return(
+          question_completed_input(question, submitted_answer()) %>%
+            disable_all_tags()
+        )
       } else {
-        # not correct and can not try again
-        button_type("incorrect")
+        # if the question is NOT 'done', disable the current UI 
+        #   until it is reset with the try again button
+        return(
+          question_initialize_input(question, submitted_answer()) %>%
+            disable_all_tags()
+        )
       }
     }
+  })
+  
 
-    # present all messages
-    is_done <- (!isTRUE(question$allow_retry)) || is_correct_info$is_correct
-    message_container_info(list(
-      messages = is_correct_info$messages, 
-      is_correct = is_correct_info$is_correct, 
-      is_done = is_done
-    ))
-    if (is_done) {
-      # if the question is 'done', display the final input ui and disable everything
-      answer_container({
-        question_completed_input(question, input$answer) %>%
-          disable_all_tags()
-      })
-    } else {
-      # if the question is NOT 'done', disable the current UI 
-      #   until it is reset with the try again button
-      answer_container({
-        question_initialize_input(question, input$answer) %>%
-          disable_all_tags()
-      })
+  
+  observeEvent(input$action_button, {
+
+    if (button_type() == "try_again") {
+      init_question(NULL)
+      return()
     }
 
+    submitted_answer(input$answer)
+  
     # submit question to server
     question_submission_event(
       session = session,
-      label = question$label,
-      question = question$question,
-      answers = question_answer_to_value(input$answer),
-      correct = is_correct_info$is_correct
+      label = as.character(question$label),
+      question = as.character(question$question),
+      answers = as.character(input$answer),
+      correct = is_correct_info()$is_correct
     )
 
   })
@@ -729,10 +777,7 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   }
 }
 
-question_messages <- function(question, message_info) {
-  messages <- message_info$messages
-  is_correct <- message_info$is_correct
-  is_done <- message_info$is_done
+question_messages <- function(question, messages, is_correct, is_done) {
 
   # Always display the incorrect, correct, or try again messages
   default_message <-
