@@ -595,6 +595,9 @@ question_module_server <- function(
     tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
   })
   observeEvent(req(session$userData$learnr_state() == "restored"), {
+    # TODO-barret remove sleep command
+    # add sleep command to show off "loading..."
+    Sys.sleep(1)
     question_module_server_impl(input, output, session, question)
   }, once = TRUE)
 }
