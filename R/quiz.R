@@ -546,6 +546,27 @@ question_completed_input.text <- function(question, answer_input, ...) {
 
 
 
+retrieve_all_question_submissions <- function(session) {
+  state_objects <- get_all_state_objects(session, exercise_output = FALSE)
+
+  # create submissions from state objects
+  submissions <- submissions_from_state_objects(state_objects)
+  
+  submissions
+}
+
+retrieve_question_submission <- function(session, question_label) {
+  question_label <- as.character(question_label)
+  submissions <- 
+  
+  for (submission in retrieve_all_question_submissions(session)) {
+    if (identical(as.character(submission$id), question_label)) {
+      return(submission)
+    }
+  }
+  return(NULL)
+}
+
 
 
 
