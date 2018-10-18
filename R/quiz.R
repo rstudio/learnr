@@ -1,4 +1,5 @@
-# TODO-barret restore answers
+# TODO-barret restore answers from browser
+# TODO-barret restore answers from disk
 # TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
