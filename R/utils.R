@@ -10,7 +10,10 @@ is_macos <- function() {
 
 
 is_localhost <- function(location) {
-  if (location$hostname %in% c("localhost", "127.0.0.1"))
+  if (is.null(location)) 
+    # caused when using dev_load()
+    TRUE
+  else if (location$hostname %in% c("localhost", "127.0.0.1"))
     TRUE
   else if (nzchar(Sys.getenv("RSTUDIO")) && grepl("/p/\\d+/", location$pathname))
     TRUE
