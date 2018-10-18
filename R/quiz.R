@@ -331,12 +331,20 @@ question_is_correct.default <- function(question, answer_input, ...) {
 
 
 
-
+answer_labels <- function(question) {
+  lapply(question$answers, `[[`, "label")
+}
+answer_values <- function(question) {
+  lapply(
+    lapply(question$answers, `[[`, "label"),
+    as.character
+  )
+}
 
 
 question_initialize_input.radio <- function(question, answer_input, ...) {
-  choice_names <- lapply(question$answers, `[[`, "label")
-  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
+  choice_names <- answer_labels(question)
+  choice_values <- answer_values(question)
 
   shiny::radioButtons(
     question$ids$answer,
@@ -368,7 +376,7 @@ question_is_correct.radio <- function(question, answer_input, ...) {
 }
 
 question_completed_input.radio <- function(question, answer_input, ...) {
-  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
+  choice_values <- answer_values(question)
 
   # update select answers to have X or √
   choice_names_final <- lapply(question$answers, function(ans) {
@@ -397,8 +405,8 @@ question_completed_input.radio <- function(question, answer_input, ...) {
 
 
 question_initialize_input.checkbox <- function(question, answer_input, ...) {
-  choice_names <- lapply(question$answers, `[[`, "label")
-  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
+  choice_names <- answer_labels(question)
+  choice_values <- answer_values(question)
 
   shiny::checkboxGroupInput(
     question$ids$answer,
@@ -470,7 +478,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
 
 question_completed_input.checkbox <- function(question, answer_input, ...) {
 
-  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
+  choice_values <- answer_values(question)
 
   # update select answers to have X or √
   choice_names_final <- lapply(question$answers, function(ans) {
@@ -710,15 +718,17 @@ question_module_server_impl <- function(
       if (is_done()) {
         # if the question is 'done', display the final input ui and disable everything
         return(
-          question_completed_input(question, submitted_answer()) %>%
-            disable_all_tags()
+          disable_all_tags(
+            question_completed_input(question, submitted_answer())
+          )
         )
       } else {
         # if the question is NOT 'done', disable the current UI 
         #   until it is reset with the try again button
         return(
-          question_initialize_input(question, submitted_answer()) %>%
-            disable_all_tags()
+          disable_all_tags(
+            question_initialize_input(question, submitted_answer())
+          )
         )
       }
     }
@@ -745,15 +755,14 @@ question_module_server_impl <- function(
     )
 
   })
-    
 }
 
 disable_element_fn <- function(ele) {
-  ele %>%
-    tagAppendAttributes(
-      class = "disabled",
-      disabled = NA
-    )
+  tagAppendAttributes(
+    ele,
+    class = "disabled",
+    disabled = NA
+  )
 }
 disable_tags <- function(ele, selector) {
   mutate_tags(ele, selector, disable_element_fn)
@@ -778,11 +787,14 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
     }
     button
   } else if (label_type == "try_again") {
-    shiny::actionButton(question$ids$action_button, button_label, class = warning_class) %>%
-      mutate_tags(paste0("#", question$ids$action_button), function(ele) {
+    mutate_tags(
+      shiny::actionButton(question$ids$action_button, button_label, class = warning_class),
+      paste0("#", question$ids$action_button), 
+      function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
         ele
-      })
+      }
+    )
   } else if (
     label_type == "correct" || 
     label_type == "incorrect"
@@ -931,10 +943,13 @@ buttons <- shiny::radioButtons("123", "Barret", c("A", "B", "C"))
 
 
 str_trim <- function(x) {
-  x %>%
-    as.character() %>%
-    sub("^\\s+", "", .) %>%
-    sub("\\s$", "", .)
+  sub(
+    "\\s$", "", 
+    sub(
+      "^\\s+", "", 
+      as.character(x)
+    )
+  )
 }
 
 if_no_match_return_null <- function(x) {
@@ -979,10 +994,9 @@ as_selector <- function(selector) {
 
   # if it contains multiple elements, recurse
   if (grepl(" ", selector)) {
-    strsplit(selector, "\\s+") %>%
-      lapply(as_selector) %>%
-      structure(class = "shiny_selector_list", .) %>% 
-      {return(.)}
+    selector <- lapply(strsplit(selector, "\\s+"), as_selector)
+    selector <- structure(class = "shiny_selector_list", selector)
+    return(selector)
   }
   
   match_everything <- isTRUE(all.equal(selector, "*"))
