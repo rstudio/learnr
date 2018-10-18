@@ -172,7 +172,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
   }
   structure(class = "tutorial_quiz_answer", list(
     id = random_answer_id(),
-    option = text,
+    option = as.character(text),
     label = quiz_text(text),
     is_correct = isTRUE(correct),
     message = quiz_text(message)
@@ -308,9 +308,6 @@ question_is_valid <- function(question, answer_input, ...) {
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
-question_answer_to_value <- function(question, answer_input, ...) {
-  UseMethod("question_answer_to_value", question)
-}
 
 
 question_stop <- function(name, question) {
@@ -332,9 +329,6 @@ question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
 }
 
-question_answer_to_value.default <- function(question, answer_input, ...) {
-  as.character(answer_input)
-}
 
 
 
@@ -344,7 +338,7 @@ question_answer_to_value.default <- function(question, answer_input, ...) {
 
 question_initialize_input.radio <- function(question, answer_input, ...) {
   choice_names <- lapply(question$answers, `[[`, "label")
-  choice_values <- lapply(question$answers, `[[`, "id")
+  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
 
   shiny::radioButtons(
     question$ids$answer,
@@ -365,7 +359,7 @@ question_is_correct.radio <- function(question, answer_input, ...) {
     req(answer_input)
   }
   for (ans in question$answers) {
-    if (ans$id == answer_input) {
+    if (as.character(ans$option) == answer_input) {
       return(list(
         is_correct = ans$is_correct,
         messages = ans$message
@@ -376,7 +370,7 @@ question_is_correct.radio <- function(question, answer_input, ...) {
 }
 
 question_completed_input.radio <- function(question, answer_input, ...) {
-  choice_values <- lapply(question$answers, `[[`, "id")
+  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
 
   # update select answers to have X or √
   choice_names_final <- lapply(question$answers, function(ans) {
@@ -398,14 +392,6 @@ question_completed_input.radio <- function(question, answer_input, ...) {
     selected = answer_input
   )
 }
-question_answer_to_value.radio <- function(question, answer_input, ...) {
-  for (ans in questioN$answers) {
-    if (ans$id == answer_input) {
-      return(as.character(ans$option))
-    }
-  }
-  return(NULL)
-}
 
 
 
@@ -414,7 +400,7 @@ question_answer_to_value.radio <- function(question, answer_input, ...) {
 
 question_initialize_input.checkbox <- function(question, answer_input, ...) {
   choice_names <- lapply(question$answers, `[[`, "label")
-  choice_values <- lapply(question$answers, `[[`, "id")
+  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
 
   shiny::checkboxGroupInput(
     question$ids$answer,
@@ -460,7 +446,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
   incorrect_messages <- list()
 
   for (ans in question$answers) {
-    ans_is_checked <- ans$id %in% answer_input
+    ans_is_checked <- as.character(ans$option) %in% answer_input
     submission_is_correct <-
       # is checked and is correct
       (ans_is_checked && ans$is_correct) ||
@@ -486,7 +472,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
 
 question_completed_input.checkbox <- function(question, answer_input, ...) {
 
-  choice_values <- lapply(question$answers, `[[`, "id")
+  choice_values <- lapply(question$answers, `[[`, "option") %>% lapply(as.character)
 
   # update select answers to have X or √
   choice_names_final <- lapply(question$answers, function(ans) {
@@ -507,15 +493,6 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
     choiceNames = choice_names_final,
     selected = answer_input
   )
-}
-question_answer_to_value.checkbox <- function(question, answer_input, ...) {
-  ret <- c()
-  for (ans in questioN$answers) {
-    if (ans$id == answer_input) {
-      ret <- c(ret, as.character(ans$option))
-    }
-  }
-  return(NULL)
 }
 
 
