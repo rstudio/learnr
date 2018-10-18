@@ -592,7 +592,16 @@ question_module_server <- function(
   input, output, session,
   question
 ) {
-  
+  observeEvent(req(session$userData$learnr_state() == "restored"), {
+    question_module_server_impl(input, output, session, question)
+  }, once = TRUE)
+}
+
+question_module_server_impl <- function(
+  input, output, session,
+  question
+) {
+
   ns <- getDefaultReactiveDomain()$ns
   
   # only set when a submit button has been pressed

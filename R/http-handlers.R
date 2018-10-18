@@ -1,6 +1,8 @@
 
 
 register_http_handlers <- function(session, metadata) {
+  session$userData$learnr_state <- reactiveVal("start")
+  
   # parent environment for completions (see discussion in setup_exercise_handler
   # for why this is chosen as the completion/execution parent)
   server_envir <- parent.env(parent.env(parent.frame()))
@@ -22,6 +24,7 @@ register_http_handlers <- function(session, metadata) {
       identifiers = identifiers
     )
     
+    session$userData$learnr_state("initialized")
     # return identifers
     list(
       status = 200L,
@@ -54,6 +57,8 @@ register_http_handlers <- function(session, metadata) {
     # get client state
     client_state <- get_client_state(session)
     
+    session$userData$learnr_state("restored")
+
     # return data
     list(
       client_state = client_state,
