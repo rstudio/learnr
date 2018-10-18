@@ -1,5 +1,3 @@
-# TODO-barret restore answers from browser
-# TODO-barret restore answers from disk
 # TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
@@ -592,6 +590,10 @@ question_module_server <- function(
   input, output, session,
   question
 ) {
+  output$answer_container <- renderUI({ tags$label(class="control-label", "Loading...") })
+  output$action_button_container <- renderUI({
+    tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
+  })
   observeEvent(req(session$userData$learnr_state() == "restored"), {
     question_module_server_impl(input, output, session, question)
   }, once = TRUE)
