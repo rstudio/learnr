@@ -601,13 +601,12 @@ retrieve_all_question_submissions <- function(session) {
   submissions
 }
 
-retrieve_question_submission <- function(session, question_label) {
+retrieve_question_submission_answer <- function(session, question_label) {
   question_label <- as.character(question_label)
-  submissions <- 
   
   for (submission in retrieve_all_question_submissions(session)) {
     if (identical(as.character(submission$id), question_label)) {
-      return(submission)
+      return(submission$data$answers)
     }
   }
   return(NULL)
@@ -643,12 +642,14 @@ question_module_server <- function(
   output$action_button_container <- renderUI({
     tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
   })
-  observeEvent(req(session$userData$learnr_state() == "restored"), {
-    # TODO-barret remove sleep command
-    # add sleep command to show off "loading..."
-    Sys.sleep(1)
-    question_module_server_impl(input, output, session, question)
-  }, once = TRUE)
+  
+  observeEvent(
+    req(session$userData$learnr_state() == "restored"), 
+    once = TRUE, 
+    {
+      question_module_server_impl(input, output, session, question)
+    }
+  )
 }
 
 question_module_server_impl <- function(
@@ -722,17 +723,14 @@ question_module_server_impl <- function(
     submitted_answer(restoreValue)
   }
   
-  # TODO-barret get storage state
-  
-  past_submission <- retrieve_question_submission(session, question$label)
-  if (is.null(past_submission)) {
-    # initialize like normal... nothing has been submitted
-    init_question(NULL)
-  } else {
-    # initialize with the past answer
-    #  this should cascade throughout the app to display correct answers and final outputs
-    init_question(past_submission$data$answers)
-  }
+  # restore past submission
+  #  If no prior submission, it returns NULL
+  past_submission_answer <- retrieve_question_submission_answer(session, question$label)
+  # initialize like normal... nothing has been submitted
+  #   or
+  # initialize with the past answer
+  #  this should cascade throughout the app to display correct answers and final outputs
+  init_question(past_submission_answer)
   
 
   output$action_button_container <- renderUI({
