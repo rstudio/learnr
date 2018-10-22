@@ -1,9 +1,11 @@
-# TODO-barret allow for null input$answer
+# TODO - Allow for messages to be functions
+  ## defer to v2
+# TODO - Allow for null input$answer
+  ## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
+
 # TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
-# TODO-barret allow for messages to be functions
-  ## defer to v2
 # TODO-barret remove slick quiz library completely
 # TODO-barret gut unused R and JS methods from old JS quiz hooks
 # TODO-barret documentation of s3 methods for a question
