@@ -1,4 +1,3 @@
-# TODO-barret Join similar message types line break
 # TODO-barret allow for null input$answer
 # TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
@@ -874,18 +873,24 @@ question_messages <- function(question, messages, is_correct, is_done) {
   if (!is.null(default_message)) {
     messages <- append(list(default_message), messages)
   }
-
+  
   # get regular message
   if (is.null(messages)) {
     message_alert <- NULL
   } else {
     alert_class <- if (is_correct) "alert-success" else "alert-danger"
-    message_alert <- lapply(messages, function(message) {
-      tags$div(
-        class = paste0("alert ", alert_class),
-        message
-      )
-    })
+    if (length(messages) > 1) {
+      # add breaks inbetween similar messages
+      break_tag <- list(tags$br(), tags$br())
+      all_messages <- replicate(length(messages) * 2 - 1, {break_tag}, simplify = FALSE)
+      # store in all _odd_ positions
+      all_messages[(seq_along(messages) * 2) - 1] <- messages
+      messages <- all_messages
+    }
+    message_alert <- tags$div(
+      class = paste0("alert ", alert_class),
+      messages
+    )
   }
 
   # get post question message only if the question is done
