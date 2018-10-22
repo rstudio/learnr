@@ -1,11 +1,14 @@
+# TODO-barret Join similar message types line break
+# TODO-barret allow for null input$answer
 # TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
 # TODO-barret allow for messages to be functions
-# TODO-barret make sure multiple questions can be put into a quiz
-  ## may need to have it's own server render method for a quiz object
+  ## defer to v2
 # TODO-barret remove slick quiz library completely
+# TODO-barret gut unused R and JS methods from old JS quiz hooks
 # TODO-barret documentation of s3 methods for a question
+# TODO-barret pass R cmd check
 
 
 
@@ -57,18 +60,25 @@ quiz <- function(..., caption = "Quiz") {
   # create table rows from questions
   index <- 1
   questions <- lapply(list(...), function(question) {
-    if (!is.null(question$x$label)) {
-      question$x$label <- paste(question$x$label, index, sep="-")
+    if (!is.null(question$label)) {
+      question$label <- paste(question$label, index, sep="-")
       index <<- index + 1
     }
     question
   })
 
-  questions
+  structure(
+    class = "tutorial_quiz", 
+    list(
+      caption = if(!is.null(caption)) quiz_text(caption),
+      questions = questions
+    )
+  )
 }
 
 
 #' @rdname quiz
+#' @import shiny
 #' @export
 question <- function(text,
                      ...,
@@ -128,7 +138,7 @@ question <- function(text,
 
   return(
     structure(
-      class = c(type, "question"),
+      class = c(type, "tutorial_question"),
       list(
         type = type,
         label = knitr::opts_current$get('label'),
@@ -246,6 +256,7 @@ random_question_id <- function() {
 random_answer_id <- function() {
   random_id("lnr_ans")
 }
+#' @importFrom stats runif
 random_id <- function(txt) {
   paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
 }
@@ -255,7 +266,7 @@ shuffle <- function(x) {
 }
 
 
-knit_print.question <- function(question, ...) {
+knit_print.tutorial_question <- function(question, ...) {
 
   ui <- question_module_ui(question$ids$question)
   
@@ -270,6 +281,18 @@ knit_print.question <- function(question, ...) {
   
   # regular knit print the UI
   knitr::knit_print(ui)
+}
+knit_print.tutorial_quiz <- function(quiz, ...) {
+  caption_tag <- if (!is.null(quiz$caption)) {
+    list(knitr::knit_print(
+      tags$div(class = "panel-heading tutorial-panel-heading", quiz$caption)
+    ))
+  }
+  
+  append(
+    caption_tag,
+    lapply(quiz$questions, knitr::knit_print)
+  )
 }
 
 
@@ -291,7 +314,7 @@ knit_print.question <- function(question, ...) {
 question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
 }
-question_completed_input <- function(question, ...) {
+question_completed_input <- function(question, answer_input, ...) {
   UseMethod("question_completed_input", question)
 }
 question_is_valid <- function(question, answer_input, ...) {
@@ -346,7 +369,7 @@ question_initialize_input.radio <- function(question, answer_input, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
-  shiny::radioButtons(
+  radioButtons(
     question$ids$answer,
     label = question$question,
     choiceNames = choice_names,
@@ -390,7 +413,7 @@ question_completed_input.radio <- function(question, answer_input, ...) {
     tags$span(ans$label, HTML(tag), class = tagClass)
   })
 
-  shiny::radioButtons(
+  radioButtons(
     question$ids$answer,
     label = question$question,
     choiceValues = choice_values,
@@ -408,7 +431,7 @@ question_initialize_input.checkbox <- function(question, answer_input, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
-  shiny::checkboxGroupInput(
+  checkboxGroupInput(
     question$ids$answer,
     label = question$question,
     choiceNames = choice_names,
@@ -492,7 +515,7 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
     tags$span(ans$label, HTML(tag), class = tagClass)
   })
 
-  shiny::checkboxGroupInput(
+  checkboxGroupInput(
     question$ids$answer,
     label = question$question,
     choiceValues = choice_values,
@@ -506,7 +529,7 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
 
 
 question_initialize_input.text <- function(question, answer_input, ...) {
-  shiny::textInput(
+  textInput(
     question$ids$answer,
     label = question$question,
     placeholder = "Enter answer here...",
@@ -543,7 +566,7 @@ question_is_correct.text <- function(question, answer_input, ...) {
 }
 
 question_completed_input.text <- function(question, answer_input, ...) {
-  shiny::textInput(
+  textInput(
     question$ids$answer,
     label = question$question,
     value = answer_input
@@ -588,9 +611,9 @@ question_prerendered_chunk <- function(question, ...) {
 question_module_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    shiny::uiOutput(ns("answer_container")),
-    shiny::uiOutput(ns("message_container")),
-    shiny::uiOutput(ns("action_button_container"))
+    uiOutput(ns("answer_container")),
+    uiOutput(ns("message_container")),
+    uiOutput(ns("action_button_container"))
   )
 }
 
@@ -598,6 +621,7 @@ question_module_server <- function(
   input, output, session,
   question
 ) {
+  
   output$answer_container <- renderUI({ tags$label(class="control-label", "Loading...") })
   output$action_button_container <- renderUI({
     tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
@@ -619,7 +643,7 @@ question_module_server_impl <- function(
   
   # only set when a submit button has been pressed
   # (or reset when try again is hit)
-  # (or reset when restoring)
+  # (or set when restoring)
   submitted_answer <- reactiveVal(NULL, label = "submitted_answer")
   
   is_correct_info <- reactive(label = "is_correct_info", {
@@ -629,7 +653,7 @@ question_module_server_impl <- function(
     question_is_correct(question, submitted_answer())
   })
   
-  # present all messages?
+  # should present all messages?
   is_done <- reactive(label = "is_done", {
     if (is.null(is_correct_info())) return(NULL)
     (!isTRUE(question$allow_retry)) || is_correct_info()$is_correct
@@ -640,7 +664,11 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) {
       "submit"
     } else {
-      req(!is.null(is_correct_info()))
+      # is_correct_info() should be valid
+      if (is.null(is_correct_info())) {
+        stop("`is_correct_info()` is `NULL` in a place it shouldn't be")
+      }
+      
       # update the submit button label
       if (is_correct_info()$is_correct) {
         "correct"
@@ -665,7 +693,6 @@ question_module_server_impl <- function(
       question_is_valid(question, submitted_answer())
     }
   })
-  
 
   init_question <- function(restoreValue = NULL) {
     if (question$random_answer_order) {
@@ -734,7 +761,6 @@ question_module_server_impl <- function(
     }
   })
   
-
   
   observeEvent(input$action_button, {
 
@@ -757,6 +783,8 @@ question_module_server_impl <- function(
   })
 }
 
+
+
 disable_element_fn <- function(ele) {
   tagAppendAttributes(
     ele,
@@ -772,6 +800,7 @@ disable_all_tags <- function(ele) {
 }
 
 
+
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
   label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
   button_label <- question$button_labels[[label_type]]
@@ -781,14 +810,14 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   warning_class <- "btn-warning"
   
   if (label_type == "submit") {
-    button <- shiny::actionButton(question$ids$action_button, button_label, class = default_class)
+    button <- actionButton(question$ids$action_button, button_label, class = default_class)
     if (!is_valid) {
       button <- disable_all_tags(button)
     }
     button
   } else if (label_type == "try_again") {
     mutate_tags(
-      shiny::actionButton(question$ids$action_button, button_label, class = warning_class),
+      actionButton(question$ids$action_button, button_label, class = warning_class),
       paste0("#", question$ids$action_button), 
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
@@ -936,10 +965,6 @@ random_encouragement <- function() {
 }
 
 
-
-
-# 
-buttons <- shiny::radioButtons("123", "Barret", c("A", "B", "C"))
 
 
 str_trim <- function(x) {
