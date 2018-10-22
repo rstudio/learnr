@@ -3,9 +3,10 @@
 # TODO - Allow for null input$answer
   ## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
 
-# TODO-barret pass R cmd check
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
+  ## double check answer params
+# TODO-barret pass R cmd check
 # TODO-barret remove slick quiz library completely
 # TODO-barret gut unused R and JS methods from old JS quiz hooks
 # TODO-barret documentation of s3 methods for a question
@@ -18,6 +19,7 @@
 #' Add interative multiple choice quiz questions to a tutorial.
 #'
 #' @param text Question or option text
+#' @param ... One or more questions or answers
 #' @param caption Optional quiz caption (defaults to "Quiz")
 #' @param type Type of quiz question. Typically this can be automatically determined
 #'   based on the provided answers Pass \code{"single"} to indicate that even though
@@ -27,10 +29,19 @@
 #' @param correct For \code{question}, text to print for a correct answer (defaults
 #'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 #'   correct.
-#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect.")
-#' @param message Additional message to display along with correct/incorrect feedback.
-#' @param ... One or more questions or answers
-#' @param allow_retry Allow retry for incorrect answers.
+#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect") 
+#'   when \code{allow_retry} is \code{FALSE}.
+#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect") 
+#'   when \code{allow_retry} is \code{TRUE}.
+#' @param message Additional message to display along with correct/incorrect feedback.  
+#'   This message is always displayed after a question submission.
+#' @param post_message Additional message to display along with correct/incorrect feedback.  
+#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
+#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
+#'   message alongside the \code{message} message value.
+#' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
+#' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
+#' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
 #' @param random_answer_order Display answers in a random order.
 #'
 #' @examples
@@ -55,6 +66,7 @@
 #' }
 #'
 #' @name quiz
+#' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
 #' @export
 quiz <- function(..., caption = "Quiz") {
 
@@ -84,9 +96,10 @@ quiz <- function(..., caption = "Quiz") {
 question <- function(text,
                      ...,
                      type = c("auto", "single", "multiple", "radio", "checkbox", "text"),
-                     correct_message = random_praise(),
-                     try_again_message = random_encouragement(),
-                     incorrect_message = "Incorrect",
+                     correct = "Correct!",
+                     incorrect = "Incorrect",
+                     try_again = incorrect,
+                     message = NULL,
                      post_message = NULL,
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
@@ -134,6 +147,7 @@ question <- function(text,
     )
   }
   
+  # can not guarantee that `label` exists
   q_id <- random_question_id()
   ns <- NS(q_id)
 
@@ -146,15 +160,14 @@ question <- function(text,
         question = quiz_text(text),
         answers = answers,
         button_labels = list(
-          correct = "Correct!",
-          incorrect = "Incorrect",
           submit = quiz_text(submit_button),
           try_again = quiz_text(try_again_button)
         ),
         messages = list(
-          correct = quiz_text(correct_message),
-          try_again = quiz_text(try_again_message),
-          incorrect = quiz_text(incorrect_message),
+          correct = quiz_text(correct),
+          try_again = quiz_text(try_again),
+          incorrect = quiz_text(incorrect),
+          message = quiz_text(message),
           post_message = quiz_text(post_message)
         ),
         ids = list(
@@ -822,7 +835,7 @@ disable_all_tags <- function(ele) {
 
 
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
-  label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
+  label_type <- match.arg(label_type, c("submit", "try_again"))
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
   
@@ -894,6 +907,16 @@ question_messages <- function(question, messages, is_correct, is_done) {
       messages
     )
   }
+  
+  
+  if (is.null(question$messages$message)) {
+    always_message_alert <- NULL
+  } else {
+    always_message_alert <- tags$div(
+      class = "alert alert-info",
+      question$messages$message
+    )
+  }
 
   # get post question message only if the question is done
   if (isTRUE(is_done) && !is.null(question$messages$post_message)) {
@@ -906,10 +929,14 @@ question_messages <- function(question, messages, is_correct, is_done) {
   }
 
   # set UI message
-  if (is.null(message_alert) && is.null(post_alert)) {
+  if (all(
+    is.null(message_alert),
+    is.null(always_message_alert),
+    is.null(post_alert)
+  )) {
     NULL
   } else {
-    tags$div(message_alert, post_alert)
+    tags$div(message_alert, always_message_alert, post_alert)
   }
 }
 
@@ -927,8 +954,26 @@ question_messages <- function(question, messages, is_correct, is_done) {
 
 
 
+#' Random praise and encouragement
+#'
+#' Random praises and encouragements sayings to compliment your question and quiz experience.
+#'
+#' @return Character string with a random saying
+#' @export
+#' @rdname random_praise
+random_praise <- function() {
+  paste0("Correct! ", sample(random_praises, 1))
+}
+#' @export
+#' @rdname random_praise
+random_encouragement <- function() {
+  sample(random_encouragements, 1)
+}
 
-.praise <- c(
+
+#' @export
+#' @rdname random_praise
+random_praises <- c(
   "Absolutely fabulous!",
   "Amazing!",
   "Awesome!",
@@ -969,8 +1014,9 @@ question_messages <- function(question, messages, is_correct, is_done) {
   ":)"
 )
 
-  # Encouragement messages
-.encourage <- c(
+#' @export
+#' @rdname random_praise
+random_encouragement <- c(
   "Please try again.",
   "Give it another try.",
   "Let's try it again.",
@@ -983,12 +1029,8 @@ question_messages <- function(question, messages, is_correct, is_done) {
   "That's okay: you learn more from mistakes than successes. Let's do it one more time."
 )
 
-random_praise <- function() {
-  paste0("Correct! ", sample(.praise, 1))
-}
-random_encouragement <- function() {
-  sample(.encourage, 1)
-}
+
+
 
 
 
