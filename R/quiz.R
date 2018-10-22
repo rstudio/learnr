@@ -351,6 +351,18 @@ question_is_correct.default <- function(question, answer_input, ...) {
 }
 
 
+question_is_correct_value <- function(is_correct, messages, ...) {
+  if (!is.logical(is_correct)) {
+    stop("`is_correct` must be a logical value")
+  }
+  structure(
+    class = "tutorial_question_is_correct_value",
+    list(
+      is_correct = is_correct,
+      messages = messages
+    )
+  )
+}
 
 
 
@@ -358,10 +370,15 @@ answer_labels <- function(question) {
   lapply(question$answers, `[[`, "label")
 }
 answer_values <- function(question) {
-  lapply(
-    lapply(question$answers, `[[`, "label"),
+  ret <- lapply(
+    # return the character string input.  This _should_ be unique
+    lapply(question$answers, `[[`, "option"),
     as.character
   )
+  if (length(unlist(unique(ret))) != length(ret)) {
+    stop("Answer `option` values are not unique.  Unique values are required")
+  }
+  ret
 }
 
 
@@ -389,13 +406,13 @@ question_is_correct.radio <- function(question, answer_input, ...) {
   }
   for (ans in question$answers) {
     if (as.character(ans$option) == answer_input) {
-      return(list(
-        is_correct = ans$is_correct,
-        messages = ans$message
+      return(question_is_correct_value(
+        ans$is_correct,
+        ans$message
       ))
     }
   }
-  return(list(is_correct = FALSE, messages = NULL))
+  question_is_correct_value(FALSE, NULL)
 }
 
 question_completed_input.radio <- function(question, answer_input, ...) {
@@ -493,9 +510,9 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
     }
   }
   
-  return(list(
-    is_correct = is_correct,
-    messages = if (is_correct) correct_messages else incorrect_messages
+  return(question_is_correct_value(
+    is_correct,
+    if (is_correct) correct_messages else incorrect_messages
   ))
 }
 
@@ -556,13 +573,13 @@ question_is_correct.text <- function(question, answer_input, ...) {
 
   for (ans in question$answers) {
     if (isTRUE(all.equal(str_trim(ans$label), answer_input))) {
-      return(list(
-        is_correct = ans$is_correct,
-        messages = ans$message
+      return(question_is_correct_value(
+        ans$is_correct,
+        ans$message
       ))
     }
   }
-  return(list(is_correct = FALSE, messages = NULL))
+  question_is_correct_value(FALSE, NULL)
 }
 
 question_completed_input.text <- function(question, answer_input, ...) {
@@ -650,7 +667,11 @@ question_module_server_impl <- function(
     # question has not been submitted
     if (is.null(submitted_answer())) return(NULL)
     # find out if answer is right
-    question_is_correct(question, submitted_answer())
+    ret <- question_is_correct(question, submitted_answer())
+    if (!inherits(ret, "tutorial_question_is_correct_value")) {
+      stop("`question_is_correct(question, input$answer)` must return a result from `question_is_correct_value`")
+    }
+    ret
   })
   
   # should present all messages?
