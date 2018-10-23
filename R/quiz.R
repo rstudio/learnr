@@ -6,11 +6,12 @@
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
   ## double check answer params
-# TODO-barret pass R cmd check
 # TODO-barret remove slick quiz library completely
 # TODO-barret gut unused R and JS methods from old JS quiz hooks
 # TODO-barret documentation of s3 methods for a question
 # TODO-barret pass R cmd check
+# TODO-barret re-render tutorials
+# TODO-barret re-render documentation pictures
 
 
 
@@ -196,6 +197,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
     id = random_answer_id(),
     option = as.character(text),
     label = quiz_text(text),
+    correct = isTRUE(correct), # TODO-barret is this needed? (only for backwards compat)
     is_correct = isTRUE(correct),
     message = quiz_text(message)
   ))
@@ -246,7 +248,8 @@ shuffle <- function(x) {
 knit_print.tutorial_question <- function(question, ...) {
 
   ui <- question_module_ui(question$ids$question)
-  
+    
+  # too late to try to set a chunk attribute
   # knitr::set_chunkattr(echo = FALSE)
   rmarkdown::shiny_prerendered_chunk(
     'server',
@@ -292,7 +295,7 @@ question_is_correct <- function(question, answer_input, ...) {
 
 question_stop <- function(name, question) {
   stop(
-    "`", name, ".", class(question[1]), "(question, ...)` has not been implemented", 
+    "`", name, ".{", paste0(class(question), collapse = "/"), "}(question, ...)` has not been implemented", 
     .call = FALSE
   )
 }
