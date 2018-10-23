@@ -8,8 +8,10 @@
 \usage{
 quiz(..., caption = "Quiz")
 
-question(text, ..., type = c("auto", "single", "multiple"),
-  correct = "Correct!", incorrect = "Incorrect.",
+question(text, ..., type = c("auto", "single", "multiple", "radio",
+  "checkbox", "text"), correct = "Correct!", incorrect = "Incorrect",
+  try_again = incorrect, message = NULL, post_message = NULL,
+  submit_button = "Submit Answer", try_again_button = "Try Again",
   allow_retry = FALSE, random_answer_order = FALSE)
 
 answer(text, correct = FALSE, message = NULL)
@@ -27,17 +29,31 @@ multiple correct answers are specified that inputs which include only one correc
 answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
 (as opposed to radio buttons) even though only once correct answer was provided.}
 
-\item{correct}{For \code{question}, text to print for a correct answer (defaults 
+\item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
-\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect.")}
+\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect") 
+when \code{allow_retry} is \code{FALSE}.}
 
-\item{allow_retry}{Allow retry for incorrect answers.}
+\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect") 
+when \code{allow_retry} is \code{TRUE}.}
+
+\item{message}{Additional message to display along with correct/incorrect feedback.
+This message is always displayed after a question submission.}
+
+\item{post_message}{Additional message to display along with correct/incorrect feedback.
+If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
+correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
+message alongside the \code{message} message value.}
+
+\item{submit_button}{Label for the submit button. Defaults to \code{"Submit Answer"}}
+
+\item{try_again_button}{Label for the try again button. Defaults to \code{"Submit Answer"}}
+
+\item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 
 \item{random_answer_order}{Display answers in a random order.}
-
-\item{message}{Additional message to display along with correct/incorrect feedback.}
 }
 \description{
 Add interative multiple choice quiz questions to a tutorial.
@@ -63,4 +79,7 @@ question("Where are you right now? (select ALL that apply)",
 )
 }
 
+}
+\seealso{
+\code{\link{random_praise}}, \code{\link{random_encouragement}}
 }
