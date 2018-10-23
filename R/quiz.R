@@ -226,43 +226,6 @@ quiz_text <- function(text) {
 }
 
 
-# used to print the html for a quiz
-quiz_html <- function(id, style, class, ...) {
-  htmltools::HTML(sprintf('
-<div id="%s" style="%s", class = "%s">
-<div class="panel panel-default">
-<div class="panel-body quizArea">
-</div>
-</div>
-</div>
-', id, style, class))
-}
-
-
-#
-#
-#
-#
-#
-# text_box_quiz_html <- function(id, style, class, ...) {
-#   htmltools::HTML(glue::glue_data(
-#     list(id = id, style = style, class = class),
-# '
-# <div id="{id}" style="{style}", class = "{class}">
-# <div class="panel panel-default">
-# <div class="panel-body quizArea">
-# </div>
-# </div>
-# </div>
-# '
-#   ))
-# }
-
-
-# quiz_to_shiny <- function(quiz) {
-#
-#   lapply(quiz$questions, question_to_shiny)
-# }
 
 random_question_id <- function() {
   random_id("lnr_ques")
@@ -312,18 +275,6 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 
 
 
-# question_methods <- function(question, ids, ...) {
-#   # class(question) <- c(question$type, class(question))
-#   dispatch <- "tmp_obj"
-#   class(dispatch) <- question$type
-#   UseMethod("question_methods", dispatch)
-# }
-# question_methods.default <- function(question, ids, ...) {
-#   stop("`question_methods.", question$type, "(question, ids, ...)` has not been implemented")
-# }
-
-
-
 # returns shinyUI component
 question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
@@ -334,12 +285,6 @@ question_completed_input <- function(question, answer_input, ...) {
 question_is_valid <- function(question, answer_input, ...) {
   UseMethod("question_is_valid", question)
 }
-# # uses req() to determine if results are ok
-# # returns
-# list(
-#   is_correct = LOGICAL,
-#   message = CHARACTER
-# )
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
