@@ -80,22 +80,23 @@ register_http_handlers <- function(session, metadata) {
                  data = input$data)
   }))
   
-  # question submission handler
-  session$registerDataObj("question_submission", NULL, rpc_handler(function(input) {
-    
-    # extract inputs
-    label <- input$label
-    question <- input$question
-    answers <- input$answers
-    correct <- input$correct
-    
-    # fire event
-    question_submission_event(session = session,
-                              label = label,
-                              question = question,
-                              answers = answers,
-                              correct = correct)
-  }))
+  # # question submission handler
+  # session$registerDataObj("question_submission", NULL, rpc_handler(function(input) {
+  #   cat("--- question_submission handler called\n")
+  # 
+  #   # extract inputs
+  #   label <- input$label
+  #   question <- input$question
+  #   answers <- input$answers
+  #   correct <- input$correct
+  # 
+  #   # fire event
+  #   question_submission_event(session = session,
+  #                             label = label,
+  #                             question = question,
+  #                             answers = answers,
+  #                             correct = correct)
+  # }))
   
   # video progress handler
   session$registerDataObj("video_progress", NULL, rpc_handler(function(input) {
