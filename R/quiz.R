@@ -709,7 +709,7 @@ question_module_server_impl <- function(
     )
   })
   
-  output$answer_container <- renderUI({
+  answer_container <- reactive(label = "answer_container", {
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
@@ -717,7 +717,7 @@ question_module_server_impl <- function(
       )
     } else {
       # has submitted
-      if (is.null(is_done())) return(NULL)
+      if (is.null(is_done())) return(NULL) # has not initialized
       if (is_done()) {
         # if the question is 'done', display the final input ui and disable everything
         return(
@@ -735,6 +735,16 @@ question_module_server_impl <- function(
         )
       }
     }
+  })
+  output$answer_container <- renderUI({
+    answer_container_ <- answer_container()
+    if (is.null(answer_container_)) return(answer_container_)
+    
+    tags$div(
+      "data-label" = as.character(question$label),
+      class = "tutorial_question",
+      answer_container_
+    )
   })
   
   
