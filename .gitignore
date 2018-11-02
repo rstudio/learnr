@@ -9,3 +9,5 @@ issues
 
 # atom config folder
 .atom/
+
+inst/tutorials/tmp
