@@ -171,12 +171,8 @@ question <- function(text,
           post_message = quiz_text(post_message)
         ),
         ids = list(
-          action_button = ns("action_button"),
           answer = ns("answer"),
-          question = q_id,
-          answer_container = ns("answer_container"),
-          action_button_container = ns("action_button_container"),
-          message_container = ns("message_container")
+          question = q_id
         ),
         random_answer_order = random_answer_order,
         allow_retry = allow_retry
@@ -782,23 +778,25 @@ disable_all_tags <- function(ele) {
 
 
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
-  label_type <- match.arg(label_type, c("submit", "try_again"))
+  label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
   
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
   
+  action_button_id <- NS(question$ids$question)("action_button")
+  
   if (label_type == "submit") {
-    button <- actionButton(question$ids$action_button, button_label, class = default_class)
+    button <- actionButton(action_button_id, button_label, class = default_class)
     if (!is_valid) {
       button <- disable_all_tags(button)
     }
     button
   } else if (label_type == "try_again") {
     mutate_tags(
-      actionButton(question$ids$action_button, button_label, class = warning_class),
-      paste0("#", question$ids$action_button), 
+      actionButton(action_button_id, button_label, class = warning_class),
+      paste0("#", action_button_id), 
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
         ele
