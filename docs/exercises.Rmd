@@ -4,7 +4,7 @@ title: "Exercises"
 
 ## Overview
 
-Exercises are interactive R code chunks that allow readers to directly execute R code and see it's results. There are many options associated with tutorial exercises (all of which are described in more detail below):
+Exercises are interactive R code chunks that allow readers to directly execute R code and see its results. There are many options associated with tutorial exercises (all of which are described in more detail below):
 
 <table>
 <thead>
