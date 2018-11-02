@@ -11,7 +11,7 @@ is_macos <- function() {
 
 is_localhost <- function(location) {
   if (is.null(location)) 
-    # caused when using dev_load()
+    # caused when using devtools::load_all(), which is a localhost
     TRUE
   else if (location$hostname %in% c("localhost", "127.0.0.1"))
     TRUE
