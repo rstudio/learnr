@@ -122,7 +122,7 @@ The most straightforward path is to start with the first type of tutorial (execu
 
 ## Exercises
 
-Exercises are interactive R code chunks that allow readers to directly execute R code and see it's results:
+Exercises are interactive R code chunks that allow readers to directly execute R code and see its results:
 
 <img src="images/exercises.png" width=770 height=922 style="border: solid 1px #cccccc;">
 
