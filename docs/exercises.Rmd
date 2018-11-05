@@ -4,7 +4,7 @@ title: "Exercises"
 
 ## Overview
 
-Exercises are interactive R code chunks that allow readers to directly execute R code and see it's results. There are many options associated with tutorial exercises (all of which are described in more detail below):
+Exercises are interactive R code chunks that allow readers to directly execute R code and see its results. There are many options associated with tutorial exercises (all of which are described in more detail below):
 
 <table>
 <thead>
@@ -67,7 +67,7 @@ The use of these special chunks is also described in detail below.
 
 By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).
 
-You can arrange for an exercise to be pre-evaluated (and it's output shown) using the `exercise.eval` chunk option. This option can also be set either globally or per-chunk:
+You can arrange for an exercise to be pre-evaluated (and its output shown) using the `exercise.eval` chunk option. This option can also be set either globally or per-chunk:
 
 <div id="exerciseeval"></div>
 <script type="text/javascript">loadSnippet('exerciseeval')</script>
