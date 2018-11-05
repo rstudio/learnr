@@ -69,7 +69,7 @@ The `runtime: shiny_prerendered` element included in the YAML hints at the under
 
 #### Tutorial Format
 
-While you can use tutorial elements many different R Markdown formats (see the article on [Tutorial Formats](formats.html) for details), the **learnr** package also includes a custom `learnr::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials. 
+While you can use tutorial elements in many different R Markdown formats (see the article on [Tutorial Formats](formats.html) for details), the **learnr** package also includes a custom `learnr::tutorial` format which provides some default layout and behavior (including progress tracking) which you'll likely want to use in many of your tutorials.
 
 You can create a new `learnr::tutorial` document from a template via the **New R Markdown** dialog in RStudio:
 
