@@ -742,7 +742,7 @@ question_module_server_impl <- function(
     
     tags$div(
       "data-label" = as.character(question$label),
-      class = "tutorial_question",
+      class = "tutorial-question",
       answer_container_
     )
   })
