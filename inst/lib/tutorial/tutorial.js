@@ -179,7 +179,7 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
     return;
   
   // get all interactive components in the section
-  var components = section.find('.tutorial-exercise, .quiz, .tutorial-video');
+  var components = section.find('.tutorial-exercise, .tutorial-question, .tutorial-video');
   
   // are they all completed?
   var allCompleted = true;
@@ -200,7 +200,7 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
     // fire for preceding siblings if they have no interactive components
     var previousSections = section.prevAll('.section');
     previousSections.each(function() {
-      var components = $(this).find('.tutorial-exercise, .quiz');
+      var components = $(this).find('.tutorial-exercise, .tutorial-question');
       if (components.length === 0)
         fireCompleted(this);
     });
@@ -223,9 +223,8 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
   
   // determine element and completed status
   if (event == "exercise_submission" || event == "question_submission") {
-    
     var element = $('.tutorial-exercise[data-label="' + data.label + '"]').add(
-                    '.quiz[data-label="' + data.label + '"]');
+                    '.tutorial-question[data-label="' + data.label + '"]');
     if (element.length > 0) {
       progressEvent.element = element;
       progressEvent.completed = true;  
