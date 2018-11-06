@@ -269,9 +269,13 @@ Tutorial.prototype.$initializeProgress = function(progress_events) {
     
     // determine data
     var progressEventData = {};
-    if (progressEvent == "exercise_submission" || progressEvent == "question_submission") {
+    if (progressEvent == "exercise_submission") {
       progressEventData.label = progress.data.label;
       progressEventData.correct = progress.data.correct;
+    }
+    else if (progressEvent == "question_submission") {
+      // quiz questions will fire their own event when loaded
+      continue
     }
     else if (progressEvent == "section_skipped") {
       progressEventData.sectionId = progress.data.sectionId;
@@ -1513,38 +1517,7 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
         });
       }
     }
-    
-    // question submissions
-    else if (type === "question_submission") {
-      
-      // find the quiz 
-      var label = id;
-      var quiz = $('.quiz[data-label="' + label + '"]');
-      
-      // if we have answers then restore them
-      if (submission.data.answers.length > 0) {
-        
-        // select answers
-        var answers = quiz.find('.answers').children('li');
-        for (var a = 0; a < answers.length; a++) {
-          var answer = $(answers[a]);
-          var answerText = answer.children('label').attr('data-answer');
-          if (submission.data.answers.indexOf(answerText) != -1)
-            answer.children('input').prop('checked', true); 
-        }
-        
-        // click submit button if we applied an answer
-        if (answers.find('input:checked').length > 0) {
-          
-          // set restoring flag on quiz element
-          quiz.data('restoring', true);
-          
-          // click the button
-          var checkAnswer = quiz.find('.checkAnswer'); 
-          checkAnswer.trigger('click');
-        }
-      }
-    }
+    // question_submission's are done with shiny directly
   }  
 };
 
