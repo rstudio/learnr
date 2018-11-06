@@ -1,13 +1,12 @@
 
 
-save_question_submission <- function(session, label, question, answers, correct) {
+save_question_submission <- function(session, label, question, answers) {
   save_object(
     session = session, 
     object_id = label, 
     tutorial_object("question_submission", list(
       question = question,
-      answers = answers,
-      correct = correct
+      answers = answers
     ))
   )
 }
@@ -123,21 +122,22 @@ progress_events_from_state_objects <- function(state_objects) {
   # first submissions
   submissions <- submissions_from_state_objects(state_objects)
   progress_events <- lapply(submissions, function(submission) {
+    data <- list(
+      label = submission$id
+    )
     if (submission$type == "question_submission") {
-      correct <- submission$data$correct
+      data$answers <- submission$data$answers
     }
     else if (submission$type == "exercise_submission") {
       if (!is.null(submission$data$feedback))
         correct <- submission$data$feedback$correct
       else
         correct <- TRUE
+      data$correct <- correct
     }
     
     list(event = submission$type,
-         data = list(
-           label = submission$id, 
-           correct = correct
-         ))
+         data = data)
   })
   
   # now sections skipped
