@@ -247,9 +247,6 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
   // fire it if we found an element
   if (progressEvent.element) {
     
-    // record it
-    this.$progressEvents.push(progressEvent);
-  
     // fire event
     this.$fireProgress(progressEvent);
     
