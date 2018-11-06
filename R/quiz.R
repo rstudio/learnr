@@ -688,6 +688,11 @@ question_module_server_impl <- function(
   # initialize with the past answer
   #  this should cascade throughout the app to display correct answers and final outputs
   init_question(past_submission_answer)
+  if (!is.null(past_submission_answer)) {
+    onFlushed(function() {
+      broadcast_question_event_to_client(session, question$label, past_submission_answer)
+    })
+  }
   
 
   output$action_button_container <- renderUI({
