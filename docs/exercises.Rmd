@@ -162,10 +162,12 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 ## Exercise Checking
 
-The **learnr** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example:
+The **learnr** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example, if a package called checkthat existed and had a `check_exercise` function, you would specify it as an exercise checker using:
 
 <div id="exercisecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
+
+The [grader](https://github.com/rstudio-education/grader) package has utilities for grading exercises; suggestions and contributions are very welcome.
 
 When you provide a "-check" chunk for an exercise, an additional "Submit Answer" button is added to the exercise editor:
 
