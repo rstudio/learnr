@@ -14,6 +14,7 @@
 
 # √-barret make the question div a class and data-label combo to be found at render, like an exercise
 # √-barret validate that chunk lables do not have unwanted characters to function better on JS side
+# √-barret chunk labels are now NS ids
 
 
 #' Tutorial quiz questions
@@ -76,7 +77,10 @@ quiz <- function(..., caption = "Quiz") {
   index <- 1
   questions <- lapply(list(...), function(question) {
     if (!is.null(question$label)) {
-      question$label <- paste(question$label, index, sep="-")
+      label <- paste(question$label, index, sep="-")
+      question$label <- label
+      question$ids$answer <- NS(label)("answer")
+      question$ids$question <- label
       index <<- index + 1
     }
     question
@@ -150,15 +154,15 @@ question <- function(text,
   }
   
   # can not guarantee that `label` exists
-  q_id <- random_question_id()
-  ns <- NS(q_id)
+  label <- knitr::opts_current$get('label')
+  q_id <- label %||% random_question_id()
 
   return(
     structure(
       class = c(type, "tutorial_question"),
       list(
         type = type,
-        label = knitr::opts_current$get('label'),
+        label = label,
         question = quiz_text(text),
         answers = answers,
         button_labels = list(
@@ -173,7 +177,7 @@ question <- function(text,
           post_message = quiz_text(post_message)
         ),
         ids = list(
-          answer = ns("answer"),
+          answer = NS(q_id)("answer"),
           question = q_id
         ),
         random_answer_order = random_answer_order,
