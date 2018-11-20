@@ -12,6 +12,7 @@
 # TODO-barret re-render tutorials
 # TODO-barret re-render documentation pictures
 
+# √-barret make the question div a class and data-label combo to be found at render, like an exercise
 
 
 #' Tutorial quiz questions
@@ -583,7 +584,9 @@ question_prerendered_chunk <- function(question, ...) {
 
 question_module_ui <- function(id) {
   ns <- NS(id)
-  tagList(
+  div(
+    "data-label" = as.character(id),
+    class = "tutorial-question",
     uiOutput(ns("answer_container")),
     uiOutput(ns("message_container")),
     uiOutput(ns("action_button_container"))
@@ -714,41 +717,36 @@ question_module_server_impl <- function(
     )
   })
   
-  answer_container <- reactive(label = "answer_container", {
+  output$answer_container <- renderUI({
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
         question_initialize_input(question, submitted_answer())
       )
-    } else {
-      # has submitted
-      if (is.null(is_done())) return(NULL) # has not initialized
-      if (is_done()) {
-        # if the question is 'done', display the final input ui and disable everything
-        return(
-          disable_all_tags(
-            question_completed_input(question, submitted_answer())
-          )
-        )
-      } else {
-        # if the question is NOT 'done', disable the current UI 
-        #   until it is reset with the try again button
-        return(
-          disable_all_tags(
-            question_initialize_input(question, submitted_answer())
-          )
-        )
-      }
     }
-  })
-  output$answer_container <- renderUI({
-    answer_container_ <- answer_container()
-    if (is.null(answer_container_)) return(answer_container_)
     
-    tags$div(
-      "data-label" = as.character(question$label),
-      class = "tutorial-question",
-      answer_container_
+    # has submitted
+    
+    if (is.null(is_done())) {
+      # has not initialized
+      return(NULL) 
+    }
+    
+    if (is_done()) {
+      # if the question is 'done', display the final input ui and disable everything
+      return(
+        disable_all_tags(
+          question_completed_input(question, submitted_answer())
+        )
+      )
+    }
+    
+    # if the question is NOT 'done', disable the current UI 
+    #   until it is reset with the try again button
+    return(
+      disable_all_tags(
+        question_initialize_input(question, submitted_answer())
+      )
     )
   })
   
