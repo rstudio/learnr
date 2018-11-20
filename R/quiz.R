@@ -757,6 +757,13 @@ question_module_server_impl <- function(
 
     if (button_type() == "try_again") {
       init_question(NULL)
+      
+      # submit "reset" to server
+      reset_question_submission_event(
+        session = session,
+        label = as.character(question$label),
+        question = as.character(question$question)
+      )
       return()
     }
 

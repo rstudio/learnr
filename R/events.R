@@ -50,6 +50,27 @@ question_submission_event <- function(session,
                            answers = answers)
 }
 
+reset_question_submission_event <- function(session, label, question) {
+  # notify server-side listeners
+  record_event(session = session,
+               event = "question_submission",
+               data = list(label = label,
+                           question = question,
+                           reset = TRUE))
+  
+  # notify client side listeners
+  session$sendCustomMessage("tutorial.reset_progress_event", list(
+    event = "question_submission", 
+    data = list(label = label)
+  ))
+
+
+  # store submission for later replay
+  save_reset_question_submission(session = session, 
+                           label = label, 
+                           question = question)
+}
+
 
 section_skipped_event <- function(session, sectionId) {
   

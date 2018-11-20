@@ -10,6 +10,16 @@ save_question_submission <- function(session, label, question, answers) {
     ))
   )
 }
+save_reset_question_submission <- function(session, label, question) {
+  save_object(
+    session = session, 
+    object_id = label, 
+    tutorial_object("question_submission", list(
+      question = question,
+      reset = TRUE
+    ))
+  )
+}
 
 save_exercise_submission <- function(session, label, code, output, error_message, checked, feedback) {
   
@@ -105,7 +115,15 @@ filter_state_objects <- function(state_objects, types) {
 }
 
 submissions_from_state_objects <- function(state_objects) {
-  filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
+  filter_state_objects(state_objects, c("question_submission", "exercise_submission")) %>%
+    Filter(x = ., function(object) {
+      # only return answered question, not reset questions
+      if (object$type == "question_submission") {
+        !isTRUE(object$data$reset)
+      } else {
+        TRUE
+      }
+    })
 }
 
 video_progress_from_state_objects <- function(state_objects) {
