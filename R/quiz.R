@@ -13,6 +13,7 @@
 # TODO-barret re-render documentation pictures
 
 # √-barret make the question div a class and data-label combo to be found at render, like an exercise
+# √-barret validate that chunk lables do not have unwanted characters to function better on JS side
 
 
 #' Tutorial quiz questions
