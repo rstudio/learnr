@@ -1007,7 +1007,7 @@ random_encouragement <- c(
 
 str_trim <- function(x) {
   sub(
-    "\\s$", "", 
+    "\\s+$", "", 
     sub(
       "^\\s+", "", 
       as.character(x)
