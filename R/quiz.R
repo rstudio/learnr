@@ -6,11 +6,21 @@
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
   ## double check answer params
-# TODO-barret gut unused R and JS methods from old JS quiz hooks
-# TODO-barret documentation of s3 methods for a question
-# TODO-barret pass R cmd check
-# TODO-barret re-render tutorials
-# TODO-barret re-render documentation pictures
+# √-barret gut unused R and JS methods from old JS quiz hooks
+
+# TODO-barret question / quiz print method
+  ## If a quiz is printed in the console... should it open in the browser or print a list?
+  ## either way it should be document or fixed
+# TODO-barret Documentation
+  # TODO-barret re-render tutorials
+  # TODO-barret re-render documentation pictures
+  # TODO-barret A new question type (“text”)
+  # TODO-barret You can now extend learnr with your own question types
+  # TODO-barret Questions are now Shiny apps
+    # TODO-barret print() behavior is different from before
+# TODO-barret R CMD check/rev-dep check
+# TODO-barret QA pass (check existing education primers)
+
 
 # √-barret make the question div a class and data-label combo to be found at render, like an exercise
 # √-barret validate that chunk lables do not have unwanted characters to function better on JS side
