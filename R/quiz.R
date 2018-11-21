@@ -777,7 +777,7 @@ question_module_server_impl <- function(
       session = session,
       label = as.character(question$label),
       question = as.character(question$question),
-      answers = as.character(input$answer),
+      answer = as.character(input$answer),
       correct = is_correct_info()$is_correct
     )
 

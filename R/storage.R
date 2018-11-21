@@ -1,12 +1,12 @@
 
 
-save_question_submission <- function(session, label, question, answers) {
+save_question_submission <- function(session, label, question, answer) {
   save_object(
     session = session, 
     object_id = label, 
     tutorial_object("question_submission", list(
       question = question,
-      answers = answers
+      answer = answer
     ))
   )
 }
@@ -144,7 +144,7 @@ progress_events_from_state_objects <- function(state_objects) {
       label = submission$id
     )
     if (submission$type == "question_submission") {
-      data$answers <- submission$data$answers
+      data$answer <- submission$data$answer
     }
     else if (submission$type == "exercise_submission") {
       if (!is.null(submission$data$feedback))
