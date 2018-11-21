@@ -42,6 +42,7 @@
 #'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
 #'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
 #'   message alongside the \code{message} message value.
+#' @param loading Loading text to display as a placeholder while the question is loaded
 #' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
 #' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
 #' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
@@ -107,6 +108,7 @@ question <- function(text,
                      try_again = incorrect,
                      message = NULL,
                      post_message = NULL,
+                     loading = c("**Loading:** ", text, "<br/><br/><br/>"),
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
                      allow_retry = FALSE,
@@ -180,6 +182,7 @@ question <- function(text,
           answer = NS(q_id)("answer"),
           question = q_id
         ),
+        loading = quiz_text(loading),
         random_answer_order = random_answer_order,
         allow_retry = allow_retry
       )
@@ -603,10 +606,7 @@ question_module_server <- function(
   question
 ) {
   
-  output$answer_container <- renderUI({ tags$label(class="control-label", "Loading...") })
-  output$action_button_container <- renderUI({
-    tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
-  })
+  output$answer_container <- renderUI({ div(class="loading", question$loading) })
   
   observeEvent(
     req(session$userData$learnr_state() == "restored"), 
