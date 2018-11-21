@@ -289,6 +289,18 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 
 
 # returns shinyUI component
+#' Custom question methods
+#'
+#' These methods are used to abstract out the necessary parts to display a custom question.
+#' The question object contains the corresponding input id information at \code{question$ids}.
+#' The question ids will contain the following information: \describe{
+#'  \item{answer}{}
+#'  \item{question}{}
+#' }
+#'
+#' @param question question object used
+#' @param answer_input input value provided by `input$answer`
+#' @param ... future parameter expansion
 question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
 }

@@ -43,12 +43,10 @@ test_that("quiz questions can be created", {
   expect_type(q$messages$psot_message, "NULL")
   
   expect_type(q$ids, "list")
-  expect_type(q$ids$action_button, "character")
   expect_type(q$ids$answer, "character")
   expect_type(q$ids$question, "character")
-  expect_type(q$ids$answer_container, "character")
-  expect_type(q$ids$action_button_container, "character")
-  expect_type(q$ids$message_container, "character")
+  
+  expect_s3_class(q$loading, "html")
   
   expect_type(q$random_answer_order, "logical")
   

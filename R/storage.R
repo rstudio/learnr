@@ -115,15 +115,15 @@ filter_state_objects <- function(state_objects, types) {
 }
 
 submissions_from_state_objects <- function(state_objects) {
-  filter_state_objects(state_objects, c("question_submission", "exercise_submission")) %>%
-    Filter(x = ., function(object) {
-      # only return answered question, not reset questions
-      if (object$type == "question_submission") {
-        !isTRUE(object$data$reset)
-      } else {
-        TRUE
-      }
-    })
+  filtered_submissions <- filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
+  Filter(x = filtered_submissions, function(object) {
+    # only return answered question, not reset questions
+    if (object$type == "question_submission") {
+      !isTRUE(object$data$reset)
+    } else {
+      TRUE
+    }
+  })
 }
 
 video_progress_from_state_objects <- function(state_objects) {
