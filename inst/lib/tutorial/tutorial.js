@@ -212,6 +212,26 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
   }
 }; 
 
+Tutorial.prototype.$removeConflictingProgressEvents = function(progressEvent) {
+  // Alias this
+  var thiz = this;
+  var event;
+  // work backwords as to avoid skipping a position caused by removing an element
+  for (var i = thiz.$progressEvents.length - 1; i >= 0; i--) {
+    event = thiz.$progressEvents[i];
+    if (event.event === "question_submission") {
+      if (
+        event.data.label === progressEvent.data.label & 
+        progressEvent.data.label !== undefined
+      ) {
+        // remove the item from existing progress events
+        thiz.$progressEvents.splice(i, 1)
+        return;
+      }
+    }
+  }
+}
+
 
 Tutorial.prototype.$fireProgressEvent = function(event, data) {
   
@@ -227,7 +247,14 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
                     '.tutorial-question[data-label="' + data.label + '"]');
     if (element.length > 0) {
       progressEvent.element = element;
-      progressEvent.completed = true;  
+      if (event == "exercise_submission") {
+        // any progress event for an exercise is to complete only
+        progressEvent.completed = true;  
+      } else {
+        // question_submission
+        // questions may be reset with "try again", and not in a completed state
+        progressEvent.completed = (data.answer !== null);
+      }
     }
     
   }
@@ -243,6 +270,9 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
       progressEvent.completed = (2*data.time) > data.total_time;
     }
   }
+  
+  // remove any prior forms of this progressEvent
+  this.$removeConflictingProgressEvents(progressEvent)
   
   // fire it if we found an element
   if (progressEvent.element) {
@@ -274,12 +304,11 @@ Tutorial.prototype.$initializeProgress = function(progress_events) {
       progressEventData.correct = progress.data.correct;
     }
     else if (progressEvent == "question_submission") {
-      // quiz questions will fire their own event when loaded
-      continue
+      progressEventData.label = progress.data.label;
+      progressEventData.answer = progress.data.answer;
     }
     else if (progressEvent == "section_skipped") {
       progressEventData.sectionId = progress.data.sectionId;
-      progressEventData.correct = false;
     }
     else if (progressEvent == "video_progress") {
       progressEventData.video_url = progress.data.video_url;
@@ -1474,6 +1503,7 @@ Tutorial.prototype.$restoreState = function(objects) {
     
     // initialize video players
     thiz.$initializeVideoPlayers(data.video_progress);
+    
   });
 };
 

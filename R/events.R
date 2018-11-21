@@ -59,10 +59,11 @@ reset_question_submission_event <- function(session, label, question) {
                            reset = TRUE))
   
   # notify client side listeners
-  session$sendCustomMessage("tutorial.reset_progress_event", list(
-    event = "question_submission", 
-    data = list(label = label)
-  ))
+  broadcast_progress_event_to_client(
+    session,
+    "question_submission",
+    list(label = label, answer = NULL)
+  )
 
 
   # store submission for later replay

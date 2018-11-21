@@ -15,6 +15,12 @@
 # √-barret make the question div a class and data-label combo to be found at render, like an exercise
 # √-barret validate that chunk lables do not have unwanted characters to function better on JS side
 # √-barret chunk labels are now NS ids
+# √-barret use the new label in js to attach the element right away, regardless if it is ready or not
+  ## this allows js to function regardless of state of the quiz question
+  ## this allows for sections to be completed regardless of what is returned from the user
+  
+
+
 
 
 #' Tutorial quiz questions
@@ -696,11 +702,6 @@ question_module_server_impl <- function(
   # initialize with the past answer
   #  this should cascade throughout the app to display correct answers and final outputs
   init_question(past_submission_answer)
-  if (!is.null(past_submission_answer)) {
-    onFlushed(function() {
-      broadcast_question_event_to_client(session, question$label, past_submission_answer)
-    })
-  }
   
 
   output$action_button_container <- renderUI({
