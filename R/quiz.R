@@ -1,9 +1,9 @@
 # TODO - Allow for messages to be functions
   ## defer to v2
-# TODO - Allow for null input$answer
+# X - Allow for null input$answer
   ## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
 
-# TODO-barret revert to old params names in question
+# √-barret revert to old params names in question
   ## or deprecate old names and use new names
   ## double check answer params
 # √-barret gut unused R and JS methods from old JS quiz hooks
@@ -14,6 +14,7 @@
 # TODO-barret Documentation
   # TODO-barret re-render tutorials
   # TODO-barret re-render documentation pictures
+  # TODO-barret answer$correct -> answer$is_correct
   # TODO-barret A new question type (“text”)
   # TODO-barret You can now extend learnr with your own question types
   # TODO-barret Questions are now Shiny apps
@@ -217,7 +218,6 @@ answer <- function(text, correct = FALSE, message = NULL) {
     id = random_answer_id(),
     option = as.character(text),
     label = quiz_text(text),
-    correct = isTRUE(correct), # TODO-barret is this needed? (only for backwards compat)
     is_correct = isTRUE(correct),
     message = quiz_text(message)
   ))
