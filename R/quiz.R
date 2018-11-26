@@ -6,11 +6,30 @@
 # TODO-barret revert to old params names in question
   ## or deprecate old names and use new names
   ## double check answer params
-# TODO-barret gut unused R and JS methods from old JS quiz hooks
-# TODO-barret documentation of s3 methods for a question
-# TODO-barret pass R cmd check
-# TODO-barret re-render tutorials
-# TODO-barret re-render documentation pictures
+# √-barret gut unused R and JS methods from old JS quiz hooks
+
+# TODO-barret question / quiz print method
+  ## If a quiz is printed in the console... should it open in the browser or print a list?
+  ## either way it should be document or fixed
+# TODO-barret Documentation
+  # TODO-barret re-render tutorials
+  # TODO-barret re-render documentation pictures
+  # TODO-barret A new question type (“text”)
+  # TODO-barret You can now extend learnr with your own question types
+  # TODO-barret Questions are now Shiny apps
+    # TODO-barret print() behavior is different from before
+# TODO-barret R CMD check/rev-dep check
+# TODO-barret QA pass (check existing education primers)
+
+
+# √-barret make the question div a class and data-label combo to be found at render, like an exercise
+# √-barret validate that chunk lables do not have unwanted characters to function better on JS side
+# √-barret chunk labels are now NS ids
+# √-barret use the new label in js to attach the element right away, regardless if it is ready or not
+  ## this allows js to function regardless of state of the quiz question
+  ## this allows for sections to be completed regardless of what is returned from the user
+  
+
 
 
 
@@ -39,6 +58,7 @@
 #'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
 #'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
 #'   message alongside the \code{message} message value.
+#' @param loading Loading text to display as a placeholder while the question is loaded
 #' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
 #' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
 #' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
@@ -74,7 +94,10 @@ quiz <- function(..., caption = "Quiz") {
   index <- 1
   questions <- lapply(list(...), function(question) {
     if (!is.null(question$label)) {
-      question$label <- paste(question$label, index, sep="-")
+      label <- paste(question$label, index, sep="-")
+      question$label <- label
+      question$ids$answer <- NS(label)("answer")
+      question$ids$question <- label
       index <<- index + 1
     }
     question
@@ -101,6 +124,7 @@ question <- function(text,
                      try_again = incorrect,
                      message = NULL,
                      post_message = NULL,
+                     loading = c("**Loading:** ", text, "<br/><br/><br/>"),
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
                      allow_retry = FALSE,
@@ -148,15 +172,15 @@ question <- function(text,
   }
   
   # can not guarantee that `label` exists
-  q_id <- random_question_id()
-  ns <- NS(q_id)
+  label <- knitr::opts_current$get('label')
+  q_id <- label %||% random_question_id()
 
   return(
     structure(
       class = c(type, "tutorial_question"),
       list(
         type = type,
-        label = knitr::opts_current$get('label'),
+        label = label,
         question = quiz_text(text),
         answers = answers,
         button_labels = list(
@@ -171,9 +195,10 @@ question <- function(text,
           post_message = quiz_text(post_message)
         ),
         ids = list(
-          answer = ns("answer"),
+          answer = NS(q_id)("answer"),
           question = q_id
         ),
+        loading = quiz_text(loading),
         random_answer_order = random_answer_order,
         allow_retry = allow_retry
       )
@@ -274,6 +299,18 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 
 
 # returns shinyUI component
+#' Custom question methods
+#'
+#' These methods are used to abstract out the necessary parts to display a custom question.
+#' The question object contains the corresponding input id information at \code{question$ids}.
+#' The question ids will contain the following information: \describe{
+#'  \item{answer}{}
+#'  \item{question}{}
+#' }
+#'
+#' @param question question object used
+#' @param answer_input input value provided by `input$answer`
+#' @param ... future parameter expansion
 question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
 }
@@ -583,7 +620,9 @@ question_prerendered_chunk <- function(question, ...) {
 
 question_module_ui <- function(id) {
   ns <- NS(id)
-  tagList(
+  div(
+    "data-label" = as.character(id),
+    class = "tutorial-question",
     uiOutput(ns("answer_container")),
     uiOutput(ns("message_container")),
     uiOutput(ns("action_button_container"))
@@ -595,10 +634,7 @@ question_module_server <- function(
   question
 ) {
   
-  output$answer_container <- renderUI({ tags$label(class="control-label", "Loading...") })
-  output$action_button_container <- renderUI({
-    tags$input(type = "button", value = "Loading...", class="btn btn-info", disabled = NA)
-  })
+  output$answer_container <- renderUI({ div(class="loading", question$loading) })
   
   observeEvent(
     req(session$userData$learnr_state() == "restored"), 
@@ -709,41 +745,36 @@ question_module_server_impl <- function(
     )
   })
   
-  answer_container <- reactive(label = "answer_container", {
+  output$answer_container <- renderUI({
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
         question_initialize_input(question, submitted_answer())
       )
-    } else {
-      # has submitted
-      if (is.null(is_done())) return(NULL) # has not initialized
-      if (is_done()) {
-        # if the question is 'done', display the final input ui and disable everything
-        return(
-          disable_all_tags(
-            question_completed_input(question, submitted_answer())
-          )
-        )
-      } else {
-        # if the question is NOT 'done', disable the current UI 
-        #   until it is reset with the try again button
-        return(
-          disable_all_tags(
-            question_initialize_input(question, submitted_answer())
-          )
-        )
-      }
     }
-  })
-  output$answer_container <- renderUI({
-    answer_container_ <- answer_container()
-    if (is.null(answer_container_)) return(answer_container_)
     
-    tags$div(
-      "data-label" = as.character(question$label),
-      class = "tutorial_question",
-      answer_container_
+    # has submitted
+    
+    if (is.null(is_done())) {
+      # has not initialized
+      return(NULL) 
+    }
+    
+    if (is_done()) {
+      # if the question is 'done', display the final input ui and disable everything
+      return(
+        disable_all_tags(
+          question_completed_input(question, submitted_answer())
+        )
+      )
+    }
+    
+    # if the question is NOT 'done', disable the current UI 
+    #   until it is reset with the try again button
+    return(
+      disable_all_tags(
+        question_initialize_input(question, submitted_answer())
+      )
     )
   })
   
@@ -752,6 +783,13 @@ question_module_server_impl <- function(
 
     if (button_type() == "try_again") {
       init_question(NULL)
+      
+      # submit "reset" to server
+      reset_question_submission_event(
+        session = session,
+        label = as.character(question$label),
+        question = as.character(question$question)
+      )
       return()
     }
 
@@ -762,7 +800,7 @@ question_module_server_impl <- function(
       session = session,
       label = as.character(question$label),
       question = as.character(question$question),
-      answers = as.character(input$answer),
+      answer = as.character(input$answer),
       correct = is_correct_info()$is_correct
     )
 
@@ -992,7 +1030,7 @@ random_encouragement <- c(
 
 str_trim <- function(x) {
   sub(
-    "\\s$", "", 
+    "\\s+$", "", 
     sub(
       "^\\s+", "", 
       as.character(x)

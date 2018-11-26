@@ -179,7 +179,7 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
     return;
   
   // get all interactive components in the section
-  var components = section.find('.tutorial-exercise, .quiz, .tutorial-video');
+  var components = section.find('.tutorial-exercise, .tutorial-question, .tutorial-video');
   
   // are they all completed?
   var allCompleted = true;
@@ -200,7 +200,7 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
     // fire for preceding siblings if they have no interactive components
     var previousSections = section.prevAll('.section');
     previousSections.each(function() {
-      var components = $(this).find('.tutorial-exercise, .quiz');
+      var components = $(this).find('.tutorial-exercise, .tutorial-question');
       if (components.length === 0)
         fireCompleted(this);
     });
@@ -211,6 +211,26 @@ Tutorial.prototype.$fireSectionCompleted = function(element) {
       this.$fireSectionCompleted(section);
   }
 }; 
+
+Tutorial.prototype.$removeConflictingProgressEvents = function(progressEvent) {
+  // Alias this
+  var thiz = this;
+  var event;
+  // work backwords as to avoid skipping a position caused by removing an element
+  for (var i = thiz.$progressEvents.length - 1; i >= 0; i--) {
+    event = thiz.$progressEvents[i];
+    if (event.event === "question_submission") {
+      if (
+        event.data.label === progressEvent.data.label & 
+        progressEvent.data.label !== undefined
+      ) {
+        // remove the item from existing progress events
+        thiz.$progressEvents.splice(i, 1)
+        return;
+      }
+    }
+  }
+}
 
 
 Tutorial.prototype.$fireProgressEvent = function(event, data) {
@@ -223,12 +243,18 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
   
   // determine element and completed status
   if (event == "exercise_submission" || event == "question_submission") {
-    
     var element = $('.tutorial-exercise[data-label="' + data.label + '"]').add(
-                    '.quiz[data-label="' + data.label + '"]');
+                    '.tutorial-question[data-label="' + data.label + '"]');
     if (element.length > 0) {
       progressEvent.element = element;
-      progressEvent.completed = true;  
+      if (event == "exercise_submission") {
+        // any progress event for an exercise is to complete only
+        progressEvent.completed = true;  
+      } else {
+        // question_submission
+        // questions may be reset with "try again", and not in a completed state
+        progressEvent.completed = (data.answer !== null);
+      }
     }
     
   }
@@ -245,12 +271,12 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
     }
   }
   
+  // remove any prior forms of this progressEvent
+  this.$removeConflictingProgressEvents(progressEvent)
+  
   // fire it if we found an element
   if (progressEvent.element) {
     
-    // record it
-    this.$progressEvents.push(progressEvent);
-  
     // fire event
     this.$fireProgress(progressEvent);
     
@@ -273,13 +299,16 @@ Tutorial.prototype.$initializeProgress = function(progress_events) {
     
     // determine data
     var progressEventData = {};
-    if (progressEvent == "exercise_submission" || progressEvent == "question_submission") {
+    if (progressEvent == "exercise_submission") {
       progressEventData.label = progress.data.label;
       progressEventData.correct = progress.data.correct;
     }
+    else if (progressEvent == "question_submission") {
+      progressEventData.label = progress.data.label;
+      progressEventData.answer = progress.data.answer;
+    }
     else if (progressEvent == "section_skipped") {
       progressEventData.sectionId = progress.data.sectionId;
-      progressEventData.correct = false;
     }
     else if (progressEvent == "video_progress") {
       progressEventData.video_url = progress.data.video_url;
@@ -1474,6 +1503,7 @@ Tutorial.prototype.$restoreState = function(objects) {
     
     // initialize video players
     thiz.$initializeVideoPlayers(data.video_progress);
+    
   });
 };
 
@@ -1517,38 +1547,7 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
         });
       }
     }
-    
-    // question submissions
-    else if (type === "question_submission") {
-      
-      // find the quiz 
-      var label = id;
-      var quiz = $('.quiz[data-label="' + label + '"]');
-      
-      // if we have answers then restore them
-      if (submission.data.answers.length > 0) {
-        
-        // select answers
-        var answers = quiz.find('.answers').children('li');
-        for (var a = 0; a < answers.length; a++) {
-          var answer = $(answers[a]);
-          var answerText = answer.children('label').attr('data-answer');
-          if (submission.data.answers.indexOf(answerText) != -1)
-            answer.children('input').prop('checked', true); 
-        }
-        
-        // click submit button if we applied an answer
-        if (answers.find('input:checked').length > 0) {
-          
-          // set restoring flag on quiz element
-          quiz.data('restoring', true);
-          
-          // click the button
-          var checkAnswer = quiz.find('.checkAnswer'); 
-          checkAnswer.trigger('click');
-        }
-      }
-    }
+    // question_submission's are done with shiny directly
   }  
 };
 

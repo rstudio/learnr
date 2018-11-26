@@ -227,11 +227,27 @@ output$`tutorial-exercise-%s-output` <- renderUI({
 
 
 verify_tutorial_chunk_label <- function() {
+  if (!isTRUE(getOption("knitr.in.progress"))) return()
+  
   label <- knitr::opts_current$get('label')
   unnamed_label <- knitr::opts_knit$get('unnamed.chunk.label')
   if (isTRUE(grepl(paste0('^', unnamed_label), label))) {
     stop("Code chunks with exercises or quiz questions must be labeled.", 
          call. = FALSE)
+  }
+  not_valid_char_regex <- "[^a-zA-Z0-9_-]"
+  if (grepl(not_valid_char_regex, label)) {
+    stop(
+      "Code chunks labels for exercises or quiz questions must only be labeled using:",
+      "\n\tlower case letters: a-z", 
+      "\n\tupper case letters: A-Z", 
+      "\n\tnumbers case letters: 0-9", 
+      "\n\tunderscore: _", 
+      "\n\tdash: -", 
+      "\n\nCurrent label: \"", label ,"\"",
+      "\n\nTry using: \"", gsub(not_valid_char_regex, "_", label) ,"\"",
+      call. = FALSE
+    )
   }
 }
 

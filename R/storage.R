@@ -1,13 +1,22 @@
 
 
-save_question_submission <- function(session, label, question, answers, correct) {
+save_question_submission <- function(session, label, question, answer) {
   save_object(
     session = session, 
     object_id = label, 
     tutorial_object("question_submission", list(
       question = question,
-      answers = answers,
-      correct = correct
+      answer = answer
+    ))
+  )
+}
+save_reset_question_submission <- function(session, label, question) {
+  save_object(
+    session = session, 
+    object_id = label, 
+    tutorial_object("question_submission", list(
+      question = question,
+      reset = TRUE
     ))
   )
 }
@@ -106,7 +115,15 @@ filter_state_objects <- function(state_objects, types) {
 }
 
 submissions_from_state_objects <- function(state_objects) {
-  filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
+  filtered_submissions <- filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
+  Filter(x = filtered_submissions, function(object) {
+    # only return answered question, not reset questions
+    if (object$type == "question_submission") {
+      !isTRUE(object$data$reset)
+    } else {
+      TRUE
+    }
+  })
 }
 
 video_progress_from_state_objects <- function(state_objects) {
@@ -123,21 +140,22 @@ progress_events_from_state_objects <- function(state_objects) {
   # first submissions
   submissions <- submissions_from_state_objects(state_objects)
   progress_events <- lapply(submissions, function(submission) {
+    data <- list(
+      label = submission$id
+    )
     if (submission$type == "question_submission") {
-      correct <- submission$data$correct
+      data$answer <- submission$data$answer
     }
     else if (submission$type == "exercise_submission") {
       if (!is.null(submission$data$feedback))
         correct <- submission$data$feedback$correct
       else
         correct <- TRUE
+      data$correct <- correct
     }
     
     list(event = submission$type,
-         data = list(
-           label = submission$id, 
-           correct = correct
-         ))
+         data = data)
   })
   
   # now sections skipped
