@@ -34,6 +34,8 @@ Imports:
   markdown,
   shiny (>= 1.0),
   rmarkdown (>= 1.12.0)
+Remotes:
+  rstudio/rmarkdown
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
