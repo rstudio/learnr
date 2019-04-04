@@ -125,7 +125,7 @@ tutorial <- function(fig_width = 6.5,
   knitr_options$opts_chunk$max.print <- 1000
   
   # create base document format using standard html_document
-  base_format <- rmarkdown::html_document_base(
+  base_format <- rmarkdown::html_document(
     smart = smart,
     theme = theme,
     lib_dir = NULL,
