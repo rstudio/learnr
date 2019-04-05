@@ -104,7 +104,7 @@ quiz(caption = "Use the code chunk above to help answer these questions.",
            answer("Whether or not the vehicle has driver side airbags"), 
            answer("Whether a car is automatic or manual transmission"),
            answer("The number of cylinders in the car's engine"),
-           answer("Something else", correct = "`drv` describes the type of drivetrain in a car: front wheel drive, rear wheel drive, or four wheel drive."), 
+           answer("Something else", correct = TRUE, message = "`drv` describes the type of drivetrain in a car: front wheel drive, rear wheel drive, or four wheel drive."), 
            allow_retry = TRUE
   ),
   question("How many rows are in the data frame named `cars`?",
