@@ -20,31 +20,56 @@ broadcast_progress_event_to_client <- function(session, event, data) {
   ))
 }
 
-
+broadcast_question_event_to_client <- function(session, label, answer) {
+  broadcast_progress_event_to_client(session = session, 
+                                     event = "question_submission", 
+                                     data = list(label = label, answer = answer))
+}
 question_submission_event <- function(session,
                                       label,
                                       question,
-                                      answers,
+                                      answer,
                                       correct) {
   # notify server-side listeners
   record_event(session = session,
                event = "question_submission",
                data = list(label = label,
                            question = question,
-                           answers = answers,
+                           answer = answer,
                            correct = correct))
   
   # notify client side listeners
-  broadcast_progress_event_to_client(session = session, 
-                                     event = "question_submission", 
-                                     data = list(label = label, correct = correct))
+  broadcast_question_event_to_client(session = session, 
+                                     label = label, 
+                                     answer = answer)
   
   # store submission for later replay
   save_question_submission(session = session, 
                            label = label, 
                            question = question, 
-                           answers = answers,
-                           correct = correct)
+                           answer = answer)
+}
+
+reset_question_submission_event <- function(session, label, question) {
+  # notify server-side listeners
+  record_event(session = session,
+               event = "question_submission",
+               data = list(label = label,
+                           question = question,
+                           reset = TRUE))
+  
+  # notify client side listeners
+  broadcast_progress_event_to_client(
+    session,
+    "question_submission",
+    list(label = label, answer = NULL)
+  )
+
+
+  # store submission for later replay
+  save_reset_question_submission(session = session, 
+                           label = label, 
+                           question = question)
 }
 
 

@@ -7,3 +7,8 @@
 Untitled
 issues
 
+# atom config folder
+.atom/
+
+# html tutorial output
+inst/tutorials/*/*.html

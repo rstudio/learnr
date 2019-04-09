@@ -24,6 +24,7 @@
 #' @param ... Forward parameters to html_document
 #'   
 #' @export
+#' @importFrom utils getFromNamespace
 tutorial <- function(fig_width = 6.5,
                      fig_height = 4,
                      fig_retina = 2,

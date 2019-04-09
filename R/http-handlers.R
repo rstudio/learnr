@@ -1,6 +1,8 @@
 
 
 register_http_handlers <- function(session, metadata) {
+  session$userData$learnr_state <- reactiveVal("start")
+  
   # parent environment for completions (see discussion in setup_exercise_handler
   # for why this is chosen as the completion/execution parent)
   server_envir <- parent.env(parent.env(parent.frame()))
@@ -22,6 +24,7 @@ register_http_handlers <- function(session, metadata) {
       identifiers = identifiers
     )
     
+    session$userData$learnr_state("initialized")
     # return identifers
     list(
       status = 200L,
@@ -54,6 +57,8 @@ register_http_handlers <- function(session, metadata) {
     # get client state
     client_state <- get_client_state(session)
     
+    session$userData$learnr_state("restored")
+
     # return data
     list(
       client_state = client_state,
@@ -75,22 +80,23 @@ register_http_handlers <- function(session, metadata) {
                  data = input$data)
   }))
   
-  # question submission handler
-  session$registerDataObj("question_submission", NULL, rpc_handler(function(input) {
-    
-    # extract inputs
-    label <- input$label
-    question <- input$question
-    answers <- input$answers
-    correct <- input$correct
-    
-    # fire event
-    question_submission_event(session = session,
-                              label = label,
-                              question = question,
-                              answers = answers,
-                              correct = correct)
-  }))
+  # # question submission handler
+  # session$registerDataObj("question_submission", NULL, rpc_handler(function(input) {
+  #   cat("--- question_submission handler called\n")
+  # 
+  #   # extract inputs
+  #   label <- input$label
+  #   question <- input$question
+  #   answers <- input$answers
+  #   correct <- input$correct
+  # 
+  #   # fire event
+  #   question_submission_event(session = session,
+  #                             label = label,
+  #                             question = question,
+  #                             answers = answers,
+  #                             correct = correct)
+  # }))
   
   # video progress handler
   session$registerDataObj("video_progress", NULL, rpc_handler(function(input) {
