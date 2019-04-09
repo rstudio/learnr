@@ -11,3 +11,4 @@
 ^.*/skeleton/skeleton.html
 
 ^\.travis\.yml$
+^\.atom

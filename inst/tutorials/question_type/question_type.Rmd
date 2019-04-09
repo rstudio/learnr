@@ -1,0 +1,273 @@
+---
+title: "Question Types in Learnr"
+output:
+  learnr::tutorial:
+    allow_skip: true
+runtime: shiny_prerendered
+tutorial:
+  # id: "com.example.tutorials.my-first-tutorial"
+  version: 2.17
+  # user_id: "barret"
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE, highlight = TRUE)
+```
+
+
+## Basic Types
+
+There are three basic types of quiz questions: radio button, checkbox, and text box.  Each one allows for one choice, multiple choices, and direct user input respectively.
+
+-------------------
+
+### Radio
+
+When wanting only one answer from a user, use a radio button question.  Even if multiple options are correct, the user is only able to pick a single value.  The `type` value supplied to a `question` should be `"radio"` or `"single"`.  If only one correct option is provided when `type = "auto"`, a radio button question will be produced.
+
+```{r radio}
+question(
+  "Is this a good question?",
+  answer("yes", correct = TRUE),
+  answer("no", message = 'This is a good question.')
+)
+```
+
+-------------------
+
+### Checkbox
+
+When wanting possibly **multiple** answers from a user, use a checkbox question.  All answers that are marked correct must be selected by the user to have the answer be correct.  A minimum of one correct answer is required.  The `type` value supplied to a `question` should be `"checkbox"` or `"multiple"`.  If more than one correct option is provided when `type = "auto"`, a checkbox question will be produced.
+
+```{r checkbox}
+question(
+  "Select all the toppings that belong on a Margherita Pizza:",
+  answer("tomato", correct = TRUE),
+  answer("mozzarella", correct = TRUE),
+  answer("basil", correct = TRUE),
+  answer("extra virgin olive oil", correct = TRUE),
+  answer("pepperoni", message = "Great topping! ... just not on a Margherita Pizza"),
+  answer("onions"),
+  answer("bacon"),
+  answer("spinach"),
+  random_answer_order = TRUE,
+  allow_retry = TRUE,
+  try_again = "Be sure to select all toppings!"
+)
+```
+
+-------------------
+
+### Text box
+
+If you'd like users to submit open-ended answers, use a text box question.  Correct and incorrect answers will be matched exactly (including white space). A minimum of one correct answer is required.  The `type` value supplied to a `question` should be `"text"` to produce a text box question.
+
+Text value inputs are trimmed before they are compared to answers provided.
+
+```{r text_box}
+question(
+  "Please enter the word 'C0rrect' below:",
+  answer("correct", message = "Don't forget to capitalize"),
+  answer("c0rrect", message = "Don't forget to capitalize"),
+  answer("Correct", message = "Is it really an 'o'?"),
+  answer("C0rrect", correct = TRUE),
+  type = "text",
+  allow_retry = TRUE
+)
+```
+
+-------------------
+
+### Extra Arguments
+
+
+* Messages
+  * `correct`: Message to be displayed when a user gets a correct answer.
+  * `incorrect`: Message to be displayed when a user gets an incorrect answer and is not able to try again.
+  * `try_again`: Message to be displayed when a user gets an incorrect answer and has the ability to try again.
+  * `message`: An additional, neutral message to be displayed along with the correct/incorrect message.
+  * `post_message`: Additional message to display along with correct/incorrect feedback.  If `allow_retry` is `TRUE`, this message will only be displayed after the correct submission.  If `allow_retry` is `FALSE`, it will produce a second message alongside the `message` value.
+* Question Setup
+  * `allow_retry`: Boolean that determines if the user should get a second chance at submitting their answer
+  * `random_answer_order`: Boolean that determines if the question answers are displayed in a random order
+* Buttons  
+  * `submit_button`: Label of the submit button
+  * `try_again_button`: Label of the submit button
+
+Example:
+
+```{r options, echo = TRUE}
+question(
+  "How many options are set in this question?",
+  answer("1", message = "Really?"),
+  answer("2"),
+  answer("3"),
+  answer("9", correct = TRUE, message = "Message for value: 9"),
+  type = "auto", # radio
+  correct = "Question is correct!",
+  try_again = "Higher!",
+  message = "Reminder to do something after answering the question...",
+  post_message = "Message to be displayed after the correct answer is found",
+  submit_button = "Submit Answer Here!",
+  try_again_button = "Try Again Here!",
+  allow_retry = TRUE,
+  random_answer_order = TRUE  
+)
+```
+
+## Custom Questions
+
+There are four methods used to define a custom question.  Each s3 method should correspond to the `type = TYPE` supplied to the question.
+
+* `question_initialize_input.TYPE(question, answer_input, ...)`
+  * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the questions is attempted again.
+* `question_completed_input.TYPE(question, ...)`
+  * Determines how the question is displayed after a submission.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
+* `question_is_valid.TYPE(question, answer_input, ...)`
+  * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
+* `question_is_correct.TYPE(question, answer_input, ...)`
+  * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::question_is_correct_value`.
+
+
+#### **No Feedback**
+
+Let's say we want a radio button question, but we want to handle how the question is displayed after a user submits their answer.  
+One option would be to leave a generic `"Thank you for your submission"` and provide no feedback to the user.  
+
+In the example below, we use a radio question as the base question type but handle the completed input stage using a `"no_feedback"` type value.
+Since the stages of displaying a question are dispatched using s3 methods, we set the type to `type = c("no_feedback", "radio")` to utilize the radio button question stages for the stages without a `no_feedback` method implemented.
+
+With the code being executed in a `shiny_prerendered` document, there are two execution phases: `"render"` and `"server"` execution.  Please see [https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html](https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html) for an indepth explaination of these phases.  For our purposes with `learnr`, we will use a `"server-start"` context to add our custom s3 method for the `"server"` phase. The `"server-start"` phase will be executed once for the `"server"` phase, not for every users visiting the tutorial.  To have the custom function be found, we must store it in the Global Environment by using the double arrow assignment.
+
+````markdown
+`r ''````{r no_feedback, context = "server-start"}
+# assign to global env
+question_completed_input.no_feedback <<- function(question, answer_input, ...) {
+  # Return a generic message
+  tagList(
+    tags$label(class="control-label", question$question),
+    tags$h3(question$feedback)
+  )
+}
+```
+````
+
+This _non-standard_ setup above could be avoided if the s3 methods were `library`ed from a package in the `setup` code block.
+
+```{r no_feedback, context = "server-start"}
+# assign to global env
+question_completed_input.no_feedback <<- function(question, answer_input, ...) {
+  # Return a generic message
+  tagList(
+    tags$label(class="control-label", question$question),
+    tags$h3(question$feedback)
+  )
+}
+```
+
+Example quiz question using the `"no_feedback"` question type.
+
+
+```{r no_feedback_questions, echo = TRUE}
+no_feedback_question <- function(..., feedback = "Thank you for your submission") {
+  ques <- question(
+    ...,
+    type = c("no_feedback", "radio"),
+    correct = NULL,
+    incorrect = NULL
+  )
+  ques$feedback <- feedback
+  ques
+}
+
+quiz(
+  no_feedback_question(
+    "Is this a good question?",
+    answer("yes", correct = TRUE),
+    answer("no")
+  ),
+  no_feedback_question(
+    "Will you see which answer you submitted?",
+    answer("yes"),
+    answer("no", correct = TRUE),
+    random_answer_order = TRUE,
+    feedback = "Your answer has been submitted"
+  )
+)
+```
+
+-------------------
+
+### Ignore White Space
+
+
+Let's create one more custom example that maintains all whitespace for a text box submission.
+
+This example should perform like a text box but maintain the white space before compairing it to the known answers.  To accomplish this, we will create a `question_is_correct.text_no_trim` method.  Remember, `question_is_correct` requires that the return value is generated from `question_is_correct_value`.
+
+
+````markdown
+`r ''````{r no_trim_whitespace, context = "server-start"}
+# use double arrow to assign to global namespace
+question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
+  
+  # validate something is given
+  if (is.null(answer_input) || nchar(answer_input) == 0) {
+    showNotification("Please enter some text before submitting", type = "error")
+    # use shiny's `req(NULL)` to stop execution
+    req(NULL)
+  }
+  
+  for (ans in question$answers) {
+    if (identical(ans$option, answer_input)) {
+      return(question_is_correct_value(
+        ans$is_correct,
+        ans$message
+      ))
+    }
+  }
+  # answer not found
+  question_is_correct_value(FALSE, NULL)
+}
+```
+````
+
+```{r no_trim_whitespace, context = "server-start"}
+# use double arrow to assign to global namespace
+question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
+  
+  # validate something is given
+  if (is.null(answer_input) || nchar(answer_input) == 0) {
+    showNotification("Please enter some text before submitting", type = "error")
+    # use shiny's `req(NULL)` to stop execution
+    req(NULL)
+  }
+  
+  for (ans in question$answers) {
+    if (identical(ans$option, answer_input)) {
+      return(question_is_correct_value(
+        ans$is_correct,
+        ans$message
+      ))
+    }
+  }
+  # answer not found
+  question_is_correct_value(FALSE, NULL)
+}
+```
+
+```{r no_trim, echo = TRUE}
+question(
+  "Please enter the phrase '&nbsp;&nbsp;abc&nbsp;&nbsp;def&nbsp;&nbsp;&nbsp;' below:",
+  answer("abc def", message = "There are two spaces in the middle"),
+  answer("abc  def", message = "There are two spaces at the beginning"),
+  answer(" abc  def", message = "There are two spaces at the beginning"),
+  answer("  abc def", message = "There are spaces at the end"),
+  answer("  abc def ", message = "more spaces at the end"),
+  answer("  abc def  ", message = "even more spaces at the end"),
+  answer("  abc  def   ", correct = TRUE),
+  type = c("text_no_trim", "text"),
+  allow_retry = TRUE
+)
+```

@@ -29,7 +29,7 @@ initialize_tutorial <- function() {
     rmarkdown::shiny_prerendered_chunk(
       'server',
       sprintf('learnr:::register_http_handlers(session, metadata = %s)',
-              list_to_string(rmarkdown::metadata$tutorial)),
+              dput_to_string(rmarkdown::metadata$tutorial)),
       singleton = TRUE
     )
     
@@ -39,8 +39,8 @@ initialize_tutorial <- function() {
 }
 
 
-list_to_string <- function(x) {
-  conn <- textConnection("list_to_string", "w")
+dput_to_string <- function(x) {
+  conn <- textConnection("dput_to_string", "w")
   on.exit({close(conn)})
   dput(x, file = conn)
   paste0(textConnectionValue(conn), collapse = "")

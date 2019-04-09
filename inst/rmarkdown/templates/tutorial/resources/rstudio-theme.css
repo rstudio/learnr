@@ -36,7 +36,8 @@ ul {
 
 .btn {
   padding: 10px 20px;
-  border-radius: 3px; }
+  border-radius: 3px; 
+  margin-bottom: 20px; }
 
 .btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
@@ -51,6 +52,8 @@ ul {
     background-color: #c8c8c8; }
   .btn-default:focus {
     background-color: #e0e0e0; }
+
+/* TODO-barret add css for btn-warning */
 
 .btn-primary, .btn-success, .btn-info {
   background-color: #75aadb;
@@ -71,4 +74,73 @@ code {
   color: darkslategray;
 }
 
+
+
+
+
+/* quiz css */
+
+.questions {
+  padding: 8px;
+  margin-bottom: 0;
+}
+
+.questions h3 {
+  font-weight: 500;
+  margin-bottom: 15px;
+  margin-top: 0;
+  font-size: 1.1em;
+}
+
+.alert {
+  width: fit-content;
+}
+
+/* .answers {
+  padding-left: 25px;
+  margin-bottom: 15px;
+} */
+
+/* .answers label {
+  font-weight: 400;
+  margin-left: 4px;
+} */
+
+/* .responses {
+  padding-left: 0;
+} */
+
+/* .answers .checked::after {
+  content: " \2713 ";
+} */
+/* .answers .invalid::after {
+  content: " \1F5F4 ";
+} */
+
+/* .responses .alert {
+  padding: 6px 12px;
+  margin-bottom: 0;
+} */
+
+/* .quiz-table .panel {
+  border: none;
+  box-shadow: none;
+  margin-bottom: 0;
+} */
+
+/* .quiz-table > tbody > tr > td {
+  padding: 0;
+} */
+
+/* .quiz .panel-body {
+  padding: 10px;
+} */
+
+/* .checkAnswer i {
+  margin-right: 8px;
+} */
+
+/* .tryAgainButton {
+  margin-top: 10px;
+} */
 
