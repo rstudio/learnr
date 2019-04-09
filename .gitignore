@@ -10,4 +10,5 @@ issues
 # atom config folder
 .atom/
 
-inst/tutorials/tmp
+# html tutorial output
+inst/tutorials/*/*.html

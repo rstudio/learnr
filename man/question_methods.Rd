@@ -2,16 +2,25 @@
 % Please edit documentation in R/quiz.R
 \name{question_initialize_input}
 \alias{question_initialize_input}
+\alias{question_completed_input}
+\alias{question_is_valid}
+\alias{question_is_correct}
 \title{Custom question methods}
 \usage{
 question_initialize_input(question, answer_input, ...)
+
+question_completed_input(question, answer_input, ...)
+
+question_is_valid(question, answer_input, ...)
+
+question_is_correct(question, answer_input, ...)
 }
 \arguments{
 \item{question}{question object used}
 
 \item{answer_input}{input value provided by `input$answer`}
 
-\item{...}{future parameter expansion}
+\item{...}{future parameter expansion and custom arguments to be used in dispatched s3 methods.}
 }
 \description{
 These methods are used to abstract out the necessary parts to display a custom question.

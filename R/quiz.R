@@ -139,7 +139,7 @@ question <- function(text,
   # capture/validate answers
   answers <- list(...)
   lapply(answers, function(answer) {
-    if (!inherits(answer, "tutorial_quiz_answer"))
+    if (!inherits(answer, "tutorial_question_answer"))
       stop("Object which is not an answer passed to question function")
   })
 
@@ -214,13 +214,19 @@ answer <- function(text, correct = FALSE, message = NULL) {
   if (!is.character(text)) {
     stop("Non-string `text` values are not allowed as an answer")
   }
-  structure(class = "tutorial_quiz_answer", list(
-    id = random_answer_id(),
-    option = as.character(text),
-    label = quiz_text(text),
-    is_correct = isTRUE(correct),
-    message = quiz_text(message)
-  ))
+  structure(
+    class = c(
+      "tutorial_question_answer", # new an improved name
+      "tutorial_quiz_answer" # legacy. Want to remove
+    ), 
+    list(
+      id = random_answer_id(),
+      option = as.character(text),
+      label = quiz_text(text),
+      is_correct = isTRUE(correct),
+      message = quiz_text(message)
+    )
+  )
 }
 
 # render markdown (including equations) for quiz_text
@@ -265,6 +271,7 @@ shuffle <- function(x) {
 }
 
 
+#' @export
 knit_print.tutorial_question <- function(question, ...) {
 
   ui <- question_module_ui(question$ids$question)
@@ -282,6 +289,7 @@ knit_print.tutorial_question <- function(question, ...) {
   # regular knit print the UI
   knitr::knit_print(ui)
 }
+#' @export
 knit_print.tutorial_quiz <- function(quiz, ...) {
   caption_tag <- if (!is.null(quiz$caption)) {
     list(knitr::knit_print(
@@ -298,6 +306,7 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 
 
 
+# TODO-barret DOCUMENT
 # returns shinyUI component
 #' Custom question methods
 #'
@@ -310,16 +319,24 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 #'
 #' @param question question object used
 #' @param answer_input input value provided by `input$answer`
-#' @param ... future parameter expansion
+#' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
+#' @export
+#' @rdname question_methods
 question_initialize_input <- function(question, answer_input, ...) {
   UseMethod("question_initialize_input", question)
 }
+#' @export
+#' @rdname question_methods
 question_completed_input <- function(question, answer_input, ...) {
   UseMethod("question_completed_input", question)
 }
+#' @export
+#' @rdname question_methods
 question_is_valid <- function(question, answer_input, ...) {
   UseMethod("question_is_valid", question)
 }
+#' @export
+#' @rdname question_methods
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
@@ -345,6 +362,8 @@ question_is_correct.default <- function(question, answer_input, ...) {
 }
 
 
+#' @export
+# TODO-barret DOCUMENT
 question_is_correct_value <- function(is_correct, messages, ...) {
   if (!is.logical(is_correct)) {
     stop("`is_correct` must be a logical value")
@@ -1143,22 +1162,29 @@ print.shiny_selector_list <- function(x, ...) {
 
 
 
-
+#' @export
 mutate_tags <- function(ele, selector, fn, ...) {
   UseMethod("mutate_tags", ele)
 }
+#' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
   stop("`mutate_tags.", class(ele)[1], "(x, selector, ...)` is not implemented")
 }
 
 # no-ops for basic types
+#' @export
 mutate_tags.NULL <- function(ele, selector, fn, ...) { ele }
+#' @export
 mutate_tags.character <- function(ele, selector, fn, ...) { ele }
+#' @export
 mutate_tags.numeric <- function(ele, selector, fn, ...) { ele }
+#' @export
 mutate_tags.logical <- function(ele, selector, fn, ...) { ele }
+#' @export
 mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
 
 
+#' @export
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   if (inherits(selector, "character")) {
     # if there is a set of selectors
