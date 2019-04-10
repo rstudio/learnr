@@ -234,3 +234,8 @@
     display: inline-block;
   }
 }
+
+/* override the width to be 100%, not 300px wide */
+.shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100%;
+}
