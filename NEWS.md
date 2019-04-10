@@ -1,6 +1,8 @@
 learnr 0.9.2.9000 (unreleased)
 ===========
 
+* Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
+
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
 
 * Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment ([#169](https://github.com/rstudio/learnr/issues/169), [#179](https://github.com/rstudio/learnr/pull/179), and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
