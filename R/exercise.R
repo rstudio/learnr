@@ -1,49 +1,49 @@
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
-  
+
   # get the environment where shared setup and data is located. one environment up
-  # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two 
-  # environments up will be an empty environment 
+  # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two
+  # environments up will be an empty environment
   # (https://github.com/rstudio/rmarkdown/blob/54bf8fc70122c6a435bba2ffcac8944d04498541/R/shiny_prerendered.R#L10)
   # that is parented by the shiny_prerendered server_envir (which has all of
   # the shared setup, data chunks executed).
   server_envir <- parent.env(parent.env(parent.frame()))
-  
+
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
-  
+
   # observe input
   observeEvent(exercise_rx(), {
-    
+
     # get exercise
     exercise <- exercise_rx()
-    
+
     # short circult for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
       object <- get_exercise_submission(session = session, label = exercise$label)
       if (!is.null(object) && !is.null(object$data$output)) {
-        
+
         # get the output
         output <- object$data$output
-        
+
         # ensure that html dependencies only reference package files
         dependencies <- htmltools::htmlDependencies(output)
         if (!is.null(dependencies))
           htmltools::htmlDependencies(output) <- filter_dependencies(dependencies)
-        
+
         # assign to rv and return
         rv$result <- output
         return()
       }
     }
-    
+
     # get timelimit option (either from chunk option or from global option)
     timelimit <- exercise$options$exercise.timelimit
     if (is.null(timelimit))
       timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
-    
+
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
@@ -59,18 +59,18 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
-    
+
     # start it
     evaluator$start()
-    
+
     # poll for completion
     o <- observe({
-      
+
       if (evaluator$completed()) {
-        
+
         # get the result
         result <- evaluator$result()
-        
+
         # side-effect: fire event
         exercise_submission_event(
           session = session,
@@ -81,23 +81,23 @@ setup_exercise_handler <- function(exercise_rx, session) {
           checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback
         )
-        
+
         # assign reactive result value
         rv$triggered <- isolate({ rv$triggered + 1})
         rv$result <- result$html_output
-        
+
         # destroy the observer
         o$destroy()
-        
+
       } else {
         invalidateLater(100, session)
       }
     })
   })
-  
+
   # return reactive
   reactive({
-    rv$triggered 
+    rv$triggered
     req(rv$result)
   })
 }
@@ -110,11 +110,11 @@ evaluate_exercise <- function(exercise, envir) {
 
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
-    
+
     # get the checker
     checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
-    
-    # call the checker 
+
+    # call the checker
     checker_feedback <- checker(
       label = exercise$label,
       user_code = exercise$code,
@@ -124,7 +124,7 @@ evaluate_exercise <- function(exercise, envir) {
       evaluate_result = NULL,
       envir_prep = envir_prep
     )
-    
+
     # if it's an 'incorrect' feedback result then return it
     if (is.list(checker_feedback)) {
       feedback_validated(checker_feedback)
@@ -137,7 +137,7 @@ evaluate_exercise <- function(exercise, envir) {
       }
     }
   }
-  
+
   # create temp dir for execution (remove on exit)
   exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
   dir.create(exercise_dir)
@@ -146,7 +146,7 @@ evaluate_exercise <- function(exercise, envir) {
     setwd(oldwd)
     unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
-  
+
   # hack the pager function so that we can print help
   # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
   pager <- function(files, header, title, delete.file) {
@@ -157,7 +157,7 @@ evaluate_exercise <- function(exercise, envir) {
   on.exit(options(orig_width), add = TRUE)
   orig_pager <- options(pager=pager)
   on.exit(options(orig_pager), add = TRUE)
-  
+
   # restore knitr options and hooks after knit
   optk <- knitr::opts_knit$get()
   on.exit(knitr::opts_knit$restore(optk), add = TRUE)
@@ -169,34 +169,34 @@ evaluate_exercise <- function(exercise, envir) {
   on.exit(knitr::opts_hooks$restore(ohooks), add = TRUE)
   templates <- knitr::opts_template$get()
   on.exit(knitr::opts_template$restore(templates), add = TRUE)
-  
+
   # set preserved chunk options
   knitr::opts_chunk$set(as.list(exercise$options))
-  
+
   # temporarily set knitr options (will be rest by on.exit handlers above)
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
-  
+
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
   writeLines(code, con = exercise_r, useBytes = TRUE)
-  
+
   # spin it to an Rmd
   exercise_rmd <- knitr::spin(hair = exercise_r,
                               knit = FALSE,
                               envir = envir,
                               format = "Rmd")
-  
+
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(
-    fig_width = exercise$options$fig.width, 
+    fig_width = exercise$options$fig.width,
     fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina, 
+    fig_retina = exercise$options$fig.retina,
     keep_md = FALSE
   )
-  
+
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate = function(code, envir, ...) {
     evaluate_result <<- evaluate::evaluate(code, envir, ...)
@@ -210,7 +210,7 @@ evaluate_exercise <- function(exercise, envir) {
                     pandoc_args = c("--metadata", "pagetitle=PREVIEW")
                   )
   )
-  
+
   # knit the Rmd to markdown (catch and report errors)
   error_message <- NULL
   error_html <- NULL
@@ -227,15 +227,15 @@ evaluate_exercise <- function(exercise, envir) {
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, error_message) != -1L) {
       error_message <<- timeout_error_message()
-    } 
+    }
   })
   if (!is.null(error_message))
     return(error_result(error_message))
-  
+
   # capture and filter dependencies
   dependencies <- attr(output_file, "knit_meta")
   dependencies <- filter_dependencies(dependencies)
-  
+
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
@@ -244,20 +244,20 @@ evaluate_exercise <- function(exercise, envir) {
                                    clean = FALSE)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
-  
+
   # capture output as HTML w/ dependencies
   html_output <- htmltools::attachDependencies(
     htmltools::HTML(output),
     dependencies
   )
-  
+
   # get the exercise checker (default does nothing)
-  checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")), 
+  checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
                   envir = envir)
   if (is.null(exercise$check) || is.null(checker))
     checker <- function(...) { NULL }
-  
-  # call the checker 
+
+  # call the checker
   checker_feedback <- checker(
     label = exercise$label,
     user_code = exercise$code,
@@ -267,10 +267,10 @@ evaluate_exercise <- function(exercise, envir) {
     evaluate_result = evaluate_result,
     envir_prep = envir_prep
   )
-  
+
   # validate the feedback
   feedback_validated(checker_feedback)
-  
+
   # amend output with feedback as required
   if (!is.null(checker_feedback)) {
     feedback_html <- feedback_as_html(checker_feedback)
@@ -281,7 +281,7 @@ evaluate_exercise <- function(exercise, envir) {
     else if (checker_feedback$location == "replace")
       html_output <- feedback_html
   }
-  
+
   # return a list with the various results of the expression
   list(
     feedback = checker_feedback,
@@ -299,7 +299,7 @@ error_result <- function(error_message) {
 }
 
 timeout_error_message <- function() {
-  paste("Error: Your code ran longer than the permitted time", 
+  paste("Error: Your code ran longer than the permitted time",
         "limit for this exercise.")
 }
 
@@ -313,13 +313,10 @@ filter_dependencies <- function(dependencies) {
     }
     else {
       ! is.null(tryCatch(
-        rprojroot::find_root(rprojroot::is_r_package, 
+        rprojroot::find_root(rprojroot::is_r_package,
                              path = dependency$src$file),
         error = function(e) NULL
       ))
     }
   })
 }
-
-
-
