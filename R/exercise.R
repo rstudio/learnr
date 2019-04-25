@@ -206,8 +206,8 @@ evaluate_exercise <- function(exercise, envir) {
   last_value <- NULL
   default_output_handler <- evaluate::new_output_handler()
   has_visible <- length(formals(default_output_handler$value)) > 1
-  learnr_output_handler <- evaluate::new_output_handler(value = function(result, visible) {
-    last_value <<- last_value
+  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
+    last_value <<- x
 
     if (has_visible) {
       default_output_handler$value(x, visible)
