@@ -1,5 +1,5 @@
 
-#' @import rmarkdown 
+#' @import rmarkdown
 #' @importFrom htmltools htmlDependency attachDependencies HTML div tags
 #' @importFrom knitr opts_chunk opts_knit opts_hooks knit_hooks knit_meta_add all_labels spin
 #' @importFrom jsonlite base64_dec base64_enc
@@ -19,8 +19,5 @@ NULL
 
 # remove knitr hooks when package is detached from search path
 .onDetach <- function(libpath) {
-  remove_knitr_hooks() 
+  remove_knitr_hooks()
 }
-
-
-
