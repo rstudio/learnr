@@ -122,7 +122,8 @@ evaluate_exercise <- function(exercise, envir) {
       check_code = exercise$code_check,
       envir_result = NULL,
       evaluate_result = NULL,
-      envir_prep = envir_prep
+      envir_prep = envir_prep,
+      last_value = NULL
     )
 
     # if it's an 'incorrect' feedback result then return it
@@ -198,8 +199,21 @@ evaluate_exercise <- function(exercise, envir) {
   )
 
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate = function(code, envir, ...) {
-    evaluate_result <<- evaluate::evaluate(code, envir, ...)
+  last_value <- NULL
+  # capture the last value and use a regular output handler for value
+  default_output_handler <- evaluate::new_output_handler()
+  learnr_output_handler <- evaluate::new_output_handler(value = function(result, ...) {
+    last_value <<- last_value
+    default_output_handler$value(x, ...)
+  })
+  knitr_options$knit_hooks$evaluate = function(
+    code, envir, ...,
+    output_handler # set to avoid name collision
+  ) {
+    evaluate_result <<- evaluate::evaluate(
+      code, envir, ...,
+      output_handler = learnr_output_handler
+    )
     evaluate_result
   }
   output_format <- rmarkdown::output_format(
@@ -265,7 +279,8 @@ evaluate_exercise <- function(exercise, envir) {
     check_code = exercise$check,
     envir_result = envir,
     evaluate_result = evaluate_result,
-    envir_prep = envir_prep
+    envir_prep = envir_prep,
+    last_value = last_value
   )
 
   # validate the feedback
