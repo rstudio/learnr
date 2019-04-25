@@ -1,14 +1,14 @@
 #' Tutorial document format
-#' 
+#'
 #' Long-form tutorial which includes narrative, figures, videos, exercises, and
 #' questions.
-#' 
+#'
 #' @inheritParams rmarkdown::html_document
-#'   
+#'
 #' @param theme Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 #'  "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
-#'  "simplex", or "yeti"). 
-#'  
+#'  "simplex", or "yeti").
+#'
 #' @param progressive Display sub-topics progresively (i.e. wait until previous
 #'   topics are either completed or skipped before displaying subsequent
 #'   topics).
@@ -22,7 +22,7 @@
 #'        See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
 #'
 #' @param ... Forward parameters to html_document
-#'   
+#'
 #' @export
 #' @importFrom utils getFromNamespace
 tutorial <- function(fig_width = 6.5,
@@ -44,22 +44,22 @@ tutorial <- function(fig_width = 6.5,
                      md_extensions = NULL,
                      pandoc_args = NULL,
                      ...) {
-  
-  # base pandoc options 
+
+  # base pandoc options
   args <- c()
-  
+
   # use section divs
   args <- c(args, "--section-divs")
-  
+
   # template
   args <- c(args, "--template", pandoc_path_arg(
-    system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm", 
+    system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",
                 package = "learnr")
   ))
-  
+
   # content includes
   args <- c(args, includes_to_pandoc_args(includes))
-  
+
   # pagedtables
   if (identical(df_print, "paged")) {
     extra_dependencies <- append(extra_dependencies,
@@ -85,7 +85,7 @@ tutorial <- function(fig_width = 6.5,
   # additional css
   for (css_file in css)
     args <- c(args, "--css", pandoc_path_arg(css_file))
-  
+
   # resolve theme (ammend base stylesheet for "rstudio" theme
   stylesheets <- "tutorial-format.css"
   if (identical(theme, "rstudio")) {
@@ -93,7 +93,7 @@ tutorial <- function(fig_width = 6.5,
     theme <- "cerulean"
   }
 
-  # additional tutorial-format js and css. note that we also include the 
+  # additional tutorial-format js and css. note that we also include the
   # tutorial_html_dependency() within our list of dependencies to ensure that
   # tutorial.js (and the API it provides) is always loaded prior to our
   # tutorial-format.js file.
@@ -109,22 +109,22 @@ tutorial <- function(fig_width = 6.5,
       stylesheet = stylesheets
     )
   ))
-  
+
   # additional pandoc variables
   jsbool <- function(value) ifelse(value, "true", "false")
   args <- c(args, pandoc_variable_arg("progressive", jsbool(progressive)))
   args <- c(args, pandoc_variable_arg("allow-skip", jsbool(allow_skip)))
-  
+
   # knitr and pandoc options
   knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
   pandoc_options <- pandoc_options(to = "html4",
     from = rmarkdown::from_rmarkdown(fig_caption, md_extensions),
     args = args,
     ext = ".html")
-  
+
   # set 1000 as the default maximum number of rows in paged tables
   knitr_options$opts_chunk$max.print <- 1000
-  
+
   # create base document format using standard html_document
   base_format <- rmarkdown::html_document(
     smart = smart,
@@ -137,7 +137,7 @@ tutorial <- function(fig_width = 6.5,
     bootstrap_compatible = TRUE,
     ...
   )
-  
+
   # return new output format
   rmarkdown::output_format(knitr = knitr_options,
                            pandoc = pandoc_options,

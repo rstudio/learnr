@@ -29,7 +29,7 @@
 # √-barret use the new label in js to attach the element right away, regardless if it is ready or not
   ## this allows js to function regardless of state of the quiz question
   ## this allows for sections to be completed regardless of what is returned from the user
-  
+
 
 
 
@@ -49,15 +49,15 @@
 #' @param correct For \code{question}, text to print for a correct answer (defaults
 #'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 #'   correct.
-#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect") 
+#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect")
 #'   when \code{allow_retry} is \code{FALSE}.
-#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect") 
+#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect")
 #'   when \code{allow_retry} is \code{TRUE}.
-#' @param message Additional message to display along with correct/incorrect feedback.  
+#' @param message Additional message to display along with correct/incorrect feedback.
 #'   This message is always displayed after a question submission.
-#' @param post_message Additional message to display along with correct/incorrect feedback.  
-#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
-#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
+#' @param post_message Additional message to display along with correct/incorrect feedback.
+#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
+#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
 #'   message alongside the \code{message} message value.
 #' @param loading Loading text to display as a placeholder while the question is loaded
 #' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
@@ -105,7 +105,7 @@ quiz <- function(..., caption = "Quiz") {
   })
 
   structure(
-    class = "tutorial_quiz", 
+    class = "tutorial_quiz",
     list(
       caption = if(!is.null(caption)) quiz_text(caption),
       questions = questions
@@ -150,7 +150,7 @@ question <- function(text,
   if (total_correct == 0) {
     stop("At least one correct answer must be supplied")
   }
-    
+
   ## no partial matching for s3 methods
   # type <- match.arg(type)
   if (missing(type)) {
@@ -164,14 +164,14 @@ question <- function(text,
     }
   }
   if (length(type) == 1) {
-    type <- switch(type, 
+    type <- switch(type,
       "single" = "radio",
       "multiple" = "checkbox",
       # allows for s3 methods
       type
     )
   }
-  
+
   # can not guarantee that `label` exists
   label <- knitr::opts_current$get('label')
   q_id <- label %||% random_question_id()
@@ -218,7 +218,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
     class = c(
       "tutorial_question_answer", # new an improved name
       "tutorial_quiz_answer" # legacy. Want to remove
-    ), 
+    ),
     list(
       id = random_answer_id(),
       option = as.character(text),
@@ -275,7 +275,7 @@ shuffle <- function(x) {
 knit_print.tutorial_question <- function(question, ...) {
 
   ui <- question_module_ui(question$ids$question)
-    
+
   # too late to try to set a chunk attribute
   # knitr::set_chunkattr(echo = FALSE)
   rmarkdown::shiny_prerendered_chunk(
@@ -285,7 +285,7 @@ knit_print.tutorial_question <- function(question, ...) {
       dput_to_string(question)
     )
   )
-  
+
   # regular knit print the UI
   knitr::knit_print(ui)
 }
@@ -296,7 +296,7 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
       tags$div(class = "panel-heading tutorial-panel-heading", quiz$caption)
     ))
   }
-  
+
   append(
     caption_tag,
     lapply(quiz$questions, knitr::knit_print)
@@ -344,7 +344,7 @@ question_is_correct <- function(question, answer_input, ...) {
 
 question_stop <- function(name, question) {
   stop(
-    "`", name, ".{", paste0(class(question), collapse = "/"), "}(question, ...)` has not been implemented", 
+    "`", name, ".{", paste0(class(question), collapse = "/"), "}(question, ...)` has not been implemented",
     .call = FALSE
   )
 }
@@ -484,7 +484,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
     showNotification("Please select an answer before submitting", type = "error")
     req(answer_input)
   }
-  
+
   append_message <- function(x, ans) {
     message <- ans$message
     if (is.null(message)) {
@@ -522,7 +522,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
       incorrect_messages <- append_message(incorrect_messages, ans)
     }
   }
-  
+
   return(question_is_correct_value(
     is_correct,
     if (is_correct) correct_messages else incorrect_messages
@@ -610,13 +610,13 @@ retrieve_all_question_submissions <- function(session) {
 
   # create submissions from state objects
   submissions <- submissions_from_state_objects(state_objects)
-  
+
   submissions
 }
 
 retrieve_question_submission_answer <- function(session, question_label) {
   question_label <- as.character(question_label)
-  
+
   for (submission in retrieve_all_question_submissions(session)) {
     if (identical(as.character(submission$id), question_label)) {
       return(submission$data$answers)
@@ -652,12 +652,12 @@ question_module_server <- function(
   input, output, session,
   question
 ) {
-  
+
   output$answer_container <- renderUI({ div(class="loading", question$loading) })
-  
+
   observeEvent(
-    req(session$userData$learnr_state() == "restored"), 
-    once = TRUE, 
+    req(session$userData$learnr_state() == "restored"),
+    once = TRUE,
     {
       question_module_server_impl(input, output, session, question)
     }
@@ -670,12 +670,12 @@ question_module_server_impl <- function(
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
-  
+
   # only set when a submit button has been pressed
   # (or reset when try again is hit)
   # (or set when restoring)
   submitted_answer <- reactiveVal(NULL, label = "submitted_answer")
-  
+
   is_correct_info <- reactive(label = "is_correct_info", {
     # question has not been submitted
     if (is.null(submitted_answer())) return(NULL)
@@ -686,14 +686,14 @@ question_module_server_impl <- function(
     }
     ret
   })
-  
+
   # should present all messages?
   is_done <- reactive(label = "is_done", {
     if (is.null(is_correct_info())) return(NULL)
     (!isTRUE(question$allow_retry)) || is_correct_info()$is_correct
   })
 
-  
+
   button_type <- reactive(label = "button type", {
     if (is.null(submitted_answer())) {
       "submit"
@@ -702,7 +702,7 @@ question_module_server_impl <- function(
       if (is.null(is_correct_info())) {
         stop("`is_correct_info()` is `NULL` in a place it shouldn't be")
       }
-      
+
       # update the submit button label
       if (is_correct_info()$is_correct) {
         "correct"
@@ -718,7 +718,7 @@ question_module_server_impl <- function(
       }
     }
   })
-  
+
   # disable / enable for every input$answer change
   answer_is_valid <- reactive(label = "answer_is_valid", {
     if (is.null(submitted_answer())) {
@@ -734,7 +734,7 @@ question_module_server_impl <- function(
     }
     submitted_answer(restoreValue)
   }
-  
+
   # restore past submission
   #  If no prior submission, it returns NULL
   past_submission_answer <- retrieve_question_submission_answer(session, question$label)
@@ -743,7 +743,7 @@ question_module_server_impl <- function(
   # initialize with the past answer
   #  this should cascade throughout the app to display correct answers and final outputs
   init_question(past_submission_answer)
-  
+
 
   output$action_button_container <- renderUI({
     question_button_label(
@@ -757,13 +757,13 @@ question_module_server_impl <- function(
     req(!is.null(is_correct_info()), !is.null(is_done()))
 
     question_messages(
-      question, 
-      messages = is_correct_info()$messages, 
-      is_correct = is_correct_info()$is_correct, 
+      question,
+      messages = is_correct_info()$messages,
+      is_correct = is_correct_info()$is_correct,
       is_done = is_done()
     )
   })
-  
+
   output$answer_container <- renderUI({
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
@@ -771,14 +771,14 @@ question_module_server_impl <- function(
         question_initialize_input(question, submitted_answer())
       )
     }
-    
+
     # has submitted
-    
+
     if (is.null(is_done())) {
       # has not initialized
-      return(NULL) 
+      return(NULL)
     }
-    
+
     if (is_done()) {
       # if the question is 'done', display the final input ui and disable everything
       return(
@@ -787,8 +787,8 @@ question_module_server_impl <- function(
         )
       )
     }
-    
-    # if the question is NOT 'done', disable the current UI 
+
+    # if the question is NOT 'done', disable the current UI
     #   until it is reset with the try again button
     return(
       disable_all_tags(
@@ -796,13 +796,13 @@ question_module_server_impl <- function(
       )
     )
   })
-  
-  
+
+
   observeEvent(input$action_button, {
 
     if (button_type() == "try_again") {
       init_question(NULL)
-      
+
       # submit "reset" to server
       reset_question_submission_event(
         session = session,
@@ -813,7 +813,7 @@ question_module_server_impl <- function(
     }
 
     submitted_answer(input$answer)
-  
+
     # submit question to server
     question_submission_event(
       session = session,
@@ -848,12 +848,12 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
-  
+
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
-  
+
   action_button_id <- NS(question$ids$question)("action_button")
-  
+
   if (label_type == "submit") {
     button <- actionButton(action_button_id, button_label, class = default_class)
     if (!is_valid) {
@@ -863,14 +863,14 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   } else if (label_type == "try_again") {
     mutate_tags(
       actionButton(action_button_id, button_label, class = warning_class),
-      paste0("#", action_button_id), 
+      paste0("#", action_button_id),
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
         ele
       }
     )
   } else if (
-    label_type == "correct" || 
+    label_type == "correct" ||
     label_type == "incorrect"
   ) {
     NULL
@@ -891,7 +891,7 @@ question_messages <- function(question, messages, is_correct, is_done) {
         question$messages$try_again
       }
     }
-  
+
   if (!is.null(messages) && !is.list(messages)) {
     messages <- list(messages)
   }
@@ -900,7 +900,7 @@ question_messages <- function(question, messages, is_correct, is_done) {
   if (!is.null(default_message)) {
     messages <- append(list(default_message), messages)
   }
-  
+
   # get regular message
   if (is.null(messages)) {
     message_alert <- NULL
@@ -919,8 +919,8 @@ question_messages <- function(question, messages, is_correct, is_done) {
       messages
     )
   }
-  
-  
+
+
   if (is.null(question$messages$message)) {
     always_message_alert <- NULL
   } else {
@@ -1049,9 +1049,9 @@ random_encouragement <- c(
 
 str_trim <- function(x) {
   sub(
-    "\\s+$", "", 
+    "\\s+$", "",
     sub(
-      "^\\s+", "", 
+      "^\\s+", "",
       as.character(x)
     )
   )
@@ -1068,7 +1068,7 @@ str_match <- function(x, pattern) {
   if_no_match_return_null(
     regmatches(x, regexpr(pattern, x))
   )
-  
+
 }
 str_match_all <- function(x, pattern) {
   if_no_match_return_null(
@@ -1088,10 +1088,10 @@ as_selector <- function(selector) {
   if (inherits(selector, "shiny_selector") || inherits(selector, "shiny_selector_list")) {
     return(selector)
   }
-    
+
   # make sure it's a trimmed string
   selector <- str_trim(selector)
-  
+
   # yell if there is a comma
   if (grepl(",", selector, fixed = TRUE)) {
     stop("Do not know how to handle comma separatated selector values")
@@ -1103,20 +1103,20 @@ as_selector <- function(selector) {
     selector <- structure(class = "shiny_selector_list", selector)
     return(selector)
   }
-  
+
   match_everything <- isTRUE(all.equal(selector, "*"))
-  
+
   element <- str_match(selector, "^([^#.]+)")
   selector <- str_remove(selector, "^[^#.]+")
-  
+
   id <- str_remove(str_match(selector, "^#([^.]+)"), "#")
   selector <- str_remove(selector, "^#[^.]+")
-  
+
   classes <- str_remove(str_match_all(selector, "\\.([^.]+)"), "^\\.")
-  
+
   structure(class = "shiny_selector", list(
     element = element,
-    id = id, 
+    id = id,
     classes = classes,
     match_everything = match_everything
   ))
@@ -1197,12 +1197,12 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
       return(ele)
     }
   }
-  
+
   # make sure it's a selector
   selector <- as_selector_list(selector)
   # grab the first element
   cur_selector <- selector[[1]]
-  
+
   is_match <- TRUE
   if (!cur_selector$match_everything) {
     # match on element
@@ -1217,20 +1217,20 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
     if (is_match && !is.null(cur_selector$classes)) {
       is_match <- all(strsplit(ele$attribs$class %||% "", " ")[[1]] %in% cur_selector$classes)
     }
-    
+
     # if it is a match, drop a selector
     if (is_match) {
       selector <- selector[-1]
     }
   }
-  
+
   # if there are children and remaining selectors, recurse through
   if (length(selector) > 0 && length(ele$children) > 0) {
     for (i in seq_along(ele$children)) {
       ele$children[[i]] <- mutate_tags(ele$children[[i]], selector, fn, ...)
     }
   }
-  
+
   # if it was a match
   if (is_match) {
     if (
@@ -1243,7 +1243,7 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
       ele <- fn(ele, ...)
     }
   }
-    
+
   # return the updated element
   ele
 }
