@@ -15,26 +15,38 @@
 #'   the .Rmd file must exist).
 #'
 #' @seealso \code{\link{safe}}
+#' @rdname run_tutorial
 #' @export
 run_tutorial <- function(name, package, shiny_args = NULL) {
-
+  
+  possible_tutorials <- available_tutorials(package)
+  pkg_tutorials <- paste0(
+    "Available \"", package, "\" tutorials: ", paste0(paste0("\"", possible_tutorials, "\""), collapse = ", ")
+  )
+  
+  if (missing(name)) {
+    message(pkg_tutorials, "\n")
+    return(possible_tutorials)
+  }
+  
   # get path to tutorial
   tutorial_path <- system.file("tutorials", name, package = package)
 
   # validate that it's a direcotry
-  if (!utils::file_test("-d", tutorial_path))
-    stop("Tutorial ", name, " was not found in the ", package, " package.")
-
+  if (!utils::file_test("-d", tutorial_path)) {
+    stop.("Tutorial \"", name, "\" was not found in the ", package, " package.\n", pkg_tutorials)
+  }
+  
   # provide launch_browser if it's not specified in the shiny_args
   if (is.null(shiny_args))
     shiny_args <- list()
   if (is.null(shiny_args$launch.browser)) {
     shiny_args$launch.browser <- (
       interactive() ||
-      identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
+        identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
     )
   }
-
+  
   # run within tutorial wd
   withr::with_dir(tutorial_path, {
     if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {
@@ -44,6 +56,28 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
     rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
   })
 }
+
+#' @rdname run_tutorial
+#' @export
+available_tutorials <- function(package) {
+  tutorials_dir <- system.file("tutorials", package = package)
+  if (!file.exists(tutorials_dir)) {
+    stop.("No tutorials found for package: \"", package, "\"")
+  }
+  
+  tutorial_folders <- list.dirs(tutorials_dir, full.names = TRUE, recursive = FALSE)
+  names(tutorial_folders) <- basename(tutorial_folders)
+  has_rmd <- vapply(tutorial_folders, FUN.VALUE = logical(1), function(tut_dir) {
+    length(dir(tut_dir, pattern = "\\.Rmd$", recursive = FALSE)) > 0
+  })
+  if (all(!has_rmd)) {
+    stop.("No tutorial .Rmd files found for package: \"", package, "\"")
+  }
+  
+  tutorial_names <- tutorial_folders[has_rmd]
+  names(tutorial_names)
+}
+
 
 
 #' Safe R CMD environment
