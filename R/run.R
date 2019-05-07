@@ -75,7 +75,7 @@ available_tutorials <- function(package) {
   }
   
   tutorial_names <- tutorial_folders[has_rmd]
-  names(tutorial_names)
+  unique(names(tutorial_names))
 }
 
 
