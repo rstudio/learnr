@@ -12,13 +12,13 @@ tutorial_options(exercise.cap = "Code", exercise.eval = FALSE,
 \arguments{
 \item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
 
-\item{exercise.eval}{Whether to pre-evaluate the exercise so the reader can 
+\item{exercise.eval}{Whether to pre-evaluate the exercise so the reader can
 see some default output (defaults to \code{FALSE}).}
 
-\item{exercise.timelimit}{Number of seconds to limit execution time to 
+\item{exercise.timelimit}{Number of seconds to limit execution time to
 (defaults to \code{30}).}
 
-\item{exercise.lines}{Lines of code for exercise editor (defaults to the 
+\item{exercise.lines}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
 
 \item{exercise.checker}{Function used to check exercise answers.}
@@ -30,6 +30,6 @@ number of lines in the code chunk).}
 \item{exercise.startover}{Show "Start Over" button on exercise.}
 }
 \description{
-Set various tutorial options that control the display and evaluation of 
+Set various tutorial options that control the display and evaluation of
 exercises.
 }
