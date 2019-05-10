@@ -17,6 +17,6 @@ Storage handler suitable for \code{options(tutorial.storage = ...)}
 \description{
 Tutorial state storage handler that uses the filesystem
 as a backing store. The direcotry will contain tutorial
-state data partitioned by user_id, tutorial_id, and 
+state data partitioned by user_id, tutorial_id, and
 tutorial_version (in that order)
 }
