@@ -205,18 +205,14 @@ evaluate_exercise <- function(exercise, envir) {
   #   arguments, the second argument indicates whether the value is visible.
   last_value <- NULL
   default_output_handler <- evaluate::new_output_handler()
-  has_visible <- length(formals(default_output_handler$value)) > 1
+  has_visible_arg <- length(formals(default_output_handler$value)) > 1
   learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
     last_value <<- x
 
-    if (has_visible) {
+    if (has_visible_arg) {
       default_output_handler$value(x, visible)
     } else {
-      if (visible) {
-        default_output_handler$value(x)
-      } else {
-        NULL
-      }
+      default_output_handler$value(x)
     }
   })
 
