@@ -34,18 +34,18 @@ answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
-\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect") 
+\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect")
 when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect") 
+\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect")
 when \code{allow_retry} is \code{TRUE}.}
 
 \item{message}{Additional message to display along with correct/incorrect feedback.
 This message is always displayed after a question submission.}
 
 \item{post_message}{Additional message to display along with correct/incorrect feedback.
-If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the 
-correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second 
+If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
+correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
 message alongside the \code{message} message value.}
 
 \item{loading}{Loading text to display as a placeholder while the question is loaded}
