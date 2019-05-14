@@ -1,6 +1,8 @@
 learnr 0.9.2.9000 (unreleased)
 ===========
 
+* Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument. ([#228](https://github.com/rstudio/learnr/pull/228))
+
 * Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
