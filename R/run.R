@@ -25,8 +25,8 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
   )
 
   if (missing(name)) {
-    message(pkg_tutorials, "\n")
-    return(possible_tutorials)
+    message(pkg_tutorials)
+    return(invisible(possible_tutorials))
   }
 
   # get path to tutorial
