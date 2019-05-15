@@ -1,6 +1,8 @@
 learnr 0.9.2.9000 (unreleased)
 ===========
 
+* Question width will expand to the container width. ([#222](https://github.com/rstudio/learnr/pull/222))
+
 * Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
