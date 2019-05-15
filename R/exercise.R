@@ -105,6 +105,17 @@ setup_exercise_handler <- function(exercise_rx, session) {
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
 
+  # return immediately and clear visible results
+  # do not consider this an exercise submission
+  if (
+    nchar(
+      str_trim(paste0(exercise$code, collapse = "\n"))
+    ) == 0
+  ) {
+    return(empty_result())
+  }
+
+
   # capture a copy of the envir before any execution is done
   envir_prep <- duplicate_env(envir)
 
@@ -177,6 +188,8 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
+
+
 
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
@@ -290,6 +303,13 @@ evaluate_exercise <- function(exercise, envir) {
   )
 }
 
+empty_result <- function() {
+  list(
+    feedback = NULL,
+    error_message = NULL,
+    html_output = NULL
+  )
+}
 error_result <- function(error_message) {
   list(
     feedback = NULL,
