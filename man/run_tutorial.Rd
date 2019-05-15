@@ -2,9 +2,12 @@
 % Please edit documentation in R/run.R
 \name{run_tutorial}
 \alias{run_tutorial}
+\alias{available_tutorials}
 \title{Run a tutorial}
 \usage{
 run_tutorial(name, package, shiny_args = NULL)
+
+available_tutorials(package)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
