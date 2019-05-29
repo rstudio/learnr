@@ -1,15 +1,26 @@
-learnr 0.9.2.9000 (unreleased)
+learnr 0.10.0 (unreleased)
 ===========
+
+## New features
 
 * Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment ([#169](https://github.com/rstudio/learnr/issues/169), [#179](https://github.com/rstudio/learnr/pull/179), and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
 
 * Added a new function, `safe`, which evaluates code in a new, safe R environment. ([#174](https://github.com/rstudio/learnr/pull/174))
 
+## Minor new features and improvements
+
+* Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument. ([#228](https://github.com/rstudio/learnr/pull/228))
+
 * Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
+
+* Question width will expand to the container width. ([#222](https://github.com/rstudio/learnr/pull/222))
+
+* Available tutorial names will be displayed when no `name` parameter or an incorrect `name` is provided to `run_tutorial()`. ([#234](https://github.com/rstudio/learnr/pull/234))
+
+## Bug fixes
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
 
-* learnr will now display available tutorial names when no `name` or an incorrect name is provided to `run_tutorial`. ([#234](https://github.com/rstudio/learnr/pull/234))
 
 learnr 0.9.2
 ===========

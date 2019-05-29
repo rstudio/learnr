@@ -122,7 +122,8 @@ evaluate_exercise <- function(exercise, envir) {
       check_code = exercise$code_check,
       envir_result = NULL,
       evaluate_result = NULL,
-      envir_prep = envir_prep
+      envir_prep = envir_prep,
+      last_value = NULL
     )
 
     # if it's an 'incorrect' feedback result then return it
@@ -197,9 +198,33 @@ evaluate_exercise <- function(exercise, envir) {
     keep_md = FALSE
   )
 
+  # capture the last value and use a regular output handler for value
+  # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
+  # @param value Function to handle the values returned from evaluation. If it
+  #   only has one argument, only visible values are handled; if it has more
+  #   arguments, the second argument indicates whether the value is visible.
+  last_value <- NULL
+  default_output_handler <- evaluate::new_output_handler()
+  has_visible_arg <- length(formals(default_output_handler$value)) > 1
+  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
+    last_value <<- x
+
+    if (has_visible_arg) {
+      default_output_handler$value(x, visible)
+    } else {
+      default_output_handler$value(x)
+    }
+  })
+
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate = function(code, envir, ...) {
-    evaluate_result <<- evaluate::evaluate(code, envir, ...)
+  knitr_options$knit_hooks$evaluate = function(
+    code, envir, ...,
+    output_handler # set to avoid name collision
+  ) {
+    evaluate_result <<- evaluate::evaluate(
+      code, envir, ...,
+      output_handler = learnr_output_handler
+    )
     evaluate_result
   }
   output_format <- rmarkdown::output_format(
@@ -265,7 +290,8 @@ evaluate_exercise <- function(exercise, envir) {
     check_code = exercise$check,
     envir_result = envir,
     evaluate_result = evaluate_result,
-    envir_prep = envir_prep
+    envir_prep = envir_prep,
+    last_value = last_value
   )
 
   # validate the feedback
