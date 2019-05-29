@@ -9,7 +9,7 @@
 #'  "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
 #'  "simplex", or "yeti").
 #'
-#' @param progressive Display sub-topics progresively (i.e. wait until previous
+#' @param progressive Display sub-topics progressively (i.e. wait until previous
 #'   topics are either completed or skipped before displaying subsequent
 #'   topics).
 #' @param allow_skip Allow users to skip sub-topics (especially useful when
