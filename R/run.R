@@ -34,7 +34,19 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
 
   # validate that it's a direcotry
   if (!utils::file_test("-d", tutorial_path)) {
-    stop.("Tutorial \"", name, "\" was not found in the ", package, " package.\n", pkg_tutorials)
+    firstlinesep <- "\t"
+    linesep <- "\n\t"
+    msg <- paste0("Tutorial \"", name, "\" was not found in the \"", package, "\" package.")
+    # if any tutorial names are _close_ tell the user
+    adist_vals <- adist(possible_tutorials, name)
+    if (any(adist_vals <= 3)) {
+      best_match <- possible_tutorials[which.min(adist_vals)]
+      msg <- paste0(
+        msg, linesep,
+        "Did you mean \"", best_match, "\"?"
+      )
+    }
+    stop.(firstlinesep, msg, linesep, pkg_tutorials)
   }
 
   # provide launch_browser if it's not specified in the shiny_args
