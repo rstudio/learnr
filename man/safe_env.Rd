@@ -8,7 +8,7 @@ safe_env()
 }
 \description{
 By default, \code{callr::\link[callr]{rcmd_safe_env}} suppresses the ability
-to open a browser window.  This is the default execution evnironment within
+to open a browser window.  This is the default execution environment within
 \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 behavior within the learnr package and should not be suppressed.
 }

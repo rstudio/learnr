@@ -59,7 +59,7 @@ message alongside the \code{message} message value.}
 \item{random_answer_order}{Display answers in a random order.}
 }
 \description{
-Add interative multiple choice quiz questions to a tutorial.
+Add interactive multiple choice quiz questions to a tutorial.
 }
 \examples{
 \dontrun{
