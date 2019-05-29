@@ -14,11 +14,16 @@
 #'   development of the package (i.e. the corresponding tutorial .html file for
 #'   the .Rmd file must exist).
 #'
-#' @seealso \code{\link{safe}}
-#' @rdname run_tutorial
+#' @seealso \code{\link{safe}} and \code{\link{available_tutorials}}
 #' @importFrom utils adist
 #' @export
 run_tutorial <- function(name, package, shiny_args = NULL) {
+#' @examples
+#' # display all "learnr" tutorials
+#' available_tutorials("learnr")
+#'
+#' # run basic example within learnr
+#' \dontrun{run_tutorial("hello", "learnr")}
 
   possible_tutorials <- available_tutorials(package)
   pkg_tutorials <- paste0(

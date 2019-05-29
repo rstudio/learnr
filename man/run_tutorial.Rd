@@ -2,12 +2,9 @@
 % Please edit documentation in R/run.R
 \name{run_tutorial}
 \alias{run_tutorial}
-\alias{available_tutorials}
 \title{Run a tutorial}
 \usage{
-run_tutorial(name, package, shiny_args = NULL)
-
-available_tutorials(package)
+run_tutorial(name = NULL, package = NULL, shiny_args = NULL)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
@@ -27,6 +24,13 @@ Note that when running a tutorial Rmd file with \code{run_tutorial}
   development of the package (i.e. the corresponding tutorial .html file for
   the .Rmd file must exist).
 }
+\examples{
+# display all "learnr" tutorials
+available_tutorials("learnr")
+
+# run basic example within learnr
+\dontrun{run_tutorial("hello", "learnr")}
+}
 \seealso{
-\code{\link{safe}}
+\code{\link{safe}} and \code{\link{available_tutorials}}
 }
