@@ -36,7 +36,7 @@
 
 #' Tutorial quiz questions
 #'
-#' Add interative multiple choice quiz questions to a tutorial.
+#' Add interactive multiple choice quiz questions to a tutorial.
 #'
 #' @param text Question or option text
 #' @param ... One or more questions or answers

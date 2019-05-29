@@ -24,7 +24,7 @@ outputting HTML directly into the markdown document).}
 
 \item{fig_caption}{\code{TRUE} to render figures with captions}
 
-\item{progressive}{Display sub-topics progresively (i.e. wait until previous
+\item{progressive}{Display sub-topics progressively (i.e. wait until previous
 topics are either completed or skipped before displaying subsequent
 topics).}
 

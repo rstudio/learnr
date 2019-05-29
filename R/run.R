@@ -11,7 +11,7 @@
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
-#'   development of the package (i.e. the correponding tutorial .html file for
+#'   development of the package (i.e. the corresponding tutorial .html file for
 #'   the .Rmd file must exist).
 #'
 #' @seealso \code{\link{safe}}
@@ -103,7 +103,7 @@ available_tutorials <- function(package) {
 #' Safe R CMD environment
 #'
 #' By default, \code{callr::\link[callr]{rcmd_safe_env}} suppresses the ability
-#' to open a browser window.  This is the default execution evnironment within
+#' to open a browser window.  This is the default execution environment within
 #' \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 #' behavior within the learnr package and should not be suppressed.
 #' @export
