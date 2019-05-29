@@ -91,7 +91,7 @@ question(
 * Question Setup
   * `allow_retry`: Boolean that determines if the user should get a second chance at submitting their answer
   * `random_answer_order`: Boolean that determines if the question answers are displayed in a random order
-* Buttons  
+* Buttons
   * `submit_button`: Label of the submit button
   * `try_again_button`: Label of the submit button
 
@@ -112,16 +112,16 @@ question(
   submit_button = "Submit Answer Here!",
   try_again_button = "Try Again Here!",
   allow_retry = TRUE,
-  random_answer_order = TRUE  
+  random_answer_order = TRUE
 )
 ```
 
 ## Custom Questions
 
-There are four methods used to define a custom question.  Each s3 method should correspond to the `type = TYPE` supplied to the question.
+There are four methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
 
 * `question_initialize_input.TYPE(question, answer_input, ...)`
-  * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the questions is attempted again.
+  * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.
 * `question_completed_input.TYPE(question, ...)`
   * Determines how the question is displayed after a submission.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
 * `question_is_valid.TYPE(question, answer_input, ...)`
@@ -132,8 +132,8 @@ There are four methods used to define a custom question.  Each s3 method should 
 
 #### **No Feedback**
 
-Let's say we want a radio button question, but we want to handle how the question is displayed after a user submits their answer.  
-One option would be to leave a generic `"Thank you for your submission"` and provide no feedback to the user.  
+Let's say we want a radio button question, but we want to handle how the question is displayed after a user submits their answer.
+One option would be to leave a generic `"Thank you for your submission"` and provide no feedback to the user.
 
 In the example below, we use a radio question as the base question type but handle the completed input stage using a `"no_feedback"` type value.
 Since the stages of displaying a question are dispatched using s3 methods, we set the type to `type = c("no_feedback", "radio")` to utilize the radio button question stages for the stages without a `no_feedback` method implemented.
@@ -211,14 +211,14 @@ This example should perform like a text box but maintain the white space before 
 `r ''````{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
 question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
-  
+
   # validate something is given
   if (is.null(answer_input) || nchar(answer_input) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
-  
+
   for (ans in question$answers) {
     if (identical(ans$option, answer_input)) {
       return(question_is_correct_value(
@@ -236,14 +236,14 @@ question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
 ```{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
 question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
-  
+
   # validate something is given
   if (is.null(answer_input) || nchar(answer_input) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
-  
+
   for (ans in question$answers) {
     if (identical(ans$option, answer_input)) {
       return(question_is_correct_value(
