@@ -16,6 +16,7 @@
 #'
 #' @seealso \code{\link{safe}}
 #' @rdname run_tutorial
+#' @importFrom utils adist
 #' @export
 run_tutorial <- function(name, package, shiny_args = NULL) {
 
