@@ -67,22 +67,24 @@
 #'
 #' @examples
 #' \dontrun{
-#' question("What number is the letter A in the alphabet?",
-#'   answer("8"),
-#'   answer("14"),
-#'   answer("1", correct = TRUE),
-#'   answer("23"),
-#'   incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
-#'   allow_retry = TRUE
-#' )
+#' quiz(
+#'   question("What number is the letter A in the alphabet?",
+#'     answer("8"),
+#'     answer("14"),
+#'     answer("1", correct = TRUE),
+#'     answer("23"),
+#'     incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
+#'     allow_retry = TRUE
+#'   ),
 #'
-#' question("Where are you right now? (select ALL that apply)",
-#'   answer("Planet Earth", correct = TRUE),
-#'   answer("Pluto"),
-#'   answer("At a computing device", correct = TRUE),
-#'   answer("In the Milky Way", correct = TRUE),
-#'   incorrect = paste0("Incorrect. You're on Earth, ",
-#'                      "in the Milky Way, at a computer.")
+#'   question("Where are you right now? (select ALL that apply)",
+#'     answer("Planet Earth", correct = TRUE),
+#'     answer("Pluto"),
+#'     answer("At a computing device", correct = TRUE),
+#'     answer("In the Milky Way", correct = TRUE),
+#'     incorrect = paste0("Incorrect. You're on Earth, ",
+#'                        "in the Milky Way, at a computer.")
+#'   )
 #' )
 #' }
 #'
@@ -310,15 +312,24 @@ knit_print.tutorial_quiz <- function(quiz, ...) {
 # returns shinyUI component
 #' Custom question methods
 #'
-#' These methods are used to abstract out the necessary parts to display a custom question.
-#' The question object contains the corresponding input id information at \code{question$ids}.
-#' The question ids will contain the following information: \describe{
-#'  \item{answer}{}
-#'  \item{question}{}
-#' }
+#' There are four methods used to define a custom question.  Each s3 method should correspond to the `type = TYPE` supplied to the question.
 #'
-#' @param question question object used
-#' @param answer_input input value provided by `input$answer`
+#' \describe{
+#'   \item{\code{question_initialize_input.TYPE(question, answer_input, ...)}}{
+#'     Determines how the question is initially displayed to the users. This should return an object that can be displayed using \code{shiny::\link[shiny]{renderUI}}.  This method will be re-executed if the question is attempted again.
+#'   }
+#'   \item{question_completed_input.TYPE(question, ...)}{
+#'     Determines how the question is displayed after a submission.  This should return an object that can be displayed using \code{shiny::\link[shiny]{renderUI}}.
+#'   }
+#'   \item{question_is_valid.TYPE(question, answer_input, ...)}{
+#'     This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
+#'   }
+#'   \item{question_is_correct.TYPE(question, answer_input, ...)}{
+#'     This function should return the output of \code{learnr::\link{question_is_correct_value}}.  \code{learnr::\link{question_is_correct_value}} allows for custom messages in addition to the determination of an answer being correct.
+#'   }
+#' }
+#' @param question \code{\link{question}} object used
+#' @param answer_input user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
 #' @export
 #' @rdname question_methods
@@ -362,8 +373,29 @@ question_is_correct.default <- function(question, answer_input, ...) {
 }
 
 
+#' Question is correct value
+#'
+#' Helper method to return
+#' @param is_correct boolean that determines if a question answer is correct
+#' @param messages a list of messages to be displayed.  The type of message will be determined by the `is_correct` value.
 #' @export
-# TODO-barret DOCUMENT
+#'
+#' # Radio button question implementation of `question_is_correct`
+#' question_is_correct.radio <- function(question, answer_input, ...) {
+#'   if (is.null(answer_input)) {
+#'     showNotification("Please select an answer before submitting", type = "error")
+#'     req(answer_input)
+#'   }
+#'   for (ans in question$answers) {
+#'     if (as.character(ans$option) == answer_input) {
+#'       return(question_is_correct_value(
+#'         ans$is_correct,
+#'         ans$message
+#'       ))
+#'     }
+#'   }
+#'   question_is_correct_value(FALSE, NULL)
+#' }
 question_is_correct_value <- function(is_correct, messages, ...) {
   if (!is.logical(is_correct)) {
     stop("`is_correct` must be a logical value")
@@ -1168,6 +1200,7 @@ mutate_tags <- function(ele, selector, fn, ...) {
 }
 #' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
+  # TODO - return ele instead of stop. delete other small methods
   stop("`mutate_tags.", class(ele)[1], "(x, selector, ...)` is not implemented")
 }
 
@@ -1260,18 +1293,37 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 
 
 
-# TODO-barret make sure methods work as expected
-# TODO-barret document and/or export
+#' Formatting and printing quizes, questions, and answers
+#'
+#' Note: If custom question types are created, custom formating methods may be implemented as well.
+#'
+#' @param x object of interest
+#' @param ... ignored
+#' @param spacing Text to be placed at the beginning of each new line
+#' @seealso \code{\link{quiz}}, \code{\link{question}}, \code{\link{answer}}
+#' @export
+#' @rdname format_quiz
+#' @examples
+#' ex_question <- question("What number is the letter A in the alphabet?",
+#'   answer("8"),
+#'   answer("14"),
+#'   answer("1", correct = TRUE),
+#'   answer("23"),
+#'   incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
+#'   allow_retry = TRUE
+#' )
+#' cat(format(ex_question))
 format.tutorial_question_answer <- function(x, ..., spacing = "") {
   paste0(
     spacing,
-    ifelse(x$is_correct, "X", "\u2714"),
+    ifelse(x$is_correct, "\u2714", "X"),
     ": ",
     "\"", x$label, "\"",
     if (!is.null(x$message)) paste0("; \"", x$message, "\"")
   )
 }
-
+#' @export
+#' @rdname format_quiz
 format.tutorial_question <- function(x, ..., spacing = "") {
   # x$label belongs to the knitr label
   paste0(
@@ -1288,7 +1340,8 @@ format.tutorial_question <- function(x, ..., spacing = "") {
     if (x$allow_retry) paste0("\n", spacing, "    try again: \"", x$messages$try_again, "\"")
   )
 }
-
+#' @export
+#' @rdname format_quiz
 format.tutorial_quiz <- function(x, ...) {
   paste0(
     "Quiz: \"", x$caption, "\"\n",
@@ -1300,6 +1353,12 @@ format.tutorial_quiz <- function(x, ...) {
 cat_format <- function(x, ...) {
   cat(format(x, ...), "\n")
 }
+#' @export
+#' @rdname format_quiz
 print.tutorial_question <- cat_format
+#' @export
+#' @rdname format_quiz
 print.tutorial_question_answer <- cat_format
+#' @export
+#' @rdname format_quiz
 print.tutorial_quiz <- cat_format
