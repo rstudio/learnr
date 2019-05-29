@@ -24,7 +24,7 @@ To bundle a tutorial into an R package and make it available for running via the
 
 Once you've done this users can run your tutorial as follows (note they should be sure to install the **learnr** package before attempting to run the tutorial):
 
-Users would then simply install tutor directly before running your tutorial, for example:
+Users would then simply install learnr directly before running your tutorial, for example:
 
 ```r
 install.packages("learnr")
