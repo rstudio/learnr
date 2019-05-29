@@ -25,35 +25,19 @@
 #' \dontrun{run_tutorial("hello", "learnr")}
 run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
 
-  possible_tutorials <- available_tutorials(package)
-  pkg_tutorials <- paste0(
-    "Available \"", package, "\" tutorials: ", paste0(paste0("\"", possible_tutorials, "\""), collapse = ", ")
-  )
+  if (is.null(package) && !is.null(name)) {
+    stop.("`package` must be provided if `name` is provided.")
+  }
 
-  if (missing(name)) {
-    message(pkg_tutorials)
-    return(invisible(possible_tutorials))
+  # works for package = NULL and if package is provided
+  tutorials <- available_tutorials(package = package)
+  if (is.null(name)) {
+    message(format(tutorials))
+    return(invisible(tutorials))
   }
 
   # get path to tutorial
-  tutorial_path <- system.file("tutorials", name, package = package)
-
-  # validate that it's a direcotry
-  if (!utils::file_test("-d", tutorial_path)) {
-    firstlinesep <- "\t"
-    linesep <- "\n\t"
-    msg <- paste0("Tutorial \"", name, "\" was not found in the \"", package, "\" package.")
-    # if any tutorial names are _close_ tell the user
-    adist_vals <- adist(possible_tutorials, name, ignore.case = TRUE)
-    if (any(adist_vals <= 3)) {
-      best_match <- possible_tutorials[which.min(adist_vals)]
-      msg <- paste0(
-        msg, linesep,
-        "Did you mean \"", best_match, "\"?"
-      )
-    }
-    stop.(firstlinesep, msg, linesep, pkg_tutorials)
-  }
+  tutorial_path <- get_tutorial_path(name, package)
 
   # provide launch_browser if it's not specified in the shiny_args
   if (is.null(shiny_args))
@@ -74,35 +58,6 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
     rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
   })
 }
-
-#' @rdname run_tutorial
-#' @export
-available_tutorials <- function(package) {
-
-  if (!file.exists(
-    system.file(package = package)
-  )) {
-    stop.("No package found with name: \"", package, "\"")
-  }
-
-  tutorials_dir <- system.file("tutorials", package = package)
-  if (!file.exists(tutorials_dir)) {
-    stop.("No tutorials found for package: \"", package, "\"")
-  }
-
-  tutorial_folders <- list.dirs(tutorials_dir, full.names = TRUE, recursive = FALSE)
-  names(tutorial_folders) <- basename(tutorial_folders)
-  has_rmd <- vapply(tutorial_folders, FUN.VALUE = logical(1), function(tut_dir) {
-    length(dir(tut_dir, pattern = "\\.Rmd$", recursive = FALSE)) > 0
-  })
-  if (all(!has_rmd)) {
-    stop.("No tutorial .Rmd files found for package: \"", package, "\"")
-  }
-
-  tutorial_names <- tutorial_folders[has_rmd]
-  unique(names(tutorial_names))
-}
-
 
 
 #' Safe R CMD environment
