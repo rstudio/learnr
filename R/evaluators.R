@@ -13,7 +13,10 @@ inline_evaluator <- function(expr, timelimit) {
       on.exit(setTimeLimit(cpu=Inf, elapsed=Inf, transient=FALSE), add = TRUE);
 
       # execute and capture result
-      result <<- force(expr)
+      result <<- tryCatch(
+        force(expr),
+        error = function(e) error_result(e)
+      )
     },
 
     completed = function() {
