@@ -1,8 +1,6 @@
 learnr 0.10.0 (unreleased)
 ===========
 
-## Breaking changes
-
 ## New features
 
 * Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment ([#169](https://github.com/rstudio/learnr/issues/169), [#179](https://github.com/rstudio/learnr/pull/179), and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
@@ -10,6 +8,8 @@ learnr 0.10.0 (unreleased)
 * Added a new function, `safe`, which evaluates code in a new, safe R environment. ([#174](https://github.com/rstudio/learnr/pull/174))
 
 ## Minor new features and improvements
+
+* Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument. ([#228](https://github.com/rstudio/learnr/pull/228))
 
 * Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
 
