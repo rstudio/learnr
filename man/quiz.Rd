@@ -25,9 +25,9 @@ answer(text, correct = FALSE, message = NULL)
 \item{text}{Question or option text}
 
 \item{type}{Type of quiz question. Typically this can be automatically determined
-based on the provided answers Pass \code{"single"} to indicate that even though
+based on the provided answers. Pass \code{"radio"} to indicate that even though
 multiple correct answers are specified that inputs which include only one correct
-answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
+answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
 (as opposed to radio buttons) even though only once correct answer was provided.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
@@ -59,10 +59,16 @@ message alongside the \code{message} message value.}
 \item{random_answer_order}{Display answers in a random order.}
 }
 \description{
-Add interative multiple choice quiz questions to a tutorial.
+Add interative quiz questions to a tutorial.
+Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
+There are three default types of quiz questions:
+\describe{
+  \item{\code{radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
+  \item{\code{checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
+  \item{\code{text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
+}
 }
 \examples{
-\dontrun{
 quiz(
   question("What number is the letter A in the alphabet?",
     answer("8"),
@@ -82,9 +88,10 @@ quiz(
                        "in the Milky Way, at a computer.")
   )
 )
-}
 
 }
 \seealso{
+For more information and question type extension examples, please see the help documentation for \code{\link{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+
 \code{\link{random_praise}}, \code{\link{random_encouragement}}
 }
