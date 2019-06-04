@@ -105,6 +105,17 @@ setup_exercise_handler <- function(exercise_rx, session) {
 # evaluate an exercise and return a list containing output and dependencies
 evaluate_exercise <- function(exercise, envir) {
 
+  # return immediately and clear visible results
+  # do not consider this an exercise submission
+  if (
+    nchar(
+      str_trim(paste0(exercise$code, collapse = "\n"))
+    ) == 0
+  ) {
+    return(empty_result())
+  }
+
+
   # capture a copy of the envir before any execution is done
   envir_prep <- duplicate_env(envir)
 
@@ -122,7 +133,8 @@ evaluate_exercise <- function(exercise, envir) {
       check_code = exercise$code_check,
       envir_result = NULL,
       evaluate_result = NULL,
-      envir_prep = envir_prep
+      envir_prep = envir_prep,
+      last_value = NULL
     )
 
     # if it's an 'incorrect' feedback result then return it
@@ -178,6 +190,8 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
 
+
+
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
@@ -197,9 +211,33 @@ evaluate_exercise <- function(exercise, envir) {
     keep_md = FALSE
   )
 
+  # capture the last value and use a regular output handler for value
+  # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
+  # @param value Function to handle the values returned from evaluation. If it
+  #   only has one argument, only visible values are handled; if it has more
+  #   arguments, the second argument indicates whether the value is visible.
+  last_value <- NULL
+  default_output_handler <- evaluate::new_output_handler()
+  has_visible_arg <- length(formals(default_output_handler$value)) > 1
+  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
+    last_value <<- x
+
+    if (has_visible_arg) {
+      default_output_handler$value(x, visible)
+    } else {
+      default_output_handler$value(x)
+    }
+  })
+
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate = function(code, envir, ...) {
-    evaluate_result <<- evaluate::evaluate(code, envir, ...)
+  knitr_options$knit_hooks$evaluate = function(
+    code, envir, ...,
+    output_handler # set to avoid name collision
+  ) {
+    evaluate_result <<- evaluate::evaluate(
+      code, envir, ...,
+      output_handler = learnr_output_handler
+    )
     evaluate_result
   }
   output_format <- rmarkdown::output_format(
@@ -265,7 +303,8 @@ evaluate_exercise <- function(exercise, envir) {
     check_code = exercise$check,
     envir_result = envir,
     evaluate_result = evaluate_result,
-    envir_prep = envir_prep
+    envir_prep = envir_prep,
+    last_value = last_value
   )
 
   # validate the feedback
@@ -290,6 +329,13 @@ evaluate_exercise <- function(exercise, envir) {
   )
 }
 
+empty_result <- function() {
+  list(
+    feedback = NULL,
+    error_message = NULL,
+    html_output = NULL
+  )
+}
 error_result <- function(error_message) {
   list(
     feedback = NULL,
