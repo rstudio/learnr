@@ -72,6 +72,7 @@ question_is_correct.default <- function(question, answer_input, ...) {
 #' Helper method to return
 #' @param is_correct boolean that determines if a question answer is correct
 #' @param messages a list of messages to be displayed.  The type of message will be determined by the `is_correct` value.
+#' @param ... possible future parameter expansion
 #' @export
 #' @examples
 #' # Radio button question implementation of `question_is_correct`

@@ -39,7 +39,7 @@ random_praises <- c(
   ":)"
 )
 
-random_encouragement <- c(
+random_encouragements <- c(
   "Please try again.",
   "Give it another try.",
   "Let's try it again.",

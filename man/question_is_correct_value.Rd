@@ -10,6 +10,8 @@ question_is_correct_value(is_correct, messages, ...)
 \item{is_correct}{boolean that determines if a question answer is correct}
 
 \item{messages}{a list of messages to be displayed.  The type of message will be determined by the `is_correct` value.}
+
+\item{...}{possible future parameter expansion}
 }
 \description{
 Helper method to return

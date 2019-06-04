@@ -46,7 +46,7 @@
 #' }
 #'
 #'
-#' @seealso For more information and question type extension examples, please see the help documentation for \code{\link{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+#' @seealso For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
 #' @param text Question or option text
 #' @param ... One or more questions or answers
 #' @param caption Optional quiz caption (defaults to "Quiz")
@@ -281,9 +281,16 @@ shuffle <- function(x) {
 }
 
 
+#' Knitr quiz print methods
+#'
+#' \code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and \code{\link{quiz}}
+#' @inheritParams knitr::knit_print
 #' @export
-knit_print.tutorial_question <- function(question, ...) {
-
+#' @importFrom knitr knit_print
+#' @method knit_print tutorial_question
+#' @rdname knit_print
+knit_print.tutorial_question <- function(x, ...) {
+  question <- x
   ui <- question_module_ui(question$ids$question)
 
   # too late to try to set a chunk attribute
@@ -299,8 +306,11 @@ knit_print.tutorial_question <- function(question, ...) {
   # regular knit print the UI
   knitr::knit_print(ui)
 }
+#' @method knit_print tutorial_quiz
 #' @export
-knit_print.tutorial_quiz <- function(quiz, ...) {
+#' @rdname knit_print
+knit_print.tutorial_quiz <- function(x, ...) {
+  quiz <- x
   caption_tag <- if (!is.null(quiz$caption)) {
     list(knitr::knit_print(
       tags$div(class = "panel-heading tutorial-panel-heading", quiz$caption)

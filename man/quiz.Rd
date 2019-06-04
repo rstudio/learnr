@@ -91,7 +91,7 @@ quiz(
 
 }
 \seealso{
-For more information and question type extension examples, please see the help documentation for \code{\link{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
 
 \code{\link{random_praise}}, \code{\link{random_encouragement}}
 }
