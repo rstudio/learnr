@@ -1,6 +1,7 @@
 ---
 output: slidy_presentation
 runtime: shiny_prerendered
+title: "Slidly demo"
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +14,6 @@ library(dygraphs)
 Modify the dyOptions to customize the graph's appearance:
 
 ```{r dygraph-options, exercise=TRUE, exercise.eval=TRUE, fig.height=5.5}
-dygraph(ldeaths) %>% 
+dygraph(ldeaths) %>%
   dyOptions(fillGraph = TRUE, drawGrid = TRUE)
 ```
-

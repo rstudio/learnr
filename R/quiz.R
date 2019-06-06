@@ -152,8 +152,7 @@ question <- function(text,
   }
 
   ## no partial matching for s3 methods
-  # type <- match.arg(type)
-  if (missing(type)) {
+  if (missing(type)) { # can not use match.arg(type) because of comment above
     type <- "auto"
   }
   if (isTRUE(all.equal(type, "auto"))) {

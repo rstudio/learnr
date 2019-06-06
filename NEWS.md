@@ -15,10 +15,11 @@ learnr 0.10.0 (unreleased)
 
 * Question width will expand to the container width. ([#222](https://github.com/rstudio/learnr/pull/222))
 
+* Available tutorial names will be displayed when no `name` parameter or an incorrect `name` is provided to `run_tutorial()`. ([#234](https://github.com/rstudio/learnr/pull/234))
+
 ## Bug fixes
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
-
 
 
 learnr 0.9.2
