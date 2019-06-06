@@ -93,11 +93,10 @@ available_tutorials_for_package <- function(package) {
   rmd_info <- rmd_info[!has_no_rmd]
 
   tutorials <- do.call(rbind, rmd_info)
+  class(tutorials) <- c("learnr_available_tutorials", class(tutorials))
+  
   list(
-    tutorials = structure(
-      class = c("learnr_available_tutorials", class(tutorials)),
-      tutorials
-    ),
+    tutorials = tutorials,
     error = NULL
   )
 }
@@ -106,7 +105,7 @@ available_tutorials_for_package <- function(package) {
 #' @noRd
 all_available_tutorials <- function() {
   ret <- list()
-  all_pkgs <- base::library()$results[,"Package"]
+  all_pkgs <- installed.packages()[,"Package"]
 
   for (pkg in all_pkgs) {
     info <- available_tutorials_for_package(pkg)
