@@ -1168,7 +1168,24 @@ mutate_tags <- function(ele, selector, fn, ...) {
 # no-op for basic type
 #' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
-  ele
+  if (any(
+    c(
+      "NULL",
+      "numeric", "integer", "complex",
+      "logical",
+      "character", "factor"
+    ) %in% class(ele)
+  )) {
+    return(ele)
+  }
+
+  # if not a basic type, recurse on the tags
+  mutate_tags(
+    htmltools::as.tags(ele),
+    selector,
+    fn,
+    ...
+  )
 }
 #' @export
 mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
