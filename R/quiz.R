@@ -1171,20 +1171,28 @@ print.shiny_selector_list <- function(x, ...) {
 mutate_tags <- function(ele, selector, fn, ...) {
   UseMethod("mutate_tags", ele)
 }
+# no-op for basic type
 #' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
-  stop("`mutate_tags.", class(ele)[1], "(x, selector, ...)` is not implemented")
-}
+  if (any(
+    c(
+      "NULL",
+      "numeric", "integer", "complex",
+      "logical",
+      "character", "factor"
+    ) %in% class(ele)
+  )) {
+    return(ele)
+  }
 
-# no-ops for basic types
-#' @export
-mutate_tags.NULL <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.character <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.numeric <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.logical <- function(ele, selector, fn, ...) { ele }
+  # if not a basic type, recurse on the tags
+  mutate_tags(
+    htmltools::as.tags(ele),
+    selector,
+    fn,
+    ...
+  )
+}
 #' @export
 mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
 
