@@ -2,9 +2,18 @@
 % Please edit documentation in R/mutate_tags.R
 \name{mutate_tags}
 \alias{mutate_tags}
+\alias{mutate_tags.default}
+\alias{mutate_tags.list}
+\alias{mutate_tags.shiny.tag}
 \title{Mutate shiny html tags}
 \usage{
 mutate_tags(ele, selector, fn, ...)
+
+\method{mutate_tags}{default}(ele, selector, fn, ...)
+
+\method{mutate_tags}{list}(ele, selector, fn, ...)
+
+\method{mutate_tags}{shiny.tag}(ele, selector, fn, ...)
 }
 \arguments{
 \item{ele}{shiny html tag element}

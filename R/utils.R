@@ -21,6 +21,10 @@ is_localhost <- function(location) {
     FALSE
 }
 
+stop. <- function(...) {
+  stop(..., call. = FALSE)
+}
+
 
 #' Create a duplicate of an environment
 #'
