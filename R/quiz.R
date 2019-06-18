@@ -64,6 +64,10 @@
 #' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
 #' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
 #' @param random_answer_order Display answers in a random order.
+# TODO-barret link to sortable_question when sortable is added
+#' @param options Extra options to be stored in the question object.
+#'   This is useful when using custom question types.
+#'   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
 #'
 #' @examples
 #' \dontrun{
@@ -129,7 +133,8 @@ question <- function(text,
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
                      allow_retry = FALSE,
-                     random_answer_order = FALSE
+                     random_answer_order = FALSE,
+                     options = list()
                    ) {
 
 
@@ -200,7 +205,8 @@ question <- function(text,
         ),
         loading = quiz_text(loading),
         random_answer_order = random_answer_order,
-        allow_retry = allow_retry
+        allow_retry = allow_retry,
+        options = options
       )
     )
   )

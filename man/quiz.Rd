@@ -13,7 +13,7 @@ question(text, ..., type = c("auto", "single", "multiple", "radio",
   try_again = incorrect, message = NULL, post_message = NULL,
   loading = c("**Loading:** ", text, "<br/><br/><br/>"),
   submit_button = "Submit Answer", try_again_button = "Try Again",
-  allow_retry = FALSE, random_answer_order = FALSE)
+  allow_retry = FALSE, random_answer_order = FALSE, options = list())
 
 answer(text, correct = FALSE, message = NULL)
 }
@@ -57,6 +57,10 @@ message alongside the \code{message} message value.}
 \item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 
 \item{random_answer_order}{Display answers in a random order.}
+
+\item{options}{Extra options to be stored in the question object.
+This is useful when using custom question types.
+See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.}
 }
 \description{
 Add interactive multiple choice quiz questions to a tutorial.
