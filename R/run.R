@@ -14,16 +14,30 @@
 #'   development of the package (i.e. the corresponding tutorial .html file for
 #'   the .Rmd file must exist).
 #'
-#' @seealso \code{\link{safe}}
+#' @seealso \code{\link{safe}} and \code{\link{available_tutorials}}
+#' @importFrom utils adist
 #' @export
-run_tutorial <- function(name, package, shiny_args = NULL) {
+#' @examples
+#' # display all "learnr" tutorials
+#' available_tutorials("learnr")
+#'
+#' # run basic example within learnr
+#' \dontrun{run_tutorial("hello", "learnr")}
+run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
+
+  if (is.null(package) && !is.null(name)) {
+    stop.("`package` must be provided if `name` is provided.")
+  }
+
+  # works for package = NULL and if package is provided
+  tutorials <- available_tutorials(package = package)
+  if (is.null(name)) {
+    message(format(tutorials))
+    return(invisible(tutorials))
+  }
 
   # get path to tutorial
-  tutorial_path <- system.file("tutorials", name, package = package)
-
-  # validate that it's a direcotry
-  if (!utils::file_test("-d", tutorial_path))
-    stop("Tutorial ", name, " was not found in the ", package, " package.")
+  tutorial_path <- get_tutorial_path(name, package)
 
   # provide launch_browser if it's not specified in the shiny_args
   if (is.null(shiny_args))
@@ -31,7 +45,7 @@ run_tutorial <- function(name, package, shiny_args = NULL) {
   if (is.null(shiny_args$launch.browser)) {
     shiny_args$launch.browser <- (
       interactive() ||
-      identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
+        identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
     )
   }
 

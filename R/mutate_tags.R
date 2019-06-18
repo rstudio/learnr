@@ -27,6 +27,7 @@ disable_all_tags <- function(ele) {
 #' @param fn function to execute when a match is found
 #' @param ... possible future parameter extension
 #' @export
+#' @rdname mutate_tags
 #' @examples
 #' # add an href to all a tags
 #' mutate_tags(
@@ -43,25 +44,33 @@ mutate_tags <- function(ele, selector, fn, ...) {
   UseMethod("mutate_tags", ele)
 }
 #' @export
+#' @rdname mutate_tags
 mutate_tags.default <- function(ele, selector, fn, ...) {
-  # TODO - return ele instead of stop. delete other small methods
-  stop("`mutate_tags.", class(ele)[1], "(x, selector, ...)` is not implemented")
-}
+  if (any(
+    c(
+      "NULL",
+      "numeric", "integer", "complex",
+      "logical",
+      "character", "factor"
+    ) %in% class(ele)
+  )) {
+    return(ele)
+  }
 
-# no-ops for basic types
+  # if not a basic type, recurse on the tags
+  mutate_tags(
+    htmltools::as.tags(ele),
+    selector,
+    fn,
+    ...
+  )
+}
 #' @export
-mutate_tags.NULL <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.character <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.numeric <- function(ele, selector, fn, ...) { ele }
-#' @export
-mutate_tags.logical <- function(ele, selector, fn, ...) { ele }
-#' @export
+#' @rdname mutate_tags
 mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
 
-
 #' @export
+#' @rdname mutate_tags
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   if (inherits(selector, "character")) {
     # if there is a set of selectors
