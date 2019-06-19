@@ -60,7 +60,7 @@ question_completed_input.default <- function(question, ...) {
   question_stop("question_completed_input", question)
 }
 question_is_valid.default <- function(question, answer_input, ...) {
-  question_stop("question_is_valid", question)
+  !is.null(answer_input)
 }
 question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
