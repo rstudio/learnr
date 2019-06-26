@@ -394,6 +394,7 @@ question_module_server_impl <- function(
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
+  question$seed <- stats::runif(1, 0, .Machine$integer.max)
 
   # only set when a submit button has been pressed
   # (or reset when try again is hit)
