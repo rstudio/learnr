@@ -45,6 +45,11 @@ question_is_valid <- function(question, answer_input, ...) {
 question_is_correct <- function(question, answer_input, ...) {
   UseMethod("question_is_correct", question)
 }
+#' @export
+#' @rdname question_methods
+question_disable_input <- function(question, answer_input, ...) {
+  UseMethod("question_disable_input", question)
+}
 
 
 question_stop <- function(name, question) {
@@ -64,6 +69,12 @@ question_is_valid.default <- function(question, answer_input, ...) {
 }
 question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
+}
+
+question_disable_input.default <- function(question, answer_input, ...) {
+  disable_all_tags(
+    question_completed_input(question, answer_input)
+  )
 }
 
 
