@@ -142,6 +142,7 @@ question <- function(text,
   initialize_tutorial()
 
   # capture/validate answers
+  ellipsis::check_dots_unnamed() # validate all answers are not named and not a misspelling
   answers <- list(...)
   lapply(answers, function(answer) {
     if (!inherits(answer, "tutorial_question_answer"))
