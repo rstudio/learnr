@@ -506,6 +506,7 @@ question_module_server_impl <- function(
 
     if (is_done()) {
       # if the question is 'done', display the final input ui and disable everything
+
       return(
         disable_all_tags(
           question_completed_input(question, submitted_answer())
@@ -515,10 +516,9 @@ question_module_server_impl <- function(
 
     # if the question is NOT 'done', disable the current UI
     #   until it is reset with the try again button
+
     return(
-      disable_all_tags(
-        question_initialize_input(question, submitted_answer())
-      )
+      question_disable_input(question, submitted_answer())
     )
   })
 
