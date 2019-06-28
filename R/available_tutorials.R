@@ -3,11 +3,7 @@
 #'
 #' Run a tutorial which is contained within an R package.
 #'
-#' @param name Tutorial name (subdirectory within \code{tutorials/}
-#'   directory of installed package).
 #' @param package Name of package
-#' @param shiny_args Additional arguments to forward to
-#'   \code{\link[shiny:runApp]{shiny::runApp}}.
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
@@ -94,7 +90,7 @@ available_tutorials_for_package <- function(package) {
 
   tutorials <- do.call(rbind, rmd_info)
   class(tutorials) <- c("learnr_available_tutorials", class(tutorials))
-  
+
   list(
     tutorials = tutorials,
     error = NULL
@@ -102,6 +98,8 @@ available_tutorials_for_package <- function(package) {
 }
 
 #' @return will return a list of `error` and `tutorials` which is a \code{data.frame} containing "package", "name", and "title".
+#'
+#' @importFrom utils installed.packages
 #' @noRd
 all_available_tutorials <- function() {
   ret <- list()
@@ -149,14 +147,13 @@ get_tutorial_path <- function(name, package) {
   tutorial_path
 }
 
-#' @rdname available_tutorials
 #' @export
 format.learnr_available_tutorials <- function(x, ...) {
   tutorials <- x
   ret <- "Available tutorials:"
 
   for (pkg in unique(tutorials$package)) {
-    tutorials_sub <- subset(tutorials, package == pkg)
+    tutorials_sub <- tutorials[tutorials$package == pkg, ]
 
     tutorial_names <- format(tutorials_sub$name)
     txts <- mapply(tutorial_names, tutorials_sub$title, SIMPLIFY = FALSE, FUN = function(name, title) {
@@ -176,7 +173,8 @@ format.learnr_available_tutorials <- function(x, ...) {
 
   ret
 }
-#' @rdname available_tutorials
+
+
 #' @export
 print.learnr_available_tutorials <- function(x, ...) {
   cat(format(x, ...), "\n")
