@@ -216,6 +216,9 @@ question <- function(text,
         loading = quiz_text(loading),
         random_answer_order = random_answer_order,
         allow_retry = allow_retry,
+        # TODO-barret should this be initialized, even if it is overwritten later?
+        # Set a seed for local testing, even though it is overwritten for each document session
+        seed = random_seed(),
         options = options
       )
     )
@@ -279,6 +282,10 @@ random_answer_id <- function() {
 #' @importFrom stats runif
 random_id <- function(txt) {
   paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
+
+random_seed <- function() {
+  stats::runif(1, 0, .Machine$integer.max)
 }
 
 shuffle <- function(x) {
@@ -394,7 +401,8 @@ question_module_server_impl <- function(
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
-  question$seed <- stats::runif(1, 0, .Machine$integer.max)
+  # set a seed for each user session for question methods to use
+  question$seed <- random_seed()
 
   # only set when a submit button has been pressed
   # (or reset when try again is hit)
