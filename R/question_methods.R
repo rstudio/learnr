@@ -62,7 +62,9 @@ question_initialize_input.default <- function(question, answer_input, ...) {
   question_stop("question_initialize_input", question)
 }
 question_completed_input.default <- function(question, ...) {
-  question_stop("question_completed_input", question)
+  disable_all_tags(
+    question_initialize_input(question, answer_input)
+  )
 }
 question_is_valid.default <- function(question, answer_input, ...) {
   !is.null(answer_input)
