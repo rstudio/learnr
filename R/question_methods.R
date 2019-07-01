@@ -61,7 +61,7 @@ question_stop <- function(name, question) {
 question_initialize_input.default <- function(question, answer_input, ...) {
   question_stop("question_initialize_input", question)
 }
-question_completed_input.default <- function(question, ...) {
+question_completed_input.default <- function(question, answer_input, ...) {
   disable_all_tags(
     question_initialize_input(question, answer_input)
   )
