@@ -108,13 +108,12 @@ quiz <- function(..., caption = "Quiz") {
     question
   })
 
-  structure(
-    class = "tutorial_quiz",
-    list(
-      caption = if(!is.null(caption)) quiz_text(caption),
-      questions = questions
-    )
+  ret <- list(
+    caption = if(!is.null(caption)) quiz_text(caption),
+    questions = questions
   )
+  class(ret) <- "tutorial_quiz"
+  ret
 }
 
 
@@ -181,37 +180,33 @@ question <- function(text,
   label <- knitr::opts_current$get('label')
   q_id <- label %||% random_question_id()
 
-  return(
-    structure(
-      class = c(type, "tutorial_question"),
-      list(
-        type = type,
-        label = label,
-        question = quiz_text(text),
-        answers = answers,
-        button_labels = list(
-          submit = quiz_text(submit_button),
-          try_again = quiz_text(try_again_button)
-        ),
-        messages = list(
-          correct = quiz_text(correct),
-          try_again = quiz_text(try_again),
-          incorrect = quiz_text(incorrect),
-          message = quiz_text(message),
-          post_message = quiz_text(post_message)
-        ),
-        ids = list(
-          answer = NS(q_id)("answer"),
-          question = q_id
-        ),
-        loading = quiz_text(loading),
-        random_answer_order = random_answer_order,
-        allow_retry = allow_retry,
-        options = options
-      )
-    )
+  ret <- list(
+    type = type,
+    label = label,
+    question = quiz_text(text),
+    answers = answers,
+    button_labels = list(
+      submit = quiz_text(submit_button),
+      try_again = quiz_text(try_again_button)
+    ),
+    messages = list(
+      correct = quiz_text(correct),
+      try_again = quiz_text(try_again),
+      incorrect = quiz_text(incorrect),
+      message = quiz_text(message),
+      post_message = quiz_text(post_message)
+    ),
+    ids = list(
+      answer = NS(q_id)("answer"),
+      question = q_id
+    ),
+    loading = quiz_text(loading),
+    random_answer_order = random_answer_order,
+    allow_retry = allow_retry,
+    options = options
   )
-
+  class(ret) <- c(type, "tutorial_question")
+  ret
 }
 
 #' @rdname quiz
@@ -374,13 +369,12 @@ question_is_correct_value <- function(is_correct, messages, ...) {
   if (!is.logical(is_correct)) {
     stop("`is_correct` must be a logical value")
   }
-  structure(
-    class = "tutorial_question_is_correct_value",
-    list(
-      is_correct = is_correct,
-      messages = messages
-    )
+  ret <- list(
+    is_correct = is_correct,
+    messages = messages
   )
+  class(ret) <- "tutorial_question_is_correct_value"
+  ret
 }
 
 
@@ -1106,7 +1100,7 @@ as_selector <- function(selector) {
   # if it contains multiple elements, recurse
   if (grepl(" ", selector)) {
     selector <- lapply(strsplit(selector, "\\s+"), as_selector)
-    selector <- structure(class = "shiny_selector_list", selector)
+    class(selector) <- "shiny_selector_list"
     return(selector)
   }
 
@@ -1120,18 +1114,21 @@ as_selector <- function(selector) {
 
   classes <- str_remove(str_match_all(selector, "\\.([^.]+)"), "^\\.")
 
-  structure(class = "shiny_selector", list(
+  ret <- list(
     element = element,
     id = id,
     classes = classes,
     match_everything = match_everything
-  ))
+  )
+  class(ret) <- "shiny_selector"
+  ret
 }
 
 as_selector_list <- function(selector) {
   selector <- as_selector(selector)
   if (inherits(selector, "shiny_selector")) {
-    selector <- structure(class = "shiny_selector_list", list(selector))
+    selector <- list(selector)
+    class(selector) <- "shiny_selector_list"
   }
   selector
 }
