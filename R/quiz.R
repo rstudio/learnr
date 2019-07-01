@@ -524,7 +524,7 @@ question_module_server_impl <- function(
     #   until it is reset with the try again button
 
     return(
-      question_disable_input(question, submitted_answer())
+      question_try_again_input(question, submitted_answer())
     )
   })
 
