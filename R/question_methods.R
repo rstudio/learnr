@@ -47,8 +47,8 @@ question_is_correct <- function(question, answer_input, ...) {
 }
 #' @export
 #' @rdname question_methods
-question_disable_input <- function(question, answer_input, ...) {
-  UseMethod("question_disable_input", question)
+question_try_again_input <- function(question, answer_input, ...) {
+  UseMethod("question_try_again_input", question)
 }
 
 
@@ -71,9 +71,9 @@ question_is_correct.default <- function(question, answer_input, ...) {
   question_stop("question_is_correct", question)
 }
 
-question_disable_input.default <- function(question, answer_input, ...) {
+question_try_again_input.default <- function(question, answer_input, ...) {
   disable_all_tags(
-    question_completed_input(question, answer_input)
+    question_initialize_input(question, answer_input)
   )
 }
 
@@ -181,12 +181,14 @@ question_completed_input.radio <- function(question, answer_input, ...) {
     tags$span(ans$label, HTML(tag), class = tagClass)
   })
 
-  radioButtons(
-    question$ids$answer,
-    label = question$question,
-    choiceValues = choice_values,
-    choiceNames = choice_names_final,
-    selected = answer_input
+  disable_all_tags(
+    radioButtons(
+      question$ids$answer,
+      label = question$question,
+      choiceValues = choice_values,
+      choiceNames = choice_names_final,
+      selected = answer_input
+    )
   )
 }
 
@@ -283,12 +285,14 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
     tags$span(ans$label, HTML(tag), class = tagClass)
   })
 
-  checkboxGroupInput(
-    question$ids$answer,
-    label = question$question,
-    choiceValues = choice_values,
-    choiceNames = choice_names_final,
-    selected = answer_input
+  disable_all_tags(
+    checkboxGroupInput(
+      question$ids$answer,
+      label = question$question,
+      choiceValues = choice_values,
+      choiceNames = choice_names_final,
+      selected = answer_input
+    )
   )
 }
 
@@ -333,10 +337,4 @@ question_is_correct.text <- function(question, answer_input, ...) {
   question_is_correct_value(FALSE, NULL)
 }
 
-question_completed_input.text <- function(question, answer_input, ...) {
-  textInput(
-    question$ids$answer,
-    label = question$question,
-    value = answer_input
-  )
-}
+# question_completed_input.text <- question_completed_input.default

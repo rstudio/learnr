@@ -516,9 +516,7 @@ question_module_server_impl <- function(
       # if the question is 'done', display the final input ui and disable everything
 
       return(
-        disable_all_tags(
-          question_completed_input(question, submitted_answer())
-        )
+        question_completed_input(question, submitted_answer())
       )
     }
 
