@@ -112,9 +112,9 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 
   # if there are children and remaining selectors, recurse through
   if (length(selector) > 0 && length(ele$children) > 0) {
-    for (i in seq_along(ele$children)) {
-      ele$children[[i]] <- mutate_tags(ele$children[[i]], selector, fn, ...)
-    }
+    ele$children <- lapply(ele$children, function(x) {
+      mutate_tags(x, selector, fn, ...)
+    })
   }
 
   # if it was a match
