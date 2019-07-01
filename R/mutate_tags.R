@@ -10,9 +10,6 @@ disable_tags <- function(ele, selector) {
   mutate_tags(ele, selector, disable_element_fn)
 }
 
-disable_all_tags <- function(ele) {
-  mutate_tags(ele, "*", disable_element_fn)
-}
 
 
 
@@ -132,4 +129,11 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 
   # return the updated element
   ele
+}
+
+
+#' @export
+#' @rdname mutate_tags
+disable_all_tags <- function(ele) {
+  mutate_tags(ele, "*", disable_element_fn)
 }
