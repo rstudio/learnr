@@ -144,8 +144,7 @@ question <- function(text,
   ellipsis::check_dots_unnamed() # validate all answers are not named and not a misspelling
   answers <- list(...)
   lapply(answers, function(answer) {
-    if (!inherits(answer, "tutorial_question_answer"))
-      stop("Object which is not an answer passed to question function")
+    checkmate::assert_class(answer, "tutorial_question_answer")
   })
 
   # verify chunk label if necessary
@@ -212,22 +211,19 @@ question <- function(text,
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
-  if (!is.character(text)) {
-    stop("Non-string `text` values are not allowed as an answer")
-  }
-  structure(
-    class = c(
-      "tutorial_question_answer", # new an improved name
-      "tutorial_quiz_answer" # legacy. Want to remove
-    ),
-    list(
-      id = random_answer_id(),
-      option = as.character(text),
-      label = quiz_text(text),
-      is_correct = isTRUE(correct),
-      message = quiz_text(message)
-    )
+  ret <- list(
+    id = random_answer_id(),
+    option = as.character(text), # character representation
+    value = text, # actual value
+    label = quiz_text(text), # md presentation
+    is_correct = isTRUE(correct),
+    message = quiz_text(message)
   )
+  class(ret) <- c(
+    "tutorial_question_answer", # new an improved name
+    "tutorial_quiz_answer" # legacy. Want to remove
+  )
+  ret
 }
 
 # render markdown (including equations) for quiz_text
