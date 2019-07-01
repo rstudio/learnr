@@ -5,7 +5,7 @@
 \alias{question_completed_input}
 \alias{question_is_valid}
 \alias{question_is_correct}
-\alias{question_disable_input}
+\alias{question_try_again_input}
 \title{Custom question methods}
 \usage{
 question_initialize_input(question, answer_input, ...)
@@ -16,7 +16,7 @@ question_is_valid(question, answer_input, ...)
 
 question_is_correct(question, answer_input, ...)
 
-question_disable_input(question, answer_input, ...)
+question_try_again_input(question, answer_input, ...)
 }
 \arguments{
 \item{question}{\code{\link{question}} object used}
