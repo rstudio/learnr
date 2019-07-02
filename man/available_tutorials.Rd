@@ -17,7 +17,7 @@ Run a tutorial which is contained within an R package.
 }
 \details{
 Note that when running a tutorial Rmd file with \code{run_tutorial}
-  the tutorial Rmd should have already been rendered as part of the
-  development of the package (i.e. the corresponding tutorial .html file for
-  the .Rmd file must exist).
+the tutorial Rmd should have already been rendered as part of the
+development of the package (i.e. the corresponding tutorial .html file for
+the .Rmd file must exist).
 }
