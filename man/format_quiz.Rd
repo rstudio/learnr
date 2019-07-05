@@ -31,8 +31,8 @@
 \description{
 Notes:
 \itemize{
-  \item If custom question types are created, custom s3 formating methods may be implemented as well.
-  \item Due to the shiny runtime of questions, a text representation of quizes, questions, and answers will be presented.
+\item If custom question types are created, custom s3 formating methods may be implemented as well.
+\item Due to the shiny runtime of questions, a text representation of quizes, questions, and answers will be presented.
 }
 }
 \examples{
