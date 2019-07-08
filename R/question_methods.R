@@ -148,9 +148,9 @@ question_initialize_input.radio <- function(question, answer_input, ...) {
   )
 }
 
-question_is_valid.radio <- function(question, answer_input, ...) {
-  !is.null(answer_input)
-}
+
+# question_is_valid.radio <- question_is_valid.default
+
 
 question_is_correct.radio <- function(question, answer_input, ...) {
   if (is.null(answer_input)) {
@@ -212,9 +212,9 @@ question_initialize_input.checkbox <- function(question, answer_input, ...) {
   )
 }
 
-question_is_valid.checkbox <- function(question, answer_input, ...) {
-  !is.null(answer_input)
-}
+
+# question_is_valid.checkbox <- question_is_valid.default
+
 
 # # returns
 # list(
@@ -310,6 +310,7 @@ question_initialize_input.text <- function(question, answer_input, ...) {
     value = answer_input
   )
 }
+
 
 question_is_valid.text <- function(question, answer_input, ...) {
   !(is.null(answer_input) || nchar(str_trim(answer_input)) == 0)
