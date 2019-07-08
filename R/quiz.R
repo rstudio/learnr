@@ -216,8 +216,7 @@ question <- function(text,
         loading = quiz_text(loading),
         random_answer_order = random_answer_order,
         allow_retry = allow_retry,
-        # TODO-barret should this be initialized, even if it is overwritten later?
-        # Set a seed for local testing, even though it is overwritten for each document session
+        # Set a seed for local testing, even though it is overwritten for each shiny session
         seed = random_seed(),
         options = options
       )
