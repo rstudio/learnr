@@ -120,13 +120,13 @@ question(
 
 There are four methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
 
-* `question_initialize_input.TYPE(question, answer_input, ...)`
+* `question_initialize_ui.TYPE(question, input_answer, ...)`
   * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.
-* `question_completed_input.TYPE(question, ...)`
+* `question_completed_ui.TYPE(question, ...)`
   * Determines how the question is displayed after a submission.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
-* `question_is_valid.TYPE(question, answer_input, ...)`
+* `question_is_valid.TYPE(question, input_answer, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
-* `question_is_correct.TYPE(question, answer_input, ...)`
+* `question_is_correct.TYPE(question, input_answer, ...)`
   * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::question_is_correct_value`.
 
 
@@ -143,7 +143,7 @@ With the code being executed in a `shiny_prerendered` document, there are two ex
 ````markdown
 `r ''````{r no_feedback, context = "server-start"}
 # assign to global env
-question_completed_input.no_feedback <<- function(question, answer_input, ...) {
+question_completed_ui.no_feedback <<- function(question, input_answer, ...) {
   # Return a generic message
   tagList(
     tags$label(class="control-label", question$question),
@@ -157,7 +157,7 @@ This _non-standard_ setup above could be avoided if the s3 methods were `library
 
 ```{r no_feedback, context = "server-start"}
 # assign to global env
-question_completed_input.no_feedback <<- function(question, answer_input, ...) {
+question_completed_ui.no_feedback <<- function(question, input_answer, ...) {
   # Return a generic message
   tagList(
     tags$label(class="control-label", question$question),
@@ -210,17 +210,17 @@ This example should perform like a text box but maintain the white space before 
 ````markdown
 `r ''````{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
+question_is_correct.text_no_trim <<- function(question, input_answer, ...) {
 
   # validate something is given
-  if (is.null(answer_input) || nchar(answer_input) == 0) {
+  if (is.null(input_answer) || nchar(input_answer) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
 
   for (ans in question$answers) {
-    if (identical(ans$option, answer_input)) {
+    if (identical(ans$option, input_answer)) {
       return(question_is_correct_value(
         ans$is_correct,
         ans$message
@@ -235,17 +235,17 @@ question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
 
 ```{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, answer_input, ...) {
+question_is_correct.text_no_trim <<- function(question, input_answer, ...) {
 
   # validate something is given
-  if (is.null(answer_input) || nchar(answer_input) == 0) {
+  if (is.null(input_answer) || nchar(input_answer) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
 
   for (ans in question$answers) {
-    if (identical(ans$option, answer_input)) {
+    if (identical(ans$option, input_answer)) {
       return(question_is_correct_value(
         ans$is_correct,
         ans$message

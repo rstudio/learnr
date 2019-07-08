@@ -18,13 +18,13 @@ Helper method to return
 }
 \examples{
 # Radio button question implementation of `question_is_correct`
-question_is_correct.radio <- function(question, answer_input, ...) {
-  if (is.null(answer_input)) {
+question_is_correct.radio <- function(question, input_answer, ...) {
+  if (is.null(input_answer)) {
     showNotification("Please select an answer before submitting", type = "error")
-    req(answer_input)
+    req(input_answer)
   }
   for (ans in question$answers) {
-    if (as.character(ans$option) == answer_input) {
+    if (as.character(ans$option) == input_answer) {
       return(question_is_correct_value(
         ans$is_correct,
         ans$message
