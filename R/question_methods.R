@@ -5,58 +5,58 @@
 #' There are five methods used to define a custom question.  Each S3 method
 #' should correspond to the `type = TYPE` supplied to the question.
 #'
-#' * `question_initialize_input.TYPE(question, answer_input, ...)`
+#' * `question_initialize_ui.TYPE(question, input_answer, ...)`
 #'
-#'     -  Determines how the question is initially displayed to the users. This should return a shiny UI object that can be displayed using [shiny::renderUI]. For example, in the case of `question_initialize_input.radio`, it returns a [shiny::radioButtons] object. This method will be re-executed if the question is attempted again.
+#'     -  Determines how the question is initially displayed to the users. This should return a shiny UI object that can be displayed using [shiny::renderUI]. For example, in the case of `question_initialize_ui.radio`, it returns a [shiny::radioButtons] object. This method will be re-executed if the question is attempted again.
 #'
-#' * `question_completed_input.TYPE(question, ...)`
+#' * `question_completed_ui.TYPE(question, ...)`
 #'
-#'     - Determines how the question is displayed after a submission.  Just like `question_initialize_input`, this method should return an shiny UI object that can be displayed using [shiny::renderUI].
+#'     - Determines how the question is displayed after a submission.  Just like `question_initialize_ui`, this method should return an shiny UI object that can be displayed using [shiny::renderUI].
 #'
-#' * `question_is_valid.TYPE(question, answer_input, ...)`
+#' * `question_is_valid.TYPE(question, input_answer, ...)`
 #'
 #'      - This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
 #'
-#' * `question_is_correct.TYPE(question, answer_input, ...)`
+#' * `question_is_correct.TYPE(question, input_answer, ...)`
 #'
 #'     - This function should return the output of [question_is_correct_value]. [question_is_correct_value] allows for custom messages in addition to the determination of an answer being correct.  See [question_is_correct_value] for more details.
 #'
-#' * `question_try_again_input <- function(question, answer_input, ...)`
+#' * `question_try_again_ui <- function(question, input_answer, ...)`
 #'
-#'     - Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to `question_initialize_input`, this should should return a shiny UI object that can be displayed using [shiny::renderUI].
+#'     - Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to `question_initialize_ui`, this should should return a shiny UI object that can be displayed using [shiny::renderUI].
 #'
 #'
 #'
 #'
 #' @param question [question] object used
-#' @param answer_input user input value
+#' @param input_answer user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
 #' @export
 #' @seealso For more information and question type extension examples, please view the `question_type` tutorial: `learnr::run_tutorial("question_type", "learnr")`.
 #'
 #' @rdname question_methods
-question_initialize_input <- function(question, answer_input, ...) {
-  UseMethod("question_initialize_input", question)
+question_initialize_ui <- function(question, input_answer, ...) {
+  UseMethod("question_initialize_ui", question)
 }
 #' @export
 #' @rdname question_methods
-question_completed_input <- function(question, answer_input, ...) {
-  UseMethod("question_completed_input", question)
+question_completed_ui <- function(question, input_answer, ...) {
+  UseMethod("question_completed_ui", question)
 }
 #' @export
 #' @rdname question_methods
-question_is_valid <- function(question, answer_input, ...) {
+question_is_valid <- function(question, input_answer, ...) {
   UseMethod("question_is_valid", question)
 }
 #' @export
 #' @rdname question_methods
-question_is_correct <- function(question, answer_input, ...) {
+question_is_correct <- function(question, input_answer, ...) {
   UseMethod("question_is_correct", question)
 }
 #' @export
 #' @rdname question_methods
-question_try_again_input <- function(question, answer_input, ...) {
-  UseMethod("question_try_again_input", question)
+question_try_again_ui <- function(question, input_answer, ...) {
+  UseMethod("question_try_again_ui", question)
 }
 
 
@@ -66,24 +66,24 @@ question_stop <- function(name, question) {
     .call = FALSE
   )
 }
-question_initialize_input.default <- function(question, answer_input, ...) {
-  question_stop("question_initialize_input", question)
+question_initialize_ui.default <- function(question, input_answer, ...) {
+  question_stop("question_initialize_ui", question)
 }
-question_completed_input.default <- function(question, answer_input, ...) {
+question_completed_ui.default <- function(question, input_answer, ...) {
   disable_all_tags(
-    question_initialize_input(question, answer_input, ...)
+    question_initialize_ui(question, input_answer, ...)
   )
 }
-question_is_valid.default <- function(question, answer_input, ...) {
-  !is.null(answer_input)
+question_is_valid.default <- function(question, input_answer, ...) {
+  !is.null(input_answer)
 }
-question_is_correct.default <- function(question, answer_input, ...) {
+question_is_correct.default <- function(question, input_answer, ...) {
   question_stop("question_is_correct", question)
 }
 
-question_try_again_input.default <- function(question, answer_input, ...) {
+question_try_again_ui.default <- function(question, input_answer, ...) {
   disable_all_tags(
-    question_initialize_input(question, answer_input, ...)
+    question_initialize_ui(question, input_answer, ...)
   )
 }
 
@@ -97,13 +97,13 @@ question_try_again_input.default <- function(question, answer_input, ...) {
 #' @export
 #' @examples
 #' # Radio button question implementation of `question_is_correct`
-#' question_is_correct.radio <- function(question, answer_input, ...) {
-#'   if (is.null(answer_input)) {
+#' question_is_correct.radio <- function(question, input_answer, ...) {
+#'   if (is.null(input_answer)) {
 #'     showNotification("Please select an answer before submitting", type = "error")
-#'     req(answer_input)
+#'     req(input_answer)
 #'   }
 #'   for (ans in question$answers) {
-#'     if (as.character(ans$option) == answer_input) {
+#'     if (as.character(ans$option) == input_answer) {
 #'       return(question_is_correct_value(
 #'         ans$is_correct,
 #'         ans$message
@@ -143,7 +143,7 @@ answer_values <- function(question) {
 }
 
 
-question_initialize_input.radio <- function(question, answer_input, ...) {
+question_initialize_ui.radio <- function(question, input_answer, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
@@ -152,7 +152,7 @@ question_initialize_input.radio <- function(question, answer_input, ...) {
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
-    selected = answer_input %||% FALSE # setting to NULL, selects the first item
+    selected = input_answer %||% FALSE # setting to NULL, selects the first item
   )
 }
 
@@ -160,13 +160,13 @@ question_initialize_input.radio <- function(question, answer_input, ...) {
 # question_is_valid.radio <- question_is_valid.default
 
 
-question_is_correct.radio <- function(question, answer_input, ...) {
-  if (is.null(answer_input)) {
+question_is_correct.radio <- function(question, input_answer, ...) {
+  if (is.null(input_answer)) {
     showNotification("Please select an answer before submitting", type = "error")
-    req(answer_input)
+    req(input_answer)
   }
   for (ans in question$answers) {
-    if (as.character(ans$option) == answer_input) {
+    if (as.character(ans$option) == input_answer) {
       return(question_is_correct_value(
         ans$is_correct,
         ans$message
@@ -176,7 +176,7 @@ question_is_correct.radio <- function(question, answer_input, ...) {
   question_is_correct_value(FALSE, NULL)
 }
 
-question_completed_input.radio <- function(question, answer_input, ...) {
+question_completed_ui.radio <- function(question, input_answer, ...) {
   choice_values <- answer_values(question)
 
   # update select answers to have X or √
@@ -197,7 +197,7 @@ question_completed_input.radio <- function(question, answer_input, ...) {
       label = question$question,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
-      selected = answer_input
+      selected = input_answer
     )
   )
 }
@@ -207,7 +207,7 @@ question_completed_input.radio <- function(question, answer_input, ...) {
 
 
 
-question_initialize_input.checkbox <- function(question, answer_input, ...) {
+question_initialize_ui.checkbox <- function(question, input_answer, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
@@ -216,7 +216,7 @@ question_initialize_input.checkbox <- function(question, answer_input, ...) {
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
-    selected = answer_input
+    selected = input_answer
   )
 }
 
@@ -229,10 +229,10 @@ question_initialize_input.checkbox <- function(question, answer_input, ...) {
 #   is_correct = LOGICAL,
 #   message = c(CHARACTER)
 # )
-question_is_correct.checkbox <- function(question, answer_input, ...) {
-  if (is.null(answer_input)) {
+question_is_correct.checkbox <- function(question, input_answer, ...) {
+  if (is.null(input_answer)) {
     showNotification("Please select an answer before submitting", type = "error")
-    req(answer_input)
+    req(input_answer)
   }
 
   append_message <- function(x, ans) {
@@ -255,7 +255,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
   incorrect_messages <- list()
 
   for (ans in question$answers) {
-    ans_is_checked <- as.character(ans$option) %in% answer_input
+    ans_is_checked <- as.character(ans$option) %in% input_answer
     submission_is_correct <-
       # is checked and is correct
       (ans_is_checked && ans$is_correct) ||
@@ -279,7 +279,7 @@ question_is_correct.checkbox <- function(question, answer_input, ...) {
   ))
 }
 
-question_completed_input.checkbox <- function(question, answer_input, ...) {
+question_completed_ui.checkbox <- function(question, input_answer, ...) {
 
   choice_values <- answer_values(question)
 
@@ -301,7 +301,7 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
       label = question$question,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
-      selected = answer_input
+      selected = input_answer
     )
   )
 }
@@ -310,35 +310,35 @@ question_completed_input.checkbox <- function(question, answer_input, ...) {
 
 
 
-question_initialize_input.text <- function(question, answer_input, ...) {
+question_initialize_ui.text <- function(question, input_answer, ...) {
   textInput(
     question$ids$answer,
     label = question$question,
     placeholder = "Enter answer here...",
-    value = answer_input
+    value = input_answer
   )
 }
 
 
-question_is_valid.text <- function(question, answer_input, ...) {
-  !(is.null(answer_input) || nchar(str_trim(answer_input)) == 0)
+question_is_valid.text <- function(question, input_answer, ...) {
+  !(is.null(input_answer) || nchar(str_trim(input_answer)) == 0)
 }
 # # returns
 # list(
 #   is_correct = LOGICAL,
 #   message = c(CHARACTER)
 # )
-question_is_correct.text <- function(question, answer_input, ...) {
+question_is_correct.text <- function(question, input_answer, ...) {
 
-  if (is.null(answer_input) || nchar(answer_input) == 0) {
+  if (is.null(input_answer) || nchar(input_answer) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
-    req(answer_input)
+    req(input_answer)
   }
 
-  answer_input <- str_trim(answer_input)
+  input_answer <- str_trim(input_answer)
 
   for (ans in question$answers) {
-    if (isTRUE(all.equal(str_trim(ans$label), answer_input))) {
+    if (isTRUE(all.equal(str_trim(ans$label), input_answer))) {
       return(question_is_correct_value(
         ans$is_correct,
         ans$message
@@ -348,4 +348,4 @@ question_is_correct.text <- function(question, answer_input, ...) {
   question_is_correct_value(FALSE, NULL)
 }
 
-# question_completed_input.text <- question_completed_input.default
+# question_completed_ui.text <- question_completed_ui.default
