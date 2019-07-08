@@ -71,7 +71,7 @@ question_initialize_input.default <- function(question, answer_input, ...) {
 }
 question_completed_input.default <- function(question, answer_input, ...) {
   disable_all_tags(
-    question_initialize_input(question, answer_input)
+    question_initialize_input(question, answer_input, ...)
   )
 }
 question_is_valid.default <- function(question, answer_input, ...) {
@@ -83,7 +83,7 @@ question_is_correct.default <- function(question, answer_input, ...) {
 
 question_try_again_input.default <- function(question, answer_input, ...) {
   disable_all_tags(
-    question_initialize_input(question, answer_input)
+    question_initialize_input(question, answer_input, ...)
   )
 }
 
