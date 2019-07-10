@@ -1,6 +1,6 @@
-Package: learnr
+Package: learnrLara
 Type: Package
-Title: Interactive Tutorials for R
+Title: Interactive Tutorials for R with Lara extension
 Version: 0.9.2.9001
 Authors@R: c(
   person("Barret", "Schloerke", role = c("aut", "cre"), email = "barret@rstudio.com"),

@@ -28,7 +28,7 @@ initialize_tutorial <- function() {
     # session initialization (forward tutorial metadata)
     rmarkdown::shiny_prerendered_chunk(
       'server',
-      sprintf('learnr:::register_http_handlers(session, metadata = %s)',
+      sprintf('learnrLara:::register_http_handlers(session, metadata = %s)',
               dput_to_string(rmarkdown::metadata$tutorial)),
       singleton = TRUE
     )

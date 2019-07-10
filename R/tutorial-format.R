@@ -19,7 +19,7 @@
 #'        "espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
 #'        to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.
 #' @param ace_theme Ace theme supplied to the ace code editor for all exercises.
-#'        See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
+#'        See \code{learnrLara:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
 #'
 #' @param ... Forward parameters to html_document
 #'
@@ -54,7 +54,7 @@ tutorial <- function(fig_width = 6.5,
   # template
   args <- c(args, "--template", pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",
-                package = "learnr")
+                package = "learnrLara")
   ))
 
   # content includes
@@ -103,8 +103,8 @@ tutorial <- function(fig_width = 6.5,
     tutorial_diagnostics_html_dependency(),
     htmltools::htmlDependency(
       name = "tutorial-format",
-      version = utils::packageVersion("learnr"),
-      src = system.file("rmarkdown/templates/tutorial/resources", package = "learnr"),
+      version = utils::packageVersion("learnrLara"),
+      src = system.file("rmarkdown/templates/tutorial/resources", package = "learnrLara"),
       script = "tutorial-format.js",
       stylesheet = stylesheets
     )

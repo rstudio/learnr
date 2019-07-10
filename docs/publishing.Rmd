@@ -1,19 +1,19 @@
 ---
 title: "Publishing"
-output: 
+output:
   html_document:
     toc_depth: 3
 ---
 
-Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like [shinyapps.io](https://www.shinyapps.io). 
+Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like [shinyapps.io](https://www.shinyapps.io).
 
 ## R Package
 
 A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the `learnr::run_tutorial` function. For example, the following functions runs the "hello" and "slidy" sample tutorials built in to the **learnr** package:
 
 ```r
-learnr::run_tutorial("hello", package = "learnr")
-learnr::run_tutorial("slidy", package = "learnr")
+learnr::run_tutorial("hello", package = "learnrLara")
+learnr::run_tutorial("slidy", package = "learnrLara")
 ```
 
 To bundle a tutorial into an R package and make it available for running via the `run_tutorial` function you should:
@@ -27,7 +27,7 @@ Once you've done this users can run your tutorial as follows (note they should b
 Users would then simply install learnr directly before running your tutorial, for example:
 
 ```r
-install.packages("learnr")
+install.packages("learnrLara")
 learnr::run_tutorial("introduction", package = "mypackage")
 ```
 
@@ -69,11 +69,11 @@ Particular `.Rmd` files can be accessed by referencing their full path including
 
 ### Resource Usage
 
-Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine). 
+Since users can execute arbitrary R code within a tutorial, this code can also consume arbitrary resources and time! (e.g. users could create an infinite loop or allocate all available memory on the machine).
 
 To limit the time taken for the execution of exercises you can use the `exercise.timelimit` option. see the documentation on [Exercise Time Limits](exercises.html#time-limits) for additional details.
 
-You can use various features of [RStudio Connect](https://www.rstudio.com/products/connect/) and [Shiny Server Pro]([Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/)) to run tutorials within a resource and/or filesystem sandbox. 
+You can use various features of [RStudio Connect](https://www.rstudio.com/products/connect/) and [Shiny Server Pro]([Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/)) to run tutorials within a resource and/or filesystem sandbox.
 
 See also the section below on [Exercise Execution] for details on further customizing the evaluation environment for exercises.
 
@@ -85,13 +85,13 @@ Note that by default when running on UNIX systems the **learnr** package runs ex
 
 ## Hosting Services
 
-Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.). 
+Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.).
 
 The **learnr** package includes a variety of mechanisms intended to make it easy to deploy within a tutorial hosting service, each of which are described below. As of this writing there are no publicly available tutorial hosting services, however we hope this will change soon, and will update this documentation as services become available.
 
 ### Tutorial Storage
 
-Tutorials save the state of inputs and outputs (e.g. exercise and question submissions) and automatically restore them when users revisit the tutorial. For locally deployed tutorials (e.g. tutorials run from within an R package) this state is saved within the local filesystem. 
+Tutorials save the state of inputs and outputs (e.g. exercise and question submissions) and automatically restore them when users revisit the tutorial. For locally deployed tutorials (e.g. tutorials run from within an R package) this state is saved within the local filesystem.
 
 For server deployed tutorials the state is saved within the per-domain storage provided by the end user's web browser. This has the benefit of saving and restoring state on a per-user basis without any notion of user authentication or identity, however will only work within a single web browser (i.e. state won't be restored if the users accesses the same tutorial from another machine).
 
@@ -144,7 +144,7 @@ Note that by default when running on UNIX systems the **learnr** package runs ex
 
 #### Start and Cleanup Hooks
 
-The **learnr** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions. 
+The **learnr** package can have it's exercise evaluation environment customized using `onstart` and `oncleanup` hooks. Within these hooks you can use functions from [RAppArmor](https://cran.r-project.org/web/packages/RAppArmor/index.html) package or another package that provides interfaces to system resource management functions.
 
 Using this method you can apply time limits, resource limits, and filesystem limits. Here are the steps required to use RAppArmor with the `onstart` and `oncleanup` hooks:
 
@@ -155,12 +155,12 @@ Using this method you can apply time limits, resource limits, and filesystem lim
     ```
     /usr/lib/rstudio/bin/pandoc/* rix,
     ```
- 
-3. Define `onstart` and `oncleaup` hooks by setting the `tutorial.exercise.evaluator.onstart` and `tutorial.exercise.evaluator.oncleanup` global options. For example: 
- 
+
+3. Define `onstart` and `oncleaup` hooks by setting the `tutorial.exercise.evaluator.onstart` and `tutorial.exercise.evaluator.oncleanup` global options. For example:
+
     <div id="exerciseevaluator"></div>
     <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
-    
+
 You'd likely set these options within `Rprofile.site` or another R source file that is evaluated prior to running the tutorial with `rmarkdown::run`.
 
 #### Fully Custom Evaluator
@@ -177,7 +177,7 @@ You can see the source code for these evaluators here: <https://github.com/rstud
 
 ### Recording Events
 
-As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.). 
+As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).
 
 #### Event Recorder Function
 
@@ -258,7 +258,7 @@ The `data` parameter is an R list which provides additional data that varies dep
 
 ### Tutorial Identifiers
 
-The [Tutorial Storage] and [Recording Events] sections above describe various ways to record user progress and actions within tutorials. Storage of tutorial state requires unique identifiers for tutorials (and their versions) as well as users. 
+The [Tutorial Storage] and [Recording Events] sections above describe various ways to record user progress and actions within tutorials. Storage of tutorial state requires unique identifiers for tutorials (and their versions) as well as users.
 
 Tutorial hosting services will often need to customize these identifiers based on their own notions of tutorial provisioning and user identify. This section describes how to do this.
 

@@ -138,7 +138,6 @@ $endfor$
 
 <body>
 
-
 $for(include-before)$
 $include-before$
 $endfor$
@@ -146,12 +145,17 @@ $endfor$
 <div class="pageContent band">
 <div class="bandContent page">
 
+$if(options.show_left_nav)$
 <div class="topics">
+$else$
+<div class="topics fullWidth">
+$endif$
 
 $body$
 
 </div> <!-- topics -->
 
+$if(options.show_left_nav)$
 <div class="topicsContainer">
 <div class="topicsPositioner">
 <div class="band">
@@ -195,6 +199,7 @@ $endif$
 </div> <!-- band -->
 </div> <!-- topicsPositioner -->
 </div> <!-- topicsContainer -->
+$endif$
 
 
 </div> <!-- bandContent page -->
@@ -238,6 +243,22 @@ $$(document).ready(function () {
 });
 </script>
 $endif$
+
+$if(false)$
+<script src="https://coder4math.concord.org/lara-plugin.js"></script>
+$else$
+<!-- set the if condition to false above to use localhost based plugin for development-->
+<!-- to start plugin change to lara-plugin directory and run `npm start` -->
+<script src="http://localhost:1234/lara-plugin.js"></script>
+$endif$
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    learnrLaraPlugin.init({
+      laraIntegration: $if(options.lara_integration)$true$else$false$endif$,
+      tutorial: window.tutorial
+    });
+  });
+</script>
 
 </body>
 

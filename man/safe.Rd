@@ -33,15 +33,15 @@ Using \code{safe} should only be necessary when locally deployed.
 \examples{
 \dontrun{
 # Direct usage
-safe(run_tutorial("hello", package = "learnr"))
+safe(run_tutorial("hello", package = "learnrLara"))
 
 # Programmatic usage
 library(rlang)
 
-expr <- quote(run_tutorial("hello", package = "learnr"))
+expr <- quote(run_tutorial("hello", package = "learnrLara"))
 safe(!!expr)
 
 tutorial <- "hello"
-safe(run_tutorial(!!tutorial, package = "learnr"))
+safe(run_tutorial(!!tutorial, package = "learnrLara"))
 }
 }

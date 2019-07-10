@@ -1,4 +1,4 @@
 library(testthat)
-library(learnr)
+library(learnrLara)
 
-test_check("learnr")
+test_check("learnrLara")

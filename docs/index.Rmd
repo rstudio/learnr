@@ -31,7 +31,7 @@ Here are some simple examples of tutorials created with the **learnr** package:
 examples(showcaseOnly = TRUE)
 ```
 
-### Hello, Tutorial! 
+### Hello, Tutorial!
 
 To create a tutorial, just use `library(learnr)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
@@ -52,7 +52,7 @@ This is what the running tutorial document looks like after the user has entered
 1. Install the **learnr** package from CRAN as follows:
 
     ```r
-    install.packages("learnr")
+    install.packages("learnrLara")
     ```
 
 2. Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.
@@ -103,7 +103,7 @@ rmarkdown::run("tutorial.Rmd")
 If your tutorial is included within an R package you can also run it via the `learnr::run_tutorial` function. For example, you can run a live version of the "Hello, Tutor" example provided above with:
 
 ```r
-learnr::run_tutorial("hello", package = "learnr")
+learnr::run_tutorial("hello", package = "learnrLara")
 ```
 
 ## Tutorial Types
@@ -131,7 +131,7 @@ Exercises can include hints or solutions as well as custom checking code to prov
 
 ## Questions
 
-You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers. 
+You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.
 
 Include a question by calling the `question` function within an R code chunk:
 
@@ -162,7 +162,7 @@ You can specify an alternate percentage for the video's width or an alternate fi
 
 ## Shiny Components
 
-The **learnr** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
+The **learnr** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).
 
 The basic technique is to add a `context="server"` attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:
 
@@ -213,7 +213,7 @@ Tutorials store the various pieces of work done within them (exercise input and 
 
 One thing to keep in mind about preserved work is that if your tutorial changes significantly then the work restored may no longer match up well with the contents of your tutorial! (e.g. the nature and content of exercises and/or questions may have changed).
 
-Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label. 
+Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label.
 
 #### Tutorial Identifiers
 
@@ -228,7 +228,7 @@ When you change the ID or version of a tutorial all stored work associated with 
 
 ## Publishing
 
-Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
+Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io.
 
 The most straightforward way to deploy a tutorial is to include it within an [R package](publishing.html#r-package) and have users run it directly via the `learnr::run_tutorial` function.
 

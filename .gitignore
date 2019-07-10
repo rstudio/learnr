@@ -12,3 +12,7 @@ issues
 
 # html tutorial output
 inst/tutorials/*/*.html
+
+lara-plugin/node_modules
+lara-plugin/dist
+lara-plugin/.cache

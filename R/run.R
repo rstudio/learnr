@@ -18,11 +18,11 @@
 #' @importFrom utils adist
 #' @export
 #' @examples
-#' # display all "learnr" tutorials
-#' available_tutorials("learnr")
+#' # display all "learnrLara" tutorials
+#' available_tutorials("learnrLara")
 #'
 #' # run basic example within learnr
-#' \dontrun{run_tutorial("hello", "learnr")}
+#' \dontrun{run_tutorial("hello", "learnrLara")}
 run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
 
   if (is.null(package) && !is.null(name)) {
@@ -108,16 +108,16 @@ callr_try_catch <- function(...) {
 #' @examples
 #' \dontrun{
 #' # Direct usage
-#' safe(run_tutorial("hello", package = "learnr"))
+#' safe(run_tutorial("hello", package = "learnrLara"))
 #'
 #' # Programmatic usage
 #' library(rlang)
 #'
-#' expr <- quote(run_tutorial("hello", package = "learnr"))
+#' expr <- quote(run_tutorial("hello", package = "learnrLara"))
 #' safe(!!expr)
 #'
 #' tutorial <- "hello"
-#' safe(run_tutorial(!!tutorial, package = "learnr"))
+#' safe(run_tutorial(!!tutorial, package = "learnrLara"))
 #' }
 safe <- function(expr, ..., show = TRUE, env = safe_env()) {
   # do not make a quosure as the attached env is not passed.
@@ -131,7 +131,7 @@ safe <- function(expr, ..., show = TRUE, env = safe_env()) {
     withr::with_envvar(c(LEARNR_INTERACTIVE = learnr_interactive), {
       callr::r(
         function(.exp) {
-          library("learnr", character.only = TRUE, quietly = TRUE)
+          library("learnrLara", character.only = TRUE, quietly = TRUE)
           base::eval(.exp)
         },
         list(

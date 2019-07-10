@@ -25,11 +25,11 @@ Note that when running a tutorial Rmd file with \code{run_tutorial}
   the .Rmd file must exist).
 }
 \examples{
-# display all "learnr" tutorials
-available_tutorials("learnr")
+# display all "learnrLara" tutorials
+available_tutorials("learnrLara")
 
-# run basic example within learnr
-\dontrun{run_tutorial("hello", "learnr")}
+# run basic example within learnrLara
+\dontrun{run_tutorial("hello", "learnrLara")}
 }
 \seealso{
 \code{\link{safe}} and \code{\link{available_tutorials}}

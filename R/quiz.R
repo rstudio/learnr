@@ -286,7 +286,7 @@ knit_print.tutorial_question <- function(question, ...) {
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::question_prerendered_chunk(%s)',
+      'learnrLara:::question_prerendered_chunk(%s)',
       dput_to_string(question)
     )
   )

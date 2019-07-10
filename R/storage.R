@@ -245,7 +245,7 @@ tutorial_storage <- function(session) {
 
   # local storage implementation
   local_storage <- filesystem_storage(
-    file.path(rappdirs::user_data_dir(), "R", "learnr", "tutorial", "storage")
+    file.path(rappdirs::user_data_dir(), "R", "learnrLara", "tutorial", "storage")
   )
 
   # function to determine "auto" storage
