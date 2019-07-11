@@ -6,7 +6,8 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      exercise.checker = grader::grade_learnr)
 ```
 
 
