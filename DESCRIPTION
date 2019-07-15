@@ -33,16 +33,15 @@ Imports:
     shiny (>= 1.0),
     rmarkdown (>= 1.12.0),
     packrat (>= 0.5.0-7),
-    ellipsis,
+    ellipsis (>= 0.2.0.1),
     checkmate
 Remotes:
-  rstudio/rmarkdown,
   rstudio/packrat
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
-Suggests: 
+Suggests:
     testthat (>= 2.1.0),
     callr,
     rlang
