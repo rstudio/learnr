@@ -118,13 +118,12 @@ quiz <- function(..., caption = "Quiz") {
     question
   })
 
-  structure(
-    class = "tutorial_quiz",
-    list(
-      caption = if(!is.null(caption)) quiz_text(caption),
-      questions = questions
-    )
+  ret <- list(
+    caption = if(!is.null(caption)) quiz_text(caption),
+    questions = questions
   )
+  class(ret) <- "tutorial_quiz"
+  ret
 }
 
 
@@ -152,10 +151,10 @@ question <- function(text,
   initialize_tutorial()
 
   # capture/validate answers
+  ellipsis::check_dots_unnamed() # validate all answers are not named and not a misspelling
   answers <- list(...)
   lapply(answers, function(answer) {
-    if (!inherits(answer, "tutorial_question_answer"))
-      stop("Object which is not an answer passed to question function")
+    checkmate::assert_class(answer, "tutorial_question_answer")
   })
 
   # verify chunk label if necessary
@@ -190,60 +189,53 @@ question <- function(text,
   label <- knitr::opts_current$get('label')
   q_id <- label %||% random_question_id()
 
-  return(
-    structure(
-      class = c(type, "tutorial_question"),
-      list(
-        type = type,
-        label = label,
-        question = quiz_text(text),
-        answers = answers,
-        button_labels = list(
-          submit = quiz_text(submit_button),
-          try_again = quiz_text(try_again_button)
-        ),
-        messages = list(
-          correct = quiz_text(correct),
-          try_again = quiz_text(try_again),
-          incorrect = quiz_text(incorrect),
-          message = quiz_text(message),
-          post_message = quiz_text(post_message)
-        ),
-        ids = list(
-          answer = NS(q_id)("answer"),
-          question = q_id
-        ),
-        loading = quiz_text(loading),
-        random_answer_order = random_answer_order,
-        allow_retry = allow_retry,
-        # Set a seed for local testing, even though it is overwritten for each shiny session
-        seed = random_seed(),
-        options = options
-      )
-    )
+  ret <- list(
+    type = type,
+    label = label,
+    question = quiz_text(text),
+    answers = answers,
+    button_labels = list(
+      submit = quiz_text(submit_button),
+      try_again = quiz_text(try_again_button)
+    ),
+    messages = list(
+      correct = quiz_text(correct),
+      try_again = quiz_text(try_again),
+      incorrect = quiz_text(incorrect),
+      message = quiz_text(message),
+      post_message = quiz_text(post_message)
+    ),
+    ids = list(
+      answer = NS(q_id)("answer"),
+      question = q_id
+    ),
+    loading = quiz_text(loading),
+    random_answer_order = random_answer_order,
+    allow_retry = allow_retry,
+    # Set a seed for local testing, even though it is overwritten for each shiny session
+    seed = random_seed(),
+    options = options
   )
-
+  class(ret) <- c(type, "tutorial_question")
+  ret
 }
 
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
-  if (!is.character(text)) {
-    stop("Non-string `text` values are not allowed as an answer")
-  }
-  structure(
-    class = c(
-      "tutorial_question_answer", # new an improved name
-      "tutorial_quiz_answer" # legacy. Want to remove
-    ),
-    list(
-      id = random_answer_id(),
-      option = as.character(text),
-      label = quiz_text(text),
-      is_correct = isTRUE(correct),
-      message = quiz_text(message)
-    )
+  ret <- list(
+    id = random_answer_id(),
+    option = as.character(text), # character representation
+    value = text, # actual value
+    label = quiz_text(text), # md presentation
+    is_correct = isTRUE(correct),
+    message = quiz_text(message)
   )
+  class(ret) <- c(
+    "tutorial_question_answer", # new an improved name
+    "tutorial_quiz_answer" # legacy. Want to remove
+  )
+  ret
 }
 
 # render markdown (including equations) for quiz_text
