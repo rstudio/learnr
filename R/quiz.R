@@ -212,6 +212,8 @@ question <- function(text,
     loading = quiz_text(loading),
     random_answer_order = random_answer_order,
     allow_retry = allow_retry,
+    # Set a seed for local testing, even though it is overwritten for each shiny session
+    seed = random_seed(),
     options = options
   )
   class(ret) <- c(type, "tutorial_question")
@@ -271,6 +273,10 @@ random_answer_id <- function() {
 #' @importFrom stats runif
 random_id <- function(txt) {
   paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
+
+random_seed <- function() {
+  stats::runif(1, 0, .Machine$integer.max)
 }
 
 shuffle <- function(x) {
@@ -386,6 +392,8 @@ question_module_server_impl <- function(
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
+  # set a seed for each user session for question methods to use
+  question$seed <- random_seed()
 
   # only set when a submit button has been pressed
   # (or reset when try again is hit)
@@ -497,19 +505,17 @@ question_module_server_impl <- function(
 
     if (is_done()) {
       # if the question is 'done', display the final input ui and disable everything
+
       return(
-        disable_all_tags(
-          question_completed_input(question, submitted_answer())
-        )
+        question_completed_input(question, submitted_answer())
       )
     }
 
     # if the question is NOT 'done', disable the current UI
     #   until it is reset with the try again button
+
     return(
-      disable_all_tags(
-        question_initialize_input(question, submitted_answer())
-      )
+      question_try_again_input(question, submitted_answer())
     )
   })
 
