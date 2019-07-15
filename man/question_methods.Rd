@@ -26,35 +26,28 @@ question_try_again_input(question, answer_input, ...)
 \item{...}{future parameter expansion and custom arguments to be used in dispatched s3 methods.}
 }
 \description{
-There are four methods used to define a custom question.  Each s3 method
+There are five methods used to define a custom question.  Each S3 method
 should correspond to the \code{type = TYPE} supplied to the question.
 \itemize{
 \item \code{question_initialize_input.TYPE(question, answer_input, ...)}
 \itemize{
-\item Determines how the question is initially displayed to the users. This
-should return an shiny UI object that can be displayed using
-\code{[shiny::renderUI]. In the case of }question_initialize_input.radio`, it
-returns a \link[shiny:radioButtons]{shiny::radioButtons} object. This method will be re-executed if
-the question is attempted again.
+\item Determines how the question is initially displayed to the users. This should return a shiny UI object that can be displayed using \link[shiny:renderUI]{shiny::renderUI}. For example, in the case of \code{question_initialize_input.radio}, it returns a \link[shiny:radioButtons]{shiny::radioButtons} object. This method will be re-executed if the question is attempted again.
 }
 \item \code{question_completed_input.TYPE(question, ...)}
 \itemize{
-\item Determines how the question is displayed after a submission.  Just like
-\code{question_initialize_input}, this method should return an shiny UI object
-that can be displayed using \link[shiny:renderUI]{shiny::renderUI}.
+\item Determines how the question is displayed after a submission.  Just like \code{question_initialize_input}, this method should return an shiny UI object that can be displayed using \link[shiny:renderUI]{shiny::renderUI}.
 }
 \item \code{question_is_valid.TYPE(question, answer_input, ...)}
 \itemize{
-\item This method should return a boolean that determines if the input answer is
-valid.  Depending on the value, this function enables and disables the
-submission button.
+\item This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
 }
 \item \code{question_is_correct.TYPE(question, answer_input, ...)}
 \itemize{
-\item This function should return the output of \link{question_is_correct_value}.
-\link{question_is_correct_value} allows for custom messages in addition to the
-determination of an answer being correct.  See \link{question_is_correct_value}
-for more details.
+\item This function should return the output of \link{question_is_correct_value}. \link{question_is_correct_value} allows for custom messages in addition to the determination of an answer being correct.  See \link{question_is_correct_value} for more details.
+}
+\item \code{question_try_again_input <- function(question, answer_input, ...)}
+\itemize{
+\item Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to \code{question_initialize_input}, this should should return a shiny UI object that can be displayed using \link[shiny:renderUI]{shiny::renderUI}.
 }
 }
 }
