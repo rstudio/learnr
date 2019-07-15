@@ -10,9 +10,6 @@ disable_tags <- function(ele, selector) {
   mutate_tags(ele, selector, disable_element_fn)
 }
 
-disable_all_tags <- function(ele) {
-  mutate_tags(ele, "*", disable_element_fn)
-}
 
 
 
@@ -112,9 +109,9 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 
   # if there are children and remaining selectors, recurse through
   if (length(selector) > 0 && length(ele$children) > 0) {
-    for (i in seq_along(ele$children)) {
-      ele$children[[i]] <- mutate_tags(ele$children[[i]], selector, fn, ...)
-    }
+    ele$children <- lapply(ele$children, function(x) {
+      mutate_tags(x, selector, fn, ...)
+    })
   }
 
   # if it was a match
@@ -132,4 +129,11 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 
   # return the updated element
   ele
+}
+
+
+#' @export
+#' @rdname mutate_tags
+disable_all_tags <- function(ele) {
+  mutate_tags(ele, "*", disable_element_fn)
 }
