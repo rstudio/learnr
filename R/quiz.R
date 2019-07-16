@@ -8,13 +8,12 @@
   ## double check answer params
 # √-barret gut unused R and JS methods from old JS quiz hooks
 
-# TODO-barret question / quiz print method
+# √ TODO-barret question / quiz print method
   ## If a quiz is printed in the console... should it open in the browser or print a list?
   ## either way it should be document or fixed
 # TODO-barret Documentation
   # TODO-barret re-render tutorials
   # TODO-barret re-render documentation pictures
-  # TODO-barret answer$correct -> answer$is_correct
   # TODO-barret A new question type (“text”)
   # TODO-barret You can now extend learnr with your own question types
   # TODO-barret Questions are now Shiny apps
@@ -160,7 +159,7 @@ question <- function(text,
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  total_correct <- sum(vapply(answers, function(ans) { ans$is_correct }, logical(1)))
+  total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
   if (total_correct == 0) {
     stop("At least one correct answer must be supplied")
   }
@@ -228,7 +227,7 @@ answer <- function(text, correct = FALSE, message = NULL) {
     option = as.character(text), # character representation
     value = text, # actual value
     label = quiz_text(text), # md presentation
-    is_correct = isTRUE(correct),
+    correct = isTRUE(correct),
     message = quiz_text(message)
   )
   class(ret) <- c(
@@ -405,8 +404,8 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) return(NULL)
     # find out if answer is right
     ret <- question_is_correct(question, submitted_answer())
-    if (!inherits(ret, "tutorial_question_is_correct_value")) {
-      stop("`question_is_correct(question, input$answer)` must return a result from `question_is_correct_value`")
+    if (!inherits(ret, "learnr_mark_as")) {
+      stop("`question_is_correct(question, input$answer)` must return a result from `correct`, `incorrect`, or `mark_as`")
     }
     ret
   })
@@ -414,7 +413,7 @@ question_module_server_impl <- function(
   # should present all messages?
   is_done <- reactive(label = "is_done", {
     if (is.null(is_correct_info())) return(NULL)
-    (!isTRUE(question$allow_retry)) || is_correct_info()$is_correct
+    (!isTRUE(question$allow_retry)) || is_correct_info()$correct
   })
 
 
@@ -428,7 +427,7 @@ question_module_server_impl <- function(
       }
 
       # update the submit button label
-      if (is_correct_info()$is_correct) {
+      if (is_correct_info()$correct) {
         "correct"
       } else {
         # not correct
@@ -483,7 +482,7 @@ question_module_server_impl <- function(
     question_messages(
       question,
       messages = is_correct_info()$messages,
-      is_correct = is_correct_info()$is_correct,
+      is_correct = is_correct_info()$correct,
       is_done = is_done()
     )
   })
@@ -492,7 +491,7 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
-        question_initialize_ui(question, submitted_answer())
+        question_ui_initialize(question, submitted_answer())
       )
     }
 
@@ -507,7 +506,7 @@ question_module_server_impl <- function(
       # if the question is 'done', display the final input ui and disable everything
 
       return(
-        question_completed_ui(question, submitted_answer())
+        question_ui_completed(question, submitted_answer())
       )
     }
 
@@ -515,7 +514,7 @@ question_module_server_impl <- function(
     #   until it is reset with the try again button
 
     return(
-      question_try_again_ui(question, submitted_answer())
+      question_ui_try_again(question, submitted_answer())
     )
   })
 
@@ -542,7 +541,7 @@ question_module_server_impl <- function(
       label = as.character(question$label),
       question = as.character(question$question),
       answer = as.character(input$answer),
-      correct = is_correct_info()$is_correct
+      correct = is_correct_info()$correct
     )
 
   })
