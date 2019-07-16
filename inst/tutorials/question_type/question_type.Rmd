@@ -120,14 +120,14 @@ question(
 
 There are four methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
 
-* `question_initialize_ui.TYPE(question, input_answer, ...)`
+* `question_ui_initialize.TYPE(question, value, ...)`
   * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.
-* `question_completed_ui.TYPE(question, ...)`
+* `question_ui_completed.TYPE(question, ...)`
   * Determines how the question is displayed after a submission.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
-* `question_is_valid.TYPE(question, input_answer, ...)`
+* `question_is_valid.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
-* `question_is_correct.TYPE(question, input_answer, ...)`
-  * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::question_is_correct_value`.
+* `question_is_correct.TYPE(question, value, ...)`
+  * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::correct`, `learnr::incorrect`, or `learnr::mark_as`.
 
 
 #### **No Feedback**
@@ -143,7 +143,7 @@ With the code being executed in a `shiny_prerendered` document, there are two ex
 ````markdown
 `r ''````{r no_feedback, context = "server-start"}
 # assign to global env
-question_completed_ui.no_feedback <<- function(question, input_answer, ...) {
+question_ui_completed.no_feedback <<- function(question, value, ...) {
   # Return a generic message
   tagList(
     tags$label(class="control-label", question$question),
@@ -157,7 +157,7 @@ This _non-standard_ setup above could be avoided if the s3 methods were `library
 
 ```{r no_feedback, context = "server-start"}
 # assign to global env
-question_completed_ui.no_feedback <<- function(question, input_answer, ...) {
+question_ui_completed.no_feedback <<- function(question, value, ...) {
   # Return a generic message
   tagList(
     tags$label(class="control-label", question$question),
@@ -204,56 +204,56 @@ quiz(
 
 Let's create one more custom example that maintains all whitespace for a text box submission.
 
-This example should perform like a text box but maintain the white space before compairing it to the known answers.  To accomplish this, we will create a `question_is_correct.text_no_trim` method.  Remember, `question_is_correct` requires that the return value is generated from `question_is_correct_value`.
+This example should perform like a text box but maintain the white space before compairing it to the known answers.  To accomplish this, we will create a `question_is_correct.text_no_trim` method.  Remember, `question_is_correct` requires that the return value is generated from `correct`, `incorrect`, `mark_as`.
 
 
 ````markdown
 `r ''````{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, input_answer, ...) {
+question_is_correct.text_no_trim <<- function(question, value, ...) {
 
   # validate something is given
-  if (is.null(input_answer) || nchar(input_answer) == 0) {
+  if (nchar(value) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
 
   for (ans in question$answers) {
-    if (identical(ans$option, input_answer)) {
-      return(question_is_correct_value(
-        ans$is_correct,
+    if (identical(ans$option, value)) {
+      return(mark_as(
+        ans$correct,
         ans$message
       ))
     }
   }
   # answer not found
-  question_is_correct_value(FALSE, NULL)
+  mark_as(FALSE, NULL)
 }
 ```
 ````
 
 ```{r no_trim_whitespace, context = "server-start"}
 # use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, input_answer, ...) {
+question_is_correct.text_no_trim <<- function(question, value, ...) {
 
   # validate something is given
-  if (is.null(input_answer) || nchar(input_answer) == 0) {
+  if (nchar(value) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     # use shiny's `req(NULL)` to stop execution
     req(NULL)
   }
 
   for (ans in question$answers) {
-    if (identical(ans$option, input_answer)) {
-      return(question_is_correct_value(
-        ans$is_correct,
+    if (identical(ans$option, value)) {
+      return(mark_as(
+        ans$correct,
         ans$message
       ))
     }
   }
   # answer not found
-  question_is_correct_value(FALSE, NULL)
+  mark_as(FALSE, NULL)
 }
 ```
 

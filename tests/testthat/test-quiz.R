@@ -19,7 +19,7 @@ test_that("quiz questions can be created", {
   expect_type(a$id, "character")
   expect_type(a$option, "character")
   expect_s3_class(a$label, "html")
-  expect_type(a$is_correct, "logical")
+  expect_type(a$correct, "logical")
   expect_type(a$message, "NULL")
 
 

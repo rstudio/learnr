@@ -25,7 +25,7 @@
 format.tutorial_question_answer <- function(x, ..., spacing = "") {
   paste0(
     spacing,
-    ifelse(x$is_correct, "\u2714", "X"),
+    ifelse(x$correct, "\u2714", "X"),
     ": ",
     "\"", x$label, "\"",
     if (!is.null(x$message)) paste0("; \"", x$message, "\"")
