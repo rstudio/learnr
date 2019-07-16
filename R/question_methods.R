@@ -92,7 +92,7 @@ question_ui_try_again.default <- function(question, value, ...) {
 #'
 #' Helper method to return
 #' @param correct boolean that determines if a question answer is correct
-#' @param messages a list of messages to be displayed.  The type of message will be determined by the `correct` value.
+#' @param message a list of messages to be displayed.  The type of message will be determined by the `correct` value.
 #' @param ... possible future parameter expansion
 #' @rdname mark_as_correct_incorrect
 #' @export
