@@ -13,9 +13,9 @@ incorrect(message = NULL)
 mark_as(correct, message = NULL)
 }
 \arguments{
-\item{correct}{boolean that determines if a question answer is correct}
+\item{message}{a list of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
 
-\item{messages}{a list of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
+\item{correct}{boolean that determines if a question answer is correct}
 
 \item{...}{possible future parameter expansion}
 }
