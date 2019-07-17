@@ -1,30 +1,43 @@
-install_tutorial_dependencies <- function(dir) {
+get_needed_pkgs <- function(dir) {
   file_paths <- list.files(dir,
                            pattern = "[.]R$|[.]Rmd",
                            full.names = TRUE,
                            recursive = TRUE)
-  deps <- lapply(file_paths, packrat:::fileDependencies)
-  deps <- unique(unlist(deps))
+  pkgs <- lapply(file_paths, fileDependencies)
+  pkgs <- unique(unlist(pkgs))
 
-  need_install <- deps[!deps %in% utils::installed.packages()]
+  pkgs[!pkgs %in% utils::installed.packages()]
+}
 
-  if(length(need_install) < 1) {
+format_needed_pkgs <- function(needed_pkgs) {
+  paste("  -", needed_pkgs, collapse = "\n")
+}
+
+ask_pkgs_install <- function(needed_pkgs) {
+  question <- sprintf("Would you like to install the following packages?\n%s",
+                      format_needed_pkgs(needed_pkgs))
+
+  utils::menu(choices = c("yes", "no"),
+              title = question)
+}
+
+install_tutorial_dependencies <- function(dir) {
+  needed_pkgs <- get_needed_pkgs(dir)
+
+  if(length(needed_pkgs) < 1) {
     return(invisible())
   }
 
-  need_install_formatted <- paste("  -", need_install, collapse = "\n")
-  question <- sprintf("Would you like to install the following packages?\n%s",
-                      need_install_formatted)
-
   if(!interactive()) {
     stop("The following packages need to be installed:\n",
-         need_install_formatted)
+         format_needed_pkgs(needed_pkgs))
   }
 
-  answer <- utils::menu(choices = c("yes", "no"),
-                        title = question)
+  answer <- ask_pkgs_install(needed_pkgs)
 
-  if(answer == 2) stop("The tutorial is missing required packages and cannot be rendered.")
+  if(answer == 2) {
+    stop("The tutorial is missing required packages and cannot be rendered.")
+  }
 
-  utils::install.packages(need_install)
+  utils::install.packages(needed_pkgs)
 }
