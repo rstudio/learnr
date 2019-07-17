@@ -1,5 +1,7 @@
 "%||%" <- function(x, y) if (is.null(x)) y else x
 
+fileDependencies <- getFromNamespace("fileDependencies", "packrat")
+
 is_windows <- function() {
   .Platform$OS.type == 'windows'
 }
