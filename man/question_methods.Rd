@@ -6,6 +6,11 @@
 \alias{question_is_valid}
 \alias{question_is_correct}
 \alias{question_ui_try_again}
+\alias{question_ui_initialize.default}
+\alias{question_ui_try_again.default}
+\alias{question_ui_completed.default}
+\alias{question_is_valid.default}
+\alias{question_is_correct.default}
 \title{Custom question methods.}
 \usage{
 question_ui_initialize(question, value, ...)
@@ -17,6 +22,16 @@ question_is_valid(question, value, ...)
 question_is_correct(question, value, ...)
 
 question_ui_try_again(question, value, ...)
+
+\method{question_ui_initialize}{default}(question, value, ...)
+
+\method{question_ui_try_again}{default}(question, value, ...)
+
+\method{question_ui_completed}{default}(question, value, ...)
+
+\method{question_is_valid}{default}(question, value, ...)
+
+\method{question_is_correct}{default}(question, value, ...)
 }
 \arguments{
 \item{question}{\link{question} object used}

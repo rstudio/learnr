@@ -66,25 +66,34 @@ question_stop <- function(name, question) {
     .call = FALSE
   )
 }
+#' @export
+#' @rdname question_methods
 question_ui_initialize.default <- function(question, value, ...) {
   question_stop("question_ui_initialize", question)
 }
+#' @export
+#' @rdname question_methods
+question_ui_try_again.default <- function(question, value, ...) {
+  disable_all_tags(
+    question_ui_initialize(question, value, ...)
+  )
+}
+#' @export
+#' @rdname question_methods
 question_ui_completed.default <- function(question, value, ...) {
   disable_all_tags(
     question_ui_initialize(question, value, ...)
   )
 }
+#' @export
+#' @rdname question_methods
 question_is_valid.default <- function(question, value, ...) {
   !is.null(value)
 }
+#' @export
+#' @rdname question_methods
 question_is_correct.default <- function(question, value, ...) {
   question_stop("question_is_correct", question)
-}
-
-question_ui_try_again.default <- function(question, value, ...) {
-  disable_all_tags(
-    question_ui_initialize(question, value, ...)
-  )
 }
 
 
