@@ -35,7 +35,7 @@ question_checkbox <- function(
   learnr::question(
     text = text,
     ...,
-    type = "checkbox",
+    type = "learnr_checkbox",
     correct = correct,
     incorrect = incorrect,
     allow_retry = allow_retry,
@@ -44,7 +44,7 @@ question_checkbox <- function(
 }
 
 
-question_ui_initialize.checkbox <- function(question, value, ...) {
+question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
@@ -58,10 +58,10 @@ question_ui_initialize.checkbox <- function(question, value, ...) {
 }
 
 
-# question_is_valid.checkbox <- question_is_valid.default
+# question_is_valid.learnr_checkbox <- question_is_valid.default
 
 
-question_is_correct.checkbox <- function(question, value, ...) {
+question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   append_message <- function(x, ans) {
     message <- ans$message
@@ -108,7 +108,7 @@ question_is_correct.checkbox <- function(question, value, ...) {
 }
 
 
-question_ui_completed.checkbox <- function(question, value, ...) {
+question_ui_completed.learnr_checkbox <- function(question, value, ...) {
 
   choice_values <- answer_values(question)
 
