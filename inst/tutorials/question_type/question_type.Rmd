@@ -6,7 +6,7 @@ output:
 runtime: shiny_prerendered
 tutorial:
   # id: "com.example.tutorials.my-first-tutorial"
-  version: 2.17
+  version: 2.18
   # user_id: "barret"
 ---
 
@@ -24,10 +24,10 @@ There are three basic types of quiz questions: radio button, checkbox, and text 
 
 ### Radio
 
-When wanting only one answer from a user, use a radio button question.  Even if multiple options are correct, the user is only able to pick a single value.  The `type` value supplied to a `question` should be `"radio"` or `"single"`.  If only one correct option is provided when `type = "auto"`, a radio button question will be produced.
+When wanting only one answer from a user, use a radio button question.  Even if multiple options are correct, the user is only able to pick a single value.
 
 ```{r radio}
-question(
+question_radio(
   "Is this a good question?",
   answer("yes", correct = TRUE),
   answer("no", message = 'This is a good question.')
@@ -38,10 +38,10 @@ question(
 
 ### Checkbox
 
-When wanting possibly **multiple** answers from a user, use a checkbox question.  All answers that are marked correct must be selected by the user to have the answer be correct.  A minimum of one correct answer is required.  The `type` value supplied to a `question` should be `"checkbox"` or `"multiple"`.  If more than one correct option is provided when `type = "auto"`, a checkbox question will be produced.
+When wanting possibly **multiple** answers from a user, use a checkbox question.  All answers that are marked correct must be selected by the user to have the answer be correct.  A minimum of one correct answer is required.
 
 ```{r checkbox}
-question(
+question_checkbox(
   "Select all the toppings that belong on a Margherita Pizza:",
   answer("tomato", correct = TRUE),
   answer("mozzarella", correct = TRUE),
@@ -61,18 +61,17 @@ question(
 
 ### Text box
 
-If you'd like users to submit open-ended answers, use a text box question.  Correct and incorrect answers will be matched exactly (including white space). A minimum of one correct answer is required.  The `type` value supplied to a `question` should be `"text"` to produce a text box question.
+If you'd like users to submit open-ended answers, use a text box question.  Correct and incorrect answers will be matched exactly (including white space). A minimum of one correct answer is required.
 
 Text value inputs are trimmed before they are compared to answers provided.
 
 ```{r text_box}
-question(
+question_text(
   "Please enter the word 'C0rrect' below:",
   answer("correct", message = "Don't forget to capitalize"),
   answer("c0rrect", message = "Don't forget to capitalize"),
   answer("Correct", message = "Is it really an 'o'?"),
   answer("C0rrect", correct = TRUE),
-  type = "text",
   allow_retry = TRUE
 )
 ```
@@ -94,6 +93,8 @@ question(
 * Buttons
   * `submit_button`: Label of the submit button
   * `try_again_button`: Label of the submit button
+* Extra
+  * `options`: List of extra pieces of information to store.  For an example, `question_text` uses `options` to store the `trim` and `placeholder` values.
 
 Example:
 
@@ -103,8 +104,8 @@ question(
   answer("1", message = "Really?"),
   answer("2"),
   answer("3"),
-  answer("9", correct = TRUE, message = "Message for value: 9"),
-  type = "auto", # radio
+  answer("10", correct = TRUE, message = "Custom message here."),
+  type = "text", # radio
   correct = "Question is correct!",
   try_again = "Higher!",
   message = "Reminder to do something after answering the question...",
@@ -112,18 +113,23 @@ question(
   submit_button = "Submit Answer Here!",
   try_again_button = "Try Again Here!",
   allow_retry = TRUE,
-  random_answer_order = TRUE
+  random_answer_order = TRUE,
+  options = list(
+    placeholder = "The answer is '10'"
+  )
 )
 ```
 
 ## Custom Questions
 
-There are four methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
+There are five methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
 
 * `question_ui_initialize.TYPE(question, value, ...)`
-  * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.
-* `question_ui_completed.TYPE(question, ...)`
-  * Determines how the question is displayed after a submission.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
+  * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.  The `value` will contain a known starting value for continuity between attempts.
+* `question_ui_try_again.TYPE(question, value, ...)`
+  * Determines how the question is displayed to the users after they answer the question incorrectly and are allowed multiple attempts. This function should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  The `value` will contain the currently submitted answer.
+* `question_ui_completed.TYPE(question, value, ...)`
+  * Determines how the question is displayed after a correct answer or an incorrect answer that can not be attempted again.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).
 * `question_is_valid.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.
 * `question_is_correct.TYPE(question, value, ...)`
