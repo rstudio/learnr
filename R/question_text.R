@@ -29,7 +29,8 @@ question_text <- function(
   allow_retry = FALSE,
   random_answer_order = FALSE,
   placeholder = "Enter answer here...",
-  trim = TRUE
+  trim = TRUE,
+  options = list()
 ) {
   checkmate::assert_character(placeholder, len = 1, null.ok = TRUE, any.missing = FALSE)
   checkmate::assert_logical(trim, len = 1, null.ok = FALSE, any.missing = FALSE)
@@ -42,9 +43,12 @@ question_text <- function(
     incorrect = incorrect,
     allow_retry = allow_retry,
     random_answer_order = random_answer_order,
-    options = list(
-      placeholder = placeholder,
-      trim = trim
+    options = modifyList(
+      options,
+      list(
+        placeholder = placeholder,
+        trim = trim
+      )
     )
   )
 }
