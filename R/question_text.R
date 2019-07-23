@@ -8,6 +8,7 @@
 #' @param ... answers and extra parameters passed onto \code{\link{question}}.
 #' @param trim Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.
 #' @seealso \code{\link{question_radio}}, \code{\link{question_checkbox}}
+#' @importFrom utils modifyList
 #' @export
 #' @examples
 #' question_text(
