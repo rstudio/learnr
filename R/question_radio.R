@@ -32,7 +32,7 @@ question_radio <- function(
   learnr::question(
     text = text,
     ...,
-    type = "radio",
+    type = "learnr_radio",
     correct = correct,
     incorrect = incorrect,
     allow_retry = allow_retry,
@@ -44,7 +44,7 @@ question_radio <- function(
 
 
 
-question_ui_initialize.radio <- function(question, value, ...) {
+question_ui_initialize.learnr_radio <- function(question, value, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
 
@@ -61,7 +61,7 @@ question_ui_initialize.radio <- function(question, value, ...) {
 # question_is_valid.radio <- question_is_valid.default
 
 
-question_is_correct.radio <- function(question, value, ...) {
+question_is_correct.learnr_radio <- function(question, value, ...) {
   for (ans in question$answers) {
     if (as.character(ans$option) == value) {
       return(mark_as(
@@ -74,7 +74,7 @@ question_is_correct.radio <- function(question, value, ...) {
 }
 
 
-question_ui_completed.radio <- function(question, value, ...) {
+question_ui_completed.learnr_radio <- function(question, value, ...) {
   choice_values <- answer_values(question)
 
   # update select answers to have X or √

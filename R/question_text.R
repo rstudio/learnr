@@ -38,7 +38,7 @@ question_text <- function(
   learnr::question(
     text = text,
     ...,
-    type = "text",
+    type = "learnr_text",
     correct = correct,
     incorrect = incorrect,
     allow_retry = allow_retry,
@@ -56,7 +56,7 @@ question_text <- function(
 
 
 
-question_ui_initialize.text <- function(question, value, ...) {
+question_ui_initialize.learnr_text <- function(question, value, ...) {
   textInput(
     question$ids$answer,
     label = question$question,
@@ -66,11 +66,11 @@ question_ui_initialize.text <- function(question, value, ...) {
 }
 
 
-question_is_valid.text <- function(question, value, ...) {
+question_is_valid.learnr_text <- function(question, value, ...) {
   if (is.null(value)) {
     return(FALSE)
   }
-  if (question$options$trim) {
+  if (isTRUE(question$options$trim)) {
     return(nchar(str_trim(value)) > 0)
   } else{
     return(nchar(value) > 0)
@@ -78,20 +78,20 @@ question_is_valid.text <- function(question, value, ...) {
 }
 
 
-question_is_correct.text <- function(question, value, ...) {
+question_is_correct.learnr_text <- function(question, value, ...) {
 
   if (nchar(value) == 0) {
     showNotification("Please enter some text before submitting", type = "error")
     req(value)
   }
 
-  if (question$options$trim) {
+  if (isTRUE(question$options$trim)) {
     value <- str_trim(value)
   }
 
   for (ans in question$answers) {
     ans_val <- ans$label
-    if (question$options$trim) {
+    if (isTRUE(question$options$trim)) {
       ans_val <- str_trim(ans_val)
     }
     if (isTRUE(all.equal(ans_val, value))) {
@@ -105,4 +105,4 @@ question_is_correct.text <- function(question, value, ...) {
   mark_as(FALSE, NULL)
 }
 
-# question_ui_completed.text <- question_ui_completed.default
+# question_ui_completed.learnr_text <- question_ui_completed.default
