@@ -7,7 +7,7 @@
 question_text(text, ..., correct = "Correct!", incorrect = "Incorrect",
   try_again = incorrect, allow_retry = FALSE,
   random_answer_order = FALSE, placeholder = "Enter answer here...",
-  trim = TRUE)
+  trim = TRUE, options = list())
 }
 \arguments{
 \item{text}{Question or option text}
@@ -33,6 +33,8 @@ be entered into the control. Internet Explorer 8 and 9 do not support this
 option.}
 
 \item{trim}{Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.}
+
+\item{options}{Extra options to be stored in the question object.}
 }
 \description{
 Creates a text box group tutorial quiz question.

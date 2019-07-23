@@ -16,9 +16,23 @@ knitr::opts_chunk$set(echo = TRUE, highlight = TRUE)
 ```
 
 
-## Basic Types
+## Basic Question Types
 
 There are three basic types of quiz questions: radio button, checkbox, and text box.  Each one allows for one choice, multiple choices, and direct user input respectively.
+
+### Question
+
+[Explain general question setup]. [WIll make a sensible type between radio and checkbox].
+
+```{r question}
+question_radio(
+  "Is this a good question?",
+  answer("yes", correct = TRUE),
+  answer("no", message = 'This is a good question.')
+)
+```
+
+
 
 -------------------
 
@@ -120,7 +134,28 @@ question(
 )
 ```
 
-## Custom Questions
+## Custom Question Types
+
+[learnr can not make all question types.  To implement custom questions, ... ]
+
+["learnr allows for custom questions". Sortable has done this...]
+
+[[Move question_sortable from bottom to here.]]
+
+```{r sortable_example, eval = FALSE}
+question_sortable <- function(..., options = sortable_options()) {
+  question(
+    ...,
+    type = "sortable",
+    options = options
+  )
+}
+
+question_sortable(
+  ...
+)
+```
+
 
 There are five methods used to define a custom question.  Each [s3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
 
@@ -135,145 +170,138 @@ There are five methods used to define a custom question.  Each [s3 method](http:
 * `question_is_correct.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::correct`, `learnr::incorrect`, or `learnr::mark_as`.
 
+If a vector is supplied to `type`, following S3 rules, methods will be dispatched starting with the first type value and ending with the last type value.
 
-#### **No Feedback**
+For example:
 
-Let's say we want a radio button question, but we want to handle how the question is displayed after a user submits their answer.
-One option would be to leave a generic `"Thank you for your submission"` and provide no feedback to the user.
+```{r custom_class}
+ques <- question(
+  "Custom Method",
+  answer("answer", correct = TRUE),
+  type = c("A", "B", "checkbox")
+)
+```
 
-In the example below, we use a radio question as the base question type but handle the completed input stage using a `"no_feedback"` type value.
-Since the stages of displaying a question are dispatched using s3 methods, we set the type to `type = c("no_feedback", "radio")` to utilize the radio button question stages for the stages without a `no_feedback` method implemented.
+When the question, `ques`, above is initialized, `question_initialize_input` will dispatch on `question_initialize_input.A`, then `question_initialize_input.B`, and settle on the existing method of `question_initialize_input.checkbox` as `question_initialize_input.A` and `question_initialize_input.B` do not exist.  Supplying multiple type values allows for clean abstraction between objects that share common functionality.
 
-With the code being executed in a `shiny_prerendered` document, there are two execution phases: `"render"` and `"server"` execution.  Please see [https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html](https://rmarkdown.rstudio.com/authoring_shiny_prerendered.html) for an indepth explaination of these phases.  For our purposes with `learnr`, we will use a `"server-start"` context to add our custom s3 method for the `"server"` phase. The `"server-start"` phase will be executed once for the `"server"` phase, not for every users visiting the tutorial.  To have the custom function be found, we must store it in the Global Environment by using the double arrow assignment.
 
-````markdown
-`r ''````{r no_feedback, context = "server-start"}
-# assign to global env
-question_ui_completed.no_feedback <<- function(question, value, ...) {
-  # Return a generic message
-  tagList(
-    tags$label(class="control-label", question$question),
-    tags$h3(question$feedback)
+### **sortable**
+
+Sortable.js is a "JavaScript library for reorderable drag-and-drop lists."  Reorderable lists quickly exends to ranking questions.
+
+[`sortable`](https://rstudio.github.io/sortable/) has [implemented](https://github.com/rstudio/sortable/blob/master/R/learnr.R) a `sortable_list` tutorial `question` using the four generic methods above.  In the code sections below, we will walk through each method and a final helper method to create `sortable` tutorial questions.
+
+#### `question_initialize_input.sortable`
+
+`question_initialize_input()` is called when the question is first initialized and after a user wants to try again.
+
+The code below extracts the necessary information to create a Shiny UI object, using the the `question$ids$answer` value and labels from the first answer.  Using the `learnr::question` `options` parameter, we can pass options directly to the `sortable_list` function.
+
+```{r sortable_init, eval = FALSE}
+question_initialize_input.sortable <- function(question, answer_input, ...) {
+
+  if (!is.null(answer_input)) {
+    # if an answer exists already, it should be displayed as is
+    labels <- answer_input
+  } else {
+    # get the first answer order
+    labels <- question$answers[[1]]$option
+
+    # if the question is to be displayed in random order, shuffle the options
+    if (
+      isTRUE(question$random_answer_order) # and we should randomize the order
+    ) {
+      labels <- sample(labels, length(labels))
+    }
+  }
+
+  # return the sortable htmlwidget
+  sortable_list(
+    question$ids$answer,
+    labels,
+    options = question$options
   )
 }
 ```
-````
 
-This _non-standard_ setup above could be avoided if the s3 methods were `library`ed from a package in the `setup` code block.
+#### `question_completed_input.sortable`
 
-```{r no_feedback, context = "server-start"}
-# assign to global env
-question_ui_completed.no_feedback <<- function(question, value, ...) {
-  # Return a generic message
-  tagList(
-    tags$label(class="control-label", question$question),
-    tags$h3(question$feedback)
+`question_completed_input()` is called when the question is finished and can not be tried again.
+
+The code below adds an extra `options` value to disable Sortable.js.  Like `question_initialize_input`, it also returns a Shiny UI object.
+
+```{r sortable_complete, eval = FALSE}
+question_completed_input.sortable <- function(question, answer_input, ...) {
+  sortable_list(
+    question$ids$answer,
+    answer_input,
+    options = modifyList(
+      question$options,
+      # forcefully add an extra option to disable sortable.js
+      sortable_options(disabled = TRUE)
+    )
   )
 }
 ```
 
-Example quiz question using the `"no_feedback"` question type.
 
 
-```{r no_feedback_questions, echo = TRUE}
-no_feedback_question <- function(..., feedback = "Thank you for your submission") {
-  ques <- question(
+#### `question_is_valid.sortable`
+
+`question_is_valid()` is called to determine if the submit button should be clickable.
+
+The default value of `!is.null(answer_input)` will work for the `sortable` question.  Therefore, no implementation is needed.
+
+
+#### `question_is_correct.sortable`
+
+`question_is_correct()` is called to determine if the answer submitted is correct.  This method is required and it may be helpful to use the `options` supplied to a `question` to change how an answer is found to be correct.
+
+Since sortable is comparing a character vector to possible answer character vectors, a quick `identical` check through each answer will be enough for this method.
+
+The return value from `question_is_correct` should return output from `question_is_correct_value`.  This allows for extra messages to be displayed while determining if the answer is correct / incorrect.
+
+```{r sortable_correct, eval = FALSE}
+question_is_correct.sortable <- function(question, answer_input, ...) {
+  # for each possible answer, check if it matches
+  for (answer in question$answers) {
+    if (identical(answer$option, answer_input)) {
+      # if it matches, return the correct-ness and its message
+      return(question_is_correct_value(answer$is_correct, answer$message))
+    }
+  }
+  # no match found. not correct
+  return(question_is_correct_value(FALSE, NULL))
+}
+```
+
+
+#### `question_sortable`
+
+This final method is a helper method used for a cohesive API.
+
+There are few main advantages by wrapping a `sortable` `question` with `question_sortable`:
+
+* options can be inforced specifically for a `sortable` `question`
+* the specialized function can be found with auto complete inside an IDE
+* and different default behavior can be enforced using the wrapper function.
+
+
+
+```{r question_sortable, eval = FALSE}
+question_sortable <- function(
+  # all extra arguments are passed directly to learnr::question
+  ...,
+  # random_answer_order will be used. Allow for it to be auto completed
+  random_answer_order = TRUE,
+  # hint that options should be made from `sortable_options()`
+  options = sortable_options()
+) {
+  learnr::question(
     ...,
-    type = c("no_feedback", "radio"),
-    correct = NULL,
-    incorrect = NULL
+    random_answer_order = random_answer_order,
+    type = "sortable",
+    options = options
   )
-  ques$feedback <- feedback
-  ques
 }
-
-quiz(
-  no_feedback_question(
-    "Is this a good question?",
-    answer("yes", correct = TRUE),
-    answer("no")
-  ),
-  no_feedback_question(
-    "Will you see which answer you submitted?",
-    answer("yes"),
-    answer("no", correct = TRUE),
-    random_answer_order = TRUE,
-    feedback = "Your answer has been submitted"
-  )
-)
-```
-
--------------------
-
-### Ignore White Space
-
-
-Let's create one more custom example that maintains all whitespace for a text box submission.
-
-This example should perform like a text box but maintain the white space before compairing it to the known answers.  To accomplish this, we will create a `question_is_correct.text_no_trim` method.  Remember, `question_is_correct` requires that the return value is generated from `correct`, `incorrect`, `mark_as`.
-
-
-````markdown
-`r ''````{r no_trim_whitespace, context = "server-start"}
-# use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, value, ...) {
-
-  # validate something is given
-  if (nchar(value) == 0) {
-    showNotification("Please enter some text before submitting", type = "error")
-    # use shiny's `req(NULL)` to stop execution
-    req(NULL)
-  }
-
-  for (ans in question$answers) {
-    if (identical(ans$option, value)) {
-      return(mark_as(
-        ans$correct,
-        ans$message
-      ))
-    }
-  }
-  # answer not found
-  mark_as(FALSE, NULL)
-}
-```
-````
-
-```{r no_trim_whitespace, context = "server-start"}
-# use double arrow to assign to global namespace
-question_is_correct.text_no_trim <<- function(question, value, ...) {
-
-  # validate something is given
-  if (nchar(value) == 0) {
-    showNotification("Please enter some text before submitting", type = "error")
-    # use shiny's `req(NULL)` to stop execution
-    req(NULL)
-  }
-
-  for (ans in question$answers) {
-    if (identical(ans$option, value)) {
-      return(mark_as(
-        ans$correct,
-        ans$message
-      ))
-    }
-  }
-  # answer not found
-  mark_as(FALSE, NULL)
-}
-```
-
-```{r no_trim, echo = TRUE}
-question(
-  "Please enter the phrase '&nbsp;&nbsp;abc&nbsp;&nbsp;def&nbsp;&nbsp;&nbsp;' below:",
-  answer("abc def", message = "There are two spaces in the middle"),
-  answer("abc  def", message = "There are two spaces at the beginning"),
-  answer(" abc  def", message = "There are two spaces at the beginning"),
-  answer("  abc def", message = "There are spaces at the end"),
-  answer("  abc def ", message = "more spaces at the end"),
-  answer("  abc def  ", message = "even more spaces at the end"),
-  answer("  abc  def   ", correct = TRUE),
-  type = c("text_no_trim", "text"),
-  allow_retry = TRUE
-)
 ```
