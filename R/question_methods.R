@@ -40,6 +40,11 @@ question_ui_initialize <- function(question, value, ...) {
 }
 #' @export
 #' @rdname question_methods
+question_ui_try_again <- function(question, value, ...) {
+  UseMethod("question_ui_try_again", question)
+}
+#' @export
+#' @rdname question_methods
 question_ui_completed <- function(question, value, ...) {
   UseMethod("question_ui_completed", question)
 }
@@ -52,11 +57,6 @@ question_is_valid <- function(question, value, ...) {
 #' @rdname question_methods
 question_is_correct <- function(question, value, ...) {
   UseMethod("question_is_correct", question)
-}
-#' @export
-#' @rdname question_methods
-question_ui_try_again <- function(question, value, ...) {
-  UseMethod("question_ui_try_again", question)
 }
 
 
