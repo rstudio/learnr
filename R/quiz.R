@@ -14,7 +14,7 @@
 # TODO-barret Documentation
   # TODO-barret re-render tutorials
   # TODO-barret re-render documentation pictures
-  # TODO-barret A new question type (“text”)
+  # √-barret A new question type (“text”)
   # TODO-barret You can now extend learnr with your own question types
   # TODO-barret Questions are now Shiny apps
     # TODO-barret print() behavior is different from before
@@ -44,6 +44,8 @@
 #'   \item{\code{text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
 #' }
 #'
+#' Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
+#'
 #'
 #' @seealso For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
 #' @param text Question or option text
@@ -72,10 +74,10 @@
 #' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
 #' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
 #' @param random_answer_order Display answers in a random order.
-# TODO-barret link to sortable_question when sortable is added
 #' @param options Extra options to be stored in the question object.
-#'   This is useful when using custom question types.
-#'   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
+# TODO-barret link to sortable_question when sortable is added
+# '   This is useful when using custom question types.
+# '   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
 #'
 #' @examples
 #' quiz(

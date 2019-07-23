@@ -34,19 +34,41 @@ format.tutorial_question_answer <- function(x, ..., spacing = "") {
 #' @export
 #' @rdname format_quiz
 format.tutorial_question <- function(x, ..., spacing = "") {
+  quote_chars <- function(y) {
+    if (is.character(y)) {
+      paste0("\"", format(y), "\"")
+    } else {
+      format(y)
+    }
+  }
+  options <-
+    if (length(x$options) > 0) {
+      paste0(
+        "\n",
+        spacing, "  Options:\n",
+        paste0(mapply(SIMPLIFY = FALSE, names(x$options), x$options, FUN = function(name, val) {
+          paste0(spacing, "    ", name, ": ", quote_chars(val))
+        }), collapse = "\n")
+      )
+    } else {
+      NULL
+    }
   # x$label belongs to the knitr label
   paste0(
     spacing, "Question: \"", x$question, "\"\n",
     # all for a type vector
     spacing, "  type: ", paste0("\"", x$type, "\"", sep = "", collapse = ", "), "\n",
-    spacing, "  allow retries: ", x$allow_retry, "\n",
-    spacing, "  random order: ", x$random_answer_order, "\n",
+    spacing, "  allow_retry: ", x$allow_retry, "\n",
+    spacing, "  random_answer_order: ", x$random_answer_order, "\n",
     spacing, "  answers:\n",
     paste0(lapply(x$answers, format, spacing = paste0(spacing, "    ")), collapse = "\n"), "\n",
     spacing, "  messages:\n",
     spacing, "    correct: \"", x$messages$correct, "\"\n",
     spacing, "    incorrect: \"", x$messages$incorrect, "\"",
-    if (x$allow_retry) paste0("\n", spacing, "    try again: \"", x$messages$try_again, "\"")
+    if (x$allow_retry) paste0("\n", spacing, "    try_again: \"", x$messages$try_again, "\""),
+    if (!is.null(x$message)) paste0("\n", spacing, "    message: \"", x$messages$message, "\""),
+    if (!is.null(x$post_message)) paste0("\n", spacing, "    message: \"", x$messages$post_message, "\""),
+    options
   )
 }
 #' @export
