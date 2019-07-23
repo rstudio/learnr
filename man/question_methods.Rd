@@ -2,10 +2,10 @@
 % Please edit documentation in R/question_methods.R
 \name{question_ui_initialize}
 \alias{question_ui_initialize}
+\alias{question_ui_try_again}
 \alias{question_ui_completed}
 \alias{question_is_valid}
 \alias{question_is_correct}
-\alias{question_ui_try_again}
 \alias{question_ui_initialize.default}
 \alias{question_ui_try_again.default}
 \alias{question_ui_completed.default}
@@ -15,13 +15,13 @@
 \usage{
 question_ui_initialize(question, value, ...)
 
+question_ui_try_again(question, value, ...)
+
 question_ui_completed(question, value, ...)
 
 question_is_valid(question, value, ...)
 
 question_is_correct(question, value, ...)
-
-question_ui_try_again(question, value, ...)
 
 \method{question_ui_initialize}{default}(question, value, ...)
 

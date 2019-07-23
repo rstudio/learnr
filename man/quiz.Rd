@@ -58,9 +58,7 @@ message alongside the \code{message} message value.}
 
 \item{random_answer_order}{Display answers in a random order.}
 
-\item{options}{Extra options to be stored in the question object.
-This is useful when using custom question types.
-See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.}
+\item{options}{Extra options to be stored in the question object.}
 }
 \description{
 Add interative quiz questions to a tutorial.
@@ -71,6 +69,9 @@ There are three default types of quiz questions:
 \item{\code{checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
 \item{\code{text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
 }
+}
+\details{
+Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
 }
 \examples{
 quiz(
