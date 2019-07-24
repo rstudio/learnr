@@ -94,6 +94,7 @@ question_text(
 
 ### Extra Arguments
 
+All the the arguments described below are also accepted by `question_radio`, `question_checkbox`, `question_rank`, and the general `question` methods.
 
 * Messages
   * `correct`: Message to be displayed when a user gets a correct answer.
@@ -137,11 +138,11 @@ question(
 
 ## Custom Question Types
 
-`learnr` comes with the three question types explained above: `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every geom, `learnr` can not implement every `question` type.
+`learnr` comes with the three built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` can not implement every possible `question` type.
 
-There are five methods used to define a custom tutorial question.  Each [S3 method](http://adv-r.had.co.nz/S3.html) should correspond to the `type = TYPE` supplied to the question.
+To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co.nz/S3.html) to define the behavior of a custom tutorial question.  Each generic [S3 method](http://adv-r.had.co.nz/S3.html) should correspond to one of `type` values supplied to the question.
 
-* `question_ui_initialize.TYPE(question, value, ...)` (required)
+* `question_ui_initialize.TYPE(question, value, ...)` (**required**)
   * Determines how the question is initially displayed to the users. This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  This method will be re-executed if the question is attempted again.  The `value` will contain a known starting value for continuity between attempts.
 * `question_ui_try_again.TYPE(question, value, ...)`
   * Determines how the question is displayed to the users after they answer the question incorrectly and are allowed multiple attempts. This function should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  The `value` will contain the currently submitted answer. This defaults to a disabled `question_ui_initialize.TYPE` output.
@@ -149,32 +150,36 @@ There are five methods used to define a custom tutorial question.  Each [S3 meth
   * Determines how the question is displayed after a correct answer or an incorrect answer that can not be attempted again.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html). This defaults to a disabled `question_ui_initialize.TYPE` output.
 * `question_is_valid.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.  This defaults to check if the answer value is not `NULL`.
-* `question_is_correct.TYPE(question, value, ...)` (required)
+* `question_is_correct.TYPE(question, value, ...)` (**required**)
   * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::correct`, `learnr::incorrect`, or `learnr::mark_as`.
 
-If a vector is supplied to `type`, following S3 rules, methods will be dispatched starting with the first type value and ending with the last type value.
-
-For example:
+If a vector of types is supplied to a question's `type`, the S3 methods will be dispatched starting with the first type value and ending with the last type value. For example, let us define a new question type that should behave like a learnr checkbox question, but have a special implementation of `question_is_correct` where the answer is always correct.
 
 ```{r custom_class}
+question_is_correct.always_correct <- function(question, value, ...) {
+  return(TRUE)
+}
+
 ques <- question(
   "Custom Method",
   answer("answer", correct = TRUE),
-  type = c("A", "B", "checkbox")
+  type = c("always_correct", "learnr_checkbox")
 )
 ```
 
-When the question, `ques`, above is initialized, `question_initialize_input` will dispatch on `question_initialize_input.A`, then `question_initialize_input.B`, and settle on the existing method of `question_initialize_input.checkbox` as `question_initialize_input.A` and `question_initialize_input.B` do not currently exist.  Supplying multiple type values allows for clean abstraction between objects that share common functionality.
+When the question, `ques`, above is initialized, `question_ui_initialize` will dispatch on `question_ui_initialize.always_correct`.  Since no method has been defined, `question_ui_initialize.learnr_checkbox` will be called.  However, when `question_is_correct` is called, `question_is_correct.always_correct` is found and called.
+
+Supplying multiple type values allows for clean abstraction between objects that share common functionality.
 
 
-### **sortable**
+### [`sortable`](https://rstudio.github.io/sortable/)
 
 [`sortable`](https://rstudio.github.io/sortable/), an htmlwidget wrapper to [SortableJS](https://sortablejs.github.io/Sortable/) (a "JavaScript library for reorderable drag-and-drop lists."), as implemented a custom question type: `question_rank`.  The convention of naming the new question method as `question_METHOD` will help users find your newly defined question function by namespacing it with `question_`.
 
-`sortable` defined it's ranking question as `question_rank`.  It uses the `options` parameter to pass along the output of `sortable_options`, which are specific to the SortableJS library. by naming the type `"sortable_rank"`, the type is namespaced by the package while still including a sub type.  By making a wrapper function, different default `question` can be implemented, such as setting `random_answer_order` to be `TRUE`.
+`sortable` defined it's ranking question as `question_rank`.  It uses the `options` parameter to pass along the output of `sortable_options`, which are specific to the SortableJS library. By naming the type `"sortable_rank"`, the type is namespaced by the package while still including a sub type.  By making a wrapper function, different default `question` parameters can be implemented, such as setting `random_answer_order` to be `TRUE`.
 
 ```{r sortable_example, eval = FALSE}
-question_rank <- function(..., random_answer_order = TRUE, options = sortable_options()) {
+question_rank <- function(..., random_answer_order = TRUE, options = sortable::sortable_options()) {
   question(
     ...,
     random_answer_order = random_answer_order,
@@ -186,26 +191,27 @@ question_rank <- function(..., random_answer_order = TRUE, options = sortable_op
 
 In the code sections below, we will walk through each method and a final helper method to create a `sortable_rank` tutorial question.
 
-#### `question_initialize_input.sortable_rank`
+#### `question_ui_initialize.sortable_rank`
 
-`question_initialize_input()` is called when the question is first initialized and after a user wants to try again.
+`question_ui_initialize()` is called when the question is first initialized and after a user wants to try again.
 
 The code below extracts the necessary information to create a Shiny UI object, using the the `question$ids$answer` value and labels from the first answer.  Using the `learnr::question` `options` parameter, we can pass options directly to the `sortable::sortable_js` function.
 
 ```{r sortable_init, eval = FALSE}
-question_initialize_input.sortable <- function(question, value, ...) {
+question_ui_initialize.sortable_rank <- function(question, value, ...) {
 
-  if (!is.null(answer_input)) {
+  if (!is.null(value)) {
     # if an answer exists already, it should be displayed as is
-    labels <- answer_input
+    labels <- value
   } else {
-    # get the first answer order
+    # get the first answer
     labels <- question$answers[[1]]$option
 
-    # if the question is to be displayed in random order, shuffle the options
+    # if we should randomize the order
     if (
-      isTRUE(question$random_answer_order) # and we should randomize the order
+      isTRUE(question$random_answer_order)
     ) {
+      # shuffle the options
       labels <- sample(labels, length(labels))
     }
   }
@@ -220,25 +226,33 @@ question_initialize_input.sortable <- function(question, value, ...) {
 }
 ```
 
-#### `question_completed_input.sortable_rank`
+#### `question_ui_completed.sortable_rank`
 
-`question_completed_input()` is called when the question is finished and can not be tried again.
+`question_ui_completed()` is called when the question is finished and can not be tried again.
 
-The code below adds an extra `options` value to disable Sortable.js.  Like `question_initialize_input`, it also returns a Shiny UI object.
+The code below adds an extra `options` value to disable SortableJS.  Like `question_ui_initialize`, it also returns a Shiny UI object.
 
 ```{r sortable_complete, eval = FALSE}
-question_completed_input.sortable <- function(question, answer_input, ...) {
+question_ui_completed.sortable_rank <- function(question, value, ...) {
   question$options <- modifyList(
     question$options,
     # forcefully add an extra option to disable sortable.js
-    sortable_options(disabled = TRUE)
+    sortable::sortable_options(disabled = TRUE)
   )
   # disable all html tags
   disable_all_tags(
     # display just like init, with current answer
-    question_initialize_input(question, answer_input, ...)
+    question_ui_initialize(question, value, ...)
   )
 }
+```
+
+#### `question_ui_try_again.sortable_rank`
+
+The `sortable` package chose to have the "Try Again" state be defined the same as the "Completed" state.
+
+```{r sortable_complete, eval = FALSE}
+question_ui_try_again.sortable_rank <- question_ui_completed.sortable_rank
 ```
 
 
@@ -247,7 +261,7 @@ question_completed_input.sortable <- function(question, answer_input, ...) {
 
 `question_is_valid()` is called to determine if the submit button should be clickable.
 
-The default value of `!is.null(answer_input)` will work for the `sortable` question.  Therefore, no implementation is needed.
+The default value of `!is.null(value)` will work for the `sortable` question.  Therefore, no implementation is needed.
 
 
 #### `question_is_correct.sortable_rank`
@@ -259,10 +273,10 @@ Since sortable is comparing a character vector to possible answer character vect
 The return value from `question_is_correct` should return output from `question_is_correct_value`.  This allows for extra messages to be displayed while determining if the answer is correct / incorrect.
 
 ```{r sortable_correct, eval = FALSE}
-question_is_correct.sortable <- function(question, answer_input, ...) {
+question_is_correct.sortable_rank <- function(question, value, ...) {
   # for each possible answer, check if it matches
   for (answer in question$answers) {
-    if (identical(answer$option, answer_input)) {
+    if (identical(answer$option, value)) {
       # if it matches, return the correct-ness and its message
       return(mark_as(answer$is_correct, answer$message))
     }
