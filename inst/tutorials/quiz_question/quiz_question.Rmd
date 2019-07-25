@@ -421,7 +421,7 @@ question(
 
 ## Custom Question Types
 
-`learnr` comes with the three built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` can not implement every possible `question` type.
+`learnr` comes with the three built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` cannot implement every possible `question` type.
 
 To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co.nz/S3.html) to define the behavior of a custom tutorial question.  Each generic [S3 method](http://adv-r.had.co.nz/S3.html) should correspond to one of `type` values supplied to the question.
 
@@ -430,7 +430,7 @@ To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co
 * `question_ui_try_again.TYPE(question, value, ...)`
   * Determines how the question is displayed to the users after they answer the question incorrectly and are allowed multiple attempts. This function should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html).  The `value` will contain the currently submitted answer. This defaults to a disabled `question_ui_initialize.TYPE` output.
 * `question_ui_completed.TYPE(question, value, ...)`
-  * Determines how the question is displayed after a correct answer or an incorrect answer that can not be attempted again.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html). This defaults to a disabled `question_ui_initialize.TYPE` output.
+  * Determines how the question is displayed after a correct answer or an incorrect answer that cannot be attempted again.  This should return an object that can be displayed using [`shiny::renderUI`](https://shiny.rstudio.com/reference/shiny/latest/renderUI.html). This defaults to a disabled `question_ui_initialize.TYPE` output.
 * `question_is_valid.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.  This defaults to check if the answer value is not `NULL`.
 * `question_is_correct.TYPE(question, value, ...)` (**required**)
@@ -553,7 +553,7 @@ question_ui_initialize(rank_ex, value = NULL)
 
 #### `question_ui_completed.sortable_rank`
 
-`question_ui_completed()` is called when the question is finished and can not be tried again.
+`question_ui_completed()` is called when the question is finished and cannot be tried again.
 
 The code below adds an extra `options` value to disable SortableJS.  Like `question_ui_initialize`, it also returns a Shiny UI object.
 
