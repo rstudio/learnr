@@ -64,7 +64,18 @@ mutate_tags.default <- function(ele, selector, fn, ...) {
 }
 #' @export
 #' @rdname mutate_tags
-mutate_tags.list <- function(ele, selector, fn, ...) { lapply(ele, mutate_tags, selector, fn, ...) }
+mutate_tags.list <- function(ele, selector, fn, ...) {
+  lapply(ele, mutate_tags, selector, fn, ...)
+}
+
+#' @export
+#' @rdname mutate_tags
+mutate_tags.shiny.tag.list <- function(ele, selector, fn, ...) {
+  do.call(
+    htmltools::tagList,
+    mutate_tags.list(ele, selector, fn, ...)
+  )
+}
 
 #' @export
 #' @rdname mutate_tags
