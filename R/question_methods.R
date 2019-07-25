@@ -61,9 +61,16 @@ question_is_correct <- function(question, value, ...) {
 
 
 question_stop <- function(name, question) {
+  classes <- setdiff(class(question), "tutorial_question")
+  class_txt <-
+    if (length(classes) == 1) {
+      classes
+    } else{
+      paste0("{", paste0(classes, collapse = "/"), "}")
+    }
   stop(
-    "`", name, ".{", paste0(class(question), collapse = "/"), "}(question, ...)` has not been implemented",
-    .call = FALSE
+    "`", name, ".", class_txt, "(question, ...)` has not been implemented",
+    call. = FALSE
   )
 }
 #' @export
