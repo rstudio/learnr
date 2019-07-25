@@ -37,7 +37,7 @@ question("What number is the letter A in the English alphabet?",
 The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:
 
 ````markdown
-`r ''```{r where-am-i, echo=FALSE}
+`r ''````{r where-am-i, echo=FALSE}
 question("Where are you right now? (select ALL that apply)",
   answer("Planet Earth", correct = TRUE),
   answer("Pluto"),
