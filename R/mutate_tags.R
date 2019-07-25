@@ -127,7 +127,7 @@ disable_tags <- function(ele, selector) {
 #' @export
 #' @examples
 #' # add an href to all a tags
-#' disable_tags(
+#' disable_all_tags(
 #'   htmltools::tagList(
 #'     htmltools::a(),
 #'     htmltools::a()

@@ -14,7 +14,7 @@ Method to disable all html tags to not allow users to interact with the html.
 }
 \examples{
 # add an href to all a tags
-disable_tags(
+disable_all_tags(
   htmltools::tagList(
     htmltools::a(),
     htmltools::a()
