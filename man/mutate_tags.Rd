@@ -4,6 +4,7 @@
 \alias{mutate_tags}
 \alias{mutate_tags.default}
 \alias{mutate_tags.list}
+\alias{mutate_tags.shiny.tag.list}
 \alias{mutate_tags.shiny.tag}
 \alias{disable_all_tags}
 \title{Mutate shiny html tags}
@@ -13,6 +14,8 @@ mutate_tags(ele, selector, fn, ...)
 \method{mutate_tags}{default}(ele, selector, fn, ...)
 
 \method{mutate_tags}{list}(ele, selector, fn, ...)
+
+\method{mutate_tags}{shiny.tag.list}(ele, selector, fn, ...)
 
 \method{mutate_tags}{shiny.tag}(ele, selector, fn, ...)
 
