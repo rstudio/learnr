@@ -23,7 +23,7 @@ test_that("quiz questions can be created", {
   expect_type(a$message, "NULL")
 
 
-  expect_s3_class(q, "radio")
+  expect_s3_class(q, "learnr_radio")
   expect_s3_class(q, "tutorial_question")
 
   expect_type(q$type, "character")
@@ -51,6 +51,9 @@ test_that("quiz questions can be created", {
   expect_type(q$random_answer_order, "logical")
 
   expect_type(q$allow_retry, "logical")
+
+  expect_type(q$seed, "double")
+  expect_type(q$options, "list")
 })
 
 test_that("questions can be aggregated via quiz", {
