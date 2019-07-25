@@ -1,5 +1,5 @@
 ---
-title: "Question Types in Learnr"
+title: "Tutorial Quiz Questions in `learnr`"
 output:
   learnr::tutorial:
     allow_skip: true
@@ -15,22 +15,232 @@ library(learnr)
 knitr::opts_chunk$set(echo = TRUE, highlight = TRUE)
 ```
 
+## Overview
+
+You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Basic questions can either have one or more correct answers.
+
+Include a question by calling the `question` function within an R code chunk:
+
+````markdown
+`r ''````{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+````
+
+
+
+The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:
+
+````markdown
+`r ''```{r where-am-i, echo=FALSE}
+question("Where are you right now? (select ALL that apply)",
+  answer("Planet Earth", correct = TRUE),
+  answer("Pluto"),
+  answer("At a computing device", correct = TRUE),
+  answer("In the Milky Way", correct = TRUE),
+  incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+)
+```
+````
+
+
+
+Note that for the examples above we specify the `echo = FALSE` option on the R code chunks that produce the questions. This is required to ensure that the R source code for the questions is not printed within the document.
+
+This is what the above example quiz questions would look like within a tutorial:
+
+
+```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+
+```{r where-am-i, echo=FALSE}
+question("Where are you right now? (select ALL that apply)",
+  answer("Planet Earth", correct = TRUE),
+  answer("Pluto"),
+  answer("At a computing device", correct = TRUE),
+  answer("In the Milky Way", correct = TRUE),
+  incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+)
+```
+
+-------------------
+
+
+### Custom Messages
+You can add answer-specific correct/incorrect messages using the `message` option. For example:
+
+````markdown
+`r ''````{r letter-a-message, echo=FALSE}
+question("What number is the letter A in the *English* alphabet?",
+  answer("8"),
+  answer("1", correct = TRUE),
+  answer("2", message = "2 is close but it's the letter B rather than A."),
+  answer("26")
+)
+```
+````
+
+```{r letter-a-message, echo=FALSE}
+question("What number is the letter A in the *English* alphabet?",
+  answer("8"),
+  answer("1", correct = TRUE),
+  answer("2", message = "2 is close but it's the letter B rather than A."),
+  answer("26")
+)
+```
+
+-------------------
+
+
+### Formatting and Math
+
+You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the `$` delimiter. For example:
+
+````markdown
+`r ''````{r math, echo=FALSE}
+x <- 42
+question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
+  answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
+  answer(sprintf("$x ^ 2 = %d$", x^2), correct = TRUE),
+  answer("$\\sin x = 1$")
+)
+```
+````
+
+Note the use of a double-backslash (`\\`) as the prefix for LaTeX macros. This is necessary to “escape” the single-backslash so that R doesn’t interpret it as a special character. Here’s what this example would look like within a tutorial:
+
+```{r math, echo=FALSE}
+x <- 42
+question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
+  answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
+  answer(sprintf("$x ^ 2 = %d$", x^2), correct = TRUE),
+  answer("$\\sin x = 1$")
+)
+```
+
+-------------------
+
+
+### Retrying Questions
+
+By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the `allow_retry` option, for example:
+
+````markdown
+`r ''````{r letter-a-allow-retry, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  allow_retry = TRUE
+)
+```
+````
+
+```{r letter-a-allow-retry, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  allow_retry = TRUE
+)
+```
+
+-------------------
+
+
+### Random Answer Order
+
+If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
+
+````markdown
+`r ''````{r letter-a-random-answer-order, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  random_answer_order = TRUE
+)
+```
+````
+
+```{r letter-a-random-answer-order, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  random_answer_order = TRUE
+)
+```
+
+-------------------
+
+### Groups of Questions
+
+You can present a group of related questions as a quiz by wrapping your questions within the `quiz` function. For example:
+
+````markdown
+`r ''````{r quiz1, echo=FALSE}
+quiz(caption = "Quiz 1",
+  question("What number is the letter A in the *English* alphabet?",
+    answer("8"),
+    answer("14"),
+    answer("1", correct = TRUE),
+    answer("23")
+  ),
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", correct = TRUE),
+    answer("Pluto"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+  )
+)
+```
+````
+
+
+```{r quiz1, echo=FALSE}
+quiz(caption = "Quiz 1",
+  question("What number is the letter A in the *English* alphabet?",
+    answer("8"),
+    answer("14"),
+    answer("1", correct = TRUE),
+    answer("23")
+  ),
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", correct = TRUE),
+    answer("Pluto"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+  )
+)
+```
+
+
+-------------------
+
+
+
 
 ## Basic Question Types
 
 There are three basic types of quiz questions: radio button, checkbox, and text box.  Each one allows for one choice, multiple choices, and direct user input respectively.
-
-### Question
-
-[Explain general question setup]. [WIll make a sensible type between radio and checkbox].
-
-```{r question}
-question_radio(
-  "Is this a good question?",
-  answer("yes", correct = TRUE),
-  answer("no", message = 'This is a good question.')
-)
-```
 
 
 
@@ -40,7 +250,17 @@ question_radio(
 
 When wanting only one answer from a user, use a radio button question.  Even if multiple options are correct, the user is only able to pick a single value.
 
-```{r radio}
+````markdown
+`r ''````{r radio, echo = FALSE}
+question_radio(
+  "Is this a good question?",
+  answer("yes", correct = TRUE),
+  answer("no", message = 'This is a good question.')
+)
+```
+````
+
+```{r radio, echo = FALSE}
 question_radio(
   "Is this a good question?",
   answer("yes", correct = TRUE),
@@ -48,13 +268,33 @@ question_radio(
 )
 ```
 
+
 -------------------
 
 ### Checkbox
 
 When wanting possibly **multiple** answers from a user, use a checkbox question.  All answers that are marked correct must be selected by the user to have the answer be correct.  A minimum of one correct answer is required.
 
-```{r checkbox}
+````markdown
+`r ''````{r checkbox, echo = FALSE}
+question_checkbox(
+  "Select all the toppings that belong on a Margherita Pizza:",
+  answer("tomato", correct = TRUE),
+  answer("mozzarella", correct = TRUE),
+  answer("basil", correct = TRUE),
+  answer("extra virgin olive oil", correct = TRUE),
+  answer("pepperoni", message = "Great topping! ... just not on a Margherita Pizza"),
+  answer("onions"),
+  answer("bacon"),
+  answer("spinach"),
+  random_answer_order = TRUE,
+  allow_retry = TRUE,
+  try_again = "Be sure to select all toppings!"
+)
+```
+````
+
+```{r checkbox, echo = FALSE}
 question_checkbox(
   "Select all the toppings that belong on a Margherita Pizza:",
   answer("tomato", correct = TRUE),
@@ -79,7 +319,20 @@ If you'd like users to submit open-ended answers, use a text box question.  Corr
 
 Text value inputs are trimmed before they are compared to answers provided.
 
-```{r text_box}
+````markdown
+`r ''````{r text_box, echo = FALSE}
+question_text(
+  "Please enter the word 'C0rrect' below:",
+  answer("correct", message = "Don't forget to capitalize"),
+  answer("c0rrect", message = "Don't forget to capitalize"),
+  answer("Correct", message = "Is it really an 'o'?"),
+  answer("C0rrect", correct = TRUE),
+  allow_retry = TRUE
+)
+```
+````
+
+```{r text_box, echo = FALSE}
 question_text(
   "Please enter the word 'C0rrect' below:",
   answer("correct", message = "Don't forget to capitalize"),
@@ -113,7 +366,32 @@ All the the arguments described below are also accepted by `question_radio`, `qu
 
 Example:
 
-```{r options, echo = TRUE}
+````markdown
+`r ''````{r options, echo = FALSE}
+question(
+  "How many parameters are supplied in this question?",
+  answer("1", message = "Really?"),
+  answer("2"),
+  answer("3"),
+  answer("15", correct = TRUE, message = "Custom message here."),
+  type = "learnr_text", # radio
+  correct = "Question is correct!",
+  try_again = "Try Again!",
+  message = "Reminder to do something after answering the question...",
+  post_message = "Message to be displayed after the correct answer is found",
+  submit_button = "Submit Answer Here!",
+  try_again_button = "Try Again Here!",
+  allow_retry = TRUE,
+  random_answer_order = TRUE,
+  options = list(
+    placeholder = "The answer is '15'",
+    trim = TRUE
+  )
+)
+```
+````
+
+```{r options, echo = FALSE}
 question(
   "How many parameters are supplied in this question?",
   answer("1", message = "Really?"),
@@ -136,6 +414,11 @@ question(
 )
 ```
 
+
+-------------------
+
+
+
 ## Custom Question Types
 
 `learnr` comes with the three built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` can not implement every possible `question` type.
@@ -155,7 +438,21 @@ To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co
 
 If a vector of types is supplied to a question's `type`, the S3 methods will be dispatched starting with the first type value and ending with the last type value. For example, let us define a new question type that should behave like a learnr checkbox question, but have a special implementation of `question_is_correct` where the answer is always correct.
 
-```{r custom_class}
+````markdown
+`r ''````{r custom_class, echo = FALSE}
+question_is_correct.always_correct <- function(question, value, ...) {
+  return(TRUE)
+}
+
+ques <- question(
+  "Custom Method",
+  answer("answer", correct = TRUE),
+  type = c("always_correct", "learnr_checkbox")
+)
+```
+````
+
+```{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
   return(TRUE)
 }
@@ -180,13 +477,33 @@ Supplying multiple type values allows for clean abstraction between objects that
 
 ```{r sortable_example, eval = FALSE}
 question_rank <- function(..., random_answer_order = TRUE, options = sortable::sortable_options()) {
-  question(
+  learnr::question(
     ...,
     random_answer_order = random_answer_order,
     type = "sortable_rank",
     options = options
   )
 }
+```
+
+````markdown
+`r ''````{r sortable_question, echo = FALSE}
+rank_ex <- sortable::question_rank(
+  "Sort the first 5 letters",
+  learnr::answer(LETTERS[1:5], correct = TRUE),
+  learnr::answer(rev(LETTERS[1:5]), correct = FALSE, "Other direction!")
+)
+rank_ex
+```
+````
+
+```{r sortable_question, echo = FALSE}
+rank_ex <- sortable::question_rank(
+  "Sort the first 5 letters",
+  learnr::answer(LETTERS[1:5], correct = TRUE),
+  learnr::answer(rev(LETTERS[1:5]), correct = FALSE, "Other direction!")
+)
+rank_ex
 ```
 
 In the code sections below, we will walk through each method and a final helper method to create a `sortable_rank` tutorial question.
@@ -226,6 +543,14 @@ question_ui_initialize.sortable_rank <- function(question, value, ...) {
 }
 ```
 
+Example:
+
+```{r ui-ex}
+# initial state with no initial value
+question_ui_initialize(rank_ex, value = NULL)
+```
+
+
 #### `question_ui_completed.sortable_rank`
 
 `question_ui_completed()` is called when the question is finished and can not be tried again.
@@ -240,18 +565,25 @@ question_ui_completed.sortable_rank <- function(question, value, ...) {
     sortable::sortable_options(disabled = TRUE)
   )
   # disable all html tags
-  disable_all_tags(
+  learnr::disable_all_tags(
     # display just like init, with current answer
-    question_ui_initialize(question, value, ...)
+    learnr::question_ui_initialize(question, value, ...)
   )
 }
+```
+
+Example:
+
+```{r ex-completed}
+# completed state with display value set to C, A, D, E, B
+question_ui_completed(rank_ex, value = c("C", "A", "D", "E", "B"))
 ```
 
 #### `question_ui_try_again.sortable_rank`
 
 The `sortable` package chose to have the "Try Again" state be defined the same as the "Completed" state.
 
-```{r sortable_complete, eval = FALSE}
+```{r sortable_try_again, eval = FALSE}
 question_ui_try_again.sortable_rank <- question_ui_completed.sortable_rank
 ```
 
@@ -270,7 +602,7 @@ The default value of `!is.null(value)` will work for the `sortable` question.  T
 
 Since sortable is comparing a character vector to possible answer character vectors, a quick `identical` check through each answer will be enough for this method.
 
-The return value from `question_is_correct` should return output from `question_is_correct_value`.  This allows for extra messages to be displayed while determining if the answer is correct / incorrect.
+The return value from `question_is_correct` should return output from `mark_as`.  This allows for extra messages to be displayed while determining if the answer is correct / incorrect.
 
 ```{r sortable_correct, eval = FALSE}
 question_is_correct.sortable_rank <- function(question, value, ...) {
@@ -278,10 +610,20 @@ question_is_correct.sortable_rank <- function(question, value, ...) {
   for (answer in question$answers) {
     if (identical(answer$option, value)) {
       # if it matches, return the correct-ness and its message
-      return(mark_as(answer$is_correct, answer$message))
+      return(learnr::mark_as(answer$is_correct, answer$message))
     }
   }
   # no match found. mark as incorrect
-  return(mark_as(FALSE, NULL))
+  return(learnr::mark_as(FALSE, NULL))
 }
+```
+
+Example:
+
+```{r ex-is-correct}
+# with incorrect values
+question_is_correct(rank_ex, value = c("E", "D", "C", "B", "A"))
+
+# with correct values
+question_is_correct(rank_ex, value = c("A", "B", "C", "D", "E"))
 ```
