@@ -43,17 +43,18 @@ mutate_tags.list <- function(ele, selector, fn, ...) {
 }
 
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
-  if (inherits(selector, "character")) {
-    # if there is a set of selectors
-    if (grepl(",", selector)) {
-      selectors <- strsplit(selector, ",")[[1]]
-      # serially mutate the tags for each indep selector
-      for (selector_i in selectors) {
-        ele <- mutate_tags(ele, selector_i, fn, ...)
-      }
-      return(ele)
-    }
-  }
+  # # vectorize selector.  (Currently not used, so removed)
+  # if (inherits(selector, "character")) {
+  #   # if there is a set of selectors
+  #   if (grepl(",", selector)) {
+  #     selectors <- strsplit(selector, ",")[[1]]
+  #     # serially mutate the tags for each indep selector
+  #     for (selector_i in selectors) {
+  #       ele <- mutate_tags(ele, selector_i, fn, ...)
+  #     }
+  #     return(ele)
+  #   }
+  # }
 
   # make sure it's a selector
   selector <- as_selector_list(selector)
