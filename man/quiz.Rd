@@ -8,8 +8,9 @@
 \usage{
 quiz(..., caption = "Quiz")
 
-question(text, ..., type = c("auto", "single", "multiple", "radio",
-  "checkbox", "text"), correct = "Correct!", incorrect = "Incorrect",
+question(text, ..., type = c("auto", "single", "multiple",
+  "learnr_radio", "learnr_checkbox", "learnr_text"),
+  correct = "Correct!", incorrect = "Incorrect",
   try_again = incorrect, message = NULL, post_message = NULL,
   loading = c("**Loading:** ", text, "<br/><br/><br/>"),
   submit_button = "Submit Answer", try_again_button = "Try Again",
@@ -65,9 +66,9 @@ Add interative quiz questions to a tutorial.
 Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
 There are three default types of quiz questions:
 \describe{
-\item{\code{radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
-\item{\code{checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
-\item{\code{text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
+\item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
+\item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
+\item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
 }
 }
 \details{
