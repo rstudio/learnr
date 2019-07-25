@@ -10,7 +10,7 @@ as_selector <- function(selector) {
 
   # yell if there is a comma
   if (grepl(",", selector, fixed = TRUE)) {
-    stop("Do not know how to handle comma separatated selector values")
+    stop("Do not know how to handle comma separated selector values")
   }
 
   # if it contains multiple elements, recurse
