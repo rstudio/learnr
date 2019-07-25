@@ -1,47 +1,15 @@
-disable_element_fn <- function(ele) {
-  tagAppendAttributes(
-    ele,
-    class = "disabled",
-    disabled = NA
-  )
-}
-
-disable_tags <- function(ele, selector) {
-  mutate_tags(ele, selector, disable_element_fn)
-}
 
 
-
-
-
-#' Mutate shiny html tags
-#'
-#' S3 method to recursively look for elements according to a basic css string.
-#' This method should not be used publically until adopted by \code{htmltools}.
-#'
-#' @param ele shiny html tag element
-#' @param selector css selector string
-#' @param fn function to execute when a match is found
-#' @param ... possible future parameter extension
-#' @export
-#' @rdname mutate_tags
-#' @examples
-#' # add an href to all a tags
-#' mutate_tags(
-#'   htmltools::tagList(
-#'     htmltools::a(),
-#'     htmltools::a()
-#'   ),
-#'   "a",
-#'   function(a_tag) {
-#'     htmltools::tagAppendAttributes(a_tag, href="http://rstudio.com")
-#'   }
-#' )
+# ' S3 method to recursively look for elements according to a basic css string.
+# ' This method should not be used publically until adopted by \code{htmltools}.
+# ' @param selector css selector string
+# ' @param fn function to execute when a match is found
+# ' @param ... possible future parameter extension
+# Export only due to knitr execution not finding mutate_tags
 mutate_tags <- function(ele, selector, fn, ...) {
   UseMethod("mutate_tags", ele)
 }
-#' @export
-#' @rdname mutate_tags
+
 mutate_tags.default <- function(ele, selector, fn, ...) {
   if (any(
     c(
@@ -62,23 +30,18 @@ mutate_tags.default <- function(ele, selector, fn, ...) {
     ...
   )
 }
-#' @export
-#' @rdname mutate_tags
+
 mutate_tags.list <- function(ele, selector, fn, ...) {
-  lapply(ele, mutate_tags, selector, fn, ...)
-}
-
-#' @export
-#' @rdname mutate_tags
-mutate_tags.shiny.tag.list <- function(ele, selector, fn, ...) {
-  do.call(
-    htmltools::tagList,
-    mutate_tags.list(ele, selector, fn, ...)
+  # set values to maintain attrs and class values
+  ele[] <- lapply(
+    ele,
+    function(item) {
+      mutate_tags(item, selector, fn, ...)
+    }
   )
+  ele
 }
 
-#' @export
-#' @rdname mutate_tags
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   if (inherits(selector, "character")) {
     # if there is a set of selectors
@@ -143,8 +106,32 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
 }
 
 
+disable_element_fn <- function(ele) {
+  tagAppendAttributes(
+    ele,
+    class = "disabled",
+    disabled = NA
+  )
+}
+
+disable_tags <- function(ele, selector) {
+  mutate_tags(ele, selector, disable_element_fn)
+}
+
+#' Disable all html tags
+#'
+#' Method to disable all html tags to not allow users to interact with the html.
+#'
+#' @param ele html tag element
 #' @export
-#' @rdname mutate_tags
+#' @examples
+#' # add an href to all a tags
+#' disable_tags(
+#'   htmltools::tagList(
+#'     htmltools::a(),
+#'     htmltools::a()
+#'   )
+#' )
 disable_all_tags <- function(ele) {
   mutate_tags(ele, "*", disable_element_fn)
 }
