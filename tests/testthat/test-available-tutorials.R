@@ -17,7 +17,11 @@ test_that("Tutorial names are retrieved", {
   expect_output(
     fixed = TRUE,
     print(available_tutorials("learnr")),
-"Available tutorials:\n* learnr\n  - hello         : \"Hello, Tutorial!\"\n  - question_type : \"Question Types in Learnr\"\n  - slidy         : \"Slidly demo\""
+"Available tutorials:
+* learnr
+  - hello         : \"Hello, Tutorial!\"
+  - quiz_question : \"Tutorial Quiz Questions in `learnr`\"
+  - slidy         : \"Slidly demo\""
   )
 
 })
