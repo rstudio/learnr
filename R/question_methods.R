@@ -135,10 +135,13 @@ incorrect <- function(message = NULL) {
 }
 #' @rdname mark_as_correct_incorrect
 #' @export
-mark_as <- function(correct, message = NULL) {
+mark_as <- function(correct, messages = NULL) {
   checkmate::assert_logical(correct, len = 1, null.ok = FALSE, any.missing = FALSE)
-  checkmate::assert_character(message, min.len = 0, max.len = 1, null.ok = TRUE, any.missing = FALSE)
-  ret <- list(correct = correct, message = message)
+  checkmate::assert_character(messages, min.len = 0, null.ok = TRUE, any.missing = FALSE)
+  ret <- list(
+    correct = correct,
+    messages = messages
+  )
   class(ret) <- "learnr_mark_as"
   ret
 }

@@ -68,19 +68,16 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
     if (is.null(message)) {
       return(x)
     }
-    if (!is.list(message))  {
-      message <- list(message)
-    }
     if (length(x) == 0) {
       message
     } else {
-      append(x, message)
+      c(x, message)
     }
   }
 
   is_correct <- TRUE
-  correct_messages <- list()
-  incorrect_messages <- list()
+  correct_messages <- c()
+  incorrect_messages <- c()
 
   for (ans in question$answers) {
     ans_is_checked <- as.character(ans$option) %in% value
