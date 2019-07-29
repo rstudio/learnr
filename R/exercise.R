@@ -119,23 +119,43 @@ evaluate_exercise <- function(exercise, envir) {
   # capture a copy of the envir before any execution is done
   envir_prep <- duplicate_env(envir)
 
+  # "global" err object to look for
+  err <- NULL
+
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
 
     # get the checker
-    checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
+    tryCatch({
+      checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
+    }, error = function(e) {
+      message("Error occured while retrieving 'exercise.checker'. Error: ", e)
+      err <<- e$message
+    })
+    if (!is.null(err)) {
+      return(error_result("Error occured while retrieving 'exercise.checker'."))
+    }
+
 
     # call the checker
-    checker_feedback <- checker(
-      label = exercise$label,
-      user_code = exercise$code,
-      solution_code = exercise$solution,
-      check_code = exercise$code_check,
-      envir_result = NULL,
-      evaluate_result = NULL,
-      envir_prep = envir_prep,
-      last_value = NULL
-    )
+    tryCatch({
+      checker_feedback <- checker(
+        label = exercise$label,
+        user_code = exercise$code,
+        solution_code = exercise$solution,
+        check_code = exercise$code_check,
+        envir_result = NULL,
+        evaluate_result = NULL,
+        envir_prep = envir_prep,
+        last_value = NULL
+      )
+    }, error = function(e) {
+      err <<- e$message
+      message("Error occured while evaluating initial 'exercise.checker'. Error: ", e)
+    })
+    if (!is.null(err)) {
+      return(error_result("Error occured while evaluating initial 'exercise.checker'."))
+    }
 
     # if it's an 'incorrect' feedback result then return it
     if (is.list(checker_feedback)) {
@@ -250,8 +270,6 @@ evaluate_exercise <- function(exercise, envir) {
   )
 
   # knit the Rmd to markdown (catch and report errors)
-  error_message <- NULL
-  error_html <- NULL
   tryCatch({
     output_file <- rmarkdown::render(input = exercise_rmd,
                                      output_format = output_format,
@@ -261,14 +279,15 @@ evaluate_exercise <- function(exercise, envir) {
                                      run_pandoc = FALSE)
   }, error = function(e) {
     # make the time limit error message a bit more friendly
-    error_message <<- e$message
+    err <<- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
     if (regexpr(pattern, error_message) != -1L) {
-      error_message <<- timeout_error_message()
+      err <<- timeout_error_message()
     }
   })
-  if (!is.null(error_message))
-    return(error_result(error_message))
+  if (!is.null(err)) {
+    return(error_result(err))
+  }
 
   # capture and filter dependencies
   dependencies <- attr(output_file, "knit_meta")
@@ -290,8 +309,18 @@ evaluate_exercise <- function(exercise, envir) {
   )
 
   # get the exercise checker (default does nothing)
-  checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
-                  envir = envir)
+  err <- NULL
+  tryCatch({
+    checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
+                    envir = envir)
+  }, error = function(e) {
+    message("Error occured while parsing chunk option 'exercise.checker'. Error: ", e)
+    err <<- e$message
+  })
+  if (!is.null(err)) {
+    return(error_result("Error occured while parsing chunk option 'exercise.checker'."))
+  }
+
   if (is.null(exercise$check) || is.null(checker))
     checker <- function(...) { NULL }
 
