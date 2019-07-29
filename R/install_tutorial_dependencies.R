@@ -1,10 +1,8 @@
 get_needed_pkgs <- function(dir) {
-  file_paths <- list.files(dir,
-                           pattern = "[.]R$|[.]Rmd",
-                           full.names = TRUE,
-                           recursive = TRUE)
-  pkgs <- lapply(file_paths, fileDependencies)
-  pkgs <- unique(unlist(pkgs))
+
+  packrat_dir_dependencies <- getFromNamespace("dirDependencies", "packrat")
+
+  pkgs <- packrat_dir_dependencies(dir)
 
   pkgs[!pkgs %in% utils::installed.packages()]
 }
