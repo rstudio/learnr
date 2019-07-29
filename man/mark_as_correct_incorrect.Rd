@@ -10,7 +10,7 @@ correct(message = NULL)
 
 incorrect(message = NULL)
 
-mark_as(correct, message = NULL)
+mark_as(correct, messages = NULL)
 }
 \arguments{
 \item{message}{a list of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
