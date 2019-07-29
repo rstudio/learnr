@@ -6,14 +6,14 @@
 \alias{mark_as}
 \title{Question is correct value}
 \usage{
-correct(message = NULL)
+correct(messages = NULL)
 
-incorrect(message = NULL)
+incorrect(messages = NULL)
 
 mark_as(correct, messages = NULL)
 }
 \arguments{
-\item{message}{a list of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
+\item{messages}{a vector of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
 
 \item{correct}{boolean that determines if a question answer is correct}
 

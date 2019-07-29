@@ -108,7 +108,7 @@ question_is_correct.default <- function(question, value, ...) {
 #'
 #' Helper method to return
 #' @param correct boolean that determines if a question answer is correct
-#' @param message a list of messages to be displayed.  The type of message will be determined by the `correct` value.
+#' @param messages a vector of messages to be displayed.  The type of message will be determined by the `correct` value.
 #' @param ... possible future parameter expansion
 #' @rdname mark_as_correct_incorrect
 #' @export
@@ -125,13 +125,13 @@ question_is_correct.default <- function(question, value, ...) {
 #'   }
 #'   mark_as(FALSE, NULL)
 #' }
-correct <- function(message = NULL) {
-  mark_as(correct = TRUE, message = message)
+correct <- function(messages = NULL) {
+  mark_as(correct = TRUE, messages = messages)
 }
 #' @rdname mark_as_correct_incorrect
 #' @export
-incorrect <- function(message = NULL) {
-  mark_as(correct = FALSE, message = message)
+incorrect <- function(messages = NULL) {
+  mark_as(correct = FALSE, messages = messages)
 }
 #' @rdname mark_as_correct_incorrect
 #' @export
