@@ -22,7 +22,7 @@ ask_pkgs_install <- function(needed_pkgs) {
 install_tutorial_dependencies <- function(dir) {
   needed_pkgs <- get_needed_pkgs(dir)
 
-  if(length(needed_pkgs) < 1) {
+  if(length(needed_pkgs) == 0) {
     return(invisible())
   }
 
