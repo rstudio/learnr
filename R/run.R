@@ -38,6 +38,7 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
   # get path to tutorial
   tutorial_path <- get_tutorial_path(name, package)
 
+  # check for necessary tutorial package dependencies
   install_tutorial_dependencies(tutorial_path)
 
   # provide launch_browser if it's not specified in the shiny_args
