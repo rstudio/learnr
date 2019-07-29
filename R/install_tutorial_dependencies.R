@@ -1,8 +1,6 @@
 get_needed_pkgs <- function(dir) {
 
-  packrat_dir_dependencies <- getFromNamespace("dirDependencies", "packrat")
-
-  pkgs <- packrat_dir_dependencies(dir)
+  pkgs <- unique(renv::dependencies(dir)$Package)
 
   pkgs[!pkgs %in% utils::installed.packages()]
 }
