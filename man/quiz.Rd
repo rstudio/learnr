@@ -8,8 +8,9 @@
 \usage{
 quiz(..., caption = "Quiz")
 
-question(text, ..., type = c("auto", "single", "multiple", "radio",
-  "checkbox", "text"), correct = "Correct!", incorrect = "Incorrect",
+question(text, ..., type = c("auto", "single", "multiple",
+  "learnr_radio", "learnr_checkbox", "learnr_text"),
+  correct = "Correct!", incorrect = "Incorrect",
   try_again = incorrect, message = NULL, post_message = NULL,
   loading = c("**Loading:** ", text, "<br/><br/><br/>"),
   submit_button = "Submit Answer", try_again_button = "Try Again",
@@ -25,9 +26,9 @@ answer(text, correct = FALSE, message = NULL)
 \item{text}{Question or option text}
 
 \item{type}{Type of quiz question. Typically this can be automatically determined
-based on the provided answers Pass \code{"single"} to indicate that even though
+based on the provided answers. Pass \code{"radio"} to indicate that even though
 multiple correct answers are specified that inputs which include only one correct
-answer are still correct. Pass \code{"multiple"} to force the use of checkboxes
+answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
 (as opposed to radio buttons) even though only once correct answer was provided.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
@@ -58,35 +59,45 @@ message alongside the \code{message} message value.}
 
 \item{random_answer_order}{Display answers in a random order.}
 
-\item{options}{Extra options to be stored in the question object.
-This is useful when using custom question types.
-See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.}
+\item{options}{Extra options to be stored in the question object.}
 }
 \description{
-Add interactive multiple choice quiz questions to a tutorial.
+Add interative quiz questions to a tutorial.
+Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
+There are three default types of quiz questions:
+\describe{
+\item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
+\item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
+\item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
+}
+}
+\details{
+Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
 }
 \examples{
-\dontrun{
-question("What number is the letter A in the alphabet?",
-  answer("8"),
-  answer("14"),
-  answer("1", correct = TRUE),
-  answer("23"),
-  incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
-  allow_retry = TRUE
-)
+quiz(
+  question("What number is the letter A in the alphabet?",
+    answer("8"),
+    answer("14"),
+    answer("1", correct = TRUE),
+    answer("23"),
+    incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
+    allow_retry = TRUE
+  ),
 
-question("Where are you right now? (select ALL that apply)",
-  answer("Planet Earth", correct = TRUE),
-  answer("Pluto"),
-  answer("At a computing device", correct = TRUE),
-  answer("In the Milky Way", correct = TRUE),
-  incorrect = paste0("Incorrect. You're on Earth, ",
-                     "in the Milky Way, at a computer.")
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", correct = TRUE),
+    answer("Pluto"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = paste0("Incorrect. You're on Earth, ",
+                       "in the Milky Way, at a computer.")
+  )
 )
-}
 
 }
 \seealso{
+For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+
 \code{\link{random_praise}}, \code{\link{random_encouragement}}
 }
