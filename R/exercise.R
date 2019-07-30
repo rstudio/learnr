@@ -219,15 +219,19 @@ evaluate_exercise <- function(exercise, envir) {
   last_value <- NULL
   default_output_handler <- evaluate::new_output_handler()
   has_visible_arg <- length(formals(default_output_handler$value)) > 1
-  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
-    last_value <<- x
-
+  learnr_value_handler <-
     if (has_visible_arg) {
-      default_output_handler$value(x, visible)
+      function(x, visible) {
+        last_value <<- x
+        default_output_handler$value(x, visible)
+      }
     } else {
-      default_output_handler$value(x)
+      function(x) {
+        last_value <<- x
+        default_output_handler$value(x)
+      }
     }
-  })
+  learnr_output_handler <- evaluate::new_output_handler(value = learnr_value_handler)
 
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate = function(
