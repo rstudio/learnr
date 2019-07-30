@@ -217,21 +217,22 @@ evaluate_exercise <- function(exercise, envir) {
   #   only has one argument, only visible values are handled; if it has more
   #   arguments, the second argument indicates whether the value is visible.
   last_value <- NULL
+  last_value_is_visible <- TRUE
   default_output_handler <- evaluate::new_output_handler()
   has_visible_arg <- length(formals(default_output_handler$value)) > 1
-  learnr_value_handler <-
+  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
+    last_value <<- x
+    last_value_is_visible <<- visible
     if (has_visible_arg) {
-      function(x, visible) {
-        last_value <<- x
-        default_output_handler$value(x, visible)
-      }
+      default_output_handler$value(x, visible)
     } else {
-      function(x) {
-        last_value <<- x
+      if (visible) {
         default_output_handler$value(x)
+      } else {
+        invisible()
       }
     }
-  learnr_output_handler <- evaluate::new_output_handler(value = learnr_value_handler)
+  })
 
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate = function(
@@ -296,7 +297,8 @@ evaluate_exercise <- function(exercise, envir) {
   # get the exercise checker (default does nothing)
   checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
                   envir = envir)
-  if (is.null(exercise$check) || is.null(checker))
+  checker_fn_does_not_exist <- is.null(exercise$check) || is.null(checker)
+  if (checker_fn_does_not_exist)
     checker <- function(...) { NULL }
 
   # call the checker
@@ -315,14 +317,33 @@ evaluate_exercise <- function(exercise, envir) {
   feedback_validated(checker_feedback)
 
   # amend output with feedback as required
-  if (!is.null(checker_feedback)) {
-    feedback_html <- feedback_as_html(checker_feedback)
-    if (checker_feedback$location == "append")
+  feedback_html <-
+    if (!is.null(checker_feedback)) {
+      feedback_as_html(checker_feedback)
+    } else {
+      NULL
+    }
+
+  if (
+    # if the last value was invisible
+    !last_value_is_visible &&
+    # if the checker function exists
+    !checker_fn_does_not_exist
+  ) {
+    # works with NULL feedback
+    feedback_html <- htmltools::tagList(feedback_html, invisible_feedback())
+  }
+
+  if (!is.null(feedback_html)) {
+    # if no feedback, append invisible_feedback
+    feedback_location <- checker_feedback$location %||% "append"
+    if (feedback_location == "append") {
       html_output <- htmltools::tagList(html_output, feedback_html)
-    else if (checker_feedback$location == "prepend")
+    } else if (feedback_location == "prepend") {
       html_output <- htmltools::tagList(feedback_html, html_output)
-    else if (checker_feedback$location == "replace")
+    } else if (feedback_location == "replace") {
       html_output <- feedback_html
+    }
   }
 
   # return a list with the various results of the expression
@@ -345,6 +366,18 @@ error_result <- function(error_message) {
     feedback = NULL,
     error_message = error_message,
     html_output = error_message_html(error_message)
+  )
+}
+invisible_feedback <- function() {
+  feedback_as_html(
+    feedback_validated(
+      list(
+        message = "Last invisible value being used to check answer",
+        type = "warning",
+        correct = FALSE,
+        location = "append"
+      )
+    )
   )
 }
 
