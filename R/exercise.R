@@ -372,7 +372,7 @@ invisible_feedback <- function() {
   feedback_as_html(
     feedback_validated(
       list(
-        message = "Last invisible value being used to check answer",
+        message = "Last value being used to check answer is invisible. See `?invisible` for more information",
         type = "warning",
         correct = FALSE,
         location = "append"
