@@ -129,7 +129,7 @@ evaluate_exercise <- function(exercise, envir) {
     tryCatch({
       checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
     }, error = function(e) {
-      message("Error occured while retrieving 'exercise.checker'. Error: ", e)
+      message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
       err <<- e$message
     })
     if (!is.null(err)) {
@@ -151,7 +151,7 @@ evaluate_exercise <- function(exercise, envir) {
       )
     }, error = function(e) {
       err <<- e$message
-      message("Error occured while evaluating initial 'exercise.checker'. Error: ", e)
+      message("Error occured while evaluating initial 'exercise.checker'. Error:\n", e)
     })
     if (!is.null(err)) {
       return(error_result("Error occured while evaluating initial 'exercise.checker'."))
@@ -314,7 +314,7 @@ evaluate_exercise <- function(exercise, envir) {
     checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
                     envir = envir)
   }, error = function(e) {
-    message("Error occured while parsing chunk option 'exercise.checker'. Error: ", e)
+    message("Error occured while parsing chunk option 'exercise.checker'. Error:\n", e)
     err <<- e$message
   })
   if (!is.null(err)) {
@@ -325,16 +325,24 @@ evaluate_exercise <- function(exercise, envir) {
     checker <- function(...) { NULL }
 
   # call the checker
-  checker_feedback <- checker(
-    label = exercise$label,
-    user_code = exercise$code,
-    solution_code = exercise$solution,
-    check_code = exercise$check,
-    envir_result = envir,
-    evaluate_result = evaluate_result,
-    envir_prep = envir_prep,
-    last_value = last_value
-  )
+  tryCatch({
+    checker_feedback <- checker(
+      label = exercise$label,
+      user_code = exercise$code,
+      solution_code = exercise$solution,
+      check_code = exercise$check,
+      envir_result = envir,
+      evaluate_result = evaluate_result,
+      envir_prep = envir_prep,
+      last_value = last_value
+    )
+  }, error = function(e) {
+    err <<- e$message
+    message("Error occured while evaluating 'exercise.checker'. Error:\n", e)
+  })
+  if (!is.null(err)) {
+    return(error_result("Error occured while evaluating 'exercise.checker'."))
+  }
 
   # validate the feedback
   feedback_validated(checker_feedback)
