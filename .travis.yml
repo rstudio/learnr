@@ -4,8 +4,6 @@ language: r
 sudo: false
 cache: packages
 
-warnings_are_errors: false # TODO-barret to remove when releasing
-
 r:
   - oldrel
   - release

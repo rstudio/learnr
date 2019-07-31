@@ -49,3 +49,42 @@ duplicate_env <- function(envir, parent = parent.env(envir)) {
     parent = parent
   )
 }
+
+
+
+
+str_trim <- function(x) {
+  sub(
+    "\\s+$", "",
+    sub(
+      "^\\s+", "",
+      as.character(x)
+    )
+  )
+}
+
+if_no_match_return_null <- function(x) {
+  if (length(x) == 0) {
+    NULL
+  } else {
+    x
+  }
+}
+str_match <- function(x, pattern) {
+  if_no_match_return_null(
+    regmatches(x, regexpr(pattern, x))
+  )
+
+}
+str_match_all <- function(x, pattern) {
+  if_no_match_return_null(
+    regmatches(x, gregexpr(pattern, x))[[1]]
+  )
+}
+str_replace <- function(x, pattern, replacement) {
+  if (is.null(x)) return(NULL)
+  sub(pattern, replacement, x)
+}
+str_remove <- function(x, pattern) {
+  str_replace(x, pattern, "")
+}
