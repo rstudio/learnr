@@ -162,14 +162,13 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 ## Exercise Checking
 
-The **learnr** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial, then adding a "-check" chunk for any exercise you want to check. For example, if a package called `checkthat` existed and had a `check_exercise` function, you would specify it as an exercise checker using:
+The **learnr** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial.
+The [gradethis](https://github.com/rstudio-education/gradethis) package has utilities for grading exercises; suggestions and contributions are very welcome.
 
 <div id="exercisecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
 
-The [gradethis](https://github.com/rstudio-education/gradethis) package has utilities for grading exercises; suggestions and contributions are very welcome.
-
-When you provide a "-check" chunk for an exercise, an additional "Submit Answer" button is added to the exercise editor:
+When you provide a "-check" chunk for an exercise you want to check, an additional "Submit Answer" button is added to the exercise editor:
 
 <img src="images/exercise-submit.png"  width="730" height="92"/>
     
@@ -269,7 +268,7 @@ Here the `is_bad_code` function is a proxy for whatever logic your code checking
 
 ### Checking Packages
 
-The **[checkr](https://github.com/dtkaplan/checkr)** package currently provides code checking functions that are compatible with **learnr**. 
+The **[gradethis](https://github.com/rstudio-education/gradethis)** and **[checkr](https://github.com/dtkaplan/checkr)** packages currently provide code checking functions that are compatible with **learnr**.
 
 We expect that additional **learnr** compatible checking packages will be developed and will update this section as they become available.
 
