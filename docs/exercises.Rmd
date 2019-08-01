@@ -167,7 +167,7 @@ The **learnr** package doesn't directly include features for checking exercise i
 <div id="exercisecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
 
-The [grader](https://github.com/rstudio-education/grader) package has utilities for grading exercises; suggestions and contributions are very welcome.
+The [gradethis](https://github.com/rstudio-education/gradethis) package has utilities for grading exercises; suggestions and contributions are very welcome.
 
 When you provide a "-check" chunk for an exercise, an additional "Submit Answer" button is added to the exercise editor:
 
