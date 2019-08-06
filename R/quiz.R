@@ -495,7 +495,10 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
-        question_ui_initialize(question, input$answer)
+        # if there is an existing input$answer, display it.
+        # if there is no answer... init with NULL
+        # Do not re-render the UI for every input$answer change
+        question_ui_initialize(question, isolate(input$answer))
       )
     }
 
