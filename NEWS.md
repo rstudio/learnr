@@ -21,6 +21,8 @@ learnr 0.10.0 (unreleased)
 
 * Missing package dependencies will ask to be installed at tutorial run time. (@isteves, [#253](https://github.com/rstudio/learnr/issues/253))
 
+* When questions are tried again, the existing answer will remain, not forcing the user to restart from scratch. ([#253](https://github.com/rstudio/learnr/issues/253))
+
 
 ## Bug fixes
 

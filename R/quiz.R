@@ -495,7 +495,7 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
-        question_ui_initialize(question, submitted_answer())
+        question_ui_initialize(question, input$answer)
       )
     }
 
@@ -526,7 +526,8 @@ question_module_server_impl <- function(
   observeEvent(input$action_button, {
 
     if (button_type() == "try_again") {
-      init_question(NULL)
+      # maintain current submission
+      submitted_answer(NULL)
 
       # submit "reset" to server
       reset_question_submission_event(
