@@ -495,7 +495,10 @@ question_module_server_impl <- function(
     if (is.null(submitted_answer())) {
       # has not submitted, show regular answers
       return(
-        question_ui_initialize(question, submitted_answer())
+        # if there is an existing input$answer, display it.
+        # if there is no answer... init with NULL
+        # Do not re-render the UI for every input$answer change
+        question_ui_initialize(question, isolate(input$answer))
       )
     }
 
@@ -526,7 +529,10 @@ question_module_server_impl <- function(
   observeEvent(input$action_button, {
 
     if (button_type() == "try_again") {
-      init_question(NULL)
+      # maintain current submission / do not randomize answer order
+      # only reset the submitted answers
+      # does NOT reset input$answer
+      submitted_answer(NULL)
 
       # submit "reset" to server
       reset_question_submission_event(
