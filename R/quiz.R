@@ -529,7 +529,9 @@ question_module_server_impl <- function(
   observeEvent(input$action_button, {
 
     if (button_type() == "try_again") {
-      # maintain current submission
+      # maintain current submission / do not randomize answer order
+      # only reset the submitted answers
+      # does NOT reset input$answer
       submitted_answer(NULL)
 
       # submit "reset" to server
