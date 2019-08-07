@@ -83,6 +83,15 @@ Since tutorials enable end users to submit R code for execution on the server, y
 
 Note that by default when running on UNIX systems the **learnr** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
 
+#### Deployment Dependencies Not Found
+
+If your tutorial contains broken code within exercises for users to fix, the CRAN version of [`packrat`](https://github.com/rstudio/packrat/) will not find all of your dependencies to install when the tutorial is deployed.  To deploy tutorials containing broken exercise code, install the development version of `packrat` will find dependencies per R chunk within the tutorial.
+
+```{r, eval = FALSE}
+devtools::install_github("rstudio/packrat")
+```
+
+
 ## Hosting Services
 
 Publishing tutorials to a server makes them instantly accessible to any user with a web browser, and requires no local installation of R or R packages. It also opens up the possibility of collecting data on user interactions with tutorials (progress made, errors encountered, etc.). 
