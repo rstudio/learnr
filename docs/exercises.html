@@ -592,13 +592,12 @@ Whether to include a “Start Over” button for the exercise.
 </div>
 <div id="exercise-checking" class="section level2">
 <h2>Exercise Checking</h2>
-<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example, if a package called <code>checkthat</code> existed and had a <code>check_exercise</code> function, you would specify it as an exercise checker using:</p>
+<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial. The <a href="https://github.com/rstudio-education/gradethis">gradethis</a> package has utilities for grading exercises; suggestions and contributions are very welcome.</p>
 <div id="exercisecheck">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
-<p>The <a href="https://github.com/rstudio-education/grader">grader</a> package has utilities for grading exercises; suggestions and contributions are very welcome.</p>
-<p>When you provide a “-check” chunk for an exercise, an additional “Submit Answer” button is added to the exercise editor:</p>
+<p>When you provide a “-check” chunk for an exercise you want to check, an additional “Submit Answer” button is added to the exercise editor:</p>
 <p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
 <p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
 <div id="checker-function" class="section level3">
@@ -747,7 +746,7 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </div>
 <div id="checking-packages" class="section level3">
 <h3>Checking Packages</h3>
-<p>The <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> package currently provides code checking functions that are compatible with <strong>learnr</strong>.</p>
+<p>The <strong><a href="https://github.com/rstudio-education/gradethis">gradethis</a></strong> and <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> packages currently provide code checking functions that are compatible with <strong>learnr</strong>.</p>
 <p>We expect that additional <strong>learnr</strong> compatible checking packages will be developed and will update this section as they become available.</p>
 </div>
 </div>
