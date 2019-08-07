@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -23,9 +24,10 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
 <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -46,10 +48,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -84,9 +88,7 @@ h6 {
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -105,8 +107,14 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -122,7 +130,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -142,6 +149,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -163,47 +207,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -252,8 +314,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -268,6 +328,16 @@ div.tocify {
 }
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -335,7 +405,7 @@ div.tocify {
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see it’s results. There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
+<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see its results. There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
 <table>
 <thead>
 <tr class="header">
@@ -429,7 +499,7 @@ Whether to include a “Start Over” button for the exercise.
 <div id="exercise-evaluation" class="section level2">
 <h2>Exercise Evaluation</h2>
 <p>By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).</p>
-<p>You can arrange for an exercise to be pre-evaluated (and it’s output shown) using the <code>exercise.eval</code> chunk option. This option can also be set either globally or per-chunk:</p>
+<p>You can arrange for an exercise to be pre-evaluated (and its output shown) using the <code>exercise.eval</code> chunk option. This option can also be set either globally or per-chunk:</p>
 <div id="exerciseeval">
 
 </div>
@@ -481,7 +551,7 @@ Whether to include a “Start Over” button for the exercise.
 </div>
 <div id="multiple-hints" class="section level3">
 <h3>Multiple Hints</h3>
-<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3“, etc.) for your exercise chunk. For example:</p>
+<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3&quot;, etc.) for your exercise chunk. For example:</p>
 <div id="exercisehints">
 
 </div>
@@ -522,11 +592,12 @@ Whether to include a “Start Over” button for the exercise.
 </div>
 <div id="exercise-checking" class="section level2">
 <h2>Exercise Checking</h2>
-<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example:</p>
+<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial, then adding a “-check” chunk for any exercise you want to check. For example, if a package called <code>checkthat</code> existed and had a <code>check_exercise</code> function, you would specify it as an exercise checker using:</p>
 <div id="exercisecheck">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
+<p>The <a href="https://github.com/rstudio-education/grader">grader</a> package has utilities for grading exercises; suggestions and contributions are very welcome.</p>
 <p>When you provide a “-check” chunk for an exercise, an additional “Submit Answer” button is added to the exercise editor:</p>
 <p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
 <p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
@@ -582,7 +653,7 @@ Code provided within the “-check” chunk for the exercise.
 <code>envir_result</code>
 </td>
 <td>
-The R environment after the execution of the chunk.
+The R environment <b>after</b> the execution of the chunk.
 </td>
 </tr>
 <tr class="even">
@@ -593,7 +664,15 @@ The R environment after the execution of the chunk.
 The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate"><code>evaluate::evaluate</code></a> function.
 </td>
 </tr>
-<tr class="pdd">
+<tr class="odd">
+<td>
+<code>envir_prep</code>
+</td>
+<td>
+A copy of the R environment <b>before</b> the execution of the chunk.
+</td>
+</tr>
+<tr class="even">
 <td>
 <code>…</code>
 </td>
@@ -674,7 +753,7 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
-<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or Sandbox“). For example:</p>
+<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or Sandbox&quot;). For example:</p>
 <div id="exercisecaption">
 
 </div>
@@ -729,6 +808,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
