@@ -458,7 +458,7 @@ learnr::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)<
 <p>Note that by default when running on UNIX systems the <strong>learnr</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).</p>
 <div id="deployment-dependencies-not-found" class="section level4">
 <h4>Deployment Dependencies Not Found</h4>
-<p>If your tutorial contains broken code within exercises for users to fix, the CRAN version of <a href="https://github.com/rstudio/packrat/"><code>packrat</code></a> will not find all of your dependencies to install when the tutorial is deployed. To deploy tutorials containing broken exercise code, install the development version of <code>packrat</code> will find dependencies per R chunk within the tutorial.</p>
+<p>If your tutorial contains broken code within exercises for users to fix, the CRAN version of <a href="https://github.com/rstudio/packrat/"><code>packrat</code></a> will not find all of your dependencies to install when the tutorial is deployed. To deploy tutorials containing broken exercise code, install the development version of <code>packrat</code>. This version of <code>packrat</code> is able to find dependencies per R chunk, allowing for <em>broken</em> R chunks within the tutorial file.</p>
 <pre class="r"><code>devtools::install_github(&quot;rstudio/packrat&quot;)</code></pre>
 </div>
 </div>

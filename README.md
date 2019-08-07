@@ -27,8 +27,9 @@ If your tutorial contains broken code within exercises for users to fix,
 the CRAN version of [`packrat`](https://github.com/rstudio/packrat/)
 will not find all of your dependencies to install when the tutorial is
 deployed. To deploy tutorials containing broken exercise code, install
-the development version of `packrat` will find dependencies per R chunk
-within the tutorial.
+the development version of `packrat`. This version of `packrat` is able
+to find dependencies per R chunk, allowing for *broken* R chunks within
+the tutorial file.
 
 ``` r
 devtools::install_github("rstudio/packrat")
