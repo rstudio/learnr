@@ -29,7 +29,8 @@ The **learnr** package makes it easy to turn any [R Markdown](http://rmarkdown.r
 You can find documentation on using the **learnr** package here: <https://rstudio.github.com/learnr/>
 
 
-### FAQ
+
+## FAQ
 
 #### Deployment Dependencies Not Found
 
@@ -44,4 +45,4 @@ devtools::install_github("rstudio/packrat")
 `learnr` does not support IE11 and Edge.
 
 * [IE11 not receiving major updates](https://support.microsoft.com/en-us/help/17454/lifecycle-faq-internet-explorer), so I am not pursuing support for IE11.
-* [Edge is adopting chromium](https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/).  Once updated, Edge _should_ work out of the box with many more packages than just `learnr`. 
+* [Edge is adopting chromium](https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/).  Once updated, Edge _should_ work out of the box with many more R packages (including `learnr`) and websites.

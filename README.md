@@ -37,7 +37,7 @@ all of the following:
 You can find documentation on using the **learnr** package here:
 <https://rstudio.github.com/learnr/>
 
-### FAQ
+## FAQ
 
 #### Deployment Dependencies Not Found
 
@@ -62,5 +62,5 @@ devtools::install_github("rstudio/packrat")
     so I am not pursuing support for IE11.
   - [Edge is adopting
     chromium](https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/).
-    Once updated, Edge *should* work out of the box with many more
-    packages than just `learnr`.
+    Once updated, Edge *should* work out of the box with many more R
+    packages (including `learnr`) and websites.
