@@ -344,7 +344,7 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
   for (submission in retrieve_all_question_submissions(session)) {
     if (identical(as.character(submission$id), question_label)) {
-      return(submission$data$answers)
+      return(submission$data$answer)
     }
   }
   return(NULL)
