@@ -28,8 +28,6 @@ The **learnr** package makes it easy to turn any [R Markdown](http://rmarkdown.r
 
 You can find documentation on using the **learnr** package here: <https://rstudio.github.com/learnr/>
 
-
-
 ## FAQ
 
 #### Deployment Dependencies Not Found
