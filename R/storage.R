@@ -98,9 +98,22 @@ get_all_state_objects <- function(session, exercise_output = TRUE) {
 
   # strip output (the client doesn't need it and it's expensive to transmit)
   objects <- lapply(objects, function(object) {
-    if (object$type == "exercise_submission")
-      if (!exercise_output)
+    if (object$type == "exercise_submission") {
+      if (!exercise_output) {
         object$data["output"] <- list(NULL)
+      }
+    }
+    if (object$type == "question_submission") {
+      if (!is.null(object$data$answers)) {
+        # as of v0.10.0...
+        # upgrade from old storage format to new storage format
+        # rename answers -> answer
+        object$data$answer <- object$data$answers
+        object$data$answers <- NULL
+        # do not record correct information
+        object$data$correct <- NULL
+      }
+    }
     object
   })
 
