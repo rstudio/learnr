@@ -369,7 +369,8 @@ question_module_ui <- function(id) {
     class = "tutorial-question",
     uiOutput(ns("answer_container")),
     uiOutput(ns("message_container")),
-    uiOutput(ns("action_button_container"))
+    uiOutput(ns("action_button_container")),
+    withMathJax()
   )
 }
 
@@ -483,11 +484,13 @@ question_module_server_impl <- function(
   output$message_container <- renderUI({
     req(!is.null(is_correct_info()), !is.null(is_done()))
 
-    question_messages(
-      question,
-      messages = is_correct_info()$messages,
-      is_correct = is_correct_info()$correct,
-      is_done = is_done()
+    withMathJax(
+      question_messages(
+        question,
+        messages = is_correct_info()$messages,
+        is_correct = is_correct_info()$correct,
+        is_done = is_done()
+      )
     )
   })
 
@@ -498,7 +501,9 @@ question_module_server_impl <- function(
         # if there is an existing input$answer, display it.
         # if there is no answer... init with NULL
         # Do not re-render the UI for every input$answer change
-        question_ui_initialize(question, isolate(input$answer))
+        withMathJax(
+          question_ui_initialize(question, isolate(input$answer))
+        )
       )
     }
 
@@ -513,7 +518,9 @@ question_module_server_impl <- function(
       # if the question is 'done', display the final input ui and disable everything
 
       return(
-        question_ui_completed(question, submitted_answer())
+        withMathJax(
+          question_ui_completed(question, submitted_answer())
+        )
       )
     }
 
@@ -521,7 +528,9 @@ question_module_server_impl <- function(
     #   until it is reset with the try again button
 
     return(
-      question_ui_try_again(question, submitted_answer())
+      withMathJax(
+        question_ui_try_again(question, submitted_answer())
+      )
     )
   })
 
