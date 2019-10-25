@@ -33,11 +33,10 @@ p {
 ul {
   line-height: 2em;
   list-style: disc outside none; }
-
-.btn {
+.btn, .modal-content .btn+.btn {
   padding: 10px 20px;
   border-radius: 3px; 
-  margin-bottom: 20px; }
+  margin-bottom: 0px; }
 
 .btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
@@ -143,4 +142,3 @@ code {
 /* .tryAgainButton {
   margin-top: 10px;
 } */
-
