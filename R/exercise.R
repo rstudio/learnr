@@ -238,7 +238,7 @@ evaluate_exercise <- function(exercise, envir) {
   #   arguments, the second argument indicates whether the value is visible.
   last_value <- NULL
   last_value_is_visible <- TRUE
-  
+
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate = function(
     code, envir, ...,
@@ -246,6 +246,8 @@ evaluate_exercise <- function(exercise, envir) {
   ) {
     has_visible_arg <- length(formals(output_handler$value)) > 1
 
+    # wrap `output_handler$value` to be able to capture the `last_value`
+    # while maintaining the original functionality of `output_handler$value`
     output_handler_value_fn <- output_handler$value
     output_handler$value <- function(x, visible) {
       last_value <<- x
