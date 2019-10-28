@@ -31,7 +31,7 @@ Do you need to work through the tutorial? Take the quiz below to find out.
 
 
 ```{r quiz1, echo = FALSE}
-question("Check all that are true. I have not:",
+question("Check all that you have NOT done:",
   answer("installed R on my computer", message = "* Install R"),
   answer("installed the RStudio IDE", message = "* Install RStudio IDE"),
   answer("installed the tidyverse R package", message = "* Install Packages"),
