@@ -2,9 +2,6 @@ get_needed_pkgs <- function(dir) {
 
   pkgs <- unique(renv::dependencies(dir, quiet = TRUE)$Package)
 
-  # remove packages with name "cannot open connection"
-  pkgs <- pkgs[!grepl(" ", pkgs)]
-
   pkgs[!pkgs %in% utils::installed.packages()]
 }
 
