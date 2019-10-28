@@ -344,7 +344,7 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
   for (submission in retrieve_all_question_submissions(session)) {
     if (identical(as.character(submission$id), question_label)) {
-      return(submission$data$answers)
+      return(submission$data$answer)
     }
   }
   return(NULL)
@@ -608,7 +608,8 @@ question_messages <- function(question, messages, is_correct, is_done) {
     }
 
   if (!is.null(messages) && !is.list(messages)) {
-    messages <- list(messages)
+    # turn vectors into lists
+    messages <- as.list(messages)
   }
 
   # display the default messages first
