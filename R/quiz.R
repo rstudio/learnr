@@ -370,7 +370,7 @@ question_module_ui <- function(id) {
     uiOutput(ns("answer_container")),
     uiOutput(ns("message_container")),
     uiOutput(ns("action_button_container")),
-    withMathJax()
+    withLearnrMathJax()
   )
 }
 
@@ -484,7 +484,7 @@ question_module_server_impl <- function(
   output$message_container <- renderUI({
     req(!is.null(is_correct_info()), !is.null(is_done()))
 
-    withMathJax(
+    withLearnrMathJax(
       question_messages(
         question,
         messages = is_correct_info()$messages,
@@ -501,7 +501,7 @@ question_module_server_impl <- function(
         # if there is an existing input$answer, display it.
         # if there is no answer... init with NULL
         # Do not re-render the UI for every input$answer change
-        withMathJax(
+        withLearnrMathJax(
           question_ui_initialize(question, isolate(input$answer))
         )
       )
@@ -518,7 +518,7 @@ question_module_server_impl <- function(
       # if the question is 'done', display the final input ui and disable everything
 
       return(
-        withMathJax(
+        withLearnrMathJax(
           question_ui_completed(question, submitted_answer())
         )
       )
@@ -528,7 +528,7 @@ question_module_server_impl <- function(
     #   until it is reset with the try again button
 
     return(
-      withMathJax(
+      withLearnrMathJax(
         question_ui_try_again(question, submitted_answer())
       )
     )
@@ -674,4 +674,18 @@ question_messages <- function(question, messages, is_correct, is_done) {
   } else {
     tags$div(message_alert, always_message_alert, post_alert)
   }
+}
+
+
+
+
+
+withLearnrMathJax <- function(...) {
+  htmltools::tagList(
+    ...,
+    htmltools::tags$script(
+      # only attempt function if it exists
+      htmltools::HTML("if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()")
+    )
+  )
 }
