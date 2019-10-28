@@ -5,7 +5,7 @@ save_question_submission <- function(session, label, question, answer) {
     session = session,
     object_id = label,
     tutorial_object("question_submission", list(
-      version = 1,
+      api_version = 1,
       question = question,
       answer = answer
     ))
@@ -198,8 +198,8 @@ save_object <- function(session, object_id, data) {
 
 update_object <- function(object) {
   if (object$type == "question_submission") {
-    version <- object$data$version
-    if (!is.null(version)) {
+    api_version <- object$data$api_version
+    if (!is.null(api_version)) {
       # if (identical(version, 1)) {
       #   # do nothing
       # }
