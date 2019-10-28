@@ -200,17 +200,17 @@ update_object <- function(object) {
   if (object$type == "question_submission") {
     version <- object$data$version
     if (!is.null(version)) {
-      if (identical(version, 1)) {
-        # do nothing
-      } else {
-        # as of v0.10.0...
-        # upgrade from old storage format to new storage format
-        # rename answers -> answer
-        object$data$answer <- object$data$answers
-        object$data$answers <- NULL
-        # do not record correct information
-        object$data$correct <- NULL
-      }
+      # if (identical(version, 1)) {
+      #   # do nothing
+      # }
+    } else {
+      # as of v0.10.0...
+      # upgrade from old storage format to new storage format
+      # rename answers -> answer
+      object$data$answer <- object$data$answers
+      object$data$answers <- NULL
+      # do not record correct information
+      object$data$correct <- NULL
     }
   }
   object
