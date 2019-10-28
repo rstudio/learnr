@@ -23,6 +23,8 @@ learnr 0.10.0 (unreleased)
 
 * When questions are tried again, the existing answer will remain, not forcing the user to restart from scratch. ([#270](https://github.com/rstudio/learnr/issues/270))
 
+* A version number has been added to `question_submission` events.  This will help when using custom storage methods. ([#291](https://github.com/rstudio/learnr/pull/291))
+
 
 ## Bug fixes
 
