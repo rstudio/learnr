@@ -1,23 +1,29 @@
 - title: "Setting Up R"
   img: images/tutorial-example-setup.png
-  href: https://jjallaire.shinyapps.io/learnr-tutorial-00-setup/
-  source: https://github.com/rstudio/ggtutorials/blob/master/tutorials/00-setup/
-- title: "Data Basics"
-  img: images/tutorial-example-data-basics.png
-  href: https://jjallaire.shinyapps.io/learnr-tutorial-01-data-basics/
-  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/01-data-basics
-  showcase: true
+  href: https://learnr-examples.shinyapps.io/ex-setup-r/
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r
 - title: "Filtering Observations"
   img: images/tutorial-example-filter.png
-  href: https://jjallaire.shinyapps.io/learnr-tutorial-03a-data-manip-filter/
-  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03a-data-manip-filter
+  href: https://learnr-examples.shinyapps.io/ex-manip-filter/
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-manip-filter
   showcase: true
 - title: "Summarizing Data"
   img: images/tutorial-example-summarize.png
-  href: https://jjallaire.shinyapps.io/learnr-tutorial-03c-data-manip-summarise
-  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03c-data-manip-summarise
+  href: https://learnr-examples.shinyapps.io/ex-data-manip-summarise
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-manip-summarise
   showcase: true
-- title: "Creating New Variables"
-  img: images/tutorial-example-mutate.png
-  href: https://jjallaire.shinyapps.io/learnr-tutorial-03b-data-manip-mutate/
-  source: https://github.com/rstudio/ggtutorials/tree/master/tutorials/03b-data-manip-mutate
+- title: "learnr: Quiz Questions"
+  img: images/tutorial-example-quiz-question.png
+  href: https://learnr-examples.shinyapps.io/quiz_question/
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/quiz_question
+  showcase: true
+- title: "learnr: slidy layout"
+  img: images/tutorial-example-slidy.png
+  href: https://learnr-examples.shinyapps.io/slidy/
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/slidy
+  showcase: true
+- title: "sortable: Ranking Questions"
+  img: images/tutorial-example-sortable.png
+  href: https://andrie-de-vries.shinyapps.io/sortable_tutorial_question_rank/
+  source: https://github.com/rstudio/sortable/tree/master/inst/tutorials/question_rank
+  showcase: true
