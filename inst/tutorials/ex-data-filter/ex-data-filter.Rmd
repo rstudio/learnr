@@ -19,53 +19,45 @@ knitr::opts_chunk$set(error = TRUE)
 
 ## Welcome
 
-### `r ""`
+This is a demo tutorial. Compare it to the [source code](https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd) that made it.
 
-Visualisation is an important tool for generating insights, but your data won't always arrive ready to visualize. Often you'll need to filter unwanted observations from your data or create new variables and summaries to visualize. In this tutorial, you will learn how to filter your data, including:
+###  
 
-* How to use `filter()` to extract observations that pass a logical test
-* How to write logical comparisons in R
-* How to combine logical comparisons with Boolean operators
-* How to handle missing values within comparisons
+In this tutorial, you will learn how to:
+
+* use `filter()` to extract observations from a data frame or tibble
+* write logical tests in R
+* combine logical tests with Boolean operators
+* handle missing values within logical tests
 
 The readings in this tutorial follow [_R for Data Science_](http://r4ds.had.co.nz/), section 5.2. 
 
-### The tutorials that follow
+### Prerequisites
 
-In the two tutorials that follow, you will learn to create new variables and summaries.
+To practice these skills, we will use the `flights` data set from the nycflights13 package. This data frame comes from the US [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) and contains all `r format(nrow(nycflights13::flights), big.mark = ",")` flights that departed from New York City in 2013. It is documented in `?flights`.
 
-To practice these skills, we will use the `flights` data set from the nycflights13 package, which you met in [Data Basics](../01-data-basics/01-data-basics.html). This data frame comes from the US [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) and contains all `r format(nrow(nycflights13::flights), big.mark = ",")` flights that departed from New York City in 2013. It is documented in `?flights`.
+We will also use the ggplot2 package to visualize the data. 
 
-In these three tutorials, we will use the ggplot2 package that you met in [Data Visualization Basics](../02-data-vis-basics/02-data-vis-basics.html) to visualize the data. 
-
-To manipulate the data, we will use four new functions: `filter()`, `mutate()`, `group_by()`, and `summarise()`. All work similarly: 
-
-1.  The first argument is a data frame (or tibble).
-
-1.  The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
-    
-1.  The result is a new data frame.
-
-Together these properties make it easy to chain together multiple simple function calls to achieve a complex result. Let's dive in and see how these functions work.
-
-I've preloaded the packages for this tutorial with 
-
-```{r eval = FALSE}
-library(tidyverse) # loads dplyr, ggplot2, and others
-library(nycflights13)
-```
+If you are ready to begin, click on!
 
 ## Filter rows with `filter()`
 
 ### filter()
 
-`filter()` allows you to subset observations based on their values. The first argument is the name of the data frame. The second and subsequent arguments are the expressions that filter the data frame. For example, we can select all flights on January 1st with:
+`filter()` lets you use a logical test to extract specific rows from a data frame. To use `filter()`, pass it the data frame followed by one or more logical tests. `filter()` will return every row that passes each logical test.
+
+So for example, we can use `filter()` to select every flight in flights that departed on January 1st. Click Submit Answer to give it a try:
 
 ```{r filter1, exercise = TRUE, exercise.eval = FALSE}
 filter(flights, month == 1, day == 1)
 ```
 
-When you run that line of code, dplyr executes the filtering operation and returns a new data frame. dplyr functions never modify their inputs, so if you want to save the result, you'll need to use the assignment operator, `<-`. 
+
+###  output
+
+Like all dplyr functions, `filter()` returns a new data frame for you to save or use. It doesn't overwrite the old data frame. 
+
+If you want to save the output of `filter()`, you'll need to use the assignment operator, `<-`. 
 
 Rerun the command in the code chunk below, but first arrange to save the output to an object named `jan1`.
 
@@ -77,63 +69,55 @@ filter(flights, month == 1, day == 1)
 jan1 <- filter(flights, month == 1, day == 1)
 ```
 
-```{r filter2-check}
-"Good job! You can now see the results by running the name jan1 by itself. Or you can pass `jan1` to a function that takes data frames as input."
-```
+###  
 
-### ()
+Good job! You can now see the results by running the name jan1 by itself. Or you can pass `jan1` to a function that takes data frames as input.
 
-R either prints out the results of a command, or saves the the results to a variable. If you want to do both, you can wrap the assignment in parentheses. Wrap the following command in parentheses, i.e. add a `(` to the start of the line and a `)` to the end. Then run the code. What happens?
-
-```{r filter3, exercise = TRUE, exercise.eval = FALSE}
-dec25 <- filter(flights, month == 12, day == 25)
-```
-
-```{r filter3-solution}
-(dec25 <- filter(flights, month == 12, day == 25))
-```
-
-```{r filter3-check}
-"Very Nice! When you surround an assignment in parentheses, R both assigns the result to the object and prints the result to the screen. You can go ahead and check: an object named `dec25` now exists and it contains the data set that you see printed."
-```
+Did you notice that this code used the double assignment operator, `==`? `==` is one of R's logical comparison operators. Comparison operators are key to using `filter()` let's take a look at them.
 
 ## Logical Comparisons
 
 ### Comparison operators
 
-To use filtering effectively, you have to know how to select the observations that you want with R's comparison operators. R provides the standard suite of comparisons: `>`, `>=`, `<`, `<=`, `!=` (not equal), and `==` (equal). 
+R provides a suite of comparison operators that you can use to compare values: `>`, `>=`, `<`, `<=`, `!=` (not equal), and `==` (equal). Each creates a logical test. For example, is `pi` greater than three?
 
-When you're starting out with R, the easiest mistake to make is to test for equality with `=` instead of `==`. When this happens you'll get an informative error:
+```{r}
+pi > 3
+```
+
+###  
+
+When you place a logical test inside of `filter()`, filter applies the test to each row in the data frame and then returns the rows that pass, as a new data frame.
+
+Our code above returned every row whose month value was equal to one _and_ whose day value was equal to one.
+
+### Watch out!
+
+When you start out with R, the easiest mistake to make is to test for equality with `=` instead of `==`. When this happens you'll get an informative error:
 
 ```{r, error = TRUE}
 filter(flights, month = 1)
 ```
 
-### Floating point arithmetic
+### Multiple tests
 
-There's another common problem you might encounter when using `==`: floating point numbers. These results might surprise you! To get a feel for floating point numbers, predict what the code below shoudl return, then click "Run Code." Does everything work as you predict?
-
-```{r floating, exercise = TRUE, exercise.eval = FALSE}
-sqrt(2) ^ 2 == 2
-1/49 * 49 == 1
-```
-
-Computers cannot store an infinite number of digits, so they round complex numbers to a number that has a large---but finite---number of digits after the decimal place. As a result, `sqrt(2) ^ 2` is saved as something like `1.99999999999999999999999999`, something close to `2` but not exactly equal. So remember that many numbers that you see on a computer are approximations. Instead of relying on `==`, use `near()`:
-
-```{r}
-near(sqrt(2) ^ 2,  2)
-near(1 / 49 * 49, 1)
-```
+If you give `filter()` more than one logical test, `filter()` will combine the tests with an implied "and."In other words, `filter()` will return only the rows that return `TRUE` for every test. You can combine tests in other ways with Boolean operators... 
 
 ## Boolean operators
 
 ### &, |, and !
 
-If you give `filter()` more than one argument, it will combine the arguments with "and": `filter()` will return only the rows that return `TRUE` for every expresssion. You can combine tests in other ways with Boolean operators: `&` is "and", `|` is "or", and `!` is "not". The diagram below shows the complete set of Boolean operations.
+R uses boolean operators to combine multiple logical comparisons into a single logical test. These include `&` (_and_), `|` (_or_), `!` (_not_ or _negation_), and `xor()` (_exactly or_). 
+
+Both `|` and `xor()` will return TRUE is one or the other logical comparison returns TRUE. `xor()` differs from `|` in that it will return FALSE if both logical comparisons return TRUE. The name _xor_ stands for _exactly or_.
+
+Study the diagram below to get a feel for how these operators work.
 
 ```{r fig1, echo = FALSE, out.width = "100%", fig.cap = "In the figure above, `x` is the left-hand circle, `y` is the right-hand circle, and the shaded region show which parts each operator selects."}
 knitr::include_graphics("images/transform-logical.png")
 ```
+
+### Test Your Knowledge
 
 ```{r logicals, echo = FALSE}
 question(" What will the following code return? `filter(flights, month == 11 | month == 12)`",
@@ -147,15 +131,19 @@ question(" What will the following code return? `filter(flights, month == 11 | m
 
 ### Common mistakes
 
-In R, the order of operations doesn't work like English. You can't write `filter(flights, month == 11 | 12)`, which you might literally translate into  "finds all flights that departed in November or December". Instead it finds all months that equal the result of `11 | 12`, which is an expression that evaluates to `TRUE`. In a numeric context (like here), `TRUE` becomes one, so this finds all flights in January, not November or December. This is quite confusing! The best solution is to be sure to write oue a _complete_ test on each side of a boolean operator.
+In R, the order of operations doesn't work like English. You can't write `filter(flights, month == 11 | 12)`, even though you might say  "finds all flights that departed in November or December". Be sure to write oue a _complete_ test on each side of a boolean operator.
 
-Here are four more tips to help you use logical tests and Boolean operators in R.
+Here are four more tips to help you use logical tests and Boolean operators in R:
+
+###  
 
 1. A useful short-hand for this problem is `x %in% y`. This will select every row where `x` is one of the values in `y`. We could use it to rewrite the code in the question above:
 
     ```{r, eval = FALSE}
     nov_dec <- filter(flights, month %in% c(11, 12))
     ```
+
+###  
 
 2. Sometimes you can simplify complicated subsetting by remembering De Morgan's law: `!(x & y)` is the same as `!x | !y`, and `!(x | y)` is the same as `!x & !y`. For example, if you wanted to find flights that weren't delayed (on arrival or departure) by more than two hours, you could use either of the following two filters:
 
@@ -164,7 +152,11 @@ Here are four more tips to help you use logical tests and Boolean operators in R
     filter(flights, arr_delay <= 120, dep_delay <= 120)
     ```
 
+###  
+
 3. As well as `&` and `|`, R also has `&&` and `||`. Don't use them with `filter()`! You'll learn when you should use them later.
+
+###  
 
 4. Whenever you start using complicated, multipart expressions in `filter()`, consider making them explicit variables instead. That makes it much easier to check your work. You'll learn how to create new variables shortly.
 
