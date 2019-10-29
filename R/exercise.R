@@ -286,7 +286,7 @@ evaluate_exercise <- function(exercise, envir) {
     # make the time limit error message a bit more friendly
     err <<- e$message
     pattern <- gettext("reached elapsed time limit", domain="R")
-    if (regexpr(pattern, error_message) != -1L) {
+    if (regexpr(pattern, err) != -1L) {
       err <<- timeout_error_message()
     }
   })
