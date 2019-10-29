@@ -1,6 +1,6 @@
 ---
 title: "Set Up"
-output: 
+output:
   learnr::tutorial:
     progressive: true
     allow_skip: true
@@ -103,7 +103,7 @@ quiz(caption = "Quiz - Install RStudio",
     allow_retry = TRUE
   ),
   question("Do you need to install R if you already have RStudio?",
-    answer("Yes.", correct = TRUE), 
+    answer("Yes.", correct = TRUE),
     answer("No.", message = "R does not come with RStudio; you need to install R separately.")
   )
 )
