@@ -13,3 +13,14 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+
+jobs:
+  include:
+    - stage: "Deploy"
+      name: "Deploy tutorials"
+      if: branch IN (master, travis, example_tutorials) AND repo = rstudio/learnr AND type = push
+      r: release
+      warnings_are_errors: false
+      script:
+      - Rscript scripts/deploy_on_travis.R
