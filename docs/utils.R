@@ -7,7 +7,15 @@ thumbnail <- function(title, img, href, source, caption = TRUE) {
       a(class = "thumbnail", title = title, href = href,
         img(src = img),
         div(class = ifelse(caption, "caption", ""),
-          ifelse(caption, title, "")
+          ifelse(caption, title, ""),
+          span(style="float:right;",
+            "(",
+            a(href=source,
+              "Source"
+            ),
+            ")"
+          )
+          <span style="float:right">(<a href="#">Source</a>)</span>
         )
       )
   )
@@ -72,5 +80,3 @@ examples <- function(caption = TRUE, showcaseOnly = FALSE) {
               caption = caption)
   }))
 }
-
-
