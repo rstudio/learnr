@@ -8,6 +8,8 @@ remotes::install_cran("rsconnect")
 # must install for packrat to work as expected
 remotes::install_github("rstudio/learnr", upgrade = "always", force = TRUE)
 
+remotes::install_cran("renv")
+remotes::install_cran(unique(renv::dependencies("inst/tutorials/")$Package))
 
 deploy_app <- function(
   app_dir,
