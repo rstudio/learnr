@@ -6,14 +6,14 @@
 
 - title: "Filtering Observations"
   img: images/tutorial-example-filter.png
-  href: https://learnr-examples.shinyapps.io/ex-manip-filter/
-  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-manip-filter/ex-data-manip-filter.Rmd
+  href: https://learnr-examples.shinyapps.io/ex-filter/
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd
   showcase: true
 
 - title: "Summarizing Data"
   img: images/tutorial-example-summarize.png
-  href: https://learnr-examples.shinyapps.io/ex-data-manip-summarise
-  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-manip-summarise/ex-data-manip-summarise.Rmd
+  href: https://learnr-examples.shinyapps.io/ex-data-summarise
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-summarise.Rmd
   showcase: true
 
 - title: "learnr: Quiz Questions"
