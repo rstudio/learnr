@@ -23,4 +23,4 @@ jobs:
       r: release
       warnings_are_errors: false
       script:
-      - Rscript scripts/deploy_on_travis.R
+      - Rscript tools/deploy_on_travis.R
