@@ -75,32 +75,46 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
     }
   }
 
-  is_correct <- TRUE
-  correct_messages <- c()
-  incorrect_messages <- c()
-
+  value_is_correct <- TRUE
   for (ans in question$answers) {
     ans_is_checked <- as.character(ans$option) %in% value
-    submission_is_correct <-
-      # is checked and is correct
-      (ans_is_checked && ans$correct) ||
-      # is not checked and is not correct
-      ((!ans_is_checked) && (!ans$correct))
-
-    if (submission_is_correct) {
-      # only append messages if the box was checked
-      if (ans_is_checked) {
-        correct_messages <- append_message(correct_messages, ans)
-      }
+    if (ans_is_checked && ans$correct) {
+      # answer is checked and is correct
+      # do nothing
+    } else if ((!ans_is_checked) && (!ans$correct)) {
+      # (answer is not checked) and (answer is not correct)
+      # do nothing
     } else {
-      is_correct <- FALSE
-      incorrect_messages <- append_message(incorrect_messages, ans)
+      value_is_correct <- FALSE
+      break
+    }
+  }
+
+  ret_messages <- c()
+
+  if (value_is_correct) {
+    # selected all correct answers. get all good messages as all correct answers were selected
+    for (ans in question$answers) {
+      if (ans$correct) {
+        ret_messages <- append_message(ret_messages, ans)
+      }
+    }
+
+  } else {
+    # not all correct answers selected. get all selected "wrong" messages
+    for (ans in question$answers) {
+      if (!ans$correct) {
+        ans_is_checked <- as.character(ans$option) %in% value
+        if (ans_is_checked) {
+          ret_messages <- append_message(ret_messages, ans)
+        }
+      }
     }
   }
 
   return(mark_as(
-    is_correct,
-    if (is_correct) correct_messages else incorrect_messages
+    value_is_correct,
+    ret_messages
   ))
 }
 
