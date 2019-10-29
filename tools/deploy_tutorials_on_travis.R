@@ -14,4 +14,4 @@ rsconnect::setAccountInfo(
 # deploy all tutorials
 # deploy using callr with `show = TRUE`
 #   to avoid "no output to travis console for 10 mins" error
-source("scripts/deploy_apps_on_local.R")
+source("tools/deploy_tutorials_on_local.R")

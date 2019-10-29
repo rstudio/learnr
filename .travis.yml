@@ -4,10 +4,10 @@ language: r
 sudo: false
 cache: packages
 
-r:
-  - oldrel
-  - release
-  - devel
+# r:
+#   - oldrel
+#   - release
+#   - devel
 
 notifications:
   email:
@@ -23,4 +23,4 @@ jobs:
       r: release
       warnings_are_errors: false
       script:
-      - Rscript tools/deploy_on_travis.R
+      - Rscript tools/deploy_tutorials_on_travis.R
