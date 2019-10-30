@@ -71,7 +71,7 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
     if (length(x) == 0) {
       message
     } else {
-      c(x, message)
+      tagList(x, message)
     }
   }
 

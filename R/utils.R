@@ -88,3 +88,9 @@ str_replace <- function(x, pattern, replacement) {
 str_remove <- function(x, pattern) {
   str_replace(x, pattern, "")
 }
+
+
+is_tags <- function(x) {
+  inherits(x, "shiny.tag") ||
+    inherits(x, "shiny.tag.list")
+}
