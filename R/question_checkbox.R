@@ -77,7 +77,7 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   value_is_correct <- TRUE
   for (ans in question$answers) {
-    ans_is_checked <- as.character(ans$option) %in% value
+    ans_is_checked <- ans$option %in% value
     if (ans_is_checked && ans$correct) {
       # answer is checked and is correct
       # do nothing
@@ -86,6 +86,7 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
       # do nothing
     } else {
       value_is_correct <- FALSE
+      # do not check remaining answers
       break
     }
   }
@@ -103,8 +104,10 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
   } else {
     # not all correct answers selected. get all selected "wrong" messages
     for (ans in question$answers) {
+      # get "wrong" answers
       if (!ans$correct) {
-        ans_is_checked <- as.character(ans$option) %in% value
+        # get selected answer
+        ans_is_checked <- ans$option %in% value
         if (ans_is_checked) {
           ret_messages <- append_message(ret_messages, ans)
         }
