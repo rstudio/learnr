@@ -1,6 +1,7 @@
 ```{r setup, include=FALSE}
 library(learnr)
-tutorial_options(exercise.checker = checkthat::check_exercise)
+
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
  
 ```{r exercise1-check}

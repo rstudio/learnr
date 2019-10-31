@@ -23,12 +23,17 @@ learnr 0.10.0 (unreleased)
 
 * When questions are tried again, the existing answer will remain, not forcing the user to restart from scratch. ([#270](https://github.com/rstudio/learnr/issues/270))
 
+* A version number has been added to `question_submission` events.  This will help when using custom storage methods. ([#291](https://github.com/rstudio/learnr/pull/291))
+
 
 ## Bug fixes
 
 * Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
 
 * Added a fail-safe to try-catch bad student code that would crash the tutorial. ([@adamblake](https://github.com/adamblake), [#229](https://github.com/rstudio/learnr/issues/229))
+
+* Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) ([#269](https://github.com/rstudio/learnr/issues/269))
+
 
 
 learnr 0.9.2
