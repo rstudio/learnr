@@ -265,4 +265,3 @@ json_rpc_input <- function(req) {
 json_rpc_result <- function(x) {
   jsonlite::toJSON(x, auto_unbox = TRUE, null = "null", force = TRUE)
 }
-

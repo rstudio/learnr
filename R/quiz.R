@@ -372,12 +372,15 @@ question_prerendered_chunk <- function(question, ...) {
 question_module_ui <- function(id) {
   ns <- NS(id)
   div(
-    "data-label" = as.character(id),
-    class = "tutorial-question",
-    uiOutput(ns("answer_container")),
-    uiOutput(ns("message_container")),
-    uiOutput(ns("action_button_container")),
-    withLearnrMathJax()
+    class = "panel panel-default",
+    div(
+      "data-label" = as.character(id),
+      class = "tutorial-question panel-body",
+      uiOutput(ns("answer_container")),
+      uiOutput(ns("message_container")),
+      uiOutput(ns("action_button_container")),
+      withLearnrMathJax()
+    )
   )
 }
 
