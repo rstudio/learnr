@@ -5,6 +5,7 @@ save_question_submission <- function(session, label, question, answer) {
     session = session,
     object_id = label,
     tutorial_object("question_submission", list(
+      api_version = 1,
       question = question,
       answer = answer
     ))
@@ -98,9 +99,11 @@ get_all_state_objects <- function(session, exercise_output = TRUE) {
 
   # strip output (the client doesn't need it and it's expensive to transmit)
   objects <- lapply(objects, function(object) {
-    if (object$type == "exercise_submission")
-      if (!exercise_output)
+    if (object$type == "exercise_submission") {
+      if (!exercise_output) {
         object$data["output"] <- list(NULL)
+      }
+    }
     object
   })
 
@@ -192,18 +195,44 @@ save_object <- function(session, object_id, data) {
   tutorial_storage(session)$save_object(tutorial_id, tutorial_version, user_id, object_id, data)
 }
 
+
+update_object <- function(object) {
+  if (is.null(object)) {
+    return(object)
+  }
+  if (identical(object$type, "question_submission")) {
+    api_version <- object$data$api_version
+    if (!is.null(api_version)) {
+      # if (identical(version, 1)) {
+      #   # do nothing
+      # }
+    } else {
+      # as of v0.10.0...
+      # upgrade from old storage format to new storage format
+      # rename answers -> answer
+      object$data$answer <- object$data$answers
+      object$data$answers <- NULL
+      # do not record correct information
+      object$data$correct <- NULL
+    }
+  }
+  object
+}
+
 get_object <- function(session, object_id) {
   tutorial_id <- read_request(session, "tutorial.tutorial_id")
   tutorial_version <- read_request(session, "tutorial.tutorial_version")
   user_id <- read_request(session, "tutorial.user_id")
-  tutorial_storage(session)$get_object(tutorial_id, tutorial_version, user_id, object_id)
+  object <- tutorial_storage(session)$get_object(tutorial_id, tutorial_version, user_id, object_id)
+  update_object(object)
 }
 
 get_objects <- function(session) {
   tutorial_id <- read_request(session, "tutorial.tutorial_id")
   tutorial_version <- read_request(session, "tutorial.tutorial_version")
   user_id <- read_request(session, "tutorial.user_id")
-  tutorial_storage(session)$get_objects(tutorial_id, tutorial_version, user_id)
+  objects <- tutorial_storage(session)$get_objects(tutorial_id, tutorial_version, user_id)
+  lapply(objects, update_object)
 }
 
 remove_all_objects <- function(session) {
