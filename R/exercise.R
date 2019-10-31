@@ -238,30 +238,35 @@ evaluate_exercise <- function(exercise, envir) {
   #   arguments, the second argument indicates whether the value is visible.
   last_value <- NULL
   last_value_is_visible <- TRUE
-  default_output_handler <- evaluate::new_output_handler()
-  has_visible_arg <- length(formals(default_output_handler$value)) > 1
-  learnr_output_handler <- evaluate::new_output_handler(value = function(x, visible) {
-    last_value <<- x
-    last_value_is_visible <<- visible
-    if (has_visible_arg) {
-      default_output_handler$value(x, visible)
-    } else {
-      if (visible) {
-        default_output_handler$value(x)
-      } else {
-        invisible()
-      }
-    }
-  })
 
   evaluate_result <- NULL
   knitr_options$knit_hooks$evaluate = function(
     code, envir, ...,
-    output_handler # set to avoid name collision
+    output_handler # knitr's output_handler
   ) {
+    has_visible_arg <- length(formals(output_handler$value)) > 1
+
+    # wrap `output_handler$value` to be able to capture the `last_value`
+    # while maintaining the original functionality of `output_handler$value`
+    output_handler_value_fn <- output_handler$value
+    output_handler$value <- function(x, visible) {
+      last_value <<- x
+      last_value_is_visible <<- visible
+
+      if (has_visible_arg) {
+        output_handler_value_fn(x, visible)
+      } else {
+        if (visible) {
+          output_handler_value_fn(x)
+        } else {
+          invisible()
+        }
+      }
+    }
+
     evaluate_result <<- evaluate::evaluate(
       code, envir, ...,
-      output_handler = learnr_output_handler
+      output_handler = output_handler
     )
     evaluate_result
   }
