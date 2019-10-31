@@ -226,6 +226,10 @@ question <- function(text,
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
+  if (!is_tags(message)) {
+    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
+  }
+
   ret <- list(
     id = random_answer_id(),
     option = as.character(text), # character representation
@@ -244,6 +248,9 @@ answer <- function(text, correct = FALSE, message = NULL) {
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
   if (inherits(text, "html")) {
+    return(text)
+  }
+  if (is_tags(text)) {
     return(text)
   }
   if (!is.null(text)) {
@@ -319,7 +326,7 @@ knit_print.tutorial_quiz <- function(x, ...) {
   quiz <- x
   caption_tag <- if (!is.null(quiz$caption)) {
     list(knitr::knit_print(
-      tags$div(class = "panel-heading tutorial-panel-heading", quiz$caption)
+      tags$div(class = "panel-heading tutorial-quiz-title", quiz$caption)
     ))
   }
 
@@ -369,7 +376,8 @@ question_module_ui <- function(id) {
     class = "tutorial-question",
     uiOutput(ns("answer_container")),
     uiOutput(ns("message_container")),
-    uiOutput(ns("action_button_container"))
+    uiOutput(ns("action_button_container")),
+    withLearnrMathJax()
   )
 }
 
@@ -483,11 +491,13 @@ question_module_server_impl <- function(
   output$message_container <- renderUI({
     req(!is.null(is_correct_info()), !is.null(is_done()))
 
-    question_messages(
-      question,
-      messages = is_correct_info()$messages,
-      is_correct = is_correct_info()$correct,
-      is_done = is_done()
+    withLearnrMathJax(
+      question_messages(
+        question,
+        messages = is_correct_info()$messages,
+        is_correct = is_correct_info()$correct,
+        is_done = is_done()
+      )
     )
   })
 
@@ -498,7 +508,9 @@ question_module_server_impl <- function(
         # if there is an existing input$answer, display it.
         # if there is no answer... init with NULL
         # Do not re-render the UI for every input$answer change
-        question_ui_initialize(question, isolate(input$answer))
+        withLearnrMathJax(
+          question_ui_initialize(question, isolate(input$answer))
+        )
       )
     }
 
@@ -513,7 +525,9 @@ question_module_server_impl <- function(
       # if the question is 'done', display the final input ui and disable everything
 
       return(
-        question_ui_completed(question, submitted_answer())
+        withLearnrMathJax(
+          question_ui_completed(question, submitted_answer())
+        )
       )
     }
 
@@ -521,7 +535,9 @@ question_module_server_impl <- function(
     #   until it is reset with the try again button
 
     return(
-      question_ui_try_again(question, submitted_answer())
+      withLearnrMathJax(
+        question_ui_try_again(question, submitted_answer())
+      )
     )
   })
 
@@ -607,14 +623,20 @@ question_messages <- function(question, messages, is_correct, is_done) {
       }
     }
 
-  if (!is.null(messages) && !is.list(messages)) {
-    # turn vectors into lists
-    messages <- as.list(messages)
+  if (!is.null(messages)) {
+    if (!is.list(messages)) {
+      # turn vectors into lists
+      messages <- tagList(messages)
+    }
   }
 
   # display the default messages first
   if (!is.null(default_message)) {
-    messages <- append(list(default_message), messages)
+    if (!is.null(messages)) {
+      messages <- tagList(default_message, messages)
+    } else {
+      messages <- default_message
+    }
   }
 
   # get regular message
@@ -628,7 +650,7 @@ question_messages <- function(question, messages, is_correct, is_done) {
       all_messages <- replicate(length(messages) * 2 - 1, {break_tag}, simplify = FALSE)
       # store in all _odd_ positions
       all_messages[(seq_along(messages) * 2) - 1] <- messages
-      messages <- all_messages
+      messages <- tagList(all_messages)
     }
     message_alert <- tags$div(
       class = paste0("alert ", alert_class),
@@ -666,4 +688,18 @@ question_messages <- function(question, messages, is_correct, is_done) {
   } else {
     tags$div(message_alert, always_message_alert, post_alert)
   }
+}
+
+
+
+
+
+withLearnrMathJax <- function(...) {
+  htmltools::tagList(
+    ...,
+    htmltools::tags$script(
+      # only attempt function if it exists
+      htmltools::HTML("if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()")
+    )
+  )
 }
