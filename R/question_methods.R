@@ -137,7 +137,6 @@ incorrect <- function(messages = NULL) {
 #' @export
 mark_as <- function(correct, messages = NULL) {
   checkmate::assert_logical(correct, len = 1, null.ok = FALSE, any.missing = FALSE)
-  checkmate::assert_character(messages, min.len = 0, null.ok = TRUE, any.missing = FALSE)
   ret <- list(
     correct = correct,
     messages = messages

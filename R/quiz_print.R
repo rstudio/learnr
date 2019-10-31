@@ -66,8 +66,8 @@ format.tutorial_question <- function(x, ..., spacing = "") {
     spacing, "    correct: \"", x$messages$correct, "\"\n",
     spacing, "    incorrect: \"", x$messages$incorrect, "\"",
     if (x$allow_retry) paste0("\n", spacing, "    try_again: \"", x$messages$try_again, "\""),
-    if (!is.null(x$message)) paste0("\n", spacing, "    message: \"", x$messages$message, "\""),
-    if (!is.null(x$post_message)) paste0("\n", spacing, "    message: \"", x$messages$post_message, "\""),
+    if (!is.null(x$messages$message)) paste0("\n", spacing, "    message: \"", x$messages$message, "\""),
+    if (!is.null(x$messages$post_message)) paste0("\n", spacing, "    message: \"", x$messages$post_message, "\""),
     options
   )
 }

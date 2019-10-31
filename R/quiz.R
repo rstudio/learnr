@@ -226,6 +226,10 @@ question <- function(text,
 #' @rdname quiz
 #' @export
 answer <- function(text, correct = FALSE, message = NULL) {
+  if (!is_tags(message)) {
+    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
+  }
+
   ret <- list(
     id = random_answer_id(),
     option = as.character(text), # character representation
@@ -244,6 +248,9 @@ answer <- function(text, correct = FALSE, message = NULL) {
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
   if (inherits(text, "html")) {
+    return(text)
+  }
+  if (is_tags(text)) {
     return(text)
   }
   if (!is.null(text)) {
@@ -616,14 +623,20 @@ question_messages <- function(question, messages, is_correct, is_done) {
       }
     }
 
-  if (!is.null(messages) && !is.list(messages)) {
-    # turn vectors into lists
-    messages <- as.list(messages)
+  if (!is.null(messages)) {
+    if (!is.list(messages)) {
+      # turn vectors into lists
+      messages <- tagList(messages)
+    }
   }
 
   # display the default messages first
   if (!is.null(default_message)) {
-    messages <- append(list(default_message), messages)
+    if (!is.null(messages)) {
+      messages <- tagList(default_message, messages)
+    } else {
+      messages <- default_message
+    }
   }
 
   # get regular message
@@ -637,7 +650,7 @@ question_messages <- function(question, messages, is_correct, is_done) {
       all_messages <- replicate(length(messages) * 2 - 1, {break_tag}, simplify = FALSE)
       # store in all _odd_ positions
       all_messages[(seq_along(messages) * 2) - 1] <- messages
-      messages <- all_messages
+      messages <- tagList(all_messages)
     }
     message_alert <- tags$div(
       class = paste0("alert ", alert_class),
