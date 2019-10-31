@@ -111,6 +111,13 @@ Tutorial.prototype.$idSelector = function(id) {
   return "#" + id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
 };
 
+// static method to trigger MathJax
+Tutorial.triggerMathJax = function() {
+  if (window.MathJax) {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  }
+}
+
 
 /* Init callbacks */
 Tutorial.prototype.$initCallbacks = $.Callbacks();
