@@ -11,25 +11,25 @@
   showcase: true
 
 - title: "Summarizing Data"
-  img: images/tutorial-ex-data-summarize.png
+  img: images/tutorial-ex-data-summarise.png
   href: https://learnr-examples.shinyapps.io/ex-data-summarise
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-summarise.Rmd
   showcase: true
 
 - title: "learnr: Quiz Questions"
-  img: images/tutorial-example-quiz-question.png
+  img: images/tutorial-quiz_question.png
   href: https://learnr-examples.shinyapps.io/quiz_question/
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/quiz_question/quiz_question.Rmd
-  showcase: true
+  showcase: false
 
 - title: "learnr: slidy layout"
-  img: images/tutorial-example-slidy.png
+  img: images/tutorial-slidy.png
   href: https://learnr-examples.shinyapps.io/slidy/
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/slidy/slidy.Rmd
-  showcase: true
+  showcase: false
 
 - title: "sortable: Ranking Questions"
-  img: images/tutorial-example-sortable.png
+  img: images/tutorial-external-sortable.png
   href: https://andrie-de-vries.shinyapps.io/sortable_tutorial_question_rank/
   source: https://github.com/rstudio/sortable/tree/master/inst/tutorials/question_rank/question_rank.Rmd
-  showcase: true
+  showcase: false
