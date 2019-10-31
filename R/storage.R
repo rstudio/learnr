@@ -197,7 +197,10 @@ save_object <- function(session, object_id, data) {
 
 
 update_object <- function(object) {
-  if (object$type == "question_submission") {
+  if (is.null(object)) {
+    return(object)
+  }
+  if (identical(object$type, "question_submission")) {
     api_version <- object$data$api_version
     if (!is.null(api_version)) {
       # if (identical(version, 1)) {
