@@ -12,3 +12,6 @@ issues
 
 # html tutorial output
 inst/tutorials/*/*.html
+
+# deployment output
+rsconnect/

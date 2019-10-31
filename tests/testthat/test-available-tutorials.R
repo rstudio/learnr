@@ -19,9 +19,14 @@ test_that("Tutorial names are retrieved", {
     print(available_tutorials("learnr")),
 "Available tutorials:
 * learnr
-  - hello         : \"Hello, Tutorial!\"
-  - quiz_question : \"Tutorial Quiz Questions in `learnr`\"
-  - slidy         : \"Slidly demo\""
+  - ex-data-basics    : \"Data basics\"
+  - ex-data-filter    : \"Filter observations\"
+  - ex-data-mutate    : \"Create new variables\"
+  - ex-data-summarise : \"Summarise Tables\"
+  - ex-setup-r        : \"Set Up\"
+  - hello             : \"Hello, Tutorial!\"
+  - quiz_question     : \"Tutorial Quiz Questions in `learnr`\"
+  - slidy             : \"Slidly demo\""
   )
 
 })
