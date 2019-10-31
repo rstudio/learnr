@@ -24,6 +24,20 @@
   font-weight: 500;
   width: 100%;
 }
+.tutorial-quiz-title {
+  font-weight: 300;
+  font-size: 18px;
+  padding-top: 6px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 8px;
+  width: 100%;
+}
+
+.tutorial-question {
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
 
 .tutorial-exercise-input .btn-xs {
   margin-right: 0;
@@ -41,7 +55,7 @@
 }
 
 .tutorial-exercise-input .btn-tutorial-solution {
-  margin-left: 15px;  
+  margin-left: 15px;
 }
 
 .tutorial-exercise-input .btn-tutorial-next-hint {
@@ -103,5 +117,3 @@
   height: 100%;
   border: solid 1px #cccccc;
 }
-
-

@@ -326,7 +326,7 @@ knit_print.tutorial_quiz <- function(x, ...) {
   quiz <- x
   caption_tag <- if (!is.null(quiz$caption)) {
     list(knitr::knit_print(
-      tags$div(class = "panel-heading tutorial-panel-heading", quiz$caption)
+      tags$div(class = "panel-heading tutorial-quiz-title", quiz$caption)
     ))
   }
 
