@@ -32,6 +32,9 @@ learnr 0.10.0 (unreleased)
 
 * Added a fail-safe to try-catch bad student code that would crash the tutorial. ([@adamblake](https://github.com/adamblake), [#229](https://github.com/rstudio/learnr/issues/229))
 
+* Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) ([#269](https://github.com/rstudio/learnr/issues/269))
+
+
 
 learnr 0.9.2
 ===========
