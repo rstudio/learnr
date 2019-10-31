@@ -19,7 +19,7 @@ jobs:
   include:
     - stage: "Deploy"
       name: "Deploy tutorials"
-      if: branch IN (master, travis, example_tutorials) AND repo = rstudio/learnr AND type = push
+      if: branch IN (master, travis) AND repo = rstudio/learnr AND type = push
       r: release
       warnings_are_errors: false
       r_github_packages:
