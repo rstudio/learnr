@@ -4,10 +4,11 @@ library(htmltools)
 # Generate HTML for a 4-wide bootstrap thumbnail
 thumbnail <- function(title, img, href, source, caption = TRUE) {
   div(class = "col-sm-4",
-      a(class = "thumbnail", title = title, href = href,
-        img(src = img),
-        div(class = ifelse(caption, "caption", ""),
-          ifelse(caption, title, ""),
+    a(class = "thumbnail", title = title, href = href,
+      img(src = img),
+      div(class = ifelse(caption, "caption", ""),
+        ifelse(caption, title, ""),
+        htmltools::tags$object(
           span(style="float:right;",
             "(",
             a(href=source,
@@ -15,9 +16,9 @@ thumbnail <- function(title, img, href, source, caption = TRUE) {
             ),
             ")"
           )
-          <span style="float:right">(<a href="#">Source</a>)</span>
         )
       )
+    )
   )
 }
 
