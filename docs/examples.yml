@@ -1,17 +1,17 @@
 - title: "Setting Up R"
-  img: images/tutorial-example-setup.png
+  img: images/tutorial-ex-setup-r.png
   href: https://learnr-examples.shinyapps.io/ex-setup-r/
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd
   showcase: true
 
 - title: "Filtering Observations"
-  img: images/tutorial-example-filter.png
-  href: https://learnr-examples.shinyapps.io/ex-filter/
+  img: images/tutorial-ex-data-filter.png
+  href: https://learnr-examples.shinyapps.io/ex-data-filter/
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd
   showcase: true
 
 - title: "Summarizing Data"
-  img: images/tutorial-example-summarize.png
+  img: images/tutorial-ex-data-summarize.png
   href: https://learnr-examples.shinyapps.io/ex-data-summarise
   source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-summarise.Rmd
   showcase: true
