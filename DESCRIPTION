@@ -35,10 +35,9 @@ Imports:
     packrat (>= 0.5.0-7),
     ellipsis (>= 0.2.0.1),
     checkmate,
-    renv
+    renv (>= 0.8.0)
 Remotes:
-  rstudio/packrat,
-  rstudio/renv
+  rstudio/packrat
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
