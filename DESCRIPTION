@@ -1,7 +1,7 @@
 Package: learnr
 Type: Package
 Title: Interactive Tutorials for R
-Version: 0.9.2.9006
+Version: 0.10.0
 Authors@R: c(
   person("Barret", "Schloerke", role = c("aut", "cre"), email = "barret@rstudio.com"),
   person("JJ", "Allaire", role = "aut", email = "jj@rstudio.com"),
