@@ -25,6 +25,8 @@ learnr 0.10.0 (unreleased)
 
 * A version number has been added to `question_submission` events.  This will help when using custom storage methods. ([#291](https://github.com/rstudio/learnr/pull/291))
 
+* If a quiz question has not been loaded within 5 seconds, a message asking the user to close other tutorial tabs with the same domain. ([#302](https://github.com/rstudio/learnr/pull/302))
+
 
 ## Bug fixes
 
