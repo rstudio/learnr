@@ -69,7 +69,7 @@
 #'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
 #'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
 #'   message alongside the \code{message} message value.
-#' @param loading Loading text to display as a placeholder while the question is loaded
+#' @param loading Loading text to display as a placeholder while the question is loaded.  If the quiz question does not load after the tutorial webpage loads, please close other tutorial browser tabs with the same domain until the quiz question is displayed.
 #' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
 #' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
 #' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
@@ -139,7 +139,7 @@ question <- function(text,
                      try_again = incorrect,
                      message = NULL,
                      post_message = NULL,
-                     loading = c("**Loading:** ", text, "<br/><br/><br/>"),
+                     loading = c("**Loading:** ", text),
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
                      allow_retry = FALSE,
@@ -389,7 +389,21 @@ question_module_server <- function(
   question
 ) {
 
-  output$answer_container <- renderUI({ div(class="loading", question$loading) })
+  output$answer_container <- renderUI({
+    tagList(
+      div(class="loading", question$loading),
+      tags$br(),
+      # add a div to display message that quiz data can not be loaded.
+      # (this should always be done until the browser indexeddb connection can be closed at will)
+      div(class="close_other_tabs", HTML("&nbsp;")),
+      # if questions are not displayed within 5 seconds, notify user to close other tabs
+      tags$script(HTML('
+        setTimeout(function() {
+          $(".close_other_tabs").html("(Close other tutorial tabs to load quiz question)");
+        }, 5 * 1000);
+      '))
+    )
+  })
 
   observeEvent(
     req(session$userData$learnr_state() == "restored"),

@@ -12,9 +12,9 @@ question(text, ..., type = c("auto", "single", "multiple",
   "learnr_radio", "learnr_checkbox", "learnr_text"),
   correct = "Correct!", incorrect = "Incorrect",
   try_again = incorrect, message = NULL, post_message = NULL,
-  loading = c("**Loading:** ", text, "<br/><br/><br/>"),
-  submit_button = "Submit Answer", try_again_button = "Try Again",
-  allow_retry = FALSE, random_answer_order = FALSE, options = list())
+  loading = c("**Loading:** ", text), submit_button = "Submit Answer",
+  try_again_button = "Try Again", allow_retry = FALSE,
+  random_answer_order = FALSE, options = list())
 
 answer(text, correct = FALSE, message = NULL)
 }
@@ -49,7 +49,7 @@ If \code{allow_retry} is \code{TRUE}, this message will only be displayed after 
 correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
 message alongside the \code{message} message value.}
 
-\item{loading}{Loading text to display as a placeholder while the question is loaded}
+\item{loading}{Loading text to display as a placeholder while the question is loaded.  If the quiz question does not load after the tutorial webpage loads, please close other tutorial browser tabs with the same domain until the quiz question is displayed.}
 
 \item{submit_button}{Label for the submit button. Defaults to \code{"Submit Answer"}}
 
