@@ -34,6 +34,8 @@ learnr 0.10.0 (unreleased)
 
 * Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) ([#269](https://github.com/rstudio/learnr/issues/269))
 
+* Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. [#303](https://github.com/rstudio/learnr/pull/303)
+
 
 
 learnr 0.9.2
