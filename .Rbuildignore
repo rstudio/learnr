@@ -16,3 +16,4 @@
 rsconnect/
 ^\.github/
 ^inst/tutorials/.*\.html$
+^LICENSE\.md$
