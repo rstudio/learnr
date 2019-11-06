@@ -1510,7 +1510,7 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
       });
   });
 
-  // overwrite prototype to clear out all key/vals
+  // mask prototype to clear out all key/vals
   thiz.$removeState = function (completed) {
     var idbStoreClear = new window.idbKeyval.Store(
       dbName,
@@ -1549,7 +1549,7 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
           return ret;
         });
     })
-    .then(function (objs) {
+    .then(function(objs) {
       success(objs);
     })
     .catch(function(err) {
