@@ -1,3 +1,9 @@
+/*!
+    idb-keyval -- super-simple-small promise-based keyval store implemented with IndexedDB
+    Version 3.2.0
+    https: //github.com/jakearchibald/idb-keyval
+    (c) 2016 Jake Archibald, Apache License 2.0
+*/
 var idbKeyval = (function (exports) {
   'use strict';
 
