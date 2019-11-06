@@ -46,13 +46,13 @@ html_dependency_src <- function(...) {
   }
 }
 
-
-localforage_html_dependency <- function() {
+idb_html_dependency <- function() {
   htmltools::htmlDependency(
-    name = "localforage",
-    version = "1.5",
-    src = system.file("lib/localforage", package = "learnr"),
-    script = "localforage.min.js"
+    name = "idb-keyvalue",
+    version = "3.2.0",
+    src = system.file("lib/idb-keyval", package = "learnr"),
+    script = "idb-keyval-iife-compat.min.js",
+    all_files = FALSE
   )
 }
 
