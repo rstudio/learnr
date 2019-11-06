@@ -54,7 +54,7 @@ devtools::install_github("rstudio/packrat")
 
 #### IE / Edge Support
 
-`learnr` does not support IE11 and Edge.
+`learnr` does not actively support IE11 and Edge.
 
   - [IE11 not receiving major
     updates](https://support.microsoft.com/en-us/help/17454/lifecycle-faq-internet-explorer),
