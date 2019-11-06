@@ -275,7 +275,7 @@ evaluate_exercise <- function(exercise, envir) {
     pandoc = NULL,
     base_format = rmarkdown::html_fragment(
                     df_print = exercise$options$exercise.df_print,
-                    pandoc_args = c("--metadata", "pagetitle=PREVIEW")
+                    pandoc_args = c("--metadata", "title=PREVIEW")
                   )
   )
 
