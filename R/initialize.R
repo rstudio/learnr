@@ -19,7 +19,7 @@ initialize_tutorial <- function() {
       rmarkdown::html_dependency_jquery(),
       rmarkdown::html_dependency_font_awesome(),
       bootbox_html_dependency(),
-      localforage_html_dependency(),
+      idb_html_dependency(),
       tutorial_html_dependency(),
       tutorial_autocompletion_html_dependency(),
       tutorial_diagnostics_html_dependency()
@@ -45,4 +45,3 @@ dput_to_string <- function(x) {
   dput(x, file = conn)
   paste0(textConnectionValue(conn), collapse = "")
 }
-
