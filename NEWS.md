@@ -25,6 +25,7 @@ learnr 0.10.0 (unreleased)
 
 * A version number has been added to `question_submission` events.  This will help when using custom storage methods. ([#291](https://github.com/rstudio/learnr/pull/291))
 
+* Tutorial storage on the browser is now executed directly on `indexedDB` using `idb-keyval` (dropping `localforage`). ([#305](https://github.com/rstudio/learnr/pull/305))
 
 ## Bug fixes
 
