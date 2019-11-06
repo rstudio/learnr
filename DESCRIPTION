@@ -10,7 +10,7 @@ Authors@R: c(
   person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
   person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),
   person("Nick", "Payne", role = c("ctb", "cph"), comment = "Bootbox library"),
-  person(family = "Mozilla", role = c("ctb", "cph"), comment = "localforage library")
+  person("Jake", "Archibald", role = c("ctb", "cph"), comment = "idb-keyval library")
   )
 Description: Create interactive tutorials using R Markdown. Use a combination
   of narrative, figures, videos, exercises, and quizzes to create self-paced
