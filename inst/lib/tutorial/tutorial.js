@@ -1470,22 +1470,28 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
     })
   }
 
-  // all interactions must:
+  // tl/dr; Do not keep indexedDB connections around
+
+  // All interactions must:
   //   1. open the object store.
   //   2. do the transaction on the object store.
   //   3. close the object store.
-
   // Known store interactions:
   // * set answer
   // * clear all existing keys
   // * get all exising keys
 
-  // tl/dr; Do not keep indexeddb connections around
-  // Problem: If a new object store is to be added, this can only be done by opening a db connection with a higher version.
-  //   The connection can not be opened until all other tabs have released their connection.
-  // By using the indexeddb in this manor, all interactions will not be blocking all other tabs if a new object store is added.
-  // If a tab connects, reads, disconnects... Then another tab bumps the version... Then, when the original tab wants to read the db, it can connect (db-version-less) and not have any issues
-  // indexeddb db version management is handled within idb-keyval
+  // Problem (if connections are kept alive):
+  //   * If a new object store is to be added, this can only be done by opening a db connection with a higher version.
+  //   * The "higher version" connection can not be opened until all other tabs have released their "older version" connection.
+  // Approach:
+  //   * By using the indexedDB in a "open, do, close" manor, all interactions will not be blocking all other tabs if a new object store is added.
+  // Example:
+  //   * If a tab connects, reads, disconnects...
+  //   * Then another tab bumps the version...
+  //   * Then, when the original tab wants to read the db, it can connect (db-version-less) and not have any issues
+  // Notes:
+  //   * indexedDB db version management is handled within idb-keyval
 
   // custom message handler to update store
   Shiny.addCustomMessageHandler("tutorial.store_object", function (message) {
