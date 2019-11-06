@@ -1448,38 +1448,113 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
 
   // alias this
   var thiz = this;
-  
+
+  if (!(typeof window.Promise != "undefined" && typeof window.indexedDB != "undefined")) {
+    // can not do db stuff.
+    // return early and do not create hooks
+    success({});
+    return;
+  }
+
   // initialize data store. note that we simply ignore errors for interactions
   // with storage since the entire behavior is a nice-to-have (i.e. we automatically
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
-  thiz.$store = window.localforage.createInstance({ 
-    name: "LearnrTutorialProgress", 
-    storeName: "Store_" + window.btoa(identifiers.tutorial_id + 
-                                      identifiers.tutorial_version)
-  });
-  
-  var objects = {};
-  if (thiz.$store) {
-  
-    // custom message handler to update store
-    Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
-      thiz.$store.setItem(message.id, message.data);
-    });
-    
-    // retreive the currently stored objects then pass them down to restore_state
-    thiz.$store.iterate(function(value, key, iterationNumber) {
-      objects = objects || {};
-      objects[key] = value;
-    }).then(function() {
-      success(objects);
-    }).catch(function(err) {
-      console.log(err);
-      success(objects);
-    });
-  } else {
-    success(objects);
+  var dbName = "LearnrTutorialProgress";
+  // var storeName = "Store_" + btoa(Math.random()).slice(0, 4);
+  var storeName = "Store_" + window.btoa(identifiers.tutorial_id + identifiers.tutorial_version);
+
+  var closeStore = function (store) {
+    store._dbp.then(function (db) {
+      db.close();
+    })
   }
+
+  // all interactions must:
+  //   1. open the object store.
+  //   2. do the transaction on the object store.
+  //   3. close the object store.
+
+  // Known store interactions:
+  // * set answer
+  // * clear all existing keys
+  // * get all exising keys
+
+  // tl/dr; Do not keep indexeddb connections around
+  // Problem: If a new object store is to be added, this can only be done by opening a db connection with a higher version.
+  //   The connection can not be opened until all other tabs have released their connection.
+  // By using the indexeddb in this manor, all interactions will not be blocking all other tabs if a new object store is added.
+  // If a tab connects, reads, disconnects... Then another tab bumps the version... Then, when the original tab wants to read the db, it can connect (db-version-less) and not have any issues
+  // indexeddb db version management is handled within idb-keyval
+
+  // custom message handler to update store
+  Shiny.addCustomMessageHandler("tutorial.store_object", function (message) {
+    var idbStoreSet = new window.idbKeyval.Store(
+      dbName,
+      storeName
+    );
+
+    window.idbKeyval
+      .set(message.id, message.data, idbStoreSet)
+      .catch(function (err) {
+        console.error(err);
+      })
+      .finally(function() {
+        closeStore(idbStoreSet);
+      });
+  });
+
+  // overwrite prototype to clear out all key/vals
+  thiz.$removeState = function (completed) {
+    var idbStoreClear = new window.idbKeyval.Store(
+      dbName,
+      storeName
+    );
+
+    window.idbKeyval.clear(idbStoreClear)
+      .then(completed)
+      .catch(function (err) {
+        console.error(err);
+        completed();
+      })
+      .finally(function () {
+        closeStore(idbStoreClear);
+      });
+  }
+
+
+  // retreive the currently stored objects then pass them down to restore_state
+  var idbStoreGet = new window.idbKeyval.Store(
+    dbName,
+    storeName
+  );
+  window.idbKeyval
+    .keys(idbStoreGet)
+    .then(function(keys) {
+      var getPromises = keys.map(function(key) {
+        return window.idbKeyval.get(key, idbStoreGet);
+      });
+      return Promise.all(getPromises)
+        .then(function(vals) {
+          var ret = {}, i;
+          for (i = 0; i < keys.length; i++) {
+            ret[keys[i]] = vals[i];
+          }
+          return ret;
+        });
+    })
+    .then(function (objs) {
+      success(objs);
+    })
+    .catch(function(err) {
+      console.error(err);
+      success({});
+    })
+    // use finally to make sure it attempts to close
+    .finally(function() {
+      closeStore(idbStoreGet);
+    });
+
 };
 
 
@@ -1558,16 +1633,7 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
 
 Tutorial.prototype.$removeState = function(completed) {
-  if (this.$store) {
-    this.$store.clear()
-      .then(completed)
-      .catch(function(err) {
-        console.log(err);
-        completed();
-      });
-  } else {
-    completed();
-  }
+  completed();
 };
 
 Tutorial.prototype.$initializeClientState = function(client_state) {
