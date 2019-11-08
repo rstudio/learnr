@@ -35,7 +35,7 @@
 
 #' Tutorial quiz questions
 #'
-#' Add interative quiz questions to a tutorial.
+#' Add interactive quiz questions to a tutorial.
 #' Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
 #' There are three default types of quiz questions:
 #' \describe{
