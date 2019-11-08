@@ -3,36 +3,6 @@
 # X - Allow for null input$answer
   ## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
 
-# √-barret revert to old params names in question
-  ## or deprecate old names and use new names
-  ## double check answer params
-# √-barret gut unused R and JS methods from old JS quiz hooks
-
-# √ TODO-barret question / quiz print method
-  ## If a quiz is printed in the console... should it open in the browser or print a list?
-  ## either way it should be document or fixed
-# TODO-barret Documentation
-  # TODO-barret re-render tutorials
-  # TODO-barret re-render documentation pictures
-  # √-barret A new question type (“text”)
-  # TODO-barret You can now extend learnr with your own question types
-  # TODO-barret Questions are now Shiny apps
-    # TODO-barret print() behavior is different from before
-# TODO-barret R CMD check/rev-dep check
-# TODO-barret QA pass (check existing education primers)
-
-
-# √-barret make the question div a class and data-label combo to be found at render, like an exercise
-# √-barret validate that chunk lables do not have unwanted characters to function better on JS side
-# √-barret chunk labels are now NS ids
-# √-barret use the new label in js to attach the element right away, regardless if it is ready or not
-  ## this allows js to function regardless of state of the quiz question
-  ## this allows for sections to be completed regardless of what is returned from the user
-
-
-
-
-
 #' Tutorial quiz questions
 #'
 #' Add interactive quiz questions to a tutorial.
