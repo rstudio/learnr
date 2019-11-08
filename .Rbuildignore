@@ -18,3 +18,4 @@ rsconnect/
 ^inst/tutorials/.*\.html$
 ^revdep$
 ^LICENSE\.md$
+^cran-comments\.md$
