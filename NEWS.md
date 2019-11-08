@@ -11,7 +11,7 @@ learnr 0.10.0
 
 * Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument. ([#228](https://github.com/rstudio/learnr/pull/228))
 
-* Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#213](https://github.com/rstudio/learnr/issues/213))
+* Added tabset support. ([#219](https://github.com/rstudio/learnr/pull/219) [#212](https://github.com/rstudio/learnr/issues/212))
 
 * Question width will expand to the container width. ([#222](https://github.com/rstudio/learnr/pull/222))
 
