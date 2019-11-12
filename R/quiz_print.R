@@ -1,9 +1,9 @@
-#' Formatting and printing quizes, questions, and answers
+#' Formatting and printing quizzes, questions, and answers
 #'
 #' Notes:
 #' \itemize{
 #'   \item If custom question types are created, custom s3 formating methods may be implemented as well.
-#'   \item Due to the shiny runtime of questions, a text representation of quizes, questions, and answers will be presented.
+#'   \item Due to the shiny runtime of questions, a text representation of quizzes, questions, and answers will be presented.
 #' }
 #'
 #' @param x object of interest

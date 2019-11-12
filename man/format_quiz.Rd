@@ -7,7 +7,7 @@
 \alias{print.tutorial_question}
 \alias{print.tutorial_question_answer}
 \alias{print.tutorial_quiz}
-\title{Formatting and printing quizes, questions, and answers}
+\title{Formatting and printing quizzes, questions, and answers}
 \usage{
 \method{format}{tutorial_question_answer}(x, ..., spacing = "")
 
@@ -32,7 +32,7 @@
 Notes:
 \itemize{
 \item If custom question types are created, custom s3 formating methods may be implemented as well.
-\item Due to the shiny runtime of questions, a text representation of quizes, questions, and answers will be presented.
+\item Due to the shiny runtime of questions, a text representation of quizzes, questions, and answers will be presented.
 }
 }
 \examples{
