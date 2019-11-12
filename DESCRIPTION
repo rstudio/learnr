@@ -1,7 +1,7 @@
 Package: learnr
 Type: Package
 Title: Interactive Tutorials for R
-Version: 0.10.0
+Version: 0.10.0.9000
 Authors@R: c(
   person("Barret", "Schloerke", role = c("aut", "cre"), email = "barret@rstudio.com",
         comment = c(ORCID = "0000-0001-9986-114X")),
@@ -35,7 +35,10 @@ Imports:
     rmarkdown (>= 1.12.0),
     ellipsis (>= 0.2.0.1),
     checkmate,
-    renv (>= 0.8.0)
+    renv (>= 0.8.0),
+    packrat (>= 0.5.0-7)
+Remotes:
+  rstudio/packrat
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
