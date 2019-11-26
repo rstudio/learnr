@@ -171,12 +171,13 @@ evaluate_exercise <- function(exercise, envir) {
   }
 
   # create temp dir for execution (remove on exit)
-  exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  # exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  exercise_dir <- 'learnr-debug'
   dir.create(exercise_dir)
   oldwd <- setwd(exercise_dir)
   on.exit({
     setwd(oldwd)
-    unlink(exercise_dir, recursive = TRUE)
+    # unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
 
   # hack the pager function so that we can print help
