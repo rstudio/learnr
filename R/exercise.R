@@ -215,7 +215,6 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(engine='python')
 
 
-
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
