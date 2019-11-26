@@ -211,6 +211,9 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
 
+  # as proof of concept, force code to use python engine
+  knitr::opts_chunk$set(engine='python')
+
 
 
   # write the R code to a temp file (inclue setup code if necessary)
