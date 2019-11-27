@@ -171,12 +171,14 @@ evaluate_exercise <- function(exercise, envir) {
   }
 
   # create temp dir for execution (remove on exit)
-  exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  # FOR DEV: use folder in same dir as learnr .rmd, do not remove.
+  # exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  exercise_dir <- "learnr-folder-for-debug"
   dir.create(exercise_dir)
   oldwd <- setwd(exercise_dir)
   on.exit({
     setwd(oldwd)
-    unlink(exercise_dir, recursive = TRUE)
+    # unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
 
   # hack the pager function so that we can print help
@@ -209,6 +211,10 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(echo = FALSE)
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
+
+  # as proof of concept, force code to use python engine
+  knitr::opts_chunk$set(engine='python')
+
 
 
 
