@@ -188,6 +188,7 @@ install_knitr_hooks <- function() {
         preserved_options$exercise.timelimit <- options$exercise.timelimit
         preserved_options$exercise.setup <- options$exercise.setup
         preserved_options$exercise.checker <- deparse(options$exercise.checker)
+        preserved_options$exercise.engine <- options$exercise.engine
 
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',

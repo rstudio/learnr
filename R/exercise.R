@@ -147,7 +147,8 @@ evaluate_exercise <- function(exercise, envir) {
         envir_result = NULL,
         evaluate_result = NULL,
         envir_prep = envir_prep,
-        last_value = NULL
+        last_value = NULL,
+        language = exercise$options$exercise.engine
       )
     }, error = function(e) {
       err <<- e$message
@@ -212,11 +213,13 @@ evaluate_exercise <- function(exercise, envir) {
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
 
-  # as proof of concept, force code to use python engine
-  knitr::opts_chunk$set(engine='python')
+  # if language specified in code chunk, assign to engine
+  # otherwise, default R is expressed as NULL
 
-
-
+  engine <- knitr::opts_chunk$get("exercise.engine")
+  if (!is.null(engine)) {
+    knitr::opts_chunk$set(engine = engine)
+  }
 
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
@@ -236,6 +239,8 @@ evaluate_exercise <- function(exercise, envir) {
     fig_retina = exercise$options$fig.retina,
     keep_md = FALSE
   )
+
+  # ignore if code chunk specifies non-R language
 
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
@@ -351,7 +356,8 @@ evaluate_exercise <- function(exercise, envir) {
       envir_result = envir,
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,
-      last_value = last_value
+      last_value = last_value,
+      language = exercise$options$exercise.engine
     )
   }, error = function(e) {
     err <<- e$message
