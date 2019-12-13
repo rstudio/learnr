@@ -15,7 +15,9 @@ inline_evaluator <- function(expr, timelimit) {
       # execute and capture result
       result <<- tryCatch(
         force(expr),
-        error = function(e) error_result(e)
+        error = function(e) {
+          error_result(e$message)
+        }
       )
     },
 
