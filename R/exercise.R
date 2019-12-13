@@ -232,16 +232,24 @@ evaluate_exercise <- function(exercise, envir) {
   writeLines(code, con = exercise_r, useBytes = TRUE)
 
   # spin it to an Rmd
+  cat("exercise.R:\n") # debug line
+  cat(readLines(exercise_r), sep = "\n") # debug line
   exercise_rmd <- knitr::spin(hair = exercise_r,
                               knit = FALSE,
                               envir = envir,
                               format = "Rmd")
+  cat("exercise.Rmd:\n") # debug line
+  cat(readLines(exercise_rmd), sep = "\n") # debug line
+  # TODO - instead of sending raw R code to be interpeted as Rmd, create full Rmd chunks here using the contents of the original chunk.
+  #        This would allow for dynamic options like the ones being supplied in `rmarkdown::knitr_options_html`
+
 
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(
     fig_width = exercise$options$fig.width,
     fig_height = exercise$options$fig.height,
     fig_retina = exercise$options$fig.retina,
+    # TODO - add extra options here. ex: `connection`
     keep_md = FALSE
   )
 
@@ -256,6 +264,7 @@ evaluate_exercise <- function(exercise, envir) {
   last_value_is_visible <- TRUE
 
   evaluate_result <- NULL
+
   knitr_options$knit_hooks$evaluate = function(
     code, envir, ...,
     output_handler # knitr's output_handler
