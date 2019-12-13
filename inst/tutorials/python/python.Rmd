@@ -1,0 +1,78 @@
+---
+title: "Python exercises"
+author: "Zoë Wilkinson Saldaña"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(
+  exercise.checker = function(...) {
+    cat("REGULAR!!")
+    vals <- list(...)
+    cat("dots...\n")
+    str(vals)
+    cat("envir_result...\n")
+    str(as.list(vals$envir_result))
+    cat("envir_prep...\n")
+    str(as.list(vals$envir_prep))
+  }
+)
+
+# altered from https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html
+if (!dir.exists("data_raw")) {
+  dir.create("data_raw")
+}
+if (!file.exists("data_raw/portal_mammals.sqlite")) {
+  download.file(url = "https://ndownloader.figshare.com/files/2292171",
+                destfile = "data_raw/portal_mammals.sqlite", mode = "wb")
+}
+mammals <- DBI::dbConnect(RSQLite::SQLite(), "data_raw/portal_mammals.sqlite")
+```
+
+```{r sql-not-r-code-check}
+print(mammals)
+```
+```{r sql-not-r-check}
+# data
+```
+```{r sql-not-r, exercise.engine = "sql", exercise = TRUE, connection=mammals, output.var='surveys'}
+SELECT *
+FROM `surveys`
+LIMIT 10
+```
+
+The following code exercises run language agnostic code.  It will finally evaluate to either 5 or 10.
+
+```{r r-not-python-check}
+r_answer <- 10
+```
+```{r r-not-python-code-check}
+x = 5
+x <-10
+print(x)
+```
+```{r r-not-python, exercise=TRUE, exercise.lines = 5}
+# if running in R, this should return 10
+# if running in Python, this should return FALSE and 5
+x = 5
+x <-10
+print(x)
+```
+
+```{r python-not-r-check}
+r_answer <- list(FALSE, 5)
+```
+```{r python-not-r-code-check}
+x = 5
+x <-10
+print(x)
+```
+```{r python-not-r, exercise.engine = "python", exercise=TRUE, exercise.lines = 5}
+# if running in R, this should return 10
+# if running in Python, this should return FALSE and 5
+x = 5
+x <-10
+print(x)
+```

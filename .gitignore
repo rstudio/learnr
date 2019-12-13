@@ -15,3 +15,7 @@ inst/tutorials/*/*.html
 
 # deployment output
 rsconnect/
+
+# multi language example
+learnr-folder-for-debug
+portal_mammals.sqlite
