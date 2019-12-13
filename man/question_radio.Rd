@@ -4,9 +4,15 @@
 \alias{question_radio}
 \title{Radio question}
 \usage{
-question_radio(text, ..., correct = "Correct!",
-  incorrect = "Incorrect", try_again = incorrect,
-  allow_retry = FALSE, random_answer_order = FALSE)
+question_radio(
+  text,
+  ...,
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = incorrect,
+  allow_retry = FALSE,
+  random_answer_order = FALSE
+)
 }
 \arguments{
 \item{text}{Question or option text}
