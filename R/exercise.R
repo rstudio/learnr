@@ -122,6 +122,11 @@ evaluate_exercise <- function(exercise, envir) {
   # "global" err object to look for
   err <- NULL
 
+  exercise_language <- exercise$options$exercise.engine
+  if (is.null(exercise_language)) {
+    exercise_language <- "R"
+  }
+
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
 
@@ -148,7 +153,7 @@ evaluate_exercise <- function(exercise, envir) {
         evaluate_result = NULL,
         envir_prep = envir_prep,
         last_value = NULL,
-        language = exercise$options$exercise.engine
+        language = exercise_language
       )
     }, error = function(e) {
       err <<- e$message
@@ -357,7 +362,7 @@ evaluate_exercise <- function(exercise, envir) {
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,
       last_value = last_value,
-      language = exercise$options$exercise.engine
+      language = exercise_language
     )
   }, error = function(e) {
     err <<- e$message
