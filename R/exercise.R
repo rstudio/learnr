@@ -180,7 +180,7 @@ evaluate_exercise <- function(exercise, envir) {
   # FOR DEV: use folder in same dir as learnr .rmd, do not remove.
   # exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
   exercise_dir <- "learnr-folder-for-debug"
-  dir.create(exercise_dir)
+  dir.create(exercise_dir, showWarnings = FALSE)
   oldwd <- setwd(exercise_dir)
   on.exit({
     setwd(oldwd)
