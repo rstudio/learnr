@@ -4,6 +4,9 @@ author: "J.J. Allaire"
 date: "March 1st, 2017"
 output: learnr::tutorial
 runtime: shiny_prerendered
+internal: true
+description: >
+  This is a demo tutorial.
 ---
 
 ```{r setup, include=FALSE}
