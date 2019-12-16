@@ -5,6 +5,10 @@ output:
     progressive: true
     allow_skip: true
 runtime: shiny_prerendered
+description: >
+  Learn how to filter observations in a data frame. Use `filter()` to extract
+  observations from a data frame, and use `&`, `|`, and `!` to write logical
+  tests.
 ---
 
 ```{r setup, include=FALSE}

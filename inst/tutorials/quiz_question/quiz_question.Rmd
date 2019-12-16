@@ -8,6 +8,10 @@ tutorial:
   # id: "com.example.tutorials.my-first-tutorial"
   version: 2.18
   # user_id: "barret"
+internal: true
+description: >
+  This tutorial demonstrates how multiple-choice questions can be created within
+  a learnr tutorial.
 ---
 
 ```{r setup, include=FALSE}

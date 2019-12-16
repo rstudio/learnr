@@ -5,6 +5,11 @@ output:
     progressive: true
     allow_skip: true
 runtime: shiny_prerendered
+description: >
+  Learn how to summarize the columns available in an R data frame with
+  `summarise()`. You will also learn how to chain operations together with the
+  magrittr pipe operator `%>%`, and how to compute grouped summaries using
+  `group_by()` together with `summarise()`.
 ---
 
 ```{r setup, include=FALSE}
