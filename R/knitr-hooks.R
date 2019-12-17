@@ -130,8 +130,10 @@ install_knitr_hooks <- function() {
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 1 > 0)
         startover <- as.numeric(options$exercise.startover %||% 1 > 0)
         caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
+        engine <- options$exercise.engine %||% ""
         paste0('<div class="tutorial-', class,
                '" data-label="', options$label,
+               '" data-engine="', engine,
                '" data-caption="', caption,
                '" data-completion="', completion,
                '" data-diagnostics="', diagnostics,
