@@ -37,7 +37,7 @@ print(mammals)
 ```{r sql-not-r-check}
 # data
 ```
-```{r sql-not-r, exercise.engine = "sql", exercise = TRUE, connection=mammals, output.var='surveys'}
+```{sql sql-not-r, exercise = TRUE, connection=mammals, output.var='surveys'}
 SELECT *
 FROM `surveys`
 LIMIT 10
@@ -69,7 +69,7 @@ x = 5
 x <-10
 print(x)
 ```
-```{r python-not-r, exercise.engine = "python", exercise=TRUE, exercise.lines = 5}
+```{python python-not-r, exercise=TRUE, exercise.lines = 5}
 # if running in R, this should return 10
 # if running in Python, this should return FALSE and 5
 x = 5
