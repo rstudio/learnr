@@ -229,20 +229,44 @@ evaluate_exercise <- function(exercise, envir) {
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
+
+  print('code')
+  print(code)
+  print('exercise')
+  print(exercise)
+
+
   writeLines(code, con = exercise_r, useBytes = TRUE)
 
   # spin it to an Rmd
   cat("exercise.R:\n") # debug line
   cat(readLines(exercise_r), sep = "\n") # debug line
-  exercise_rmd <- knitr::spin(hair = exercise_r,
-                              knit = FALSE,
-                              envir = envir,
-                              format = "Rmd")
-  cat("exercise.Rmd:\n") # debug line
-  cat(readLines(exercise_rmd), sep = "\n") # debug line
-  # TODO - instead of sending raw R code to be interpeted as Rmd, create full Rmd chunks here using the contents of the original chunk.
-  #        This would allow for dynamic options like the ones being supplied in `rmarkdown::knitr_options_html`
+  if (is.null(engine)) {
+    exercise_rmd <- knitr::spin(hair = exercise_r,
+                                knit = FALSE,
+                                envir = envir,
+                                format = "Rmd")
+    cat("exercise.Rmd:\n") # debug line
+    cat(readLines(exercise_rmd), sep = "\n") # debug line
+    print('exercise_rmd')
+    print(exercise_rmd)
 
+  } else {
+
+  # In case where exercise.engine is set, circumvent knitr::spin() call
+  # and directly write exercise.Rmd file by pasting strings together
+
+  chunk_head <- '```{r }\n'
+  chunk_foot <- '\n```'
+
+  (output_for_chunk <- paste0(chunk_head, code, chunk_foot))
+  rmd_chunk_con <- 'exercise.Rmd'
+
+  writeLines(output_for_chunk, con = rmd_chunk_con, useBytes = TRUE)
+  # set filepath to .Rmd as output, same as if we had called knitr::spin()
+  exercise_rmd <- rmd_chunk_con
+
+  }
 
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(
