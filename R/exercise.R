@@ -122,10 +122,7 @@ evaluate_exercise <- function(exercise, envir) {
   # "global" err object to look for
   err <- NULL
 
-  exercise_language <- exercise$options$exercise.engine
-  if (is.null(exercise_language)) {
-    exercise_language <- "R"
-  }
+  engine <- exercise$options$exercise.engine %||% "R"
 
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
@@ -153,7 +150,7 @@ evaluate_exercise <- function(exercise, envir) {
         evaluate_result = NULL,
         envir_prep = envir_prep,
         last_value = NULL,
-        language = exercise_language
+        engine = engine
       )
     }, error = function(e) {
       err <<- e$message
@@ -221,14 +218,13 @@ evaluate_exercise <- function(exercise, envir) {
   # if language specified in code chunk, assign to engine
   # otherwise, default R is expressed as NULL
 
-  engine <- knitr::opts_chunk$get("exercise.engine")
   if (!is.null(engine)) {
     # catch cases where exercise.engine is set to R
     # NOTE: replace logic with checks for specific supported langauges?
-    if (engine != 'r' && engine != 'R'){
+    if (tolower(engine) != "r"){
       knitr::opts_chunk$set(engine = engine)
     }
-    }
+  }
 
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
@@ -248,19 +244,17 @@ evaluate_exercise <- function(exercise, envir) {
 
   } else {
 
-  # In case where exercise.engine is set, circumvent knitr::spin() call
-  # and directly write exercise.Rmd file by pasting strings together
+    # In case where exercise.engine is set, circumvent knitr::spin() call
+    # and directly write exercise.Rmd file by pasting strings together
+    chunk_head <- '```{r }\n'
+    chunk_foot <- '\n```'
 
-  chunk_head <- '```{r }\n'
-  chunk_foot <- '\n```'
+    output_for_chunk <- paste0(chunk_head, code, chunk_foot)
+    rmd_chunk_con <- 'exercise.Rmd'
 
-  (output_for_chunk <- paste0(chunk_head, code, chunk_foot))
-  rmd_chunk_con <- 'exercise.Rmd'
-
-  writeLines(output_for_chunk, con = rmd_chunk_con, useBytes = TRUE)
-  # set filepath to .Rmd as output, same as if we had called knitr::spin()
-  exercise_rmd <- rmd_chunk_con
-
+    writeLines(output_for_chunk, con = rmd_chunk_con, useBytes = TRUE)
+    # set filepath to .Rmd as output, same as if we had called knitr::spin()
+    exercise_rmd <- rmd_chunk_con
   }
 
   # create html_fragment output format with forwarded knitr options
@@ -390,7 +384,7 @@ evaluate_exercise <- function(exercise, envir) {
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,
       last_value = last_value,
-      language = exercise_language
+      engine = engine
     )
   }, error = function(e) {
     err <<- e$message
