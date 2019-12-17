@@ -223,19 +223,16 @@ evaluate_exercise <- function(exercise, envir) {
 
   engine <- knitr::opts_chunk$get("exercise.engine")
   if (!is.null(engine)) {
-    knitr::opts_chunk$set(engine = engine)
-  }
+    # catch cases where exercise.engine is set to R
+    # NOTE: replace logic with checks for specific supported langauges?
+    if (engine != 'r' && engine != 'R'){
+      knitr::opts_chunk$set(engine = engine)
+    }
+    }
 
   # write the R code to a temp file (inclue setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
-
-  print('code')
-  print(code)
-  print('exercise')
-  print(exercise)
-
-
   writeLines(code, con = exercise_r, useBytes = TRUE)
 
   # spin it to an Rmd
@@ -248,8 +245,6 @@ evaluate_exercise <- function(exercise, envir) {
                                 format = "Rmd")
     cat("exercise.Rmd:\n") # debug line
     cat(readLines(exercise_rmd), sep = "\n") # debug line
-    print('exercise_rmd')
-    print(exercise_rmd)
 
   } else {
 
@@ -276,8 +271,6 @@ evaluate_exercise <- function(exercise, envir) {
     # TODO - add extra options here. ex: `connection`
     keep_md = FALSE
   )
-
-  # ignore if code chunk specifies non-R language
 
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
@@ -369,6 +362,7 @@ evaluate_exercise <- function(exercise, envir) {
 
   # get the exercise checker (default does nothing)
   err <- NULL
+
   tryCatch({
     checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
                     envir = envir)
@@ -379,6 +373,7 @@ evaluate_exercise <- function(exercise, envir) {
   if (!is.null(err)) {
     return(error_result("Error occured while parsing chunk option 'exercise.checker'."))
   }
+
 
   checker_fn_does_not_exist <- is.null(exercise$check) || is.null(checker)
   if (checker_fn_does_not_exist)
@@ -407,6 +402,7 @@ evaluate_exercise <- function(exercise, envir) {
 
   # validate the feedback
   feedback_validated(checker_feedback)
+
 
   # amend output with feedback as required
   feedback_html <-

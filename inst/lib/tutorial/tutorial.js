@@ -972,7 +972,15 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // support startover
     var startover_code = exercise.attr('data-startover') === "1" ? code : null;
 
+    // disable diagnostic if a langauge engine is set
+      if (chunk_options["exercise.engine"]) {
+        diagnostics = null;
+      }
 
+    // disable completion if a language engine is set
+      if (chunk_options["exercise.engine"]) {
+        completion = null;
+      }
     // set tutorial options/data
     editor.tutorial = {
       label: label,
