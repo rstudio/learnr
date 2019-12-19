@@ -33,7 +33,14 @@ available_tutorials <- function(package = NULL) {
 }
 
 
-#' @return will return a list of `error` and `tutorials` which is a \code{data.frame} containing "package", "name", and "title".
+#' @return will return a list of `error` and `tutorials`.
+#'   `tutorials` is a \code{data.frame} containing
+#'    "package": name of package; string
+#'    "name": Tutorial directory. (can be passed in as `run_tutorial(NAME, PKG)`; string
+#'    "title": Tutorial title from yaml header; [NA]
+#'    "description": Tutorial description from yaml header; [NA]
+#'    "private": Boolean describing if tutorial should be indexed / displayed; [FALSE]
+#'    "yaml_front_matter": list column of all yaml header info; [list()]
 #' @noRd
 available_tutorials_for_package <- function(package) {
 
@@ -68,12 +75,19 @@ available_tutorials_for_package <- function(package) {
       return(NULL)
     }
     if (dir_rmd_files_length > 1) {
-      warning("Found multiple .Rmd files in \"", package, "\"'s \"", tut_dir, "\" folder.  Using: ", dir_rmd_files[1])
+      warning(
+        "Found multiple .Rmd files in \"", package, "\"'s \"", tut_dir, "\" folder.",
+        "  Using: ", dir_rmd_files[1]
+      )
     }
+    yaml_front_matter <- rmarkdown::yaml_front_matter(dir_rmd_files[1])
     data.frame(
       package = package,
       name = basename(tut_dir),
-      title = rmarkdown::yaml_front_matter(dir_rmd_files[1])$title %||% NA,
+      title = yaml_front_matter$title %||% NA,
+      description = yaml_front_matter$description %||% NA,
+      private = yaml_front_matter$private %||% FALSE,
+      yaml_front_matter = I(list(yaml_front_matter)),
       stringsAsFactors = FALSE,
       row.names = FALSE
     )
@@ -90,6 +104,7 @@ available_tutorials_for_package <- function(package) {
 
   tutorials <- do.call(rbind, rmd_info)
   class(tutorials) <- c("learnr_available_tutorials", class(tutorials))
+  rownames(tutorials) <- NULL
 
   list(
     tutorials = tutorials,
@@ -152,17 +167,28 @@ format.learnr_available_tutorials <- function(x, ...) {
   tutorials <- x
   ret <- "Available tutorials:"
 
+  tutorials <- tutorials[!tutorials$private, , drop = FALSE]
+
   for (pkg in unique(tutorials$package)) {
-    tutorials_sub <- tutorials[tutorials$package == pkg, ]
+    tutorials_sub <- tutorials[tutorials$package == pkg, , drop = FALSE]
 
     tutorial_names <- format(tutorials_sub$name)
-    txts <- mapply(tutorial_names, tutorials_sub$title, SIMPLIFY = FALSE, FUN = function(name, title) {
-      txt <- paste0("  - ", name)
-      if (!is.na(title)) {
-        txt <- paste0(txt, " : \"", title, "\"")
+    txts <- mapply(
+      tutorial_names,
+      tutorials_sub$title,
+      SIMPLIFY = FALSE,
+      FUN = function(name, title) {
+        txt <- paste0("  - ", name)
+        if (!is.na(title)) {
+          txt <- paste0(txt, " : \"", title, "\"")
+        }
+        width <- getOption("width", 80)
+        if (nchar(txt) > width) {
+          txt <- paste0(substr(txt, 1, width - 3), "...")
+        }
+        txt
       }
-      txt
-    })
+    )
 
     ret <- paste0(
       ret, "\n",
