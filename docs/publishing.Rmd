@@ -51,8 +51,6 @@ For both of these methods, you can use the RStudio IDE's integrated [one-click p
 
 ![](images/shinyapps-deploy-faithful.png){width=669 height=421}
 
-Note that you should install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or higher) before attempting to use one-click publishing with tutorials.
-
 ### Shiny Server (Open Source and Pro versions)
 
 A third way of publishing your tutorial is to serve it as a `.Rmd` document in a hosted directory of [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
