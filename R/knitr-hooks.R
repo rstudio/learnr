@@ -194,6 +194,17 @@ install_knitr_hooks <- function() {
         preserved_options$exercise.engine <- options$engine
         preserved_options$engine <- "R"
 
+        # pass along connection if set as string
+        # now passes SQL chunk in python test
+        conn = options$connection
+        if(is.character(conn)){
+          preserved_options$connection <- conn
+        }
+
+        # while this pattern works, we may wish to switch over to a full serialization pattern
+        # e.g. using:
+        # preservered_options$full.options <- options
+
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
                         jsonlite::toJSON(preserved_options, auto_unbox = TRUE),

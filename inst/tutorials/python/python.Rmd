@@ -37,7 +37,7 @@ print(mammals)
 ```{r sql-not-r-check}
 # data
 ```
-```{sql sql-not-r, exercise = TRUE, connection=mammals, output.var='surveys'}
+```{sql sql-not-r, exercise = TRUE, connection="mammals", output.var='surveys'}
 SELECT *
 FROM `surveys`
 LIMIT 10
