@@ -1,5 +1,7 @@
 ---
 title: "Publishing learnr Tutorials on shinyapps.io"
+author: "Angela Li"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Publishing learnr Tutorials on shinyapps.io}
