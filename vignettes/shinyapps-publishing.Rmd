@@ -1,0 +1,89 @@
+---
+title: "Publishing learnr Tutorials on shinyapps.io"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Publishing learnr Tutorials on shinyapps.io}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+You may be interested in deploying your learnr tutorial on shinyapps.io so that students can access them from the web browser. 
+
+However, you will need to know how to optimize your application settings so that your tutorials are able to handle a large number of users at once (for example, a 60-person class logging onto the same tutorial to complete interactive exercises during a statistics lecture).
+
+In order to publish your tutorials on shinyapps.io, you can follow the normal process of publishing your tutorials from the RStudio IDE to shinyapps.io. This will not be covered extensively here, as our main concern is optimizing tutorial performance.
+
+## Optimal settings for shinyapps.io
+
+As an educator, we assume you have a few concerns:
+
+1. How can my students access the same tutorials concurrently, over multiple sessions, over a long period of time? 
+2. How can I reduce the cost of tutorial hosting?
+
+Balancing these two things will be a part of figuring out your optimal configuration settings.
+
+## Alternative options for hosting learnr tutorials
+
+Note that there are other options for hosting tutorials besides shinyapps.io, such as:
+
+- creating a tutorial package that students run locally (free, but requires students to be able to download and install packages, as well as run commands in R), or 
+- setting up your own free academic Shiny Server Pro account (free, provided you have a server at your institution that will host the software, which may require IT help). 
+
+Both of these require some configuration and setup, and may be beyond what either you or your students wish to undertake at the time (i.e. if you are running a short-term course). This leads to a third option that costs money, but may save you valuable time on system administation: deploying your learnr tutorial on shinyapps.io.
+
+**Note**: Currently, the free shinyapps.io service is designed for no more than three users at once. If you would like multiple users to be able to access the service without the tutorial crashing, you will need to [pay for a hosted shinyapps.io service](https://www.shinyapps.io/#pricing).
+
+### Optimizing for classroom settings
+
+Once you have published your tutorials to shinyapps.io, log into your account, click on the application page and configure the following:
+
+- **Instances**: increase to maximum amount allowed. This is the total number of servers that are available to run your tutorial. The more, the better.
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/shinyapps-publishing-instances.png", dpi = 150)
+```
+
+Then go to the Settings > General page and configure the following:
+
+- **Instance Size**: increase to maximum size possible. This will allow for "flash traffic", which is what having multiple students at once will do to your server.
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/shinyapps-publishing-instance-size.png", dpi = 150)
+```
+
+Finally, go to the Settings > Advanced page and configure the following:
+
+- **Max Worker Processes**: reduce if possible, possibly to 2. Keep this equation in mind:
+
+(Instance Size) / (Worker Processes * Max Connections) = Amount of memory available for each new student accessing your tutorial.
+
+- **Max Connections**: reduce if possible, possibly to 20 or so.
+- **Start Count**: increase to maximum size possible. This is the number of servers ("instances") that will launch when a single person accesses the tutorial. This means that the first student to access your tutorial during class will start all the servers so that others can access them more quickly.
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/shinyapps-publishing-advanced.png", dpi = 150)
+```
+
+We recommend you set everything to the maximum, monitor hours used, and adjust settings from there.
+
+### Reducing cost
+
+Because you are paying for the active hours of use per month, you will want to minimize this to stay within your subscription limits. To do this, you can do the following:
+
+- Reduce start count 
+- Reduce instance size
+- Increase connections
+- Increase processes
+
+A good workflow is to adjust one setting, observe usage metrics, and modify as needed.
+```{r setup}
+library(learnr)
+```

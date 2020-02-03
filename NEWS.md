@@ -6,6 +6,7 @@ learnr 0.10.0.9000 (unreleased)
 
 ## Minor new features and improvements
 
+* Include vignette about publishing learnr tutorials on shinyapps.io
 
 ## Bug fixes
 
