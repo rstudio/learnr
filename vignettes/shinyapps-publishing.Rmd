@@ -84,6 +84,3 @@ Because you are paying for the active hours of use per month, you will want to m
 - Increase processes
 
 A good workflow is to adjust one setting, observe usage metrics, and modify as needed.
-```{r setup}
-library(learnr)
-```
