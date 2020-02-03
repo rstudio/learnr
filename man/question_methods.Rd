@@ -60,7 +60,7 @@ should correspond to the \code{type = TYPE} supplied to the question.
 \itemize{
 \item This function should return the output of \link{correct}, \link{incorrect}, or \link{mark_as}. Each method allows for custom messages in addition to the determination of an answer being correct.  See \link{correct}, \link{incorrect}, or \link{mark_as} for more details.
 }
-\item \code{question_ui_try_again <- function(question, value, ...)}
+\item \verb{question_ui_try_again <- function(question, value, ...)}
 \itemize{
 \item Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to \code{question_ui_initialize}, this should should return a shiny UI object that can be displayed using \link[shiny:renderUI]{shiny::renderUI}.
 }
