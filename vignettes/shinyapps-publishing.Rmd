@@ -86,3 +86,52 @@ Because you are paying for the active hours of use per month, you will want to m
 - Increase processes
 
 A good workflow is to adjust one setting, observe usage metrics, and modify as needed.
+
+## Example use case
+
+### Context
+
+Suppose you are teaching a statistical programming seminar over 5 weeks for several class sections of 60 people each. The course is short and students have just been introduced to R and RStudio, so it may not make to set up a full server for tutorials, or ask students to configure their own R package. 
+
+A browser-based interface is also friendly to those who may have trouble understanding or navigating the RStudio interface during their first weeks of classes.
+
+A few sections are back-to-back, so ideally, the settings on learnr tutorials are robust enough to allow the next section's students to access them. 
+
+### Initial settings
+
+In my use case, I had my department purchase the Standard shinyapps.io subscription for $100/month, which gave me **2,000 Active Hours** per month. (Note that **Active Hours** refers to the amount of time spent launching the tutorial and actively processing R code and input submitted by students, not the total amount of time the browser is open on a student's computer.)
+
+For each tutorial I deployed, I set up: 
+
+ - **5 XXX-Large Instances (8 GB)** on `shinyapps.io`, 
+ - with **2 Worker Processes** each and **10 Max Connections**. 
+ - I also set the **Start Count to 5**, so that all tutorials launched at once.
+
+### Adjusting based on usage metrics
+
+I then observed my usage metrics in the shinyapps.io dashboard in `Metrics`. After noticing that my tutorials did not require excessive memory, I:
+
+- changed the size of the Instances to **X-Large (2 GB)**
+- increased **Max Connections to 15** and 
+- reduced **Start Count to 2** once we had completed that week's sections.
+
+After the 5-week course was done, I: 
+
+- canceled our shinyapps.io Standard subscription, 
+- reduced Instance Count and Instance Size to a single **Large Instance (1 GB)**, and 
+- left Worker Processes and Max Connections as is. 
+
+This enabled students to return to the tutorial after the workshop was done, without being optimized for mass numbers of students accessing the tutorial at once.
+
+We used around 1000 Active Hours in our first month, and around 300 in our second month of the course, so next year, I will likely purchase the Standard subscription for one month, and reduce to the Basic level in the second month.
+
+Example of the usage metrics dashboard below:
+
+```{r, echo = FALSE}
+knitr::include_graphics("img/shinyapps-publishing-metrics.png", dpi = 200)
+```
+
+
+### Troubleshooting beyond settings
+
+For consecutive classes, we still had some issues with open server connections from the previous class getting in the way. I published an identical learnr tutorial with a different name (i.e. `"tutorial-2"`), so I could direct some students to a different link as needed.
