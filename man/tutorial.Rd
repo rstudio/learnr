@@ -4,12 +4,27 @@
 \alias{tutorial}
 \title{Tutorial document format}
 \usage{
-tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
-  fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
-  dev = "png", df_print = "paged", smart = TRUE, theme = "rstudio",
-  highlight = "textmate", ace_theme = "textmate",
-  mathjax = "default", extra_dependencies = NULL, css = NULL,
-  includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
+tutorial(
+  fig_width = 6.5,
+  fig_height = 4,
+  fig_retina = 2,
+  fig_caption = TRUE,
+  progressive = FALSE,
+  allow_skip = FALSE,
+  dev = "png",
+  df_print = "paged",
+  smart = TRUE,
+  theme = "rstudio",
+  highlight = "textmate",
+  ace_theme = "textmate",
+  mathjax = "default",
+  extra_dependencies = NULL,
+  css = NULL,
+  includes = NULL,
+  md_extensions = NULL,
+  pandoc_args = NULL,
+  ...
+)
 }
 \arguments{
 \item{fig_width}{Default width (in inches) for figures}
@@ -34,15 +49,16 @@ topics).}
 \item{dev}{Graphics device to use for figure output (defaults to png)}
 
 \item{df_print}{Method to be used for printing data frames. Valid values
-include "default", "kable", "tibble", and "paged". The "default" method uses
+include "default", "kable", "tibble", and "paged". The "default" method
+uses a corresponding S3 method of \code{print}, typically
 \code{print.data.frame}. The "kable" method uses the
 \code{\link[knitr:kable]{knitr::kable}} function. The "tibble" method uses
 the \pkg{tibble} package to print a summary of the data frame. The "paged"
 method creates a paginated HTML table (note that this method is only valid
-for formats that produce HTML). In addition
-to the named methods you can also pass an arbitrary function to be used
-for printing data frames. You can disable the \code{df_print} behavior entirely
-by setting the option \code{rmarkdown.df_print} to \code{FALSE}.}
+for formats that produce HTML). In addition to the named methods you can
+also pass an arbitrary function to be used for printing data frames. You
+can disable the \code{df_print} behavior entirely by setting the option
+\code{rmarkdown.df_print} to \code{FALSE}.}
 
 \item{smart}{Produce typographically correct output, converting straight
 quotes to curly quotes, \code{---} to em-dashes, \code{--} to en-dashes, and
@@ -66,15 +82,15 @@ copied into the output directory). You can pass an alternate URL or pass
 \code{NULL} to exclude MathJax entirely.}
 
 \item{extra_dependencies}{Additional function arguments to pass to the
-base R Markdown HTML output formatter \code{\link{html_document_base}}}
+base R Markdown HTML output formatter \code{\link[rmarkdown]{html_document_base}}}
 
 \item{css}{One or more css files to include}
 
 \item{includes}{Named list of additional content to include within the
-document (typically created using the \code{\link{includes}} function).}
+document (typically created using the \code{\link[rmarkdown]{includes}} function).}
 
 \item{md_extensions}{Markdown extensions to be added or removed from the
-default definition or R Markdown. See the \code{\link{rmarkdown_format}} for
+default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_format}} for
 additional details.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
