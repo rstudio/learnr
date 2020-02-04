@@ -11,6 +11,8 @@ learnr 0.10.0.9000 (unreleased)
 
 * Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))
 
+* Fixed extra parameter documentation bug. ([#323](https://github.com/rstudio/learnr/pull/323))
+
 
 learnr 0.10.0
 ===========
