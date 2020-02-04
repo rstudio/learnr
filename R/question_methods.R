@@ -109,7 +109,6 @@ question_is_correct.default <- function(question, value, ...) {
 #' Helper method to return
 #' @param correct boolean that determines if a question answer is correct
 #' @param messages a vector of messages to be displayed.  The type of message will be determined by the `correct` value.
-#' @param ... possible future parameter expansion
 #' @rdname mark_as_correct_incorrect
 #' @export
 #' @examples
