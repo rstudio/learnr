@@ -6,6 +6,9 @@ output:
     allow_skip: true
     df_print: default
 runtime: shiny_prerendered
+description: >
+  Learn about the base data types in R. Explore R's data frames, and learn how
+  to interact with data frames and their columns.
 ---
 
 ```{r setup, include=FALSE}

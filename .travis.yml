@@ -22,7 +22,7 @@ jobs:
       if: branch IN (master, travis) AND repo = rstudio/learnr AND type = push
       r: release
       warnings_are_errors: false
-      r_github_packages:
-        - rstudio/sortable
+      r_packages:
+        - sortable
       script:
       - Rscript tools/deploy_tutorials_on_travis.R

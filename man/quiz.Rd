@@ -8,13 +8,23 @@
 \usage{
 quiz(..., caption = "Quiz")
 
-question(text, ..., type = c("auto", "single", "multiple",
-  "learnr_radio", "learnr_checkbox", "learnr_text"),
-  correct = "Correct!", incorrect = "Incorrect",
-  try_again = incorrect, message = NULL, post_message = NULL,
+question(
+  text,
+  ...,
+  type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox",
+    "learnr_text"),
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = incorrect,
+  message = NULL,
+  post_message = NULL,
   loading = c("**Loading:** ", text, "<br/><br/><br/>"),
-  submit_button = "Submit Answer", try_again_button = "Try Again",
-  allow_retry = FALSE, random_answer_order = FALSE, options = list())
+  submit_button = "Submit Answer",
+  try_again_button = "Try Again",
+  allow_retry = FALSE,
+  random_answer_order = FALSE,
+  options = list()
+)
 
 answer(text, correct = FALSE, message = NULL)
 }

@@ -4,9 +4,15 @@
 \alias{question_checkbox}
 \title{Checkbox question}
 \usage{
-question_checkbox(text, ..., correct = "Correct!",
-  incorrect = "Incorrect", try_again = incorrect,
-  allow_retry = FALSE, random_answer_order = FALSE)
+question_checkbox(
+  text,
+  ...,
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = incorrect,
+  allow_retry = FALSE,
+  random_answer_order = FALSE
+)
 }
 \arguments{
 \item{text}{Question or option text}

@@ -44,7 +44,7 @@ ex_question <- question("What number is the letter A in the alphabet?",
   incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
   allow_retry = TRUE
 )
-cat(format(ex_question), "\\n")
+cat(format(ex_question), "\n")
 }
 \seealso{
 \code{\link{quiz}}, \code{\link{question}}, \code{\link{answer}}

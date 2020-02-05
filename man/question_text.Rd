@@ -4,10 +4,18 @@
 \alias{question_text}
 \title{Text box question}
 \usage{
-question_text(text, ..., correct = "Correct!", incorrect = "Incorrect",
-  try_again = incorrect, allow_retry = FALSE,
-  random_answer_order = FALSE, placeholder = "Enter answer here...",
-  trim = TRUE, options = list())
+question_text(
+  text,
+  ...,
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = incorrect,
+  allow_retry = FALSE,
+  random_answer_order = FALSE,
+  placeholder = "Enter answer here...",
+  trim = TRUE,
+  options = list()
+)
 }
 \arguments{
 \item{text}{Question or option text}

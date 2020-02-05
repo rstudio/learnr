@@ -16,8 +16,6 @@ mark_as(correct, messages = NULL)
 \item{messages}{a vector of messages to be displayed.  The type of message will be determined by the \code{correct} value.}
 
 \item{correct}{boolean that determines if a question answer is correct}
-
-\item{...}{possible future parameter expansion}
 }
 \description{
 Helper method to return

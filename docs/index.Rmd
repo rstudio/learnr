@@ -61,9 +61,10 @@ This is what the running tutorial document looks like after the user has entered
 
 A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:
 
-1. Loads the **learnr** package.
-2. Includes one or more interactive components (exercises, quiz questions, etc.).
-3. Uses the `runtime: shiny_prerendered` directive in the YAML header.
+1. Loads the **learnr** package,
+2. Includes one or more interactive components (exercises, quiz questions, etc.),
+3. Uses the `runtime: shiny_prerendered` directive in the YAML header,
+4. Provides a short description in the top-level `description:` field of the YAML header.
 
 The `runtime: shiny_prerendered` element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional `ui.R` file.
 

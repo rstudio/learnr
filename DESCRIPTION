@@ -7,7 +7,7 @@ Authors@R: c(
         comment = c(ORCID = "0000-0001-9986-114X")),
   person("JJ", "Allaire", role = "aut", email = "jj@rstudio.com"),
   person("Barbara", "Borges", role = "aut", email = "barbara@rstudio.com"),
-  person(family = "RStudio, Inc.", role = "cph"),
+  person("RStudio", role = c("cph", "fnd")),
   person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library"),
   person("Zeno", "Rocha", role = c("ctb", "cph"), comment = "clipboard.js library"),
   person("Nick", "Payne", role = c("ctb", "cph"), comment = "Bootbox library"),
@@ -42,7 +42,7 @@ Remotes:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Suggests:
     testthat (>= 2.1.0),
     callr,
