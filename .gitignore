@@ -19,3 +19,7 @@ rsconnect/
 # multi language example
 learnr-folder-for-debug
 portal_mammals.sqlite
+
+inst/doc
+doc
+Meta
