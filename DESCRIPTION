@@ -18,7 +18,7 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
 License: Apache License (>= 2.0)
-URL: https://rstudio.github.io/learnr/
+URL: https://rstudio.github.io/learnr/, https://github.com/rstudio/learnr
 BugReports: https://github.com/rstudio/learnr/issues
 Imports:
     utils,
@@ -36,10 +36,7 @@ Imports:
     rmarkdown (>= 1.12.0),
     ellipsis (>= 0.2.0.1),
     checkmate,
-    renv (>= 0.8.0),
-    packrat (>= 0.5.0-7)
-Remotes:
-  rstudio/packrat
+    renv (>= 0.8.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
