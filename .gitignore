@@ -16,3 +16,5 @@ inst/tutorials/*/*.html
 # deployment output
 rsconnect/
 inst/doc
+doc
+Meta
