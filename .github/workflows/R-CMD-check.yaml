@@ -44,8 +44,8 @@ jobs:
       - name: Query dependencies
         run: >
           Rscript
-            -e "install.packages('remotes')"
-            -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), 'depends.Rds', version = 2)"
+          -e "install.packages('remotes')"
+          -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), 'depends.Rds', version = 2)"
 
       - name: Cache R packages
         if: runner.os != 'Windows'
@@ -58,14 +58,14 @@ jobs:
       - name: Install dependencies
         run: >
           Rscript
-            -e "library(remotes)"
-            -e "update(readRDS('depends.Rds'))"
-            -e "remotes::install_cran('rcmdcheck')"
+          -e "library(remotes)"
+          -e "update(readRDS('depends.Rds'))"
+          -e "remotes::install_cran('rcmdcheck')"
 
       - name: Check
         run: >
           Rscript
-            -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'note', check_dir = 'check')"
+          -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'note', check_dir = 'check')"
 
       - name: Upload check results
         if: failure()
@@ -79,4 +79,4 @@ jobs:
         # if: matrix.config.os == 'macOS-latest' && matrix.config.r == '3.6'
         run: >
           Rscript
-            -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
+          -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'

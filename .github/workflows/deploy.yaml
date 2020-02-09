@@ -44,8 +44,8 @@ jobs:
       - name: Query dependencies
         run: >
           Rscript
-            -e "install.packages('remotes')"
-            -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), 'depends.Rds', version = 2)"
+          -e "install.packages('remotes')"
+          -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), 'depends.Rds', version = 2)"
 
       - name: Cache R packages
         if: runner.os != 'Windows'
@@ -60,9 +60,9 @@ jobs:
       - name: Install dependencies
         run: >
           Rscript
-            -e "library(remotes)"
-            -e "update(readRDS('depends.Rds'))"
-            -e "remotes::install_cran('sortable')"
+          -e "library(remotes)"
+          -e "update(readRDS('depends.Rds'))"
+          -e "remotes::install_cran('sortable')"
 
       - name: Deploy
         run: >
