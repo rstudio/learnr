@@ -18,7 +18,7 @@ Description: Create interactive tutorials using R Markdown. Use a combination
   of narrative, figures, videos, exercises, and quizzes to create self-paced
   tutorials for learning about R and R packages.
 License: Apache License (>= 2.0)
-URL: https://rstudio.github.io/learnr/
+URL: https://rstudio.github.io/learnr/, https://github.com/rstudio/learnr
 BugReports: https://github.com/rstudio/learnr/issues
 Imports:
     utils,
