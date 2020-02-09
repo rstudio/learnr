@@ -17,6 +17,9 @@ remotes::install_cran(
   )
 )
 
+server <- "shinyapps.io"
+account <- "learnr-examples"
+
 deploy_app <- function(
   app_dir,
   name = basename(app_dir),
@@ -28,8 +31,8 @@ deploy_app <- function(
   rsconnect::deployApp(
     appDir = app_dir,
     appName = name,
-    server = "shinyapps.io",
-    account = "learnr-examples",
+    server = server,
+    account = account,
     forceUpdate = TRUE,
     ...
   )
@@ -59,6 +62,22 @@ deploy_folder <- function(path, fn) {
   )
 }
 
+deploy_vignettes <- function() {
+  lapply(
+    dir("vignettes", pattern = ".Rmd", full.names = TRUE),
+    function(rmd) {
+      rsconnect::deployDoc(
+        doc = rmd,
+        appName = rmarkdown::yaml_front_matter(rmd)$title,
+        server = server,
+        account = account,
+        forceUpdate = TRUE
+      )
+    }
+  )
+}
+
 deploy_folder("inst/tutorials", deploy_tutorial)
+deploy_vignettes()
 
 message("done")
