@@ -65,5 +65,9 @@ jobs:
           -e "remotes::install_cran('sortable')"
 
       - name: Deploy
+        env:
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
         run: >
           Rscript 'tools/deploy_tutorials_on_ci.R'
