@@ -51,8 +51,6 @@ For both of these methods, you can use the RStudio IDE's integrated [one-click p
 
 ![](images/shinyapps-deploy-faithful.png){width=669 height=421}
 
-Note that you should install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or higher) before attempting to use one-click publishing with tutorials.
-
 ### Shiny Server (Open Source and Pro versions)
 
 A third way of publishing your tutorial is to serve it as a `.Rmd` document in a hosted directory of [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/).
@@ -81,7 +79,7 @@ See also the section below on [Exercise Execution] for details on further custom
 
 Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it's access to the filesystem and/or other system resources.
 
-Note that by default when running on UNIX systems the **learnr** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).
+Note that by default when running on UNIX systems the **learnr** package runs exercise code within a forked child process. This means that it's not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Execution] section below for details).
 
 #### Deployment Dependencies Not Found
 
