@@ -59,6 +59,7 @@ jobs:
         run: >
           Rscript
           -e "library(remotes)"
+          -e "if (.Platform[['OS.type']] == 'windows' || Sys.info()[['sysname']] == 'Darwin') options(pkgType = 'binary')"
           -e "update(readRDS('depends.Rds'))"
           -e "remotes::install_cran('rcmdcheck')"
 
