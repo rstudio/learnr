@@ -68,7 +68,7 @@ deploy_vignettes <- function() {
     function(rmd) {
       rsconnect::deployDoc(
         doc = rmd,
-        appName = rmarkdown::yaml_front_matter(rmd)$title,
+        appName = sub(".Rmd", "", basename(rmd)),
         server = server,
         account = account,
         forceUpdate = TRUE
@@ -77,7 +77,7 @@ deploy_vignettes <- function() {
   )
 }
 
-deploy_folder("inst/tutorials", deploy_tutorial)
 deploy_vignettes()
+deploy_folder("inst/tutorials", deploy_tutorial)
 
 message("done")
