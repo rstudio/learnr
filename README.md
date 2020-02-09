@@ -2,8 +2,8 @@
 ## learnr: Interactive tutorials for R
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/rstudio/learnr.svg?branch=master)](https://travis-ci.org/rstudio/learnr)
 [![R build status](https://github.com/rstudio/learnr/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/learnr)
+[![Tutorial deploy status](https://github.com/rstudio/learnr/workflows/deploy/badge.svg)](https://github.com/rstudio/shinycoreci/actions?query=workflow%3ADeploy)
 [![CRAN status](https://www.r-pkg.org/badges/version/learnr)](https://CRAN.R-project.org/package=learnr)
 [![learnr downloads per month](http://cranlogs.r-pkg.org/badges/learnr)](http://www.rpackages.io/package/learnr)
 [![DOI](https://zenodo.org/badge/71377580.svg)](https://zenodo.org/badge/latestdoi/71377580)
