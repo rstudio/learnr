@@ -5,6 +5,8 @@ learnr 0.10.0.9000 (unreleased)
 
 ## Minor new features and improvements
 
+* Include vignette about publishing learnr tutorials on shinyapps.io
+
 * `learnr`'s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system. ([#312](https://github.com/rstudio/learnr/issues/312))
 
 ## Bug fixes
