@@ -38,6 +38,11 @@ jobs:
       - uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
+      - name: R Options
+        shell: bash
+        run: |
+          echo 'MAKEFLAGS=-j2' >> .Renviron
+
 
       - uses: r-lib/actions/setup-pandoc@master
 
@@ -60,6 +65,7 @@ jobs:
           Rscript
           -e "library(remotes)"
           -e "if (.Platform[['OS.type']] == 'windows' || Sys.info()[['sysname']] == 'Darwin') options(pkgType = 'binary')"
+          -e "if (.Platform[['OS.type']] == 'windows') remotes::install_cran(c('stringr', 'stringi'))"
           -e "update(readRDS('depends.Rds'))"
           -e "remotes::install_cran('rcmdcheck')"
 
