@@ -278,7 +278,7 @@ We expect that additional **learnr** compatible checking packages will be develo
 
 ## Exercise Caption
 
-By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. "Exercise" or Sandbox"). For example:
+By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. "Exercise" or "Sandbox"). For example:
 
 <div id="exercisecaption"></div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>
