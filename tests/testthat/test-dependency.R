@@ -7,6 +7,6 @@ test_that("tutor html dependencies can be retreived", {
 })
 
 test_that("tutorial package dependencies can be enumerated", {
-  packages <- tutorial_dependencies("ex-data-summarise", "learnr")
+  packages <- tutorial_package_dependencies("ex-data-summarise", "learnr")
   expect_true("tidyverse" %in% packages)
 })

@@ -1,10 +1,6 @@
 get_needed_pkgs <- function(dir) {
 
-  pkgs <- unique(renv::dependencies(dir, quiet = TRUE)$Package)
-
-  # remove packages with name "cannot open connection" (or any _pkg_ with a space in its name)
-  # See https://github.com/rstudio/renv/issues/228
-  pkgs <- pkgs[!grepl(" ", pkgs)]
+  pkgs <- tutorial_dir_package_dependencies(dir)
 
   pkgs[!pkgs %in% utils::installed.packages()]
 }
@@ -40,4 +36,28 @@ install_tutorial_dependencies <- function(dir) {
   }
 
   utils::install.packages(needed_pkgs)
+}
+
+
+
+
+#' List Tutorial Dependencies
+#'
+#' List the \R packages required to run a particular tutorial.
+#'
+#' @param name The tutorial name.
+#' @param package The \R package providing the tutorial.
+#'
+#' @export
+tutorial_package_dependencies <- function(name, package) {
+
+  # resolve tutorial path
+  dir <- get_tutorial_path(name, package)
+  tutorial_dir_package_dependencies(dir)
+}
+
+tutorial_dir_package_dependencies <- function(dir) {
+  # enumerate tutorial package dependencies
+  deps <- renv::dependencies(dir, quiet = TRUE)
+  sort(unique(deps$Package))
 }

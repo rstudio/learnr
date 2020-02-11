@@ -13,6 +13,8 @@ learnr 0.10.0.9000 (unreleased)
 
 * Add `session_start` and `session_stop` events. ([#311](https://github.com/rstudio/learnr/pull/328))
 
+* Added `tutorial_package_dependencies(name, package)` to expose which packages are used by a specific tutorial.
+
 ## Bug fixes
 
 * Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))
