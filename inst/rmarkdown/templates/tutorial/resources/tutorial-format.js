@@ -156,6 +156,9 @@ $(document).ready(function() {
         else {
           scrollLastSectionToView = true;
         }
+        // update UI
+        sectionSkipped([section.jqElement]);
+        // notify server
         tutorial.skipSection(sectionId);
       }
     }
