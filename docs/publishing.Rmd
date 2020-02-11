@@ -261,6 +261,14 @@ The `event` parameter is one of the following values:
 <td>section_skipped</td>
 <td>A section of the tutorial was skipped.</td>
 </tr>
+<tr class="even">
+<td>session_start</td>
+<td>A new session has been initiated</td>
+</tr>
+<tr class="odd">
+<td>session_stop</td>
+<td>A session has been terminated</td>
+</tr>
 </tbody>
 </table>
 

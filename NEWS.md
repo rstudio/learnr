@@ -9,6 +9,8 @@ learnr 0.10.0.9000 (unreleased)
 
 * `learnr`'s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system. ([#312](https://github.com/rstudio/learnr/issues/312))
 
+* Add `session_start` and `session_stop` events. ([#311](https://github.com/rstudio/learnr/pull/328))
+
 ## Bug fixes
 
 * Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))

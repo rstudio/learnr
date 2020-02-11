@@ -33,6 +33,15 @@ initialize_tutorial <- function() {
       singleton = TRUE
     )
 
+    # Register session stop handler
+    rmarkdown::shiny_prerendered_chunk(
+      'server',
+      sprintf('session$onSessionEnded(function() {
+        learnr:::record_event(session = session, event = "session_stop", data = list())
+      })'),
+      singleton = TRUE
+    )
+
     # set initialized flag to ensure single initialization
     knitr::opts_knit$set(tutorial.initialized = TRUE)
   }
