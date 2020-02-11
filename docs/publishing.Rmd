@@ -257,6 +257,18 @@ The `event` parameter is one of the following values:
 <td>video_progress</td>
 <td>User watched a segment of a video.</td>
 </tr>
+<tr class="odd">
+<td>section_skipped</td>
+<td>A section of the tutorial was skipped.</td>
+</tr>
+<tr class="even">
+<td>session_start</td>
+<td>A new session has been initiated</td>
+</tr>
+<tr class="odd">
+<td>session_stop</td>
+<td>A session has been terminated</td>
+</tr>
 </tbody>
 </table>
 
@@ -289,7 +301,7 @@ The default tutorial and user identifiers are determined as follows:
 <td>tutorial_version</td>
 <td>1.0</td>
 </tr>
-<tr class="add">
+<tr class="odd">
 <td>user_id</td>
 <td>Account name of server user executing the tutorial</td>
 </tr>
