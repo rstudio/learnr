@@ -320,7 +320,7 @@ $(document).ready(function() {
   function handleLocationHash() {
 
     function findTopicIndexFromHash() {
-      var hash = window.decodeURI(window.location.hash);
+      var hash = window.decodeURIComponent(window.location.hash);
       var topicIndex = 0;
       if (hash.length > 0) {
         $.each(topics, function( ti, t) {
