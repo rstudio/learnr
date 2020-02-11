@@ -37,7 +37,7 @@ initialize_tutorial <- function() {
     rmarkdown::shiny_prerendered_chunk(
       'server',
       sprintf('session$onSessionEnded(function() {
-        learnr:::record_event(session = session, event = "session_stop", data = list())
+        learnr:::session_stop_event(session)
       })'),
       singleton = TRUE
     )
