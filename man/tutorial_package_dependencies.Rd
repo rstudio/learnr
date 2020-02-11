@@ -4,13 +4,19 @@
 \alias{tutorial_package_dependencies}
 \title{List Tutorial Dependencies}
 \usage{
-tutorial_package_dependencies(name, package)
+tutorial_package_dependencies(name = NULL, package = NULL)
 }
 \arguments{
-\item{name}{The tutorial name.}
+\item{name}{The tutorial name. If \code{name} is \code{NULL}, then all tutorials within \code{package} will be searched.}
 
-\item{package}{The \R package providing the tutorial.}
+\item{package}{The \R package providing the tutorial. If \code{package} is \code{NULL}, then all tutorials will be searched.}
+}
+\value{
+A character vector of package names that are require for execution.
 }
 \description{
 List the \R packages required to run a particular tutorial.
+}
+\examples{
+tutorial_package_dependencies(package = "learnr")
 }

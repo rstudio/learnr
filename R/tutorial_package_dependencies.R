@@ -45,11 +45,29 @@ install_tutorial_dependencies <- function(dir) {
 #'
 #' List the \R packages required to run a particular tutorial.
 #'
-#' @param name The tutorial name.
-#' @param package The \R package providing the tutorial.
+#' @param name The tutorial name. If \code{name} is \code{NULL}, then all tutorials within \code{package} will be searched.
+#' @param package The \R package providing the tutorial. If \code{package} is \code{NULL}, then all tutorials will be searched.
 #'
 #' @export
-tutorial_package_dependencies <- function(name, package) {
+#' @return A character vector of package names that are require for execution.
+#' @examples
+#' tutorial_package_dependencies(package = "learnr")
+tutorial_package_dependencies <- function(name = NULL, package = NULL) {
+
+  # if name is not provided, combine all dependencies for a given package
+  if (identical(name, NULL)) {
+    avail_tutorials <- available_tutorials(package = package)
+    all_pkg_deps <- mapply(
+      avail_tutorials$package, avail_tutorials$name,
+      SIMPLIFY = FALSE, USE.NAMES = FALSE,
+      FUN = function(pkg, name) {
+        tutorial_package_dependencies(name, pkg)
+      }
+    )
+    return(
+      sort(unique(unlist(all_pkg_deps)))
+    )
+  }
 
   # resolve tutorial path
   dir <- get_tutorial_path(name, package)
