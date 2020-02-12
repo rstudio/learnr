@@ -7,12 +7,10 @@ test_that("tutor html dependencies can be retreived", {
 })
 
 test_that("tutorial package dependencies can be enumerated", {
-  testthat::skip_if_not_installed("learnr")
   packages <- tutorial_package_dependencies("ex-data-summarise", "learnr")
   expect_true("tidyverse" %in% packages)
 })
 test_that("Per package, tutorial package dependencies can be enumerated", {
-  testthat::skip_if_not_installed("learnr")
   packages <- tutorial_package_dependencies(package = "learnr")
   expect_true("tidyverse" %in% packages)
 })
