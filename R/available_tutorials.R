@@ -10,7 +10,7 @@
 #'   development of the package (i.e. the corresponding tutorial .html file for
 #'   the .Rmd file must exist).
 #'
-#' @return \code{available_tutorials} will return a \code{data.frame} containing "package", "name", and "title".
+#' @return \code{available_tutorials} will return a \code{data.frame} containing "package", "name", "title", "description", "package_dependencies", "private", and "yaml_front_matter".
 #' @rdname available_tutorials
 #' @export
 available_tutorials <- function(package = NULL) {
@@ -39,6 +39,7 @@ available_tutorials <- function(package = NULL) {
 #'    "name": Tutorial directory. (can be passed in as `run_tutorial(NAME, PKG)`; string
 #'    "title": Tutorial title from yaml header; [NA]
 #'    "description": Tutorial description from yaml header; [NA]
+#'    "package_dependencies": Packages needed to run tutorial; [lsit()]
 #'    "private": Boolean describing if tutorial should be indexed / displayed; [FALSE]
 #'    "yaml_front_matter": list column of all yaml header info; [list()]
 #' @noRd
@@ -87,6 +88,7 @@ available_tutorials_for_package <- function(package) {
       title = yaml_front_matter$title %||% NA,
       description = yaml_front_matter$description %||% NA,
       private = yaml_front_matter$private %||% FALSE,
+      package_dependencies = I(list(tutorial_dir_package_dependencies(tut_dir))),
       yaml_front_matter = I(list(yaml_front_matter)),
       stringsAsFactors = FALSE,
       row.names = FALSE

@@ -10,7 +10,7 @@ available_tutorials(package = NULL)
 \item{package}{Name of package}
 }
 \value{
-\code{available_tutorials} will return a \code{data.frame} containing "package", "name", and "title".
+\code{available_tutorials} will return a \code{data.frame} containing "package", "name", "title", "description", "package_dependencies", "private", and "yaml_front_matter".
 }
 \description{
 Run a tutorial which is contained within an R package.

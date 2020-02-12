@@ -51,4 +51,3 @@ test_that("tutorial dependency check works (not interactive)", {
 
   expect_error(install_tutorial_dependencies(tutorial_dir))
 })
-
