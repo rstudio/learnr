@@ -15,9 +15,13 @@ learnr 0.10.0.9000 (unreleased)
 
 * Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))
 
-* Fixed extra parameter documentation bug. ([#323](https://github.com/rstudio/learnr/pull/323))
+* Fixed extra parameter documentation bug for CRAN. ([#323](https://github.com/rstudio/learnr/pull/323))
 
 * Fixed video initialization error caused by a jQuery version increase in Shiny. ([#326](https://github.com/rstudio/learnr/pull/#326))
+
+* Fixed progressive reveal bug where the next section would not be displayed unless refreshed. ([#330](https://github.com/rstudio/learnr/pull/330))
+
+* Fixed a bug where topics would not be loaded if they contained non-ascii characters. ([#330](https://github.com/rstudio/learnr/pull/330))
 
 
 learnr 0.10.0
