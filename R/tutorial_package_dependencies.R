@@ -53,25 +53,16 @@ install_tutorial_dependencies <- function(dir) {
 #' @examples
 #' tutorial_package_dependencies(package = "learnr")
 tutorial_package_dependencies <- function(name = NULL, package = NULL) {
-
-  # if name is not provided, combine all dependencies for a given package
   if (identical(name, NULL)) {
-    avail_tutorials <- available_tutorials(package = package)
-    all_pkg_deps <- mapply(
-      avail_tutorials$package, avail_tutorials$name,
-      SIMPLIFY = FALSE, USE.NAMES = FALSE,
-      FUN = function(pkg, name) {
-        tutorial_package_dependencies(name, pkg)
-      }
-    )
+    info <- available_tutorials(package = package)
     return(
-      sort(unique(unlist(all_pkg_deps)))
+      sort(unique(unlist(info$package_dependencies)))
     )
   }
 
-  # resolve tutorial path
-  dir <- get_tutorial_path(name, package)
-  tutorial_dir_package_dependencies(dir)
+  tutorial_dir_package_dependencies(
+    get_tutorial_path(name = name, package = package)
+  )
 }
 
 tutorial_dir_package_dependencies <- function(dir) {
