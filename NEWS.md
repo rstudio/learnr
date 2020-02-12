@@ -1,4 +1,4 @@
-learnr 0.10.0.9000 (unreleased)
+learnr 0.10.1
 ===========
 
 ## New features
