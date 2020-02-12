@@ -21,7 +21,7 @@ install_tutorial_dependencies <- function(dir) {
   needed_pkgs <- get_needed_pkgs(dir)
 
   if(length(needed_pkgs) == 0) {
-    return(invisible())
+    return(invisible(NULL))
   }
 
   if(!interactive()) {
