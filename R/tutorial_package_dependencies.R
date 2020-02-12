@@ -45,11 +45,13 @@ install_tutorial_dependencies <- function(dir) {
 #'
 #' List the \R packages required to run a particular tutorial.
 #'
-#' @param name The tutorial name. If \code{name} is \code{NULL}, then all tutorials within \code{package} will be searched.
-#' @param package The \R package providing the tutorial. If \code{package} is \code{NULL}, then all tutorials will be searched.
+#' @param name The tutorial name. If \code{name} is \code{NULL}, then all
+#'   tutorials within \code{package} will be searched.
+#' @param package The \R package providing the tutorial. If \code{package} is
+#'   \code{NULL}, then all tutorials will be searched.
 #'
 #' @export
-#' @return A character vector of package names that are require for execution.
+#' @return A character vector of package names that are required for execution.
 #' @examples
 #' tutorial_package_dependencies(package = "learnr")
 tutorial_package_dependencies <- function(name = NULL, package = NULL) {
