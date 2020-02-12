@@ -70,5 +70,12 @@ tutorial_package_dependencies <- function(name = NULL, package = NULL) {
 tutorial_dir_package_dependencies <- function(dir) {
   # enumerate tutorial package dependencies
   deps <- renv::dependencies(dir, quiet = TRUE)
+
+  # R <= 3.4 can not sort(NULL)
+  # if no deps are found, renv::dependencies returns NULL
+  if (is.null(deps)) {
+    return(NULL)
+  }
+
   sort(unique(deps$Package))
 }
