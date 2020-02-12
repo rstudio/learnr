@@ -24,6 +24,9 @@ register_http_handlers <- function(session, metadata) {
       identifiers = identifiers
     )
 
+    # Now that we've initialized the session state, emit the start event
+    session_start_event(session)
+
     session$userData$learnr_state("initialized")
     # return identifers
     list(

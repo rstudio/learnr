@@ -156,6 +156,9 @@ $(document).ready(function() {
         else {
           scrollLastSectionToView = true;
         }
+        // update UI
+        sectionSkipped([section.jqElement]);
+        // notify server
         tutorial.skipSection(sectionId);
       }
     }
@@ -317,7 +320,7 @@ $(document).ready(function() {
   function handleLocationHash() {
 
     function findTopicIndexFromHash() {
-      var hash = window.location.hash;
+      var hash = window.decodeURIComponent(window.location.hash);
       var topicIndex = 0;
       if (hash.length > 0) {
         $.each(topics, function( ti, t) {

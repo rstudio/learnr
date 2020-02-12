@@ -5,15 +5,25 @@ learnr 0.10.0.9000 (unreleased)
 
 ## Minor new features and improvements
 
+* `learnr` gained the function `learnr::tutorial_package_dependencies()`, used to enumerate a tutorial's R package dependencies. Front-ends can use this to ensure a tutorial's dependencies are satisfied before attempting to run that tutorial. `learnr::available_tutorials()` gained the column `package_dependencies` containing the required packages to run the document. ([#329](https://github.com/rstudio/learnr/pull/329))
+
 * Include vignette about publishing learnr tutorials on shinyapps.io
 
 * `learnr`'s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system. ([#312](https://github.com/rstudio/learnr/issues/312))
+
+* Add `session_start` and `session_stop` events. ([#311](https://github.com/rstudio/learnr/pull/328))
 
 ## Bug fixes
 
 * Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))
 
-* Fixed extra parameter documentation bug. ([#323](https://github.com/rstudio/learnr/pull/323))
+* Fixed extra parameter documentation bug for CRAN. ([#323](https://github.com/rstudio/learnr/pull/323))
+
+* Fixed video initialization error caused by a jQuery version increase in Shiny. ([#326](https://github.com/rstudio/learnr/pull/#326))
+
+* Fixed progressive reveal bug where the next section would not be displayed unless refreshed. ([#330](https://github.com/rstudio/learnr/pull/330))
+
+* Fixed a bug where topics would not be loaded if they contained non-ascii characters. ([#330](https://github.com/rstudio/learnr/pull/330))
 
 
 learnr 0.10.0

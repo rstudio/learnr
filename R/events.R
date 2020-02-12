@@ -151,7 +151,17 @@ video_progress_event <- function(session, video_url, time, total_time) {
   save_video_progress(session, video_url, time, total_time)
 }
 
+session_start_event <- function(session) {
+  record_event(session = session,
+               event = "session_start",
+               data = list())
+}
 
+session_stop_event <- function(session) {
+  record_event(session = session,
+               event = "session_stop",
+               data = list())
+}
 
 debug_event_recorder <- function(tutorial_id,
                                  tutorial_version,

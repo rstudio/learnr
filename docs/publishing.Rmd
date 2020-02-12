@@ -20,7 +20,12 @@ To bundle a tutorial into an R package and make it available for running via the
 
 1. Create a `tutorials` directory within the `inst` sub-directory of your package and then create a directory for your tutorial there (e.g. `inst/tutorials/hello`, `inst/tutorials/slidy`, etc.).
 
-2. Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development & preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).
+2. Add the `.Rmd` associated with your tutorial in that directory. (You may see a
+`..._files/` directory or a `.html` file that periodically get generated adjacent
+to your `.Rmd` tutorial. You can safely ignore, delete, or exclude these from your 
+package and from version control. They are temporary artifacts produced while
+rendering the tutorial on your specific system and aren't likely to be 
+portable to other environments.)
 
 Once you've done this users can run your tutorial as follows (note they should be sure to install the **learnr** package before attempting to run the tutorial):
 
@@ -242,20 +247,28 @@ The `event` parameter is one of the following values:
 <td>User requested a hint or solution for an exercise.</td>
 </tr>
 <tr class="even">
-<td>exercise_error</td>
-<td>Error occurred within R code submitted as an answer for an exercise.</td>
-</tr>
-<tr class="odd">
 <td>exercise_submission</td>
 <td>User submitted an answer for an exercise.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>question_submission</td>
 <td>User submitted an answer for a multiple-choice question.</td>
 </tr>
 <tr class="even">
 <td>video_progress</td>
 <td>User watched a segment of a video.</td>
+</tr>
+<tr class="odd">
+<td>section_skipped</td>
+<td>A section of the tutorial was skipped.</td>
+</tr>
+<tr class="even">
+<td>session_start</td>
+<td>A new session has been initiated</td>
+</tr>
+<tr class="odd">
+<td>session_stop</td>
+<td>A session has been terminated</td>
 </tr>
 </tbody>
 </table>
@@ -289,7 +302,7 @@ The default tutorial and user identifiers are determined as follows:
 <td>tutorial_version</td>
 <td>1.0</td>
 </tr>
-<tr class="add">
+<tr class="odd">
 <td>user_id</td>
 <td>Account name of server user executing the tutorial</td>
 </tr>
