@@ -13,7 +13,7 @@
 
 <title>Interactive Tutorials for R</title>
 
-<script src="site_libs/header-attrs-2.1.1/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -497,9 +497,10 @@ Summarizing Data
 <h3>Creating a Tutorial</h3>
 <p>A tutorial is just a directory that contains a standard R Markdown document with three additional attributes:</p>
 <ol style="list-style-type: decimal">
-<li>Loads the <strong>learnr</strong> package.</li>
-<li>Includes one or more interactive components (exercises, quiz questions, etc.).</li>
-<li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header.</li>
+<li>Loads the <strong>learnr</strong> package,</li>
+<li>Includes one or more interactive components (exercises, quiz questions, etc.),</li>
+<li>Uses the <code>runtime: shiny_prerendered</code> directive in the YAML header,</li>
+<li>Provides a short description in the top-level <code>description:</code> field of the YAML header.</li>
 </ol>
 <p>The <code>runtime: shiny_prerendered</code> element included in the YAML hints at the underlying implementation of tutorials: they are simply Shiny applications which use an R Markdown document as their user-interface rather than the traditional <code>ui.R</code> file.</p>
 <div id="tutorial-format" class="section level4">
