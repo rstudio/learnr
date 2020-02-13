@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -250,6 +249,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -278,6 +278,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -410,8 +416,8 @@ div.tocify {
 learnr::run_tutorial(&quot;slidy&quot;, package = &quot;learnr&quot;)</code></pre>
 <p>To bundle a tutorial into an R package and make it available for running via the <code>run_tutorial</code> function you should:</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
-<li><p>Render your tutorial .Rmd to .html and include the rendered HTML in your R package (this will happen automatically during development &amp; preview of the tutorial, you just need to be sure to include the .html file within the R package when you build it).</p></li>
+<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
+<li><p>Add the <code>.Rmd</code> associated with your tutorial in that directory. (You may see a <code>..._files/</code> directory or a <code>.html</code> file that periodically get generated adjacent to your <code>.Rmd</code> tutorial. You can safely ignore, delete, or exclude these from your package and from version control. They are temporary artifacts produced while rendering the tutorial on your specific system and aren’t likely to be portable to other environments.)</p></li>
 </ol>
 <p>Once you’ve done this users can run your tutorial as follows (note they should be sure to install the <strong>learnr</strong> package before attempting to run the tutorial):</p>
 <p>Users would then simply install learnr directly before running your tutorial, for example:</p>
@@ -434,7 +440,6 @@ learnr::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)<
 </ol>
 <p>For both of these methods, you can use the RStudio IDE’s integrated <a href="https://support.rstudio.com/hc/en-us/articles/228270928-Push-button-publishing-to-RStudio-Connect">one-click publishing</a> to publish directly from your desktop:</p>
 <p><img src="images/shinyapps-deploy-faithful.png" width="669" height="421" /></p>
-<p>Note that you should install the <a href="https://www.rstudio.com/products/rstudio/download/">latest release of RStudio</a> (v1.0.136 or higher) before attempting to use one-click publishing with tutorials.</p>
 </div>
 <div id="shiny-server-open-source-and-pro-versions" class="section level3">
 <h3>Shiny Server (Open Source and Pro versions)</h3>
@@ -454,7 +459,7 @@ learnr::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)<
 <div id="security-considerations" class="section level3">
 <h3>Security Considerations</h3>
 <p>Since tutorials enable end users to submit R code for execution on the server, you need to architect your deployment of tutorials so that code is placed in an appropriate sandbox. There are a variety of ways to accomplish this including placing the entire Shiny Server in a container or Linux namespace that limits it’s access to the filesystem and/or other system resources.</p>
-<p>Note that by default when running on UNIX systems the <strong>learnr</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the [Exercise Evaluation] section below for details).</p>
+<p>Note that by default when running on UNIX systems the <strong>learnr</strong> package runs exercise code within a forked child process. This means that it’s not possible for exercise code to modify the state of the parent Shiny Server process. You can further customize the evaluation environment for exercises using AppArmor and other system resource management facilities (see the <a href="#exercise-execution">Exercise Execution</a> section below for details).</p>
 <div id="deployment-dependencies-not-found" class="section level4">
 <h4>Deployment Dependencies Not Found</h4>
 <p>If your tutorial contains broken code within exercises for users to fix, the CRAN version of <a href="https://github.com/rstudio/packrat/"><code>packrat</code></a> will not find all of your dependencies to install when the tutorial is deployed. To deploy tutorials containing broken exercise code, install the development version of <code>packrat</code>. This version of <code>packrat</code> is able to find dependencies per R chunk, allowing for <em>broken</em> R chunks within the tutorial file.</p>
@@ -653,21 +658,13 @@ User requested a hint or solution for an exercise.
 </tr>
 <tr class="even">
 <td>
-exercise_error
-</td>
-<td>
-Error occurred within R code submitted as an answer for an exercise.
-</td>
-</tr>
-<tr class="odd">
-<td>
 exercise_submission
 </td>
 <td>
 User submitted an answer for an exercise.
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 question_submission
 </td>
@@ -681,6 +678,30 @@ video_progress
 </td>
 <td>
 User watched a segment of a video.
+</td>
+</tr>
+<tr class="odd">
+<td>
+section_skipped
+</td>
+<td>
+A section of the tutorial was skipped.
+</td>
+</tr>
+<tr class="even">
+<td>
+session_start
+</td>
+<td>
+A new session has been initiated
+</td>
+</tr>
+<tr class="odd">
+<td>
+session_stop
+</td>
+<td>
+A session has been terminated
 </td>
 </tr>
 </tbody>
@@ -723,7 +744,7 @@ tutorial_version
 1.0
 </td>
 </tr>
-<tr class="add">
+<tr class="odd">
 <td>
 user_id
 </td>

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Interactive Tutorials for R</title>
 
+<script src="site_libs/header-attrs-2.1.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -250,6 +250,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -278,6 +279,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -574,7 +581,7 @@ Summarizing Data
 <div id="shiny-components" class="section level2">
 <h2>Shiny Components</h2>
 <p>The <strong>learnr</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
-<p>The basic technique is to add a <code>context=&quot;server&quot;</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
+<p>The basic technique is to add a <code>context="server"</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
 <div id="shiny">
 
 </div>

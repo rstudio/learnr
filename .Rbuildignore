@@ -20,3 +20,6 @@ rsconnect/
 ^LICENSE\.md$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^doc$
+^Meta$
+^\.github

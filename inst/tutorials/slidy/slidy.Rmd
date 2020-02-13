@@ -2,6 +2,9 @@
 output: slidy_presentation
 runtime: shiny_prerendered
 title: "Slidly demo"
+description: >
+  This tutorial demonstrates how one can use dygraphs (with the dygraph package)
+  as part of a learnr tutorial.
 ---
 
 ```{r setup, include=FALSE}

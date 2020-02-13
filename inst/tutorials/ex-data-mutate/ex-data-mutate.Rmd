@@ -5,6 +5,8 @@ output:
     progressive: true
     allow_skip: true
 runtime: shiny_prerendered
+description: >
+  Learn how to select, create, and mutate variables in a data frame.
 ---
 
 ```{r setup, include=FALSE}

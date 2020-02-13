@@ -369,7 +369,7 @@ Tutorial.prototype.$injectScript = function(src, onload) {
   script.src = src;
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-  $(script).load(onload);
+  $(script).on("load", onload);
 };
 
 Tutorial.prototype.$debounce = function(func, wait, immediate) {
