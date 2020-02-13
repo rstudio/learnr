@@ -92,7 +92,7 @@ jobs:
 
 
   deploy:
-    if: github.repository == 'rstudio/learnr'
+    if: github.repository == 'rstudio/learnr' && github.event_name == 'push'
     runs-on: ${{ matrix.config.os }}
 
     name: "Deploy to shinyapps.io"
