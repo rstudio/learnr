@@ -1,4 +1,7 @@
-library(testthat)
-library(learnr)
 
-test_check("learnr")
+if (requireNamespace("testthat")) {
+  library(testthat)
+  library(learnr)
+
+  test_check("learnr")
+}

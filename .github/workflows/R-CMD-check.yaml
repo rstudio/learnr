@@ -87,3 +87,63 @@ jobs:
         run: >
           Rscript
           -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
+
+
+
+
+  deploy:
+    if: github.repository == 'rstudio/learnr' && github.event_name == 'push'
+    runs-on: ${{ matrix.config.os }}
+
+    name: "Deploy to shinyapps.io"
+    needs: [R-CMD-check]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-16.04, r: '3.6', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      CRAN: ${{ matrix.config.cran }}
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: r-lib/actions/setup-r@master
+        with:
+          r-version: ${{ matrix.config.r }}
+
+      - uses: r-lib/actions/setup-pandoc@master
+
+      - name: Query dependencies
+        run: >
+          Rscript
+          -e "install.packages('remotes')"
+          -e "saveRDS(remotes::dev_package_deps(dependencies = TRUE), 'depends.Rds', version = 2)"
+
+      - name: Cache R packages
+        if: runner.os != 'Windows'
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-${{ matrix.config.r }}-deploy-${{ hashFiles('depends.Rds') }}
+          restore-keys: |
+            ${{ runner.os }}-r-${{ matrix.config.r }}-deploy-
+            ${{ runner.os }}-r-${{ matrix.config.r }}-
+
+      - name: Install dependencies
+        run: >
+          Rscript
+          -e "library(remotes)"
+          -e "update(readRDS('depends.Rds'))"
+          -e "remotes::install_cran('sortable')"
+
+      - name: Deploy
+        env:
+          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+        run: >
+          Rscript 'tools/deploy_tutorials_on_ci.R'
