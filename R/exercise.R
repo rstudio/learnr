@@ -71,6 +71,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
       code = exercise$code
     )
 
+    start <- Sys.time()
+
     # start it
     evaluator$start()
 
@@ -90,6 +92,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
           code = exercise$code,
           output = result$html_output,
           timeout_exceeded = result$timeout_exceeded,
+          time_elapsed = as.numeric(Sys.time() - start),
           error_message = result$error_message,
           checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback

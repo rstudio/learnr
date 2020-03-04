@@ -5,13 +5,15 @@ learnr (development version)
 
 * Renamed the `exercise_submission` event to `exercise_result` and added the following fields: 
   1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
-  2. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported.
+  2. `time_elapsed` - the time required to run the exercise (in seconds)
+  3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported.
+  
 
 ## New features
 
 ## Minor new features and improvements
 
-* Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated to an `exercise_result` event using the randomly generated `id` included in the data of both events.
+* Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated with an `exercise_result` event using the randomly generated `id` included in the data of both events.
 
 ## Bug fixes
 
