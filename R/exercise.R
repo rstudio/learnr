@@ -61,7 +61,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
 
     # Create exercise ID to map the associated events.
-    ex_id <- shiny:::createUniqueId(8)
+    ex_id <- random_id("lnr_ex")
 
     # fire event before computing
     exercise_submitted_event(
