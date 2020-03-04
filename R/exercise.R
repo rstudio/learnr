@@ -89,6 +89,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
           label = exercise$label,
           code = exercise$code,
           output = result$html_output,
+          timeout_exceeded = result$timeout_exceeded,
           error_message = result$error_message,
           checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback
@@ -176,6 +177,7 @@ evaluate_exercise <- function(exercise, envir) {
         return(list(
           feedback = checker_feedback,
           error_message = NULL,
+          timeout_exceeded = FALSE,
           html_output = feedback_as_html(checker_feedback)
         ))
       }
@@ -404,6 +406,7 @@ evaluate_exercise <- function(exercise, envir) {
   list(
     feedback = checker_feedback,
     error_message = NULL,
+    timeout_exceeded = FALSE,
     html_output = html_output
   )
 }
@@ -412,12 +415,16 @@ empty_result <- function() {
   list(
     feedback = NULL,
     error_message = NULL,
+    timeout_exceeded = FALSE,
     html_output = NULL
   )
 }
-error_result <- function(error_message) {
+# @param timeout_exceeded represents whether or not the error was triggered
+#   because the exercise exceeded the timeout. Use NA if unknown
+error_result <- function(error_message, timeout_exceeded=NA) {
   list(
     feedback = NULL,
+    timeout_exceeded = timeout_exceeded,
     error_message = error_message,
     html_output = error_message_html(error_message)
   )

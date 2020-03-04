@@ -16,7 +16,9 @@ inline_evaluator <- function(expr, timelimit) {
       result <<- tryCatch(
         force(expr),
         error = function(e) {
-          error_result(e$message)
+          # TODO: could grepl the error message to determine if the error was due
+          # to an exceeded timeout.
+          error_result(e$message, timeout_exceeded = NA)
         }
       )
     },
@@ -89,7 +91,7 @@ forked_evaluator <- function(expr, timelimit) {
 
         # check if it's an error and convert it to an html error if it is
         if(inherits(result, "try-error"))
-          result <<- error_result(result)
+          result <<- error_result(result, timeout_exceeded = FALSE)
 
         TRUE
       }
@@ -101,7 +103,7 @@ forked_evaluator <- function(expr, timelimit) {
         call_hook("oncleanup", default = default_cleanup)
 
         # return error result
-        result <<- error_result(timeout_error_message())
+        result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
         TRUE
       }
 
