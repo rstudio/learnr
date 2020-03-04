@@ -60,6 +60,17 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
 
+    # Create exercise ID to map the associated events.
+    ex_id <- shiny:::createUniqueId(8)
+
+    # fire event before computing
+    exercise_submitted_event(
+      session = session,
+      id = ex_id,
+      label = exercise$label,
+      code = exercise$code
+    )
+
     # start it
     evaluator$start()
 
@@ -71,9 +82,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
         # get the result
         result <- evaluator$result()
 
-        # side-effect: fire event
-        exercise_submission_event(
+        # fire event with evaluation result
+        exercise_result_event(
           session = session,
+          id = ex_id,
           label = exercise$label,
           code = exercise$code,
           output = result$html_output,

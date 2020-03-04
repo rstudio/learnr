@@ -92,16 +92,31 @@ section_skipped_event <- function(session, sectionId) {
   save_section_skipped(session = session, sectionId = sectionId)
 }
 
-exercise_submission_event <- function(session,
+exercise_submitted_event <- function(session,
+                                      id,
                                       label,
-                                      code,
-                                      output,
-                                      error_message,
-                                      checked = FALSE,
-                                      feedback = NULL) {
+                                      code) {
   # notify server-side listeners
   record_event(session = session,
-               event = "exercise_submission",
+               event = "exercise_submitted",
+               data = list(label = label,
+                           id = id,
+                           code = code))
+
+  # TODO: we could save the code for later replay in case the evaluation gets interrupted.
+}
+
+exercise_result_event <- function(session,
+                                     id,
+                                     label,
+                                     code,
+                                     output,
+                                     error_message,
+                                     checked = FALSE,
+                                     feedback = NULL) {
+  # notify server-side listeners
+  record_event(session = session,
+               event = "exercise_result",
                data = list(label = label,
                            code = code,
                            output = output,

@@ -1,12 +1,17 @@
 learnr (development version)
 ===========
 
+## Breaking Changes
+
+* Renamed the `exercise_submission` event to `exercise_result` and added a randomly generated `id` field.
+
 ## New features
 
 ## Minor new features and improvements
 
-## Bug fixes
+* Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated to an `exercise_result` event using the randomly generated `id` included in the data of both events.
 
+## Bug fixes
 
 
 learnr 0.10.1
