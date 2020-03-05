@@ -60,6 +60,19 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
 
+    # Create exercise ID to map the associated events.
+    ex_id <- random_id("lnr_ex")
+
+    # fire event before computing
+    exercise_submitted_event(
+      session = session,
+      id = ex_id,
+      label = exercise$label,
+      code = exercise$code
+    )
+
+    start <- Sys.time()
+
     # start it
     evaluator$start()
 
@@ -71,12 +84,15 @@ setup_exercise_handler <- function(exercise_rx, session) {
         # get the result
         result <- evaluator$result()
 
-        # side-effect: fire event
-        exercise_submission_event(
+        # fire event with evaluation result
+        exercise_result_event(
           session = session,
+          id = ex_id,
           label = exercise$label,
           code = exercise$code,
           output = result$html_output,
+          timeout_exceeded = result$timeout_exceeded,
+          time_elapsed = as.numeric(Sys.time() - start),
           error_message = result$error_message,
           checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback
@@ -164,6 +180,7 @@ evaluate_exercise <- function(exercise, envir) {
         return(list(
           feedback = checker_feedback,
           error_message = NULL,
+          timeout_exceeded = FALSE,
           html_output = feedback_as_html(checker_feedback)
         ))
       }
@@ -392,6 +409,7 @@ evaluate_exercise <- function(exercise, envir) {
   list(
     feedback = checker_feedback,
     error_message = NULL,
+    timeout_exceeded = FALSE,
     html_output = html_output
   )
 }
@@ -400,12 +418,16 @@ empty_result <- function() {
   list(
     feedback = NULL,
     error_message = NULL,
+    timeout_exceeded = FALSE,
     html_output = NULL
   )
 }
-error_result <- function(error_message) {
+# @param timeout_exceeded represents whether or not the error was triggered
+#   because the exercise exceeded the timeout. Use NA if unknown
+error_result <- function(error_message, timeout_exceeded=NA) {
   list(
     feedback = NULL,
+    timeout_exceeded = timeout_exceeded,
     error_message = error_message,
     html_output = error_message_html(error_message)
   )

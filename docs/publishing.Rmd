@@ -247,26 +247,30 @@ The `event` parameter is one of the following values:
 <td>User requested a hint or solution for an exercise.</td>
 </tr>
 <tr class="even">
-<td>exercise_submission</td>
+<td>exercise_submitted</td>
 <td>User submitted an answer for an exercise.</td>
 </tr>
 <tr class="odd">
+<td>exercise_result</td>
+<td>The evaluation of an exercise has completed.</td>
+</tr>
+<tr class="even">
 <td>question_submission</td>
 <td>User submitted an answer for a multiple-choice question.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>video_progress</td>
 <td>User watched a segment of a video.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>section_skipped</td>
 <td>A section of the tutorial was skipped.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>session_start</td>
 <td>A new session has been initiated</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>session_stop</td>
 <td>A session has been terminated</td>
 </tr>
