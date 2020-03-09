@@ -12,6 +12,30 @@ description: >
 
 ```{r setup, include=FALSE}
 library(learnr)
+
+options(error = function() {
+  lobstr::cst();
+  print(
+    list(
+      calls = sys.calls(),
+      frames = lapply(sys.frames(), function(f) ls.str(envir = f))
+    )
+  )
+})
+options(
+  tutorial.exercise.evaluator = learnr:::forked_evaluator,
+  tutorial.exercise.evaluator.onstart = function(pid) {
+    options(error = function() {
+      lobstr::cst();
+      print(
+        list(
+        calls = sys.calls(),
+          frames = lapply(sys.frames(), function(f) ls.str(envir = f))
+        )
+      )
+    })
+  }
+)
 ```
 
 The following code computes the answer to 1+1. Change it so it computes 2 + 2:

@@ -338,8 +338,17 @@ filesystem_storage <- function(dir, compress = TRUE) {
 
   # helpers to transform ids into valid filesystem paths
   id_to_filesystem_path <- function(id) {
-    id <- gsub("..", "", id, fixed = TRUE)
-    utils::URLencode(id, reserved = TRUE, repeated = TRUE)
+    tryCatch({
+      id <- gsub("..", "", id, fixed = TRUE)
+      utils::URLencode(id, reserved = TRUE, repeated = TRUE)
+    }, error = function(e) {
+      lobstr::cst();
+      print(list(
+        calls = tail(sys.calls(), 10),
+        frames = lapply(tail(sys.frames(), 10), function(f) ls.str(envir = f))
+      ))
+      stop(e)
+    })
   }
   id_from_filesystem_path <- function(path) {
     utils::URLdecode(path)
