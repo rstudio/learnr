@@ -13,7 +13,7 @@
 
 <title>Publishing</title>
 
-<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.1.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -659,7 +659,7 @@ User requested a hint or solution for an exercise.
 </tr>
 <tr class="even">
 <td>
-exercise_submission
+exercise_submitted
 </td>
 <td>
 User submitted an answer for an exercise.
@@ -667,13 +667,21 @@ User submitted an answer for an exercise.
 </tr>
 <tr class="odd">
 <td>
+exercise_result
+</td>
+<td>
+The evaluation of an exercise has completed.
+</td>
+</tr>
+<tr class="even">
+<td>
 question_submission
 </td>
 <td>
 User submitted an answer for a multiple-choice question.
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 video_progress
 </td>
@@ -681,7 +689,7 @@ video_progress
 User watched a segment of a video.
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 section_skipped
 </td>
@@ -689,7 +697,7 @@ section_skipped
 A section of the tutorial was skipped.
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 session_start
 </td>
@@ -697,7 +705,7 @@ session_start
 A new session has been initiated
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 session_stop
 </td>
@@ -823,7 +831,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

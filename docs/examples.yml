@@ -13,7 +13,7 @@
 - title: "Summarizing Data"
   img: images/tutorial-ex-data-summarise.png
   href: https://learnr-examples.shinyapps.io/ex-data-summarise
-  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-summarise.Rmd
+  source: https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd
   showcase: true
 
 - title: "learnr: Quiz Questions"
