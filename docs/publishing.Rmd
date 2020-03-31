@@ -177,7 +177,14 @@ You'd likely set these options within `Rprofile.site` or another R source file t
 
 #### Fully Custom Evaluator
 
-You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (`start`, `completed`, and `result`) to use for execution .
+You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts four arguments: 
+
+  1. An expression to evaluate
+  2. A timelimit for evaluation
+  3. A serializable representation of the exercise to be evaluated
+  4. The session associated with the request 
+  
+It returns a list of functions (`start`, `completed`, and `result`) to use for execution.
 
 The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):
 
@@ -186,6 +193,8 @@ The two built-in evaluators (used for Windows/MacOS and UNIX systems respectivel
 2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
 
 You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/master/R/evaluators.R>.
+
+The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
 
 ### Recording Events
 

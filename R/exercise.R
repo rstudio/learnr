@@ -19,7 +19,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise
     exercise <- exercise_rx()
 
-    # short circult for restore (we restore some outputs like errors so that
+    # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
       object <- get_exercise_submission(session = session, label = exercise$label)
@@ -58,7 +58,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
     envir <- duplicate_env(server_envir, parent = globalenv())
 
     # create exercise evaluator
-    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
+    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir),
+                                   timelimit, exercise, session)
 
     # Create exercise ID to map the associated events.
     ex_id <- random_id("lnr_ex")

@@ -1,6 +1,6 @@
 
 # inline execution evaluator
-inline_evaluator <- function(expr, timelimit) {
+inline_evaluator <- function(expr, timelimit, ...) {
 
   result <- NULL
 
@@ -34,7 +34,7 @@ inline_evaluator <- function(expr, timelimit) {
 }
 
 # forked execution evaluator
-forked_evaluator <- function(expr, timelimit) {
+forked_evaluator <- function(expr, timelimit, ...) {
 
   # closure members
   job <- NULL
