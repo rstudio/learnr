@@ -47,7 +47,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
-      if (!is_windows() && !is_macos())
+      remote_host <- Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)
+      if (!is.na(remote_host)){
+        evaluator_factory <- new_remote_evaluator(remote_host)
+      } else if (!is_windows() && !is_macos())
         evaluator_factory <- forked_evaluator
       else
         evaluator_factory <- inline_evaluator

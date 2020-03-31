@@ -118,3 +118,112 @@ forked_evaluator <- function(expr, timelimit, ...) {
     }
   )
 }
+
+#' Remote execution evaluator
+#' @param endpoint The HTTP(S) endpoint to POST the exercises to
+#' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
+#'   endpoint.
+#' @import curl
+#' @export
+new_remote_evaluator <- function(endpoint = getOption("tutorial.remote.host"),
+                                 max_curl_conns = 50){
+
+  # Trim trailing slash
+  endpoint <- sub("/+$", "", endpoint)
+
+  remote_evaluator <- function(expr, timelimit, exercise, session, ...) {
+
+    result <- NULL
+    pool <- curl::new_pool(total_con = max_curl_conns, host_con = max_curl_conns)
+
+    list(
+      start = function() {
+
+        # Initiate a session
+        if (is.null(session$userData$.remote_evaluator_session_id)){
+          rs <- initiate_remote_session(paste0(endpoint, "/learnr/"))
+          session$userData$.remote_evaluator_session_id <- rs
+        }
+
+        # Create curl request
+        json <- jsonlite::toJSON(exercise, auto_unbox = TRUE)
+
+        handle <- curl::new_handle(customrequest = "POST",
+                                   postfields = json,
+                                   postfieldsize = nchar(json),
+                                   timeout_ms = exercise$options$exercise.timelimit * 1000 + 5000)
+        curl::handle_setheaders(handle, "Content-Type" = "application/json")
+
+        url <- paste0(endpoint, "/learnr/", session$userData$.remote_evaluator_session_id)
+
+        done_cb <- function(res){
+          r <- rawToChar(res$content)
+          p <- jsonlite::fromJSON(r)
+          p$html_output <- htmltools::HTML(p$html_output)
+          result <<- p
+        }
+
+        fail_cb <- function(res){
+          # TODO: how should we handle?
+          print("Error result")
+          print(res)
+          result <<- error_result(res)
+        }
+
+        curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+
+        poll <- function(){
+          res <- curl::multi_run(timeout = 0)
+          if (res$pending > 0){
+            later::later(poll, delay = 0.1)
+          }
+        }
+        poll()
+      },
+
+      completed = function() {
+        !is.null(result)
+      },
+
+      result = function() {
+        result
+      }
+    )
+  }
+}
+
+#' Obtains a unique session ID
+#' @noRd
+initiate_remote_session <- function(url){
+  handle <- curl::new_handle(post=1)
+
+  result <- NULL
+
+  done_cb <- function(res){
+    r <- rawToChar(res$content)
+    p <- jsonlite::fromJSON(r)
+    result <<- p$id
+  }
+
+  fail_cb <- function(res){
+    # TODO: how does this stop get handled upstream?
+    stop("Failed to initiate remote session")
+  }
+
+  curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+
+  poll <- function(){
+    res <- curl::multi_run(timeout = 0)
+    if (res$pending > 0){
+      later::later(poll, delay = 0.1)
+    }
+  }
+  poll()
+
+  # TODO: make this non-blocking, or just switch to in-memory fetch
+  while (is.null(result)) {
+    later::run_now()
+  }
+
+  result
+}
