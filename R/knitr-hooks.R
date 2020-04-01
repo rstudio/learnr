@@ -203,7 +203,24 @@ install_knitr_hooks <- function() {
     else if (is_exercise_support_chunk(options)) {
 
       # output wrapper div
+      message("saving local setup!")
       exercise_wrapper_div(suffix = "support")
+
+      if (before) {
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            '# jeff - setup chunk here!! "%s"',
+            dput_to_string(options$label)
+          )
+        )
+      }
+
+
+    } else if (identical(options$label, "setup")) {
+      message("saving setup!")
+      exercise_wrapper_div(suffix = "global_support")
+
     }
 
 
