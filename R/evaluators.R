@@ -125,8 +125,13 @@ forked_evaluator <- function(expr, timelimit, ...) {
 #'   endpoint.
 #' @import curl
 #' @export
-new_remote_evaluator <- function(endpoint = getOption("tutorial.remote.host"),
-                                 max_curl_conns = 50){
+new_remote_evaluator <- function(
+  endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
+  max_curl_conns = 50){
+
+  if (is.na(endpoint)){
+    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.remote.host` option, or the `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable")
+  }
 
   # Trim trailing slash
   endpoint <- sub("/+$", "", endpoint)
@@ -142,6 +147,10 @@ new_remote_evaluator <- function(endpoint = getOption("tutorial.remote.host"),
         # Initiate a session
         if (is.null(session$userData$.remote_evaluator_session_id)){
           rs <- initiate_remote_session(paste0(endpoint, "/learnr/"))
+          if (is.na(rs)){
+            result <<- error_result("error initiating new remote session")
+            return()
+          }
           session$userData$.remote_evaluator_session_id <- rs
         }
 
@@ -164,8 +173,7 @@ new_remote_evaluator <- function(endpoint = getOption("tutorial.remote.host"),
         }
 
         fail_cb <- function(res){
-          # TODO: how should we handle?
-          print("Error result")
+          print("Error submitting remote exercise:")
           print(res)
           result <<- error_result(res)
         }
@@ -206,8 +214,9 @@ initiate_remote_session <- function(url){
   }
 
   fail_cb <- function(res){
-    # TODO: how does this stop get handled upstream?
-    stop("Failed to initiate remote session")
+    print("Error initiating remote session:")
+    print(res)
+    result <<- NA
   }
 
   curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
