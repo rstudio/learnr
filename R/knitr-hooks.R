@@ -204,9 +204,46 @@ install_knitr_hooks <- function() {
 
       # output wrapper div
       exercise_wrapper_div(suffix = "support")
+
+      # Store setup chunks for later analysis
+      if (before && grepl("-setup$", options$label)) {
+        name <- sub("-setup$", "", options$label)
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::storeSetupChunk(%s, %s)',
+            dput_to_string(name),
+            dput_to_string(options$code)
+          )
+        )
+      }
     }
 
+  })
 
+  # Preserve any existing `source` hook
+  # We generally namespace our hooks under `tutorial` by calling `opts_chunk$set(tutorial = TRUE)`.
+  # Unfortunately, that only applies to subsequent chunks, not the current one.
+  # Since learnr is typically loaded in the `setup` chunk and we want to capture
+  # that chunk, that's unfortunately too late. Therefore we have to set a global
+  # `source` chunk to capture setup. However, we do take precautions to preserve
+  # any existing hook that might have been installed before creating our own.
+  origHook <- knitr::knit_hooks$get("source")
+
+  knitr::knit_hooks$set(source = function(x, options) {
+    origHook(x, options)
+
+    # Note: Empirically, this function gets called twice for the setup chunk.
+    if (identical(options$label, "setup")){
+      rmarkdown::shiny_prerendered_chunk(
+        'server',
+        sprintf(
+          'learnr:::storeSetupChunk("__", %s)',
+          dput_to_string(options$code)
+        )
+      )
+
+    }
   })
 }
 
