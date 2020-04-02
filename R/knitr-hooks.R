@@ -202,9 +202,6 @@ install_knitr_hooks <- function() {
     # handle exercise support chunks (setup, solution, and check)
     else if (is_exercise_support_chunk(options)) {
 
-      # output wrapper div
-      exercise_wrapper_div(suffix = "support")
-
       # Store setup chunks for later analysis
       if (before && grepl("-setup$", options$label)) {
         name <- sub("-setup$", "", options$label)
@@ -217,6 +214,9 @@ install_knitr_hooks <- function() {
           )
         )
       }
+
+      # output wrapper div
+      exercise_wrapper_div(suffix = "support")
     }
 
   })
@@ -263,6 +263,7 @@ install_knitr_hooks <- function() {
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
   knitr::knit_hooks$set(tutorial = NULL)
+  # TODO: restore original source hook
 }
 
 exercise_server_chunk <- function(label) {
