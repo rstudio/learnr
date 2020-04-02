@@ -56,6 +56,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
         evaluator_factory <- inline_evaluator
     }
 
+    # supplement the exercise with the global setup options
+    # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
+    exercise$global_setup <- get_global_setup()
+
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
     envir <- duplicate_env(server_envir, parent = globalenv())
@@ -233,7 +237,7 @@ evaluate_exercise <- function(exercise, envir) {
 
 
 
-  # write the R code to a temp file (inclue setup code if necessary)
+  # write the R code to a temp file (include setup code if necessary)
   code <- c(exercise$setup, exercise$code)
   exercise_r <- "exercise.R"
   writeLines(code, con = exercise_r, useBytes = TRUE)

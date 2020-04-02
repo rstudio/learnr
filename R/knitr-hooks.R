@@ -204,9 +204,59 @@ install_knitr_hooks <- function() {
 
       # output wrapper div
       exercise_wrapper_div(suffix = "support")
+
+      # Store setup chunks for later analysis
+      if (before && grepl("-setup$", options$label)) {
+        name <- sub("-setup$", "", options$label)
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::store_exercise_setup_chunk(%s, %s)',
+            dput_to_string(name),
+            dput_to_string(options$code)
+          )
+        )
+      }
     }
 
+  })
 
+  # Preserve any existing `source` hook
+  # We generally namespace our hooks under `tutorial` by calling `opts_chunk$set(tutorial = TRUE)`.
+  # Unfortunately, that only applies to subsequent chunks, not the current one.
+  # Since learnr is typically loaded in the `setup` chunk and we want to capture
+  # that chunk, that's unfortunately too late. Therefore we have to set a global
+  # `source` chunk to capture setup. However, we do take precautions to preserve
+  # any existing hook that might have been installed before creating our own.
+  origHook <- knitr::knit_hooks$get("source")
+
+  # Note: Empirically, this function gets called twice
+  knitr::knit_hooks$set(source = function(x, options) {
+    origHook(x, options)
+
+    # By configuring `setup` to not overwrite, and `setup-global-exercise` to
+    # overwrite, we ensure that:
+    #  1. If a chunk named `setup-global-exercise` exists, we use that
+    #  2. If not, it would return the chunk named `setup` if it exists
+    if (identical(options$label, "setup-global-exercise")){
+      rmarkdown::shiny_prerendered_chunk(
+        'server',
+        sprintf(
+          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = TRUE)',
+          dput_to_string(options$code)
+        )
+      )
+    }
+
+    if (identical(options$label, "setup")){
+      rmarkdown::shiny_prerendered_chunk(
+        'server',
+        sprintf(
+          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = FALSE)',
+          dput_to_string(options$code)
+        )
+      )
+    }
   })
 }
 
