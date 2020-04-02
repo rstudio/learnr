@@ -217,6 +217,7 @@ install_knitr_hooks <- function() {
 
       # output wrapper div
       exercise_wrapper_div(suffix = "support")
+
     }
 
   })
@@ -232,8 +233,6 @@ install_knitr_hooks <- function() {
 
   # Note: Empirically, this function gets called twice
   knitr::knit_hooks$set(source = function(x, options) {
-    origHook(x, options)
-
     # By configuring `setup` to not overwrite, and `setup-global-exercise` to
     # overwrite, we ensure that:
     #  1. If a chunk named `setup-global-exercise` exists, we use that
@@ -257,6 +256,8 @@ install_knitr_hooks <- function() {
         )
       )
     }
+
+    origHook(x, options)
   })
 }
 
