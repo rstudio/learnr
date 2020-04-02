@@ -234,11 +234,15 @@ install_knitr_hooks <- function() {
   knitr::knit_hooks$set(source = function(x, options) {
     origHook(x, options)
 
+    # By configuring `setup` to not overwrite, and `setup-global-exercise` to
+    # overwrite, we ensure that:
+    #  1. If a chunk named `setup-global-exercise` exists, we use that
+    #  2. If not, it would return the chunk named `setup` if it exists
     if (identical(options$label, "setup-global-exercise")){
       rmarkdown::shiny_prerendered_chunk(
         'server',
         sprintf(
-          'learnr:::store_exercise_setup_chunk("__setup_global_exercise__", %s)',
+          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = TRUE)',
           dput_to_string(options$code)
         )
       )
@@ -248,7 +252,7 @@ install_knitr_hooks <- function() {
       rmarkdown::shiny_prerendered_chunk(
         'server',
         sprintf(
-          'learnr:::store_exercise_setup_chunk("__setup__", %s)',
+          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = FALSE)',
           dput_to_string(options$code)
         )
       )

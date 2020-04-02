@@ -54,7 +54,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     }
 
     # supplement the exercise with the global setup options
-    # FIXME: set warn = TRUE if using remote
+    # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
 
     # create a new environment parented by the global environment
