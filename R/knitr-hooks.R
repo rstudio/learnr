@@ -211,7 +211,7 @@ install_knitr_hooks <- function() {
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
-            'learnr:::storeSetupChunk(%s, %s)',
+            'learnr:::store_exercise_setup_chunk(%s, %s)',
             dput_to_string(name),
             dput_to_string(options$code)
           )
@@ -230,19 +230,28 @@ install_knitr_hooks <- function() {
   # any existing hook that might have been installed before creating our own.
   origHook <- knitr::knit_hooks$get("source")
 
+  # Note: Empirically, this function gets called twice
   knitr::knit_hooks$set(source = function(x, options) {
     origHook(x, options)
 
-    # Note: Empirically, this function gets called twice for the setup chunk.
+    if (identical(options$label, "setup-global-exercise")){
+      rmarkdown::shiny_prerendered_chunk(
+        'server',
+        sprintf(
+          'learnr:::store_exercise_setup_chunk("__setup_global_exercise__", %s)',
+          dput_to_string(options$code)
+        )
+      )
+    }
+
     if (identical(options$label, "setup")){
       rmarkdown::shiny_prerendered_chunk(
         'server',
         sprintf(
-          'learnr:::storeSetupChunk("__", %s)',
+          'learnr:::store_exercise_setup_chunk("__setup__", %s)',
           dput_to_string(options$code)
         )
       )
-
     }
   })
 }
