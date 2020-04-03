@@ -37,6 +37,7 @@ Imports:
     ellipsis (>= 0.2.0.1),
     checkmate,
     renv (>= 0.8.0)
+Remotes: rstudio/htmltools
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
