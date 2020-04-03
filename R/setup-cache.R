@@ -19,3 +19,7 @@ get_global_setup <- function(){
   }
   NULL
 }
+
+clear_exercise_setup_chunks <- function(){
+  rm(list=ls(setup_chunks, all.names=TRUE), envir=setup_chunks)
+}
