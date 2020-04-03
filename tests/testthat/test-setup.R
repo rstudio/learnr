@@ -13,6 +13,10 @@ test_that("store works", {
   # Overwrite returns true
   expect_equal(store_exercise_setup_chunk("myName", c("updated", "code"), TRUE), TRUE)
   expect_equal(setup_chunks$myName, c("updated", "code"))
+
+  # clear clears
+  clear_exercise_setup_chunks()
+  expect_equal(length(ls(envir = setup_chunks)), 0)
 })
 
 test_that("get_global works", {

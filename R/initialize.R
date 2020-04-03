@@ -36,7 +36,7 @@ initialize_tutorial <- function() {
     # clear the setup chunk cache
     rmarkdown::shiny_prerendered_chunk(
       'server',
-      'rm(list=ls(learnr:::setup_chunks, all.names=TRUE), envir=learnr:::setup_chunks)',
+      'learnr:::clear_exercise_setup_chunks()',
       singleton = TRUE
     )
 
