@@ -45,6 +45,10 @@ install_knitr_hooks <- function() {
     }
   }
 
+  is_exercise_setup_chunk <- function(label) {
+    grepl("-setup$", label) || (length(exercise_chunks_for_setup_chunk(label)) > 0)
+  }
+
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutorial = function(options) {
 
@@ -203,13 +207,12 @@ install_knitr_hooks <- function() {
     else if (is_exercise_support_chunk(options)) {
 
       # Store setup chunks for later analysis
-      if (before && grepl("-setup$", options$label)) {
-        name <- sub("-setup$", "", options$label)
+      if (before && is_exercise_setup_chunk(options$label)) {
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
             'learnr:::store_exercise_setup_chunk(%s, %s)',
-            dput_to_string(name),
+            dput_to_string(options$label),
             dput_to_string(options$code)
           )
         )
@@ -272,7 +275,7 @@ new_source_knit_hook <- function(prerenderCB = rmarkdown::shiny_prerendered_chun
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
   knitr::knit_hooks$set(tutorial = NULL)
-  knitr::knit_hooks$set(tutorial = knitr_hook_cache$source)
+  knitr::knit_hooks$set(source = knitr_hook_cache$source)
 }
 
 exercise_server_chunk <- function(label) {
