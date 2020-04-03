@@ -229,7 +229,7 @@ install_knitr_hooks <- function() {
   # that chunk, that's unfortunately too late. Therefore we have to set a global
   # `source` chunk to capture setup. However, we do take precautions to preserve
   # any existing hook that might have been installed before creating our own.
-  origHook <- knitr::knit_hooks$get("source")
+  knitr_hook_cache$source <- knitr::knit_hooks$get("source")
 
   # Note: Empirically, this function gets called twice
   knitr::knit_hooks$set(source = function(x, options) {
@@ -257,14 +257,16 @@ install_knitr_hooks <- function() {
       )
     }
 
-    origHook(x, options)
+    knitr_hook_cache$source(x, options)
   })
 }
+
+knitr_hook_cache <- new.env(parent=emptyenv())
 
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
   knitr::knit_hooks$set(tutorial = NULL)
-  # TODO: restore original source hook
+  knitr::knit_hooks$set(tutorial = knitr_hook_cache$source)
 }
 
 exercise_server_chunk <- function(label) {
