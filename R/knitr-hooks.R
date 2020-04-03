@@ -245,9 +245,7 @@ install_knitr_hooks <- function() {
           dput_to_string(options$code)
         )
       )
-    }
-
-    if (identical(options$label, "setup")){
+    } else if (identical(options$label, "setup")){
       rmarkdown::shiny_prerendered_chunk(
         'server',
         sprintf(
