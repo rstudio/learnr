@@ -232,13 +232,21 @@ install_knitr_hooks <- function() {
   knitr_hook_cache$source <- knitr::knit_hooks$get("source")
 
   # Note: Empirically, this function gets called twice
-  knitr::knit_hooks$set(source = function(x, options) {
+  knitr::knit_hooks$set(source = new_source_knit_hook())
+}
+
+# cache to hold the original knit hook
+knitr_hook_cache <- new.env(parent=emptyenv())
+
+# takes in the prerenderCB which we can use to mock this side-effect in testing.
+new_source_knit_hook <- function(prerenderCB = rmarkdown::shiny_prerendered_chunk) {
+  function(x, options) {
     # By configuring `setup` to not overwrite, and `setup-global-exercise` to
     # overwrite, we ensure that:
     #  1. If a chunk named `setup-global-exercise` exists, we use that
     #  2. If not, it would return the chunk named `setup` if it exists
     if (identical(options$label, "setup-global-exercise")){
-      rmarkdown::shiny_prerendered_chunk(
+      prerenderCB(
         'server',
         sprintf(
           'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = TRUE)',
@@ -246,7 +254,7 @@ install_knitr_hooks <- function() {
         )
       )
     } else if (identical(options$label, "setup")){
-      rmarkdown::shiny_prerendered_chunk(
+      prerenderCB(
         'server',
         sprintf(
           'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = FALSE)',
@@ -255,11 +263,11 @@ install_knitr_hooks <- function() {
       )
     }
 
-    knitr_hook_cache$source(x, options)
-  })
+    if(!is.null(knitr_hook_cache$source)) {
+      knitr_hook_cache$source(x, options)
+    }
+  }
 }
-
-knitr_hook_cache <- new.env(parent=emptyenv())
 
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
