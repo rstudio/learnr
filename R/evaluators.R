@@ -129,15 +129,16 @@ new_remote_evaluator <- function(
   endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
   max_curl_conns = 50){
 
-  internal_new_remote_evaluator(endpoint, max_curl_conns, initiate_remote_session)
+  internal_new_remote_evaluator(endpoint, max_curl_conns)
 }
 
 # An internal version of new_remote_evaluator that allows us to stub some calls
 # for testing.
 internal_new_remote_evaluator <- function(
-  endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
-  max_curl_conns = 50,
+  endpoint,
+  max_curl_conns,
   initiate = initiate_remote_session()){
+
   if (is.na(endpoint)){
     stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.remote.host` option, or the `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable")
   }
@@ -145,7 +146,7 @@ internal_new_remote_evaluator <- function(
   # Trim trailing slash
   endpoint <- sub("/+$", "", endpoint)
 
-  remote_evaluator <- function(expr, timelimit, exercise, session, ...) {
+  function(expr, timelimit, exercise, session, ...) {
 
     result <- NULL
     pool <- curl::new_pool(total_con = max_curl_conns, host_con = max_curl_conns)
@@ -158,8 +159,6 @@ internal_new_remote_evaluator <- function(
           # Create curl request
           json <- jsonlite::toJSON(exercise, auto_unbox = TRUE)
 
-          print(json)
-
           handle <- curl::new_handle(customrequest = "POST",
                                      postfields = json,
                                      postfieldsize = nchar(json),
@@ -169,18 +168,26 @@ internal_new_remote_evaluator <- function(
           url <- paste0(endpoint, "/learnr/", sess_id)
 
           done_cb <- function(res){
-            r <- rawToChar(res$content)
-            p <- jsonlite::fromJSON(r)
-            p$html_output <- htmltools::HTML(p$html_output)
-            print("DONE")
-            print(p)
-            result <<- p
+            tryCatch({
+              if (res$status != 200){
+                err_callback(res)
+                return()
+              }
+
+              r <- rawToChar(res$content)
+              p <- jsonlite::fromJSON(r)
+              p$html_output <- htmltools::HTML(p$html_output)
+              result <<- p
+            }, error = function(e){
+              print(e)
+              fail_cb(res)
+            })
           }
 
           fail_cb <- function(res){
             print("Error submitting remote exercise:")
             print(res)
-            result <<- error_result(res)
+            result <<- error_result("Error submitting remote exercise. Please try again later")
           }
 
           curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
@@ -233,14 +240,14 @@ initiate_remote_session <- function(pool, url, callback, err_callback){
   handle <- curl::new_handle(post=1)
 
   done_cb <- function(res){
-    if (res$status != 200){
-      err_callback(res)
-      return()
-    }
-
     id <- NULL
     failed <- FALSE
     tryCatch({
+      if (res$status != 200){
+        err_callback(res)
+        return()
+      }
+
       r <- rawToChar(res$content)
       p <- jsonlite::fromJSON(r)
       id <- p$id
