@@ -253,7 +253,7 @@ write_setup_chunk <- function(code, overwrite = FALSE){
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::store_exercise_setup_chunk("__setup__", %s, %s)',
+      'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = %s)',
       dput_to_string(code),
       overwrite
     )
