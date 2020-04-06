@@ -223,6 +223,14 @@ install_knitr_hooks <- function() {
 
     }
 
+    # Possibly redundant with the new_source_knot_hook, but that hook skips
+    # chunks that are empty. This makes it more likely that we catch the setup-
+    # global-exercise chunk. We keep the source hook, however, because we want
+    # to be less sensitive to the ordering of the chunks.
+    else if (identical(options$label, "setup-global-exercise")){
+      write_setup_chunk(options$code, TRUE)
+    }
+
   })
 
   # Preserve any existing `source` hook
@@ -241,29 +249,28 @@ install_knitr_hooks <- function() {
 # cache to hold the original knit hook
 knitr_hook_cache <- new.env(parent=emptyenv())
 
+write_setup_chunk <- function(code, overwrite = FALSE){
+  rmarkdown::shiny_prerendered_chunk(
+    'server',
+    sprintf(
+      'learnr:::store_exercise_setup_chunk("__setup__", %s, %s)',
+      dput_to_string(code),
+      overwrite
+    )
+  )
+}
+
 # takes in the prerenderCB which we can use to mock this side-effect in testing.
-new_source_knit_hook <- function(prerenderCB = rmarkdown::shiny_prerendered_chunk) {
+new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {
   function(x, options) {
     # By configuring `setup` to not overwrite, and `setup-global-exercise` to
     # overwrite, we ensure that:
     #  1. If a chunk named `setup-global-exercise` exists, we use that
     #  2. If not, it would return the chunk named `setup` if it exists
     if (identical(options$label, "setup-global-exercise")){
-      prerenderCB(
-        'server',
-        sprintf(
-          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = TRUE)',
-          dput_to_string(options$code)
-        )
-      )
+      write_set_chk(options$code, TRUE)
     } else if (identical(options$label, "setup")){
-      prerenderCB(
-        'server',
-        sprintf(
-          'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = FALSE)',
-          dput_to_string(options$code)
-        )
-      )
+      write_set_chk(options$code, FALSE)
     }
 
     if(!is.null(knitr_hook_cache$source)) {
