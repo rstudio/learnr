@@ -1,6 +1,8 @@
 
 context("evaluators")
 
+pool <- curl::new_pool(total_con = 5, host_con = 5)
+
 # TODO: consider using testthat::setup/teardown, but we want to conditionally
 #  skip these tests which makes that more complicated.
 # @param responses - a list indexed by `<verb> <path>` which maps to an httpuv
@@ -46,7 +48,7 @@ start_server <- function(responses){
   result
 }
 
-test_that("initiate_remote_session works one-at-a-time", {
+test_that("initiate_remote_session works", {
   testthat::skip_on_cran()
 
   responses <- list(`POST /learnr/` = list(
@@ -60,13 +62,130 @@ test_that("initiate_remote_session works one-at-a-time", {
   srv <- start_server(responses)
   on.exit(srv$stop(), add = TRUE)
 
-  sess_id <- initiate_remote_session(paste0(srv$url, "/learnr/"))
+  failed <- FALSE
+  sess_ids <- NULL
+  cb <- function(sid){
+    sess_ids <<- c(sess_ids, sid)
+  }
+  err_cb <- function(res){
+    print(res)
+    testthat::fail("Unexpected error from initiate_remote_session")
+    failed <<- TRUE
+  }
 
-  expect_equal(sess_id, "abcd1234")
+  # Initiate a handful of sessions all at once
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+
+  while(!failed && length(sess_ids) < 3){
+    later::run_now()
+  }
+
+  expect_equal(failed, FALSE)
+  expect_equal(sess_ids, rep("abcd1234", 3))
 })
 
+test_that("initiate_remote_session fails with bad status", {
+  testthat::skip_on_cran()
 
+  responses <- list(`POST /learnr/` = list(
+    status = 500L,
+    headers = list(
+      'Content-Type' = 'application/json'
+    ),
+    body = '{"id": "abcd1234"}'
+  ))
 
+  srv <- start_server(responses)
+  on.exit(srv$stop(), add = TRUE)
+
+  done <- FALSE
+  cb <- function(sid){
+    testthat::fail("Expected failure but got success")
+    done <<- TRUE
+  }
+  err_cb <- function(res){
+    done <<- TRUE
+  }
+
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+
+  while(!done){
+    later::run_now()
+  }
+
+  # testthat deems this test empty if we don't have any expectations.
+  expect_equal(1, 1)
+})
+
+test_that("initiate_remote_session fails with invalid JSON", {
+  testthat::skip_on_cran()
+
+  responses <- list(`POST /learnr/` = list(
+    status = 200L,
+    headers = list(
+      'Content-Type' = 'application/json'
+    ),
+    body = 'this is not the JSON you seek'
+  ))
+
+  srv <- start_server(responses)
+  on.exit(srv$stop(), add = TRUE)
+
+  done <- FALSE
+  cb <- function(sid){
+    testthat::fail("Expected failure but got success")
+    done <<- TRUE
+  }
+  err_cb <- function(res){
+    done <<- TRUE
+  }
+
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+
+  while(!done){
+    later::run_now()
+  }
+
+  # testthat deems this test empty if we don't have any expectations.
+  expect_equal(1, 1)
+})
+
+test_that("initiate_remote_session fails with failed curl", {
+  testthat::skip_on_cran()
+
+  responses <- list(`POST /learnr/` = list(
+    status = 200L,
+    headers = list(
+      'Content-Type' = 'application/json'
+    ),
+    body = '{"id": "abcd1234"}'
+  ))
+
+  # Start and stop the server as a way to obtain a port number that's likely
+  # inavtive.
+  srv <- start_server(responses)
+  srv$stop()
+
+  done <- FALSE
+  cb <- function(sid){
+    testthat::fail("Expected failure but got success")
+    done <<- TRUE
+  }
+  err_cb <- function(res){
+    done <<- TRUE
+  }
+
+  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+
+  while(!done){
+    later::run_now()
+  }
+
+  # testthat deems this test empty if we don't have any expectations.
+  expect_equal(1, 1)
+})
 
 
 

@@ -155,7 +155,7 @@ internal_new_remote_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.remote_evaluator_session_id)){
-          rs <- initiate(paste0(endpoint, "/learnr/"))
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"))
           if (is.na(rs)){
             result <<- error_result("error initiating new remote session")
             return()
@@ -210,22 +210,42 @@ internal_new_remote_evaluator <- function(
 }
 
 #' Obtains a unique session ID
+#' @param pool the curl pool to use for this request
+#' @param url The URL to POST to to get a session
+#' @param callback The callback to invoke on success. Provides one parameter:
+#'   the session ID
+#' @param err_callback The callback to invoke on error. Provides one parameter:
+#'   the err'ing response
 #' @noRd
-initiate_remote_session <- function(url){
+initiate_remote_session <- function(pool, url, callback, err_callback){
   handle <- curl::new_handle(post=1)
 
-  result <- NULL
-
   done_cb <- function(res){
-    r <- rawToChar(res$content)
-    p <- jsonlite::fromJSON(r)
-    result <<- p$id
+    if (res$status != 200){
+      err_callback(res)
+      return()
+    }
+
+    id <- NULL
+    failed <- FALSE
+    tryCatch({
+      r <- rawToChar(res$content)
+      p <- jsonlite::fromJSON(r)
+      id <<- p$id
+    }, error = function(e) {
+      err_callback(res)
+      failed <<- TRUE
+    })
+
+    # If success, we'll have a non-null ID. Otherwise we must have invoked the
+    # err_callback.
+    if (!failed){
+      callback(p$id)
+    }
   }
 
   fail_cb <- function(res){
-    print("Error initiating remote session:")
-    print(res)
-    result <<- NA
+    err_callback(res)
   }
 
   curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
@@ -238,10 +258,5 @@ initiate_remote_session <- function(url){
   }
   poll()
 
-  # TODO: make this non-blocking, or just switch to in-memory fetch
-  while (is.null(result)) {
-    later::run_now()
-  }
-
-  result
+  invisible(NULL)
 }
