@@ -153,49 +153,61 @@ internal_new_remote_evaluator <- function(
     list(
       start = function() {
 
+        # The actual workhorse here -- called once we have a session ID on the remote evaluator
+        submit_req <- function(sess_id){
+          # Create curl request
+          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE)
+
+          print(json)
+
+          handle <- curl::new_handle(customrequest = "POST",
+                                     postfields = json,
+                                     postfieldsize = nchar(json),
+                                     timeout_ms = exercise$options$exercise.timelimit * 1000 + 5000)
+          curl::handle_setheaders(handle, "Content-Type" = "application/json")
+
+          url <- paste0(endpoint, "/learnr/", sess_id)
+
+          done_cb <- function(res){
+            r <- rawToChar(res$content)
+            p <- jsonlite::fromJSON(r)
+            p$html_output <- htmltools::HTML(p$html_output)
+            print("DONE")
+            print(p)
+            result <<- p
+          }
+
+          fail_cb <- function(res){
+            print("Error submitting remote exercise:")
+            print(res)
+            result <<- error_result(res)
+          }
+
+          curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+
+          poll <- function(){
+            res <- curl::multi_run(timeout = 0)
+            if (res$pending > 0){
+              later::later(poll, delay = 0.1)
+            }
+          }
+          poll()
+        }
+
         # Initiate a session
         if (is.null(session$userData$.remote_evaluator_session_id)){
-          rs <- initiate(pool, paste0(endpoint, "/learnr/"))
-          if (is.na(rs)){
-            result <<- error_result("error initiating new remote session")
-            return()
-          }
-          session$userData$.remote_evaluator_session_id <- rs
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
+            # Stash the session ID for future use and fire the actual request
+            session$userData$.remote_evaluator_session_id <- sid
+            submit_req(sid)
+          }, err_callback = function(res){
+            print(res)
+            result <<- error_result("Error initiating session for remote requests. Please try again later")
+          })
+        } else {
+          # We already have an ID, invoke immediately
+          submit_req(session$userData$.remote_evaluator_session_id)
         }
-
-        # Create curl request
-        json <- jsonlite::toJSON(exercise, auto_unbox = TRUE)
-
-        handle <- curl::new_handle(customrequest = "POST",
-                                   postfields = json,
-                                   postfieldsize = nchar(json),
-                                   timeout_ms = exercise$options$exercise.timelimit * 1000 + 5000)
-        curl::handle_setheaders(handle, "Content-Type" = "application/json")
-
-        url <- paste0(endpoint, "/learnr/", session$userData$.remote_evaluator_session_id)
-
-        done_cb <- function(res){
-          r <- rawToChar(res$content)
-          p <- jsonlite::fromJSON(r)
-          p$html_output <- htmltools::HTML(p$html_output)
-          result <<- p
-        }
-
-        fail_cb <- function(res){
-          print("Error submitting remote exercise:")
-          print(res)
-          result <<- error_result(res)
-        }
-
-        curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
-
-        poll <- function(){
-          res <- curl::multi_run(timeout = 0)
-          if (res$pending > 0){
-            later::later(poll, delay = 0.1)
-          }
-        }
-        poll()
       },
 
       completed = function() {
@@ -231,8 +243,9 @@ initiate_remote_session <- function(pool, url, callback, err_callback){
     tryCatch({
       r <- rawToChar(res$content)
       p <- jsonlite::fromJSON(r)
-      id <<- p$id
+      id <- p$id
     }, error = function(e) {
+      print(e)
       err_callback(res)
       failed <<- TRUE
     })
@@ -240,15 +253,11 @@ initiate_remote_session <- function(pool, url, callback, err_callback){
     # If success, we'll have a non-null ID. Otherwise we must have invoked the
     # err_callback.
     if (!failed){
-      callback(p$id)
+      callback(id)
     }
   }
 
-  fail_cb <- function(res){
-    err_callback(res)
-  }
-
-  curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+  curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = err_callback)
 
   poll <- function(){
     res <- curl::multi_run(timeout = 0)
