@@ -120,6 +120,7 @@ forked_evaluator <- function(expr, timelimit, ...) {
 }
 
 #' Remote execution evaluator
+#'
 #' @param endpoint The HTTP(S) endpoint to POST the exercises to
 #' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
 #'   endpoint.

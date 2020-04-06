@@ -5,7 +5,8 @@
 \title{Remote execution evaluator}
 \usage{
 new_remote_evaluator(
-  endpoint = getOption("tutorial.remote.host"),
+  endpoint = getOption("tutorial.remote.host",
+    Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
   max_curl_conns = 50
 )
 }
