@@ -186,7 +186,7 @@ You can replace the default exercise evaluation code entirely with your own via 
   
 It returns a list of functions (`start`, `completed`, and `result`) to use for execution.
 
-The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):
+The two default evaluators (used for Windows/MacOS and UNIX systems, respectively, are):
 
 1. `inline_evaluator` --- Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).
 
@@ -195,6 +195,15 @@ The two built-in evaluators (used for Windows/MacOS and UNIX systems respectivel
 You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/master/R/evaluators.R>.
 
 The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
+
+##### Remote Evalutor
+
+In versions of learnr later than 0.10.1, there is also support for a `remote_evaluator`. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a `tutorial.remote.host` option or setting a `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable. If set, learnr will submit exercises over HTTP to the specified host.
+
+The given host is expected to fulfill this OpenAPI specification ([json](openapi/openapi.json), [yaml](openapi/openapi.yaml)). In other words, it has two HTTP endpoints:
+
+1. `POST /learnr/` - Initiate a session
+2. `POST /learnr/<session ID>` - Submit an exercise to run as a part of a session
 
 ### Recording Events
 

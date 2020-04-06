@@ -570,13 +570,22 @@ R object to be saved
 <li>The session associated with the request</li>
 </ol>
 <p>It returns a list of functions (<code>start</code>, <code>completed</code>, and <code>result</code>) to use for execution.</p>
-<p>The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):</p>
+<p>The two default evaluators (used for Windows/MacOS and UNIX systems, respectively, are):</p>
 <ol style="list-style-type: decimal">
 <li><p><code>inline_evaluator</code> — Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).</p></li>
 <li><p><code>forked_evaluator</code> — Evaluate exercises within a forked child process (this is the default on UNIX systems).</p></li>
 </ol>
 <p>You can see the source code for these evaluators here: <a href="https://github.com/rstudio/learnr/blob/master/R/evaluators.R" class="uri">https://github.com/rstudio/learnr/blob/master/R/evaluators.R</a>.</p>
 <p>The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.</p>
+<div id="remote-evalutor" class="section level5">
+<h5>Remote Evalutor</h5>
+<p>In versions of learnr later than 0.10.1, there is also support for a <code>remote_evaluator</code>. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a <code>tutorial.remote.host</code> option or setting a <code>TUTORIAL_REMOTE_EVALUATOR_HOST</code> environment variable. If set, learnr will submit exercises over HTTP to the specified host.</p>
+<p>The given host is expected to fulfill this OpenAPI specification (<a href="openapi/openapi.json">json</a>, <a href="openapi/openapi.yaml">yaml</a>). In other words, it has two HTTP endpoints:</p>
+<ol style="list-style-type: decimal">
+<li><code>POST /learnr/</code> - Initiate a session</li>
+<li><code>POST /learnr/&lt;session ID&gt;</code> - Submit an exercise to run as a part of a session</li>
+</ol>
+</div>
 </div>
 </div>
 <div id="recording-events" class="section level3">

@@ -1,0 +1,243 @@
+swagger: "2.0"
+info:
+  title: Remote Evaluator Service
+  description: Service for remotely invoking R for learnr exercises
+  version: ""
+host: 0.0.0.0:8080
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /learnr:
+    post:
+      tags:
+      - remote evaluator
+      summary: initiate session remote evaluator
+      description: Initiate a session in which exercises can be evaluated
+      operationId: remote evaluator#initiate session
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/RemoteEvaluatorInitiateSessionResponseBody'
+      schemes:
+      - http
+  /learnr/{session_id}:
+    post:
+      tags:
+      - remote evaluator
+      summary: evaluate exercise remote evaluator
+      operationId: remote evaluator#evaluate exercise
+      parameters:
+      - name: session_id
+        in: path
+        description: The ID of session obtained during session initiation
+        required: true
+        type: string
+      - name: Evaluate ExerciseRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/RemoteEvaluatorEvaluateExerciseRequestBody'
+          required:
+          - code
+          - options
+      responses:
+        "200":
+          description: The server was able to fulfill the request. This does _not_
+            imply that the provided R code didn't produce an error -- just that we
+            were able to run it through to completion.
+          schema:
+            $ref: '#/definitions/RemoteEvaluatorEvaluateExerciseResponseBody'
+      schemes:
+      - http
+  /openapi.json:
+    get:
+      tags:
+      - remote evaluator
+      summary: Download ./gen/http/openapi.json
+      operationId: remote evaluator#/openapi.json
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+definitions:
+  ExerciseOptionsRequestBody:
+    title: ExerciseOptionsRequestBody
+    type: object
+    properties:
+      error:
+        type: boolean
+        example: false
+      exercise.checker:
+        type: array
+        items:
+          type: string
+          example: Natus vitae quod.
+        example: []
+      exercise.df_print:
+        type: string
+        example: paged
+      exercise.timelimit:
+        type: integer
+        description: The time limit for the exercise, in seconds
+        default: 30
+        example: 30
+        format: int64
+      fig.align:
+        type: string
+        example: default
+      fig.height:
+        type: number
+        example: 4
+        format: float
+      fig.keep:
+        type: string
+        example: high
+      fig.retina:
+        type: number
+        example: 2
+        format: float
+      fig.show:
+        type: string
+        example: asis
+      fig.width:
+        type: number
+        example: 6.5
+        format: float
+      message:
+        type: boolean
+        example: true
+      out.width:
+        type: integer
+        example: 624
+        format: int64
+      warning:
+        type: boolean
+        example: true
+    description: The options corresponding to the exercise. These are generally obtained
+      from knitr code chunk options.
+    example:
+      error: false
+      exercise.checker: []
+      exercise.df_print: paged
+      exercise.timelimit: 30
+      fig.align: default
+      fig.height: 4
+      fig.keep: high
+      fig.retina: 2
+      fig.show: asis
+      fig.width: 6.5
+      message: true
+      out.width: 624
+      warning: true
+  RemoteEvaluatorEvaluateExerciseRequestBody:
+    title: RemoteEvaluatorEvaluateExerciseRequestBody
+    type: object
+    properties:
+      check:
+        type: string
+        description: TODO
+        example: Officiis sunt.
+      code:
+        type: string
+        description: The R code to execute
+        example: rnorm(5)
+      code_check:
+        description: TODO
+        example: Occaecati ea.
+      global_setup:
+        type: string
+        description: Setup code from the `setup-global-exercise` or `setup` chunk
+          that should be run before every exercise
+        example: library(ggplot2)
+      options:
+        $ref: '#/definitions/ExerciseOptionsRequestBody'
+      restore:
+        type: boolean
+        description: TODO
+        example: true
+      setup:
+        type: string
+        description: Setup code associated with this specific exercise
+        example: dataset <- iris
+      solution:
+        type: string
+        description: Unused, the solution code for this exercise
+        example: rnorm(1)
+    example:
+      check: Sed quidem laudantium.
+      code: rnorm(5)
+      code_check: Ut aspernatur rem autem fugiat non maxime.
+      global_setup: library(ggplot2)
+      options:
+        error: false
+        exercise.checker: []
+        exercise.df_print: paged
+        exercise.timelimit: 30
+        fig.align: default
+        fig.height: 4
+        fig.keep: high
+        fig.retina: 2
+        fig.show: asis
+        fig.width: 6.5
+        message: true
+        out.width: 624
+        warning: true
+      restore: true
+      setup: dataset <- iris
+      solution: rnorm(1)
+    required:
+    - code
+    - options
+  RemoteEvaluatorEvaluateExerciseResponseBody:
+    title: RemoteEvaluatorEvaluateExerciseResponseBody
+    type: object
+    properties:
+      error_message:
+        type: string
+        description: If an error occurred, the plain-text representation
+        example: object 'x' not found
+      feedback:
+        type: string
+        description: TODO
+        example: Consequatur minus sunt placeat eaque amet.
+      html_output:
+        type: string
+        description: The output of the given command
+        example: |2
+
+
+
+          <pre><code>[1] -0.78207928  0.70263075 -0.08438296 -0.06020523  1.97638361</code></pre>
+      timeout_exceeded:
+        type: boolean
+        description: True if the time limit was exceeded; otherwise false
+        example: false
+    example:
+      error_message: object 'x' not found
+      feedback: Quo quisquam sit beatae corporis.
+      html_output: |2
+
+
+
+        <pre><code>[1] -0.78207928  0.70263075 -0.08438296 -0.06020523  1.97638361</code></pre>
+      timeout_exceeded: true
+  RemoteEvaluatorInitiateSessionResponseBody:
+    title: RemoteEvaluatorInitiateSessionResponseBody
+    type: object
+    properties:
+      id:
+        type: string
+        description: The ID of the session generated
+        example: 8rmci3kdkc
+    example:
+      id: 8rmci3kdkc

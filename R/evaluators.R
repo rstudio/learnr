@@ -138,7 +138,7 @@ new_remote_evaluator <- function(
 internal_new_remote_evaluator <- function(
   endpoint,
   max_curl_conns,
-  initiate = initiate_remote_session()){
+  initiate = initiate_remote_session){
 
   if (is.na(endpoint)){
     stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.remote.host` option, or the `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable")
