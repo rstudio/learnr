@@ -129,6 +129,15 @@ new_remote_evaluator <- function(
   endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
   max_curl_conns = 50){
 
+  internal_new_remote_evaluator(endpoint, max_curl_conns, initiate_remote_session)
+}
+
+# An internal version of new_remote_evaluator that allows us to stub some calls
+# for testing.
+internal_new_remote_evaluator <- function(
+  endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
+  max_curl_conns = 50,
+  initiate = initiate_remote_session()){
   if (is.na(endpoint)){
     stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.remote.host` option, or the `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable")
   }
@@ -146,7 +155,7 @@ new_remote_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.remote_evaluator_session_id)){
-          rs <- initiate_remote_session(paste0(endpoint, "/learnr/"))
+          rs <- initiate(paste0(endpoint, "/learnr/"))
           if (is.na(rs)){
             result <<- error_result("error initiating new remote session")
             return()
