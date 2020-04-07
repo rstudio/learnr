@@ -82,7 +82,12 @@ definitions:
         items:
           type: string
           example: Natus vitae quod.
-        example: []
+        example:
+        - 'function (label, user_code, check_code, envir_result, evaluate_result, '
+        - '    ...) '
+        - '{'
+        - '    list(message = check_code, correct = TRUE, location = "append")'
+        - '}'
       exercise.df_print:
         type: string
         example: paged
@@ -127,7 +132,12 @@ definitions:
       from knitr code chunk options.
     example:
       error: false
-      exercise.checker: []
+      exercise.checker:
+      - 'function (label, user_code, check_code, envir_result, evaluate_result, '
+      - '    ...) '
+      - '{'
+      - '    list(message = check_code, correct = TRUE, location = "append")'
+      - '}'
       exercise.df_print: paged
       exercise.timelimit: 30
       fig.align: default
@@ -180,7 +190,12 @@ definitions:
       global_setup: library(ggplot2)
       options:
         error: false
-        exercise.checker: []
+        exercise.checker:
+        - 'function (label, user_code, check_code, envir_result, evaluate_result, '
+        - '    ...) '
+        - '{'
+        - '    list(message = check_code, correct = TRUE, location = "append")'
+        - '}'
         exercise.df_print: paged
         exercise.timelimit: 30
         fig.align: default

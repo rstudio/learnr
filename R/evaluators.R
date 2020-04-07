@@ -157,13 +157,24 @@ internal_new_remote_evaluator <- function(
 
         # The actual workhorse here -- called once we have a session ID on the remote evaluator
         submit_req <- function(sess_id){
-          # Create curl request
+
+          # Work around a few edge cases on the exercise that don't serialize well
+          if (identical(exercise$options$exercise.checker, "NULL")){
+            exercise$options$exercise.checker <- c()
+          }
           json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
-print(json)
+
+          if (is.null(exercise$options$exercise.timelimit) || exercise$options$exercise.timelimit == 0){
+            timeout_s <- 30 * 1000
+          } else {
+            timeout_s <- exercise$options$exercise.timelimit * 1000
+          }
+
+          # Create curl request
           handle <- curl::new_handle(customrequest = "POST",
                                      postfields = json,
                                      postfieldsize = nchar(json),
-                                     timeout_ms = exercise$options$exercise.timelimit * 1000 + 5000)
+                                     timeout_ms = timeout_s + 5000)
           curl::handle_setheaders(handle, "Content-Type" = "application/json")
 
           url <- paste0(endpoint, "/learnr/", sess_id)
