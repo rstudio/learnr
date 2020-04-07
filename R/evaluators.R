@@ -158,8 +158,8 @@ internal_new_remote_evaluator <- function(
         # The actual workhorse here -- called once we have a session ID on the remote evaluator
         submit_req <- function(sess_id){
           # Create curl request
-          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE)
-
+          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
+print(json)
           handle <- curl::new_handle(customrequest = "POST",
                                      postfields = json,
                                      postfieldsize = nchar(json),
@@ -171,7 +171,7 @@ internal_new_remote_evaluator <- function(
           done_cb <- function(res){
             tryCatch({
               if (res$status != 200){
-                err_callback(res)
+                fail_cb(res)
                 return()
               }
 
