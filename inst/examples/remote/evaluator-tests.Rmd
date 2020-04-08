@@ -1,0 +1,164 @@
+---
+title: "Learnr Remote Evaluator Tests"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(exercise.checker = function(...){
+  library(gradethis)
+  gradethis::grade_learnr(...)
+})
+
+# Setup a remote evaluator.
+options(tutorial.remote.host = "http://localhost:8080")
+```
+
+```{r setup-global-exercise, include=FALSE}
+x <- 123
+library(gradethis)
+```
+
+
+## Basics
+
+```{r basics1, exercise=TRUE}
+rnorm(1)
+```
+
+Should produce one random number
+
+### Code that generates an error
+
+```{r badcode, exercise=TRUE}
+# Reference a variable that's not defined
+a123
+```
+
+You should see a red box that says `object 'a123' not found`
+
+### Invalid syntax
+
+```{r syntax, exercise=TRUE}
+asdf + ___1
+```
+
+You should see a red box that says `... unexpected input 3: 4: asdf + _ ^`
+
+## Setup Chunks
+
+### Global Setup
+
+```{r global1, exercise=TRUE}
+x
+```
+
+Should be `123`. Defined in the `setup-global-exercise` chunk.
+
+### Local Setup
+
+Test an exercise that has a matching `-setup` chunk.
+
+```{r local1, exercise=TRUE}
+y
+```
+
+```{r local1-setup}
+y <- "abc"
+```
+
+`y` should be `"abc"`
+
+### Local Setup #2
+
+Test an exercise that names its setup chunk in the knitr parameters.
+
+```{r local2, exercise=TRUE, exercise.setup="local2su"}
+y
+```
+
+```{r local2su}
+y <- 456
+```
+
+`y` should be `456`.
+
+## Timeouts
+
+### Default timeouts
+
+By default, we set the timeout to 30s for remote evaluator requests. This request should timeout after 30-35s.
+
+```{r timeout, exercise=TRUE}
+Sys.sleep(35)
+print("I didn't time out!")
+```
+
+You should see an error message stating that the exercise timed out.
+
+### Option timeout
+
+Using the option `options(tutorial.exercise.timelimit = 5)`
+
+```{r optTimeout, exercise=TRUE}
+# TODO
+```
+
+### Exercise-Specific Timeout
+
+```{r exTimeout, exercise=TRUE, exercise.timelimit=5}
+Sys.sleep(7)
+print("I didn't timeout")
+```
+
+After 5-10 seconds, you should see an error message about the timeout being exceeded.
+
+## Code Checkers
+
+### Exercise-Specific Check
+
+Enter the number 4, then click "Submit Answer" (**not Run Code**)
+```{r excheck, exercise=TRUE}
+3
+#4
+```
+ 
+```{r excheck-check}
+gradethis::grade_result(
+  gradethis::fail_if(~ identical(.result, 1), "Custom message for value 1."),
+  gradethis::pass_if(~ identical(.result, 2), "Custom message for value 2."),
+  gradethis::fail_if(~ identical(.result, 3), "Custom message for value 3."),
+  gradethis::pass_if(~ identical(.result %% 2, 0) && (.result < 5),
+          "Even number below 5")
+)
+```
+
+If you enter `3`, you should see an error: `Custom message for value 3.`. If you enter `4`, you should see a success message with praise.
+
+
+### Checks that leverage setup blocks
+
+Checks should be able to leverage the setup block to e.g. allow setup to call `library(gradethis)` and then have the checker use those functions without having to namespace them
+
+The following should work just as the previous example did. Click "Submit Answer" (**not Run Code**)
+
+```{r excheck2, exercise=TRUE}
+3
+#4
+```
+ 
+```{r excheck2-check}
+grade_result(
+  fail_if(~ identical(.result, 1), "Custom message for value 1."),
+  pass_if(~ identical(.result, 2), "Custom message for value 2."),
+  fail_if(~ identical(.result, 3), "Custom message for value 3."),
+  pass_if(~ identical(.result %% 2, 0) && (.result < 5),
+         "Even number below 5")
+)
+```
+
+If you enter `3`, you should see an error: `Custom message for value 3.`. If you enter `4`, you should see a success message with praise.
+
+
