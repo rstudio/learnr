@@ -174,6 +174,7 @@ internal_new_remote_evaluator <- function(
           handle <- curl::new_handle(customrequest = "POST",
                                      postfields = json,
                                      postfieldsize = nchar(json),
+                                     # add 5 seconds for application startup
                                      timeout_ms = timeout_s + 5000)
           curl::handle_setheaders(handle, "Content-Type" = "application/json")
 
