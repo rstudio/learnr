@@ -50,4 +50,3 @@ Suggests:
     httpuv,
     later
 VignetteBuilder: knitr
-RdMacros: lifecycle
