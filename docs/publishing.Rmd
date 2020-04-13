@@ -196,9 +196,9 @@ You can see the source code for these evaluators here: <https://github.com/rstud
 
 The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
 
-##### Remote Evalutor
+##### External Evalutor
 
-In versions of learnr later than 0.10.1, there is also support for a `remote_evaluator`. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a `tutorial.remote.host` option or setting a `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable. If set, learnr will submit exercises over HTTP to the specified host.
+In versions of learnr later than 0.10.1, there is also support for a `external_evaluator`. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a `tutorial.external.host` option or setting a `TUTORIAL_external_evaluator_HOST` environment variable. If set, learnr will submit exercises over HTTP to the specified host.
 
 The given host is expected to fulfill [this OpenAPI specification](openapi/openapi.yaml). In other words, it has two HTTP endpoints:
 

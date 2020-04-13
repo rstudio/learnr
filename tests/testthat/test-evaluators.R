@@ -48,7 +48,7 @@ start_server <- function(responses){
   result
 }
 
-test_that("initiate_remote_session works", {
+test_that("initiate_external_session works", {
   testthat::skip_on_cran()
 
   responses <- list(`POST /learnr/` = list(
@@ -69,14 +69,14 @@ test_that("initiate_remote_session works", {
   }
   err_cb <- function(res){
     print(res)
-    testthat::fail("Unexpected error from initiate_remote_session")
+    testthat::fail("Unexpected error from initiate_external_session")
     failed <<- TRUE
   }
 
   # Initiate a handful of sessions all at once
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
 
   while(!failed && length(sess_ids) < 3){
     later::run_now()
@@ -86,7 +86,7 @@ test_that("initiate_remote_session works", {
   expect_equal(sess_ids, rep("abcd1234", 3))
 })
 
-test_that("initiate_remote_session fails with bad status", {
+test_that("initiate_external_session fails with bad status", {
   testthat::skip_on_cran()
 
   responses <- list(`POST /learnr/` = list(
@@ -109,7 +109,7 @@ test_that("initiate_remote_session fails with bad status", {
     done <<- TRUE
   }
 
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -119,7 +119,7 @@ test_that("initiate_remote_session fails with bad status", {
   expect_equal(1, 1)
 })
 
-test_that("initiate_remote_session fails with invalid JSON", {
+test_that("initiate_external_session fails with invalid JSON", {
   testthat::skip_on_cran()
 
   responses <- list(`POST /learnr/` = list(
@@ -142,7 +142,7 @@ test_that("initiate_remote_session fails with invalid JSON", {
     done <<- TRUE
   }
 
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -152,7 +152,7 @@ test_that("initiate_remote_session fails with invalid JSON", {
   expect_equal(1, 1)
 })
 
-test_that("initiate_remote_session fails with failed curl", {
+test_that("initiate_external_session fails with failed curl", {
   testthat::skip_on_cran()
 
   responses <- list(`POST /learnr/` = list(
@@ -177,7 +177,7 @@ test_that("initiate_remote_session fails with failed curl", {
     done <<- TRUE
   }
 
-  initiate_remote_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -188,7 +188,7 @@ test_that("initiate_remote_session fails with failed curl", {
 })
 
 
-test_that("remote_evaluator works", {
+test_that("external_evaluator works", {
   testthat::skip_on_cran()
 
   mock_initiate <- function(pool, url, callback, err_callback){
@@ -212,13 +212,13 @@ test_that("remote_evaluator works", {
   srv <- start_server(responses)
   on.exit(srv$stop(), add = TRUE)
 
-  re <- internal_remote_evaluator(srv$url, 5, mock_initiate)
+  re <- internal_external_evaluator(srv$url, 5, mock_initiate)
 
   # Start a couple of sessions concurrently
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
   # Simulate a session that already has an evaluator ID stashed
   e2 <- re(NULL, 30, list(options = list(exercise.timelimit = 5)),
-           list(userData = list(`.remote_evaluator_session_id` = "efgh5678")))
+           list(userData = list(`.external_evaluator_session_id` = "efgh5678")))
   e$start()
   e2$start()
 
@@ -244,18 +244,18 @@ test_that("remote_evaluator works", {
   }
 })
 
-test_that("remote_evaluator handles initiate failures", {
+test_that("external_evaluator handles initiate failures", {
   mock_initiate <- function(pool, url, callback, err_callback){
     err_callback(list())
   }
 
-  re <- internal_remote_evaluator("http://doesntmatter", 5, mock_initiate)
+  re <- internal_external_evaluator("http://doesntmatter", 5, mock_initiate)
 
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
   e$start()
 
   print(e$result())
-  expect_equal(e$result()$error_message, "Error initiating session for remote requests. Please try again later")
+  expect_equal(e$result()$error_message, "Error initiating session for external requests. Please try again later")
 })
 
 test_that("", {
@@ -284,7 +284,7 @@ test_that("", {
   on.exit(srv$stop(), add = TRUE)
 
   ### Test with a bad status
-  re <- internal_remote_evaluator(srv$url, 5,
+  re <- internal_external_evaluator(srv$url, 5,
     function(pool, url, callback, err_callback){ callback("badstatus") })
 
   # Start a session
@@ -296,10 +296,10 @@ test_that("", {
   }
 
   res <- e$result()
-  expect_match(res$error_message, "^Error submitting remote exercise")
+  expect_match(res$error_message, "^Error submitting external exercise")
 
   ### Test with invalid JSON
-  re <- internal_remote_evaluator(srv$url, 5,
+  re <- internal_external_evaluator(srv$url, 5,
     function(pool, url, callback, err_callback){ callback("invalidjson") })
 
   # Start a session
@@ -311,5 +311,5 @@ test_that("", {
   }
 
   res <- e$result()
-  expect_match(res$error_message, "^Error submitting remote exercise")
+  expect_match(res$error_message, "^Error submitting external exercise")
 })

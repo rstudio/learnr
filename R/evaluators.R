@@ -119,29 +119,29 @@ forked_evaluator <- function(expr, timelimit, ...) {
   )
 }
 
-#' Remote execution evaluator
+#' External execution evaluator
 #'
 #' @param endpoint The HTTP(S) endpoint to POST the exercises to
 #' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
 #'   endpoint.
 #' @import curl
 #' @export
-remote_evaluator <- function(
-  endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
+external_evaluator <- function(
+  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_external_evaluator_HOST", NA)),
   max_curl_conns = 50){
 
-  internal_remote_evaluator(endpoint, max_curl_conns)
+  internal_external_evaluator(endpoint, max_curl_conns)
 }
 
-# An internal version of remote_evaluator that allows us to stub some calls
+# An internal version of external_evaluator that allows us to stub some calls
 # for testing.
-internal_remote_evaluator <- function(
+internal_external_evaluator <- function(
   endpoint,
   max_curl_conns,
-  initiate = initiate_remote_session){
+  initiate = initiate_external_session){
 
   if (is.na(endpoint)){
-    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.remote.host` option, or the `TUTORIAL_REMOTE_EVALUATOR_HOST` environment variable")
+    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.external.host` option, or the `TUTORIAL_external_evaluator_HOST` environment variable")
   }
 
   # Trim trailing slash
@@ -155,7 +155,7 @@ internal_remote_evaluator <- function(
     list(
       start = function() {
 
-        # The actual workhorse here -- called once we have a session ID on the remote evaluator
+        # The actual workhorse here -- called once we have a session ID on the external evaluator
         submit_req <- function(sess_id){
 
           # Work around a few edge cases on the exercise that don't serialize well
@@ -198,9 +198,9 @@ internal_remote_evaluator <- function(
           }
 
           fail_cb <- function(res){
-            print("Error submitting remote exercise:")
+            print("Error submitting external exercise:")
             print(res)
-            result <<- error_result("Error submitting remote exercise. Please try again later")
+            result <<- error_result("Error submitting external exercise. Please try again later")
           }
 
           curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
@@ -215,18 +215,18 @@ internal_remote_evaluator <- function(
         }
 
         # Initiate a session
-        if (is.null(session$userData$.remote_evaluator_session_id)){
+        if (is.null(session$userData$.external_evaluator_session_id)){
           rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
             # Stash the session ID for future use and fire the actual request
-            session$userData$.remote_evaluator_session_id <- sid
+            session$userData$.external_evaluator_session_id <- sid
             submit_req(sid)
           }, err_callback = function(res){
             print(res)
-            result <<- error_result("Error initiating session for remote requests. Please try again later")
+            result <<- error_result("Error initiating session for external requests. Please try again later")
           })
         } else {
           # We already have an ID, invoke immediately
-          submit_req(session$userData$.remote_evaluator_session_id)
+          submit_req(session$userData$.external_evaluator_session_id)
         }
       },
 
@@ -249,7 +249,7 @@ internal_remote_evaluator <- function(
 #' @param err_callback The callback to invoke on error. Provides one parameter:
 #'   the err'ing response
 #' @noRd
-initiate_remote_session <- function(pool, url, callback, err_callback){
+initiate_external_session <- function(pool, url, callback, err_callback){
   handle <- curl::new_handle(post=1)
 
   done_cb <- function(res){

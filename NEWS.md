@@ -11,7 +11,7 @@ learnr (development version)
 
 ## New features
 
-* Introduced `remote_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document.
+* Introduced `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document.
 
 ## Minor new features and improvements
 
