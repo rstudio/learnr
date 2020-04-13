@@ -17,5 +17,5 @@ external_evaluator(
 endpoint.}
 }
 \description{
-\href{https://www.tidyverse.org/lifecycle/#experimental}{Experimental lifecycle}
+\lifecycle{experimental}
 }
