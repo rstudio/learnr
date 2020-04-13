@@ -126,16 +126,16 @@ forked_evaluator <- function(expr, timelimit, ...) {
 #'   endpoint.
 #' @import curl
 #' @export
-new_remote_evaluator <- function(
+remote_evaluator <- function(
   endpoint = getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA)),
   max_curl_conns = 50){
 
-  internal_new_remote_evaluator(endpoint, max_curl_conns)
+  internal_remote_evaluator(endpoint, max_curl_conns)
 }
 
-# An internal version of new_remote_evaluator that allows us to stub some calls
+# An internal version of remote_evaluator that allows us to stub some calls
 # for testing.
-internal_new_remote_evaluator <- function(
+internal_remote_evaluator <- function(
   endpoint,
   max_curl_conns,
   initiate = initiate_remote_session){

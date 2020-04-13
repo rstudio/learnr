@@ -49,7 +49,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     if (is.null(evaluator_factory)) {
       remote_host <- getOption("tutorial.remote.host", Sys.getenv("TUTORIAL_REMOTE_EVALUATOR_HOST", NA))
       if (!is.na(remote_host)){
-        evaluator_factory <- new_remote_evaluator(remote_host)
+        evaluator_factory <- remote_evaluator(remote_host)
       } else if (!is_windows() && !is_macos())
         evaluator_factory <- forked_evaluator
       else

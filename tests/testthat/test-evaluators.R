@@ -212,7 +212,7 @@ test_that("remote_evaluator works", {
   srv <- start_server(responses)
   on.exit(srv$stop(), add = TRUE)
 
-  re <- internal_new_remote_evaluator(srv$url, 5, mock_initiate)
+  re <- internal_remote_evaluator(srv$url, 5, mock_initiate)
 
   # Start a couple of sessions concurrently
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
@@ -249,7 +249,7 @@ test_that("remote_evaluator handles initiate failures", {
     err_callback(list())
   }
 
-  re <- internal_new_remote_evaluator("http://doesntmatter", 5, mock_initiate)
+  re <- internal_remote_evaluator("http://doesntmatter", 5, mock_initiate)
 
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
   e$start()
@@ -284,7 +284,7 @@ test_that("", {
   on.exit(srv$stop(), add = TRUE)
 
   ### Test with a bad status
-  re <- internal_new_remote_evaluator(srv$url, 5,
+  re <- internal_remote_evaluator(srv$url, 5,
     function(pool, url, callback, err_callback){ callback("badstatus") })
 
   # Start a session
@@ -299,7 +299,7 @@ test_that("", {
   expect_match(res$error_message, "^Error submitting remote exercise")
 
   ### Test with invalid JSON
-  re <- internal_new_remote_evaluator(srv$url, 5,
+  re <- internal_remote_evaluator(srv$url, 5,
     function(pool, url, callback, err_callback){ callback("invalidjson") })
 
   # Start a session
