@@ -177,15 +177,33 @@ You'd likely set these options within `Rprofile.site` or another R source file t
 
 #### Fully Custom Evaluator
 
-You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts two arguments (an expression to evaluate and a timelimit for evaluation) and returns a list of functions (`start`, `completed`, and `result`) to use for execution .
+You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts four arguments: 
 
-The two built-in evaluators (used for Windows/MacOS and UNIX systems respectively are):
+  1. An expression to evaluate
+  2. A timelimit for evaluation
+  3. A serializable representation of the exercise to be evaluated
+  4. The session associated with the request 
+  
+It returns a list of functions (`start`, `completed`, and `result`) to use for execution.
+
+The two default evaluators (used for Windows/MacOS and UNIX systems, respectively, are):
 
 1. `inline_evaluator` --- Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).
 
 2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
 
 You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/master/R/evaluators.R>.
+
+The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
+
+##### External Evalutor
+
+In versions of learnr later than 0.10.1, there is also support for a `external_evaluator`. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a `tutorial.external.host` option or setting a `TUTORIAL_external_evaluator_HOST` environment variable. If set, learnr will submit exercises over HTTP to the specified host.
+
+The given host is expected to fulfill [this OpenAPI specification](openapi/openapi.yaml). In other words, it has two HTTP endpoints:
+
+1. `POST /learnr/` - Initiate a session
+2. `POST /learnr/<session ID>` - Submit an exercise to run as a part of a session
 
 ### Recording Events
 

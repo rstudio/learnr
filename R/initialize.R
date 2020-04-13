@@ -33,6 +33,13 @@ initialize_tutorial <- function() {
       singleton = TRUE
     )
 
+    # clear the setup chunk cache
+    rmarkdown::shiny_prerendered_chunk(
+      'server',
+      'learnr:::clear_exercise_setup_chunks()',
+      singleton = TRUE
+    )
+
     # Register session stop handler
     rmarkdown::shiny_prerendered_chunk(
       'server',

@@ -1,6 +1,6 @@
 
 # inline execution evaluator
-inline_evaluator <- function(expr, timelimit) {
+inline_evaluator <- function(expr, timelimit, ...) {
 
   result <- NULL
 
@@ -34,7 +34,7 @@ inline_evaluator <- function(expr, timelimit) {
 }
 
 # forked execution evaluator
-forked_evaluator <- function(expr, timelimit) {
+forked_evaluator <- function(expr, timelimit, ...) {
 
   # closure members
   job <- NULL
@@ -117,4 +117,176 @@ forked_evaluator <- function(expr, timelimit) {
       result
     }
   )
+}
+
+#' External execution evaluator
+#'
+#' [Lifecycle: experimental](https://www.tidyverse.org/lifecycle/#experimental)
+#' @param endpoint The HTTP(S) endpoint to POST the exercises to
+#' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
+#'   endpoint.
+#' @import curl
+#' @export
+external_evaluator <- function(
+  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_external_evaluator_HOST", NA)),
+  max_curl_conns = 50){
+
+  internal_external_evaluator(endpoint, max_curl_conns)
+}
+
+# An internal version of external_evaluator that allows us to stub some calls
+# for testing.
+internal_external_evaluator <- function(
+  endpoint,
+  max_curl_conns,
+  initiate = initiate_external_session){
+
+  if (is.na(endpoint)){
+    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.external.host` option, or the `TUTORIAL_external_evaluator_HOST` environment variable")
+  }
+
+  # Trim trailing slash
+  endpoint <- sub("/+$", "", endpoint)
+
+  function(expr, timelimit, exercise, session, ...) {
+
+    result <- NULL
+    pool <- curl::new_pool(total_con = max_curl_conns, host_con = max_curl_conns)
+
+    list(
+      start = function() {
+
+        # The actual workhorse here -- called once we have a session ID on the external evaluator
+        submit_req <- function(sess_id){
+
+          # Work around a few edge cases on the exercise that don't serialize well
+          if (identical(exercise$options$exercise.checker, "NULL")){
+            exercise$options$exercise.checker <- c()
+          }
+          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
+
+          if (is.null(exercise$options$exercise.timelimit) || exercise$options$exercise.timelimit == 0){
+            timeout_s <- 30 * 1000
+          } else {
+            timeout_s <- exercise$options$exercise.timelimit * 1000
+          }
+
+          # Create curl request
+          handle <- curl::new_handle(customrequest = "POST",
+                                     postfields = json,
+                                     postfieldsize = nchar(json),
+                                     # add 5 seconds for application startup
+                                     timeout_ms = timeout_s + 5000)
+          curl::handle_setheaders(handle, "Content-Type" = "application/json")
+
+          url <- paste0(endpoint, "/learnr/", sess_id)
+
+          done_cb <- function(res){
+            tryCatch({
+              if (res$status != 200){
+                fail_cb(res)
+                return()
+              }
+
+              r <- rawToChar(res$content)
+              p <- jsonlite::fromJSON(r)
+              p$html_output <- htmltools::HTML(p$html_output)
+              result <<- p
+            }, error = function(e){
+              print(e)
+              fail_cb(res)
+            })
+          }
+
+          fail_cb <- function(res){
+            print("Error submitting external exercise:")
+            print(res)
+            result <<- error_result("Error submitting external exercise. Please try again later")
+          }
+
+          curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+
+          poll <- function(){
+            res <- curl::multi_run(timeout = 0)
+            if (res$pending > 0){
+              later::later(poll, delay = 0.1)
+            }
+          }
+          poll()
+        }
+
+        # Initiate a session
+        if (is.null(session$userData$.external_evaluator_session_id)){
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
+            # Stash the session ID for future use and fire the actual request
+            session$userData$.external_evaluator_session_id <- sid
+            submit_req(sid)
+          }, err_callback = function(res){
+            print(res)
+            result <<- error_result("Error initiating session for external requests. Please try again later")
+          })
+        } else {
+          # We already have an ID, invoke immediately
+          submit_req(session$userData$.external_evaluator_session_id)
+        }
+      },
+
+      completed = function() {
+        !is.null(result)
+      },
+
+      result = function() {
+        result
+      }
+    )
+  }
+}
+
+#' Obtains a unique session ID
+#' @param pool the curl pool to use for this request
+#' @param url The URL to POST to to get a session
+#' @param callback The callback to invoke on success. Provides one parameter:
+#'   the session ID
+#' @param err_callback The callback to invoke on error. Provides one parameter:
+#'   the err'ing response
+#' @noRd
+initiate_external_session <- function(pool, url, callback, err_callback){
+  handle <- curl::new_handle(post=1)
+
+  done_cb <- function(res){
+    id <- NULL
+    failed <- FALSE
+    tryCatch({
+      if (res$status != 200){
+        err_callback(res)
+        return()
+      }
+
+      r <- rawToChar(res$content)
+      p <- jsonlite::fromJSON(r)
+      id <- p$id
+    }, error = function(e) {
+      print(e)
+      err_callback(res)
+      failed <<- TRUE
+    })
+
+    # If success, we'll have a non-null ID. Otherwise we must have invoked the
+    # err_callback.
+    if (!failed){
+      callback(id)
+    }
+  }
+
+  curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = err_callback)
+
+  poll <- function(){
+    res <- curl::multi_run(timeout = 0)
+    if (res$pending > 0){
+      later::later(poll, delay = 0.1)
+    }
+  }
+  poll()
+
+  invisible(NULL)
 }

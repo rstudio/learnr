@@ -45,6 +45,10 @@ install_knitr_hooks <- function() {
     }
   }
 
+  is_exercise_setup_chunk <- function(label) {
+    grepl("-setup$", label) || (length(exercise_chunks_for_setup_chunk(label)) > 0)
+  }
+
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutorial = function(options) {
 
@@ -202,17 +206,83 @@ install_knitr_hooks <- function() {
     # handle exercise support chunks (setup, solution, and check)
     else if (is_exercise_support_chunk(options)) {
 
+      # Store setup chunks for later analysis
+      if (before && is_exercise_setup_chunk(options$label)) {
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::store_exercise_setup_chunk(%s, %s)',
+            dput_to_string(options$label),
+            dput_to_string(options$code)
+          )
+        )
+      }
+
       # output wrapper div
       exercise_wrapper_div(suffix = "support")
+
     }
 
+    # Possibly redundant with the new_source_knot_hook, but that hook skips
+    # chunks that are empty. This makes it more likely that we catch the setup-
+    # global-exercise chunk. We keep the source hook, however, because we want
+    # to be less sensitive to the ordering of the chunks.
+    else if (identical(options$label, "setup-global-exercise")){
+      write_setup_chunk(options$code, TRUE)
+    }
 
   })
+
+  # Preserve any existing `source` hook
+  # We generally namespace our hooks under `tutorial` by calling `opts_chunk$set(tutorial = TRUE)`.
+  # Unfortunately, that only applies to subsequent chunks, not the current one.
+  # Since learnr is typically loaded in the `setup` chunk and we want to capture
+  # that chunk, that's unfortunately too late. Therefore we have to set a global
+  # `source` chunk to capture setup. However, we do take precautions to preserve
+  # any existing hook that might have been installed before creating our own.
+  knitr_hook_cache$source <- knitr::knit_hooks$get("source")
+
+  # Note: Empirically, this function gets called twice
+  knitr::knit_hooks$set(source = new_source_knit_hook())
+}
+
+# cache to hold the original knit hook
+knitr_hook_cache <- new.env(parent=emptyenv())
+
+write_setup_chunk <- function(code, overwrite = FALSE){
+  rmarkdown::shiny_prerendered_chunk(
+    'server',
+    sprintf(
+      'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = %s)',
+      dput_to_string(code),
+      overwrite
+    )
+  )
+}
+
+# takes in the prerenderCB which we can use to mock this side-effect in testing.
+new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {
+  function(x, options) {
+    # By configuring `setup` to not overwrite, and `setup-global-exercise` to
+    # overwrite, we ensure that:
+    #  1. If a chunk named `setup-global-exercise` exists, we use that
+    #  2. If not, it would return the chunk named `setup` if it exists
+    if (identical(options$label, "setup-global-exercise")){
+      write_set_chk(options$code, TRUE)
+    } else if (identical(options$label, "setup")){
+      write_set_chk(options$code, FALSE)
+    }
+
+    if(!is.null(knitr_hook_cache$source)) {
+      knitr_hook_cache$source(x, options)
+    }
+  }
 }
 
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
   knitr::knit_hooks$set(tutorial = NULL)
+  knitr::knit_hooks$set(source = knitr_hook_cache$source)
 }
 
 exercise_server_chunk <- function(label) {
