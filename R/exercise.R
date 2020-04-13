@@ -19,7 +19,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise
     exercise <- exercise_rx()
 
-    # short circult for restore (we restore some outputs like errors so that
+    # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
       object <- get_exercise_submission(session = session, label = exercise$label)
@@ -47,7 +47,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
-      if (!is_windows() && !is_macos())
+      remote_host <- getOption("tutorial.external.host", Sys.getenv("TUTORIAL_external_evaluator_HOST", NA))
+      if (!is.na(remote_host)){
+        evaluator_factory <- external_evaluator(remote_host)
+      } else if (!is_windows() && !is_macos())
         evaluator_factory <- forked_evaluator
       else
         evaluator_factory <- inline_evaluator
@@ -62,7 +65,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
     envir <- duplicate_env(server_envir, parent = globalenv())
 
     # create exercise evaluator
-    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir), timelimit)
+    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir),
+                                   timelimit, exercise, session)
 
     # Create exercise ID to map the associated events.
     ex_id <- random_id("lnr_ex")
@@ -123,14 +127,16 @@ setup_exercise_handler <- function(exercise_rx, session) {
 }
 
 # evaluate an exercise and return a list containing output and dependencies
-# @param include_global_setup - If `FALSE`, will just concatenate the exercise-
-#  specific setup code and then the submitted exercise code itself into the
-#  resultant expression. If `TRUE`, it will also include the global exercise
-#  setup chunk (`setup-global-exercise` or `setup`). Local evaluators inherit
-#  an environment in which those setup chunks have already been executed, so
-#  they'd typically use `FALSE`, the default. Remote evaluators, if they choose
-#  to use this function, might want to include the global setup.
-evaluate_exercise <- function(exercise, envir, include_global_setup = FALSE) {
+# @param evaluate_global_setup - If `FALSE`, will not evaluate the global setup
+#   code. Instead, it just concatenates the exercise- specific setup code and
+#   then the submitted exercise code itself into the resultant expression. If
+#   `TRUE`, it will evaluate global exercise setup chunk
+#   (`setup-global-exercise` or `setup`) prior to running the checker. Local
+#   evaluators inherit an environment in which those setup chunks have already
+#   been executed, so they'd typically use `FALSE`, the default. Remote
+#   evaluators, if they choose to use this function, might want to include the
+#   global setup.
+evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
@@ -142,6 +148,9 @@ evaluate_exercise <- function(exercise, envir, include_global_setup = FALSE) {
     return(empty_result())
   }
 
+  if (evaluate_global_setup) {
+    eval(parse(text = exercise$global_setup), envir = envir)
+  }
 
   # capture a copy of the envir before any execution is done
   envir_prep <- duplicate_env(envir)
@@ -242,9 +251,6 @@ evaluate_exercise <- function(exercise, envir, include_global_setup = FALSE) {
 
   # write the R code to a temp file (include setup code if necessary)
   code <- c(exercise$setup, exercise$code)
-  if (include_global_setup) {
-    code <- c(exercise$global_setup, code)
-  }
   exercise_r <- "exercise.R"
   writeLines(code, con = exercise_r, useBytes = TRUE)
 
