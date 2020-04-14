@@ -84,6 +84,8 @@ test_that("initiate_external_session works", {
 
   expect_equal(failed, FALSE)
   expect_equal(sess_ids, rep("abcd1234", 3))
+
+  expect_equal(srv$reqs[[1]]$req$CONTENT_LENGTH, "0")
 })
 
 test_that("initiate_external_session fails with bad status", {
