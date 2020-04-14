@@ -251,7 +251,8 @@ internal_external_evaluator <- function(
 #'   the err'ing response
 #' @noRd
 initiate_external_session <- function(pool, url, callback, err_callback){
-  handle <- curl::new_handle(post=1)
+  handle <- curl::new_handle(post=1,
+                             postfieldsize = 0)
 
   done_cb <- function(res){
     id <- NULL
