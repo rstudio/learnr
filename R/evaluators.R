@@ -143,7 +143,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
   }
 }
 
-forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = 3)
+forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = getOption("tutorial.max.forked.procs", Sys.getenv("TUTORIAL_MAX_FORKED_PROCS", NA)))
 
 #' External execution evaluator
 #'
@@ -154,7 +154,7 @@ forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = 3)
 #' @import curl
 #' @export
 external_evaluator <- function(
-  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_external_evaluator_HOST", NA)),
+  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
   max_curl_conns = 50){
 
   internal_external_evaluator(endpoint, max_curl_conns)
