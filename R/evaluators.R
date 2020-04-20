@@ -33,6 +33,8 @@ inline_evaluator <- function(expr, timelimit, ...) {
   )
 }
 
+max_forked_procs <- 1
+
 # forked execution evaluator
 forked_evaluator <- function(expr, timelimit, ...) {
 
@@ -40,6 +42,7 @@ forked_evaluator <- function(expr, timelimit, ...) {
   job <- NULL
   start_time <- NULL
   result <- NULL
+  running_exercises <- 0
 
   # helper to call a hook function
   call_hook <- function(name, default = NULL) {
@@ -59,17 +62,30 @@ forked_evaluator <- function(expr, timelimit, ...) {
 
     start = function() {
       start_time <<- Sys.time()
-      job <<- parallel::mcparallel(mc.interactive = FALSE, {
 
-        # close all connections
-        closeAllConnections()
+      doStart <- function(){
+        if (running_exercises >= max_forked_procs) {
+          # Then we can't start this job yet.
+          print("Delaying exercise execution due to forked proc limits")
+          later::later(doStart, 1)
+        }
 
-        # call onstart hook
-        call_hook("onstart")
+        # increment our counter of processes
+        running_exercises <<- running_exercises + 1
+        cat("Running ", running_exercises, " exercises now\n")
 
-        # evaluate the expression
-        force(expr)
-      })
+        job <<- parallel::mcparallel(mc.interactive = FALSE, {
+
+          # close all connections
+          closeAllConnections()
+
+          # call onstart hook
+          call_hook("onstart")
+
+          # evaluate the expression
+          force(expr)
+        })
+      }
     },
 
     completed = function() {
@@ -86,6 +102,9 @@ forked_evaluator <- function(expr, timelimit, ...) {
         # call cleanup hook
         call_hook("oncleanup", default = default_cleanup)
 
+        # decrement our counter of processes
+        running_exercises <<- running_exercises - 1
+
         # return result
         result <<- collect[[1]]
 
@@ -101,6 +120,9 @@ forked_evaluator <- function(expr, timelimit, ...) {
 
         # call cleanup hook
         call_hook("oncleanup", default = default_cleanup)
+
+        # decrement our counter of processes
+        running_exercises <<- running_exercises - 1
 
         # return error result
         result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
