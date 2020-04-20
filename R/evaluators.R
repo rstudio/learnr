@@ -73,7 +73,6 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
           # increment our counter of processes
           running_exercises <<- running_exercises + 1
-          cat("Running ", running_exercises, " exercises now\n")
 
           job <<- parallel::mcparallel(mc.interactive = FALSE, {
 
@@ -106,7 +105,6 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
           # decrement our counter of processes
           running_exercises <<- running_exercises - 1
-          cat("Finished exercise, now ", running_exercises, "\n")
 
           # return result
           result <<- collect[[1]]
@@ -126,7 +124,6 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
           # decrement our counter of processes
           running_exercises <<- running_exercises - 1
-          cat("Exercise timed out, now ", running_exercises, "\n")
 
           # return error result
           result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
