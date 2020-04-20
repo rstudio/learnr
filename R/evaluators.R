@@ -67,7 +67,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           if (running_exercises >= max_forked_procs) {
             # Then we can't start this job yet.
             print("Delaying exercise execution due to forked proc limits")
-            later::later(doStart, 1)
+            later::later(doStart, 0.1)
             return()
           }
 
