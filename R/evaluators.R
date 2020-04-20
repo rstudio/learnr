@@ -33,114 +33,120 @@ inline_evaluator <- function(expr, timelimit, ...) {
   )
 }
 
-max_forked_procs <- 1
-
 # forked execution evaluator
-forked_evaluator <- function(expr, timelimit, ...) {
-
-  # closure members
-  job <- NULL
-  start_time <- NULL
-  result <- NULL
+setup_forked_evaluator_factory <- function(max_forked_procs){
   running_exercises <- 0
 
-  # helper to call a hook function
-  call_hook <- function(name, default = NULL) {
-    hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
-    if (!is.null(hook))
-      hook(job$pid)
-    else if (!is.null(default))
-      default(job$pid)
-  }
+  function(expr, timelimit, ...) {
 
-  # default cleanup function
-  default_cleanup <- function(pid) {
-    system(paste("kill -9", pid))
-  }
+    # closure members
+    job <- NULL
+    start_time <- NULL
+    result <- NULL
 
-  list(
+    # helper to call a hook function
+    call_hook <- function(name, default = NULL) {
+      hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
+      if (!is.null(hook))
+        hook(job$pid)
+      else if (!is.null(default))
+        default(job$pid)
+    }
 
-    start = function() {
-      start_time <<- Sys.time()
+    # default cleanup function
+    default_cleanup <- function(pid) {
+      system(paste("kill -9", pid))
+    }
 
-      doStart <- function(){
-        if (running_exercises >= max_forked_procs) {
-          # Then we can't start this job yet.
-          print("Delaying exercise execution due to forked proc limits")
-          later::later(doStart, 1)
-          return()
+    list(
+
+      start = function() {
+        start_time <<- Sys.time()
+
+        doStart <- function(){
+          if (running_exercises >= max_forked_procs) {
+            # Then we can't start this job yet.
+            print("Delaying exercise execution due to forked proc limits")
+            later::later(doStart, 1)
+            return()
+          }
+
+          # increment our counter of processes
+          running_exercises <<- running_exercises + 1
+          cat("Running ", running_exercises, " exercises now\n")
+
+          job <<- parallel::mcparallel(mc.interactive = FALSE, {
+
+            # close all connections
+            closeAllConnections()
+
+            # call onstart hook
+            call_hook("onstart")
+
+            # evaluate the expression
+            force(expr)
+          })
+        }
+        doStart()
+      },
+
+      completed = function() {
+
+        # attempt to collect the result
+        collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
+
+        # got result
+        if (!is.null(collect)) {
+
+          # final reaping of process
+          parallel::mccollect(jobs = job, wait = FALSE)
+
+          # call cleanup hook
+          call_hook("oncleanup", default = default_cleanup)
+
+          # decrement our counter of processes
+          running_exercises <<- running_exercises - 1
+          cat("Finished exercise, now ", running_exercises, "\n")
+
+          # return result
+          result <<- collect[[1]]
+
+          # check if it's an error and convert it to an html error if it is
+          if(inherits(result, "try-error"))
+            result <<- error_result(result, timeout_exceeded = FALSE)
+
+          TRUE
         }
 
-        # increment our counter of processes
-        running_exercises <<- running_exercises + 1
-        cat("Running ", running_exercises, " exercises now\n")
+        # hit timeout
+        else if ((Sys.time() - start_time) >= timelimit) {
 
-        job <<- parallel::mcparallel(mc.interactive = FALSE, {
+          # call cleanup hook
+          call_hook("oncleanup", default = default_cleanup)
 
-          # close all connections
-          closeAllConnections()
+          # decrement our counter of processes
+          running_exercises <<- running_exercises - 1
+          cat("Exercise timed out, now ", running_exercises, "\n")
 
-          # call onstart hook
-          call_hook("onstart")
+          # return error result
+          result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
+          TRUE
+        }
 
-          # evaluate the expression
-          force(expr)
-        })
+        # not yet completed
+        else {
+          FALSE
+        }
+      },
+
+      result = function() {
+        result
       }
-    },
-
-    completed = function() {
-
-      # attempt to collect the result
-      collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
-
-      # got result
-      if (!is.null(collect)) {
-
-        # final reaping of process
-        parallel::mccollect(jobs = job, wait = FALSE)
-
-        # call cleanup hook
-        call_hook("oncleanup", default = default_cleanup)
-
-        # decrement our counter of processes
-        running_exercises <<- running_exercises - 1
-
-        # return result
-        result <<- collect[[1]]
-
-        # check if it's an error and convert it to an html error if it is
-        if(inherits(result, "try-error"))
-          result <<- error_result(result, timeout_exceeded = FALSE)
-
-        TRUE
-      }
-
-      # hit timeout
-      else if ((Sys.time() - start_time) >= timelimit) {
-
-        # call cleanup hook
-        call_hook("oncleanup", default = default_cleanup)
-
-        # decrement our counter of processes
-        running_exercises <<- running_exercises - 1
-
-        # return error result
-        result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
-        TRUE
-      }
-
-      # not yet completed
-      else {
-        FALSE
-      }
-    },
-
-    result = function() {
-      result
-    }
-  )
+    )
+  }
 }
+
+forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = 3)
 
 #' External execution evaluator
 #'
