@@ -68,6 +68,7 @@ forked_evaluator <- function(expr, timelimit, ...) {
           # Then we can't start this job yet.
           print("Delaying exercise execution due to forked proc limits")
           later::later(doStart, 1)
+          return()
         }
 
         # increment our counter of processes
