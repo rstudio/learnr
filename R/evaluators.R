@@ -143,7 +143,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
   }
 }
 
-forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = getOption("tutorial.max.forked.procs", Sys.getenv("TUTORIAL_MAX_FORKED_PROCS", NA)))
+forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = getOption("tutorial.max.forked.procs", Sys.getenv("TUTORIAL_MAX_FORKED_PROCS", 3)))
 
 #' External execution evaluator
 #'
