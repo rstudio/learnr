@@ -6,17 +6,17 @@ learnr (development version)
 * Renamed the `exercise_submission` event to `exercise_result` and added the following fields: 
   1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
-  3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported.
+  3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
   
 
 ## New features
 
-* Introduced an [experimental](https://www.tidyverse.org/lifecycle/#experimental) function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document.
-* For the "forked" evaluator (the default used on Linux), add a limit to the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable.
+* Introduced an [experimental](https://www.tidyverse.org/lifecycle/#experimental) function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document. ([#345](https://github.com/rstudio/learnr/pull/345))
+* For the "forked" evaluator (the default used on Linux), add a limit to the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. ([#353](https://github.com/rstudio/learnr/pull/353))
 
 ## Minor new features and improvements
 
-* Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated with an `exercise_result` event using the randomly generated `id` included in the data of both events.
+* Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated with an `exercise_result` event using the randomly generated `id` included in the data of both events. ([#337](https://github.com/rstudio/learnr/pull/337))
 
 ## Bug fixes
 

@@ -6,7 +6,7 @@
 \usage{
 external_evaluator(
   endpoint = getOption("tutorial.external.host",
-    Sys.getenv("TUTORIAL_external_evaluator_HOST", NA)),
+    Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
   max_curl_conns = 50
 )
 }
