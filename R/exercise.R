@@ -51,7 +51,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
       if (!is.na(remote_host)){
         evaluator_factory <- external_evaluator(remote_host)
       } else if (!is_windows() && !is_macos())
-        evaluator_factory <- forked_evaluator
+        evaluator_factory <- forked_evaluator_factory
       else
         evaluator_factory <- inline_evaluator
     }

@@ -34,90 +34,119 @@ inline_evaluator <- function(expr, timelimit, ...) {
 }
 
 # forked execution evaluator
-forked_evaluator <- function(expr, timelimit, ...) {
+setup_forked_evaluator_factory <- function(max_forked_procs){
+  running_exercises <- 0
 
-  # closure members
-  job <- NULL
-  start_time <- NULL
-  result <- NULL
+  function(expr, timelimit, ...) {
 
-  # helper to call a hook function
-  call_hook <- function(name, default = NULL) {
-    hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
-    if (!is.null(hook))
-      hook(job$pid)
-    else if (!is.null(default))
-      default(job$pid)
-  }
+    # closure members
+    job <- NULL
+    start_time <- NULL
+    result <- NULL
 
-  # default cleanup function
-  default_cleanup <- function(pid) {
-    system(paste("kill -9", pid))
-  }
-
-  list(
-
-    start = function() {
-      start_time <<- Sys.time()
-      job <<- parallel::mcparallel(mc.interactive = FALSE, {
-
-        # close all connections
-        closeAllConnections()
-
-        # call onstart hook
-        call_hook("onstart")
-
-        # evaluate the expression
-        force(expr)
-      })
-    },
-
-    completed = function() {
-
-      # attempt to collect the result
-      collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
-
-      # got result
-      if (!is.null(collect)) {
-
-        # final reaping of process
-        parallel::mccollect(jobs = job, wait = FALSE)
-
-        # call cleanup hook
-        call_hook("oncleanup", default = default_cleanup)
-
-        # return result
-        result <<- collect[[1]]
-
-        # check if it's an error and convert it to an html error if it is
-        if(inherits(result, "try-error"))
-          result <<- error_result(result, timeout_exceeded = FALSE)
-
-        TRUE
-      }
-
-      # hit timeout
-      else if ((Sys.time() - start_time) >= timelimit) {
-
-        # call cleanup hook
-        call_hook("oncleanup", default = default_cleanup)
-
-        # return error result
-        result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
-        TRUE
-      }
-
-      # not yet completed
-      else {
-        FALSE
-      }
-    },
-
-    result = function() {
-      result
+    # helper to call a hook function
+    call_hook <- function(name, default = NULL) {
+      hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
+      if (!is.null(hook))
+        hook(job$pid)
+      else if (!is.null(default))
+        default(job$pid)
     }
-  )
+
+    # default cleanup function
+    default_cleanup <- function(pid) {
+      system(paste("kill -9", pid))
+    }
+
+    list(
+
+      start = function() {
+        start_time <<- Sys.time()
+
+        doStart <- function(){
+          if (running_exercises >= max_forked_procs) {
+            # Then we can't start this job yet.
+            print("Delaying exercise execution due to forked proc limits")
+            later::later(doStart, 0.1)
+            return()
+          }
+
+          # increment our counter of processes
+          running_exercises <<- running_exercises + 1
+
+          job <<- parallel::mcparallel(mc.interactive = FALSE, {
+
+            # close all connections
+            closeAllConnections()
+
+            # call onstart hook
+            call_hook("onstart")
+
+            # evaluate the expression
+            force(expr)
+          })
+        }
+        doStart()
+      },
+
+      completed = function() {
+
+        # attempt to collect the result
+        collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
+
+        # got result
+        if (!is.null(collect)) {
+
+          # final reaping of process
+          parallel::mccollect(jobs = job, wait = FALSE)
+
+          # call cleanup hook
+          call_hook("oncleanup", default = default_cleanup)
+
+          # decrement our counter of processes
+          running_exercises <<- running_exercises - 1
+
+          # return result
+          result <<- collect[[1]]
+
+          # check if it's an error and convert it to an html error if it is
+          if(inherits(result, "try-error"))
+            result <<- error_result(result, timeout_exceeded = FALSE)
+
+          TRUE
+        }
+
+        # hit timeout
+        else if ((Sys.time() - start_time) >= timelimit) {
+
+          # call cleanup hook
+          call_hook("oncleanup", default = default_cleanup)
+
+          # decrement our counter of processes
+          running_exercises <<- running_exercises - 1
+
+          # return error result
+          result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
+          TRUE
+        }
+
+        # not yet completed
+        else {
+          FALSE
+        }
+      },
+
+      result = function() {
+        result
+      }
+    )
+  }
 }
+
+forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = getOption("tutorial.max.forked.procs", Sys.getenv("TUTORIAL_MAX_FORKED_PROCS", 3)))
+# Maintain for backwards-compatibility with original implementation in which
+# forked_evaluator was uncapped
+forked_evaluator <- setup_forked_evaluator_factory(max_forked_procs = Inf)
 
 #' External execution evaluator
 #'
@@ -128,7 +157,7 @@ forked_evaluator <- function(expr, timelimit, ...) {
 #' @import curl
 #' @export
 external_evaluator <- function(
-  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_external_evaluator_HOST", NA)),
+  endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
   max_curl_conns = 50){
 
   internal_external_evaluator(endpoint, max_curl_conns)
