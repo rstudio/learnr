@@ -144,6 +144,9 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 }
 
 forked_evaluator_factory <- setup_forked_evaluator_factory(max_forked_procs = getOption("tutorial.max.forked.procs", Sys.getenv("TUTORIAL_MAX_FORKED_PROCS", 3)))
+# Maintain for backwards-compatibility with original implementation in which
+# forked_evaluator was uncapped
+forked_evaluator <- setup_forked_evaluator_factory(max_forked_procs = Inf)
 
 #' External execution evaluator
 #'
