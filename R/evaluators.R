@@ -165,6 +165,10 @@ external_evaluator <- function(
 
 # An internal version of external_evaluator that allows us to stub some calls
 # for testing.
+# Note that the cookie implementation of the external evaluator is currently
+# limited. Cookies are persisted on the initialization call and reused by
+# subsequent exercise evaluations. But they are NOT updated during exercise
+# evaluations.
 internal_external_evaluator <- function(
   endpoint,
   max_curl_conns,
@@ -186,7 +190,7 @@ internal_external_evaluator <- function(
       start = function() {
 
         # The actual workhorse here -- called once we have a session ID on the external evaluator
-        submit_req <- function(sess_id){
+        submit_req <- function(sess_id, cookiejar){
 
           # Work around a few edge cases on the exercise that don't serialize well
           if (identical(exercise$options$exercise.checker, "NULL")){
@@ -204,8 +208,9 @@ internal_external_evaluator <- function(
           handle <- curl::new_handle(customrequest = "POST",
                                      postfields = json,
                                      postfieldsize = nchar(json),
-                                     # add 5 seconds for application startup
-                                     timeout_ms = timeout_s + 5000)
+                                     # add 15 seconds for application startup
+                                     timeout_ms = timeout_s + 15000,
+                                     cookiefile=cookiejar)
           curl::handle_setheaders(handle, "Content-Type" = "application/json")
 
           url <- paste0(endpoint, "/learnr/", sess_id)
@@ -246,17 +251,21 @@ internal_external_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.external_evaluator_session_id)){
-          rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
-            # Stash the session ID for future use and fire the actual request
-            session$userData$.external_evaluator_session_id <- sid
-            submit_req(sid)
-          }, err_callback = function(res){
-            print(res)
-            result <<- error_result("Error initiating session for external requests. Please try again later")
-          })
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"),
+                         callback = function(sid, cookieFile){
+              # Stash the session ID and the cookies for future use and fire the
+              # actual request
+              session$userData$.external_evaluator_session_id <- sid
+              session$userData$.external_evaluator_cookiejar <- cookieFile
+              submit_req(sid, cookieFile)
+            }, err_callback = function(res){
+              print(res)
+              result <<- error_result("Error initiating session for external requests. Please try again later")
+            })
         } else {
           # We already have an ID, invoke immediately
-          submit_req(session$userData$.external_evaluator_session_id)
+          submit_req(session$userData$.external_evaluator_session_id,
+                     session$userData$.external_evaluator_cookiejar)
         }
       },
 
@@ -278,10 +287,10 @@ internal_external_evaluator <- function(
 #'   the session ID
 #' @param err_callback The callback to invoke on error. Provides one parameter:
 #'   the err'ing response
+#' @param cookieFile The path to a file into which cookies should be written
 #' @noRd
 initiate_external_session <- function(pool, url, callback, err_callback){
-  handle <- curl::new_handle(post=1,
-                             postfieldsize = 0)
+  handle <- curl::new_handle(post = 1, postfieldsize = 0)
 
   done_cb <- function(res){
     id <- NULL
@@ -304,7 +313,10 @@ initiate_external_session <- function(pool, url, callback, err_callback){
     # If success, we'll have a non-null ID. Otherwise we must have invoked the
     # err_callback.
     if (!failed){
-      callback(id)
+      cookies <- handle_cookies(handle)
+      cookieFile <- tempfile("cookies")
+      write_cookies(cookies, cookieFile)
+      callback(id, cookieFile)
     }
   }
 
@@ -319,4 +331,26 @@ initiate_external_session <- function(pool, url, callback, err_callback){
   poll()
 
   invisible(NULL)
+}
+
+# Writes out cookies into the Netscape format that curl supports
+# We write these files ourselves because the curl package doesn't provide the
+# necessary hooks to do this more cleanly. There are two options that were
+# considered:
+#  1. As documented, cookies are persisted on R curl handles. So if you reuse and
+#     reset a single curl handle, you don't have to worry about carrying around
+#     the cookies. Unfortunately, we want to create connections async and in
+#     parallel, and a single curl handle can't be reused like that.
+#  2. We could use the libcurl COOKIEFILE and COOKIEJAR options. Unfortunately,
+#     we don't have tight guarantees about exactly when a curl handle is going to
+#     be closed. In interactive use, it worked fine but programatically we often
+#     went to read the file before it had been written. I think we're in a race
+#     against the R garbage collector if we use this approach.
+# So we settled on this approach -- persisting the cookies off the connection
+# ourselves in a format that can be read in by curl using the COOKIEFILE option.
+write_cookies <- function(cookies, cookieFile){
+  cookies$expiration <- as.numeric(cookies$expiration)
+  cookies$expiration[is.infinite(cookies$expiration) | is.na(cookies$expiration)] <- 0
+  cookies$expiration <- as.integer(cookies$expiration)
+  write.table(cookies, cookieFile, row.names=FALSE, col.names=FALSE, sep="\t", quote = FALSE)
 }
