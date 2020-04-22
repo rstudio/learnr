@@ -246,7 +246,8 @@ internal_external_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.external_evaluator_session_id)){
-          rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup,
+                         callback = function(sid){
             # Stash the session ID for future use and fire the actual request
             session$userData$.external_evaluator_session_id <- sid
             submit_req(sid)
@@ -279,9 +280,12 @@ internal_external_evaluator <- function(
 #' @param err_callback The callback to invoke on error. Provides one parameter:
 #'   the err'ing response
 #' @noRd
-initiate_external_session <- function(pool, url, callback, err_callback){
-  handle <- curl::new_handle(post=1,
-                             postfieldsize = 0)
+initiate_external_session <- function(pool, url, global_setup, callback, err_callback){
+  json <- jsonlite::toJSON(list(global_setup = global_setup), auto_unbox = TRUE, null = "null")
+  handle <- curl::new_handle(customrequest = "POST",
+                             postfields = json,
+                             postfieldsize = nchar(json))
+
 
   done_cb <- function(res){
     id <- NULL
