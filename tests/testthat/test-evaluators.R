@@ -64,7 +64,7 @@ test_that("initiate_external_session works", {
 
   failed <- FALSE
   sess_ids <- NULL
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     sess_ids <<- c(sess_ids, sid)
   }
   err_cb <- function(res){
@@ -103,7 +103,7 @@ test_that("initiate_external_session fails with bad status", {
   on.exit(srv$stop(), add = TRUE)
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -136,7 +136,7 @@ test_that("initiate_external_session fails with invalid JSON", {
   on.exit(srv$stop(), add = TRUE)
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -171,7 +171,7 @@ test_that("initiate_external_session fails with failed curl", {
   srv$stop()
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -194,7 +194,7 @@ test_that("external_evaluator works", {
   testthat::skip_on_cran()
 
   mock_initiate <- function(pool, url, callback, err_callback){
-    callback("abcd1234")
+    callback("abcd1234", tempfile())
   }
 
   mockResult <- list(html_output = "hi")
@@ -287,7 +287,7 @@ test_that("", {
 
   ### Test with a bad status
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("badstatus") })
+    function(pool, url, callback, err_callback){ callback("badstatus", tempfile()) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
@@ -302,7 +302,7 @@ test_that("", {
 
   ### Test with invalid JSON
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("invalidjson") })
+    function(pool, url, callback, err_callback){ callback("invalidjson", tempfile()) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
