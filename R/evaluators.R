@@ -348,6 +348,7 @@ initiate_external_session <- function(pool, url, callback, err_callback){
 #     against the R garbage collector if we use this approach.
 # So we settled on this approach -- persisting the cookies off the connection
 # ourselves in a format that can be read in by curl using the COOKIEFILE option.
+#' @importFrom utils write.table
 write_cookies <- function(cookies, cookieFile){
   cookies$expiration <- as.numeric(cookies$expiration)
   cookies$expiration[is.infinite(cookies$expiration) | is.na(cookies$expiration)] <- 0
