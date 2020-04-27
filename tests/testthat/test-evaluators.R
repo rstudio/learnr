@@ -193,8 +193,10 @@ test_that("initiate_external_session fails with failed curl", {
 test_that("external_evaluator works", {
   testthat::skip_on_cran()
 
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   mock_initiate <- function(pool, url, callback, err_callback){
-    callback("abcd1234", tempfile())
+    callback("abcd1234", tf)
   }
 
   mockResult <- list(html_output = "hi")
@@ -288,8 +290,10 @@ test_that("", {
   on.exit(srv$stop(), add = TRUE)
 
   ### Test with a bad status
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("badstatus", tempfile()) })
+    function(pool, url, callback, err_callback){ callback("badstatus", tf) })
 
   # Start a session
   mockSession <- list(onSessionEnded = function(callback){})
@@ -304,8 +308,10 @@ test_that("", {
   expect_match(res$error_message, "^Error submitting external exercise")
 
   ### Test with invalid JSON
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("invalidjson", tempfile()) })
+    function(pool, url, callback, err_callback){ callback("invalidjson", tf) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
