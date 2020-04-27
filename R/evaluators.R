@@ -246,7 +246,8 @@ internal_external_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.external_evaluator_session_id)){
-          rs <- initiate(pool, paste0(endpoint, "/learnr/"), callback = function(sid){
+          rs <- initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup,
+                         callback = function(sid){
             # Stash the session ID for future use and fire the actual request
             session$userData$.external_evaluator_session_id <- sid
             submit_req(sid)
@@ -279,25 +280,40 @@ internal_external_evaluator <- function(
 #' @param err_callback The callback to invoke on error. Provides one parameter:
 #'   the err'ing response
 #' @noRd
-initiate_external_session <- function(pool, url, callback, err_callback){
-  handle <- curl::new_handle(post=1,
-                             postfieldsize = 0)
+initiate_external_session <- function(pool, url, global_setup, callback,
+                                      err_callback, retry_count = 0){
+  json <- jsonlite::toJSON(list(global_setup = global_setup), auto_unbox = TRUE, null = "null")
+  handle <- curl::new_handle(customrequest = "POST",
+                             postfields = json,
+                             postfieldsize = nchar(json))
+
+
+  err_cb <- function(res){
+    # may just have hit a temporarily overloaded server. Retry
+    if (res$status == 503 && retry_count < 2) { # three total tries
+      initiate_external_session(pool, url, global_setup, callback, err_callback, retry_count+1)
+    } else {
+      # invoke the given error callback
+      err_callback(res)
+    }
+  }
 
   done_cb <- function(res){
     id <- NULL
     failed <- FALSE
-    tryCatch({
-      if (res$status != 200){
-        err_callback(res)
-        return()
-      }
 
+    if (res$status != 200){
+      err_cb(res)
+      return()
+    }
+
+    tryCatch({
       r <- rawToChar(res$content)
       p <- jsonlite::fromJSON(r)
       id <- p$id
     }, error = function(e) {
       print(e)
-      err_callback(res)
+      err_cb(res)
       failed <<- TRUE
     })
 
