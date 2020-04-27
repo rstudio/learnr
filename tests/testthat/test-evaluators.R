@@ -64,7 +64,7 @@ test_that("initiate_external_session works", {
 
   failed <- FALSE
   sess_ids <- NULL
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     sess_ids <<- c(sess_ids, sid)
   }
   err_cb <- function(res){
@@ -103,7 +103,7 @@ test_that("initiate_external_session fails with bad status", {
   on.exit(srv$stop(), add = TRUE)
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -136,7 +136,7 @@ test_that("initiate_external_session fails with invalid JSON", {
   on.exit(srv$stop(), add = TRUE)
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -171,7 +171,7 @@ test_that("initiate_external_session fails with failed curl", {
   srv$stop()
 
   done <- FALSE
-  cb <- function(sid){
+  cb <- function(sid, cookiefile){
     testthat::fail("Expected failure but got success")
     done <<- TRUE
   }
@@ -193,8 +193,10 @@ test_that("initiate_external_session fails with failed curl", {
 test_that("external_evaluator works", {
   testthat::skip_on_cran()
 
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   mock_initiate <- function(pool, url, global_setup, callback, err_callback){
-    callback("abcd1234")
+    callback("abcd1234", tf)
   }
 
   mockResult <- list(html_output = "hi")
@@ -216,11 +218,13 @@ test_that("external_evaluator works", {
 
   re <- internal_external_evaluator(srv$url, 5, mock_initiate)
 
+  mockSession <- list(onSessionEnded = function(callback){})
+
   # Start a couple of sessions concurrently
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   # Simulate a session that already has an evaluator ID stashed
   e2 <- re(NULL, 30, list(options = list(exercise.timelimit = 5)),
-           list(userData = list(`.external_evaluator_session_id` = "efgh5678")))
+           list(userData = c(mockSession, `.external_evaluator_session_id` = "efgh5678")))
   e$start()
   e2$start()
 
@@ -286,11 +290,14 @@ test_that("", {
   on.exit(srv$stop(), add = TRUE)
 
   ### Test with a bad status
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, global_setup, callback, err_callback){ callback("badstatus") })
+    function(pool, url, global_setup, callback, err_callback){ callback("badstatus", tf) })
 
   # Start a session
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  mockSession <- list(onSessionEnded = function(callback){})
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   e$start()
 
   while(!e$completed()) {
@@ -301,11 +308,13 @@ test_that("", {
   expect_match(res$error_message, "^Error submitting external exercise")
 
   ### Test with invalid JSON
+  tf <- tempfile()
+  on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, global_setup, callback, err_callback){ callback("invalidjson") })
+    function(pool, url, global_setup, callback, err_callback){ callback("invalidjson", tf) })
 
   # Start a session
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   e$start()
 
   while(!e$completed()) {
