@@ -301,12 +301,13 @@ initiate_external_session <- function(pool, url, global_setup, callback,
   done_cb <- function(res){
     id <- NULL
     failed <- FALSE
-    tryCatch({
-      if (res$status != 200){
-        err_cb(res)
-        return()
-      }
 
+    if (res$status != 200){
+      err_cb(res)
+      return()
+    }
+
+    tryCatch({
       r <- rawToChar(res$content)
       p <- jsonlite::fromJSON(r)
       id <- p$id
