@@ -216,11 +216,13 @@ test_that("external_evaluator works", {
 
   re <- internal_external_evaluator(srv$url, 5, mock_initiate)
 
+  mockSession <- list(onSessionEnded = function(callback){})
+
   # Start a couple of sessions concurrently
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   # Simulate a session that already has an evaluator ID stashed
   e2 <- re(NULL, 30, list(options = list(exercise.timelimit = 5)),
-           list(userData = list(`.external_evaluator_session_id` = "efgh5678")))
+           list(userData = c(mockSession, `.external_evaluator_session_id` = "efgh5678")))
   e$start()
   e2$start()
 
@@ -290,7 +292,8 @@ test_that("", {
     function(pool, url, callback, err_callback){ callback("badstatus", tempfile()) })
 
   # Start a session
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  mockSession <- list(onSessionEnded = function(callback){})
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   e$start()
 
   while(!e$completed()) {
@@ -305,7 +308,7 @@ test_that("", {
     function(pool, url, callback, err_callback){ callback("invalidjson", tempfile()) })
 
   # Start a session
-  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
+  e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   e$start()
 
   while(!e$completed()) {

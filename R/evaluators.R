@@ -258,6 +258,13 @@ internal_external_evaluator <- function(
               session$userData$.external_evaluator_session_id <- sid
               session$userData$.external_evaluator_cookiejar <- cookieFile
               submit_req(sid, cookieFile)
+              session$onSessionEnded(function(){
+                # Cleanup session cookiefile
+                # Because of https://github.com/rstudio/shiny/pull/2757, we can't
+                # trust that the reactive context will be provided here. So just
+                # grab objects from the closure.
+                unlink(cookieFile)
+              })
             }, err_callback = function(res){
               print(res)
               result <<- error_result("Error initiating session for external requests. Please try again later")

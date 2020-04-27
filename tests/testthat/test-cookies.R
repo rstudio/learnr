@@ -14,6 +14,7 @@ test_that("cookies are properly serialized", {
     class = "data.frame")
 
   f <- tempfile()
+  on.exit({unlink(f)})
 
   write_cookies(cookies, f)
   txt <- readLines(f)
