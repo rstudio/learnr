@@ -1,38 +1,45 @@
 swagger: "2.0"
 info:
-  title: Remote Evaluator Service
+  title: External Evaluator Service
   description: Service for remotely invoking R for learnr exercises
   version: ""
 host: 0.0.0.0:8080
 consumes:
 - application/json
-- application/xml
-- application/gob
 produces:
 - application/json
-- application/xml
-- application/gob
 paths:
-  /learnr:
+  /learnr/:
     post:
       tags:
-      - remote evaluator
-      summary: initiate session remote evaluator
+      - srvr
+      summary: initiate session srvr
       description: Initiate a session in which exercises can be evaluated
-      operationId: remote evaluator#initiate session
+      operationId: srvr#initiate session
+      parameters:
+      - name: Initiate SessionRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SrvrInitiateSessionRequestBody'
+          required:
+          - global_setup
       responses:
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/RemoteEvaluatorInitiateSessionResponseBody'
+            $ref: '#/definitions/SrvrInitiateSessionResponseBody'
+            required:
+            - id
       schemes:
       - http
   /learnr/{session_id}:
     post:
       tags:
-      - remote evaluator
-      summary: evaluate exercise remote evaluator
-      operationId: remote evaluator#evaluate exercise
+      - srvr
+      summary: evaluate exercise srvr
+      description: Evaluate an exercise in a given session
+      operationId: srvr#evaluate exercise
       parameters:
       - name: session_id
         in: path
@@ -43,7 +50,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/RemoteEvaluatorEvaluateExerciseRequestBody'
+          $ref: '#/definitions/SrvrEvaluateExerciseRequestBody'
           required:
           - code
           - options
@@ -53,15 +60,20 @@ paths:
             imply that the provided R code didn't produce an error -- just that we
             were able to run it through to completion.
           schema:
-            $ref: '#/definitions/RemoteEvaluatorEvaluateExerciseResponseBody'
+            $ref: '#/definitions/SrvrEvaluateExerciseResponseBody'
+            required:
+            - feedback
+            - error_message
+            - timeout_exceeded
+            - html_output
       schemes:
       - http
   /openapi.json:
     get:
       tags:
-      - remote evaluator
+      - srvr
       summary: Download ./gen/http/openapi.json
-      operationId: remote evaluator#/openapi.json
+      operationId: srvr#/openapi.json
       responses:
         "200":
           description: File downloaded
@@ -70,8 +82,37 @@ paths:
       schemes:
       - http
 definitions:
-  ExerciseOptionsRequestBody:
-    title: ExerciseOptionsRequestBody
+  Exercise FeedbackResponseBody:
+    title: Exercise FeedbackResponseBody
+    type: object
+    properties:
+      ' location ':
+        type: string
+        description: Location for feedback (“append”, “prepend”, or “replace”).
+        example: Facilis sed reiciendis pariatur doloribus aut.
+      correct:
+        type: boolean
+        description: TRUE/FALSE logical value indicating whether the submitted answer
+          was correct.
+        example: false
+      message:
+        type: string
+        description: Feedback message. Can be a plain character vector or can HTML
+          produced via the htmltools package.
+        example: Expedita rem et dolore ut et.
+      type:
+        type: string
+        description: Feedback type (visual presentation style). Can be “auto”, “success”,
+          “info”, “warning”, “error”, or “custom”. Note that “custom” implies that
+          the “message” field is custom HTML rather than a character vector.
+        example: Quis hic quis similique.
+    example:
+      ' location ': Id fugit adipisci repellat ea voluptatem et.
+      correct: false
+      message: Ipsam deserunt voluptatem fugit beatae.
+      type: Omnis vero.
+  Exercise OptionsRequestBody:
+    title: Exercise OptionsRequestBody
     type: object
     properties:
       error:
@@ -81,7 +122,7 @@ definitions:
         type: array
         items:
           type: string
-          example: Natus vitae quod.
+          example: Dicta hic saepe ipsa.
         example:
         - 'function (label, user_code, check_code, envir_result, evaluate_result, '
         - '    ...) '
@@ -149,28 +190,28 @@ definitions:
       message: true
       out.width: 624
       warning: true
-  RemoteEvaluatorEvaluateExerciseRequestBody:
-    title: RemoteEvaluatorEvaluateExerciseRequestBody
+  SrvrEvaluateExerciseRequestBody:
+    title: SrvrEvaluateExerciseRequestBody
     type: object
     properties:
       check:
         type: string
         description: TODO
-        example: Officiis sunt.
+        example: Similique eum ex.
       code:
         type: string
         description: The R code to execute
         example: rnorm(5)
       code_check:
         description: TODO
-        example: Occaecati ea.
+        example: Vitae necessitatibus nostrum.
       global_setup:
         type: string
         description: Setup code from the `setup-global-exercise` or `setup` chunk
           that should be run before every exercise
         example: library(ggplot2)
       options:
-        $ref: '#/definitions/ExerciseOptionsRequestBody'
+        $ref: '#/definitions/Exercise OptionsRequestBody'
       restore:
         type: boolean
         description: TODO
@@ -184,9 +225,9 @@ definitions:
         description: Unused, the solution code for this exercise
         example: rnorm(1)
     example:
-      check: Sed quidem laudantium.
+      check: Repellendus dolorum.
       code: rnorm(5)
-      code_check: Ut aspernatur rem autem fugiat non maxime.
+      code_check: Officiis consequatur.
       global_setup: library(ggplot2)
       options:
         error: false
@@ -213,8 +254,8 @@ definitions:
     required:
     - code
     - options
-  RemoteEvaluatorEvaluateExerciseResponseBody:
-    title: RemoteEvaluatorEvaluateExerciseResponseBody
+  SrvrEvaluateExerciseResponseBody:
+    title: SrvrEvaluateExerciseResponseBody
     type: object
     properties:
       error_message:
@@ -222,9 +263,7 @@ definitions:
         description: If an error occurred, the plain-text representation
         example: object 'x' not found
       feedback:
-        type: string
-        description: TODO
-        example: Consequatur minus sunt placeat eaque amet.
+        $ref: '#/definitions/Exercise FeedbackResponseBody'
       html_output:
         type: string
         description: The output of the given command
@@ -236,18 +275,40 @@ definitions:
       timeout_exceeded:
         type: boolean
         description: True if the time limit was exceeded; otherwise false
-        example: false
+        example: true
     example:
       error_message: object 'x' not found
-      feedback: Quo quisquam sit beatae corporis.
+      feedback:
+        ' location ': Dolores est nisi officiis voluptatum natus.
+        correct: true
+        message: Facilis omnis nemo dolorum quos.
+        type: Saepe qui quos adipisci quod.
       html_output: |2
 
 
 
         <pre><code>[1] -0.78207928  0.70263075 -0.08438296 -0.06020523  1.97638361</code></pre>
       timeout_exceeded: true
-  RemoteEvaluatorInitiateSessionResponseBody:
-    title: RemoteEvaluatorInitiateSessionResponseBody
+    required:
+    - feedback
+    - error_message
+    - timeout_exceeded
+    - html_output
+  SrvrInitiateSessionRequestBody:
+    title: SrvrInitiateSessionRequestBody
+    type: object
+    properties:
+      global_setup:
+        type: string
+        description: Setup code from the `setup-global-exercise` or `setup` chunk
+          that should be run before every exercise
+        example: library(tidyverse)
+    example:
+      global_setup: library(tidyverse)
+    required:
+    - global_setup
+  SrvrInitiateSessionResponseBody:
+    title: SrvrInitiateSessionResponseBody
     type: object
     properties:
       id:
@@ -256,3 +317,5 @@ definitions:
         example: 8rmci3kdkc
     example:
       id: 8rmci3kdkc
+    required:
+    - id

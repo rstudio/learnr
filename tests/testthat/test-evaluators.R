@@ -74,9 +74,9 @@ test_that("initiate_external_session works", {
   }
 
   # Initiate a handful of sessions all at once
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
 
   while(!failed && length(sess_ids) < 3){
     later::run_now()
@@ -85,7 +85,7 @@ test_that("initiate_external_session works", {
   expect_equal(failed, FALSE)
   expect_equal(sess_ids, rep("abcd1234", 3))
 
-  expect_equal(srv$reqs[[1]]$req$CONTENT_LENGTH, "0")
+  expect_equal(jsonlite::fromJSON(rawToChar(srv$reqs[[1]]$body)), list(global_setup = ""))
 })
 
 test_that("initiate_external_session fails with bad status", {
@@ -111,7 +111,7 @@ test_that("initiate_external_session fails with bad status", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -144,7 +144,7 @@ test_that("initiate_external_session fails with invalid JSON", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -179,7 +179,7 @@ test_that("initiate_external_session fails with failed curl", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -195,7 +195,7 @@ test_that("external_evaluator works", {
 
   tf <- tempfile()
   on.exit({unlink(tf)})
-  mock_initiate <- function(pool, url, callback, err_callback){
+  mock_initiate <- function(pool, url, global_setup, callback, err_callback){
     callback("abcd1234", tf)
   }
 
@@ -251,7 +251,7 @@ test_that("external_evaluator works", {
 })
 
 test_that("external_evaluator handles initiate failures", {
-  mock_initiate <- function(pool, url, callback, err_callback){
+  mock_initiate <- function(pool, url, global_setup, callback, err_callback){
     err_callback(list())
   }
 
@@ -293,7 +293,7 @@ test_that("", {
   tf <- tempfile()
   on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("badstatus", tf) })
+    function(pool, url, global_setup, callback, err_callback){ callback("badstatus", tf) })
 
   # Start a session
   mockSession <- list(onSessionEnded = function(callback){})
@@ -311,7 +311,7 @@ test_that("", {
   tf <- tempfile()
   on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, callback, err_callback){ callback("invalidjson", tf) })
+    function(pool, url, global_setup, callback, err_callback){ callback("invalidjson", tf) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
