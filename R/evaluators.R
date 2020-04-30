@@ -184,8 +184,6 @@ internal_external_evaluator <- function(
   endpoint <- sub("/+$", "", endpoint)
 
   function(expr, timelimit, exercise, session, ...) {
-    print("GS")
-    print(exercise$global_setup)
     result <- NULL
     pool <- curl::new_pool(total_con = max_curl_conns, host_con = max_curl_conns)
 
