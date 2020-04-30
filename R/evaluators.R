@@ -353,7 +353,7 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
       resolve(list(id = id, cookieFile = cookieFile))
     }
 
-    curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = err_cb)
+    curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = reject)
 
     poll <- function(){
       res <- curl::multi_run(timeout = 0)
