@@ -37,7 +37,8 @@ Imports:
     ellipsis (>= 0.2.0.1),
     checkmate,
     renv (>= 0.8.0),
-    curl
+    curl,
+    promises
 Remotes: rstudio/htmltools
 Encoding: UTF-8
 LazyData: true  

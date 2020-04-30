@@ -17,7 +17,7 @@ get_global_setup <- function(){
     setup <- get("__setup__", envir = setup_chunks)
     return(paste0(setup, collapse="\n"))
   }
-  NULL
+  "" # TODO?
 }
 
 clear_exercise_setup_chunks <- function(){

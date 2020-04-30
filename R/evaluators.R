@@ -169,6 +169,8 @@ external_evaluator <- function(
 # limited. Cookies are persisted on the initialization call and reused by
 # subsequent exercise evaluations. But they are NOT updated during exercise
 # evaluations.
+#' @importFrom promises then
+#' @noRd
 internal_external_evaluator <- function(
   endpoint,
   max_curl_conns,
@@ -182,7 +184,8 @@ internal_external_evaluator <- function(
   endpoint <- sub("/+$", "", endpoint)
 
   function(expr, timelimit, exercise, session, ...) {
-
+    print("GS")
+    print(exercise$global_setup)
     result <- NULL
     pool <- curl::new_pool(total_con = max_curl_conns, host_con = max_curl_conns)
 
@@ -191,6 +194,7 @@ internal_external_evaluator <- function(
 
         # The actual workhorse here -- called once we have a session ID on the external evaluator
         submit_req <- function(sess_id, cookiejar){
+          cat("Request with ID", sess_id, "\n")
 
           # Work around a few edge cases on the exercise that don't serialize well
           if (identical(exercise$options$exercise.checker, "NULL")){
@@ -218,7 +222,7 @@ internal_external_evaluator <- function(
           done_cb <- function(res){
             tryCatch({
               if (res$status != 200){
-                fail_cb(res)
+                fail_cb(response_to_error(res))
                 return()
               }
 
@@ -228,13 +232,13 @@ internal_external_evaluator <- function(
               result <<- p
             }, error = function(e){
               print(e)
-              fail_cb(res)
+              fail_cb(response_to_error(res))
             })
           }
 
           fail_cb <- function(res){
             print("Error submitting external exercise:")
-            print(res)
+            print(response_to_error(res))
             result <<- error_result("Error submitting external exercise. Please try again later")
           }
 
@@ -251,28 +255,38 @@ internal_external_evaluator <- function(
 
         # Initiate a session
         if (is.null(session$userData$.external_evaluator_session_id)){
-          rs <- initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup,
-                         callback = function(sid, cookieFile){
-              # Stash the session ID and the cookies for future use and fire the
-              # actual request
-              session$userData$.external_evaluator_session_id <- sid
-              session$userData$.external_evaluator_cookiejar <- cookieFile
-              submit_req(sid, cookieFile)
-              session$onSessionEnded(function(){
-                # Cleanup session cookiefile
-                # Because of https://github.com/rstudio/shiny/pull/2757, we can't
-                # trust that the reactive context will be provided here. So just
-                # grab objects from the closure.
-                unlink(cookieFile)
+          session$userData$.external_evaluator_session_id <-
+            initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup)
+
+          session$userData$.external_evaluator_session_id %>%
+            then(
+              onFulfilled = function(extsess){
+                # Stash the session ID and the cookies for future use and fire the
+                # actual request
+                submit_req(extsess$id, extsess$cookieFile)
+                session$onSessionEnded(function(){
+                  # Cleanup session cookiefile
+                  # Because of https://github.com/rstudio/shiny/pull/2757, we can't
+                  # trust that the reactive context will be provided here. So just
+                  # grab objects from the closure.
+                  unlink(extsess$cookieFile)
+                })
+              },
+              onRejected = function(err){
+                print(err)
+                result <<- error_result("Error initiating session for external requests. Please try again later")
               })
-            }, err_callback = function(res){
-              print(res)
-              result <<- error_result("Error initiating session for external requests. Please try again later")
-            })
         } else {
-          # We already have an ID, invoke immediately
-          submit_req(session$userData$.external_evaluator_session_id,
-                     session$userData$.external_evaluator_cookiejar)
+          # We've already defined a session promise, so tap into that
+          session$userData$.external_evaluator_session_id %>% then(
+            onFulfilled = function(extsess){
+              submit_req(extsess$id, extsess$cookieFile)
+            },
+            onRejected = function(err){
+              print(err)
+              result <<- error_result("Error initiating session for external requests. Please try again later")
+            }
+          )
         }
       },
 
@@ -287,7 +301,7 @@ internal_external_evaluator <- function(
   }
 }
 
-#' Obtains a unique session ID
+#' Returns a promise representing a a unique session
 #' @param pool the curl pool to use for this request
 #' @param url The URL to POST to to get a session
 #' @param callback The callback to invoke on success. Provides one parameter:
@@ -295,65 +309,73 @@ internal_external_evaluator <- function(
 #' @param err_callback The callback to invoke on error. Provides one parameter:
 #'   the err'ing response
 #' @param cookieFile The path to a file into which cookies should be written
+#' @return a promise that resolves to a list of (id = `<sessionID>`, cookieFile = `<path to cookie file>`).
+#' @importFrom promises promise
+#' @importFrom promises %>%
 #' @noRd
-initiate_external_session <- function(pool, url, global_setup, callback,
-                                      err_callback, retry_count = 0){
-  json <- jsonlite::toJSON(list(global_setup = global_setup), auto_unbox = TRUE, null = "null")
-  handle <- curl::new_handle(customrequest = "POST",
-                             postfields = json,
-                             postfieldsize = nchar(json))
+initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
+  promises::promise(function(resolve, reject){
+    json <- jsonlite::toJSON(list(global_setup = global_setup), auto_unbox = TRUE, null = "null")
+    handle <- curl::new_handle(customrequest = "POST",
+                               postfields = json,
+                               postfieldsize = nchar(json))
 
-
-  err_cb <- function(res){
-    # may just have hit a temporarily overloaded server. Retry
-    if (res$status == 503 && retry_count < 2) { # three total tries
-      initiate_external_session(pool, url, global_setup, callback, err_callback, retry_count+1)
-    } else {
-      # invoke the given error callback
-      err_callback(res)
-    }
-  }
-
-  done_cb <- function(res){
-    id <- NULL
-    failed <- FALSE
-
-    if (res$status != 200){
-      err_cb(res)
-      return()
+    err_cb <- function(res){
+      # may just have hit a temporarily overloaded server. Retry
+      if (res$status == 503 && retry_count < 2) { # three total tries
+        resolve(initiate_external_session(pool, url, global_setup, retry_count+1))
+        return()
+      } else {
+        # invoke the given error callback
+        reject(response_to_error(res))
+        return()
+      }
     }
 
-    tryCatch({
-      r <- rawToChar(res$content)
-      p <- jsonlite::fromJSON(r)
-      id <- p$id
-    }, error = function(e) {
-      print(e)
-      err_cb(res)
-      failed <<- TRUE
-    })
+    done_cb <- function(res){
+      id <- NULL
+      failed <- FALSE
 
-    # If success, we'll have a non-null ID. Otherwise we must have invoked the
-    # err_callback.
-    if (!failed){
+      if (res$status != 200){
+        reject(response_to_error(res))
+        return()
+      }
+
+      tryCatch({
+        r <- rawToChar(res$content)
+        p <- jsonlite::fromJSON(r)
+        id <- p$id
+      }, error = function(e) {
+        print(e)
+        reject(response_to_error(res))
+        return()
+      })
+
       cookies <- handle_cookies(handle)
       cookieFile <- tempfile("cookies")
       write_cookies(cookies, cookieFile)
-      callback(id, cookieFile)
+      resolve(list(id = id, cookieFile = cookieFile))
     }
-  }
 
-  curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = err_callback)
+    curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = err_cb)
 
-  poll <- function(){
-    res <- curl::multi_run(timeout = 0)
-    if (res$pending > 0){
-      later::later(poll, delay = 0.1)
+    poll <- function(){
+      res <- curl::multi_run(timeout = 0)
+      if (res$pending > 0){
+        later::later(poll, delay = 0.1)
+      }
     }
-  }
-  poll()
+    poll()
+  })
+}
 
-  invisible(NULL)
+response_to_error <- function(res){
+  list(
+    url = res$url,
+    status_code = res$status_code,
+    headers = rawToChar(res$headers),
+    content = rawToChar(res$content)
+  )
 }
 
 # Writes out cookies into the Netscape format that curl supports
