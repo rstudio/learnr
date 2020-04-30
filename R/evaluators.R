@@ -194,8 +194,6 @@ internal_external_evaluator <- function(
 
         # The actual workhorse here -- called once we have a session ID on the external evaluator
         submit_req <- function(sess_id, cookiejar){
-          cat("Request with ID", sess_id, "\n")
-
           # Work around a few edge cases on the exercise that don't serialize well
           if (identical(exercise$options$exercise.checker, "NULL")){
             exercise$options$exercise.checker <- c()
