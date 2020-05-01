@@ -1,6 +1,8 @@
 
 context("evaluators")
 
+library(promises)
+
 pool <- curl::new_pool(total_con = 5, host_con = 5)
 
 # TODO: consider using testthat::setup/teardown, but we want to conditionally
@@ -64,8 +66,8 @@ test_that("initiate_external_session works", {
 
   failed <- FALSE
   sess_ids <- NULL
-  cb <- function(sid, cookiefile){
-    sess_ids <<- c(sess_ids, sid)
+  cb <- function(result){
+    sess_ids <<- c(sess_ids, result$id)
   }
   err_cb <- function(res){
     print(res)
@@ -74,9 +76,9 @@ test_that("initiate_external_session works", {
   }
 
   # Initiate a handful of sessions all at once
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
 
   while(!failed && length(sess_ids) < 3){
     later::run_now()
@@ -111,7 +113,7 @@ test_that("initiate_external_session fails with bad status", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -144,7 +146,7 @@ test_that("initiate_external_session fails with invalid JSON", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -179,7 +181,7 @@ test_that("initiate_external_session fails with failed curl", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "", cb, err_cb)
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
 
   while(!done){
     later::run_now()
@@ -195,8 +197,8 @@ test_that("external_evaluator works", {
 
   tf <- tempfile()
   on.exit({unlink(tf)})
-  mock_initiate <- function(pool, url, global_setup, callback, err_callback){
-    callback("abcd1234", tf)
+  mock_initiate <- function(pool, url, global_setup){
+    promises::promise(function(resolve, reject){ resolve(list(id="abcd1234", cookieFile=tf)) })
   }
 
   mockResult <- list(html_output = "hi")
@@ -224,7 +226,10 @@ test_that("external_evaluator works", {
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
   # Simulate a session that already has an evaluator ID stashed
   e2 <- re(NULL, 30, list(options = list(exercise.timelimit = 5)),
-           list(userData = c(mockSession, `.external_evaluator_session_id` = "efgh5678")))
+           list(onSessionEnded = function(callback){}, userData =
+               list(`.external_evaluator_session_id` =
+                      promises::promise(function(resolve, reject){ resolve(list(id="efgh5678", cookieFile=tf)) }))))
+
   e$start()
   e2$start()
 
@@ -239,7 +244,6 @@ test_that("external_evaluator works", {
 
   expect_equal(e$result(), e2$result())
 
-  # Requests may be stored in either order
   if (srv$reqs[[1]]$req$PATH_INFO == "/learnr/abcd1234") {
     expect_equal(srv$reqs[[2]]$req$PATH_INFO, "/learnr/efgh5678")
   } else if (srv$reqs[[1]]$req$PATH_INFO == "/learnr/efgh5678") {
@@ -251,8 +255,8 @@ test_that("external_evaluator works", {
 })
 
 test_that("external_evaluator handles initiate failures", {
-  mock_initiate <- function(pool, url, global_setup, callback, err_callback){
-    err_callback(list())
+  mock_initiate <- function(pool, url, global_setup){
+    promises::promise(function(resolve, reject){ reject(list()) })
   }
 
   re <- internal_external_evaluator("http://doesntmatter", 5, mock_initiate)
@@ -260,11 +264,15 @@ test_that("external_evaluator handles initiate failures", {
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
   e$start()
 
+  while(!e$completed() || !e$completed()) {
+    later::run_now()
+  }
+
   print(e$result())
   expect_equal(e$result()$error_message, "Error initiating session for external requests. Please try again later")
 })
 
-test_that("", {
+test_that("bad statuses or invalid json are handled sanely", {
   testthat::skip_on_cran()
 
   mockResult <- list(html_output = "hi")
@@ -292,8 +300,9 @@ test_that("", {
   ### Test with a bad status
   tf <- tempfile()
   on.exit({unlink(tf)})
+  mockInit <- promise(function(resolve, reject){ resolve(list(id="badstatus", cookieFile=tf)) })
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, global_setup, callback, err_callback){ callback("badstatus", tf) })
+    function(pool, url, global_setup){ mockInit })
 
   # Start a session
   mockSession <- list(onSessionEnded = function(callback){})
@@ -311,7 +320,7 @@ test_that("", {
   tf <- tempfile()
   on.exit({unlink(tf)})
   re <- internal_external_evaluator(srv$url, 5,
-    function(pool, url, global_setup, callback, err_callback){ callback("invalidjson", tf) })
+    function(pool, url, global_setup){ promises::promise(function(resolve, reject){ resolve(list(id="invalidjson", cookieFile=tf)) }) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)

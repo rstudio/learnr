@@ -1,7 +1,7 @@
 Package: learnr
 Type: Package
 Title: Interactive Tutorials for R
-Version: 0.10.1.9001
+Version: 0.10.1.9002
 Authors@R: c(
   person("Barret", "Schloerke", role = c("aut", "cre"), email = "barret@rstudio.com",
         comment = c(ORCID = "0000-0001-9986-114X")),
@@ -37,7 +37,8 @@ Imports:
     ellipsis (>= 0.2.0.1),
     checkmate,
     renv (>= 0.8.0),
-    curl
+    curl,
+    promises
 Remotes: rstudio/htmltools
 Encoding: UTF-8
 LazyData: true  

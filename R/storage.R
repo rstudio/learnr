@@ -30,7 +30,7 @@ save_exercise_submission <- function(session, label, code, output, error_message
   # will just tickle the inputs to force re-execution of the outputs.
   storage <- tutorial_storage(session)
   if (identical(storage$type, "client")) {
-    if (!is.null(error_message))
+    if (!is.null(error_message) && !identical(error_message, ""))
       output <- error_message_html(error_message)
     else
       output <- NULL

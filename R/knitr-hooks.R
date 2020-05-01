@@ -223,7 +223,7 @@ install_knitr_hooks <- function() {
 
     }
 
-    # Possibly redundant with the new_source_knot_hook, but that hook skips
+    # Possibly redundant with the new_source_knit_hook, but that hook skips
     # chunks that are empty. This makes it more likely that we catch the setup-
     # global-exercise chunk. We keep the source hook, however, because we want
     # to be less sensitive to the ordering of the chunks.
@@ -260,7 +260,7 @@ write_setup_chunk <- function(code, overwrite = FALSE){
   )
 }
 
-# takes in the prerenderCB which we can use to mock this side-effect in testing.
+# takes in the write_set_chk which we can use to mock this side-effect in testing.
 new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {
   function(x, options) {
     # By configuring `setup` to not overwrite, and `setup-global-exercise` to
