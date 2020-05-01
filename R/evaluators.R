@@ -252,38 +252,28 @@ internal_external_evaluator <- function(
         # Initiate a session
         if (is.null(session$userData$.external_evaluator_session_id)){
           session$userData$.external_evaluator_session_id <-
-            initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup)
-
-          session$userData$.external_evaluator_session_id %>%
-            then(
-              onFulfilled = function(extsess){
-                # Stash the session ID and the cookies for future use and fire the
-                # actual request
-                submit_req(extsess$id, extsess$cookieFile)
-                session$onSessionEnded(function(){
-                  # Cleanup session cookiefile
-                  # Because of https://github.com/rstudio/shiny/pull/2757, we can't
-                  # trust that the reactive context will be provided here. So just
-                  # grab objects from the closure.
-                  unlink(extsess$cookieFile)
-                })
-              },
-              onRejected = function(err){
-                print(err)
-                result <<- error_result("Error initiating session for external requests. Please try again later")
+            initiate(pool, paste0(endpoint, "/learnr/"), exercise$global_setup) %>%
+            then(onFulfilled = function(extsess){
+              session$onSessionEnded(function(){
+                # Cleanup session cookiefile
+                # Because of https://github.com/rstudio/shiny/pull/2757, we can't
+                # trust that the reactive context will be provided here. So just
+                # grab objects from the closure.
+                unlink(extsess$cookieFile)
               })
-        } else {
-          # We've already defined a session promise, so tap into that
-          session$userData$.external_evaluator_session_id %>% then(
-            onFulfilled = function(extsess){
-              submit_req(extsess$id, extsess$cookieFile)
-            },
-            onRejected = function(err){
-              print(err)
-              result <<- error_result("Error initiating session for external requests. Please try again later")
-            }
-          )
+              extsess
+            })
         }
+
+        session$userData$.external_evaluator_session_id %>% then(
+          onFulfilled = function(extsess){
+            submit_req(extsess$id, extsess$cookieFile)
+          },
+          onRejected = function(err){
+            print(err)
+            result <<- error_result("Error initiating session for external requests. Please try again later")
+          }
+        )
       },
 
       completed = function() {
