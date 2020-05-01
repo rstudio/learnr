@@ -232,9 +232,9 @@ internal_external_evaluator <- function(
             })
           }
 
-          fail_cb <- function(res){
+          fail_cb <- function(err){
             print("Error submitting external exercise:")
-            print(response_to_error(res))
+            print(err)
             result <<- error_result("Error submitting external exercise. Please try again later")
           }
 
