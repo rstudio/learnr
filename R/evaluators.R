@@ -366,11 +366,21 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
 }
 
 response_to_error <- function(res){
+  headers <- res$headers
+  if (is.raw(headers)){
+    headers <- rawToChar(headers)
+  }
+
+  content <- res$content
+  if (is.raw(content)){
+    content <- rawToChar(content)
+  }
+
   list(
     url = res$url,
     status_code = res$status_code,
-    headers = rawToChar(res$headers),
-    content = rawToChar(res$content)
+    headers = headers,
+    content = content
   )
 }
 

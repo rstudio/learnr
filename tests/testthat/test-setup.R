@@ -20,7 +20,7 @@ test_that("store works", {
 })
 
 test_that("get_global works", {
-  expect_equal(get_global_setup(), NULL)
+  expect_equal(get_global_setup(), "")
   expect_equal(store_exercise_setup_chunk("__setup__", c("code", "here"), FALSE), TRUE)
   expect_equal(get_global_setup(), c("code\nhere"))
 })
