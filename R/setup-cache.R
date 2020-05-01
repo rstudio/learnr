@@ -7,6 +7,9 @@ store_exercise_setup_chunk <- function(name, code, overwrite = FALSE){
   if (!overwrite && exists(name, envir = setup_chunks)) {
     return(FALSE)
   }
+  if (is.null(code)){
+    code <- ""
+  }
   assign(name, code, envir = setup_chunks)
   TRUE
 }
@@ -17,7 +20,7 @@ get_global_setup <- function(){
     setup <- get("__setup__", envir = setup_chunks)
     return(paste0(setup, collapse="\n"))
   }
-  ""
+  NULL
 }
 
 clear_exercise_setup_chunks <- function(){
