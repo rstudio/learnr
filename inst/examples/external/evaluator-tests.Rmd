@@ -1,5 +1,5 @@
 ---
-title: "Learnr Remote Evaluator Tests"
+title: "Learnr External Evaluator Tests"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -11,13 +11,15 @@ knitr::opts_chunk$set(exercise.checker = function(...){
   library(gradethis)
   gradethis::grade_learnr(...)
 })
+```
 
+```{r, context="server-start", include=FALSE}
 # Setup a remote evaluator.
 options(tutorial.external.host = "http://localhost:8080")
 ```
 
 ```{r setup-global-exercise, include=FALSE}
-x <- 123
+x <- "123"
 library(gradethis)
 ```
 
@@ -161,4 +163,57 @@ grade_result(
 
 If you enter `3`, you should see an error: `Custom message for value 3.`. If you enter `4`, you should see a success message with praise.
 
+## Isolation & Malicious Code
 
+We can test the sandboxing and isolation of the evaluator.
+
+### Network Access
+
+```{r network, exercise=TRUE, out.width=632}
+download.file("http://1.1.1.1", "file.html")
+readLines("file.html", n=1)
+```
+
+If the network is enabled, you'll see a line of HTML. If the network is disabled you'll see an error like `cannot open URL 'http://1.1.1.1'`.
+
+### Too-Long Init
+
+// TODO: test that global_setups that take longer than 30s are cut off.
+
+### Recycling Environments
+
+We should not be reusing environments. So running this chunk:
+
+```{r newvar1, exercise=TRUE}
+newvar <- 123
+```
+
+Then this one
+
+```{r newvar2, exercise=TRUE}
+exists("newvar")
+```
+
+should return `FALSE`
+
+### Interrupting the process
+
+We use forked processes to evaluate exercises, so running stop() may interrupt our ability to return a meaningful response, but it shouldn't cause subsequent problems. This one's tricky to test, so we can just confirm that if we run stop:
+
+```{r stop, exercise=TRUE}
+stop()
+```
+
+(may return an empty red box or an error message)
+
+subsequent exercises still work OK
+
+```{r stop2, exercise=TRUE}
+rnorm(1)
+```
+
+should return a random number.
+
+### Memory/CPU/Process/File System limitations
+
+TODO
