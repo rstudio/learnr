@@ -32,6 +32,12 @@ rnorm(1)
 
 Should produce one random number
 
+```{r image, exercise=TRUE}
+plot(1,1)
+```
+
+Should produce an image with one point
+
 ### Code that generates an error
 
 ```{r badcode, exercise=TRUE}
