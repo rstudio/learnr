@@ -117,7 +117,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
         }
 
         # hit timeout
-        else if ((Sys.time() - start_time) >= timelimit) {
+        else if (difftime(Sys.time(), start_time, units="secs") >= timelimit) {
 
           # call cleanup hook
           call_hook("oncleanup", default = default_cleanup)

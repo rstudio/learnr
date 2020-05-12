@@ -20,6 +20,7 @@ learnr (development version)
 
 ## Bug fixes
 
+* Properly enforce time limits exceeding 60 seconds. ([#365](https://github.com/rstudio/learnr/pull/365))
 
 learnr 0.10.1
 ===========
