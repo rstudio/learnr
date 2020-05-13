@@ -20,7 +20,7 @@ learnr (development version)
 
 ## Bug fixes
 
-* Properly enforce time limits exceeding 60 seconds. ([#365](https://github.com/rstudio/learnr/pull/365))
+* Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
 
 learnr 0.10.1
 ===========
