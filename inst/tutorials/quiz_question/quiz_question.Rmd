@@ -444,12 +444,13 @@ If a vector of types is supplied to a question's `type`, the S3 methods will be 
 ````markdown
 `r ''````{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
-  return(TRUE)
+    return(learnr::mark_as(TRUE, NULL))
 }
 
 ques <- question(
   "Custom Method",
   answer("answer", correct = TRUE),
+  answer("also correct"),
   type = c("always_correct", "learnr_checkbox")
 )
 ```
@@ -457,14 +458,16 @@ ques <- question(
 
 ```{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
-  return(TRUE)
+    return(learnr::mark_as(TRUE, NULL))
 }
 
 ques <- question(
   "Custom Method",
   answer("answer", correct = TRUE),
+  answer("also correct"),
   type = c("always_correct", "learnr_checkbox")
 )
+ques
 ```
 
 When the question, `ques`, above is initialized, `question_ui_initialize` will dispatch on `question_ui_initialize.always_correct`.  Since no method has been defined, `question_ui_initialize.learnr_checkbox` will be called.  However, when `question_is_correct` is called, `question_is_correct.always_correct` is found and called.
