@@ -76,7 +76,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
       session = session,
       id = ex_id,
       label = exercise$label,
-      code = exercise$code
+      code = exercise$code,
+      restore = exercise$restore
     )
 
     start <- Sys.time()
