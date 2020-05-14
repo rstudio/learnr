@@ -238,7 +238,7 @@ internal_external_evaluator <- function(
             result <<- error_result("Error submitting external exercise. Please try again later")
           }
 
-          curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb)
+          curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb, pool = pool)
 
           poll <- function(){
             res <- curl::multi_run(timeout = 0)
