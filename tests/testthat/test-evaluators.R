@@ -168,7 +168,7 @@ test_that("initiate_external_session fails with failed curl", {
   ))
 
   # Start and stop the server as a way to obtain a port number that's likely
-  # inavtive.
+  # inactive.
   srv <- start_server(responses)
   srv$stop()
 

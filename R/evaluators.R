@@ -241,7 +241,7 @@ internal_external_evaluator <- function(
           curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb, pool = pool)
 
           poll <- function(){
-            res <- curl::multi_run(timeout = 0)
+            res <- curl::multi_run(timeout = 0, pool = pool)
             if (res$pending > 0){
               later::later(poll, delay = 0.1)
             }
