@@ -177,7 +177,7 @@ internal_external_evaluator <- function(
   initiate = initiate_external_session){
 
   if (is.na(endpoint)){
-    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.external.host` option, or the `TUTORIAL_external_evaluator_HOST` environment variable")
+    stop("You must specify an endpoint explicitly as a parameter, or via the `tutorial.external.host` option, or the `TUTORIAL_EXTERNAL_EVALUATOR_HOST` environment variable")
   }
 
   # Trim trailing slash
