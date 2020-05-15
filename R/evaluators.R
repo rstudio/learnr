@@ -215,7 +215,14 @@ internal_external_evaluator <- function(
 
           url <- paste0(endpoint, "/learnr/", sess_id)
 
+          # Track whether or not the current request is still active.
+          # We cannot use multi_run()$pending because it waits for ALL pending
+          # requests in the pool to resolve.
+          pending <- TRUE
+
           done_cb <- function(res){
+            pending <<- FALSE
+
             tryCatch({
               if (res$status != 200){
                 fail_cb(response_to_error(res))
@@ -233,6 +240,8 @@ internal_external_evaluator <- function(
           }
 
           fail_cb <- function(err){
+            pending <<- FALSE
+
             print("Error submitting external exercise:")
             print(err)
             result <<- error_result("Error submitting external exercise. Please try again later")
@@ -241,8 +250,8 @@ internal_external_evaluator <- function(
           curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb, pool = pool)
 
           poll <- function(){
-            res <- curl::multi_run(timeout = 0, pool = pool)
-            if (res$pending > 0){
+            curl::multi_run(timeout = 0, pool = pool)
+            if (pending){
               later::later(poll, delay = 0.1)
             }
           }
@@ -306,7 +315,14 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
                                postfields = json,
                                postfieldsize = nchar(json))
 
+    # Track whether or not the current request is still active.
+    # We cannot use multi_run()$pending because it waits for ALL pending
+    # requests in the pool to resolve.
+    pending <- TRUE
+
     err_cb <- function(res){
+      pending <<- FALSE
+
       # may just have hit a temporarily overloaded server. Retry
       if (res$status == 503 && retry_count < 2) { # three total tries
         resolve(initiate_external_session(pool, url, global_setup, retry_count+1))
@@ -319,6 +335,8 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
     }
 
     done_cb <- function(res){
+      pending <<- FALSE
+
       id <- NULL
       failed <- FALSE
 
@@ -346,8 +364,8 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
     curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = reject, pool = pool)
 
     poll <- function(){
-      res <- curl::multi_run(timeout = 0, pool = pool)
-      if (res$pending > 0){
+      curl::multi_run(timeout = 0, pool = pool)
+      if (pending){
         later::later(poll, delay = 0.1)
       }
     }
