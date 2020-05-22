@@ -13,7 +13,6 @@
 
 <title>Exercises</title>
 
-<script src="site_libs/header-attrs-2.1.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -488,6 +487,14 @@ Whether to enable code diagnostics in the exercise editor.
 Whether to include a “Start Over” button for the exercise.
 </td>
 </tr>
+<tr class="odd">
+<td>
+<code>exercise.warn_invisible</code>
+</td>
+<td>
+Whether to display an invisible result warning if the last value returned is invisible.
+</td>
+</tr>
 </tbody>
 </table>
 <p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the <code>setup</code> chunk and also sets some local options on the <code>addition</code> chunk:</p>
@@ -526,7 +533,7 @@ Whether to include a “Start Over” button for the exercise.
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script></li>
-<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
+<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
 <div id="exercisesetupsuffix" style="width: 95%;">
 
 </div>
@@ -548,7 +555,7 @@ Whether to include a “Start Over” button for the exercise.
 </div>
 <div id="markdown-hints" class="section level3">
 <h3>Markdown Hints</h3>
-<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
+<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
 <div id="exercisehintdiv">
 
 </div>
@@ -557,7 +564,7 @@ Whether to include a “Start Over” button for the exercise.
 </div>
 <div id="multiple-hints" class="section level3">
 <h3>Multiple Hints</h3>
-<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3", etc.) for your exercise chunk. For example:</p>
+<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3&quot;, etc.) for your exercise chunk. For example:</p>
 <div id="exercisehints">
 
 </div>
@@ -766,7 +773,7 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
-<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or “Sandbox”). For example:</p>
+<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or “Sandbox”). For example:</p>
 <div id="exercisecaption">
 
 </div>
@@ -853,7 +860,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
