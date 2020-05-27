@@ -450,7 +450,7 @@ question_is_correct.always_correct <- function(question, value, ...) {
 ques <- question(
   "Custom Method",
   answer("answer", correct = TRUE),
-  answer("also correct"),
+  answer("also marked as correct", correct = FALSE),
   type = c("always_correct", "learnr_checkbox")
 )
 ```
@@ -464,7 +464,7 @@ question_is_correct.always_correct <- function(question, value, ...) {
 ques <- question(
   "Custom Method",
   answer("answer", correct = TRUE),
-  answer("also correct"),
+  answer("also marked as correct", correct = FALSE),
   type = c("always_correct", "learnr_checkbox")
 )
 ques
