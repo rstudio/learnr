@@ -63,6 +63,12 @@ jobs:
           key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
           restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-
 
+      - name: Install libcurl
+        if: runner.os == 'Linux'
+        run: |
+          sudo -s apt-get update
+          sudo -s apt-get install -y libcurl4-openssl-dev
+
       - name: Install dependencies
         run: >
           Rscript
