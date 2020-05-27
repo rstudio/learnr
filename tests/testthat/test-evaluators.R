@@ -32,7 +32,13 @@ start_server <- function(responses){
       # See if this method + path has a defined response
       id <- req_to_id(req)
       if (!is.null(responses[[id]])){
-        return(responses[[id]])
+        res <- responses[[id]]
+        if (is.function(res)){
+          # Invoke
+          return(res())
+        } else {
+          return(res)
+        }
       }
 
       # Otherwise, 404
@@ -88,6 +94,54 @@ test_that("initiate_external_session works", {
   expect_equal(sess_ids, rep("abcd1234", 3))
 
   expect_equal(jsonlite::fromJSON(rawToChar(srv$reqs[[1]]$body)), list(global_setup = ""))
+})
+
+
+test_that("initiate_external_session doesn't wait on all requests", {
+  # We previously used curl::multi_run which, it turns out, waits for ALL
+  # requests in the pool to resolve, not just the handle you provide. So this
+  # test ensures that a single slow request in the pool doesn't slow down other
+  # requests.
+
+  testthat::skip_on_cran()
+
+  responses <- list(`POST /learnr/` = list(
+    status = 200L,
+    headers = list(
+      'Content-Type' = 'application/json'
+    ),
+    body = '{"id": "abcd1234"}'
+  ))
+
+  srv <- start_server(responses)
+  on.exit(srv$stop(), add = TRUE)
+
+  result <- NULL
+  cb <- function(result){
+    result <<- TRUE
+  }
+  err_cb <- function(res){
+    print(res)
+    testthat::fail("Unexpected error from initiate_external_session")
+    result <<- FALSE
+  }
+
+  start <- Sys.time()
+
+  # Trigger a slow (2s) request
+  curl::curl_fetch_multi("http://www.httpbin.org/delay/2", done = function(res){ expect_gt(difftime(Sys.time(), start, units="secs"), 2) }, pool = pool)
+
+  # Initiate a session
+  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
+
+  while(is.null(result)){
+    later::run_now()
+  }
+
+  expect_equal(result, TRUE)
+
+  # Should return before the slow request returns
+  expect_lt(difftime(Sys.time(), start, units="secs"), 2)
 })
 
 test_that("initiate_external_session fails with bad status", {
@@ -168,7 +222,7 @@ test_that("initiate_external_session fails with failed curl", {
   ))
 
   # Start and stop the server as a way to obtain a port number that's likely
-  # inavtive.
+  # inactive.
   srv <- start_server(responses)
   srv$stop()
 

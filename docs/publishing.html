@@ -392,7 +392,7 @@ div.tocify {
         <li>
   <a href="https://github.com/rstudio/learnr">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -579,7 +579,7 @@ R object to be saved
 <p>The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.</p>
 <div id="external-evalutor" class="section level5">
 <h5>External Evalutor</h5>
-<p>In versions of learnr later than 0.10.1, there is also support for a <code>external_evaluator</code>. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a <code>tutorial.external.host</code> option or setting a <code>TUTORIAL_external_evaluator_HOST</code> environment variable. If set, learnr will submit exercises over HTTP to the specified host.</p>
+<p>In versions of learnr later than 0.10.1, there is also support for a <code>external_evaluator</code>. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a <code>tutorial.external.host</code> option or setting a <code>TUTORIAL_EXTERNAL_EVALUATOR_HOST</code> environment variable. If set, learnr will submit exercises over HTTP to the specified host.</p>
 <p>The given host is expected to fulfill <a href="openapi/openapi.yaml">this OpenAPI specification</a>. In other words, it has two HTTP endpoints:</p>
 <ol style="list-style-type: decimal">
 <li><code>POST /learnr/</code> - Initiate a session</li>
