@@ -444,7 +444,7 @@ If a vector of types is supplied to a question's `type`, the S3 methods will be 
 ````markdown
 `r ''````{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
-    return(learnr::mark_as(TRUE, NULL))
+  return(learnr::mark_as(TRUE, message = NULL))
 }
 
 ques <- question(
@@ -458,7 +458,7 @@ ques <- question(
 
 ```{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
-    return(learnr::mark_as(TRUE, NULL))
+  return(learnr::mark_as(TRUE, message = NULL))
 }
 
 ques <- question(
