@@ -60,20 +60,13 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-
-
-        # remove this step once Rcpp (> 1.0.4) is uploaded
-      - name: Rcpp band-aid
-        run: >
-          Rscript
-          -e "if (system.file(package = 'Rcpp') == '') install.packages('Rcpp', repos=c('https://RcppCore.github.io/drat', '${{ matrix.config.cran }}'), type = 'source')"
+          key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-${{ hashFiles('depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-
 
       - name: Install dependencies
         run: >
           Rscript
           -e "library(remotes)"
-          -e "if (.Platform[['OS.type']] == 'windows' || Sys.info()[['sysname']] == 'Darwin') options(pkgType = 'binary')"
           -e "if (.Platform[['OS.type']] == 'windows') remotes::install_cran(c('stringr', 'stringi'))"
           -e "update(readRDS('depends.Rds'))"
           -e "remotes::install_cran('rcmdcheck')"
@@ -87,7 +80,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
           path: check
 
       - name: Test coverage
@@ -111,11 +104,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-16.04, r: '3.6', cran: "https://packagemanager.rstudio.com/all/__linux__/xenial/latest"}
+          - {os: ubuntu-18.04, r: 'release', rspm: "https://packagemanager.rstudio.com/all/__linux__/bionic/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      CRAN: ${{ matrix.config.cran }}
+      RSPM: ${{ matrix.config.rspm }}
 
     steps:
       - uses: actions/checkout@v1
@@ -137,10 +130,10 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-deploy-${{ hashFiles('depends.Rds') }}
+          key: ${{ matrix.config.os }}-r-${{ matrix.config.r }}-deploy-${{ hashFiles('depends.Rds') }}
           restore-keys: |
-            ${{ runner.os }}-r-${{ matrix.config.r }}-deploy-
-            ${{ runner.os }}-r-${{ matrix.config.r }}-
+            ${{ matrix.config.os }}-r-${{ matrix.config.r }}-deploy-
+            ${{ matrix.config.os }}-r-${{ matrix.config.r }}-
 
       - name: Install dependencies
         run: >
