@@ -52,7 +52,12 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
   }
 
   # set rmarkdown args to render in tmp dir
-  render_args <- list(output_dir = tempdir())
+  temp_output_dir <- tempdir()
+  render_args <- list(
+    output_dir = temp_output_dir,
+    intermediates_dir = temp_output_dir,
+    knit_root_dir = temp_output_dir
+  )
 
   # run within tutorial wd
   withr::with_dir(tutorial_path, {
