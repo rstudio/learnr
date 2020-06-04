@@ -51,13 +51,47 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
     )
   }
 
+
+  render_args <-
+    tryCatch({
+      local({
+        # try to save a file to check for write permissions
+        tmp_save_file <- file.path(tutorial_path, "__leanr_test_file")
+        # make sure it's deleted
+        on.exit({
+          if (file.exists(tmp_save_file)) {
+            unlink(tmp_save_file)
+          }
+        }, add = TRUE)
+        # write to the test file
+        cat("test", file = tmp_save_file)
+        # if no errors have occurred, return an empty list of render_args
+        list()
+      })
+    }, error = function(e) {
+      # Could not write in the tutorial folder
+
+      # Set rmarkdown args to render in tmp dir
+      # This will cause the tutorial to be re-rendered in each R session
+      temp_output_dir <- file.path(tempdir(), "learnr", package, name)
+      if (!dir.exists(temp_output_dir)) {
+        dir.create(temp_output_dir, recursive = TRUE)
+      }
+      list(
+        output_dir = temp_output_dir,
+        intermediates_dir = temp_output_dir,
+        knit_root_dir = temp_output_dir
+      )
+    })
+
   # run within tutorial wd
   withr::with_dir(tutorial_path, {
     if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {
       # is currently running in a server, do not allow for prerender (rmarkdown::render)
       withr::local_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"))
     }
-    rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
+    rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args,
+                   render_args = render_args)
   })
 }
 
