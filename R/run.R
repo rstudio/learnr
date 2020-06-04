@@ -51,13 +51,17 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
     )
   }
 
+  # set rmarkdown args to render in tmp dir
+  render_args <- list(output_dir = tempdir())
+
   # run within tutorial wd
   withr::with_dir(tutorial_path, {
     if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {
       # is currently running in a server, do not allow for prerender (rmarkdown::render)
       withr::local_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"))
     }
-    rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args)
+    rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args,
+                   render_args = render_args)
   })
 }
 
