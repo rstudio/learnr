@@ -1593,15 +1593,29 @@ Tutorial.prototype.$restoreState = function(objects) {
   });
 };
 
-
+// submissions is an object where the keys are the submission id, and the values
+// are of this shape:
+// {
+//   type: string,
+//   id: string,
+//   data: {
+//     checked: boolean,
+//     code: string,
+//     feedback: ?,
+//     output: ?
+//   }
+// }
 Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
   // alias this
   var thiz = this;
 
-  for (var i = 0; i < submissions.length; i++) {
+  for (var key in submissions) {
+    if (!submissions.hasOwnProperty(key)) {
+      continue;
+    }
 
-    var submission = submissions[i];
+    var submission = submissions[key];
     var type = submission.type;
     var id = submission.id;
 
