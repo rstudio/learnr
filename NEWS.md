@@ -23,6 +23,7 @@ learnr (development version)
 ## Bug fixes
 
 * Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
+* Render tutorial in a temp directory to avoid errors due to write permissions. ([#347](https://github.com/rstudio/learnr/issues/347))
 
 learnr 0.10.1
 ===========
