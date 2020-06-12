@@ -3,11 +3,11 @@ learnr (development version)
 
 ## Breaking Changes
 
-* Renamed the `exercise_submission` event to `exercise_result` and added the following fields: 
+* Renamed the `exercise_submission` event to `exercise_result` and added the following fields:
   1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
   3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
-  
+
 
 ## New features
 
@@ -23,6 +23,8 @@ learnr (development version)
 ## Bug fixes
 
 * Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
+* Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value. ([#376](https://github.com/rstudio/learnr/pull/376))
+* Fixed exercise progress spinner being prematurely cleared. ([#384](https://github.com/rstudio/learnr/pull/384))
 * Render tutorial in a temp directory to avoid errors due to write permissions. ([#347](https://github.com/rstudio/learnr/issues/347))
 
 learnr 0.10.1

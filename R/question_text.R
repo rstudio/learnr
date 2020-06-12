@@ -91,7 +91,7 @@ question_is_correct.learnr_text <- function(question, value, ...) {
   }
 
   for (ans in question$answers) {
-    ans_val <- ans$label
+    ans_val <- ans$option
     if (isTRUE(question$options$trim)) {
       ans_val <- str_trim(ans_val)
     }
