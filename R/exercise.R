@@ -65,7 +65,15 @@ setup_exercise_handler <- function(exercise_rx, session) {
     envir <- duplicate_env(server_envir, parent = globalenv())
 
     # create exercise evaluator
-    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir),
+
+    # by default, use learnr's native evaluate exercise
+    evaluate_exercise_fn <- evaluate_exercise # defined below
+    # but allow an alternative exercise evaluator via the option learnr.alt.evaluator
+    alternative_fn_name <- getOption("learnr.alt.evaluator")
+    if (!is.null(alternative_fn_name)) {
+      evaluate_exercise_fn <- eval(parse(text = alternative_fn_name))
+    }
+    evaluator <- evaluator_factory(evaluate_exercise_fn(exercise, envir),
                                    timelimit, exercise, session)
 
     # Create exercise ID to map the associated events.
