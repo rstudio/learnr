@@ -23,6 +23,27 @@ get_global_setup <- function(){
   NULL
 }
 
+# Store setup chunks for an exercise or non-exercise chunk (chaining).
+store_exercise_setup_chunks <- function(name, chunks, overwrite = FALSE){
+  if (!overwrite && exists(name, envir = setup_chunks)) {
+    return(FALSE)
+  }
+  if (is.null(chunks)){
+    return(FALSE)
+  }
+  assign(name, chunks, envir = setup_chunks)
+  TRUE
+}
+
+# Gets the list of knitr setup chunks for a given exercise.
+get_exercise_setup_chunks <- function(label){
+  if (exists(label, envir = setup_chunks)) {
+    setup <- get(label, envir = setup_chunks)
+    return(setup)
+  }
+  NULL
+}
+
 clear_exercise_setup_chunks <- function(){
   rm(list=ls(setup_chunks, all.names=TRUE), envir=setup_chunks)
 }

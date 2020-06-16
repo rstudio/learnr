@@ -1,0 +1,68 @@
+---
+title: "Chained setup chunks"
+author: "Nischal Shrestha"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  This is a demo of chained setup chunks and how it can be used to build up / share code.
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+library(gradethis)
+knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.checker = gradethis::grade_learnr)
+d <- 3
+```
+
+# Addition
+
+<!-- We'll start the setup chunk chain with a regular chunk dataA: -->
+
+```{r dataA}
+a <- 5
+``` 
+
+<!-- Note: we use `exercise.setup` to chain setup chunks. In the case of an exercise serving as a setup chunk, the pre-filled -->
+<!-- static code will be used as the setup code. -->
+
+<!-- We start with a simple single, setup chunk for dataB depending on dataA. This is the familiar setup workflow for an exercise. -->
+
+```{r dataB, exercise.setup = "dataA"}
+b <- a + d
+``` 
+
+<!-- However, we can now set the setup chunks for data1 as dataB and also inherit dataA. -->
+
+```{r dataC, exercise.setup = "dataB"}
+c <- b
+```
+
+Result of w should be 9.
+
+```{r data1, exercise=TRUE, exercise.setup = "dataC"}
+w = c + 1
+
+```
+
+Result of x should be 10.
+
+```{r data2, exercise=TRUE, exercise.setup = "data1"}
+x <- w + 1
+
+```
+
+Result of y should be 11.
+
+```{r data3, exercise=as.logical(1), exercise.setup = "data2"}
+y <- x + 1
+
+```
+
+Result of z should be 12.
+
+```{r data4, exercise=TRUE, exercise.setup = "data3"}
+z <- y + 1
+
+```
+

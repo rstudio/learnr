@@ -88,6 +88,8 @@ You can however arrange for setup code to be run before evaluation of an exercis
     <div id="exercisesetupshared" style="width: 95%;"></div>
     <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 
+If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can also use `exercise.setup`. `learnr` will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found.
+
 3. Create a setup chunk that's specific to another chunk using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `filter`) then add another chunk with the same label plus a `-setup` suffix (e.g. `filter-setup`). For example:
 
     <div id="exercisesetupsuffix" style="width: 95%;"></div>

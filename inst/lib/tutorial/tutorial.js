@@ -960,11 +960,11 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // get setup_code (if any)
     var setup_code = null;
     var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
-    if (chunk_options["exercise.setup"])
-        setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);
-      else
-        setup_code = thiz.$exerciseSupportCode(label + "-setup");
-
+    //if (chunk_options["exercise.setup"]) {
+    //    setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);
+    //} else {
+    //    setup_code = thiz.$exerciseSupportCode(label + "-setup");
+    //}
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
     var diagnostics = exercise.attr('data-diagnostics') === "1";
@@ -972,10 +972,13 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // support startover
     var startover_code = exercise.attr('data-startover') === "1" ? code : null;
 
+    // get the engine
+    var engine = chunk_options["engine"]
 
     // set tutorial options/data
     editor.tutorial = {
       label: label,
+      engine: engine,
       setup_code: setup_code,
       completion: completion,
       diagnostics: diagnostics,
@@ -1328,15 +1331,19 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       // restore flag
       value.restore = this.restore;
 
+      // get the engine
+      value.engine = value.options["engine"]
+
       // get any setup, solution, or check chunks
 
       // setup
       var label = exerciseLabel(el);
-      if (value.options["exercise.setup"])
-        value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);
-      else
-        value.setup = thiz.$exerciseSupportCode(label + "-setup");
-
+      value.setup = null;
+      //if (value.options["exercise.setup"]) {
+      //  value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);
+      //} else {
+      //  value.setup = thiz.$exerciseSupportCode(label + "-setup");
+      //}
       // solution
       value.solution = thiz.$exerciseSupportCode(label + "-solution");
 
