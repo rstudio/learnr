@@ -1407,6 +1407,9 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
 
     renderValue: function renderValue(el, data) {
 
+      // See big comment in showProgress method, below.
+      thiz.$showExerciseProgress(exerciseLabel(el), null, false);
+
       // remove default content (if any)
       this.outputFrame(el).children().not($(el)).remove();
 
@@ -1432,7 +1435,18 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
     },
 
     showProgress: function(el, show) {
-      thiz.$showExerciseProgress(exerciseLabel(el), null, show);
+      if (show) {
+        thiz.$showExerciseProgress(exerciseLabel(el), null, show);
+      } else {
+        // This branch is intentionally empty. You'd expect that we would call
+        //     thiz.$showExerciseProgress(exerciseLabel(el), null, show);
+        // at this time, but we cannot due to a quirk in Shiny. Shiny assumes
+        // that when we receive a new value for one output, then all outputs are
+        // done; this is because all outputs are held and flushed together. I
+        // (jcheng) don't know enough about learnr to know why this assumption
+        // doesn't hold in this case, but it doesn't (issue #348). Instead, we
+        // need to use renderValue as a proxy for showProgress(false).
+      }
     },
 
     outputFrame: function(el) {
