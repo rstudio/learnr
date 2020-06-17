@@ -40,7 +40,21 @@ install_knitr_hooks <- function() {
       # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
       # this second condition is for support chunks that isn't referenced by an exercise yet
       # but is part of a chain and should be stored as a setup chunk
-      length(exercise_chunks_for_setup_chunk(options$label)) > 0 || !is.null(options$exercise.setup)
+      is_referenced <- length(exercise_chunks_for_setup_chunk(options$label)) > 0
+      if (is_referenced) {
+        find_parent_setup_chunks(options) # only used to check for cycles; the return value is not useful here
+        TRUE
+      } else {
+        # if this looks like a setup chunk, but no one references it, error
+        if (!is.null(options$exercise.setup)) {
+          stop(
+            "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
+            "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
+               call. = FALSE)
+        }
+        # just a random chunk
+        FALSE
+      }
     }
     else {
       FALSE
@@ -63,13 +77,14 @@ install_knitr_hooks <- function() {
   find_parent_setup_chunks <- function(options, visited = NULL) {
     # base case: empty setup name means no more setup references
     if (is.null(options))
-      return()
-    # error out if there is a cycle
-    if (is.element(options$label, visited)) {
-      stop("Chained setup chunks form a cycle!")
-    }
+      return(NULL)
+    has_visited <- options$label %in% visited
     # update visited set
-    visited <- union(visited, options$label)
+    visited <- append(visited, options$label)
+    # error out if there is a cycle
+    if (has_visited) {
+      stop("Chained setup chunks form a cycle!\nCycle: ", paste0(visited, collapse = " => "), call. = FALSE)
+    }
     # check if the chunk with label has another setup chunk associated with it
     label <- options$exercise.setup
     code_chunk <- get_knitr_chunk(label)

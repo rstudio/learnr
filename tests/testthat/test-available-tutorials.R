@@ -25,6 +25,7 @@ test_that("Tutorial names are retrieved", {
   - ex-data-summarise : \"Summarise Tables\"
   - ex-setup-r        : \"Set Up\"
   - hello             : \"Hello, Tutorial!\"
+  - hello-chained     : \"Chained setup chunks\"
   - quiz_question     : \"Tutorial Quiz Questions in `learnr`\"
   - slidy             : \"Slidly demo\""
   )
