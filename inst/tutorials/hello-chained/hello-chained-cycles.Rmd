@@ -3,17 +3,16 @@ title: "Chained setup chunks: Cycles"
 author: "Nischal Shrestha"
 output: learnr::tutorial
 runtime: shiny_prerendered 
-description: > 
+description: >
   This is a demo of catching cyclic dependencies with chained setup chunks.
----
+--- 
 
 ```{r setup, include = FALSE}
-library(reticulate)
 library(learnr)
 library(gradethis)
-knitr::opts_chunk$set(echo = FALSE) 
-tutorial_options(exercise.checker = gradethis::grade_learnr) 
-d <- 3
+knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.checker = gradethis::grade_learnr)
+d <- 3 
 ```
 
 # Addition
@@ -26,9 +25,7 @@ a <- 5
 
 ```{r dataB, exercise.setup = "dataA"}
 b <- a + d
-``` 
-
-<!-- TODO: for some reason setting this first data1's exercise.setup to anything else causes an object 'b' not found error -->
+```
 
 ```{r dataC, exercise.setup = "dataB"}
 c <- b
@@ -36,15 +33,15 @@ c <- b
 
 Result of w should be 9.
 
-```{r data1, exercise=TRUE, exercise.setup = "dataC"}
+<!-- Example: a cycle for data1 (data1 => data4 => data3 => data2 => data1) here and an error message upon processing this Rmd -->
+```{r data1, exercise=TRUE, exercise.setup = "data4"} 
 w = c + 1
 
 ```
-
-<!-- We should detect a cycle for data2 (data2 => data4 => data3 => data2) here and an error message upon processing this Rmd -->
+ 
 Result of x should be 10.
 
-```{r data2, exercise=TRUE, exercise.setup = "data4"}
+```{r data2, exercise=TRUE, exercise.setup = "data1"}
 x <- w + 1
 
 ```

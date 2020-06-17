@@ -21,6 +21,7 @@ learnr (development version)
 * Added a `restore` flag on `exercise_submitted` events which is `TRUE` if the exercise is being restored from a previous execution, or `FALSE` if the exercise is being run interactively.
 * Add `label` field to the `exercise_hint` event to identify for which exercise the user requested a hint. ([#377](https://github.com/rstudio/learnr/pull/377))
 * Add and `include=FALSE` to setup chunks to prevent exercises from printing out messages or potential code output for those setup chunks.
+* Add error handling when user mispells or specificies a non-existent label for `exercise.setup` option with an error message.
 
 ## Bug fixes
 

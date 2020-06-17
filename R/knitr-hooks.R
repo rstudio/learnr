@@ -37,8 +37,10 @@ install_knitr_hooks <- function() {
       exercise_label %in% all_exercise_labels
     }
     else if ("setup" %in% type) {
-      # look for another chunk which names this as it's setup chunk
-      length(exercise_chunks_for_setup_chunk(options$label)) > 0
+      # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
+      # this second condition is for support chunks that isn't referenced by an exercise yet
+      # but is part of a chain and should be stored as a setup chunk
+      length(exercise_chunks_for_setup_chunk(options$label)) > 0 || !is.null(options$exercise.setup)
     }
     else {
       FALSE
@@ -49,6 +51,7 @@ install_knitr_hooks <- function() {
     grepl("-setup$", label) || (length(exercise_chunks_for_setup_chunk(label)) > 0)
   }
 
+  # helper function to grab the raw knitr chunk associated with a chunk label
   get_knitr_chunk <- function(label) {
     code_query <- paste0("knitr::knit_code$get('", label, "')")
     # Note: we can get the raw, unevaluated chunk options, for e.g. `exercise=as.logical(1)`
@@ -70,6 +73,10 @@ install_knitr_hooks <- function() {
     # check if the chunk with label has another setup chunk associated with it
     label <- options$exercise.setup
     code_chunk <- get_knitr_chunk(label)
+    # if the label is mispelled, throw an error to user instead of silently ignoring
+    # which will cause other issues when data dependencies can't be found
+    if (!is.null(label) && is.null(code_chunk))
+      stop(paste0("exercise.setup label '", label, "' not found for exercise '", options$label, "'"))
     # recurse if the chunk options exist, else return
     options <- attr(code_chunk, "chunk_opts")
     setup_chunks <- list()
@@ -122,7 +129,6 @@ install_knitr_hooks <- function() {
     # if this is an exercise setup chunk then eval it if the corresponding
     # exercise chunk is going to be executed
     if (exercise_setup_chunk) {
-
       # figure out the default behavior
       exercise_eval <- knitr::opts_chunk$get('exercise.eval')
       if (is.null(exercise_eval))
@@ -224,8 +230,8 @@ install_knitr_hooks <- function() {
         preserved_options$exercise.setup <- options$exercise.setup
 
         root_chunk <- get_knitr_chunk(options$label)
-        options <- attr(root_chunk, "chunk_opts")
-        preserved_options$engine <- options$engine
+        root_options <- attr(root_chunk, "chunk_opts")
+        preserved_options$engine <- root_options$engine
 
         # we need to rev so that we have correct order of setup chunks
         setup_chunks <- rev(find_parent_setup_chunks(options))
@@ -252,15 +258,14 @@ install_knitr_hooks <- function() {
 
     # handle exercise support chunks (setup, solution, and check)
     else if (is_exercise_support_chunk(options)) {
-      setup_chunks <- rev(find_parent_setup_chunks(options))
       # Store setup chunks for later analysis
       if (before && is_exercise_setup_chunk(options$label)) {
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
-            'learnr:::store_exercise_setup_chunks(%s, %s)',
+            'learnr:::store_exercise_setup_chunk(%s, %s)',
             dput_to_string(options$label),
-            dput_to_string(setup_chunks)
+            dput_to_string(options$code)
           )
         )
       }

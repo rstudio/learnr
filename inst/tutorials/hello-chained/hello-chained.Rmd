@@ -15,7 +15,7 @@ tutorial_options(exercise.checker = gradethis::grade_learnr)
 d <- 3
 ```
 
-# Addition
+# Addition 
 
 <!-- We'll start the setup chunk chain with a regular chunk dataA: -->
 
