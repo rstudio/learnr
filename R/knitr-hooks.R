@@ -46,7 +46,7 @@ install_knitr_hooks <- function() {
         TRUE
       } else {
         # if this looks like a setup chunk, but no one references it, error
-        if (!is.null(options$exercise.setup)) {
+        if (is.null(options$exercise) && !is.null(options$exercise.setup)) {
           stop(
             "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
             "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
@@ -86,20 +86,16 @@ install_knitr_hooks <- function() {
       stop("Chained setup chunks form a cycle!\nCycle: ", paste0(visited, collapse = " => "), call. = FALSE)
     }
     # check if the chunk with label has another setup chunk associated with it
-    label <- options$exercise.setup
-    code_chunk <- get_knitr_chunk(label)
-    # if the label is mispelled, throw an error to user instead of silently ignoring
-    # which will cause other issues when data dependencies can't be found
-    if (!is.null(label) && is.null(code_chunk))
-      stop(paste0("exercise.setup label '", label, "' not found for exercise '", options$label, "'"))
-    # recurse if the chunk options exist, else return
-    options <- attr(code_chunk, "chunk_opts")
-    setup_chunks <- list()
-    # this check will make sure we exclude the last NULL element (base case)
-    if (!is.null(options))
-      setup_chunks <- list(code_chunk)
-    setup_chunks <- append(setup_chunks, find_parent_setup_chunks(options, visited))
-    setup_chunks
+    setup_label <- options$exercise.setup
+    setup_chunk <- get_knitr_chunk(setup_label)
+    # if the setup_label is mispelled, throw an error to user instead of silently ignoring
+    # which would cause other issues when data dependencies can't be found
+    if (!is.null(setup_label) && is.null(setup_chunk))
+      stop(paste0("exercise.setup label '", setup_label, "' not found for exercise '", options$label, "'"))
+    # recurse
+    setup_options <- attr(setup_chunk, "chunk_opts")
+    parent_setup_chunks <- find_parent_setup_chunks(setup_options, visited)
+    setup_chunks <- c(parent_setup_chunks, setup_chunk)
   }
 
   # hook to turn off evaluation/highlighting for exercise related chunks
@@ -243,22 +239,31 @@ install_knitr_hooks <- function() {
           preserved_options$exercise.df_print <- "default"
         preserved_options$exercise.timelimit <- options$exercise.timelimit
         preserved_options$exercise.setup <- options$exercise.setup
+        preserved_options$engine <- knitr_engine(options$engine)
 
-        root_chunk <- get_knitr_chunk(options$label)
-        root_options <- attr(root_chunk, "chunk_opts")
-        preserved_options$engine <- root_options$engine
+        # retrieve the setup chunks associated with the exercise
+        # if there is no `exercise.setup` find one with "label-setup"
+        setup_chunks <-
+          if (!is.null(options$exercise.setup)) {
+            find_parent_setup_chunks(options)
+          } else if (!is.null(get_knitr_chunk(paste0(options$label, '-setup')))) {
+            options$exercise.setup <- paste0(options$label, '-setup')
+            find_parent_setup_chunks(options)
+          } else {
+            NULL
+          }
 
-        # we need to rev so that we have correct order of setup chunks
-        setup_chunks <- rev(find_parent_setup_chunks(options))
-        # serialize the list of chunks to server
-        rmarkdown::shiny_prerendered_chunk(
-          'server',
-          sprintf(
-            'learnr:::store_exercise_setup_chunks(%s, %s)',
-            dput_to_string(options$label),
-            dput_to_string(setup_chunks)
+        if (!is.null(setup_chunks)) {
+          # serialize the list of chunks to server
+          rmarkdown::shiny_prerendered_chunk(
+            'server',
+            sprintf(
+              'learnr:::store_exercise_setup_chunks(%s, %s)',
+              dput_to_string(options$label),
+              dput_to_string(setup_chunks)
+            )
           )
-        )
+        }
 
         preserved_options$exercise.checker <- deparse(options$exercise.checker)
         # script tag with knit options for this chunk

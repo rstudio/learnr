@@ -250,6 +250,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   knitr::opts_chunk$set(comment = NA)
   knitr::opts_chunk$set(error = FALSE)
 
+  # TODO-Nischal see if we can set these knitr hooks in a setup label
+
   # helper function that unpacks knitr chunk options and
   # returns a single character vector (e.g. "tidy=TRUE, prompt=FALSE")
   unpack_options <- function(opts) {
@@ -264,27 +266,26 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # helper function that processes a list of raw setup chunks and
   # returns a single character vector of knitr chunks for an Rmd file
   get_setup_chunk_rmds <- function(chunks) {
-    if (is.null(chunks)) return()
-    setup_code_list <- chunks
-    setup_rmds <- c()
-    for (i in seq_along(setup_code_list)) {
-      code_chunk <- setup_code_list[[i]]
-      # grab code getting rid of any empty lines
-      code <- paste0(as.character(code_chunk), collapse = '\n')
-      options <- attr(code_chunk, "chunk_opts")
-      label <- options$label
-      # grab all the non-exercise options, comma-separated
-      # set `include` to false for setup chunks to prevent printing last value
-      options$include <- FALSE
-      opts <- unpack_options(options)
-      # if there's an engine option it's non-R code
-      engine <- options$engine %||% 'r'
-      label_opts <- paste0(c(engine, sQuote(label, FALSE), opts), collapse = ', ')
-      chunk_head <- paste0('```{', label_opts, '}\n')
-      chunk_foot <- '\n```'
-      output_for_chunk <- paste0(chunk_head, code, chunk_foot)
-      setup_rmds <- c(setup_rmds, output_for_chunk)
-    }
+    if (is.null(chunks)) return(NULL)
+    setup_rmds <- vapply(chunks, character(1), FUN = function(code_chunk) {
+        # grab code getting rid of any empty lines
+        code <- paste0(as.character(code_chunk), collapse = '\n')
+        options <- attr(code_chunk, "chunk_opts")
+        label <- options$label
+        # grab all the non-exercise options, comma-separated
+        # set `include` to false for setup chunks to prevent printing last value
+        options$include <- FALSE
+        opts <- unpack_options(options)
+        # if there's an engine option it's non-R code
+        engine <- knitr_engine(options$engine)
+        # sQuote the label to ensure that it is treated as a label and not a symbol for instance
+        label_opts <- paste0(c(engine, sQuote(label, FALSE), opts), collapse = ', ')
+        chunk_head <- paste0('```{', label_opts, '}\n')
+        chunk_foot <- '\n```'
+        output_for_chunk <- paste0(chunk_head, code, chunk_foot)
+        output_for_chunk
+      }
+    )
     paste0(setup_rmds, sep = '\n')
   }
 
@@ -297,12 +298,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   exercise_code <- paste0(exercise_chunk_head, exercise$code, exercise_chunk_foot)
   code <- c(exercise_setup, exercise_code)
 
-  # Assumption: we can use one big Rmd to process and be able to get an md
-  # From Python branch
+  # use one final Rmd to process and be able to get an md
   exercise_rmd <- "exercise.Rmd"
   writeLines(code, con = exercise_rmd, useBytes = TRUE)
-  cat("exercise.Rmd:\n") # debug line
-  cat(readLines(exercise_rmd), sep = "\n") # debug line
 
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(

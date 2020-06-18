@@ -12,6 +12,6 @@ library(learnr)
 ```
 
 ```{r dataA, exercise.setup = "dataA"}
-a <- 5
+1
 ```
 

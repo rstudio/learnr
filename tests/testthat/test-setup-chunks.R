@@ -16,6 +16,11 @@ test_that("Detection of chained setup cycle works", {
     fixed = TRUE
   )
   expect_error(
+    rmarkdown::run(test_path("setup-chunks", "exercise-cycle-default-setup.Rmd")),
+    "data1 => data1-setup => data1",
+    fixed = TRUE
+  )
+  expect_error(
     rmarkdown::run(test_path("setup-chunks", "exercise-cycle.Rmd")),
     "data1 => data3 => data2 => data1",
     fixed = TRUE

@@ -960,11 +960,6 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // get setup_code (if any)
     var setup_code = null;
     var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
-    //if (chunk_options["exercise.setup"]) {
-    //    setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);
-    //} else {
-    //    setup_code = thiz.$exerciseSupportCode(label + "-setup");
-    //}
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
     var diagnostics = exercise.attr('data-diagnostics') === "1";
@@ -1339,11 +1334,6 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       // setup
       var label = exerciseLabel(el);
       value.setup = null;
-      //if (value.options["exercise.setup"]) {
-      //  value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);
-      //} else {
-      //  value.setup = thiz.$exerciseSupportCode(label + "-setup");
-      //}
       // solution
       value.solution = thiz.$exerciseSupportCode(label + "-solution");
 

@@ -18,3 +18,5 @@ library(learnr)
 ```{r dataB, exercise.setup = "dataA"}
 2
 ```
+
+

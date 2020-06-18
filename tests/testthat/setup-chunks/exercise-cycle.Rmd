@@ -20,7 +20,6 @@ library(learnr)
 2
 ```
 
-
 ```{r data3, exercise=as.logical(1), exercise.setup = "data2"}
 3
 
