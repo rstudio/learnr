@@ -10,14 +10,14 @@ description: >
 ```{r setup, include = FALSE}
 library(learnr)
 d <- 3
-```
- 
+``` 
+
 # Addition
 
 <!-- We'll start the setup chunk chain with a regular chunk dataA: -->
 
 ```{r setupA}
-a <- 5
+a <- 5 
 ``` 
 
 <!-- Note: we use `exercise.setup` to chain setup chunks. In the case of an exercise serving as a setup chunk, the pre-filled code will be used as the setup code. -->
@@ -26,11 +26,11 @@ a <- 5
 
 ```{r setupB, exercise.setup = "setupA"}
 b <- a + d
-```
+``` 
 
 Result of x should be 9.
 
-```{r ex1, exercise=TRUE, exercise.setup = "setupB"}
+```{r ex1, exercise=TRUE, exercise.setup = "setupB"} 
 x = b + 1
 
 ```

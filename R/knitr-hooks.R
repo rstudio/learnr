@@ -75,7 +75,7 @@ install_knitr_hooks <- function() {
   # helper function to find all the setup chunks associated with an exercise chunk
   # it goes up the chain of setup dependencies and returns a list of raw knitr chunks (if any)
   find_parent_setup_chunks <- function(options, visited = NULL) {
-    # base case: empty setup name means no more setup references
+    # base case: when options are null, there are no more setup references
     if (is.null(options))
       return(NULL)
     has_visited <- options$label %in% visited
