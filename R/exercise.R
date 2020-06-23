@@ -219,20 +219,11 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
 
-  # hack the pager function so that we can print help
-  # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
-  pager <- function(files, header, title, delete.file) {
-    all.str <- do.call("c",lapply(files,readLines))
-    cat(all.str,sep="\n")
-  }
-  orig_width <- options(width=70)
-  on.exit(options(orig_width), add = TRUE)
-  orig_pager <- options(pager=pager)
-  on.exit(options(orig_pager), add = TRUE)
-
   # helper function to return "key=value" character for knitr options
-  equal_separate_opts <- function(opts, values = opts) {
-    paste0(names(opts), '=', values)
+  equal_separate_opts <- function(opts) {
+    # note: we quote each option's value if its type is a character, else return as is
+    # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
+    paste0(names(opts), '=', lapply(opts, function(x) dput_to_string(x)))
   }
 
   # helper function that unpacks knitr chunk options and
@@ -246,23 +237,16 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     equal_separate_opts(opts)
   }
 
-  # helper function that quotes values of knitr chunk options
-  quote_knitr_values <- function(options) {
-    vapply(options, character(1), FUN = function(x) {
-        # quote if it's a character; sometimes we get a "NULL" character
-        if (identical(typeof(x), "character") && !identical(x, "NULL")) {
-          sQuote(x, FALSE)
-        } else {
-          as.character(x)
-        }
-      }
-    )
-  }
-
   # construct a global setup chunk to set knitr options
-  knitr_setup_header <- "```{r setup, include=FALSE}"
+  knitr_setup_header <- "```{r learnr-setup, include=FALSE}"
+  # hack the pager function so that we can print help with custom pager function
+  # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
   knitr_setup_body <- paste0(
-    c("knitr::opts_chunk$set(echo = FALSE)",
+    c("options(width=50, pager=function(files, header, title, delete.file) {
+        all.str <- do.call(\"c\",lapply(files,readLines))
+        cat(all.str,sep=\"\\n\")
+      })",
+      "knitr::opts_chunk$set(echo = FALSE)",
       "knitr::opts_chunk$set(comment = NA)",
       "knitr::opts_chunk$set(error = FALSE)"),
     collapse = '\n'
@@ -274,18 +258,15 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # returns a single character vector of knitr chunks for an Rmd file
   get_setup_chunk_rmds <- function(chunks) {
     if (is.null(chunks)) return(NULL)
-    setup_chunks <- chunks[chunks != ""]
-    setup_rmds <- vapply(setup_chunks, character(1), FUN = function(code_chunk) {
+    setup_rmds <- vapply(chunks, character(1), FUN = function(code_chunk) {
         # grab code getting rid of any empty lines
         code <- paste0(as.character(code_chunk), collapse = '\n')
+        # code <- as.character(code_chunk)
         options <- attr(code_chunk, "chunk_opts")
         # grab all the non-exercise options, comma-separated
         # set `include` to false for setup chunks to prevent printing last value
         options$include <- FALSE
-        # quote each option's value if its type is a character, else return as is
-        # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
-        options_formatted <- quote_knitr_values(options)
-        opts <- unpack_options(options_formatted)
+        opts <- unpack_options(options)
         # if there's an engine option it's non-R code
         engine <- knitr_engine(options$engine)
         # sQuote the label to ensure that it is treated as a label and not a symbol for instance
@@ -298,17 +279,14 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     paste0(setup_rmds, sep = '\n')
   }
 
-  # construct both setup and exercise chunk
+  # construct the exercise chunk
   exercise_setup <- get_setup_chunk_rmds(exercise$setup_chunks)
-  # setup the exercise chunk as well
   exercise_engine <- knitr_engine(exercise$engine)
-  # grab the exercise relevant knitr options as well and quote values
-  exercise_options_quoted <- quote_knitr_values(exercise$options)
-  exercise_options <- unpack_options(exercise_options_quoted)
-  exercise_opts <- paste0(exercise_options, collapse = ', ')
-  exercise_opts_formatted <- paste0(c(exercise_engine, sQuote(exercise$label, FALSE), exercise_opts), collapse = ', ')
+  # grab the exercise relevant knitr options (equal separated)
+  exercise_opts <- unpack_options(exercise$options)
+  exercise_label_opts <- paste0(c(exercise_engine, sQuote(exercise$label, FALSE), exercise_opts), collapse = ', ')
   # construct the final knitr chunk for exercise
-  exercise_chunk_header <- paste0('```{', exercise_opts_formatted, '}\n')
+  exercise_chunk_header <- paste0('```{', exercise_label_opts, '}\n')
   exercise_chunk_footer <- '\n```'
   exercise_code <- paste0(exercise_chunk_header, exercise$code, exercise_chunk_footer)
   # concatenate the knitr setup, exercise setup, and exercise code for exercise.Rmd
@@ -377,12 +355,17 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # knit the Rmd to markdown (catch and report errors)
   tryCatch({
-    output_file <- rmarkdown::render(input = exercise_rmd,
-                                     output_format = output_format,
-                                     envir = envir,
-                                     clean = FALSE,
-                                     quiet = TRUE,
-                                     run_pandoc = FALSE)
+    # make sure the exericse did not alter global options
+    output_file <- local({
+      opts <- options()
+      on.exit({ options(opts) }, add = TRUE)
+      output_file <- rmarkdown::render(input = exercise_rmd,
+                                       output_format = output_format,
+                                       envir = envir,
+                                       clean = FALSE,
+                                       quiet = TRUE,
+                                       run_pandoc = FALSE)
+    })
   }, error = function(e) {
     # make the time limit error message a bit more friendly
     err <<- e$message

@@ -88,14 +88,23 @@ install_knitr_hooks <- function() {
     # check if the chunk with label has another setup chunk associated with it
     setup_label <- options$exercise.setup
     setup_chunk <- get_knitr_chunk(setup_label)
+    # remove empty lines from a setup chunk
+    if (!is.null(setup_chunk)) {
+      setup_attributes <- attributes(setup_chunk)
+      setup_chunk <- paste0(setup_chunk, collapse = "\n")
+      attributes(setup_chunk) <- setup_attributes
+    }
     # if the setup_label is mispelled, throw an error to user instead of silently ignoring
     # which would cause other issues when data dependencies can't be found
     if (!is.null(setup_label) && is.null(setup_chunk))
       stop(paste0("exercise.setup label '", setup_label, "' not found for exercise '", options$label, "'"))
     # recurse
     setup_options <- attr(setup_chunk, "chunk_opts")
-    parent_setup_chunks <- find_parent_setup_chunks(setup_options, visited)
-    setup_chunks <- c(parent_setup_chunks, setup_chunk)
+    parent_setup_chunks <- list()
+    if (!is.null(setup_options))
+      parent_setup_chunks <- list(setup_chunk)
+    parent_setup_chunks <- append(find_parent_setup_chunks(setup_options, visited), parent_setup_chunks)
+    parent_setup_chunks
   }
 
   # hook to turn off evaluation/highlighting for exercise related chunks
