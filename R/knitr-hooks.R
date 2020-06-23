@@ -249,6 +249,7 @@ install_knitr_hooks <- function() {
         preserved_options$exercise.timelimit <- options$exercise.timelimit
         preserved_options$exercise.setup <- options$exercise.setup
         preserved_options$engine <- knitr_engine(options$engine)
+        preserved_options$exercise.checker <- deparse(options$exercise.checker)
 
         # retrieve the setup chunks associated with the exercise
         # if there is no `exercise.setup` find one with "label-setup"
@@ -274,7 +275,6 @@ install_knitr_hooks <- function() {
           )
         }
 
-        preserved_options$exercise.checker <- deparse(options$exercise.checker)
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
                         jsonlite::toJSON(preserved_options, auto_unbox = TRUE),

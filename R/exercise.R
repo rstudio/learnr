@@ -223,7 +223,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   equal_separate_opts <- function(opts) {
     # note: we quote each option's value if its type is a character, else return as is
     # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
-    paste0(names(opts), '=', lapply(opts, function(x) dput_to_string(x)))
+    paste0(names(opts), "=", vapply(opts, function(x) dput_to_string(x), character(1)))
   }
 
   # helper function that unpacks knitr chunk options and
@@ -249,10 +249,10 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       "knitr::opts_chunk$set(echo = FALSE)",
       "knitr::opts_chunk$set(comment = NA)",
       "knitr::opts_chunk$set(error = FALSE)"),
-    collapse = '\n'
+    collapse = "\n"
   )
   knitr_setup_footer <- "\n```"
-  knitr_setup <- paste0(c(knitr_setup_header, knitr_setup_body, knitr_setup_footer), collapse = '\n')
+  knitr_setup <- paste0(c(knitr_setup_header, knitr_setup_body, knitr_setup_footer), collapse = "\n")
 
   # helper function that processes a list of raw setup chunks and
   # returns a single character vector of knitr chunks for an Rmd file
@@ -260,7 +260,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     if (is.null(chunks)) return(NULL)
     setup_rmds <- vapply(chunks, character(1), FUN = function(code_chunk) {
         # grab code getting rid of any empty lines
-        code <- paste0(as.character(code_chunk), collapse = '\n')
+        code <- paste0(as.character(code_chunk), collapse = "\n")
         # code <- as.character(code_chunk)
         options <- attr(code_chunk, "chunk_opts")
         # grab all the non-exercise options, comma-separated
@@ -269,14 +269,14 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
         opts <- unpack_options(options)
         # if there's an engine option it's non-R code
         engine <- knitr_engine(options$engine)
-        # sQuote the label to ensure that it is treated as a label and not a symbol for instance
-        label_opts <- paste0(c(engine, sQuote(options$label, FALSE), opts), collapse = ', ')
-        chunk_header <- paste0('```{', label_opts, '}\n')
-        chunk_footer <- '\n```'
+        # we quote the label to ensure that it is treated as a label and not a symbol for instance
+        label_opts <- paste0(c(engine, dput_to_string(options$label), opts), collapse = ", ")
+        chunk_header <- paste0("```{", label_opts, "}\n")
+        chunk_footer <- "\n```"
         paste0(chunk_header, code, chunk_footer)
       }
     )
-    paste0(setup_rmds, sep = '\n')
+    paste0(setup_rmds, sep = "\n")
   }
 
   # construct the exercise chunk
@@ -284,10 +284,10 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   exercise_engine <- knitr_engine(exercise$engine)
   # grab the exercise relevant knitr options (equal separated)
   exercise_opts <- unpack_options(exercise$options)
-  exercise_label_opts <- paste0(c(exercise_engine, sQuote(exercise$label, FALSE), exercise_opts), collapse = ', ')
+  exercise_label_opts <- paste0(c(exercise_engine, dput_to_string(exercise$label), exercise_opts), collapse = ", ")
   # construct the final knitr chunk for exercise
-  exercise_chunk_header <- paste0('```{', exercise_label_opts, '}\n')
-  exercise_chunk_footer <- '\n```'
+  exercise_chunk_header <- paste0("```{", exercise_label_opts, "}\n")
+  exercise_chunk_footer <- "\n```"
   exercise_code <- paste0(exercise_chunk_header, exercise$code, exercise_chunk_footer)
   # concatenate the knitr setup, exercise setup, and exercise code for exercise.Rmd
   code <- c(knitr_setup, exercise_setup, exercise_code)
