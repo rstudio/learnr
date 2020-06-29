@@ -77,7 +77,7 @@ jan1 <- filter(flights, month == 1, day == 1)
 
 Good job! You can now see the results by running the name jan1 by itself. Or you can pass `jan1` to a function that takes data frames as input.
 
-Did you notice that this code used the double assignment operator, `==`? `==` is one of R's logical comparison operators. Comparison operators are key to using `filter()` let's take a look at them.
+Did you notice that this code used the double equal operator, `==`? `==` is one of R's logical comparison operators. Comparison operators are key to using `filter()`, so let's take a look at them.
 
 ## Logical Comparisons
 
@@ -113,11 +113,11 @@ If you give `filter()` more than one logical test, `filter()` will combine the t
 
 R uses boolean operators to combine multiple logical comparisons into a single logical test. These include `&` (_and_), `|` (_or_), `!` (_not_ or _negation_), and `xor()` (_exactly or_). 
 
-Both `|` and `xor()` will return TRUE is one or the other logical comparison returns TRUE. `xor()` differs from `|` in that it will return FALSE if both logical comparisons return TRUE. The name _xor_ stands for _exactly or_.
+Both `|` and `xor()` will return TRUE if one or the other logical comparison returns TRUE. `xor()` differs from `|` in that it will return FALSE if both logical comparisons return TRUE. The name _xor_ stands for _exactly or_.
 
 Study the diagram below to get a feel for how these operators work.
 
-```{r fig1, echo = FALSE, out.width = "100%", fig.cap = "In the figure above, `x` is the left-hand circle, `y` is the right-hand circle, and the shaded region show which parts each operator selects."}
+```{r fig1, echo = FALSE, out.width = "100%", fig.cap = "In the figure above, `x` is the left-hand circle, `y` is the right-hand circle, and the shaded region show which parts each command selects."}
 knitr::include_graphics("images/transform-logical.png")
 ```
 
@@ -135,7 +135,7 @@ question(" What will the following code return? `filter(flights, month == 11 | m
 
 ### Common mistakes
 
-In R, the order of operations doesn't work like English. You can't write `filter(flights, month == 11 | 12)`, even though you might say  "finds all flights that departed in November or December". Be sure to write oue a _complete_ test on each side of a boolean operator.
+In R, the order of operations doesn't work like English. You can't write `filter(flights, month == 11 | 12)`, even though you might say  "finds all flights that departed in November or December". Be sure to write out a _complete_ test on each side of a boolean operator.
 
 Here are four more tips to help you use logical tests and Boolean operators in R:
 
@@ -168,13 +168,14 @@ Here are four more tips to help you use logical tests and Boolean operators in R
 
 ### NA
 
-Missing values can make comparisons tricky in R. R uses `NA` to represent missing or unknown values. `NA`s are "contagious" because almost any operation involving an unknown value (`NA`) will also be unknown (`NA`). For example, can you determine what value these expressions that use missing values shoudl evaluate to? Make a prediction and then click "Submit Answer".
+Missing values can make comparisons tricky in R. R uses `NA` to represent missing or unknown values. `NA`s are "contagious" because almost any operation involving an unknown value (`NA`) will also be unknown (`NA`). For example, can you determine what value these expressions that use missing values should evaluate to? Make a prediction and then click "Submit Answer".
 
 ```{r nas, exercise = TRUE, evaluate.exercise = FALSE}
 NA > 5
 10 == NA
 NA + 10
 NA / 2
+NA == NA
 ```
 
 ```{r nas-check}
@@ -309,7 +310,7 @@ Use the code chunks below to find all flights that
     ```
     
     <div id="filterex7-hint">
-    **Hint:** Don't forget flights thsat left at eactly midnight (`2400`). This is a good case for an "or" operator.
+    **Hint:** Don't forget flights that left at exactly midnight (`2400`). This is a good case for an "or" operator.
     </div>
 
 ### Exercise 2
@@ -331,7 +332,7 @@ How many flights have a missing `dep_time`? What other variables are missing? Wh
 filter(flights, is.na(dep_time))
 ```
     
-<div id="filterex7-hint">
+<div id="filterex9-hint">
 **Hint:** This is a good case for `is.na()`.
 </div>
 
