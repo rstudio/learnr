@@ -60,7 +60,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
     # retrieve a list of setup knitr chunks for the exercise to be processed in `evaluate_exercise`
-    exercise$setup_chunks <- get_exercise_setup_chunks(exercise$label)
+    exercise$chunks <- get_exercise_chunks(exercise$label)
 
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
@@ -163,7 +163,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # see if we need to do code checking
   if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
-
     # get the checker
     tryCatch({
       checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
@@ -219,6 +218,10 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
 
+  # TODO-Nischal: this line is needed for the exercise.checker function later but unsure
+  # what other options are needed for; is there a way to avoid this?
+  knitr::opts_chunk$set(as.list(exercise$options))
+
   # helper function to return "key=value" character for knitr options
   equal_separate_opts <- function(opts) {
     # note: we quote each option's value if its type is a character, else return as is
@@ -252,25 +255,33 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     collapse = "\n"
   )
   knitr_setup_footer <- "\n```"
-  knitr_setup <- paste0(c(knitr_setup_header, knitr_setup_body, knitr_setup_footer), collapse = "\n")
+  knitr_setup_rmd <- paste0(c(knitr_setup_header, knitr_setup_body, knitr_setup_footer), collapse = "\n")
 
   # helper function that processes a list of raw setup chunks and
   # returns a single character vector of knitr chunks for an Rmd file
-  get_setup_chunk_rmds <- function(chunks) {
+  get_chunk_rmds <- function(chunks) {
     if (is.null(chunks)) return(NULL)
     setup_rmds <- vapply(chunks, character(1), FUN = function(code_chunk) {
-        # grab code getting rid of any empty lines
-        code <- paste0(as.character(code_chunk), collapse = "\n")
-        # code <- as.character(code_chunk)
-        options <- attr(code_chunk, "chunk_opts")
-        # grab all the non-exercise options, comma-separated
-        # set `include` to false for setup chunks to prevent printing last value
-        options$include <- FALSE
-        opts <- unpack_options(options)
+        # grab all the options, comma-separated
+        # handle setup chunks differently from exercise chunk
+        chunk_opts <- attr(code_chunk, "chunk_opts")
+        if (identical(chunk_opts$label, exercise$label)) {
+          # grab exercise code and set label to exercise$label
+          code <- paste0(exercise$code, collapse = "\n")
+          # the chunk opts captured in knitr-hooks isn't comprehensive
+          # so we modify it to also include exercise$options
+          chunk_opts <- modifyList(chunk_opts, exercise$options)
+        } else {
+          # grab code getting rid of any empty lines
+          code <- paste0(as.character(code_chunk), collapse = "\n")
+          # set `include` to false for setup chunks to prevent printing last value
+          chunk_opts$include <- FALSE
+        }
+        opts <- unpack_options(chunk_opts)
         # if there's an engine option it's non-R code
-        engine <- knitr_engine(options$engine)
+        engine <- knitr_engine(chunk_opts$engine)
         # we quote the label to ensure that it is treated as a label and not a symbol for instance
-        label_opts <- paste0(c(engine, dput_to_string(options$label), opts), collapse = ", ")
+        label_opts <- paste0(c(engine, dput_to_string(chunk_opts$label), opts), collapse = ", ")
         chunk_header <- paste0("```{", label_opts, "}\n")
         chunk_footer <- "\n```"
         paste0(chunk_header, code, chunk_footer)
@@ -279,18 +290,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     paste0(setup_rmds, sep = "\n")
   }
 
-  # construct the exercise chunk
-  exercise_setup <- get_setup_chunk_rmds(exercise$setup_chunks)
-  exercise_engine <- knitr_engine(exercise$engine)
-  # grab the exercise relevant knitr options (equal separated)
-  exercise_opts <- unpack_options(exercise$options)
-  exercise_label_opts <- paste0(c(exercise_engine, dput_to_string(exercise$label), exercise_opts), collapse = ", ")
-  # construct the final knitr chunk for exercise
-  exercise_chunk_header <- paste0("```{", exercise_label_opts, "}\n")
-  exercise_chunk_footer <- "\n```"
-  exercise_code <- paste0(exercise_chunk_header, exercise$code, exercise_chunk_footer)
-  # concatenate the knitr setup, exercise setup, and exercise code for exercise.Rmd
-  code <- c(knitr_setup, exercise_setup, exercise_code)
+  # construct the exercise chunks
+  exercise_rmds <- get_chunk_rmds(exercise$chunks)
+  code <- c(knitr_setup_rmd, exercise_rmds)
 
   # write the final Rmd to process with `rmarkdown::render` later
   exercise_rmd <- "exercise.Rmd"
@@ -360,11 +362,11 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       opts <- options()
       on.exit({ options(opts) }, add = TRUE)
       output_file <- rmarkdown::render(input = exercise_rmd,
-                                       output_format = output_format,
-                                       envir = envir,
-                                       clean = FALSE,
-                                       quiet = TRUE,
-                                       run_pandoc = FALSE)
+                                output_format = output_format,
+                                envir = envir,
+                                clean = FALSE,
+                                quiet = TRUE,
+                                run_pandoc = FALSE)
     })
   }, error = function(e) {
     # make the time limit error message a bit more friendly

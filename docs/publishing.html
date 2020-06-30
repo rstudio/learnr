@@ -13,7 +13,6 @@
 
 <title>Publishing</title>
 
-<script src="site_libs/header-attrs-2.1.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -392,7 +391,7 @@ div.tocify {
         <li>
   <a href="https://github.com/rstudio/learnr">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -417,7 +416,7 @@ div.tocify {
 learnr::run_tutorial(&quot;slidy&quot;, package = &quot;learnr&quot;)</code></pre>
 <p>To bundle a tutorial into an R package and make it available for running via the <code>run_tutorial</code> function you should:</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
+<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
 <li><p>Add the <code>.Rmd</code> associated with your tutorial in that directory. (You may see a <code>..._files/</code> directory or a <code>.html</code> file that periodically get generated adjacent to your <code>.Rmd</code> tutorial. You can safely ignore, delete, or exclude these from your package and from version control. They are temporary artifacts produced while rendering the tutorial on your specific system and aren’t likely to be portable to other environments.)</p></li>
 </ol>
 <p>Once you’ve done this users can run your tutorial as follows (note they should be sure to install the <strong>learnr</strong> package before attempting to run the tutorial):</p>
@@ -425,7 +424,7 @@ learnr::run_tutorial(&quot;slidy&quot;, package = &quot;learnr&quot;)</code></pr
 <pre class="r"><code>install.packages(&quot;learnr&quot;)
 learnr::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
 <div id="exercise-checkers" class="section level3 toc-ignore">
-<h3 class="toc-ignore">Exercise Checkers</h3>
+<h3>Exercise Checkers</h3>
 <p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should be sure to add the package you use for checking as an <code>Imports</code> dependency of your package so it’s installed automatically along with your package.</p>
 <p>Note that it’s likely that the <strong>learnr</strong> package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.</p>
 </div>

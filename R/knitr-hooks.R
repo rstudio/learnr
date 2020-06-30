@@ -107,6 +107,35 @@ install_knitr_hooks <- function() {
     parent_setup_chunks
   }
 
+  # TODO-Nischal incorporate the exercise AND setup chunks into one list structure
+  # could we structure of each chunk in a list structure instead?
+  # item <- "x <- 2"
+  # attributes(item) <- list(chunk_opts = list(label = "setupB"))
+  # exercise_setup <- list(val = as.character(item), opts = attributes(item))
+  # json <- jsonlite::toJSON(exercise_setup)
+  # json
+  # {"val":["x <- 2"],"opts":{"chunk_opts":{"label":["setupB"]}}}
+  # helper function to return a list of exercise chunk and its setup chunks
+  get_all_chunks <- function(options) {
+    # get the exercise chunk
+    current_chunk <- get_knitr_chunk(options$label)
+    all_chunks <- list(current_chunk)
+    # append the setup chunks at the front
+    # retrieve the setup chunks associated with the exercise
+    # if there is no `exercise.setup` find one with "label-setup"
+    setup_chunks <-
+      if (!is.null(options$exercise.setup)) {
+        find_parent_setup_chunks(options)
+      } else if (!is.null(get_knitr_chunk(paste0(options$label, '-setup')))) {
+        options$exercise.setup <- paste0(options$label, '-setup')
+        find_parent_setup_chunks(options)
+      } else {
+        NULL
+      }
+    all_chunks <- append(setup_chunks, all_chunks)
+    all_chunks
+  }
+
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutorial = function(options) {
 
@@ -251,29 +280,16 @@ install_knitr_hooks <- function() {
         preserved_options$engine <- knitr_engine(options$engine)
         preserved_options$exercise.checker <- deparse(options$exercise.checker)
 
-        # retrieve the setup chunks associated with the exercise
-        # if there is no `exercise.setup` find one with "label-setup"
-        setup_chunks <-
-          if (!is.null(options$exercise.setup)) {
-            find_parent_setup_chunks(options)
-          } else if (!is.null(get_knitr_chunk(paste0(options$label, '-setup')))) {
-            options$exercise.setup <- paste0(options$label, '-setup')
-            find_parent_setup_chunks(options)
-          } else {
-            NULL
-          }
-
-        if (!is.null(setup_chunks)) {
-          # serialize the list of chunks to server
-          rmarkdown::shiny_prerendered_chunk(
-            'server',
-            sprintf(
-              'learnr:::store_exercise_setup_chunks(%s, %s)',
-              dput_to_string(options$label),
-              dput_to_string(setup_chunks)
-            )
+        all_chunks <- get_all_chunks(options)
+        # serialize the list of chunks to server
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::store_exercise_chunks(%s, %s)',
+            dput_to_string(options$label),
+            dput_to_string(all_chunks)
           )
-        }
+        )
 
         # script tag with knit options for this chunk
         extra_html <- c('<script type="application/json" data-opts-chunk="1">',
