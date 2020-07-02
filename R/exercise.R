@@ -59,8 +59,11 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # supplement the exercise with the global setup options
     # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
-    # retrieve a list of setup knitr chunks for the exercise to be processed in `evaluate_exercise`
-    exercise$chunks <- get_exercise_chunks(exercise$label)
+    # retrieve chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
+    exercise$cache <- get_exercise_cache(exercise$label)
+    # TODO-Nischal: include cache as items of the exercise list
+    # exercise <- append(exercise, get_exercise_cache(exercise$label))
+    exercise$version <- "1"
 
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
@@ -129,6 +132,22 @@ setup_exercise_handler <- function(exercise_rx, session) {
   })
 }
 
+# helper function that will upgrade a previous learnr exercise into new learnr exercise
+# TODO-do the actual upgrade
+upgrade_exercise <- function(exercise) {
+  # if version doesn't exist we're at "0" (older learnr)
+  if (is.null(exercise$version)) {
+    exercise$version <- "0"
+  }
+  # for now, raise error when learnr version is not supported
+  # else, return the exercise for the correct version, "1"
+  switch(exercise$version,
+         "0" = stop("Exercise version not supplied! Unable to upgrade exercise."),
+         "1" = { exercise },
+         stop("Exercise version unknown. Unable to upgrade exercise.")
+  )
+}
+
 # evaluate an exercise and return a list containing output and dependencies
 # @param evaluate_global_setup - If `FALSE`, will not evaluate the global setup
 #   code. Instead, it just concatenates the exercise- specific setup code and
@@ -140,6 +159,9 @@ setup_exercise_handler <- function(exercise_rx, session) {
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
 evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+
+  # for compatibility with previous learnr versions, we'll upgrade exercise (if possible)
+  exercise <- upgrade_exercise(exercise)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
@@ -160,20 +182,27 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # "global" err object to look for
   err <- NULL
-
-  # see if we need to do code checking
-  if (!is.null(exercise$code_check) && !is.null(exercise$options$exercise.checker)) {
-    # get the checker
+  exercise_checker_exists <- !is.null(exercise$cache$options$exercise.checker)
+  get_checker <- function() {
     tryCatch({
-      checker <- eval(parse(text = exercise$options$exercise.checker), envir = envir)
+      if (!exercise_checker_exists)
+        return(NULL)
+      exercise.checker <- exercise$cache$options$exercise.checker
+      environment(exercise.checker) <- envir
+      exercise.checker
     }, error = function(e) {
       message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
       err <<- e$message
     })
-    if (!is.null(err)) {
-      return(error_result("Error occured while retrieving 'exercise.checker'."))
-    }
+  }
 
+  # get the checker
+  checker <- get_checker()
+  if (!is.null(err)) {
+    return(error_result("Error occured while retrieving 'exercise.checker'."))
+  }
+  # see if we need to do code checking
+  if (!is.null(exercise$code_check) && exercise_checker_exists) {
 
     # call the checker
     tryCatch({
@@ -218,23 +247,34 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     unlink(exercise_dir, recursive = TRUE)
   }, add = TRUE)
 
-  # TODO-Nischal: this line is needed for the exercise.checker function later but unsure
-  # what other options are needed for; is there a way to avoid this?
-  knitr::opts_chunk$set(as.list(exercise$options))
-
   # helper function to return "key=value" character for knitr options
   equal_separate_opts <- function(opts) {
-    # note: we quote each option's value if its type is a character, else return as is
-    # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
-    paste0(names(opts), "=", vapply(opts, function(x) dput_to_string(x), character(1)))
+    paste0(names(opts), "=", unname(opts))
   }
 
   # helper function that unpacks knitr chunk options and
   # returns a single character vector (e.g. "tidy=TRUE, prompt=FALSE")
-  unpack_options <- function(opts) {
+  # `preserved_opts` are options that user supplied in Rmd
+  # `inherited_opts` are exercise options
+  # `static_opts` are list of manually set options, e.g. list(include=FALSE) for setup chunks.
+  unpack_options <- function(preserved_opts, inherited_opts, static_opts = list()) {
+    # note: we quote each option's value if its type is a character, else return as is
+    # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
+    static_opts <- lapply(static_opts, dput_to_string)
+    inherited_opts <- lapply(inherited_opts, dput_to_string)
+    # get all the unique names of the options
+    option_names <- unique(c(names(preserved_opts), names(inherited_opts), names(static_opts)))
+    opts <- lapply(option_names, function(option_name) {
+      # first we want manually set options, then user's, then exercise
+      static_opts[[option_name]]  %||%
+      preserved_opts[[option_name]] %||%
+      inherited_opts[[option_name]]
+    })
+    # since we manually grab the names, set the names to opts
+    names(opts) <- option_names
     # filter out options we don't need for the exercise.Rmd
-    opts <- opts[!(names(opts) %in% c("label", "engine"))]
-    opts <- opts[!grepl("exercise", names(opts))]
+    opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
+    opts <- opts[!grepl("^exercise", names(opts))]
     if (length(opts) == 0)
       return(NULL)
     equal_separate_opts(opts)
@@ -245,7 +285,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # hack the pager function so that we can print help with custom pager function
   # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
   knitr_setup_body <- paste0(
-    c("options(width=50, pager=function(files, header, title, delete.file) {
+    c("options(pager=function(files, header, title, delete.file) {
         all.str <- do.call(\"c\",lapply(files,readLines))
         cat(all.str,sep=\"\\n\")
       })",
@@ -261,27 +301,42 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # returns a single character vector of knitr chunks for an Rmd file
   get_chunk_rmds <- function(chunks) {
     if (is.null(chunks)) return(NULL)
-    setup_rmds <- vapply(chunks, character(1), FUN = function(code_chunk) {
-        # grab all the options, comma-separated
-        # handle setup chunks differently from exercise chunk
-        chunk_opts <- attr(code_chunk, "chunk_opts")
-        if (identical(chunk_opts$label, exercise$label)) {
-          # grab exercise code and set label to exercise$label
-          code <- paste0(exercise$code, collapse = "\n")
-          # the chunk opts captured in knitr-hooks isn't comprehensive
-          # so we modify it to also include exercise$options
-          chunk_opts <- modifyList(chunk_opts, exercise$options)
+    setup_rmds <- vapply(chunks, character(1), FUN = function(chunk_info) {
+        # construct the knitr Rmd for exercise and its setup chunks
+        # handle exercise chunk differently from setup chunks
+        if (identical(chunk_info$label, exercise$label)) {
+          # grab exercise code
+          code <- exercise$code
+          # manually set exercise relevant options, disable other options
+          static_opts <- list(include = TRUE,
+                              eval = TRUE,
+                              echo = FALSE,
+                              tutorial = NULL,
+                              cache = FALSE,
+                              child = NULL
+          )
+          # construct a character of all of the options
+          opts <- unpack_options(
+            preserved_opts = chunk_info$opts,
+            inherited_opts = exercise$cache$options,
+            static_opts = static_opts
+          )
         } else {
-          # grab code getting rid of any empty lines
-          code <- paste0(as.character(code_chunk), collapse = "\n")
+          # grab setup code
+          code <- chunk_info$code
           # set `include` to false for setup chunks to prevent printing last value
-          chunk_opts$include <- FALSE
+          static_opts <- list(include = FALSE)
+          # for setup chunk, we don't include any exercise options (inherited_opts)
+          opts <- unpack_options(
+            preserved_opts = chunk_info$opts,
+            inherited_opts = list(),
+            static_opts = static_opts
+          )
         }
-        opts <- unpack_options(chunk_opts)
         # if there's an engine option it's non-R code
-        engine <- knitr_engine(chunk_opts$engine)
+        engine <- chunk_info$engine
         # we quote the label to ensure that it is treated as a label and not a symbol for instance
-        label_opts <- paste0(c(engine, dput_to_string(chunk_opts$label), opts), collapse = ", ")
+        label_opts <- paste0(c(engine, dput_to_string(chunk_info$label), opts), collapse = ", ")
         chunk_header <- paste0("```{", label_opts, "}\n")
         chunk_footer <- "\n```"
         paste0(chunk_header, code, chunk_footer)
@@ -291,20 +346,22 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # construct the exercise chunks
-  exercise_rmds <- get_chunk_rmds(exercise$chunks)
+  exercise_rmds <- get_chunk_rmds(exercise$cache$chunks)
   code <- c(knitr_setup_rmd, exercise_rmds)
 
   # write the final Rmd to process with `rmarkdown::render` later
   exercise_rmd <- "exercise.Rmd"
   writeLines(code, con = exercise_rmd, useBytes = TRUE)
 
+  # TODO-Nischal once exercise structure has changed, reference exercise$options
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(
-    fig_width = exercise$options$fig.width,
-    fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina,
+    fig_width = exercise$cache$options$fig.width,
+    fig_height = exercise$cache$options$fig.height,
+    fig_retina = exercise$cache$options$fig.retina,
     keep_md = FALSE
   )
+
 
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
@@ -368,6 +425,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
                                 quiet = TRUE,
                                 run_pandoc = FALSE)
     })
+
   }, error = function(e) {
     # make the time limit error message a bit more friendly
     err <<- e$message
@@ -393,6 +451,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   output <- paste(output, collapse = "\n")
 
+
   # capture output as HTML w/ dependencies
   html_output <- htmltools::attachDependencies(
     htmltools::HTML(output),
@@ -401,16 +460,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # get the exercise checker (default does nothing)
   err <- NULL
-  tryCatch({
-    checker <- eval(parse(text = knitr::opts_chunk$get("exercise.checker")),
-                    envir = envir)
-  }, error = function(e) {
-    message("Error occured while parsing chunk option 'exercise.checker'. Error:\n", e)
-    err <<- e$message
-  })
-  if (!is.null(err)) {
-    return(error_result("Error occured while parsing chunk option 'exercise.checker'."))
-  }
 
   checker_fn_does_not_exist <- is.null(exercise$check) || is.null(checker)
   if (checker_fn_does_not_exist)

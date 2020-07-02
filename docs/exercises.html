@@ -525,21 +525,21 @@ Whether to include a “Start Over” button for the exercise.
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script></li>
-<li><p>If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can also use <code>exercise.setup</code>. <code>learnr</code> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, let’s turn the first exercise in the previous example to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
-<div id="exercisesetupchained" style="width: 95%;">
-
-</div>
-<script type="text/javascript">loadSnippet('exercisesetupchained')</script></li>
-</ol>
-<p><strong>Note:</strong> you can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for exercises that use it as setup:</p>
-<pre><code>&lt;div id=&quot;exercisechained&quot; style=&quot;width: 95%;&quot;&gt;&lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;loadSnippet(&#39;exercisechained&#39;)&lt;/script&gt;</code></pre>
-<ol start="4" style="list-style-type: decimal">
 <li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
 <div id="exercisesetupsuffix" style="width: 95%;">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script></li>
+<li><p>If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can use <code>exercise.setup</code> (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <code>learnr</code> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, let’s turn the first exercise in the previous examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
+<div id="exercisesetupchained" style="width: 95%;">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisesetupchained')</script></li>
+<li><p>You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for the <code>arrange</code> exercise that use it as its setup:</p>
+<div id="exercisechained" style="width: 95%;">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisechained')</script></li>
 </ol>
 </div>
 <div id="hints-and-solutions" class="section level2">

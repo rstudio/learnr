@@ -3,8 +3,8 @@ nycflights <- nycflights13::flights
 ```
 
 ```{r filtered-flights, exercise=TRUE, exercise.setup = "prepare-flights"}
-# Change the filter to select February rather than January
-flights_february <- filter(nycflights, month == 1)
+# Filter to select February rather than January
+flights_february <- filter(nycflights, month == 2)
 ```
 
 ```{r arrange, exercise=TRUE, exercise.setup = "filtered-flights"}

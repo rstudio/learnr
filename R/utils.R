@@ -95,6 +95,6 @@ is_tags <- function(x) {
 }
 
 knitr_engine <- function(engine) {
-  engine %||% "r"
+  tolower(engine %||% "r")
 }
 

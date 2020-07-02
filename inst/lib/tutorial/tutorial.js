@@ -888,7 +888,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
 
     // get the knitr options script block and detach it (will move to input div)
-    var options_script = exercise.children('script[data-opts-chunk="1"]').detach();
+    var options_script = exercise.children('script[data-ui-opts="1"]').detach();
 
     // wrap the remaining elements in an output frame div
     exercise.wrapInner('<div class="tutorial-exercise-output-frame"></div>');
@@ -1316,18 +1316,8 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       var editor = ace.edit($(el).attr('id'));
       value.code = editor.getSession().getValue();
 
-      // get the preserved chunk options (if any)
-      var options_script = thiz.$exerciseContainer(el).find('script[data-opts-chunk="1"]');
-      if (options_script.length == 1)
-        value.options = JSON.parse(options_script.text());
-      else
-        value.options = {};
-
       // restore flag
       value.restore = this.restore;
-
-      // get the engine
-      value.engine = value.options["engine"]
 
       // get any setup, solution, or check chunks
 

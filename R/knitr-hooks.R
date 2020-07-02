@@ -88,38 +88,34 @@ install_knitr_hooks <- function() {
     # check if the chunk with label has another setup chunk associated with it
     setup_label <- options$exercise.setup
     setup_chunk <- get_knitr_chunk(setup_label)
-    # remove empty lines from a setup chunk
-    if (!is.null(setup_chunk)) {
-      setup_attributes <- attributes(setup_chunk)
-      setup_chunk <- paste0(setup_chunk, collapse = "\n")
-      attributes(setup_chunk) <- setup_attributes
-    }
     # if the setup_label is mispelled, throw an error to user instead of silently ignoring
     # which would cause other issues when data dependencies can't be found
     if (!is.null(setup_label) && is.null(setup_chunk))
       stop(paste0("exercise.setup label '", setup_label, "' not found for exercise '", options$label, "'"))
-    # recurse
+
     setup_options <- attr(setup_chunk, "chunk_opts")
-    parent_setup_chunks <- list()
+    # serialize the options here so that the values are not evaluated when retrieved from learnr cache
+    chunk_opts <- lapply(setup_options, dput_to_string)
+    setup_chunk <- paste0(setup_chunk, collapse = "\n")
+    engine <- knitr_engine(options$engine)
+    current_setup_chunks = list()
     if (!is.null(setup_options))
-      parent_setup_chunks <- list(setup_chunk)
-    parent_setup_chunks <- append(find_parent_setup_chunks(setup_options, visited), parent_setup_chunks)
+      current_setup_chunks <- list(list(label = setup_label, code = setup_chunk, opts = chunk_opts, engine = engine))
+    # recurse
+    parent_setup_chunks <- append(find_parent_setup_chunks(setup_options, visited), current_setup_chunks)
     parent_setup_chunks
   }
 
-  # TODO-Nischal incorporate the exercise AND setup chunks into one list structure
-  # could we structure of each chunk in a list structure instead?
-  # item <- "x <- 2"
-  # attributes(item) <- list(chunk_opts = list(label = "setupB"))
-  # exercise_setup <- list(val = as.character(item), opts = attributes(item))
-  # json <- jsonlite::toJSON(exercise_setup)
-  # json
-  # {"val":["x <- 2"],"opts":{"chunk_opts":{"label":["setupB"]}}}
+  # TODO-Nischal restructure of each chunk into an acceptable structure for srvr
+  # example: {"code":["x <- 2"],"opts":{"chunk_opts":{"label":["setupB"]}}}
   # helper function to return a list of exercise chunk and its setup chunks
   get_all_chunks <- function(options) {
     # get the exercise chunk
-    current_chunk <- get_knitr_chunk(options$label)
-    all_chunks <- list(current_chunk)
+    exercise_chunk <- get_knitr_chunk(options$label)
+    exercise_options <- attr(exercise_chunk, "chunk_opts")
+    # serialize the exercise options here so that the values are not evaluated when retrieved from learnr cache
+    chunk_opts <- lapply(exercise_options, dput_to_string)
+    exercise_chunk <- paste0(exercise_chunk, collapse = "\n")
     # append the setup chunks at the front
     # retrieve the setup chunks associated with the exercise
     # if there is no `exercise.setup` find one with "label-setup"
@@ -132,7 +128,7 @@ install_knitr_hooks <- function() {
       } else {
         NULL
       }
-    all_chunks <- append(setup_chunks, all_chunks)
+    all_chunks <- append(setup_chunks, list(list(label = options$label, code = exercise_chunk, opts = chunk_opts, engine = knitr_engine(options$engine))))
     all_chunks
   }
 
@@ -255,45 +251,29 @@ install_knitr_hooks <- function() {
       }
       else {
         # forward a subset of standard knitr chunk options
-        preserved_options <- list()
-        preserved_options$fig.width <- options$fig.width
-        preserved_options$fig.height <- options$fig.height
-        preserved_options$fig.retina <- options$fig.retina
-        preserved_options$fig.asp <- options$fig.asp
-        preserved_options$fig.align <- options$fig.align
-        preserved_options$fig.keep <- options$fig.keep
-        preserved_options$fig.show <- options$fig.show
-        preserved_options$fig.cap <- options$fig.cap
-        preserved_options$out.width <- options$out.width
-        preserved_options$out.height <- options$out.height
-        preserved_options$out.extra <- options$out.extra
-        preserved_options$warning <- options$warning
-        preserved_options$error <- options$error
-        preserved_options$message <- options$message
+        ui_options <- list(engine = options$engine)
 
-        # forward some exercise options
-        preserved_options$exercise.df_print <- knitr::opts_knit$get('rmarkdown.df_print')
-        if (is.null(preserved_options$exercise.df_print))
-          preserved_options$exercise.df_print <- "default"
-        preserved_options$exercise.timelimit <- options$exercise.timelimit
-        preserved_options$exercise.setup <- options$exercise.setup
-        preserved_options$engine <- knitr_engine(options$engine)
-        preserved_options$exercise.checker <- deparse(options$exercise.checker)
-
+        options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
+        options$engine <- knitr_engine(options$engine)
         all_chunks <- get_all_chunks(options)
+
+        # TODO-Nischal: add solution and check chunks
+        exercise_cache <- list(chunks = all_chunks,
+                               options = options,
+                               engine = options$engine)
         # serialize the list of chunks to server
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
-            'learnr:::store_exercise_chunks(%s, %s)',
+            'learnr:::store_exercise_cache(%s, %s)',
             dput_to_string(options$label),
-            dput_to_string(all_chunks)
+            dput_to_string(exercise_cache)
           )
         )
 
         # script tag with knit options for this chunk
-        extra_html <- c('<script type="application/json" data-opts-chunk="1">',
-                        jsonlite::toJSON(preserved_options, auto_unbox = TRUE),
+        extra_html <- c('<script type="application/json" data-ui-opts="1">',
+                        jsonlite::toJSON(ui_options, auto_unbox = TRUE),
                         '</script>')
       }
 
@@ -303,6 +283,7 @@ install_knitr_hooks <- function() {
 
     # handle exercise support chunks (setup, solution, and check)
     else if (is_exercise_support_chunk(options)) {
+      # TODO-Nischal: try to avoid storing this, we'll store it with `exercise_cache` instead
       # Store setup chunks for later analysis
       if (before && is_exercise_setup_chunk(options$label)) {
         rmarkdown::shiny_prerendered_chunk(
