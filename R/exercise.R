@@ -59,10 +59,13 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # supplement the exercise with the global setup options
     # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
-    # retrieve chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
-    exercise$cache <- get_exercise_cache(exercise$label)
-    # TODO-Nischal: include cache as items of the exercise list
-    # exercise <- append(exercise, get_exercise_cache(exercise$label))
+    # retrieve exercise cache information:
+    # - chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
+    # - checker code
+    # - engine
+    exercise <- append(exercise, get_exercise_cache(exercise$label))
+    # placeholder for current learnr version to deal with exercise structure differences
+    # with other learnr versions
     exercise$version <- "1"
 
     # create a new environment parented by the global environment
@@ -108,7 +111,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
           timeout_exceeded = result$timeout_exceeded,
           time_elapsed = as.numeric(difftime(Sys.time(), start, units="secs")),
           error_message = result$error_message,
-          checked = !is.null(exercise$code_check) || !is.null(exercise$check),
+          checked = !is.null(exercise$code_check) || !is.null(exercise$checker),
           feedback = result$feedback
         )
 
@@ -182,12 +185,12 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # "global" err object to look for
   err <- NULL
-  exercise_checker_exists <- !is.null(exercise$cache$options$exercise.checker)
+  exercise_checker_exists <- !is.null(exercise$options$exercise.checker)
   get_checker <- function() {
     tryCatch({
       if (!exercise_checker_exists)
         return(NULL)
-      exercise.checker <- exercise$cache$options$exercise.checker
+      exercise.checker <- exercise$options$exercise.checker
       environment(exercise.checker) <- envir
       exercise.checker
     }, error = function(e) {
@@ -318,7 +321,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
           # construct a character of all of the options
           opts <- unpack_options(
             preserved_opts = chunk_info$opts,
-            inherited_opts = exercise$cache$options,
+            inherited_opts = exercise$options,
             static_opts = static_opts
           )
         } else {
@@ -346,22 +349,20 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # construct the exercise chunks
-  exercise_rmds <- get_chunk_rmds(exercise$cache$chunks)
+  exercise_rmds <- get_chunk_rmds(exercise$chunks)
   code <- c(knitr_setup_rmd, exercise_rmds)
 
   # write the final Rmd to process with `rmarkdown::render` later
   exercise_rmd <- "exercise.Rmd"
   writeLines(code, con = exercise_rmd, useBytes = TRUE)
 
-  # TODO-Nischal once exercise structure has changed, reference exercise$options
   # create html_fragment output format with forwarded knitr options
   knitr_options <- rmarkdown::knitr_options_html(
-    fig_width = exercise$cache$options$fig.width,
-    fig_height = exercise$cache$options$fig.height,
-    fig_retina = exercise$cache$options$fig.retina,
+    fig_width = exercise$options$fig.width,
+    fig_height = exercise$options$fig.height,
+    fig_retina = exercise$options$fig.retina,
     keep_md = FALSE
   )
-
 
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
@@ -425,7 +426,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
                                 quiet = TRUE,
                                 run_pandoc = FALSE)
     })
-
   }, error = function(e) {
     # make the time limit error message a bit more friendly
     err <<- e$message
@@ -458,9 +458,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     dependencies
   )
 
-  # get the exercise checker (default does nothing)
-  err <- NULL
-
   checker_fn_does_not_exist <- is.null(exercise$check) || is.null(checker)
   if (checker_fn_does_not_exist)
     checker <- function(...) { NULL }
@@ -471,7 +468,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       label = exercise$label,
       user_code = exercise$code,
       solution_code = exercise$solution,
-      check_code = exercise$check,
+      check_code = exercise$checker, # use the cached checker for exercise
       envir_result = envir,
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,

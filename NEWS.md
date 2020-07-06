@@ -22,6 +22,7 @@ learnr (development version)
 * Add `label` field to the `exercise_hint` event to identify for which exercise the user requested a hint. ([#377](https://github.com/rstudio/learnr/pull/377))
 * Added `include=FALSE` to setup chunks to prevent exercises from printing out messages or potential code output for those setup chunks. ([#390](https://github.com/rstudio/learnr/pull/390))
 * Added error handling when user specificies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
+* We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
 
 ## Bug fixes
 

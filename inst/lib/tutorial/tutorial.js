@@ -930,8 +930,9 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       return button;
     }
 
+    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
     // create submit answer button if checks are enabled
-    if (thiz.$exerciseCheckCode(label) !== null)
+    if (chunk_options["check"])
       add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
 
     // create run button
@@ -959,7 +960,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // get setup_code (if any)
     var setup_code = null;
-    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
+
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
     var diagnostics = exercise.attr('data-diagnostics') === "1";
@@ -1327,10 +1328,14 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       // solution
       value.solution = thiz.$exerciseSupportCode(label + "-solution");
 
+      value.check = null;
       // check
       if (this.check) {
         value.code_check = thiz.$exerciseSupportCode(label + "-code-check");
-        value.check = thiz.$exerciseCheckCode(label);
+        // check if exercise needs to be graded
+        var options_script = thiz.$exerciseContainer(el).find('script[data-ui-opts="1"]');
+        var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
+        value.check = chunk_options["check"];
       }
 
       // some randomness to ensure we re-execute on button clicks

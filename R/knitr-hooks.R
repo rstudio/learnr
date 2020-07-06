@@ -171,6 +171,10 @@ install_knitr_hooks <- function() {
       options$highlight <- FALSE
     }
 
+    if (is_exercise_support_chunk(options, type = "check")) {
+      options$include <- FALSE
+    }
+
     # if this is an exercise setup chunk then eval it if the corresponding
     # exercise chunk is going to be executed
     if (exercise_setup_chunk) {
@@ -257,8 +261,11 @@ install_knitr_hooks <- function() {
         options$engine <- knitr_engine(options$engine)
         all_chunks <- get_all_chunks(options)
 
-        # TODO-Nischal: add solution and check chunks
+        check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
+        ui_options$check = !is.null(check_chunk)
+
         exercise_cache <- list(chunks = all_chunks,
+                               checker = check_chunk,
                                options = options,
                                engine = options$engine)
         # serialize the list of chunks to server
@@ -281,23 +288,13 @@ install_knitr_hooks <- function() {
       exercise_wrapper_div(extra_html = extra_html)
     }
 
-    # handle exercise support chunks (setup, solution, and check)
+    # handle exercise support chunks (setup, hints, solution)
     else if (is_exercise_support_chunk(options)) {
-      # TODO-Nischal: try to avoid storing this, we'll store it with `exercise_cache` instead
-      # Store setup chunks for later analysis
-      if (before && is_exercise_setup_chunk(options$label)) {
-        rmarkdown::shiny_prerendered_chunk(
-          'server',
-          sprintf(
-            'learnr:::store_exercise_setup_chunk(%s, %s)',
-            dput_to_string(options$label),
-            dput_to_string(options$code)
-          )
-        )
-      }
 
-      # output wrapper div
-      exercise_wrapper_div(suffix = "support")
+      # checking code (-check) is included in exercise cache
+      if (is_exercise_support_chunk(options, type = c("setup", "hint", "hint-\\d+", "solution"))) {
+        exercise_wrapper_div(suffix = "support")
+      }
 
     }
 
