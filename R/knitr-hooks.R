@@ -106,8 +106,6 @@ install_knitr_hooks <- function() {
     parent_setup_chunks
   }
 
-  # TODO-Nischal restructure of each chunk into an acceptable structure for srvr
-  # example: {"code":["x <- 2"],"opts":{"chunk_opts":{"label":["setupB"]}}}
   # helper function to return a list of exercise chunk and its setup chunks
   get_all_chunks <- function(options) {
     # get the exercise chunk
@@ -160,6 +158,8 @@ install_knitr_hooks <- function() {
         options$eval <- options$exercise.eval
       else
         options$eval <- FALSE
+      # exercises can be support chunks, but if it's an exercise it should be treated that way
+      return(options)
     }
 
     # if this is an exercise support chunk then force echo, but don't
@@ -171,7 +171,7 @@ install_knitr_hooks <- function() {
       options$highlight <- FALSE
     }
 
-    if (is_exercise_support_chunk(options, type = "check")) {
+    if (is_exercise_support_chunk(options, type = c("code-check", "check"))) {
       options$include <- FALSE
     }
 
@@ -198,6 +198,7 @@ install_knitr_hooks <- function() {
 
       # set the eval property as appropriate
       options$eval <- exercise_eval
+      options$echo <- FALSE
     }
 
     # return modified options
@@ -261,13 +262,18 @@ install_knitr_hooks <- function() {
         options$engine <- knitr_engine(options$engine)
         all_chunks <- get_all_chunks(options)
 
+        code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
-        ui_options$check = !is.null(check_chunk)
+        solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+        ui_options$has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
 
         exercise_cache <- list(chunks = all_chunks,
-                               checker = check_chunk,
+                               code_check = code_check_chunk,
+                               check = check_chunk,
+                               solution  = solution,
                                options = options,
                                engine = options$engine)
+
         # serialize the list of chunks to server
         rmarkdown::shiny_prerendered_chunk(
           'server',
@@ -288,11 +294,15 @@ install_knitr_hooks <- function() {
       exercise_wrapper_div(extra_html = extra_html)
     }
 
-    # handle exercise support chunks (setup, hints, solution)
+    # handle exercise support chunks (hints, solution)
     else if (is_exercise_support_chunk(options)) {
 
-      # checking code (-check) is included in exercise cache
-      if (is_exercise_support_chunk(options, type = c("setup", "hint", "hint-\\d+", "solution"))) {
+      # setup and checking code (-setup, -code-check, and -check) are included in exercise cache
+      # do not send the setup and checking code to the browser
+
+      # send hint and solution to the browser
+      # these are visibly displayed in the UI
+      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {
         exercise_wrapper_div(suffix = "support")
       }
 

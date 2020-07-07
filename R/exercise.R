@@ -61,9 +61,17 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise$global_setup <- get_global_setup()
     # retrieve exercise cache information:
     # - chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
-    # - checker code
+    # - checker code (check, code-check)
+    # - solution
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
+    if (!isTRUE(exercise$should_check)) {
+      exercise$check <- NULL
+      exercise$code_check <- NULL
+    }
+    # variable has now served its purpose so remove it
+    exercise$should_check <- NULL
+
     # placeholder for current learnr version to deal with exercise structure differences
     # with other learnr versions
     exercise$version <- "1"
@@ -111,7 +119,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
           timeout_exceeded = result$timeout_exceeded,
           time_elapsed = as.numeric(difftime(Sys.time(), start, units="secs")),
           error_message = result$error_message,
-          checked = !is.null(exercise$code_check) || !is.null(exercise$checker),
+          checked = !is.null(exercise$code_check) || !is.null(exercise$check),
           feedback = result$feedback
         )
 
@@ -136,7 +144,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 }
 
 # helper function that will upgrade a previous learnr exercise into new learnr exercise
-# TODO-do the actual upgrade
+# TODO: do the actual upgrade
 upgrade_exercise <- function(exercise) {
   # if version doesn't exist we're at "0" (older learnr)
   if (is.null(exercise$version)) {
@@ -458,29 +466,29 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     dependencies
   )
 
-  checker_fn_does_not_exist <- is.null(exercise$check) || is.null(checker)
-  if (checker_fn_does_not_exist)
-    checker <- function(...) { NULL }
-
-  # call the checker
-  tryCatch({
-    checker_feedback <- checker(
-      label = exercise$label,
-      user_code = exercise$code,
-      solution_code = exercise$solution,
-      check_code = exercise$checker, # use the cached checker for exercise
-      envir_result = envir,
-      evaluate_result = evaluate_result,
-      envir_prep = envir_prep,
-      last_value = last_value
-    )
-  }, error = function(e) {
-    err <<- e$message
-    message("Error occured while evaluating 'exercise.checker'. Error:\n", e)
-  })
-  if (!is.null(err)) {
-    return(error_result("Error occured while evaluating 'exercise.checker'."))
+  checker_feedback <- NULL
+  if (!is.null(exercise$check) && exercise_checker_exists) {
+    # call the checker
+    tryCatch({
+      checker_feedback <- checker(
+        label = exercise$label,
+        user_code = exercise$code,
+        solution_code = exercise$solution,
+        check_code = exercise$check, # use the cached checker for exercise
+        envir_result = envir,
+        evaluate_result = evaluate_result,
+        envir_prep = envir_prep,
+        last_value = last_value
+      )
+    }, error = function(e) {
+      err <<- e$message
+      message("Error occured while evaluating 'exercise.checker'. Error:\n", e)
+    })
+    if (!is.null(err)) {
+      return(error_result("Error occured while evaluating 'exercise.checker'."))
+    }
   }
+
 
   # validate the feedback
   feedback_validated(checker_feedback)

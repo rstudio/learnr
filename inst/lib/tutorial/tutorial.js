@@ -880,11 +880,13 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       else
         code = code + $(this).text();
     });
+    console.error("code ", code, code_blocks)
     code_blocks.remove();
     // ensure a minimum of 3 lines
     var lines = code.split(/\r\n|\r|\n/).length;
     for (var i=lines; i<thiz.kMinLines;i++)
       code = code + "\n";
+
 
 
     // get the knitr options script block and detach it (will move to input div)
@@ -932,7 +934,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
     // create submit answer button if checks are enabled
-    if (chunk_options["check"])
+    if (chunk_options.has_checker)
       add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
 
     // create run button
@@ -1320,23 +1322,7 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       // restore flag
       value.restore = this.restore;
 
-      // get any setup, solution, or check chunks
-
-      // setup
-      var label = exerciseLabel(el);
-      value.setup = null;
-      // solution
-      value.solution = thiz.$exerciseSupportCode(label + "-solution");
-
-      value.check = null;
-      // check
-      if (this.check) {
-        value.code_check = thiz.$exerciseSupportCode(label + "-code-check");
-        // check if exercise needs to be graded
-        var options_script = thiz.$exerciseContainer(el).find('script[data-ui-opts="1"]');
-        var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
-        value.check = chunk_options["check"];
-      }
+      value.should_check = this.should_check;
 
       // some randomness to ensure we re-execute on button clicks
       value.timestamp = new Date().getTime();
@@ -1350,13 +1336,13 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
         binding.restore = false;
         binding.clicked = true;
-        binding.check = ev.target.hasAttribute('data-check');
+        binding.should_check = ev.target.hasAttribute('data-check');
         callback(true);
       });
       $(el).on('restore.exerciseInputBinding', function(ev, options) {
         binding.restore = true;
         binding.clicked = false;
-        binding.check = options.check;
+        binding.should_check = options.check;
         callback(true);
       });
     },
