@@ -19,6 +19,7 @@ learnr (development version)
 * Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated with an `exercise_result` event using the randomly generated `id` included in the data of both events. ([#337](https://github.com/rstudio/learnr/pull/337))
 * Added a `restore` flag on `exercise_submitted` events which is `TRUE` if the exercise is being restored from a previous execution, or `FALSE` if the exercise is being run interactively.
 * Add `label` field to the `exercise_hint` event to identify for which exercise the user requested a hint. ([#377](https://github.com/rstudio/learnr/pull/377))
+* `save_question_submission` now also records the `correct` flag, indicating if the answer was correct or not. This bringing it in line with `question_submission` event.
 
 ## Bug fixes
 
