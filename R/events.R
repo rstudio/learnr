@@ -47,7 +47,8 @@ question_submission_event <- function(session,
   save_question_submission(session = session,
                            label = label,
                            question = question,
-                           answer = answer)
+                           answer = answer,
+                           correct = correct)
 }
 
 reset_question_submission_event <- function(session, label, question) {

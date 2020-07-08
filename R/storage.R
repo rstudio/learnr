@@ -1,13 +1,14 @@
 
 
-save_question_submission <- function(session, label, question, answer) {
+save_question_submission <- function(session, label, question, answer, correct) {
   save_object(
     session = session,
     object_id = label,
     tutorial_object("question_submission", list(
       api_version = 1,
       question = question,
-      answer = answer
+      answer = answer,
+      correct = correct
     ))
   )
 }
