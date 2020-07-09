@@ -735,10 +735,6 @@ Tutorial.prototype.$exerciseSolutionCode = function(label) {
   return this.$exerciseSupportCode(label + "-solution");
 };
 
-Tutorial.prototype.$exerciseCheckCode = function(label) {
-  return this.$exerciseSupportCode(label + "-check");
-};
-
 Tutorial.prototype.$exerciseHintDiv = function(label) {
 
   // look for a div w/ hint id
@@ -880,14 +876,11 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       else
         code = code + $(this).text();
     });
-    console.error("code ", code, code_blocks)
     code_blocks.remove();
     // ensure a minimum of 3 lines
     var lines = code.split(/\r\n|\r|\n/).length;
     for (var i=lines; i<thiz.kMinLines;i++)
       code = code + "\n";
-
-
 
     // get the knitr options script block and detach it (will move to input div)
     var options_script = exercise.children('script[data-ui-opts="1"]').detach();
@@ -1342,7 +1335,7 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       $(el).on('restore.exerciseInputBinding', function(ev, options) {
         binding.restore = true;
         binding.clicked = false;
-        binding.should_check = options.check;
+        binding.should_check = options.should_check;
         callback(true);
       });
     },
@@ -1621,7 +1614,7 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
         thiz.$exerciseForLabel(label).data('restoring', true);
         thiz.$showExerciseProgress(label, 'run', true);
         editorContainer.trigger('restore', {
-          check: checked
+          should_check: checked
         });
       }
     }

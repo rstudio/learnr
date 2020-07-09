@@ -177,9 +177,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # return immediately and clear visible results
   # do not consider this an exercise submission
   if (
-    nchar(
+    !nzchar(
       str_trim(paste0(exercise$code, collapse = "\n"))
-    ) == 0
+    )
   ) {
     return(empty_result())
   }
@@ -193,27 +193,22 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # "global" err object to look for
   err <- NULL
-  exercise_checker_exists <- !is.null(exercise$options$exercise.checker)
+  checker_fn_exists <- FALSE
   get_checker <- function() {
-    tryCatch({
-      if (!exercise_checker_exists)
-        return(NULL)
-      exercise.checker <- exercise$options$exercise.checker
-      environment(exercise.checker) <- envir
-      exercise.checker
-    }, error = function(e) {
-      message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
-      err <<- e$message
-    })
+    checker <- exercise$options$exercise.checker
+    checker_fn_exists <<- is.function(checker)
+    if (checker_fn_exists) {
+      environment(checker) <- envir_prep
+    } else if (!is.null(checker)) {
+      warning("Found a exercise.checker that isn't a function", call. = FALSE)
+      checker <- NULL
+    }
+    checker
   }
 
-  # get the checker
+  # get the checker & see if we need to do code checking
   checker <- get_checker()
-  if (!is.null(err)) {
-    return(error_result("Error occured while retrieving 'exercise.checker'."))
-  }
-  # see if we need to do code checking
-  if (!is.null(exercise$code_check) && exercise_checker_exists) {
+  if (!is.null(exercise$code_check) && checker_fn_exists) {
 
     # call the checker
     tryCatch({
@@ -260,6 +255,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # helper function to return "key=value" character for knitr options
   equal_separate_opts <- function(opts) {
+    if (length(opts) == 0) {
+      return(NULL)
+    }
     paste0(names(opts), "=", unname(opts))
   }
 
@@ -286,8 +284,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     # filter out options we don't need for the exercise.Rmd
     opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
     opts <- opts[!grepl("^exercise", names(opts))]
-    if (length(opts) == 0)
-      return(NULL)
     equal_separate_opts(opts)
   }
 
@@ -296,6 +292,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # hack the pager function so that we can print help with custom pager function
   # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
   knitr_setup_body <- paste0(
+    # the options restoration is done after processing the exercise.Rmd
     c("options(pager=function(files, header, title, delete.file) {
         all.str <- do.call(\"c\",lapply(files,readLines))
         cat(all.str,sep=\"\\n\")
@@ -348,9 +345,12 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
         engine <- chunk_info$engine
         # we quote the label to ensure that it is treated as a label and not a symbol for instance
         label_opts <- paste0(c(engine, dput_to_string(chunk_info$label), opts), collapse = ", ")
-        chunk_header <- paste0("```{", label_opts, "}\n")
-        chunk_footer <- "\n```"
-        paste0(chunk_header, code, chunk_footer)
+        paste(
+          paste0("```{", label_opts, "}"),
+          paste0(code, collapse = "\n"),
+          "```",
+          sep = "\n"
+        )
       }
     )
     paste0(setup_rmds, sep = "\n")
@@ -421,18 +421,19 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
                   )
   )
 
+  envir_result <- duplicate_env(envir, parent = globalenv())
   # knit the Rmd to markdown (catch and report errors)
   tryCatch({
-    # make sure the exericse did not alter global options
+    # make sure the exercise did not alter global options
     output_file <- local({
       opts <- options()
       on.exit({ options(opts) }, add = TRUE)
       output_file <- rmarkdown::render(input = exercise_rmd,
-                                output_format = output_format,
-                                envir = envir,
-                                clean = FALSE,
-                                quiet = TRUE,
-                                run_pandoc = FALSE)
+                                       output_format = output_format,
+                                       envir = envir_result,
+                                       clean = FALSE,
+                                       quiet = TRUE,
+                                       run_pandoc = FALSE)
     })
   }, error = function(e) {
     # make the time limit error message a bit more friendly
@@ -453,7 +454,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
-                                   envir = envir,
+                                   envir = envir_result,
                                    quiet = TRUE,
                                    clean = FALSE)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
@@ -467,7 +468,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   )
 
   checker_feedback <- NULL
-  if (!is.null(exercise$check) && exercise_checker_exists) {
+  if (!is.null(exercise$check) && checker_fn_exists) {
     # call the checker
     tryCatch({
       checker_feedback <- checker(
@@ -475,7 +476,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
         user_code = exercise$code,
         solution_code = exercise$solution,
         check_code = exercise$check, # use the cached checker for exercise
-        envir_result = envir,
+        envir_result = envir_result,
         evaluate_result = evaluate_result,
         envir_prep = envir_prep,
         last_value = last_value
@@ -505,7 +506,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     # if the last value was invisible
     !last_value_is_visible &&
     # if the checker function exists
-    !checker_fn_does_not_exist
+    checker_fn_exists
   ) {
     # works with NULL feedback
     feedback_html <- htmltools::tagList(feedback_html, invisible_feedback())

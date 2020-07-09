@@ -67,9 +67,9 @@ install_knitr_hooks <- function() {
 
   # helper function to grab the raw knitr chunk associated with a chunk label
   get_knitr_chunk <- function(label) {
-    code_query <- paste0("knitr::knit_code$get('", label, "')")
-    # Note: we can get the raw, unevaluated chunk options, for e.g. `exercise=as.logical(1)`
-    eval(parse(text = code_query))
+    # Note: we directly call the knitr function in this case because we do not
+    # need to pass expressions which required delayed evaluation.
+    knitr::knit_code$get(label)
   }
 
   # helper function to find all the setup chunks associated with an exercise chunk
@@ -95,15 +95,20 @@ install_knitr_hooks <- function() {
 
     setup_options <- attr(setup_chunk, "chunk_opts")
     # serialize the options here so that the values are not evaluated when retrieved from learnr cache
-    chunk_opts <- lapply(setup_options, dput_to_string)
-    setup_chunk <- paste0(setup_chunk, collapse = "\n")
-    engine <- knitr_engine(options$engine)
-    current_setup_chunks = list()
-    if (!is.null(setup_options))
-      current_setup_chunks <- list(list(label = setup_label, code = setup_chunk, opts = chunk_opts, engine = engine))
+    current_setup_chunks <- if (is.null(setup_options)) {
+      list()
+    } else {
+      list(
+        list(
+          label = setup_label,
+          code = paste0(setup_chunk, collapse = "\n"),
+          opts = lapply(setup_options, dput_to_string),
+          engine = knitr_engine(options$engine)
+        )
+      )
+    }
     # recurse
-    parent_setup_chunks <- append(find_parent_setup_chunks(setup_options, visited), current_setup_chunks)
-    parent_setup_chunks
+    append(find_parent_setup_chunks(setup_options, visited), current_setup_chunks)
   }
 
   # helper function to return a list of exercise chunk and its setup chunks
@@ -126,8 +131,7 @@ install_knitr_hooks <- function() {
       } else {
         NULL
       }
-    all_chunks <- append(setup_chunks, list(list(label = options$label, code = exercise_chunk, opts = chunk_opts, engine = knitr_engine(options$engine))))
-    all_chunks
+    append(setup_chunks, list(list(label = options$label, code = exercise_chunk, opts = chunk_opts, engine = knitr_engine(options$engine))))
   }
 
   # hook to turn off evaluation/highlighting for exercise related chunks
@@ -256,16 +260,13 @@ install_knitr_hooks <- function() {
       }
       else {
         # forward a subset of standard knitr chunk options
-        ui_options <- list(engine = options$engine)
-
-        options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
         options$engine <- knitr_engine(options$engine)
+        options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
         all_chunks <- get_all_chunks(options)
 
         code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
-        ui_options$has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
 
         exercise_cache <- list(chunks = all_chunks,
                                code_check = code_check_chunk,
@@ -285,6 +286,10 @@ install_knitr_hooks <- function() {
         )
 
         # script tag with knit options for this chunk
+        ui_options <- list(
+          engine = options$engine,
+          has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
+        )
         extra_html <- c('<script type="application/json" data-ui-opts="1">',
                         jsonlite::toJSON(ui_options, auto_unbox = TRUE),
                         '</script>')
