@@ -33,7 +33,6 @@ tutorial <- function(fig_width = 6.5,
                      allow_skip = FALSE,
                      dev = "png",
                      df_print = "paged",
-                     smart = TRUE,
                      theme = "rstudio",
                      highlight = "textmate",
                      ace_theme = "textmate",
@@ -127,7 +126,6 @@ tutorial <- function(fig_width = 6.5,
 
   # create base document format using standard html_document
   base_format <- rmarkdown::html_document(
-    smart = smart,
     theme = theme,
     lib_dir = NULL,
     mathjax = mathjax,

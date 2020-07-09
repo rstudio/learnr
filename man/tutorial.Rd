@@ -13,7 +13,6 @@ tutorial(
   allow_skip = FALSE,
   dev = "png",
   df_print = "paged",
-  smart = TRUE,
   theme = "rstudio",
   highlight = "textmate",
   ace_theme = "textmate",
@@ -59,10 +58,6 @@ for formats that produce HTML). In addition to the named methods you can
 also pass an arbitrary function to be used for printing data frames. You
 can disable the \code{df_print} behavior entirely by setting the option
 \code{rmarkdown.df_print} to \code{FALSE}.}
-
-\item{smart}{Produce typographically correct output, converting straight
-quotes to curly quotes, \code{---} to em-dashes, \code{--} to en-dashes, and
-\code{...} to ellipses.}
 
 \item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",

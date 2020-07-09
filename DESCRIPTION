@@ -33,7 +33,7 @@ Imports:
     knitr (>= 1.14),
     markdown,
     shiny (>= 1.0),
-    rmarkdown (>= 1.12.0),
+    rmarkdown (>= 2.2.0),
     ellipsis (>= 0.2.0.1),
     checkmate,
     renv (>= 0.8.0),
@@ -41,9 +41,9 @@ Imports:
     promises
 Remotes: rstudio/htmltools
 Encoding: UTF-8
-LazyData: true  
+LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests:
     testthat (>= 2.1.0),
     callr,
