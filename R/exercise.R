@@ -425,12 +425,14 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     output_file <- local({
       opts <- options()
       on.exit({ options(opts) }, add = TRUE)
-      output_file <- rmarkdown::render(input = exercise_rmd,
-                                       output_format = output_format,
-                                       envir = envir,
-                                       clean = FALSE,
-                                       quiet = TRUE,
-                                       run_pandoc = FALSE)
+      rmarkdown::render(
+        input = exercise_rmd,
+        output_format = output_format,
+        envir = envir,
+        clean = FALSE,
+        quiet = TRUE,
+        run_pandoc = FALSE
+      )
     })
   }, error = function(e) {
     # make the time limit error message a bit more friendly
