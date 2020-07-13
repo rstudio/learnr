@@ -1,199 +1,57 @@
+event_handlers <- new.env(parent = emptyenv())
 
-
-record_event <- function(session, event, data) {
-  recorder <- getOption("tutorial.event_recorder", default = NULL)
-  if (!is.null(recorder)) {
-    recorder(tutorial_id = read_request(session, "tutorial.tutorial_id"),
-             tutorial_version = read_request(session, "tutorial.tutorial_version"),
-             user_id = read_request(session, "tutorial.user_id"),
-             event = event,
-             data = data)
+# Register an event handler on a per-tutorial basis.
+register_event_handler <- function(event, callback) {
+  if (is.null(event_handlers[[event]])) {
+    event_handlers[[event]] <- list()
+    last_id <- sprintf("%010d", 0)
+  } else {
+    last_id <- names(event_handlers[[event]])[[length(event_handlers[[event]])]]
   }
-  invisible(NULL)
+
+  # IDs have name like "0000000001", "0000000002", "0000000003", etc.
+  id <- sprintf("%010d", as.numeric(last_id) + 1)
+  event_handlers[[event]][[id]] <- callback
+
+  # Use this instead of a local anonymous function, so that we don't capture
+  # `callback`, and other objects in the removal function, which might keep some
+  # objects from getting GC'd.
+  create_event_handler_remover(event, id)
+}
+
+# Returns a function which removes an event handler.
+create_event_handler_remover <- function(event, id) {
+  function() {
+    remove_event_handler(event, id)
+  }
+}
+
+# Remove an event handler.
+remove_event_handler <- function(event, id) {
+  if (is.null(event_handlers[[event]]) ||
+      is.null(event_handlers[[event]][[id]]))
+  {
+    return(invisible(FALSE))
+  }
+
+  event_handlers[[event]][[id]] <- NULL
+  invisible(TRUE)
 }
 
 
-broadcast_progress_event_to_client <- function(session, event, data) {
-  session$sendCustomMessage("tutorial.progress_event", list(
-    event = event,
-    data = data
-  ))
+trigger_event <- function(session, event, data) {
+  if (is.null(event_handlers[[event]])) {
+    return(invisible())
+  }
+
+  # Handlers for this named event
+  handlers <- event_handlers[[event]]
+
+  # Invoke all the callbacks for this event.
+
+  # NOTE: These are not wrapped in try-catch, so an error will stop all the rest
+  # of the callbacks from executing.
+  for (handler in handlers) {
+    handler(session, data)
+  }
 }
-
-broadcast_question_event_to_client <- function(session, label, answer) {
-  broadcast_progress_event_to_client(session = session,
-                                     event = "question_submission",
-                                     data = list(label = label, answer = answer))
-}
-question_submission_event <- function(session,
-                                      label,
-                                      question,
-                                      answer,
-                                      correct) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           answer = answer,
-                           correct = correct))
-
-  # notify client side listeners
-  broadcast_question_event_to_client(session = session,
-                                     label = label,
-                                     answer = answer)
-
-  # store submission for later replay
-  save_question_submission(session = session,
-                           label = label,
-                           question = question,
-                           answer = answer)
-}
-
-reset_question_submission_event <- function(session, label, question) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           reset = TRUE))
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(
-    session,
-    "question_submission",
-    list(label = label, answer = NULL)
-  )
-
-
-  # store submission for later replay
-  save_reset_question_submission(session = session,
-                           label = label,
-                           question = question)
-}
-
-
-section_skipped_event <- function(session, sectionId) {
-
-  # event data
-  event_data <- list(sectionId = sectionId)
-
-  # notify server-side listeners
-  record_event(session = session,
-               event = "section_skipped",
-               data = event_data)
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(session = session,
-                                     event = "section_skipped",
-                                     data = event_data)
-
-  # save for later replay
-  save_section_skipped(session = session, sectionId = sectionId)
-}
-
-exercise_submitted_event <- function(session,
-                                      id,
-                                      label,
-                                      code,
-                                      restore) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_submitted",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           restore = restore))
-
-  # TODO: we could save the code for later replay in case the evaluation gets interrupted.
-}
-
-exercise_result_event <- function(session,
-                                     id,
-                                     label,
-                                     code,
-                                     output,
-                                     timeout_exceeded,
-                                     time_elapsed,
-                                     error_message,
-                                     checked = FALSE,
-                                     feedback = NULL) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_result",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           output = output,
-                           timeout_exceeded = timeout_exceeded,
-                           time_elapsed = time_elapsed,
-                           error_message = error_message,
-                           checked = checked,
-                           feedback = feedback))
-
-  # notify client side listeners
-  if (checked)
-    correct <- feedback$correct
-  else
-    correct <- TRUE
-  broadcast_progress_event_to_client(session = session,
-                                     event = "exercise_submission",
-                                     data = list(label = label, correct = correct))
-
-  # save submission for later replay
-  save_exercise_submission(
-    session = session,
-    label = label,
-    code = code,
-    output = output,
-    error_message = error_message,
-    checked = checked,
-    feedback = feedback
-  )
-}
-
-video_progress_event <- function(session, video_url, time, total_time) {
-
-  # data for event
-  data <- list(
-    video_url = video_url,
-    time = time,
-    total_time = total_time
-  )
-
-  # notify server side listeners
-  record_event(session = session,
-               event = "video_progress",
-               data = data)
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(session, "video_progress", data)
-
-  # save for later replay
-  save_video_progress(session, video_url, time, total_time)
-}
-
-session_start_event <- function(session) {
-  record_event(session = session,
-               event = "session_start",
-               data = list())
-}
-
-session_stop_event <- function(session) {
-  record_event(session = session,
-               event = "session_stop",
-               data = list())
-}
-
-debug_event_recorder <- function(tutorial_id,
-                                 tutorial_version,
-                                 user_id,
-                                 event,
-                                 data) {
-  cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
-  cat("event: ", event, "\n", sep = "")
-  utils::str(data)
-  cat("\n")
-}
-
-
