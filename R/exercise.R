@@ -193,11 +193,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # "global" err object to look for
   err <- NULL
-  checker_fn_exists <- FALSE
   get_checker <- function() {
     checker <- exercise$options$exercise.checker
-    checker_fn_exists <<- is.function(checker)
-    if (checker_fn_exists) {
+    if (is.function(checker)) {
       environment(checker) <- envir_prep
     } else if (!is.null(checker)) {
       warning("Found a exercise.checker that isn't a function", call. = FALSE)
@@ -208,7 +206,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # get the checker & see if we need to do code checking
   checker <- get_checker()
-  if (!is.null(exercise$code_check) && checker_fn_exists) {
+  if (!is.null(exercise$code_check) && is.function(checker)) {
 
     # call the checker
     tryCatch({
@@ -468,7 +466,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   )
 
   checker_feedback <- NULL
-  if (!is.null(exercise$check) && checker_fn_exists) {
+  if (!is.null(exercise$check) && is.function(checker)) {
     # call the checker
     tryCatch({
       checker_feedback <- checker(
@@ -506,7 +504,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     # if the last value was invisible
     !last_value_is_visible &&
     # if the checker function exists
-    checker_fn_exists
+    is.function(checker)
   ) {
     # works with NULL feedback
     feedback_html <- htmltools::tagList(feedback_html, invisible_feedback())
