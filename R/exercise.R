@@ -419,7 +419,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
                   )
   )
 
-  envir_result <- duplicate_env(envir, parent = globalenv())
   # knit the Rmd to markdown (catch and report errors)
   tryCatch({
     # make sure the exercise did not alter global options
@@ -428,7 +427,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       on.exit({ options(opts) }, add = TRUE)
       output_file <- rmarkdown::render(input = exercise_rmd,
                                        output_format = output_format,
-                                       envir = envir_result,
+                                       envir = envir,
                                        clean = FALSE,
                                        quiet = TRUE,
                                        run_pandoc = FALSE)
@@ -452,7 +451,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # render the markdown
   output_file <- rmarkdown::render(input = output_file,
                                    output_format = output_format,
-                                   envir = envir_result,
+                                   envir = envir,
                                    quiet = TRUE,
                                    clean = FALSE)
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
@@ -474,7 +473,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
         user_code = exercise$code,
         solution_code = exercise$solution,
         check_code = exercise$check, # use the cached checker for exercise
-        envir_result = envir_result,
+        envir_result = envir,
         evaluate_result = evaluate_result,
         envir_prep = envir_prep,
         last_value = last_value
