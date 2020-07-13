@@ -20,7 +20,9 @@
 #'        to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.
 #' @param ace_theme Ace theme supplied to the ace code editor for all exercises.
 #'        See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
-#'
+#' @param smart Produce typographically correct output, converting straight quotes to curly quotes,
+#'        \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
+#'        Deprecated in \pkg{rmarkdown} v2.2.0.
 #' @param ... Forward parameters to html_document
 #'
 #' @export
