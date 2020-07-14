@@ -75,6 +75,8 @@ event_remove_handler <- function(event, id) {
 
 
 event_trigger <- function(session, event, data = list()) {
+  record_event(session, event, data)
+
   if (is.null(event_handlers[[event]])) {
     return(invisible())
   }

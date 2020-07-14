@@ -27,9 +27,6 @@ broadcast_question_event_to_client <- function(session, label, answer) {
 event_register_handler(
   "question_submission",
   function(session, event, data) {
-    # notify server-side listeners
-    record_event(session, event, data)
-
     # notify client side listeners
     broadcast_question_event_to_client(
       session = session,
@@ -50,9 +47,6 @@ event_register_handler(
 event_register_handler(
   "reset_question_submission",
   function(session, event, data) {
-    # notify server-side listeners
-    record_event(session, event, data = c(data, reset = TRUE))
-
     # notify client side listeners
     broadcast_progress_event_to_client(
       session,
@@ -73,9 +67,6 @@ event_register_handler(
 event_register_handler(
   "section_skipped",
   function(session, event, data) {
-    # notify server-side listeners
-    record_event(session, event, data)
-
     # notify client side listeners
     broadcast_progress_event_to_client(
       session = session,
@@ -88,28 +79,10 @@ event_register_handler(
   }
 )
 
-event_register_handler(
-  "exercise_submitted",
-  function(session, event, data) {
-    record_event(session, event, data)
-    # TODO: we could save the code for later replay in case the evaluation gets interrupted.
-  }
-)
-
 
 event_register_handler(
   "exercise_result",
   function(session, event, data) {
-
-    # Set some defaults if needed.
-    if (! "checked" %in% names(data))
-      data$checked <- FALSE
-    if (! "feedback" %in% names(data))
-      data$feedback <- NULL
-
-    # notify server-side listeners
-    record_event(session, event, data)
-
     # notify client side listeners
     if (data$checked)
       correct <- data$feedback$correct
@@ -138,9 +111,6 @@ event_register_handler(
 event_register_handler(
   "video_progress",
   function(session, event, data) {
-    # notify server side listeners
-    record_event(session, event, data)
-
     # notify client side listeners
     broadcast_progress_event_to_client(session, "video_progress", data)
 
@@ -148,10 +118,6 @@ event_register_handler(
     save_video_progress(session, data$video_url, data$time, data$total_time)
   }
 )
-
-event_register_handler("session_start", record_event)
-event_register_handler("session_stop", record_event)
-
 
 debug_event_recorder <- function(tutorial_id,
                                  tutorial_version,
