@@ -23,165 +23,135 @@ broadcast_question_event_to_client <- function(session, label, answer) {
                                      event = "question_submission",
                                      data = list(label = label, answer = answer))
 }
-question_submission_event <- function(session,
-                                      label,
-                                      question,
-                                      answer,
-                                      correct) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           answer = answer,
-                           correct = correct))
 
-  # notify client side listeners
-  broadcast_question_event_to_client(session = session,
-                                     label = label,
-                                     answer = answer)
+event_register_handler(
+  "question_submission",
+  function(session, event, data) {
+    # notify server-side listeners
+    record_event(session, event, data)
 
-  # store submission for later replay
-  save_question_submission(session = session,
-                           label = label,
-                           question = question,
-                           answer = answer)
-}
+    # notify client side listeners
+    broadcast_question_event_to_client(
+      session = session,
+      label   = data$label,
+      answer  = data$answer
+    )
 
-reset_question_submission_event <- function(session, label, question) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           reset = TRUE))
+    # store submission for later replay
+    save_question_submission(
+      session  = session,
+      label    = data$label,
+      question = data$question,
+      answer   = data$answer
+    )
+  }
+)
 
-  # notify client side listeners
-  broadcast_progress_event_to_client(
-    session,
-    "question_submission",
-    list(label = label, answer = NULL)
-  )
+event_register_handler(
+  "reset_question_submission",
+  function(session, event, data) {
+    # notify server-side listeners
+    record_event(session, event, data = c(data, reset = TRUE))
+
+    # notify client side listeners
+    broadcast_progress_event_to_client(
+      session,
+      "question_submission",
+      list(label = data$label, answer = NULL)
+    )
 
 
-  # store submission for later replay
-  save_reset_question_submission(session = session,
-                           label = label,
-                           question = question)
-}
+    # store submission for later replay
+    save_reset_question_submission(
+      session  = session,
+      label    = data$label,
+      question = data$question
+    )
+  }
+)
+
+event_register_handler(
+  "section_skipped",
+  function(session, event, data) {
+    # notify server-side listeners
+    record_event(session, event, data)
+
+    # notify client side listeners
+    broadcast_progress_event_to_client(
+      session = session,
+      event = "section_skipped",
+      data = data
+    )
+
+    # save for later replay
+    save_section_skipped(session = session, sectionId = data$sectionId)
+  }
+)
+
+event_register_handler(
+  "exercise_submitted",
+  function(session, event, data) {
+    record_event(session, event, data)
+    # TODO: we could save the code for later replay in case the evaluation gets interrupted.
+  }
+)
 
 
-section_skipped_event <- function(session, sectionId) {
+event_register_handler(
+  "exercise_result",
+  function(session, event, data) {
 
-  # event data
-  event_data <- list(sectionId = sectionId)
+    # Set some defaults if needed.
+    if (! "checked" %in% names(data))
+      data$checked <- FALSE
+    if (! "feedback" %in% names(data))
+      data$feedback <- NULL
 
-  # notify server-side listeners
-  record_event(session = session,
-               event = "section_skipped",
-               data = event_data)
+    # notify server-side listeners
+    record_event(session, event, data)
 
-  # notify client side listeners
-  broadcast_progress_event_to_client(session = session,
-                                     event = "section_skipped",
-                                     data = event_data)
+    # notify client side listeners
+    if (data$checked)
+      correct <- data$feedback$correct
+    else
+      correct <- TRUE
+    broadcast_progress_event_to_client(
+      session = session,
+      event = "exercise_submission",
+      data = list(label = data$label, correct = correct)
+    )
 
-  # save for later replay
-  save_section_skipped(session = session, sectionId = sectionId)
-}
+    # save submission for later replay
+    save_exercise_submission(
+      session       = session,
+      label         = data$label,
+      code          = data$code,
+      output        = data$output,
+      error_message = data$error_message,
+      checked       = data$checked,
+      feedback      = data$feedback
+    )
+  }
+)
 
-exercise_submitted_event <- function(session,
-                                      id,
-                                      label,
-                                      code,
-                                      restore) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_submitted",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           restore = restore))
 
-  # TODO: we could save the code for later replay in case the evaluation gets interrupted.
-}
+event_register_handler(
+  "video_progress",
+  function(session, event, data) {
+    # notify server side listeners
+    record_event(session, event, data)
 
-exercise_result_event <- function(session,
-                                     id,
-                                     label,
-                                     code,
-                                     output,
-                                     timeout_exceeded,
-                                     time_elapsed,
-                                     error_message,
-                                     checked = FALSE,
-                                     feedback = NULL) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_result",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           output = output,
-                           timeout_exceeded = timeout_exceeded,
-                           time_elapsed = time_elapsed,
-                           error_message = error_message,
-                           checked = checked,
-                           feedback = feedback))
+    # notify client side listeners
+    broadcast_progress_event_to_client(session, "video_progress", data)
 
-  # notify client side listeners
-  if (checked)
-    correct <- feedback$correct
-  else
-    correct <- TRUE
-  broadcast_progress_event_to_client(session = session,
-                                     event = "exercise_submission",
-                                     data = list(label = label, correct = correct))
+    # save for later replay
+    save_video_progress(session, data$video_url, data$time, data$total_time)
+  }
+)
 
-  # save submission for later replay
-  save_exercise_submission(
-    session = session,
-    label = label,
-    code = code,
-    output = output,
-    error_message = error_message,
-    checked = checked,
-    feedback = feedback
-  )
-}
+event_register_handler("session_start", record_event)
+event_register_handler("session_stop", record_event)
 
-video_progress_event <- function(session, video_url, time, total_time) {
-
-  # data for event
-  data <- list(
-    video_url = video_url,
-    time = time,
-    total_time = total_time
-  )
-
-  # notify server side listeners
-  record_event(session = session,
-               event = "video_progress",
-               data = data)
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(session, "video_progress", data)
-
-  # save for later replay
-  save_video_progress(session, video_url, time, total_time)
-}
-
-session_start_event <- function(session) {
-  record_event(session = session,
-               event = "session_start",
-               data = list())
-}
-
-session_stop_event <- function(session) {
-  record_event(session = session,
-               event = "session_stop",
-               data = list())
-}
 
 debug_event_recorder <- function(tutorial_id,
                                  tutorial_version,

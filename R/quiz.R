@@ -524,10 +524,13 @@ question_module_server_impl <- function(
       submitted_answer(NULL)
 
       # submit "reset" to server
-      reset_question_submission_event(
-        session = session,
-        label = as.character(question$label),
-        question = as.character(question$question)
+      event_trigger(
+        session,
+        "reset_question_submission",
+        data = list(
+          label    = as.character(question$label),
+          question = as.character(question$question)
+        )
       )
       return()
     }
@@ -535,12 +538,15 @@ question_module_server_impl <- function(
     submitted_answer(input$answer)
 
     # submit question to server
-    question_submission_event(
+    event_trigger(
       session = session,
-      label = as.character(question$label),
-      question = as.character(question$question),
-      answer = as.character(input$answer),
-      correct = is_correct_info()$correct
+      event   = "question_submission",
+      data    = list(
+        label    = as.character(question$label),
+        question = as.character(question$question),
+        answer   = as.character(input$answer),
+        correct  = is_correct_info()$correct
+      )
     )
 
   })
