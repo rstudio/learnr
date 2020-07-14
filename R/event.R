@@ -83,10 +83,12 @@ event_trigger <- function(session, event, data = list()) {
   handlers <- event_handlers[[event]]
 
   # Invoke all the callbacks for this event.
-
-  # NOTE: These are not wrapped in try-catch, so an error will stop all the rest
-  # of the callbacks from executing.
   for (handler in handlers) {
-    handler(session, event, data)
+    tryCatch(
+      handler(session, event, data),
+      error = function(e) {
+        warning(conditionMessage(e), .call = FALSE)
+      }
+    )
   }
 }

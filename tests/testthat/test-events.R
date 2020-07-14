@@ -79,3 +79,16 @@ test_that("Event handler input checking", {
     event_register_handler("", function(session, event, data) NULL)
   )
 })
+
+
+test_that("Errors are converted to warnings", {
+  n <- 0
+  f <- function() g()
+  g <- function() stop("error in g")
+  event_register_handler_once("foo", function(session, event, data) f())
+  event_register_handler_once("foo", function(session, event, data) n <<- n + 1)
+
+  expect_warning(event_trigger(NULL, "foo", NA), "error in g")
+  # Other callbacks should still have executed.
+  expect_identical(n, 1)
+})
