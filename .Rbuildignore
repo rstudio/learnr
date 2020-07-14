@@ -16,6 +16,7 @@
 rsconnect/
 ^\.github/
 ^inst/tutorials/.*\.html$
+^inst/tutorials/.*\.sqlite$
 ^revdep$
 ^LICENSE\.md$
 ^cran-comments\.md$

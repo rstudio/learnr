@@ -1,0 +1,54 @@
+---
+title: "Multi-language exercises"
+author: "Zoë Wilkinson Saldaña"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+
+# altered from https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html
+if (!file.exists("portal_mammals.sqlite")) {
+  download.file(url = "https://ndownloader.figshare.com/files/2292171",
+                destfile = "portal_mammals.sqlite", mode = "wb")
+}
+mammals <- DBI::dbConnect(RSQLite::SQLite(), "portal_mammals.sqlite")
+```
+
+The following two code exercises run language agnostic code.  It will finally evaluate to either 5 or 10.
+
+```{r r-not-python, exercise=TRUE, exercise.lines = 5}
+# if running in R, this should return 10
+# if running in Python, this should return FALSE and 5
+x = 5
+x <-10
+print(x)
+```
+
+```{python python-not-r, exercise=TRUE, exercise.lines = 5}
+# if running in R, this should return 10
+# if running in Python, this should return FALSE and 5
+x = 5
+x <-10
+print(x)
+```
+
+### Bash
+
+Execute exercises in bash
+
+```{bash bash-not-r, exercise = TRUE}
+echo "hello world"
+date
+```
+
+### SQL
+
+Use a SQL connection defined in a setup chunk.
+
+```{sql sql-not-r, exercise = TRUE, connection="mammals"}
+SELECT *
+FROM `surveys`
+LIMIT 10
+```
