@@ -16,6 +16,8 @@ if (!file.exists("portal_mammals.sqlite")) {
 mammals <- DBI::dbConnect(RSQLite::SQLite(), "portal_mammals.sqlite")
 ```
 
+### Python or R?
+
 The following two code exercises run language agnostic code.  It will finally evaluate to either 5 or 10.
 
 ```{r r-not-python, exercise=TRUE, exercise.lines = 5}
