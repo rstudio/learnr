@@ -264,9 +264,13 @@ install_knitr_hooks <- function() {
         options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
         all_chunks <- get_all_chunks(options)
 
+        code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
+        check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
+        solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+
         # remove class of "knitr_strict_list" so serializing works properly for external evaluators
         class(options) <- NULL
-      
+
         exercise_cache <- list(chunks = all_chunks,
                                code_check = code_check_chunk,
                                check = check_chunk,
@@ -303,7 +307,7 @@ install_knitr_hooks <- function() {
 
       # setup and checking code (-setup, -code-check, and -check) are included in exercise cache
       # do not send the setup and checking code to the browser
-      
+
       # send hint and solution to the browser
       # these are visibly displayed in the UI
       if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {
