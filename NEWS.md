@@ -23,6 +23,7 @@ learnr (development version)
 * Added `include=FALSE` to setup chunks to prevent exercises from printing out messages or potential code output for those setup chunks. ([#390](https://github.com/rstudio/learnr/pull/390))
 * Added error handling when user specificies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
+* We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option `exercise.warn_invisible = TRUE` to display an invisible result warning message. ([#373](https://github.com/rstudio/learnr/pull/373))
 
 ## Bug fixes
 

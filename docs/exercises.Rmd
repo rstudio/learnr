@@ -46,6 +46,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.startover</code></td>
 <td>Whether to include a "Start Over" button for the exercise.</td>
 </tr>
+<tr class="odd">
+<td><code>exercise.warn_invisible</code></td>
+<td>Whether to display an invisible result warning if the last value returned is invisible.</td>
+</tr>
 </tbody>
 </table>
 

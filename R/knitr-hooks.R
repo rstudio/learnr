@@ -263,14 +263,49 @@ install_knitr_hooks <- function() {
         options$engine <- knitr_engine(options$engine)
         options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
         all_chunks <- get_all_chunks(options)
+<<<<<<< HEAD
+
+        code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
+        check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
+        solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+=======
 
         code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
 
+        exercise_cache <- list(chunks = all_chunks,
+                               code_check = code_check_chunk,
+                               check = check_chunk,
+                               solution  = solution,
+                               options = options,
+                               engine = options$engine)
+
+        # serialize the list of chunks to server
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::store_exercise_cache(%s, %s)',
+            dput_to_string(options$label),
+            dput_to_string(exercise_cache)
+          )
+        )
+
+        # script tag with knit options for this chunk
+        ui_options <- list(
+          engine = options$engine,
+          has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
+        )
+        extra_html <- c('<script type="application/json" data-ui-opts="1">',
+                        jsonlite::toJSON(ui_options, auto_unbox = TRUE),
+                        '</script>')
+      }
+>>>>>>> master
+
         # remove class of "knitr_strict_list" so serializing works properly for external evaluators
         class(options) <- NULL
 
+<<<<<<< HEAD
         exercise_cache <- list(chunks = all_chunks,
                                code_check = code_check_chunk,
                                check = check_chunk,
@@ -308,6 +343,14 @@ install_knitr_hooks <- function() {
       # setup and checking code (-setup, -code-check, and -check) are included in exercise cache
       # do not send the setup and checking code to the browser
 
+=======
+    # handle exercise support chunks (hints, solution)
+    else if (is_exercise_support_chunk(options)) {
+
+      # setup and checking code (-setup, -code-check, and -check) are included in exercise cache
+      # do not send the setup and checking code to the browser
+
+>>>>>>> master
       # send hint and solution to the browser
       # these are visibly displayed in the UI
       if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {

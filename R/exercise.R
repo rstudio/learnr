@@ -501,11 +501,13 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       NULL
     }
 
+  warn_invisible_result <- isTRUE(exercise$options$exercise.warn_invisible)
+
   if (
     # if the last value was invisible
     !last_value_is_visible &&
-    # if the checker function exists
-    is.function(checker)
+    # if the warn invisible is set
+    warn_invisible_result
   ) {
     # works with NULL feedback
     feedback_html <- htmltools::tagList(feedback_html, invisible_feedback())
@@ -554,7 +556,7 @@ invisible_feedback <- function() {
   feedback_as_html(
     feedback_validated(
       list(
-        message = "Last value being used to check answer is invisible. See `?invisible` for more information",
+        message = "Note: Last value being returned is invisible. See `?invisible` for more information",
         type = "warning",
         correct = FALSE,
         location = "append"
