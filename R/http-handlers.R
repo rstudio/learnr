@@ -78,6 +78,9 @@ register_http_handlers <- function(session, metadata) {
 
   # event recording
   session$registerDataObj("record_event", NULL, rpc_handler(function(input) {
+    # Augment the data with the label
+    input$data$label <- input$label
+
     record_event(session = session,
                  event = input$event,
                  data = input$data)

@@ -37,8 +37,24 @@ install_knitr_hooks <- function() {
       exercise_label %in% all_exercise_labels
     }
     else if ("setup" %in% type) {
-      # look for another chunk which names this as it's setup chunk
-      length(exercise_chunks_for_setup_chunk(options$label)) > 0
+      # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
+      # this second condition is for support chunks that isn't referenced by an exercise yet
+      # but is part of a chain and should be stored as a setup chunk
+      is_referenced <- length(exercise_chunks_for_setup_chunk(options$label)) > 0
+      if (is_referenced) {
+        find_parent_setup_chunks(options) # only used to check for cycles; the return value is not useful here
+        TRUE
+      } else {
+        # if this looks like a setup chunk, but no one references it, error
+        if (is.null(options$exercise) && !is.null(options$exercise.setup)) {
+          stop(
+            "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
+            "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
+               call. = FALSE)
+        }
+        # just a random chunk
+        FALSE
+      }
     }
     else {
       FALSE
@@ -47,6 +63,75 @@ install_knitr_hooks <- function() {
 
   is_exercise_setup_chunk <- function(label) {
     grepl("-setup$", label) || (length(exercise_chunks_for_setup_chunk(label)) > 0)
+  }
+
+  # helper function to grab the raw knitr chunk associated with a chunk label
+  get_knitr_chunk <- function(label) {
+    # Note: we directly call the knitr function in this case because we do not
+    # need to pass expressions which required delayed evaluation.
+    knitr::knit_code$get(label)
+  }
+
+  # helper function to find all the setup chunks associated with an exercise chunk
+  # it goes up the chain of setup dependencies and returns a list of raw knitr chunks (if any)
+  find_parent_setup_chunks <- function(options, visited = NULL) {
+    # base case: when options are null, there are no more setup references
+    if (is.null(options))
+      return(NULL)
+    has_visited <- options$label %in% visited
+    # update visited set
+    visited <- append(visited, options$label)
+    # error out if there is a cycle
+    if (has_visited) {
+      stop("Chained setup chunks form a cycle!\nCycle: ", paste0(visited, collapse = " => "), call. = FALSE)
+    }
+    # check if the chunk with label has another setup chunk associated with it
+    setup_label <- options$exercise.setup
+    setup_chunk <- get_knitr_chunk(setup_label)
+    # if the setup_label is mispelled, throw an error to user instead of silently ignoring
+    # which would cause other issues when data dependencies can't be found
+    if (!is.null(setup_label) && is.null(setup_chunk))
+      stop(paste0("exercise.setup label '", setup_label, "' not found for exercise '", options$label, "'"))
+
+    setup_options <- attr(setup_chunk, "chunk_opts")
+    # serialize the options here so that the values are not evaluated when retrieved from learnr cache
+    current_setup_chunks <- if (is.null(setup_options)) {
+      list()
+    } else {
+      list(
+        list(
+          label = setup_label,
+          code = paste0(setup_chunk, collapse = "\n"),
+          opts = lapply(setup_options, dput_to_string),
+          engine = knitr_engine(options$engine)
+        )
+      )
+    }
+    # recurse
+    append(find_parent_setup_chunks(setup_options, visited), current_setup_chunks)
+  }
+
+  # helper function to return a list of exercise chunk and its setup chunks
+  get_all_chunks <- function(options) {
+    # get the exercise chunk
+    exercise_chunk <- get_knitr_chunk(options$label)
+    exercise_options <- attr(exercise_chunk, "chunk_opts")
+    # serialize the exercise options here so that the values are not evaluated when retrieved from learnr cache
+    chunk_opts <- lapply(exercise_options, dput_to_string)
+    exercise_chunk <- paste0(exercise_chunk, collapse = "\n")
+    # append the setup chunks at the front
+    # retrieve the setup chunks associated with the exercise
+    # if there is no `exercise.setup` find one with "label-setup"
+    setup_chunks <-
+      if (!is.null(options$exercise.setup)) {
+        find_parent_setup_chunks(options)
+      } else if (!is.null(get_knitr_chunk(paste0(options$label, '-setup')))) {
+        options$exercise.setup <- paste0(options$label, '-setup')
+        find_parent_setup_chunks(options)
+      } else {
+        NULL
+      }
+    append(setup_chunks, list(list(label = options$label, code = exercise_chunk, opts = chunk_opts, engine = knitr_engine(options$engine))))
   }
 
   # hook to turn off evaluation/highlighting for exercise related chunks
@@ -77,6 +162,8 @@ install_knitr_hooks <- function() {
         options$eval <- options$exercise.eval
       else
         options$eval <- FALSE
+      # exercises can be support chunks, but if it's an exercise it should be treated that way
+      return(options)
     }
 
     # if this is an exercise support chunk then force echo, but don't
@@ -88,10 +175,13 @@ install_knitr_hooks <- function() {
       options$highlight <- FALSE
     }
 
+    if (is_exercise_support_chunk(options, type = c("code-check", "check"))) {
+      options$include <- FALSE
+    }
+
     # if this is an exercise setup chunk then eval it if the corresponding
     # exercise chunk is going to be executed
     if (exercise_setup_chunk) {
-
       # figure out the default behavior
       exercise_eval <- knitr::opts_chunk$get('exercise.eval')
       if (is.null(exercise_eval))
@@ -112,6 +202,7 @@ install_knitr_hooks <- function() {
 
       # set the eval property as appropriate
       options$eval <- exercise_eval
+      options$echo <- FALSE
     }
 
     # return modified options
@@ -169,34 +260,38 @@ install_knitr_hooks <- function() {
       }
       else {
         # forward a subset of standard knitr chunk options
-        preserved_options <- list()
-        preserved_options$fig.width <- options$fig.width
-        preserved_options$fig.height <- options$fig.height
-        preserved_options$fig.retina <- options$fig.retina
-        preserved_options$fig.asp <- options$fig.asp
-        preserved_options$fig.align <- options$fig.align
-        preserved_options$fig.keep <- options$fig.keep
-        preserved_options$fig.show <- options$fig.show
-        preserved_options$fig.cap <- options$fig.cap
-        preserved_options$out.width <- options$out.width
-        preserved_options$out.height <- options$out.height
-        preserved_options$out.extra <- options$out.extra
-        preserved_options$warning <- options$warning
-        preserved_options$error <- options$error
-        preserved_options$message <- options$message
+        options$engine <- knitr_engine(options$engine)
+        options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
+        all_chunks <- get_all_chunks(options)
 
-        # forward some exercise options
-        preserved_options$exercise.df_print <- knitr::opts_knit$get('rmarkdown.df_print')
-        if (is.null(preserved_options$exercise.df_print))
-          preserved_options$exercise.df_print <- "default"
-        preserved_options$exercise.timelimit <- options$exercise.timelimit
-        preserved_options$exercise.setup <- options$exercise.setup
-        preserved_options$exercise.checker <- deparse(options$exercise.checker)
-        preserved_options$exercise.warn_invisible <- options$exercise.warn_invisible
+        code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
+        check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
+        solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+
+        exercise_cache <- list(chunks = all_chunks,
+                               code_check = code_check_chunk,
+                               check = check_chunk,
+                               solution  = solution,
+                               options = options,
+                               engine = options$engine)
+
+        # serialize the list of chunks to server
+        rmarkdown::shiny_prerendered_chunk(
+          'server',
+          sprintf(
+            'learnr:::store_exercise_cache(%s, %s)',
+            dput_to_string(options$label),
+            dput_to_string(exercise_cache)
+          )
+        )
 
         # script tag with knit options for this chunk
-        extra_html <- c('<script type="application/json" data-opts-chunk="1">',
-                        jsonlite::toJSON(preserved_options, auto_unbox = TRUE),
+        ui_options <- list(
+          engine = options$engine,
+          has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
+        )
+        extra_html <- c('<script type="application/json" data-ui-opts="1">',
+                        jsonlite::toJSON(ui_options, auto_unbox = TRUE),
                         '</script>')
       }
 
@@ -204,23 +299,17 @@ install_knitr_hooks <- function() {
       exercise_wrapper_div(extra_html = extra_html)
     }
 
-    # handle exercise support chunks (setup, solution, and check)
+    # handle exercise support chunks (hints, solution)
     else if (is_exercise_support_chunk(options)) {
 
-      # Store setup chunks for later analysis
-      if (before && is_exercise_setup_chunk(options$label)) {
-        rmarkdown::shiny_prerendered_chunk(
-          'server',
-          sprintf(
-            'learnr:::store_exercise_setup_chunk(%s, %s)',
-            dput_to_string(options$label),
-            dput_to_string(options$code)
-          )
-        )
-      }
+      # setup and checking code (-setup, -code-check, and -check) are included in exercise cache
+      # do not send the setup and checking code to the browser
 
-      # output wrapper div
-      exercise_wrapper_div(suffix = "support")
+      # send hint and solution to the browser
+      # these are visibly displayed in the UI
+      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {
+        exercise_wrapper_div(suffix = "support")
+      }
 
     }
 
@@ -245,6 +334,7 @@ install_knitr_hooks <- function() {
 
   # Note: Empirically, this function gets called twice
   knitr::knit_hooks$set(source = new_source_knit_hook())
+
 }
 
 # cache to hold the original knit hook

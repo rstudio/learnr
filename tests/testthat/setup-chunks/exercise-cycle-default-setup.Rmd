@@ -1,0 +1,23 @@
+---
+title: "Chained setup chunks: Cycles"
+author: "Nischal Shrestha"
+output: learnr::tutorial
+runtime: shiny_prerendered 
+description: >
+  This is a demo of catching cyclic dependencies with setup chunks starting from an exercise chunk with no exercise.setup set.
+--- 
+
+```{r setup, include = FALSE}
+library(learnr)
+```
+
+<!-- Note: when an exercise is missing a `exercise.setup`, we default to finding a `-setup` chunk. -->
+
+```{r data1, exercise = TRUE}
+1
+```
+
+```{r data1-setup, exercise.setup = "data1"}
+2
+```
+

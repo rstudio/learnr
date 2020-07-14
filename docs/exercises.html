@@ -538,6 +538,16 @@ Whether to display an invisible result warning if the last value returned is inv
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script></li>
+<li><p>If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can use <code>exercise.setup</code> (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <code>learnr</code> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, let’s turn the first exercise in the previous examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
+<div id="exercisesetupchained" style="width: 95%;">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisesetupchained')</script></li>
+<li><p>You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for the <code>arrange</code> exercise that use it as its setup:</p>
+<div id="exercisechained" style="width: 95%;">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisechained')</script></li>
 </ol>
 </div>
 <div id="hints-and-solutions" class="section level2">

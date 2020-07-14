@@ -3,14 +3,15 @@ learnr (development version)
 
 ## Breaking Changes
 
-* Renamed the `exercise_submission` event to `exercise_result` and added the following fields: 
+* Renamed the `exercise_submission` event to `exercise_result` and added the following fields:
   1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
   3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
-  
+
 
 ## New features
 
+* Introduced "setup chunk chaining", which allows a setup chunk to depend on another setup chunk and so on, forming a chain of setup code that can be used for exercises via `exercise.setup`. Run `run_tutorial("setup-chunks", "learnr")` for a demo. ([#390](https://github.com/rstudio/learnr/pull/390))
 * Introduced an [experimental](https://www.tidyverse.org/lifecycle/#experimental) function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document. ([#345](https://github.com/rstudio/learnr/pull/345), [#354](https://github.com/rstudio/learnr/pull/354))
 * For the "forked" evaluator (the default used on Linux), add a limit to the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. ([#353](https://github.com/rstudio/learnr/pull/353))
 
@@ -18,10 +19,16 @@ learnr (development version)
 
 * Added an `exercise_submitted` event which is fired before evaluating an exercise. This event can be associated with an `exercise_result` event using the randomly generated `id` included in the data of both events. ([#337](https://github.com/rstudio/learnr/pull/337))
 * Added a `restore` flag on `exercise_submitted` events which is `TRUE` if the exercise is being restored from a previous execution, or `FALSE` if the exercise is being run interactively.
+* Add `label` field to the `exercise_hint` event to identify for which exercise the user requested a hint. ([#377](https://github.com/rstudio/learnr/pull/377))
+* Added `include=FALSE` to setup chunks to prevent exercises from printing out messages or potential code output for those setup chunks. ([#390](https://github.com/rstudio/learnr/pull/390))
+* Added error handling when user specificies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
+* We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
 
 ## Bug fixes
 
 * Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
+* Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value. ([#376](https://github.com/rstudio/learnr/pull/376))
+* Fixed exercise progress spinner being prematurely cleared. ([#384](https://github.com/rstudio/learnr/pull/384))
 
 learnr 0.10.1
 ===========

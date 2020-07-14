@@ -1,0 +1,52 @@
+---
+title: "Chained setup chunks"
+author: "Nischal Shrestha"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: > 
+  This is a demo of chained setup chunks and how it can be used to build up / share code.
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+d <- 3
+``` 
+
+# Addition
+
+<!-- We'll start the setup chunk chain with a regular chunk dataA: -->
+
+```{r setupA}
+a <- 5 
+``` 
+
+<!-- Note: we use `exercise.setup` to chain setup chunks. In the case of an exercise serving as a setup chunk, the pre-filled code will be used as the setup code. -->
+
+<!-- We start with a simple single, setup chunk for dataB depending on dataA. This is the familiar setup workflow for an exercise. -->
+
+```{r setupB, exercise.setup = "setupA"}
+b <- a + d
+``` 
+
+Result of x should be 9.
+
+```{r ex1, exercise=TRUE, exercise.setup = "setupB"} 
+x = b + 1
+
+```
+
+<!-- Note: setup chunks can use the default value of the exercises. -->
+
+Result of y should be 10.
+
+```{r ex2, exercise=TRUE, exercise.setup = "ex1"}
+y <- x + 1 
+
+```
+
+Result of z should be 15.
+
+```{r ex3, exercise=TRUE, exercise.setup = "ex1"}
+z <- x + 6 
+
+```
