@@ -28,7 +28,7 @@ all of the following:
 5.  Interactive Shiny components.
 
 You can find documentation on using the **learnr** package here:
-<https://rstudio.github.com/learnr/>
+<https://rstudio.github.io/learnr/>
 
 ## FAQ
 
