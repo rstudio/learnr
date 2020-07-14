@@ -735,10 +735,6 @@ Tutorial.prototype.$exerciseSolutionCode = function(label) {
   return this.$exerciseSupportCode(label + "-solution");
 };
 
-Tutorial.prototype.$exerciseCheckCode = function(label) {
-  return this.$exerciseSupportCode(label + "-check");
-};
-
 Tutorial.prototype.$exerciseHintDiv = function(label) {
 
   // look for a div w/ hint id
@@ -886,9 +882,8 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     for (var i=lines; i<thiz.kMinLines;i++)
       code = code + "\n";
 
-
     // get the knitr options script block and detach it (will move to input div)
-    var options_script = exercise.children('script[data-opts-chunk="1"]').detach();
+    var options_script = exercise.children('script[data-ui-opts="1"]').detach();
 
     // wrap the remaining elements in an output frame div
     exercise.wrapInner('<div class="tutorial-exercise-output-frame"></div>');
@@ -930,8 +925,9 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       return button;
     }
 
+    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
     // create submit answer button if checks are enabled
-    if (thiz.$exerciseCheckCode(label) !== null)
+    if (chunk_options.has_checker)
       add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
 
     // create run button
@@ -959,11 +955,6 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // get setup_code (if any)
     var setup_code = null;
-    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
-    if (chunk_options["exercise.setup"])
-        setup_code = thiz.$exerciseSupportCode(chunk_options["exercise.setup"]);
-      else
-        setup_code = thiz.$exerciseSupportCode(label + "-setup");
 
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
@@ -972,10 +963,13 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // support startover
     var startover_code = exercise.attr('data-startover') === "1" ? code : null;
 
+    // get the engine
+    var engine = chunk_options["engine"]
 
     // set tutorial options/data
     editor.tutorial = {
       label: label,
+      engine: engine,
       setup_code: setup_code,
       completion: completion,
       diagnostics: diagnostics,
@@ -1318,33 +1312,10 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       var editor = ace.edit($(el).attr('id'));
       value.code = editor.getSession().getValue();
 
-      // get the preserved chunk options (if any)
-      var options_script = thiz.$exerciseContainer(el).find('script[data-opts-chunk="1"]');
-      if (options_script.length == 1)
-        value.options = JSON.parse(options_script.text());
-      else
-        value.options = {};
-
       // restore flag
       value.restore = this.restore;
 
-      // get any setup, solution, or check chunks
-
-      // setup
-      var label = exerciseLabel(el);
-      if (value.options["exercise.setup"])
-        value.setup = thiz.$exerciseSupportCode(value.options["exercise.setup"]);
-      else
-        value.setup = thiz.$exerciseSupportCode(label + "-setup");
-
-      // solution
-      value.solution = thiz.$exerciseSupportCode(label + "-solution");
-
-      // check
-      if (this.check) {
-        value.code_check = thiz.$exerciseSupportCode(label + "-code-check");
-        value.check = thiz.$exerciseCheckCode(label);
-      }
+      value.should_check = this.should_check;
 
       // some randomness to ensure we re-execute on button clicks
       value.timestamp = new Date().getTime();
@@ -1358,13 +1329,13 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
         binding.restore = false;
         binding.clicked = true;
-        binding.check = ev.target.hasAttribute('data-check');
+        binding.should_check = ev.target.hasAttribute('data-check');
         callback(true);
       });
       $(el).on('restore.exerciseInputBinding', function(ev, options) {
         binding.restore = true;
         binding.clicked = false;
-        binding.check = options.check;
+        binding.should_check = options.should_check;
         callback(true);
       });
     },
@@ -1643,7 +1614,7 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
         thiz.$exerciseForLabel(label).data('restoring', true);
         thiz.$showExerciseProgress(label, 'run', true);
         editorContainer.trigger('restore', {
-          check: checked
+          should_check: checked
         });
       }
     }

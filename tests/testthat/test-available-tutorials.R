@@ -26,6 +26,7 @@ test_that("Tutorial names are retrieved", {
   - ex-setup-r        : \"Set Up\"
   - hello             : \"Hello, Tutorial!\"
   - quiz_question     : \"Tutorial Quiz Questions in `learnr`\"
+  - setup-chunks      : \"Chained setup chunks\"
   - slidy             : \"Slidly demo\""
   )
 

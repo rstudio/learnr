@@ -93,6 +93,16 @@ You can however arrange for setup code to be run before evaluation of an exercis
     <div id="exercisesetupsuffix" style="width: 95%;"></div>
     <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
 
+4. If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can use `exercise.setup` (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) `learnr` will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, let's turn the first exercise in the previous examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
+
+    <div id="exercisesetupchained" style="width: 95%;"></div>
+    <script type="text/javascript">loadSnippet('exercisesetupchained')</script>
+    
+5. You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
+
+    <div id="exercisechained" style="width: 95%;"></div>
+    <script type="text/javascript">loadSnippet('exercisechained')</script>
+
 ## Hints and Solutions
 
 You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. Hints can be based on either R code snippets or on custom markdown/HTML content.

@@ -59,5 +59,6 @@ dput_to_string <- function(x) {
   conn <- textConnection("dput_to_string", "w")
   on.exit({close(conn)})
   dput(x, file = conn)
-  paste0(textConnectionValue(conn), collapse = "")
+  # Must use a `"\n"` if `dput()`ing a function
+  paste0(textConnectionValue(conn), collapse = "\n")
 }
