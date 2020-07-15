@@ -54,6 +54,14 @@ event_register_handler_once <- function(event, callback) {
   invisible(cancel_callback)
 }
 
+# Clear all event handlers
+event_handlers_reset <- function() {
+  rm(
+    list = ls(event_handlers, all.names = TRUE),
+    envir = event_handlers
+  )
+}
+
 # Returns a function which removes an event handler.
 create_event_handler_remover <- function(event, id) {
   function() {
