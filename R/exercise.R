@@ -539,7 +539,8 @@ empty_result <- function() {
     feedback = NULL,
     error_message = NULL,
     timeout_exceeded = FALSE,
-    html_output = NULL
+    # This value needs to pass a req()
+    html_output = " "
   )
 }
 # @param timeout_exceeded represents whether or not the error was triggered
