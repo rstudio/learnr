@@ -10,6 +10,7 @@ tutorial_options(
   exercise.timelimit = 30,
   exercise.lines = NULL,
   exercise.checker = NULL,
+  exercise.error.checker = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE
@@ -28,6 +29,8 @@ see some default output (defaults to \code{FALSE}).}
 number of lines in the code chunk).}
 
 \item{exercise.checker}{Function used to check exercise answers.}
+
+\item{exercise.error.checker}{Function used to check exercise answers that result in an error.}
 
 \item{exercise.completion}{Use code completion in exercise editors.}
 
