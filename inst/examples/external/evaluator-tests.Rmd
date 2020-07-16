@@ -15,7 +15,7 @@ knitr::opts_chunk$set(exercise.checker = function(...){
 
 ```{r, context="server-start", include=FALSE}
 # Setup a remote evaluator.
-options(tutorial.external.host = "http://localhost:8080") 
+options(tutorial.external.host = "http://localhost:8080")
 ```
 
 ```{r setup-global-exercise, include=FALSE}
