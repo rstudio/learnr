@@ -254,7 +254,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
   missing_args <- setdiff(names(args), checker_args)
   if (length(missing_args) && !"..." %in% checker_args) {
     msg <- sprintf(
-      "The '%s' function must include the following arguments (or ...): '%s'",
+      "Either add ... or the following arguments to the '%s' function: '%s'",
       name, paste(missing_args, collapse = "', '")
     )
     message(msg)
@@ -275,7 +275,11 @@ try_checker <- function(exercise, name, check_code, envir_result,
     return(feedback)
   }
   # If checker doesn't return anything, there's no exercise result to return
-  feedback
+  if (length(feedback)) {
+    exercise_result(feedback)
+  } else {
+    feedback
+  }
 }
 
 
@@ -296,12 +300,7 @@ render_exercise <- function(exercise, envir) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
   # start constructing knitr_options for the output format
-  knitr_options <- rmarkdown::knitr_options_html(
-    fig_width = exercise$options$fig.width,
-    fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina,
-    keep_md = FALSE
-  )
+  knitr_options <- rmarkdown::knitr_options_html(keep_md = FALSE)
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
@@ -348,7 +347,7 @@ render_exercise <- function(exercise, envir) {
     )
   )
   rmd_src <- c(
-    readLines(system.file("templates", "exercise-setup.Rmd", package = "learnr")),
+    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
     "", exercise_code_chunks(exercise)
   )
   rmd_file <- "exercise.Rmd"
@@ -380,8 +379,8 @@ render_exercise <- function(exercise, envir) {
       envir_prep = envir,
       last_value = e
     )
-    if (length(checker_feedback)) {
-      exercise_result(feedback = checker_feedback)
+    if (is_exercise_result(checker_feedback)) {
+      checker_feedback
     } else {
       exercise_result_error(msg)
     }
@@ -422,15 +421,16 @@ render_exercise <- function(exercise, envir) {
 }
 
 exercise_code_chunks <- function(exercise) {
-  unlist(lapply(exercise$chunks, function(x) {
+  vapply(exercise$chunks, function(x) {
     opts <- paste(names(x$opts), unname(x$opts), sep = "=")
-    c(
+    paste(
+      sep = "\n",
       # we quote the label to ensure that it is treated as a label and not a symbol for instance
       sprintf("```{%s}", paste0(c(x$engine, dput_to_string(x$label), opts), collapse = ", ")),
       paste0(x$code, collapse = "\n"),
       "```"
     )
-  }))
+  }, character(1))
 }
 
 
@@ -517,6 +517,7 @@ prepare_exercise <- function(exercise) {
         list(include = FALSE)
       }
     )
+    # Move over user submission code to the pre-rendered chunk object
     if (isExercise) {
       chunk$code <- exercise$code
     }
