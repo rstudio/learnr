@@ -188,7 +188,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   envir_prep <- duplicate_env(envir)
 
   # Setup a temporary directory for rendering the exercise
-  exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
   on.exit(unlink(exercise_dir), add = TRUE)
 
