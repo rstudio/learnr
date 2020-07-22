@@ -58,6 +58,8 @@ $(document).ready(function() {
     }
 
     function updateVisibilityOfTopicElements(topicIndex) {
+      resetSectionVisibilityList();
+
       var topic = topics[topicIndex];
 
       if (!topic.progressiveReveal) return;
@@ -189,6 +191,7 @@ $(document).ready(function() {
 
       $('#doc-metadata').appendTo(topicsList);
 
+      resetSectionVisibilityList();
 
       var topicsDOM = $('.section.level2');
       topicsDOM.each( function(topicIndex, topicElement) {
@@ -228,6 +231,25 @@ $(document).ready(function() {
         }
         $(topicElement).append(topicActions);
 
+        $(topicElement).on('shown', function() {
+          // Some the topic can have the shown event triggered but not actually
+          // be visible. This visibility check saves a little effort when it's
+          // not actually visible.
+          if ($(this).is(":visible")) {
+            var sectionsDOM = $(topicElement).children('.section.level3');
+            sectionsDOM.each( function(sectionIndex, sectionElement) {
+              updateSectionVisibility(sectionElement);
+            })
+          }
+        });
+
+        $(topicElement).on('hidden', function() {
+          var sectionsDOM = $(topicElement).children('.section.level3');
+          sectionsDOM.each( function(sectionIndex, sectionElement) {
+            updateSectionVisibility(sectionElement);
+          })
+        });
+
         topic.sections = [];
         var sectionsDOM = $(topicElement).children('.section.level3');
         sectionsDOM.each( function( sectionIndex, sectionElement) {
@@ -239,6 +261,18 @@ $(document).ready(function() {
             actions.append(continueButton);
             $(sectionElement).append(actions);
           }
+
+          $(sectionElement).on('shown', function() {
+            // A 'shown' event can be triggered even when this section isn't
+            // actually visible. This can happen when the parent topic isn't
+            // visible. So we have to check that this section actually is
+            // visible.
+            updateSectionVisibility(sectionElement);
+          });
+
+          $(sectionElement).on('hidden', function() {
+            updateSectionVisibility(sectionElement);
+          });
 
           var section = {};
           section.exercises = [];
@@ -408,6 +442,43 @@ $(document).ready(function() {
     }
   }
 
+  // Keep track of which sections are currently visible. When this changes
+  var visibleSections = [];
+  function resetSectionVisibilityList() {
+    visibleSections = [];
+    sendVisibleSections();
+  }
+
+  function updateSectionVisibility(sectionElement) {
+    var idx = visibleSections.indexOf(sectionElement.id);
+
+    if ($(sectionElement).is(":visible")) {
+      if (idx == -1) {
+        visibleSections.push(sectionElement.id);
+        sendVisibleSections();
+      }
+    } else {
+      if (idx != -1) {
+        visibleSections.splice(idx, 1);
+        sendVisibleSections();
+      }
+    }
+  }
+
+  function sendVisibleSections() {
+    // This function may be called several times in a tick, which results in
+    // many calls to Shiny.setInputValue(). That shouldn't be a problem since
+    // those calls are deduped; only the last value gets sent to the server.
+    if (Shiny && Shiny.setInputValue) {
+      Shiny.setInputValue("tutorial-visible-sections", visibleSections);
+    } else {
+      $(document).on("shiny:sessioninitialized", function() {
+        Shiny.setInputValue("tutorial-visible-sections", visibleSections);
+      })
+    }
+  }
+
+
   // update the UI after a section or topic (with 0 sections) gets skipped
   function sectionSkipped(exerciseElement) {
     var sectionSkippedId;
@@ -453,6 +524,7 @@ $(document).ready(function() {
 
     // handle progress events
     tutorial.onProgress(function(progressEvent) {
+      console.log('progress: ' + progressEvent.event);
       if (progressEvent.event === "section_completed")
         sectionCompleted(progressEvent.element);
       else if (progressEvent.event === "section_skipped")

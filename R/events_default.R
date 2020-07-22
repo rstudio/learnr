@@ -14,6 +14,68 @@ broadcast_question_event_to_client <- function(session, label, answer) {
 
 
 register_default_event_handlers <- function() {
+
+  event_register_handler("session_start",
+    function(session, event, data) {
+      # The observer here needs to be registered at session_start; if it is
+      # called in initialize_tutorial(), then the "section_viewed" event fire
+      # too soon, which will cause errors when it calls get_object(), because
+      # the storage system won't yet be ready.
+      #
+      # This observer watches input$`tutorial-visible-sections`, and wraps it
+      # so that it fires a "section_viewed" event when a new section is added
+      # to that input value.
+      last_visible_sections <- character(0)
+      observe({
+        visible_sections <- session$input$`tutorial-visible-sections`
+
+        new_visible <- setdiff(visible_sections, last_visible_sections)
+        for (section in new_visible) {
+          event_trigger(
+            session,
+            "section_viewed",
+            data = list(sectionId = section)
+          )
+        }
+
+        # Note: `visible_sections` could have more or fewer items from
+        # `last_visible_sections`; the setdiff() above only detects if it has
+        # more. Always save the `visible_sections`.
+        last_visible_sections <<- visible_sections
+      })
+    }
+  )
+
+  event_register_handler(
+    "section_viewed",
+    function(session, event, data) {
+      label <- ns_wrap("section_viewed_", data$sectionId)
+
+      if (length(get_object(session = session, object_id = label)) == 0) {
+        first_time <- TRUE
+        save_object(
+          session = session,
+          object_id = label,
+          data = tutorial_object(
+            type = "section_viewed",
+            data = list(sectionId = data$sectionId)
+          )
+        )
+      } else {
+        first_time <- FALSE
+      }
+
+      if (first_time) {
+        event_trigger(
+          session,
+          "section_viewed_first_time",
+          data = list(sectionId = data$sectionId)
+        )
+      }
+    }
+  )
+
+
   event_register_handler(
     "question_submission",
     function(session, event, data) {
@@ -109,3 +171,6 @@ register_default_event_handlers <- function() {
     }
   )
 }
+
+register_default_event_handlers()
+
