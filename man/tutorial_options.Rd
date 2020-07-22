@@ -12,8 +12,7 @@ tutorial_options(
   exercise.checker = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
-  exercise.startover = TRUE,
-  ...
+  exercise.startover = TRUE
 )
 }
 \arguments{
