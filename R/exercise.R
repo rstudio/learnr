@@ -300,7 +300,12 @@ render_exercise <- function(exercise, envir) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
   # start constructing knitr_options for the output format
-  knitr_options <- rmarkdown::knitr_options_html(keep_md = FALSE)
+  knitr_options <- rmarkdown::knitr_options_html(
+    fig_width = exercise$options$fig.width,
+    fig_height = exercise$options$fig.height,
+    fig_retina = exercise$options$fig.retina,
+    keep_md = FALSE
+  )
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
