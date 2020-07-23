@@ -209,7 +209,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Resolve knitr options for the exercise and setup chunks
-  rmd_results <- withr::with_dir(exercise_dir, render_exercise(exercise, envir))
+  rmd_results <- withr::with_dir(exercise_dir, render_exercise(exercise, envir, envir_prep))
 
   if (is_exercise_result(rmd_results)) {
     return(rmd_results)
@@ -229,7 +229,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # include any checker feedback with the exercise results
   exercise_result(
-    feedback = checker_feedback,
+    feedback = checker_feedback$feedback,
     html_output = rmd_results$html_output
   )
 }
@@ -296,7 +296,7 @@ get_checker_func <- function(exercise, name, envir) {
 }
 
 
-render_exercise <- function(exercise, envir) {
+render_exercise <- function(exercise, envir, envir_prep) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
   # start constructing knitr_options for the output format
@@ -377,11 +377,11 @@ render_exercise <- function(exercise, envir) {
     }
     # Run the condition through an error checker (the exercise could be to throw an error!)
     checker_feedback <- try_checker(
-      exercise, "exercise.checker",
-      check_code = exercise$code_check,
-      envir_result = NULL,
-      evaluate_result = NULL,
-      envir_prep = envir,
+      exercise, "exercise.error.checker",
+      check_code = exercise$check,
+      envir_result = envir,
+      evaluate_result = evaluate_result,
+      envir_prep = envir_prep,
       last_value = e
     )
     if (is_exercise_result(checker_feedback)) {
