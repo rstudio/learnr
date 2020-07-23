@@ -2,12 +2,9 @@
 % Please edit documentation in R/events.R
 \name{event_register_handler}
 \alias{event_register_handler}
-\alias{event_register_handler_once}
 \title{Register an event handler callback}
 \usage{
 event_register_handler(event, callback)
-
-event_register_handler_once(event, callback)
 }
 \arguments{
 \item{event}{The name of an event.}

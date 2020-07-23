@@ -60,21 +60,6 @@ event_register_handler <- function(event, callback) {
   invisible(cancel_handler)
 }
 
-#' @name event_register_handler
-#' @export
-event_register_handler_once <- function(event, callback) {
-  cancel_callback <- event_register_handler(
-    event,
-    function(session, event, data) {
-      # Use on.exit() to ensure cancellation in case callback throws an error.
-      on.exit(cancel_callback())
-      callback(session, event, data)
-    }
-  )
-
-  invisible(cancel_callback)
-}
-
 # Clear all event handlers
 event_handlers_reset <- function() {
   rm(
@@ -121,5 +106,83 @@ event_trigger <- function(session, event, data = list()) {
         warning(conditionMessage(e), .call = FALSE)
       }
     )
+  }
+}
+
+
+#' Wrap an expression that will be executed one time in an event handler
+#'
+#' This wraps an expression so that it will be executed one time for a tutorial,
+#' based on some condition. The first time the condition is true, the expression
+#' will be executed; after that, the expression will not be evaluated again.
+#'
+#' The execution state is stored so that if the expression is executed, then the
+#' user quits the tutorial and then returns to it, the expression will not be
+#' executed a second time.
+#'
+#' A common use for `one_time` is to execute an expression when a section is
+#' viewed for the first time.
+#'
+#' @param session A Shiny session object.
+#' @param cond A condition that is used as a filter. The first time the
+#'   condition evaluates to true, `expr` will be evaluated; after that, `expr`
+#'   will not be evaluated again.
+#' @param expr An expression that will be evaluated once, the first time that
+#'   `cond` is true.
+#' @param label A unique identifier. This is used as an ID for the condition and
+#'   expression; if two calls to `one_time()` uses the same label, there will be
+#'   an ID collision and only one of them will execute. By default, `cond` is
+#'   deparsed and used as the label.
+#'
+#' @examples
+#' \dontrun{
+#' # This goes in a {r context="server-start"} chunk
+#'
+#' # The expression with message() will be executed the first time the user
+#' # sees the section with ID "section-exercise-with-hint".
+#' event_register_handler("section_viewed",
+#'   function(session, event, data) {
+#'     one_time(
+#'       session,
+#'       data$sectionId == "section-exercise-with-hint",
+#'       {
+#'         message("Seeing ", data$sectionId, " for the first time.")
+#'       }
+#'     )
+#'   }
+#' )
+#'
+#'
+#' }
+#' @export
+one_time <- function(session, cond, expr, label = deparse(substitute(cond))) {
+  # This is meant to be called within an event handler, instead of being
+  # implemented as an event handler that removes itself. The reason that the
+  # latter method isn't used is because it's possible that two simultaneous user
+  # sessions will use be running, and these event handlers are installed at an
+  # app-level (not session-level) scope.
+
+    if (!isTRUE(cond)) {
+    return()
+  }
+
+  object_id <- ns_wrap("one_time_", digest::digest(label, "xxhash64"))
+
+  if (length(get_object(session = session, object_id = object_id)) == 0) {
+    first_time <- TRUE
+    save_object(
+      session = session,
+      object_id = object_id,
+      data = tutorial_object(
+        type = "one_time",
+        data = list(cond = label)
+      )
+    )
+  } else {
+    first_time <- FALSE
+  }
+
+  if (first_time) {
+    expr
   }
 }

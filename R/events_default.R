@@ -15,7 +15,8 @@ broadcast_question_event_to_client <- function(session, label, answer) {
 
 register_default_event_handlers <- function() {
 
-  event_register_handler("session_start",
+  event_register_handler(
+    "session_start",
     function(session, event, data) {
       # The observer here needs to be registered at session_start; if it is
       # called in initialize_tutorial(), then the "section_viewed" event fire
@@ -74,7 +75,6 @@ register_default_event_handlers <- function() {
       }
     }
   )
-
 
   event_register_handler(
     "question_submission",
