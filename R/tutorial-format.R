@@ -127,12 +127,6 @@ tutorial <- function(fig_width = 6.5,
   # set 1000 as the default maximum number of rows in paged tables
   knitr_options$opts_chunk$max.print <- 1000
 
-  # Clear all event handlers and register the default event handlers.
-  # TODO: Currently, the `_once` handler isn't restored if user starts over.
-  #       Make this work somehow.
-  event_handlers_reset()
-  register_default_event_handlers()
-
   # create base document format using standard html_document
   base_format <- rmarkdown::html_document(
     smart = smart,

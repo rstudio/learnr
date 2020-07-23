@@ -171,6 +171,3 @@ register_default_event_handlers <- function() {
     }
   )
 }
-
-register_default_event_handlers()
-
