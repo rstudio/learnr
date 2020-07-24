@@ -524,7 +524,6 @@ $(document).ready(function() {
 
     // handle progress events
     tutorial.onProgress(function(progressEvent) {
-      console.log('progress: ' + progressEvent.event);
       if (progressEvent.event === "section_completed")
         sectionCompleted(progressEvent.element);
       else if (progressEvent.event === "section_skipped")
