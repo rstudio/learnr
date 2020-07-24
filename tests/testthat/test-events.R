@@ -10,15 +10,6 @@ test_that("Event handlers", {
   cancel()
 
 
-  # Same as previous, but with event_register_handler_once.
-  result <- NULL
-  event_register_handler_once("foo",
-    function(session, event, data) { result <<- list(session, event, data) }
-  )
-  event_trigger("session_obj", "foo", "data")
-  expect_identical(result, list("session_obj", "foo", "data"))
-
-
   # Testing multiple event handlers for same event, checking for order
   x <- numeric()
   cancel1 <- event_register_handler(
@@ -27,41 +18,24 @@ test_that("Event handlers", {
   )
   on.exit(cancel1(), add = TRUE)
 
-  cancel2 <- event_register_handler_once(
+  cancel2 <- event_register_handler(
     "foo",
     function(session, event, data) { x <<- c(x, 2) }
   )
   on.exit(cancel2(), add = TRUE)
 
-  cancel3 <- event_register_handler(
-    "foo",
-    function(session, event, data) { x <<- c(x, 3) }
-  )
-  on.exit(cancel3(), add = TRUE)
+  event_trigger(NULL, "foo", NA)
+  expect_identical(x, c(1, 2))
 
   event_trigger(NULL, "foo", NA)
-  expect_identical(x, c(1, 2, 3))
-
-  event_trigger(NULL, "foo", NA)
-  expect_identical(x, c(1, 2, 3, 1, 3))
+  expect_identical(x, c(1, 2, 1, 2))
 
   # Cancel first handler
   expect_true(cancel1())
   expect_false(cancel1())
 
   event_trigger(NULL, "foo", NA)
-  expect_identical(x, c(1, 2, 3, 1, 3, 3))
-})
-
-
-test_that("Canceling one-time event handlers", {
-  n <- 0
-  cancel <- event_register_handler_once("foo", function(session, event, data) { n <<- n + 1 })
-
-  expect_true(cancel())
-  event_trigger(NULL, "foo", NA)
-  expect_identical(n, 0)
-  expect_false(cancel())
+  expect_identical(x, c(1, 2, 1, 2, 2))
 })
 
 
@@ -85,8 +59,10 @@ test_that("Errors are converted to warnings", {
   n <- 0
   f <- function() g()
   g <- function() stop("error in g")
-  event_register_handler_once("foo", function(session, event, data) f())
-  event_register_handler_once("foo", function(session, event, data) n <<- n + 1)
+  cancel1 <- event_register_handler("foo", function(session, event, data) f())
+  on.exit(cancel1(), add = TRUE)
+  cancel2 <- event_register_handler("foo", function(session, event, data) n <<- n + 1)
+  on.exit(cancel2(), add = TRUE)
 
   expect_warning(event_trigger(NULL, "foo", NA), "error in g")
   # Other callbacks should still have executed.
