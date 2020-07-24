@@ -93,6 +93,33 @@ y <- 456
 
 `y` should be `456`.
 
+### Local Setup #3
+
+Test chained setup chunks for an exercise.
+
+```{r base-setup}
+a <- 1
+```
+
+```{r local3-setup, exercise.setup = "base-setup"}
+b <- a + 5
+b
+```
+
+`c` should be 9 (`b` is 6 in setup code)
+
+```{r local3, exercise=TRUE, exercise.setup = "local3-setup"}
+c <- b + 3
+c
+```
+
+`d` should be 10
+
+```{r local4, exercise=TRUE, exercise.setup="local3"}
+d <- c + 1
+d
+```
+
 ## Timeouts
 
 ### Default timeouts
