@@ -11,7 +11,10 @@
 #'   (defaults to \code{30}).
 #' @param exercise.lines Lines of code for exercise editor (defaults to the
 #'   number of lines in the code chunk).
-#' @param exercise.checker Function used to check exercise answers.
+#' @param exercise.checker Function used to check exercise answers
+#'   (e.g., `gradethis::grade_learnr()`).
+#' @param exercise.error.checker Function used to check exercise answers
+#'   (e.g., `gradethis::grade_learnr()`).
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.

@@ -10,6 +10,7 @@ tutorial_options(
   exercise.timelimit = 30,
   exercise.lines = NULL,
   exercise.checker = NULL,
+  exercise.error.checker = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE
@@ -27,7 +28,11 @@ see some default output (defaults to \code{FALSE}).}
 \item{exercise.lines}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
 
-\item{exercise.checker}{Function used to check exercise answers.}
+\item{exercise.checker}{Function used to check exercise answers
+(e.g., \code{gradethis::grade_learnr()}).}
+
+\item{exercise.error.checker}{Function used to check exercise answers
+(e.g., \code{gradethis::grade_learnr()}).}
 
 \item{exercise.completion}{Use code completion in exercise editors.}
 
