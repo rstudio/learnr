@@ -32,7 +32,7 @@ number of lines in the code chunk).}
 (e.g., \code{gradethis::grade_learnr()}).}
 
 \item{exercise.error.checker}{Function used to check exercise answers
-(e.g., \code{gradethis::grade_learnr()}).}
+(e.g., \code{gradethis::grade_learnr_error()}).}
 
 \item{exercise.completion}{Use code completion in exercise editors.}
 

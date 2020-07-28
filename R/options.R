@@ -14,7 +14,7 @@
 #' @param exercise.checker Function used to check exercise answers
 #'   (e.g., `gradethis::grade_learnr()`).
 #' @param exercise.error.checker Function used to check exercise answers
-#'   (e.g., `gradethis::grade_learnr()`).
+#'   (e.g., `gradethis::grade_learnr_error()`).
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.
