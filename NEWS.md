@@ -14,6 +14,8 @@ learnr (development version)
 * Introduced "setup chunk chaining", which allows a setup chunk to depend on another setup chunk and so on, forming a chain of setup code that can be used for exercises via `exercise.setup`. Run `run_tutorial("setup-chunks", "learnr")` for a demo. ([#390](https://github.com/rstudio/learnr/pull/390))
 * Introduced an [experimental](https://www.tidyverse.org/lifecycle/#experimental) function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document. ([#345](https://github.com/rstudio/learnr/pull/345), [#354](https://github.com/rstudio/learnr/pull/354))
 * For the "forked" evaluator (the default used on Linux), add a limit to the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. ([#353](https://github.com/rstudio/learnr/pull/353))
+* Added an event handler system, with the functions `event_register_handler()` and `one_time()`. There is also a new event `"section_viewed"`, which is triggered when a new section becomes visible. ([#398](https://github.com/rstudio/learnr/pull/398))
+* Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset=TRUE`. Now it a separate event, `"reset_question_submission"`. ([#398](https://github.com/rstudio/learnr/pull/398))
 
 ## Minor new features and improvements
 
