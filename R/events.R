@@ -162,7 +162,7 @@ one_time <- function(session, cond, expr, label = deparse(substitute(cond))) {
   # sessions will use be running, and these event handlers are installed at an
   # app-level (not session-level) scope.
 
-    if (!isTRUE(cond)) {
+  if (!isTRUE(cond)) {
     return()
   }
 
