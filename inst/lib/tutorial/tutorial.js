@@ -1324,6 +1324,15 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       return value;
     },
 
+    setValue: function(el, value) {
+      var editor = ace.edit($(el).attr('id'));
+      editor.getSession().setValue(value.code);
+    },
+
+    getType: function(el) {
+      return "learnr.exercise";
+    },
+
     subscribe: function(el, callback) {
       var binding = this;
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
