@@ -1,199 +1,188 @@
+event_handlers <- new.env(parent = emptyenv())
 
-
-record_event <- function(session, event, data) {
-  recorder <- getOption("tutorial.event_recorder", default = NULL)
-  if (!is.null(recorder)) {
-    recorder(tutorial_id = read_request(session, "tutorial.tutorial_id"),
-             tutorial_version = read_request(session, "tutorial.tutorial_version"),
-             user_id = read_request(session, "tutorial.user_id"),
-             event = event,
-             data = data)
+#' Register an event handler callback
+#'
+#' Register an event handler on a per-tutorial basis. Handlers for an event will
+#' be fired in the order that they were registered.
+#'
+#' In most cases, this will be called within a learnr document. If that is the
+#' case, then the handler will exist as long as the document (that is, the Shiny
+#' application) is running.
+#'
+#' If this function is called in a learnr .Rmd document, it should be in a chunk
+#' with `context="server-start"`. If it is called with `context="server"`, the
+#' handler will be registered at least two times (once for the application as a
+#' whole, and once per user session).
+#'
+#' If this function is called outside of a learnr document, then the handler
+#' will persist until the learnr package is unloaded, typically when the R
+#' session is stopped.
+#'
+#' @param event The name of an event.
+#' @param callback A function to be invoked when an event with a specified name
+#'   occurs. The callback must take parameters `session`, `event`, and `data`.
+#'
+#' @return A function which, if invoked, will remove the callback.
+#'
+#' @export
+event_register_handler <- function(event, callback) {
+  if (!is.function(callback) ||
+      !identical(names(formals(callback)), c("session", "event", "data")))
+  {
+    stop("`callback` must be a function that takes three arguments, `session`, `event`, and `data`.")
   }
-  invisible(NULL)
+
+  if (is.null(event_handlers[[event]])) {
+    event_handlers[[event]] <- list()
+    attr(event_handlers[[event]], "last_id") <- 0
+  }
+
+  id <- attr(event_handlers[[event]], "last_id", TRUE) + 1
+  attr(event_handlers[[event]], "last_id") <- id
+
+  # IDs have names like "0000000001", "0000000002", "0000000003", etc.
+  id_str <- sprintf("%010d", id)
+  event_handlers[[event]][[id_str]] <- callback
+
+  # Use this instead of a local anonymous function, so that we don't capture
+  # `callback`, and other objects in the removal function, which might keep some
+  # objects from getting GC'd.
+  cancel_handler <- create_event_handler_remover(event, id_str)
+
+  # If a handler is registered in a learnr document, then it will last as long
+  # as the document (Shiny app) is running -- it will not be scoped to the
+  # specific user session. This is because these event handlers take `session`
+  # as an argument.
+  if (shiny::isRunning()) {
+    shiny::onStop(cancel_handler, session = NULL)
+  }
+
+  invisible(cancel_handler)
 }
 
-
-broadcast_progress_event_to_client <- function(session, event, data) {
-  session$sendCustomMessage("tutorial.progress_event", list(
-    event = event,
-    data = data
-  ))
-}
-
-broadcast_question_event_to_client <- function(session, label, answer) {
-  broadcast_progress_event_to_client(session = session,
-                                     event = "question_submission",
-                                     data = list(label = label, answer = answer))
-}
-question_submission_event <- function(session,
-                                      label,
-                                      question,
-                                      answer,
-                                      correct) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           answer = answer,
-                           correct = correct))
-
-  # notify client side listeners
-  broadcast_question_event_to_client(session = session,
-                                     label = label,
-                                     answer = answer)
-
-  # store submission for later replay
-  save_question_submission(session = session,
-                           label = label,
-                           question = question,
-                           answer = answer)
-}
-
-reset_question_submission_event <- function(session, label, question) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "question_submission",
-               data = list(label = label,
-                           question = question,
-                           reset = TRUE))
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(
-    session,
-    "question_submission",
-    list(label = label, answer = NULL)
-  )
-
-
-  # store submission for later replay
-  save_reset_question_submission(session = session,
-                           label = label,
-                           question = question)
-}
-
-
-section_skipped_event <- function(session, sectionId) {
-
-  # event data
-  event_data <- list(sectionId = sectionId)
-
-  # notify server-side listeners
-  record_event(session = session,
-               event = "section_skipped",
-               data = event_data)
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(session = session,
-                                     event = "section_skipped",
-                                     data = event_data)
-
-  # save for later replay
-  save_section_skipped(session = session, sectionId = sectionId)
-}
-
-exercise_submitted_event <- function(session,
-                                      id,
-                                      label,
-                                      code,
-                                      restore) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_submitted",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           restore = restore))
-
-  # TODO: we could save the code for later replay in case the evaluation gets interrupted.
-}
-
-exercise_result_event <- function(session,
-                                     id,
-                                     label,
-                                     code,
-                                     output,
-                                     timeout_exceeded,
-                                     time_elapsed,
-                                     error_message,
-                                     checked = FALSE,
-                                     feedback = NULL) {
-  # notify server-side listeners
-  record_event(session = session,
-               event = "exercise_result",
-               data = list(label = label,
-                           id = id,
-                           code = code,
-                           output = output,
-                           timeout_exceeded = timeout_exceeded,
-                           time_elapsed = time_elapsed,
-                           error_message = error_message,
-                           checked = checked,
-                           feedback = feedback))
-
-  # notify client side listeners
-  if (checked)
-    correct <- feedback$correct
-  else
-    correct <- TRUE
-  broadcast_progress_event_to_client(session = session,
-                                     event = "exercise_submission",
-                                     data = list(label = label, correct = correct))
-
-  # save submission for later replay
-  save_exercise_submission(
-    session = session,
-    label = label,
-    code = code,
-    output = output,
-    error_message = error_message,
-    checked = checked,
-    feedback = feedback
+# Clear all event handlers
+event_handlers_reset <- function() {
+  rm(
+    list = ls(event_handlers, all.names = TRUE),
+    envir = event_handlers
   )
 }
 
-video_progress_event <- function(session, video_url, time, total_time) {
-
-  # data for event
-  data <- list(
-    video_url = video_url,
-    time = time,
-    total_time = total_time
-  )
-
-  # notify server side listeners
-  record_event(session = session,
-               event = "video_progress",
-               data = data)
-
-  # notify client side listeners
-  broadcast_progress_event_to_client(session, "video_progress", data)
-
-  # save for later replay
-  save_video_progress(session, video_url, time, total_time)
+# Returns a function which removes an event handler.
+create_event_handler_remover <- function(event, id) {
+  function() {
+    event_remove_handler(event, id)
+  }
 }
 
-session_start_event <- function(session) {
-  record_event(session = session,
-               event = "session_start",
-               data = list())
-}
+# Remove an event handler.
+event_remove_handler <- function(event, id) {
+  if (is.null(event_handlers[[event]]) ||
+      is.null(event_handlers[[event]][[id]]))
+  {
+    return(invisible(FALSE))
+  }
 
-session_stop_event <- function(session) {
-  record_event(session = session,
-               event = "session_stop",
-               data = list())
-}
-
-debug_event_recorder <- function(tutorial_id,
-                                 tutorial_version,
-                                 user_id,
-                                 event,
-                                 data) {
-  cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
-  cat("event: ", event, "\n", sep = "")
-  utils::str(data)
-  cat("\n")
+  event_handlers[[event]][[id]] <- NULL
+  invisible(TRUE)
 }
 
 
+event_trigger <- function(session, event, data = list()) {
+  record_event(session, event, data)
+
+  if (is.null(event_handlers[[event]])) {
+    return(invisible())
+  }
+
+  # Handlers for this named event
+  handlers <- event_handlers[[event]]
+
+  # Invoke all the callbacks for this event.
+  for (handler in handlers) {
+    tryCatch(
+      handler(session, event, data),
+      error = function(e) {
+        warning(conditionMessage(e), .call = FALSE)
+      }
+    )
+  }
+}
+
+
+#' Wrap an expression that will be executed one time in an event handler
+#'
+#' This wraps an expression so that it will be executed one time for a tutorial,
+#' based on some condition. The first time the condition is true, the expression
+#' will be executed; after that, the expression will not be evaluated again.
+#'
+#' The execution state is stored so that if the expression is executed, then the
+#' user quits the tutorial and then returns to it, the expression will not be
+#' executed a second time.
+#'
+#' A common use for `one_time` is to execute an expression when a section is
+#' viewed for the first time.
+#'
+#' @param session A Shiny session object.
+#' @param cond A condition that is used as a filter. The first time the
+#'   condition evaluates to true, `expr` will be evaluated; after that, `expr`
+#'   will not be evaluated again.
+#' @param expr An expression that will be evaluated once, the first time that
+#'   `cond` is true.
+#' @param label A unique identifier. This is used as an ID for the condition and
+#'   expression; if two calls to `one_time()` uses the same label, there will be
+#'   an ID collision and only one of them will execute. By default, `cond` is
+#'   deparsed and used as the label.
+#'
+#' @examples
+#' \dontrun{
+#' # This goes in a {r context="server-start"} chunk
+#'
+#' # The expression with message() will be executed the first time the user
+#' # sees the section with ID "section-exercise-with-hint".
+#' event_register_handler("section_viewed",
+#'   function(session, event, data) {
+#'     one_time(
+#'       session,
+#'       data$sectionId == "section-exercise-with-hint",
+#'       {
+#'         message("Seeing ", data$sectionId, " for the first time.")
+#'       }
+#'     )
+#'   }
+#' )
+#'
+#'
+#' }
+#' @export
+one_time <- function(session, cond, expr, label = deparse(substitute(cond))) {
+  # This is meant to be called within an event handler, instead of being
+  # implemented as an event handler that removes itself. The reason that the
+  # latter method isn't used is because it's possible that two simultaneous user
+  # sessions will use be running, and these event handlers are installed at an
+  # app-level (not session-level) scope.
+
+  if (!isTRUE(cond)) {
+    return()
+  }
+
+  object_id <- ns_wrap("one_time_", digest::digest(label, "xxhash64"))
+
+  if (length(get_object(session = session, object_id = object_id)) == 0) {
+    first_time <- TRUE
+    save_object(
+      session = session,
+      object_id = object_id,
+      data = tutorial_object(
+        type = "one_time",
+        data = list(cond = label)
+      )
+    )
+  } else {
+    first_time <- FALSE
+  }
+
+  if (first_time) {
+    expr
+  }
+}
