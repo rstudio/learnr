@@ -1,66 +1,65 @@
-
-
 # Provide exercise feedback
 feedback <- function(message, correct, type, location) {
-
-  # return validated feedback
   feedback_validated(list(
     message = message,
     correct = correct,
     type = type,
-    location = match.arg(location)
+    location = location
   ))
 }
 
-# return feedback if it's valid, otherwise throw an error
+# return feedback if it's valid (with defaults), otherwise throw an error
 feedback_validated <- function(feedback) {
-
-  if (is.null(feedback))
+  if (!length(feedback)) {
     return(feedback)
-
-  if (!is.character(feedback$message))
-    stop("Feedback must include a 'message' character vector", call. = FALSE)
-
-  if (!is.logical(feedback$correct))
-    stop("Feedback must include a 'correct' logical value", call. = FALSE)
-
+  }
+  if (!(is.list(feedback) && all(c("message", "correct") %in% names(feedback)))) {
+    stop("Feedback must be a list with 'message' and 'correct' fields", call. = FALSE)
+  }
+  if (!is.character(feedback$message)) {
+    stop("The 'message' field of feedback must be a character vector", call. = FALSE)
+  }
+  if (!is.logical(feedback$correct)) {
+    stop("The 'correct' field of feedback must be a logical (i.e., boolean) value", call. = FALSE)
+  }
+  # Fill in type/location defaults and check their value
+  feedback$type <- feedback$type[1] %||% "auto"
+  feedback$location <- feedback$location[1] %||% "append"
   feedback_types <- c("auto", "success", "info", "warning", "error", "custom")
-  if (is.null(feedback$type))
-    feedback$type <- "auto"
-  if (!feedback$type %in% feedback_types)
+  if (!feedback$type %in% feedback_types) {
     stop("Feedback 'type' field must be one of these values: ",
          paste(feedback_types, collapse = ", "), call. = FALSE)
-
+  }
   feedback_locations <- c("append", "prepend", "replace")
-  if (is.null(feedback$location))
-    feedback$location <- "append"
-  if (!feedback$location %in% feedback_locations)
+  if (!feedback$location %in% feedback_locations) {
     stop("Feedback 'location' field must be one of these values: ",
          paste(feedback_locations, collapse = ", "), call. = FALSE)
-
+  }
+  if (feedback$type %in% "auto") {
+    feedback$type <- if (feedback$correct) "success" else "error"
+  }
   feedback
 }
 
-# return feedback as html
 feedback_as_html <- function(feedback) {
-
-  if (is.null(feedback$type) || identical(feedback$type, "auto"))
-    feedback$type <- ifelse(feedback$correct, "success", "error")
-
-  if (feedback$type == "custom") {
-    div(feedback$message)
+  if (!length(feedback)) {
+    return(feedback)
   }
-  else if (feedback$type %in% c("success", "info", "warning", "error")) {
-    if (feedback$type == "error")
-      feedback$type <- "danger"
-    div(class = paste0("alert alert-", feedback$type),
-        role = "alert",
-        feedback$message
-    )
+  feedback <- feedback_validated(feedback)
+  if (feedback$type %in% "custom") {
+    return(div(feedback$message))
   }
-  else {
-    stop("Invalid message type specified.", call. = FALSE)
+  if (feedback$type %in% "error") {
+    feedback$type <- "danger"
   }
+  if (feedback$type %in% c("success", "info", "warning", "danger")) {
+    return(div(
+      role = "alert",
+      class = paste0("alert alert-", feedback$type),
+      feedback$message
+    ))
+  }
+  stop("Invalid message type specified.", call. = FALSE)
 }
 
 # helper function to create tags for error message

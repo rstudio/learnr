@@ -18,7 +18,7 @@ inline_evaluator <- function(expr, timelimit, ...) {
         error = function(e) {
           # TODO: could grepl the error message to determine if the error was due
           # to an exceeded timeout.
-          error_result(e$message, timeout_exceeded = NA)
+          exercise_result_error(e$message, timeout_exceeded = NA)
         }
       )
     },
@@ -111,7 +111,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
           # check if it's an error and convert it to an html error if it is
           if(inherits(result, "try-error"))
-            result <<- error_result(result, timeout_exceeded = FALSE)
+            result <<- exercise_result_error(result, timeout_exceeded = FALSE)
 
           TRUE
         }
@@ -126,7 +126,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           running_exercises <<- running_exercises - 1
 
           # return error result
-          result <<- error_result(timeout_error_message(), timeout_exceeded = TRUE)
+          result <<- exercise_result_timeout()
           TRUE
         }
 
@@ -244,7 +244,7 @@ internal_external_evaluator <- function(
 
             print("Error submitting external exercise:")
             print(err)
-            result <<- error_result("Error submitting external exercise. Please try again later")
+            result <<- exercise_result_error("Error submitting external exercise. Please try again later")
           }
 
           curl::curl_fetch_multi(url, handle = handle, done = done_cb, fail = fail_cb, pool = pool)
@@ -280,7 +280,7 @@ internal_external_evaluator <- function(
           },
           onRejected = function(err){
             print(err)
-            result <<- error_result("Error initiating session for external requests. Please try again later")
+            result <<- exercise_result_error("Error initiating session for external requests. Please try again later")
           }
         )
       },
