@@ -6,8 +6,7 @@ learnr (development version)
 * Renamed the `exercise_submission` event to `exercise_result` and added the following fields:
   1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
-  3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
-  
+  3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))  
 * If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don't provide a `-code-check` chunk). ([#403](https://github.com/rstudio/learnr/pull/403))
 
 ## New features
@@ -16,6 +15,8 @@ learnr (development version)
 * Introduced an [experimental](https://www.tidyverse.org/lifecycle/#experimental) function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document. ([#345](https://github.com/rstudio/learnr/pull/345), [#354](https://github.com/rstudio/learnr/pull/354))
 * For the "forked" evaluator (the default used on Linux), add a limit to the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. ([#353](https://github.com/rstudio/learnr/pull/353))
 * Added a new `tutorial_options()`, namely `exercise.error.checker`, for customizing feedback when exercise submission code produces an evaluation error. This option accepts a function with the same arguments as `exercise.checker`. Use `gradethis::grade_learnr_error()` for a sensible default for this option. ([#403](https://github.com/rstudio/learnr/pull/403))
+* Added an event handler system, with the functions `event_register_handler()` and `one_time()`. There is also a new event `"section_viewed"`, which is triggered when a new section becomes visible. ([#398](https://github.com/rstudio/learnr/pull/398))
+* Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset=TRUE`. Now it a separate event, `"reset_question_submission"`. ([#398](https://github.com/rstudio/learnr/pull/398))
 
 ## Minor new features and improvements
 

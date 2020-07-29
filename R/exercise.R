@@ -88,12 +88,15 @@ setup_exercise_handler <- function(exercise_rx, session) {
     ex_id <- random_id("lnr_ex")
 
     # fire event before computing
-    exercise_submitted_event(
-      session = session,
-      id = ex_id,
-      label = exercise$label,
-      code = exercise$code,
-      restore = exercise$restore
+    event_trigger(
+      session,
+      "exercise_submitted",
+      data = list(
+        label   = exercise$label,
+        id      = ex_id,
+        code    = exercise$code,
+        restore = exercise$restore
+      )
     )
 
     start <- Sys.time()
@@ -110,17 +113,20 @@ setup_exercise_handler <- function(exercise_rx, session) {
         result <- evaluator$result()
 
         # fire event with evaluation result
-        exercise_result_event(
-          session = session,
-          id = ex_id,
-          label = exercise$label,
-          code = exercise$code,
-          output = result$html_output,
-          timeout_exceeded = result$timeout_exceeded,
-          time_elapsed = as.numeric(difftime(Sys.time(), start, units="secs")),
-          error_message = result$error_message,
-          checked = !is.null(exercise$code_check) || !is.null(exercise$check),
-          feedback = result$feedback
+        event_trigger(
+          session,
+          "exercise_result",
+          data = list(
+            label            = exercise$label,
+            id               = ex_id,
+            code             = exercise$code,
+            output           = result$html_output,
+            timeout_exceeded = result$timeout_exceeded,
+            time_elapsed     = as.numeric(difftime(Sys.time(), start, units="secs")),
+            error_message    = result$error_message,
+            checked          = !is.null(exercise$code_check) || !is.null(exercise$check),
+            feedback         = result$feedback
+          )
         )
 
         # assign reactive result value

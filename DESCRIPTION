@@ -38,7 +38,8 @@ Imports:
     checkmate,
     renv (>= 0.8.0),
     curl,
-    promises
+    promises,
+    digest
 Remotes: rstudio/htmltools
 Encoding: UTF-8
 LazyData: true

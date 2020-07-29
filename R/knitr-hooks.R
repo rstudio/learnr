@@ -268,6 +268,9 @@ install_knitr_hooks <- function() {
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
 
+        # remove class of "knitr_strict_list" so serializing works properly for external evaluators
+        class(options) <- NULL
+
         exercise_cache <- list(chunks = all_chunks,
                                code_check = code_check_chunk,
                                check = check_chunk,
