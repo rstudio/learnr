@@ -11,7 +11,10 @@
 #'   (defaults to \code{30}).
 #' @param exercise.lines Lines of code for exercise editor (defaults to the
 #'   number of lines in the code chunk).
-#' @param exercise.checker Function used to check exercise answers.
+#' @param exercise.checker Function used to check exercise answers
+#'   (e.g., `gradethis::grade_learnr()`).
+#' @param exercise.error.checker Function used to check exercise answers
+#'   (e.g., `gradethis::grade_learnr_error()`).
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.
@@ -22,6 +25,7 @@ tutorial_options <- function(exercise.cap = "Code",
                              exercise.timelimit = 30,
                              exercise.lines = NULL,
                              exercise.checker = NULL,
+                             exercise.error.checker = NULL,
                              exercise.completion = TRUE,
                              exercise.diagnostics = TRUE,
                              exercise.startover = TRUE)
@@ -35,6 +39,7 @@ tutorial_options <- function(exercise.cap = "Code",
   eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
   eval(parse(text = sprintf(set_option_code, "exercise.lines")))
   eval(parse(text = sprintf(set_option_code, "exercise.checker")))
+  eval(parse(text = sprintf(set_option_code, "exercise.error.checker")))
   eval(parse(text = sprintf(set_option_code, "exercise.completion")))
   eval(parse(text = sprintf(set_option_code, "exercise.diagnostics")))
   eval(parse(text = sprintf(set_option_code, "exercise.startover")))
