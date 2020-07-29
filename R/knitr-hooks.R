@@ -148,6 +148,15 @@ install_knitr_hooks <- function() {
            call. = FALSE)
     }
 
+    # validate that the exercise chunk is 'defined'
+    if (exercise_chunk && is.null(get_knitr_chunk(options$label))) {
+      stop(
+        "The exercise chunk '", options$label, "' doesn't have anything inside of it. ",
+        "Try adding empty line(s) inside the code chunk.",
+        call. = FALSE
+      )
+    }
+
     # if this is an exercise chunk then set various options
     if (exercise_chunk) {
 
