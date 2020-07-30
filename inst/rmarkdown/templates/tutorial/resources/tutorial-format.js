@@ -11,7 +11,32 @@ $(document).ready(function() {
     var scrollLastSectionToView = false;
     var scrollLastSectionPosition = 0;
 
-    function setCurrentTopic(topicIndex) {
+    // Callbacks that are triggered when setCurrentTopic() is called.
+    var setCurrentTopicNotifiers = (function() {
+      notifiers = [];
+
+      return {
+        add: function(id, callback) {
+          notifiers.push({id: id, callback: callback});
+        },
+        remove: function(id) {
+          notifiers = notifiers.filter(function(x) {
+            return id !== x.id;
+          });
+        },
+        invoke: function() {
+          for(var i = 0; i < notifiers.length; i++) {
+            notifiers[i].callback();
+          }
+        }
+      };
+    })();
+
+
+    function setCurrentTopic(topicIndex, notify) {
+      if (typeof(notify) === "undefined") {
+        notify = true;
+      }
       if (topics.length === 0) return;
 
       topicIndex = topicIndex * 1;  // convert strings to a number
@@ -32,6 +57,10 @@ $(document).ready(function() {
       currentEl.trigger('shown');
       $(topics[topicIndex].jqListElement).addClass('current');
       currentTopicIndex = topicIndex;
+
+      if (notify) {
+        setCurrentTopicNotifiers.invoke();
+      }
 
       // always start a topic with a the scroll pos at the top
       // we do this in part to prevent the scroll to view behavior of hash navigation
@@ -180,7 +209,7 @@ $(document).ready(function() {
     // build the list of topics in the document
     // and create/adorn the DOM for them as needed
     function buildTopicsList() {
-      var topicsList = $('<div class="topicsList hideFloating"></div>');
+      var topicsList = $('<div id="tutorial-topic" class="topicsList hideFloating"></div>');
 
       var topicsHeader = $('<div class="topicsHeader"></div>');
       topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'));
@@ -319,6 +348,35 @@ $(document).ready(function() {
       return topicsList;
 
     }
+
+  // topicMenuInputBinding
+  // ------------------------------------------------------------------
+  // This keeps tracks of what topic is selected
+  var topicMenuInputBinding = new Shiny.InputBinding();
+  $.extend(topicMenuInputBinding, {
+    find: function(scope) {
+      return $(scope).find('.topicsList');
+    },
+    getValue: function(el) {
+      return topics[currentTopicIndex].id;
+    },
+    setValue: function(el, value) {
+      for (var i = 0; i < topics.length; i++) {
+        if (topics[i].id == value) {
+          setCurrentTopic(i, false);
+          break;
+        }
+      }
+    },
+    subscribe: function(el, callback) {
+      setCurrentTopicNotifiers.add(el.id, callback);
+    },
+    unsubscribe: function(el) {
+      setCurrentTopicNotifiers.remove(el.id);
+    }
+  });
+  Shiny.inputBindings.register(topicMenuInputBinding, 'learnr.topicMenuInputBinding');
+
 
     // transform the DOM here
   function transformDOM() {
