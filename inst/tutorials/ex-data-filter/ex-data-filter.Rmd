@@ -170,7 +170,7 @@ Here are four more tips to help you use logical tests and Boolean operators in R
 
 Missing values can make comparisons tricky in R. R uses `NA` to represent missing or unknown values. `NA`s are "contagious" because almost any operation involving an unknown value (`NA`) will also be unknown (`NA`). For example, can you determine what value these expressions that use missing values should evaluate to? Make a prediction and then click "Submit Answer".
 
-```{r nas, exercise = TRUE, evaluate.exercise = FALSE}
+```{r nas, exercise = TRUE}
 NA > 5
 10 == NA
 NA + 10
