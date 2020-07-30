@@ -33,7 +33,7 @@ learnr (development version)
 * Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
 * Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value. ([#376](https://github.com/rstudio/learnr/pull/376))
 * Fixed exercise progress spinner being prematurely cleared. ([#384](https://github.com/rstudio/learnr/pull/384))
-* Render tutorials in a temp directory if the R user does not have write permissions. ([#347](https://github.com/rstudio/learnr/issues/347))
+* Updated `run_tutorial()` to render tutorials in a temp directory if the R user does not have write permissions. ([#347](https://github.com/rstudio/learnr/issues/347))
 
 learnr 0.10.1
 ===========
