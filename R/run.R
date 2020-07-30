@@ -63,12 +63,13 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
           }
         }, add = TRUE)
         # write to the test file
-        cat("test", file = tmp_save_file)
+        suppressWarnings(cat("test", file = tmp_save_file))
         # if no errors have occurred, return an empty list of render_args
         list()
       })
     }, error = function(e) {
       # Could not write in the tutorial folder
+      message("Rendering tutorial in a temp folder as `learnr` does not have write permissions in the tutorial folder: ", tutorial_path)
 
       # Set rmarkdown args to render in tmp dir
       # This will cause the tutorial to be re-rendered in each R session
