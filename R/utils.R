@@ -98,3 +98,12 @@ knitr_engine <- function(engine) {
   tolower(engine %||% "r")
 }
 
+is_installed <- function(package, version = NULL) {
+  if (system.file(package = package) == "") {
+    return(FALSE)
+  }
+  if (!is.null(version) && packageVersion(package) < version) {
+    return(FALSE)
+  }
+  TRUE
+}
