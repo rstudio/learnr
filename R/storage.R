@@ -279,6 +279,9 @@ tutorial_storage <- function(session) {
 
   # function to determine "auto" storage
   auto_storage <- function() {
+    if (getOption("shiny.testmode", default = FALSE)) {
+      return(no_storage())
+    }
     location <- read_request(session, "tutorial.http_location")
     if (is_localhost(location))
       local_storage
