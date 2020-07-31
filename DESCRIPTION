@@ -40,7 +40,9 @@ Imports:
     curl,
     promises,
     digest
-Remotes: rstudio/htmltools
+Remotes:
+    rstudio/htmltools,
+    rstudio/shinytest
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
