@@ -187,7 +187,7 @@ register_http_handlers <- function(session, metadata) {
     settings <- utils::rc.settings()
     utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
                        ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
-                       argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
+                       argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = FALSE)
     on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
 
     # temporarily attach global setup to search path
