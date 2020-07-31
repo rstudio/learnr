@@ -280,6 +280,8 @@ tutorial_storage <- function(session) {
   # function to determine "auto" storage
   auto_storage <- function() {
     if (getOption("shiny.testmode", default = FALSE)) {
+      # With shinytest, we don't want to restore state; start with a clean slate
+      # each time.
       return(no_storage())
     }
     location <- read_request(session, "tutorial.http_location")
