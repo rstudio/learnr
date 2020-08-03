@@ -33,10 +33,6 @@ executed a second time.
 
 A common use for \code{one_time} is to execute an expression when a section is
 viewed for the first time.
-
-Technical note: This is meant to be called within an event handler, instead
-of being implemented as an event handler that removes itself. The reason that
-the latter method isn't used is because it's possible that two users
 }
 \examples{
 \dontrun{
