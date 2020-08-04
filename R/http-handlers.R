@@ -184,6 +184,9 @@ register_http_handlers <- function(session, metadata) {
                       function.suffix = "(")
     on.exit(do.call(utils::rc.options, as.list(options)), add = TRUE)
 
+    # If and when exercises gain access to files, then we should evaluate this
+    # code in the exercise dir with `quotes = TRUE` (and sanitize to keep
+    # filename lookup local to exercise dir)
     settings <- utils::rc.settings()
     utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
                        ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
