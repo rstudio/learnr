@@ -182,200 +182,136 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
-  if (
-    !nzchar(
-      str_trim(paste0(exercise$code, collapse = "\n"))
-    )
-  ) {
-    return(empty_result())
+  if (!nzchar(str_trim(paste0(exercise$code, collapse = "\n")))) {
+    # " " since html_output needs to pass a req()
+    return(exercise_result(html_output = " "))
   }
 
   if (evaluate_global_setup) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-  # capture a copy of the envir before any execution is done
   envir_prep <- duplicate_env(envir)
 
-  # "global" err object to look for
-  err <- NULL
-  get_checker <- function() {
-    checker <- exercise$options$exercise.checker
-    if (is.function(checker)) {
-      environment(checker) <- envir_prep
-    } else if (!is.null(checker)) {
-      warning("Found a exercise.checker that isn't a function", call. = FALSE)
-      checker <- NULL
-    }
-    checker
-  }
-
-  # get the checker & see if we need to do code checking
-  checker <- get_checker()
-  if (!is.null(exercise$code_check) && is.function(checker)) {
-
-    # call the checker
-    tryCatch({
-      checker_feedback <- checker(
-        label = exercise$label,
-        user_code = exercise$code,
-        solution_code = exercise$solution,
-        check_code = exercise$code_check,
-        envir_result = NULL,
-        evaluate_result = NULL,
-        envir_prep = envir_prep,
-        last_value = NULL
-      )
-    }, error = function(e) {
-      err <<- e$message
-      message("Error occured while evaluating initial 'exercise.checker'. Error:\n", e)
-    })
-    if (!is.null(err)) {
-      return(error_result("Error occured while evaluating initial 'exercise.checker'."))
-    }
-
-    # if it's an 'incorrect' feedback result then return it
-    if (is.list(checker_feedback)) {
-      feedback_validated(checker_feedback)
-      if (!checker_feedback$correct) {
-        return(list(
-          feedback = checker_feedback,
-          error_message = NULL,
-          timeout_exceeded = FALSE,
-          html_output = feedback_as_html(checker_feedback)
-        ))
-      }
-    }
-  }
-
-  # create temp dir for execution (remove on exit)
-  exercise_dir <- tempfile(pattern = "learnr-tutorial-exercise")
+  # Setup a temporary directory for rendering the exercise
+  exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
-  oldwd <- setwd(exercise_dir)
-  on.exit({
-    setwd(oldwd)
-    unlink(exercise_dir, recursive = TRUE)
-  }, add = TRUE)
+  on.exit(unlink(exercise_dir), add = TRUE)
 
-  # helper function to return "key=value" character for knitr options
-  equal_separate_opts <- function(opts) {
-    if (length(opts) == 0) {
-      return(NULL)
-    }
-    paste0(names(opts), "=", unname(opts))
-  }
-
-  # helper function that unpacks knitr chunk options and
-  # returns a single character vector (e.g. "tidy=TRUE, prompt=FALSE")
-  # `preserved_opts` are options that user supplied in Rmd
-  # `inherited_opts` are exercise options
-  # `static_opts` are list of manually set options, e.g. list(include=FALSE) for setup chunks.
-  unpack_options <- function(preserved_opts, inherited_opts, static_opts = list()) {
-    # note: we quote each option's value if its type is a character, else return as is
-    # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
-    static_opts <- lapply(static_opts, dput_to_string)
-    inherited_opts <- lapply(inherited_opts, dput_to_string)
-    # get all the unique names of the options
-    option_names <- unique(c(names(preserved_opts), names(inherited_opts), names(static_opts)))
-    opts <- lapply(option_names, function(option_name) {
-      # first we want manually set options, then user's, then exercise
-      static_opts[[option_name]]  %||%
-      preserved_opts[[option_name]] %||%
-      inherited_opts[[option_name]]
-    })
-    # since we manually grab the names, set the names to opts
-    names(opts) <- option_names
-    # filter out options we don't need for the exercise.Rmd
-    opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
-    opts <- opts[!grepl("^exercise", names(opts))]
-    equal_separate_opts(opts)
-  }
-
-  # construct a global setup chunk to set knitr options
-  knitr_setup_header <- "```{r learnr-setup, include=FALSE}"
-  # hack the pager function so that we can print help with custom pager function
-  # http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
-  knitr_setup_body <- paste0(
-    # the options restoration is done after processing the exercise.Rmd
-    c("options(pager=function(files, header, title, delete.file) {
-        all.str <- do.call(\"c\",lapply(files,readLines))
-        cat(all.str,sep=\"\\n\")
-      })",
-      "knitr::opts_chunk$set(echo = FALSE)",
-      "knitr::opts_chunk$set(comment = NA)",
-      "knitr::opts_chunk$set(error = FALSE)"),
-    collapse = "\n"
-  )
-  knitr_setup_footer <- "\n```"
-  knitr_setup_rmd <- paste0(c(knitr_setup_header, knitr_setup_body, knitr_setup_footer), collapse = "\n")
-
-  # helper function that processes a list of raw setup chunks and
-  # returns a single character vector of knitr chunks for an Rmd file
-  get_chunk_rmds <- function(chunks) {
-    if (is.null(chunks)) return(NULL)
-    setup_rmds <- vapply(chunks, character(1), FUN = function(chunk_info) {
-        # construct the knitr Rmd for exercise and its setup chunks
-        # handle exercise chunk differently from setup chunks
-        if (identical(chunk_info$label, exercise$label)) {
-          # grab exercise code
-          code <- exercise$code
-          # manually set exercise relevant options, disable other options
-          static_opts <- list(include = TRUE,
-                              eval = TRUE,
-                              echo = FALSE,
-                              tutorial = NULL,
-                              cache = FALSE,
-                              child = NULL
-          )
-          # construct a character of all of the options
-          opts <- unpack_options(
-            preserved_opts = chunk_info$opts,
-            inherited_opts = exercise$options,
-            static_opts = static_opts
-          )
-        } else {
-          # grab setup code
-          code <- chunk_info$code
-          # set `include` to false for setup chunks to prevent printing last value
-          static_opts <- list(include = FALSE)
-          # for setup chunk, we don't include any exercise options (inherited_opts)
-          opts <- unpack_options(
-            preserved_opts = chunk_info$opts,
-            inherited_opts = list(),
-            static_opts = static_opts
-          )
-        }
-        # if there's an engine option it's non-R code
-        engine <- chunk_info$engine
-        # we quote the label to ensure that it is treated as a label and not a symbol for instance
-        label_opts <- paste0(c(engine, dput_to_string(chunk_info$label), opts), collapse = ", ")
-        paste(
-          paste0("```{", label_opts, "}"),
-          paste0(code, collapse = "\n"),
-          "```",
-          sep = "\n"
-        )
-      }
+  checker_feedback <- NULL
+  # Run the checker pre-evaluation _if_ there is code checking to do
+  if (length(exercise$code_check)) {
+    checker_feedback <- try_checker(
+      exercise, "exercise.checker",
+      check_code = exercise$code_check,
+      envir_result = NULL,
+      evaluate_result = NULL,
+      envir_prep = envir_prep,
+      last_value = NULL
     )
-    paste0(setup_rmds, sep = "\n")
+    if (is_exercise_result(checker_feedback)) {
+      return(checker_feedback)
+    }
   }
 
-  # construct the exercise chunks
-  exercise_rmds <- get_chunk_rmds(exercise$chunks)
-  code <- c(knitr_setup_rmd, exercise_rmds)
+  # Resolve knitr options for the exercise and setup chunks
+  rmd_results <- withr::with_dir(exercise_dir, render_exercise(exercise, envir, envir_prep))
 
-  # write the final Rmd to process with `rmarkdown::render` later
-  exercise_rmd <- "exercise.Rmd"
-  writeLines(code, con = exercise_rmd, useBytes = TRUE)
+  if (is_exercise_result(rmd_results)) {
+    return(rmd_results)
+  }
 
-  # create html_fragment output format with forwarded knitr options
+  # Run the checker post-evaluation (for checking code results)
+  if (length(exercise$check)) {
+    checker_feedback <- try_checker(
+      exercise, "exercise.checker",
+      check_code = exercise$check,
+      envir_result = envir,
+      evaluate_result = rmd_results$evaluate_result,
+      envir_prep = envir_prep,
+      last_value = rmd_results$last_value
+    )
+  }
+
+  # include any checker feedback with the exercise results
+  exercise_result(
+    feedback = checker_feedback$feedback,
+    html_output = rmd_results$html_output
+  )
+}
+
+
+try_checker <- function(exercise, name, check_code, envir_result,
+                        evaluate_result, envir_prep, last_value,
+                        html_output) {
+  checker_func <- get_checker_func(exercise, name, envir_prep)
+  checker_args <- names(formals(checker_func))
+  args <- list(
+    label = exercise$label,
+    user_code = exercise$code,
+    solution_code = exercise$solution,
+    check_code = check_code,
+    envir_result = envir_result,
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep,
+    last_value = last_value
+  )
+  # Throw better error messaging if the checker function signature is ill-defined
+  missing_args <- setdiff(names(args), checker_args)
+  if (length(missing_args) && !"..." %in% checker_args) {
+    msg <- sprintf(
+      "Either add ... or the following arguments to the '%s' function: '%s'",
+      name, paste(missing_args, collapse = "', '")
+    )
+    message(msg)
+    return(exercise_result_error(msg))
+  }
+
+  # Call the check function
+  feedback <- tryCatch(
+    do.call(checker_func, args),
+    error = function(e) {
+      msg <- paste("Error occurred while evaluating", sprintf("'%s'", name))
+      message(msg, ": ", conditionMessage(e))
+      exercise_result_error(msg)
+    }
+  )
+  # If checker code fails, return an error result
+  if (is_error_result(feedback)) {
+    return(feedback)
+  }
+  # If checker doesn't return anything, there's no exercise result to return
+  if (length(feedback)) {
+    exercise_result(feedback)
+  } else {
+    feedback
+  }
+}
+
+
+get_checker_func <- function(exercise, name, envir) {
+  func <- exercise$options[[name]]
+  if (is.function(func)) {
+    environment(func) <- envir
+    return(func)
+  }
+  if (!is.null(func)) {
+    warning("Ignoring the ", name, " option since it isn't a function", call. = FALSE)
+  }
+  function(...) NULL
+}
+
+
+render_exercise <- function(exercise, envir, envir_prep) {
+  # Make sure exercise (& setup) chunk options and code are prepped for rendering
+  exercise <- prepare_exercise(exercise)
+  # start constructing knitr_options for the output format
   knitr_options <- rmarkdown::knitr_options_html(
     fig_width = exercise$options$fig.width,
     fig_height = exercise$options$fig.height,
     fig_retina = exercise$options$fig.retina,
     keep_md = FALSE
   )
-
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
@@ -383,14 +319,11 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   #   arguments, the second argument indicates whether the value is visible.
   last_value <- NULL
   last_value_is_visible <- TRUE
-
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate = function(
-    code, envir, ...,
-    output_handler # knitr's output_handler
+  knitr_options$knit_hooks$evaluate <- function(
+    code, envir, ..., output_handler # knitr's output_handler
   ) {
     has_visible_arg <- length(formals(output_handler$value)) > 1
-
     # wrap `output_handler$value` to be able to capture the `last_value`
     # while maintaining the original functionality of `output_handler$value`
     output_handler_value_fn <- output_handler$value
@@ -408,174 +341,157 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
         }
       }
     }
-
     evaluate_result <<- evaluate::evaluate(
       code, envir, ...,
       output_handler = output_handler
     )
-
     evaluate_result
   }
+
+  # Put the exercise in a minimal HTML doc
   output_format <- rmarkdown::output_format(
     knitr = knitr_options,
     pandoc = NULL,
     base_format = rmarkdown::html_fragment(
-                    df_print = exercise$options$exercise.df_print,
-                    pandoc_args = c("--metadata", "title=PREVIEW")
-                  )
+      df_print = exercise$options$exercise.df_print,
+      pandoc_args = c("--metadata", "title=PREVIEW")
+    )
   )
+  rmd_src <- c(
+    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
+    "", exercise_code_chunks(exercise)
+  )
+  rmd_file <- "exercise.Rmd"
+  writeLines(rmd_src, con = rmd_file, useBytes = TRUE)
 
-  # knit the Rmd to markdown (catch and report errors)
-  tryCatch({
-    # make sure the exercise did not alter global options
-    output_file <- local({
-      opts <- options()
-      on.exit({ options(opts) }, add = TRUE)
-      rmarkdown::render(
-        input = exercise_rmd,
-        output_format = output_format,
-        envir = envir,
-        clean = FALSE,
-        quiet = TRUE,
-        run_pandoc = FALSE
-      )
-    })
+  # First, Rmd to markdown (and exit early if any error)
+  output_file <- tryCatch({
+    rmarkdown::render(
+      input = rmd_file,
+      output_format = output_format,
+      envir = envir,
+      clean = FALSE,
+      quiet = TRUE,
+      run_pandoc = FALSE
+    )
   }, error = function(e) {
+    msg <- conditionMessage(e)
     # make the time limit error message a bit more friendly
-    err <<- e$message
-    pattern <- gettext("reached elapsed time limit", domain="R")
-    if (regexpr(pattern, err) != -1L) {
-      err <<- timeout_error_message()
+    pattern <- gettext("reached elapsed time limit", domain = "R")
+    if (grepl(pattern, msg, fixed = TRUE)) {
+      return(exercise_result_timeout())
+    }
+    # Run the condition through an error checker (the exercise could be to throw an error!)
+    checker_feedback <- try_checker(
+      exercise, "exercise.error.checker",
+      check_code = exercise$check,
+      envir_result = envir,
+      evaluate_result = evaluate_result,
+      envir_prep = envir_prep,
+      last_value = e
+    )
+    if (is_exercise_result(checker_feedback)) {
+      checker_feedback
+    } else {
+      exercise_result_error(msg)
     }
   })
-  if (!is.null(err)) {
-    return(error_result(err))
+
+  if (is_exercise_result(output_file)) {
+    return(output_file)
   }
 
-  # capture and filter dependencies
-  dependencies <- attr(output_file, "knit_meta")
-  dependencies <- filter_dependencies(dependencies)
-
-  # render the markdown
-  output_file <- rmarkdown::render(input = output_file,
-                                   output_format = output_format,
-                                   envir = envir,
-                                   quiet = TRUE,
-                                   clean = FALSE)
+  # Render markdown to HTML
+  dependencies <- filter_dependencies(attr(output_file, "knit_meta"))
+  output_file <- rmarkdown::render(
+    input = output_file, output_format = output_format,
+    envir = envir, quiet = TRUE, clean = FALSE
+  )
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
-  output <- paste(output, collapse = "\n")
-
-
-  # capture output as HTML w/ dependencies
   html_output <- htmltools::attachDependencies(
-    htmltools::HTML(output),
+    htmltools::HTML(paste(output, collapse = "\n")),
     dependencies
   )
 
-  checker_feedback <- NULL
-  if (!is.null(exercise$check) && is.function(checker)) {
-    # call the checker
-    tryCatch({
-      checker_feedback <- checker(
-        label = exercise$label,
-        user_code = exercise$code,
-        solution_code = exercise$solution,
-        check_code = exercise$check, # use the cached checker for exercise
-        envir_result = envir,
-        evaluate_result = evaluate_result,
-        envir_prep = envir_prep,
-        last_value = last_value
-      )
-    }, error = function(e) {
-      err <<- e$message
-      message("Error occured while evaluating 'exercise.checker'. Error:\n", e)
-    })
-    if (!is.null(err)) {
-      return(error_result("Error occured while evaluating 'exercise.checker'."))
-    }
+  if (!last_value_is_visible && isTRUE(exercise$options$exercise.warn_invisible)) {
+    invisible_feedback <- list(
+      message = "The submitted code didn't produce a visible value, so exercise checking may not work correctly.",
+      type = "warning", correct = FALSE
+    )
+    html_output <- htmltools::tagList(
+      feedback_as_html(invisible_feedback),
+      html_output
+    )
   }
 
-
-  # validate the feedback
-  feedback_validated(checker_feedback)
-
-  # amend output with feedback as required
-  feedback_html <-
-    if (!is.null(checker_feedback)) {
-      feedback_as_html(checker_feedback)
-    } else {
-      NULL
-    }
-
-  warn_invisible_result <- isTRUE(exercise$options$exercise.warn_invisible)
-
-  if (
-    # if the last value was invisible
-    !last_value_is_visible &&
-    # if the warn invisible is set
-    warn_invisible_result
-  ) {
-    # works with NULL feedback
-    feedback_html <- htmltools::tagList(feedback_html, invisible_feedback())
-  }
-
-  if (!is.null(feedback_html)) {
-    # if no feedback, append invisible_feedback
-    feedback_location <- checker_feedback$location %||% "append"
-    if (feedback_location == "append") {
-      html_output <- htmltools::tagList(html_output, feedback_html)
-    } else if (feedback_location == "prepend") {
-      html_output <- htmltools::tagList(feedback_html, html_output)
-    } else if (feedback_location == "replace") {
-      html_output <- feedback_html
-    }
-  }
-
-  # return a list with the various results of the expression
   list(
-    feedback = checker_feedback,
-    error_message = NULL,
-    timeout_exceeded = FALSE,
+    evaluate_result = evaluate_result,
+    last_value = last_value,
     html_output = html_output
   )
 }
 
-empty_result <- function() {
-  list(
-    feedback = NULL,
-    error_message = NULL,
-    timeout_exceeded = FALSE,
-    html_output = NULL
+exercise_code_chunks <- function(exercise) {
+  vapply(exercise$chunks, function(x) {
+    opts <- paste(names(x$opts), unname(x$opts), sep = "=")
+    paste(
+      sep = "\n",
+      # we quote the label to ensure that it is treated as a label and not a symbol for instance
+      sprintf("```{%s}", paste0(c(x$engine, dput_to_string(x$label), opts), collapse = ", ")),
+      paste0(x$code, collapse = "\n"),
+      "```"
+    )
+  }, character(1))
+}
+
+
+exercise_result_timeout <- function() {
+  exercise_result_error(
+    "Error: Your code ran longer than the permitted timelimit for this exercise.",
+    timeout_exceeded = TRUE
   )
 }
+
 # @param timeout_exceeded represents whether or not the error was triggered
 #   because the exercise exceeded the timeout. Use NA if unknown
-error_result <- function(error_message, timeout_exceeded=NA) {
-  list(
-    feedback = NULL,
+exercise_result_error <- function(error_message, feedback = NULL, timeout_exceeded = NA) {
+  exercise_result(
+    feedback = feedback,
     timeout_exceeded = timeout_exceeded,
     error_message = error_message,
     html_output = error_message_html(error_message)
   )
 }
-invisible_feedback <- function() {
-  feedback_as_html(
-    feedback_validated(
-      list(
-        message = "Note: Last value being returned is invisible. See `?invisible` for more information",
-        type = "warning",
-        correct = FALSE,
-        location = "append"
+
+exercise_result <- function(feedback = NULL, html_output = NULL,
+                            error_message = NULL, timeout_exceeded = FALSE) {
+  feedback <- feedback_validated(feedback)
+  feedback_html <- feedback_as_html(feedback)
+
+  structure(
+    list(
+      feedback = feedback,
+      error_message = error_message,
+      timeout_exceeded = timeout_exceeded,
+      html_output = switch(
+        feedback$location %||% "append",
+        append = htmltools::tagList(html_output, feedback_html),
+        prepend = htmltools::tagList(feedback_html, html_output),
+        replace = feedback_html,
+        stop("Feedback location of ", feedback$location, " not supported")
       )
-    )
+    ),
+    class = "learnr_exercise_result"
   )
 }
 
-timeout_error_message <- function() {
-  paste("Error: Your code ran longer than the permitted time",
-        "limit for this exercise.")
+is_exercise_result <- function(x) {
+  inherits(x, "learnr_exercise_result")
 }
 
+is_error_result <- function(x) {
+  is_exercise_result(x) && length(x$error_message)
+}
 
 filter_dependencies <- function(dependencies) {
   # purge dependencies that aren't in a package (to close off reading of
@@ -592,4 +508,54 @@ filter_dependencies <- function(dependencies) {
       ))
     }
   })
+}
+
+
+prepare_exercise <- function(exercise) {
+  exercise$chunks <- lapply(exercise$chunks, function(chunk) {
+    isExercise <- identical(chunk$label, exercise$label)
+    chunk$opts <- merge_options(
+      preserved_opts = chunk$opts,
+      # don't include the exercise options in setup chunks
+      inherited_opts = if (isExercise) exercise$options else list(),
+      static_opts = if (isExercise) {
+        list(
+          eval = TRUE, echo = FALSE, tutorial = NULL,
+          cache = FALSE, child = NULL
+        )
+      } else {
+        # don't include results in setup chunks
+        list(include = FALSE)
+      }
+    )
+    # Move over user submission code to the pre-rendered chunk object
+    if (isExercise) {
+      chunk$code <- exercise$code
+    }
+    chunk
+  })
+  exercise
+}
+
+# `preserved_opts` are options that user supplied in Rmd
+# `inherited_opts` are exercise options
+# `static_opts` are list of manually set options, e.g. list(include=FALSE) for setup chunks.
+merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) {
+  # note: we quote each option's value if its type is a character, else return as is
+  # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
+  static_opts <- lapply(static_opts, dput_to_string)
+  inherited_opts <- lapply(inherited_opts, dput_to_string)
+  # get all the unique names of the options
+  option_names <- unique(c(names(preserved_opts), names(inherited_opts), names(static_opts)))
+  opts <- lapply(option_names, function(option_name) {
+    # first we want manually set options, then user's, then exercise
+    static_opts[[option_name]]  %||%
+      preserved_opts[[option_name]] %||%
+      inherited_opts[[option_name]]
+  })
+  # since we manually grab the names, set the names to opts
+  names(opts) <- option_names
+  # filter out options we don't need for the exercise.Rmd
+  opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
+  opts[!grepl("^exercise", names(opts))]
 }
