@@ -358,6 +358,7 @@ $(document).ready(function() {
       return $(scope).find('.topicsList');
     },
     getValue: function(el) {
+      if (currentTopicIndex == -1) return null;
       return topics[currentTopicIndex].id;
     },
     setValue: function(el, value) {
