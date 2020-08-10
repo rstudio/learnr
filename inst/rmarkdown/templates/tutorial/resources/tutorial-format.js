@@ -154,6 +154,8 @@ $(document).ready(function() {
     }
 
     function handleSkipClick(event) {
+      $(this).data('n_clicks', $(this).data('n_clicks') + 1)
+
       var sectionId = this.getAttribute('data-section-id');
       // get the topic & section indexes
       var topicIndex = -1;
@@ -284,7 +286,12 @@ $(document).ready(function() {
         sectionsDOM.each( function( sectionIndex, sectionElement) {
 
           if (topic.progressiveReveal) {
-            var continueButton = $('<button class="btn btn-default skip" data-section-id="' + sectionElement.id + '">Continue</button>');
+            var continueButton = $(
+              '<button class="btn btn-default skip" id="' +
+              'continuebutton-' + sectionElement.id +
+              '" data-section-id="' + sectionElement.id + '">Continue</button>'
+            );
+            continueButton.data('n_clicks', 0);
             continueButton.on('click', handleSkipClick);
             var actions = $('<div class="exerciseActions"></div>');
             actions.append(continueButton);
@@ -377,6 +384,41 @@ $(document).ready(function() {
     }
   });
   Shiny.inputBindings.register(topicMenuInputBinding, 'learnr.topicMenuInputBinding');
+
+  // continueButtonInputBinding
+  // ------------------------------------------------------------------
+  // This keeps tracks of what topic is selected
+  var continueButtonInputBinding = new Shiny.InputBinding();
+  $.extend(continueButtonInputBinding, {
+    find: function(scope) {
+      return $(scope).find('.exerciseActions > button.skip');
+    },
+    getId: function(el) {
+      return 'continuebutton-' + el.getAttribute('data-section-id');
+    },
+    getValue: function(el) {
+      return $(el).data('n_clicks');
+    },
+    setValue: function(el, value) {
+      var old_value = $(el).data('n_clicks');
+      if (value > old_value) {
+        $(el).trigger('click');
+      }
+
+      // Just in case the click event didn't increment n_clicks to be the same
+      // as the `value`, set `n_clicks` to be the same.
+      $(el).data('n_clicks', value);
+    },
+    subscribe: function(el, callback) {
+      $(el).on('click.continueButtonInputBinding', function(event) {
+        callback(false);
+      });
+    },
+    unsubscribe: function(el) {
+      $(el).off('.continueButtonInputBinding');
+    }
+  });
+  Shiny.inputBindings.register(continueButtonInputBinding, 'learnr.continueButtonInputBinding');
 
 
     // transform the DOM here

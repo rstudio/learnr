@@ -5,6 +5,7 @@
   # shinytest::registerInputProcessor(), below.
   removeInputHandler("learnr.exercise")
   registerInputHandler("learnr.exercise", function(x, shinysession, name) {
+    snapshotPreprocessInput(name, snapshotPreprocessorLearnrExercise)
     x
   })
 

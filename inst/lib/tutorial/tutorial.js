@@ -1327,6 +1327,8 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
     setValue: function(el, value) {
       var editor = ace.edit($(el).attr('id'));
       editor.getSession().setValue(value.code);
+      // Need to trigger a click for progressive mode.
+      this.runButtons(el).trigger('click');
     },
 
     getType: function(el) {
