@@ -277,10 +277,28 @@ install_knitr_hooks <- function() {
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
 
-        # remove class of "knitr_strict_list" so serializing works properly for external evaluators
+        # remove specific option fields and construct an exercise$setup to make old learnr on external evaluator server happy
+        # sending an eval field for options causes the 4 empty lines issue (https://github.com/rstudio/rmote/issues/36)
+        options$eval <- NULL
+        # `code` needs to be cleared since the original code of exercise seems to get used every time we evaluate exercise
+        # instead of using user code via `exercise$code`
+        options$code <- NULL
+        # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
         class(options) <- NULL
+        # we collect all the setup code to make exercise compatible with old learnr
+        # note: this means that chained setup chunks will not work for non-R exercises
+        all_setup_code =
+          if (length(all_chunks) > 1) {
+            paste0(
+              vapply(all_chunks[-length(all_chunks)], function(x) x$code, character(1)),
+              collapse = "\n"
+            )
+          } else {
+            NULL
+          }
 
-        exercise_cache <- list(chunks = all_chunks,
+        exercise_cache <- list(setup = all_setup_code,
+                               chunks = all_chunks,
                                code_check = code_check_chunk,
                                check = check_chunk,
                                solution  = solution,
