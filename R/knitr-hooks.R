@@ -271,6 +271,7 @@ install_knitr_hooks <- function() {
         # forward a subset of standard knitr chunk options
         options$engine <- knitr_engine(options$engine)
         options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
+        options$exercise.checker <- dput_to_string(options$exercise.checker)
         all_chunks <- get_all_chunks(options)
 
         code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
@@ -287,15 +288,13 @@ install_knitr_hooks <- function() {
         class(options) <- NULL
         # we collect all the setup code to make exercise compatible with old learnr
         # note: this means that chained setup chunks will not work for non-R exercises
-        all_setup_code =
-          if (length(all_chunks) > 1) {
-            paste0(
-              vapply(all_chunks[-length(all_chunks)], function(x) x$code, character(1)),
-              collapse = "\n"
-            )
-          } else {
-            NULL
-          }
+        all_setup_code <- NULL
+        if (length(all_chunks) > 1) {
+          all_setup_code <- paste0(
+            vapply(all_chunks[-length(all_chunks)], function(x) x$code, character(1)),
+            collapse = "\n"
+          )
+        }
 
         exercise_cache <- list(setup = all_setup_code,
                                chunks = all_chunks,

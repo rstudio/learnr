@@ -244,7 +244,17 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 try_checker <- function(exercise, name, check_code, envir_result,
                         evaluate_result, envir_prep, last_value,
                         html_output) {
-  checker_func <- get_checker_func(exercise, name, envir_prep)
+  checker_func <- tryCatch(
+    get_checker_func(exercise, name, envir_prep),
+    error = function(e) {
+      message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
+      exercise_result_error(e$message)
+    }
+  )
+  # If retrieving checker_func fails, return an error result
+  if (is_error_result(checker_func)) {
+    return(checker_func)
+  }
   checker_args <- names(formals(checker_func))
   args <- list(
     label = exercise$label,
@@ -288,19 +298,19 @@ try_checker <- function(exercise, name, check_code, envir_result,
   }
 }
 
-
 get_checker_func <- function(exercise, name, envir) {
   func <- exercise$options[[name]]
-  if (is.function(func)) {
-    environment(func) <- envir
-    return(func)
-  }
-  if (!is.null(func)) {
+  # attempt to parse the exercise.checker and return the function
+  # with envir attached to it.
+  checker <- eval(parse(text = func), envir = envir)
+  if (is.function(checker)) {
+    environment(checker) <- envir
+    return(checker)
+  } else if(!is.null(checker)) {
     warning("Ignoring the ", name, " option since it isn't a function", call. = FALSE)
   }
   function(...) NULL
 }
-
 
 render_exercise <- function(exercise, envir, envir_prep) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
