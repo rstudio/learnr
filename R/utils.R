@@ -95,7 +95,7 @@ is_tags <- function(x) {
 }
 
 knitr_engine <- function(engine) {
-  engine %||% "r"
+  tolower(engine %||% "r")
 }
 
 is_installed <- function(package, version = NULL) {
