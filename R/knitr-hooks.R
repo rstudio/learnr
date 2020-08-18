@@ -282,6 +282,7 @@ install_knitr_hooks <- function() {
         class(options) <- NULL
         # we collect all the setup code to make exercise compatible with old learnr
         # note: this means that chained setup chunks will not work for non-R exercises
+        # Remove this after v0.13 is released
         all_setup_code <- NULL
         if (length(all_chunks) > 1) {
           all_setup_code <- paste0(
