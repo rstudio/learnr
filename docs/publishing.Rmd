@@ -22,9 +22,9 @@ To bundle a tutorial into an R package and make it available for running via the
 
 2. Add the `.Rmd` associated with your tutorial in that directory. (You may see a
 `..._files/` directory or a `.html` file that periodically get generated adjacent
-to your `.Rmd` tutorial. You can safely ignore, delete, or exclude these from your 
+to your `.Rmd` tutorial. You can safely ignore, delete, or exclude these from your
 package and from version control. They are temporary artifacts produced while
-rendering the tutorial on your specific system and aren't likely to be 
+rendering the tutorial on your specific system and aren't likely to be
 portable to other environments.)
 
 Once you've done this users can run your tutorial as follows (note they should be sure to install the **learnr** package before attempting to run the tutorial):
@@ -177,13 +177,13 @@ You'd likely set these options within `Rprofile.site` or another R source file t
 
 #### Fully Custom Evaluator
 
-You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts four arguments: 
+You can replace the default exercise evaluation code entirely with your own via the `tutorial.exercise.evaluator` global R option. The evaluator is an R function that accepts four arguments:
 
   1. An expression to evaluate
   2. A timelimit for evaluation
   3. A serializable representation of the exercise to be evaluated
-  4. The session associated with the request 
-  
+  4. The session associated with the request
+
 It returns a list of functions (`start`, `completed`, and `result`) to use for execution.
 
 The two default evaluators (used for Windows/MacOS and UNIX systems, respectively, are):
@@ -205,11 +205,16 @@ The given host is expected to fulfill [this OpenAPI specification](openapi/opena
 1. `POST /learnr/` - Initiate a session
 2. `POST /learnr/<session ID>` - Submit an exercise to run as a part of a session
 
-### Recording Events
+## Events
+
+Learnr has an event system which can be used for recording information about usage, or for causing code to run when events occur.
 
 As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).
 
-#### Event Recorder Function
+The event system can also be used to cause arbitrary code to run when the events occur.
+
+
+### Recording Events
 
 You can capture events by using a custom event recorder function. This function is specified via the `tutorial.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
 
@@ -285,10 +290,14 @@ The `event` parameter is one of the following values:
 <td>A section of the tutorial was skipped.</td>
 </tr>
 <tr class="odd">
+<td>section_viewed</td>
+<td>A section of the tutorial became visible.</td>
+</tr>
+<tr class="even">
 <td>session_start</td>
 <td>A new session has been initiated</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>session_stop</td>
 <td>A session has been terminated</td>
 </tr>
@@ -296,6 +305,61 @@ The `event` parameter is one of the following values:
 </table>
 
 The `data` parameter is an R list which provides additional data that varies depending on which `event` is being recorded.
+
+### Event handlers
+
+It can also be useful to cause code to run when an event occurs. The `event_register_handler()` function can be used for this. For example, this will cause a a message to be printed to the console when the `"section_viewed"` event is triggered:
+
+<pre><code>```{r context="server-start"}
+event_register_handler("section_viewed", function(session, event, data) {
+  message("event: section_viewed: ", data$sectionId)
+})
+```</code></pre>
+
+Note that `event_register_handler()` should be called in a code chunk with `context="server-start"`!
+
+The callback must take three parameters:
+
+- `session`: This is a Shiny session object.
+- `event`: The name of the event (like `"section_viewed"`).
+- `data`: This is a list that contains arbitrary data.
+
+In some cases it is useful to have handlers that are triggered just once in the tutorial. This can be done with the `one_time()` function. Inside of the handler, call `one_time()`, and pass it the `session` object, `cond`, a condition expression, and `expr`, the code expression to run.
+
+The first time `cond` is true, `expr` will be evaluated; after that, `expr` will not be evaluated again. In the example here, `cond` is true when time the section with ID `"section-exercise-with-hint"` is viewed, and so the first time that section is visible, it will print out a message.
+
+<pre><code>```{r context="server-start"}
+event_register_handler("section_viewed",
+  function(session, event, data) {
+    one_time(
+      session,
+      cond = data$sectionId == "section-exercise-with-hint",
+      expr = { message("Seeing ", data$sectionId, " for the first time.") }
+    )
+  }
+)
+```</code></pre>
+
+Technical note: The reason that `one_time()` has an unusual interface is because it needs to be able to store data that persists across runs of the tutorial. The code will run one time, even if the user stops the document and starts it again; it resets when the user clicks on "Start Over".
+
+The section IDs are generated automatically from the section title. For example, if this is the section heading:
+
+```
+### This is a section
+```
+
+Then the ID will be `section-this-is-a-section`. If you want to use a different ID, you can supply it in curly braces, and it will be prepended with `section-`. This will set the ID to `section-myid`:
+
+```
+### This is a section {#myid}
+```
+
+You can even have sections that don't have a title, but do have an ID:
+
+```
+### {#myid}
+```
+
 
 
 ### Tutorial Identifiers
