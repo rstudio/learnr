@@ -391,20 +391,22 @@ render_exercise <- function(exercise, envir, envir_prep) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
-    # Run the condition through an error checker (the exercise could be to throw an error!)
-    checker_feedback <- try_checker(
-      exercise, "exercise.error.checker",
-      check_code = exercise$check,
-      envir_result = envir,
-      evaluate_result = evaluate_result,
-      envir_prep = envir_prep,
-      last_value = e
-    )
-    if (is_exercise_result(checker_feedback)) {
-      checker_feedback
-    } else {
-      exercise_result_error(msg)
+    error_check_code <- exercise$error_check %||% exercise$options$exercise.error.check.code
+    if (length(error_check_code)) {
+      # Run the condition through an error checker (the exercise could be to throw an error!)
+      checker_feedback <- try_checker(
+        exercise, "exercise.checker",
+        check_code = error_check_code,
+        envir_result = envir,
+        evaluate_result = evaluate_result,
+        envir_prep = envir_prep,
+        last_value = e
+      )
+      if (is_exercise_result(checker_feedback)) {
+        return(checker_feedback)
+      }
     }
+    exercise_result_error(msg)
   })
 
   if (is_exercise_result(output_file)) {

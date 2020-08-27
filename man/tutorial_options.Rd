@@ -10,7 +10,7 @@ tutorial_options(
   exercise.timelimit = 30,
   exercise.lines = NULL,
   exercise.checker = NULL,
-  exercise.error.checker = NULL,
+  exercise.error.check.code = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE
@@ -31,8 +31,8 @@ number of lines in the code chunk).}
 \item{exercise.checker}{Function used to check exercise answers
 (e.g., \code{gradethis::grade_learnr()}).}
 
-\item{exercise.error.checker}{Function used to check exercise answers
-(e.g., \code{gradethis::grade_learnr_error()}).}
+\item{exercise.error.check.code}{A string containing R code to use for checking
+code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 
 \item{exercise.completion}{Use code completion in exercise editors.}
 
