@@ -8,9 +8,11 @@ gradethis::gradethis_setup()
 ```{r exercise1, exercise = TRUE}
 
 ```
+
+```{r exercise1-solution}
+1+1
+```
  
-```{r exercise1-check}
-grade_result(
-  pass_if(~identical(.result, 2))
-)
+```{r exercise1-code-check}
+grade_code()
 ```

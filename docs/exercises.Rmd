@@ -32,7 +32,11 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 </tr>
 <tr class="odd">
 <td><code>exercise.checker</code></td>
-<td>Function used to check exercise answers.</td>
+<td>Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>exercise.error.check.code</code></td>
+<td>A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</td>
 </tr>
 <tr class="even">
 <td><code>exercise.completion</code></td>
@@ -176,21 +180,88 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 ## Exercise Checking
 
-The **learnr** package doesn't directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the `exercise.checker` knitr chunk option within the `setup` chunk of your tutorial.
-The [gradethis](https://github.com/rstudio-education/gradethis) package has utilities for grading exercises; suggestions and contributions are very welcome.
+**learnr** provides allows full control over feedback provided to exercise submissions via `exercise.checker` in `tutorial_options()`. We'll eventually cover how to implement a custom `exercise.checker`, but for sake of demonstration, this section uses [**gradethis**](https://github.com/rstudio-education/gradethis)'s approach to exercise checking, which doesn't require knowledge of `exercise.checker` (**NOTE**: **gradethis** is still a work-in-progress. You may want to consider alternatives such as [**checkr**](https://github.com/dtkaplan/checkr)). To use **gradethis**'s approach to exercise checking inside of **learnr**, just call `gradethis_setup()` in a [setup](#Exercise_Setup) chunk, which will set `tutorial_options(exercise.checker = gradethis::grade_learnr)` (among other things).
+
+### Checking results
+
+Checking of exercise results may be done through a `*-check` chunk. With a **gradethis** setup, results can be graded with `grade_result()`, like so:
 
 <div id="exercisecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
 
-When you provide a "-check" chunk for an exercise you want to check, an additional "Submit Answer" button is added to the exercise editor:
+When an exercise `*-check` chunk is provided, **learnr** provides an additional "Submit Answer" button, which allows users to experiment with various answers before formally submitting an answer:
 
-<img src="images/exercise-submit.png"  width="730" height="92"/>
+<img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
-This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.
+### Checking code
 
-### Checker Function
+Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get magical detection of issues with the exercise code. 
 
-What the code within the "-check" chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user's exercise input:
+<div id="exercisecodecheck"></div>
+<script type="text/javascript">loadSnippet('exercisecodecheck')</script>
+
+<img src="images/exercise-code.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
+
+It's worth noting that, when a `*-code-check` chunk is supplied, the check is done *prior* to evaluation of the exercise submission, meaning that if the `*-code-check` chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.
+
+
+### Checking errors
+
+In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`, meaning that if a `*-solution` chunk is provided, then more intelligent feedback is provided "for free".
+
+<img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
+
+To learn more about grading exercises with **gradethis**, see its grading demo ([`gradethis::gradethis_demo()`](https://github.com/rstudio-education/gradethis/blob/master/inst/tutorials/grading-demo/grading-demo.Rmd)).
+
+### Custom Checking
+
+If you need custom exercise checking logic that isn't already provided grading packages like [**gradethis**](https://github.com/rstudio-education/gradethis), then you may want to write your own `exercise.checker` function. This function is called on exercise submission whenever `*-check`, `*-code-check`, and/or `*-error-check` chunk(s) exist. When called, this function receives all the information that **learnr** knows about the exercise at the time of the checking, including the `user_code`, `solution_code`, `check_code`, exercise environments, and the `last_value` (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:
+
+1. Before exercise evaluation, at this stage:
+  * `check_code` contains `*-code-check` chunk code.
+  * `envir_result`, `evaludate_result`, and `last_value` are all `NULL`.
+2. On evaluation error, at this stage:
+  * `check_code` contains `*-error-check` chunk code.
+  * `last_value` contains the error condition object.
+3. After exercise evaluation, at this stage:
+  * `check_code` contains `*-check` chunk code.
+  * `last_value` contains the last printed value.
+
+If, at any one of these stages, feedback should be provided, then `exercise.checker` should return an R list with, at the very least, a `correct` flag and feedback `message`:
+
+<table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>message</code></td>
+<td>Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html">htmltools</a> package.</td>
+</tr>
+<tr class="even">
+<td><code>correct</code></td>
+<td>TRUE/FALSE logical value indicating whether the submitted answer was correct.</td>
+</tr>
+<tr class="odd">
+<td><code>type</code></td>
+<td>Feedback type (visual presentation style). Can be "auto", "success", "info", "warning", "error", or "custom". Note that "custom" implies that the "message" field is custom HTML rather than a character vector.</td>
+</tr>
+<tr class="even">
+<td><code>location</code></td>
+<td>Location for feedback ("append", "prepend", or "replace").</td>
+</tr>
+</tbody>
+</table>
+
+Below is a rough sketch of how one might implement an `exercise.checker` function. Notice how the presence of `envir_result` may be used to determine which type of check is being done (i.e., code or result check). 
+
+<div id="customchecker"></div>
+<script type="text/javascript">loadSnippet('customchecker')</script>
+
+See the table below for a full description of all the arguments supplied to `exercise.checker`.
 
 <table>
 <thead>
@@ -239,56 +310,8 @@ What the code within the "-check" chunk actually does will vary depending on whi
 </tbody>
 </table>
 
-The checker function should return an R list which contains several fields indicating the result of the check. For example:
 
-<div id="exercisefeedback"></div>
-<script type="text/javascript">loadSnippet('exercisefeedback')</script>
 
-The fields within this list and their valid values include:
-
-<table>
-<thead>
-<tr class="header">
-<th>Field</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>message</code></td>
-<td>Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html">htmltools</a> package.</td>
-</tr>
-<tr class="even">
-<td><code>correct</code></td>
-<td>TRUE/FALSE logical value indicating whether the submitted answer was correct.</td>
-</tr>
-<tr class="odd">
-<td><code>type</code></td>
-<td>Feedback type (visual presentation style). Can be "auto", "success", "info", "warning", "error", or "custom". Note that "custom" implies that the "message" field is custom HTML rather than a character vector.</td>
-</tr>
-<tr class="even">
-<td><code>location</code></td>
-<td>Location for feedback ("append", "prepend", or "replace").</td>
-</tr>
-</tbody>
-</table>
-
-### Code Checking
-
-You can also choose to check the user's code *prior* to it being submitted to R. To do this, include a "-code-check" chunk in addition to a "-check" chunk. The checker function will be called prior to the execution of the chunk with the `envir_result` and `evaluate_result` parameters set to `NULL`. If it returns "incorrect" feedback it is displayed and R code chunk is not executed.
-
-Here's how we'd update the example checking function to also perform code checking:
-
-<div id="codefeedback"></div>
-<script type="text/javascript">loadSnippet('codefeedback')</script>
-
-Here the `is_bad_code` function is a proxy for whatever logic your code checking provides to validate user source code.
-
-### Checking Packages
-
-The **[gradethis](https://github.com/rstudio-education/gradethis)** and **[checkr](https://github.com/dtkaplan/checkr)** packages currently provide code checking functions that are compatible with **learnr**.
-
-We expect that additional **learnr** compatible checking packages will be developed and will update this section as they become available.
 
 ## Exercise Caption
 
