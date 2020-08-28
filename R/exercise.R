@@ -65,6 +65,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # - solution
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
+    # If there is no locally defined error check code, look for globally defined error check option
     exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     if (!isTRUE(exercise$should_check)) {
       exercise$check <- NULL
