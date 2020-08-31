@@ -195,7 +195,7 @@ When an exercise `*-check` chunk is provided, **learnr** provides an additional 
 
 ### Checking code
 
-Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get magical detection of issues with the exercise code. 
+Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.
 
 <div id="exercisecodecheck"></div>
 <script type="text/javascript">loadSnippet('exercisecodecheck')</script>
@@ -207,7 +207,7 @@ It's worth noting that, when a `*-code-check` chunk is supplied, the check is do
 
 ### Checking errors
 
-In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`, meaning that if a `*-solution` chunk is provided, then more intelligent feedback is provided "for free".
+In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`, meaning that if a `*-solution` chunk is provided, then more intelligent feedback is provided _for free_.
 
 <img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
@@ -219,8 +219,8 @@ If you need custom exercise checking logic that isn't already provided grading p
 
 1. Before exercise evaluation, at this stage:
   * `check_code` contains `*-code-check` chunk code.
-  * `envir_result`, `evaludate_result`, and `last_value` are all `NULL`.
-2. On evaluation error, at this stage:
+  * `envir_result`, `evaluate_result`, and `last_value` are all `NULL`.
+2. During evaluation, when an error occurs:
   * `check_code` contains `*-error-check` chunk code.
   * `last_value` contains the error condition object.
 3. After exercise evaluation, at this stage:
