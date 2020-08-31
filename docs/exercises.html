@@ -460,7 +460,15 @@ Number of seconds to limit execution time to (defaults to 30).
 <code>exercise.checker</code>
 </td>
 <td>
-Function used to check exercise answers.
+Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>exercise.error.check.code</code>
+</td>
+<td>
+A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>“gradethis::grade_code()”</code>).
 </td>
 </tr>
 <tr class="even">
@@ -533,7 +541,7 @@ Whether to display an invisible result warning if the last value returned is inv
 
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script></li>
-<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
+<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
 <div id="exercisesetupsuffix" style="width: 95%;">
 
 </div>
@@ -565,7 +573,7 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="markdown-hints" class="section level3">
 <h3>Markdown Hints</h3>
-<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
+<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
 <div id="exercisehintdiv">
 
 </div>
@@ -574,7 +582,7 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="multiple-hints" class="section level3">
 <h3>Multiple Hints</h3>
-<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3&quot;, etc.) for your exercise chunk. For example:</p>
+<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3", etc.) for your exercise chunk. For example:</p>
 <div id="exercisehints">
 
 </div>
@@ -615,17 +623,110 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="exercise-checking" class="section level2">
 <h2>Exercise Checking</h2>
-<p>The <strong>learnr</strong> package doesn’t directly include features for checking exercise inputs however it does include lower-level hooks that enable other packages to provide tools for exercise checking. You can provide an external function for exercise checking by setting the <code>exercise.checker</code> knitr chunk option within the <code>setup</code> chunk of your tutorial. The <a href="https://github.com/rstudio-education/gradethis">gradethis</a> package has utilities for grading exercises; suggestions and contributions are very welcome.</p>
+<p><strong>learnr</strong> provides allows full control over feedback provided to exercise submissions via <code>exercise.checker</code> in <code>tutorial_options()</code>. We’ll eventually cover how to implement a custom <code>exercise.checker</code>, but for sake of demonstration, this section uses <a href="https://github.com/rstudio-education/gradethis"><strong>gradethis</strong></a>’s approach to exercise checking, which doesn’t require knowledge of <code>exercise.checker</code> (<strong>NOTE</strong>: <strong>gradethis</strong> is still a work-in-progress. You may want to consider alternatives such as <a href="https://github.com/dtkaplan/checkr"><strong>checkr</strong></a>). To use <strong>gradethis</strong>’s approach to exercise checking inside of <strong>learnr</strong>, just call <code>gradethis_setup()</code> in a <a href="#Exercise_Setup">setup</a> chunk, which will set <code>tutorial_options(exercise.checker = gradethis::grade_learnr)</code> (among other things).</p>
+<div id="checking-results" class="section level3">
+<h3>Checking results</h3>
+<p>Checking of exercise results may be done through a <code>*-check</code> chunk. With a <strong>gradethis</strong> setup, results can be graded with <code>grade_result()</code>, like so:</p>
 <div id="exercisecheck">
 
 </div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script>
-<p>When you provide a “-check” chunk for an exercise you want to check, an additional “Submit Answer” button is added to the exercise editor:</p>
-<p><img src="images/exercise-submit.png"  width="730" height="92"/></p>
-<p>This is provided so that users can experiment with various solutions before formally submitting an answer they believe is correct.</p>
-<div id="checker-function" class="section level3">
-<h3>Checker Function</h3>
-<p>What the code within the “-check” chunk actually does will vary depending on which exercise checker is currently active. The exercise checker function is passed various arguments which provide the context required to check the user’s exercise input:</p>
+<p>When an exercise <code>*-check</code> chunk is provided, <strong>learnr</strong> provides an additional “Submit Answer” button, which allows users to experiment with various answers before formally submitting an answer:</p>
+<p><img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
+</div>
+<div id="checking-code" class="section level3">
+<h3>Checking code</h3>
+<p>Checking of exercise <em>code</em> may be done through a <code>*-code-check</code> chunk. With a <strong>gradethis</strong> setup, if you supply a <code>*-solution</code> chunk and call <code>grade_code()</code> inside <code>*-code-check</code>, then you get magical detection of issues with the exercise code.</p>
+<div id="exercisecodecheck">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisecodecheck')</script>
+<p><img src="images/exercise-code.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
+<p>It’s worth noting that, when a <code>*-code-check</code> chunk is supplied, the check is done <em>prior</em> to evaluation of the exercise submission, meaning that if the <code>*-code-check</code> chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.</p>
+</div>
+<div id="checking-errors" class="section level3">
+<h3>Checking errors</h3>
+<p>In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a <code>*-error-check</code> chunk or through the global <code>exercise.error.check.code</code> option. With a <strong>gradethis</strong> setup, <code>exercise.error.check.code</code> is set to <code>grade_code()</code>, meaning that if a <code>*-solution</code> chunk is provided, then more intelligent feedback is provided “for free”.</p>
+<p><img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
+<p>To learn more about grading exercises with <strong>gradethis</strong>, see its grading demo (<a href="https://github.com/rstudio-education/gradethis/blob/master/inst/tutorials/grading-demo/grading-demo.Rmd"><code>gradethis::gradethis_demo()</code></a>).</p>
+</div>
+<div id="custom-checking" class="section level3">
+<h3>Custom Checking</h3>
+<p>If you need custom exercise checking logic that isn’t already provided grading packages like <a href="https://github.com/rstudio-education/gradethis"><strong>gradethis</strong></a>, then you may want to write your own <code>exercise.checker</code> function. This function is called on exercise submission whenever <code>*-check</code>, <code>*-code-check</code>, and/or <code>*-error-check</code> chunk(s) exist. When called, this function receives all the information that <strong>learnr</strong> knows about the exercise at the time of the checking, including the <code>user_code</code>, <code>solution_code</code>, <code>check_code</code>, exercise environments, and the <code>last_value</code> (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:</p>
+<ol style="list-style-type: decimal">
+<li>Before exercise evaluation, at this stage:</li>
+</ol>
+<ul>
+<li><code>check_code</code> contains <code>*-code-check</code> chunk code.</li>
+<li><code>envir_result</code>, <code>evaludate_result</code>, and <code>last_value</code> are all <code>NULL</code>.</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>On evaluation error, at this stage:</li>
+</ol>
+<ul>
+<li><code>check_code</code> contains <code>*-error-check</code> chunk code.</li>
+<li><code>last_value</code> contains the error condition object.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>After exercise evaluation, at this stage:</li>
+</ol>
+<ul>
+<li><code>check_code</code> contains <code>*-check</code> chunk code.</li>
+<li><code>last_value</code> contains the last printed value.</li>
+</ul>
+<p>If, at any one of these stages, feedback should be provided, then <code>exercise.checker</code> should return an R list with, at the very least, a <code>correct</code> flag and feedback <code>message</code>:</p>
+<table>
+<thead>
+<tr class="header">
+<th>
+Field
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>message</code>
+</td>
+<td>
+Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html">htmltools</a> package.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>correct</code>
+</td>
+<td>
+TRUE/FALSE logical value indicating whether the submitted answer was correct.
+</td>
+</tr>
+<tr class="odd">
+<td>
+<code>type</code>
+</td>
+<td>
+Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.
+</td>
+</tr>
+<tr class="even">
+<td>
+<code>location</code>
+</td>
+<td>
+Location for feedback (“append”, “prepend”, or “replace”).
+</td>
+</tr>
+</tbody>
+</table>
+<p>Below is a rough sketch of how one might implement an <code>exercise.checker</code> function. Notice how the presence of <code>envir_result</code> may be used to determine which type of check is being done (i.e., code or result check).</p>
+<div id="customchecker">
+
+</div>
+<script type="text/javascript">loadSnippet('customchecker')</script>
+<p>See the table below for a full description of all the arguments supplied to <code>exercise.checker</code>.</p>
 <table>
 <thead>
 <tr class="header">
@@ -712,78 +813,11 @@ Unused (include for compatibility with parameters to be added in the future)
 </tr>
 </tbody>
 </table>
-<p>The checker function should return an R list which contains several fields indicating the result of the check. For example:</p>
-<div id="exercisefeedback">
-
-</div>
-<script type="text/javascript">loadSnippet('exercisefeedback')</script>
-<p>The fields within this list and their valid values include:</p>
-<table>
-<thead>
-<tr class="header">
-<th>
-Field
-</th>
-<th>
-Description
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>
-<code>message</code>
-</td>
-<td>
-Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html">htmltools</a> package.
-</td>
-</tr>
-<tr class="even">
-<td>
-<code>correct</code>
-</td>
-<td>
-TRUE/FALSE logical value indicating whether the submitted answer was correct.
-</td>
-</tr>
-<tr class="odd">
-<td>
-<code>type</code>
-</td>
-<td>
-Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.
-</td>
-</tr>
-<tr class="even">
-<td>
-<code>location</code>
-</td>
-<td>
-Location for feedback (“append”, “prepend”, or “replace”).
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="code-checking" class="section level3">
-<h3>Code Checking</h3>
-<p>You can also choose to check the user’s code <em>prior</em> to it being submitted to R. To do this, include a “-code-check” chunk in addition to a “-check” chunk. The checker function will be called prior to the execution of the chunk with the <code>envir_result</code> and <code>evaluate_result</code> parameters set to <code>NULL</code>. If it returns “incorrect” feedback it is displayed and R code chunk is not executed.</p>
-<p>Here’s how we’d update the example checking function to also perform code checking:</p>
-<div id="codefeedback">
-
-</div>
-<script type="text/javascript">loadSnippet('codefeedback')</script>
-<p>Here the <code>is_bad_code</code> function is a proxy for whatever logic your code checking provides to validate user source code.</p>
-</div>
-<div id="checking-packages" class="section level3">
-<h3>Checking Packages</h3>
-<p>The <strong><a href="https://github.com/rstudio-education/gradethis">gradethis</a></strong> and <strong><a href="https://github.com/dtkaplan/checkr">checkr</a></strong> packages currently provide code checking functions that are compatible with <strong>learnr</strong>.</p>
-<p>We expect that additional <strong>learnr</strong> compatible checking packages will be developed and will update this section as they become available.</p>
 </div>
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
-<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or “Sandbox”). For example:</p>
+<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or “Sandbox”). For example:</p>
 <div id="exercisecaption">
 
 </div>
