@@ -27,6 +27,7 @@ learnr (development version)
 * Added error handling when user specifies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option `exercise.warn_invisible = TRUE` to display an invisible result warning message. ([#373](https://github.com/rstudio/learnr/pull/373))
+* Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 
 ## Bug fixes
 
