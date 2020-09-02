@@ -1,14 +1,13 @@
 ```r
 custom_checker <- function(label, user_code, check_code, envir_result, evaluate_result, last_value, ...) {
+  # this is a code check
   if (is.null(envir_result)) {
-    # check_code contains `*-code-check` code
     if (is_bad_code(user_code, check_code)) {
       return(list(message = "I wasn't expecting that code", correct = FALSE))
     }
     return(list(message = "Nice code!", correct = TRUE))
   }
-  
-  # check_code contains `*-check` code
+  # this is a fully evaluated chunk check
   if (is_bad_result(last_value, check_code)) {
     return(list(message = "I wasn't expecting that result", correct = FALSE))
   }

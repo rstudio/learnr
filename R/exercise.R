@@ -61,13 +61,16 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise$global_setup <- get_global_setup()
     # retrieve exercise cache information:
     # - chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
-    # - checker code (check, code-check)
+    # - checker code (check, code-check, error-check)
     # - solution
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
+    # If there is no locally defined error check code, look for globally defined error check option
+    exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     if (!isTRUE(exercise$should_check)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
+      exercise$error_check <- NULL
     }
     # variable has now served its purpose so remove it
     exercise$should_check <- NULL
@@ -391,20 +394,21 @@ render_exercise <- function(exercise, envir, envir_prep) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
-    # Run the condition through an error checker (the exercise could be to throw an error!)
-    checker_feedback <- try_checker(
-      exercise, "exercise.error.checker",
-      check_code = exercise$check,
-      envir_result = envir,
-      evaluate_result = evaluate_result,
-      envir_prep = envir_prep,
-      last_value = e
-    )
-    if (is_exercise_result(checker_feedback)) {
-      checker_feedback
-    } else {
-      exercise_result_error(msg)
+    if (length(exercise$error_check)) {
+      # Run the condition through an error checker (the exercise could be to throw an error!)
+      checker_feedback <- try_checker(
+        exercise, "exercise.checker",
+        check_code = exercise$error_check,
+        envir_result = envir,
+        evaluate_result = evaluate_result,
+        envir_prep = envir_prep,
+        last_value = e
+      )
+      if (is_exercise_result(checker_feedback)) {
+        return(checker_feedback)
+      }
     }
+    exercise_result_error(msg)
   })
 
   if (is_exercise_result(output_file)) {

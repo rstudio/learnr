@@ -416,7 +416,7 @@ div.tocify {
 learnr::run_tutorial(&quot;slidy&quot;, package = &quot;learnr&quot;)</code></pre>
 <p>To bundle a tutorial into an R package and make it available for running via the <code>run_tutorial</code> function you should:</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
+<li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
 <li><p>Add the <code>.Rmd</code> associated with your tutorial in that directory. (You may see a <code>..._files/</code> directory or a <code>.html</code> file that periodically get generated adjacent to your <code>.Rmd</code> tutorial. You can safely ignore, delete, or exclude these from your package and from version control. They are temporary artifacts produced while rendering the tutorial on your specific system and aren’t likely to be portable to other environments.)</p></li>
 </ol>
 <p>Once you’ve done this users can run your tutorial as follows (note they should be sure to install the <strong>learnr</strong> package before attempting to run the tutorial):</p>
@@ -746,21 +746,21 @@ A session has been terminated
 </div>
 <div id="event-handlers" class="section level3">
 <h3>Event handlers</h3>
-<p>It can also be useful to cause code to run when an event occurs. The <code>event_register_handler()</code> function can be used for this. For example, this will cause a a message to be printed to the console when the <code>&quot;section_viewed&quot;</code> event is triggered:</p>
+<p>It can also be useful to cause code to run when an event occurs. The <code>event_register_handler()</code> function can be used for this. For example, this will cause a a message to be printed to the console when the <code>"section_viewed"</code> event is triggered:</p>
 <pre><code>```{r context="server-start"}
 event_register_handler("section_viewed", function(session, event, data) {
   message("event: section_viewed: ", data$sectionId)
 })
 ```</code></pre>
-<p>Note that <code>event_register_handler()</code> should be called in a code chunk with <code>context=&quot;server-start&quot;</code>!</p>
+<p>Note that <code>event_register_handler()</code> should be called in a code chunk with <code>context="server-start"</code>!</p>
 <p>The callback must take three parameters:</p>
 <ul>
 <li><code>session</code>: This is a Shiny session object.</li>
-<li><code>event</code>: The name of the event (like <code>&quot;section_viewed&quot;</code>).</li>
+<li><code>event</code>: The name of the event (like <code>"section_viewed"</code>).</li>
 <li><code>data</code>: This is a list that contains arbitrary data.</li>
 </ul>
 <p>In some cases it is useful to have handlers that are triggered just once in the tutorial. This can be done with the <code>one_time()</code> function. Inside of the handler, call <code>one_time()</code>, and pass it the <code>session</code> object, <code>cond</code>, a condition expression, and <code>expr</code>, the code expression to run.</p>
-<p>The first time <code>cond</code> is true, <code>expr</code> will be evaluated; after that, <code>expr</code> will not be evaluated again. In the example here, <code>cond</code> is true when time the section with ID <code>&quot;section-exercise-with-hint&quot;</code> is viewed, and so the first time that section is visible, it will print out a message.</p>
+<p>The first time <code>cond</code> is true, <code>expr</code> will be evaluated; after that, <code>expr</code> will not be evaluated again. In the example here, <code>cond</code> is true when time the section with ID <code>"section-exercise-with-hint"</code> is viewed, and so the first time that section is visible, it will print out a message.</p>
 <pre><code>```{r context="server-start"}
 event_register_handler("section_viewed",
   function(session, event, data) {
