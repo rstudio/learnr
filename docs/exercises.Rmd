@@ -308,6 +308,10 @@ See the table below for a full description of all the arguments supplied to `exe
 <td>The last value of the evaluated chunk.</td>
 </tr>
 <tr class="odd">
+<td><code>engine</code></td>
+<td>The <code>engine</code> value of the evaluated chunk.</td>
+</tr>
+<tr class="even">
 <td><code>...</code></td>
 <td>Unused (include for compatibility with parameters to be added in the future)</td>
 </tr>
