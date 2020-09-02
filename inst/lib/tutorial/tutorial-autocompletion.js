@@ -217,9 +217,16 @@ function TutorialCompleter(tutorial) {
       return;
 
     var keys = new KeyCombination(event);
-    if (keys.keyCode == KEYCODE_TAB && keys.modifier == MODIFIER_NONE)
-       return autocomplete();
-    
+    if (keys.keyCode == KEYCODE_TAB && keys.modifier == MODIFIER_NONE) {
+      if (editor && editor.completer && editor.completer.activated) {
+        // it is already activated. Accept the top choice. To do this, do nothing and it will be resolved by the autocompleter
+       //// do nothing. let autocompleter handle it
+      } else {
+        // autocompleter is not active. enable it
+        return autocomplete()
+      }
+    }
+
     if (keys.keyCode == KEYCODE_SPACE && keys.modifier == MODIFIER_CTRL)
        return autocomplete();
 
