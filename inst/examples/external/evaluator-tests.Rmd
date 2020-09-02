@@ -23,7 +23,6 @@ x <- "123"
 library(gradethis)
 ```
 
-
 ## Basics
 
 ```{r basics1, exercise=TRUE}
@@ -92,6 +91,33 @@ y <- 456
 ```
 
 `y` should be `456`.
+
+### Local Setup #3
+
+Test chained setup chunks for an exercise.
+
+```{r base-setup}
+a <- 1
+```
+
+```{r local3-setup, exercise.setup = "base-setup"}
+b <- a + 5
+b
+```
+
+`c` should be 9 (`b` is 6 in setup code)
+
+```{r local3, exercise=TRUE, exercise.setup = "local3-setup"}
+c <- b + 3
+c
+```
+
+`d` should be 10
+
+```{r local4, exercise=TRUE, exercise.setup="local3"}
+d <- c + 1
+d
+```
 
 ## Timeouts
 
@@ -168,6 +194,28 @@ grade_result(
 ```
 
 If you enter `3`, you should see an error: `Custom message for value 3.`. If you enter `4`, you should see a success message with praise.
+
+### Check that accepts an exception
+
+Throw an error message of `"boom"`
+
+```{r grade_error, exercise = TRUE}
+stop("boom")
+```
+
+```{r grade_error-solution}
+stop("boom")
+```
+
+```{r grade_error-code-check}
+grade_code("Nice error!")
+```
+
+If you run `stop("boom")`, you should see a red box with `boom`.
+
+If you submit `stop("boom")`, you should see a green box that has `Nice error!`.
+
+For incorrect submission, you should see a red box with a random encouragement message.
 
 ## Isolation & Malicious Code
 

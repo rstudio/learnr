@@ -1,0 +1,8 @@
+```{r learnr-setup, include=FALSE}
+# hack the pager function so that we can print help with custom pager function
+# http://stackoverflow.com/questions/24146843/including-r-help-in-knitr-output
+options(pager = function(files, header, title, delete.file) {
+  cat(do.call('c', lapply(files, readLines)), sep = '\n')
+})
+knitr::opts_chunk$set(echo = FALSE, comment = NA, error = FALSE)
+```

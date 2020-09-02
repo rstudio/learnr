@@ -148,6 +148,15 @@ install_knitr_hooks <- function() {
            call. = FALSE)
     }
 
+    # validate that the exercise chunk is 'defined'
+    if (exercise_chunk && is.null(get_knitr_chunk(options$label))) {
+      stop(
+        "The exercise chunk '", options$label, "' doesn't have anything inside of it. ",
+        "Try adding empty line(s) inside the code chunk.",
+        call. = FALSE
+      )
+    }
+
     # if this is an exercise chunk then set various options
     if (exercise_chunk) {
 
@@ -262,13 +271,28 @@ install_knitr_hooks <- function() {
         # forward a subset of standard knitr chunk options
         options$engine <- knitr_engine(options$engine)
         options$exercise.df_print <- options$exercise.df_print %||% knitr::opts_knit$get('rmarkdown.df_print') %||% "default"
+        options$exercise.checker <- dput_to_string(options$exercise.checker)
         all_chunks <- get_all_chunks(options)
 
         code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
 
-        exercise_cache <- list(chunks = all_chunks,
+        # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
+        class(options) <- NULL
+        # we collect all the setup code to make exercise compatible with old learnr
+        # note: this means that chained setup chunks will not work for non-R exercises
+        # Remove this after v0.13 is released
+        all_setup_code <- NULL
+        if (length(all_chunks) > 1) {
+          all_setup_code <- paste0(
+            vapply(all_chunks[-length(all_chunks)], function(x) x$code, character(1)),
+            collapse = "\n"
+          )
+        }
+
+        exercise_cache <- list(setup = all_setup_code,
+                               chunks = all_chunks,
                                code_check = code_check_chunk,
                                check = check_chunk,
                                solution  = solution,

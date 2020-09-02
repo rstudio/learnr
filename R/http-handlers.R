@@ -25,7 +25,7 @@ register_http_handlers <- function(session, metadata) {
     )
 
     # Now that we've initialized the session state, emit the start event
-    session_start_event(session)
+    event_trigger(session, "session_start")
 
     session$userData$learnr_state("initialized")
     # return identifers
@@ -113,10 +113,15 @@ register_http_handlers <- function(session, metadata) {
     total_time <- input$total_time
 
     # fire event
-    video_progress_event(session = session,
-                         video_url = video_url,
-                         time = time,
-                         total_time = total_time)
+    event_trigger(
+      session,
+      "video_progress",
+      data = list(
+        video_url  = video_url,
+        time       = time,
+        total_time = total_time
+      )
+    )
   }))
 
   # exercise skipped event
@@ -126,7 +131,11 @@ register_http_handlers <- function(session, metadata) {
     sectionId <- input$sectionId
 
     # fire event
-    section_skipped_event(session = session, sectionId = sectionId)
+    event_trigger(
+      session,
+      "section_skipped",
+      data = list(sectionId = sectionId)
+    )
 
   }))
 
@@ -175,10 +184,13 @@ register_http_handlers <- function(session, metadata) {
                       function.suffix = "(")
     on.exit(do.call(utils::rc.options, as.list(options)), add = TRUE)
 
+    # If and when exercises gain access to files, then we should evaluate this
+    # code in the exercise dir with `quotes = TRUE` (and sanitize to keep
+    # filename lookup local to exercise dir)
     settings <- utils::rc.settings()
     utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
                        ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
-                       argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
+                       argdb = TRUE, fuzzy = FALSE, files = FALSE, quotes = FALSE)
     on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
 
     # temporarily attach global setup to search path

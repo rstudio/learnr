@@ -587,11 +587,14 @@ R object to be saved
 </div>
 </div>
 </div>
+</div>
+<div id="events" class="section level2">
+<h2>Events</h2>
+<p>Learnr has an event system which can be used for recording information about usage, or for causing code to run when events occur.</p>
+<p>As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
+<p>The event system can also be used to cause arbitrary code to run when the events occur.</p>
 <div id="recording-events" class="section level3">
 <h3>Recording Events</h3>
-<p>As part of deploying a tutorial you might want to record the various user events which occur within tutorials (e.g. exercise and question submissions, requests for hints/solutions, etc.).</p>
-<div id="event-recorder-function" class="section level4">
-<h4>Event Recorder Function</h4>
 <p>You can capture events by using a custom event recorder function. This function is specified via the <code>tutorial.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
 <div id="tutorrecorder">
 
@@ -715,13 +718,21 @@ A section of the tutorial was skipped.
 </tr>
 <tr class="odd">
 <td>
+section_viewed
+</td>
+<td>
+A section of the tutorial became visible.
+</td>
+</tr>
+<tr class="even">
+<td>
 session_start
 </td>
 <td>
 A new session has been initiated
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 session_stop
 </td>
@@ -733,6 +744,41 @@ A session has been terminated
 </table>
 <p>The <code>data</code> parameter is an R list which provides additional data that varies depending on which <code>event</code> is being recorded.</p>
 </div>
+<div id="event-handlers" class="section level3">
+<h3>Event handlers</h3>
+<p>It can also be useful to cause code to run when an event occurs. The <code>event_register_handler()</code> function can be used for this. For example, this will cause a a message to be printed to the console when the <code>&quot;section_viewed&quot;</code> event is triggered:</p>
+<pre><code>```{r context="server-start"}
+event_register_handler("section_viewed", function(session, event, data) {
+  message("event: section_viewed: ", data$sectionId)
+})
+```</code></pre>
+<p>Note that <code>event_register_handler()</code> should be called in a code chunk with <code>context=&quot;server-start&quot;</code>!</p>
+<p>The callback must take three parameters:</p>
+<ul>
+<li><code>session</code>: This is a Shiny session object.</li>
+<li><code>event</code>: The name of the event (like <code>&quot;section_viewed&quot;</code>).</li>
+<li><code>data</code>: This is a list that contains arbitrary data.</li>
+</ul>
+<p>In some cases it is useful to have handlers that are triggered just once in the tutorial. This can be done with the <code>one_time()</code> function. Inside of the handler, call <code>one_time()</code>, and pass it the <code>session</code> object, <code>cond</code>, a condition expression, and <code>expr</code>, the code expression to run.</p>
+<p>The first time <code>cond</code> is true, <code>expr</code> will be evaluated; after that, <code>expr</code> will not be evaluated again. In the example here, <code>cond</code> is true when time the section with ID <code>&quot;section-exercise-with-hint&quot;</code> is viewed, and so the first time that section is visible, it will print out a message.</p>
+<pre><code>```{r context="server-start"}
+event_register_handler("section_viewed",
+  function(session, event, data) {
+    one_time(
+      session,
+      cond = data$sectionId == "section-exercise-with-hint",
+      expr = { message("Seeing ", data$sectionId, " for the first time.") }
+    )
+  }
+)
+```</code></pre>
+<p>Technical note: The reason that <code>one_time()</code> has an unusual interface is because it needs to be able to store data that persists across runs of the tutorial. The code will run one time, even if the user stops the document and starts it again; it resets when the user clicks on “Start Over”.</p>
+<p>The section IDs are generated automatically from the section title. For example, if this is the section heading:</p>
+<pre><code>### This is a section</code></pre>
+<p>Then the ID will be <code>section-this-is-a-section</code>. If you want to use a different ID, you can supply it in curly braces, and it will be prepended with <code>section-</code>. This will set the ID to <code>section-myid</code>:</p>
+<pre><code>### This is a section {#myid}</code></pre>
+<p>You can even have sections that don’t have a title, but do have an ID:</p>
+<pre><code>### {#myid}</code></pre>
 </div>
 <div id="tutorial-identifiers" class="section level3">
 <h3>Tutorial Identifiers</h3>

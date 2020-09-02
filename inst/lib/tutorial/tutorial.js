@@ -1324,6 +1324,17 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       return value;
     },
 
+    setValue: function(el, value) {
+      var editor = ace.edit($(el).attr('id'));
+      editor.getSession().setValue(value.code);
+      // Need to trigger a click for progressive mode.
+      this.runButtons(el).trigger('click');
+    },
+
+    getType: function(el) {
+      return "learnr.exercise";
+    },
+
     subscribe: function(el, callback) {
       var binding = this;
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
@@ -1453,6 +1464,29 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
     store._dbp.then(function (db) {
       db.close();
     })
+  }
+
+  // Validate that we can actually open a store. Some browsers (e.g. Safari)
+  // pass the previous tests but will deny access to the idb store in certain
+  // context (such as a cross-origin iframe). This check ensures that we fail
+  // fast in such scenarios.
+  var storeCreated;
+  try{
+    testStore = new window.idbKeyval.Store(
+      dbName,
+      storeName
+    );
+    closeStore(testStore);
+    storeCreated = true;
+  } catch (error){
+    // Unable to open store.
+    storeCreated = false;
+  }
+  if (storeCreated === false) {
+    // can not do db stuff.
+    // return early and do not create hooks
+    success({});
+    return;
   }
 
   // tl/dr; Do not keep indexedDB connections around

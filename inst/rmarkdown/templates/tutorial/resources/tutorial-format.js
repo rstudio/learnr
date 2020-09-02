@@ -11,7 +11,32 @@ $(document).ready(function() {
     var scrollLastSectionToView = false;
     var scrollLastSectionPosition = 0;
 
-    function setCurrentTopic(topicIndex) {
+    // Callbacks that are triggered when setCurrentTopic() is called.
+    var setCurrentTopicNotifiers = (function() {
+      notifiers = [];
+
+      return {
+        add: function(id, callback) {
+          notifiers.push({id: id, callback: callback});
+        },
+        remove: function(id) {
+          notifiers = notifiers.filter(function(x) {
+            return id !== x.id;
+          });
+        },
+        invoke: function() {
+          for(var i = 0; i < notifiers.length; i++) {
+            notifiers[i].callback();
+          }
+        }
+      };
+    })();
+
+
+    function setCurrentTopic(topicIndex, notify) {
+      if (typeof(notify) === "undefined") {
+        notify = true;
+      }
       if (topics.length === 0) return;
 
       topicIndex = topicIndex * 1;  // convert strings to a number
@@ -32,6 +57,10 @@ $(document).ready(function() {
       currentEl.trigger('shown');
       $(topics[topicIndex].jqListElement).addClass('current');
       currentTopicIndex = topicIndex;
+
+      if (notify) {
+        setCurrentTopicNotifiers.invoke();
+      }
 
       // always start a topic with a the scroll pos at the top
       // we do this in part to prevent the scroll to view behavior of hash navigation
@@ -58,6 +87,8 @@ $(document).ready(function() {
     }
 
     function updateVisibilityOfTopicElements(topicIndex) {
+      resetSectionVisibilityList();
+
       var topic = topics[topicIndex];
 
       if (!topic.progressiveReveal) return;
@@ -123,6 +154,8 @@ $(document).ready(function() {
     }
 
     function handleSkipClick(event) {
+      $(this).data('n_clicks', $(this).data('n_clicks') + 1)
+
       var sectionId = this.getAttribute('data-section-id');
       // get the topic & section indexes
       var topicIndex = -1;
@@ -178,7 +211,7 @@ $(document).ready(function() {
     // build the list of topics in the document
     // and create/adorn the DOM for them as needed
     function buildTopicsList() {
-      var topicsList = $('<div class="topicsList hideFloating"></div>');
+      var topicsList = $('<div id="tutorial-topic" class="topicsList hideFloating"></div>');
 
       var topicsHeader = $('<div class="topicsHeader"></div>');
       topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'));
@@ -189,6 +222,7 @@ $(document).ready(function() {
 
       $('#doc-metadata').appendTo(topicsList);
 
+      resetSectionVisibilityList();
 
       var topicsDOM = $('.section.level2');
       topicsDOM.each( function(topicIndex, topicElement) {
@@ -228,17 +262,53 @@ $(document).ready(function() {
         }
         $(topicElement).append(topicActions);
 
+        $(topicElement).on('shown', function() {
+          // Some the topic can have the shown event triggered but not actually
+          // be visible. This visibility check saves a little effort when it's
+          // not actually visible.
+          if ($(this).is(":visible")) {
+            var sectionsDOM = $(topicElement).children('.section.level3');
+            sectionsDOM.each( function(sectionIndex, sectionElement) {
+              updateSectionVisibility(sectionElement);
+            })
+          }
+        });
+
+        $(topicElement).on('hidden', function() {
+          var sectionsDOM = $(topicElement).children('.section.level3');
+          sectionsDOM.each( function(sectionIndex, sectionElement) {
+            updateSectionVisibility(sectionElement);
+          })
+        });
+
         topic.sections = [];
         var sectionsDOM = $(topicElement).children('.section.level3');
         sectionsDOM.each( function( sectionIndex, sectionElement) {
 
           if (topic.progressiveReveal) {
-            var continueButton = $('<button class="btn btn-default skip" data-section-id="' + sectionElement.id + '">Continue</button>');
+            var continueButton = $(
+              '<button class="btn btn-default skip" id="' +
+              'continuebutton-' + sectionElement.id +
+              '" data-section-id="' + sectionElement.id + '">Continue</button>'
+            );
+            continueButton.data('n_clicks', 0);
             continueButton.on('click', handleSkipClick);
             var actions = $('<div class="exerciseActions"></div>');
             actions.append(continueButton);
             $(sectionElement).append(actions);
           }
+
+          $(sectionElement).on('shown', function() {
+            // A 'shown' event can be triggered even when this section isn't
+            // actually visible. This can happen when the parent topic isn't
+            // visible. So we have to check that this section actually is
+            // visible.
+            updateSectionVisibility(sectionElement);
+          });
+
+          $(sectionElement).on('hidden', function() {
+            updateSectionVisibility(sectionElement);
+          });
 
           var section = {};
           section.exercises = [];
@@ -285,6 +355,71 @@ $(document).ready(function() {
       return topicsList;
 
     }
+
+  // topicMenuInputBinding
+  // ------------------------------------------------------------------
+  // This keeps tracks of what topic is selected
+  var topicMenuInputBinding = new Shiny.InputBinding();
+  $.extend(topicMenuInputBinding, {
+    find: function(scope) {
+      return $(scope).find('.topicsList');
+    },
+    getValue: function(el) {
+      if (currentTopicIndex == -1) return null;
+      return topics[currentTopicIndex].id;
+    },
+    setValue: function(el, value) {
+      for (var i = 0; i < topics.length; i++) {
+        if (topics[i].id == value) {
+          setCurrentTopic(i, false);
+          break;
+        }
+      }
+    },
+    subscribe: function(el, callback) {
+      setCurrentTopicNotifiers.add(el.id, callback);
+    },
+    unsubscribe: function(el) {
+      setCurrentTopicNotifiers.remove(el.id);
+    }
+  });
+  Shiny.inputBindings.register(topicMenuInputBinding, 'learnr.topicMenuInputBinding');
+
+  // continueButtonInputBinding
+  // ------------------------------------------------------------------
+  // This keeps tracks of what topic is selected
+  var continueButtonInputBinding = new Shiny.InputBinding();
+  $.extend(continueButtonInputBinding, {
+    find: function(scope) {
+      return $(scope).find('.exerciseActions > button.skip');
+    },
+    getId: function(el) {
+      return 'continuebutton-' + el.getAttribute('data-section-id');
+    },
+    getValue: function(el) {
+      return $(el).data('n_clicks');
+    },
+    setValue: function(el, value) {
+      var old_value = $(el).data('n_clicks');
+      if (value > old_value) {
+        $(el).trigger('click');
+      }
+
+      // Just in case the click event didn't increment n_clicks to be the same
+      // as the `value`, set `n_clicks` to be the same.
+      $(el).data('n_clicks', value);
+    },
+    subscribe: function(el, callback) {
+      $(el).on('click.continueButtonInputBinding', function(event) {
+        callback(false);
+      });
+    },
+    unsubscribe: function(el) {
+      $(el).off('.continueButtonInputBinding');
+    }
+  });
+  Shiny.inputBindings.register(continueButtonInputBinding, 'learnr.continueButtonInputBinding');
+
 
     // transform the DOM here
   function transformDOM() {
@@ -407,6 +542,43 @@ $(document).ready(function() {
       }
     }
   }
+
+  // Keep track of which sections are currently visible. When this changes
+  var visibleSections = [];
+  function resetSectionVisibilityList() {
+    visibleSections = [];
+    sendVisibleSections();
+  }
+
+  function updateSectionVisibility(sectionElement) {
+    var idx = visibleSections.indexOf(sectionElement.id);
+
+    if ($(sectionElement).is(":visible")) {
+      if (idx == -1) {
+        visibleSections.push(sectionElement.id);
+        sendVisibleSections();
+      }
+    } else {
+      if (idx != -1) {
+        visibleSections.splice(idx, 1);
+        sendVisibleSections();
+      }
+    }
+  }
+
+  function sendVisibleSections() {
+    // This function may be called several times in a tick, which results in
+    // many calls to Shiny.setInputValue(). That shouldn't be a problem since
+    // those calls are deduped; only the last value gets sent to the server.
+    if (Shiny && Shiny.setInputValue) {
+      Shiny.setInputValue("tutorial-visible-sections", visibleSections);
+    } else {
+      $(document).on("shiny:sessioninitialized", function() {
+        Shiny.setInputValue("tutorial-visible-sections", visibleSections);
+      })
+    }
+  }
+
 
   // update the UI after a section or topic (with 0 sections) gets skipped
   function sectionSkipped(exerciseElement) {
