@@ -14,7 +14,7 @@ function TutorialCompleter(tutorial) {
     var lines = data.lines || [];
     if (lines.length !== 1)
       return;
-    
+
     // NOTE: Ace has already updated the document line at this point
     // so we can just look at the state of that line
     var pos = this.getCursorPosition();
@@ -37,7 +37,7 @@ function TutorialCompleter(tutorial) {
 
     this.$autocompletionTimerId = setTimeout(this.$liveAutocompleter, delayMs);
   };
- 
+
   var MODIFIER_NONE  = 0;
   var MODIFIER_CTRL  = 1;
   var MODIFIER_ALT   = 2;
@@ -74,12 +74,12 @@ function TutorialCompleter(tutorial) {
   }
 
   function initializeCompletionEngine(editor) {
-    
+
     editor.completers = editor.completers || [];
     editor.completers.push({
 
       getCompletions: function(editor, session, position, prefix, callback) {
-        
+
         // send autocompletion request with document contents up to cursor
         // position (done to enable multi-line autocompletions)
         var contents = session.getTextRange({
@@ -93,7 +93,7 @@ function TutorialCompleter(tutorial) {
         };
 
         self.$tutorial.$serverRequest("completion", payload, function(data) {
-          
+
           data = data || [];
 
           // define a custom completer -- used for e.g. automatic
@@ -109,7 +109,7 @@ function TutorialCompleter(tutorial) {
                 ranges[i].start.column -= n;
                 editor.session.remove(ranges[i]);
               }
-              
+
               // insert completion term (add parentheses for functions)
               var term = data.value + (data.is_function ? "()" : "");
               editor.execCommand("insertstring", term);
@@ -149,18 +149,18 @@ function TutorialCompleter(tutorial) {
   }
 
   var ensureInitialized = function(editor) {
-    
+
     // bail if completions are disabled for this editor
     if (!editor.tutorial.completion)
       return;
-    
+
     if (editor.$autocompletionInitialized)
       return;
 
     initializeAceEventListeners(editor);
     initializeCompletionEngine(editor);
     initializeSetupChunk(editor);
-    
+
     // generate a live autocompleter for this editor if
     // not yet available
     if (typeof editor.$liveAutocompleter === "undefined") {
@@ -188,11 +188,11 @@ function TutorialCompleter(tutorial) {
     var editor = findActiveAceInstance();
     if (editor == null)
       return;
-      
+
     // bail if completions are disabled for this editor
     if (!editor.tutorial.completion)
       return;
-    
+
     // ensure completion engine initialized
     ensureInitialized(editor);
 
@@ -224,5 +224,5 @@ function TutorialCompleter(tutorial) {
        return autocomplete();
 
   }, true);
-  
+
 }
