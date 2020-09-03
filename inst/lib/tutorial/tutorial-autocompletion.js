@@ -221,10 +221,10 @@ function TutorialCompleter(tutorial) {
       if (editor && editor.completer && editor.completer.activated) {
         // it is already activated. Accept the top choice. To do this, do nothing and it will be resolved by the autocompleter
        //// do nothing. let autocompleter handle it
-      } else {
-        // autocompleter is not active. enable it
-        return autocomplete()
+        return;
       }
+      // autocompleter is not active. enable it
+      return autocomplete();
     }
 
     if (keys.keyCode == KEYCODE_SPACE && keys.modifier == MODIFIER_CTRL)
