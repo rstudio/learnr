@@ -851,8 +851,6 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // capture label and caption
     var label = exercise.attr('data-label');
     var caption = exercise.attr('data-caption');
-    var engine_txt = exercise.attr('data-engine');
-
 
     // helper to create an id
     function create_id(suffix) {
@@ -897,11 +895,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // creating heading
     var panel_heading = $('<div class="panel-heading tutorial-panel-heading"></div>');
-    // add engine if it exists
-    if (engine_txt && engine_txt.length > 0) {
-      panel_heading.append($('<span class="tutorial-exercise-engine"></span>').text(engine_txt));
-    }
-    panel_heading.append($('<span class="tutorial-exercise-caption"></span>').text(caption));
+    panel_heading.text(caption);
     input_div.append(panel_heading);
 
     // create body
