@@ -311,10 +311,10 @@ install_knitr_hooks <- function() {
         )
 
         # script tag with knit options for this chunk
-        ui_options <- list(
-          engine = options$engine,
-          has_checker = (!is.null(check_chunk) || !is.null(code_check_chunk)),
-          caption = options$exercise.cap %||% {
+        caption <-
+          if (!is.null(options$exercise.cap)) {
+            as.character(options$exercise.cap)
+          } else {
             cap_engine <- knitr_engine(options$engine)
             cap_engine_file <- system.file(file.path("internals", "icons", paste0(cap_engine, ".svg")), package = "learnr")
             if (file.exists(cap_engine_file)) {
@@ -323,6 +323,10 @@ install_knitr_hooks <- function() {
               paste0(options$engine, " code")
             }
           }
+        ui_options <- list(
+          engine = options$engine,
+          has_checker = (!is.null(check_chunk) || !is.null(code_check_chunk)),
+          caption = caption
         )
         extra_html <- c('<script type="application/json" data-ui-opts="1">',
                         jsonlite::toJSON(ui_options, auto_unbox = TRUE),
