@@ -234,10 +234,8 @@ install_knitr_hooks <- function() {
         completion  <- as.numeric(options$exercise.completion %||% 1 > 0)
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 1 > 0)
         startover <- as.numeric(options$exercise.startover %||% 1 > 0)
-        caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
         paste0('<div class="tutorial-', class,
                '" data-label="', options$label,
-               '" data-caption="', caption,
                '" data-completion="', completion,
                '" data-diagnostics="', diagnostics,
                '" data-startover="', startover,
@@ -315,7 +313,16 @@ install_knitr_hooks <- function() {
         # script tag with knit options for this chunk
         ui_options <- list(
           engine = options$engine,
-          has_checker = !is.null(check_chunk) || !is.null(code_check_chunk)
+          has_checker = (!is.null(check_chunk) || !is.null(code_check_chunk)),
+          caption = options$exercise.cap %||% {
+            cap_engine <- knitr_engine(options$engine)
+            cap_engine_file <- system.file(file.path("internals", "icons", paste0(cap_engine, ".svg")), package = "learnr")
+            if (file.exists(cap_engine_file)) {
+              readLines(cap_engine_file)
+            } else {
+              paste0(options$engine, " code")
+            }
+          }
         )
         extra_html <- c('<script type="application/json" data-ui-opts="1">',
                         jsonlite::toJSON(ui_options, auto_unbox = TRUE),

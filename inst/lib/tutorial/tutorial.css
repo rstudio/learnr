@@ -117,3 +117,10 @@
   height: 100%;
   border: solid 1px #cccccc;
 }
+
+.tutorial-panel-heading svg {
+  vertical-align: middle;
+  fill: currentColor;
+  height: 20px;
+  margin-right: -9px; /* net 6px */
+}

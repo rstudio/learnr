@@ -848,9 +848,14 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
   this.$forEachExercise(function(exercise) {
 
+    // get the knitr options script block and detach it (will move to input div)
+    var options_script = exercise.children('script[data-ui-opts="1"]').detach();
+
+    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
+
     // capture label and caption
     var label = exercise.attr('data-label');
-    var caption = exercise.attr('data-caption');
+    var caption = chunk_options.caption;
 
     // helper to create an id
     function create_id(suffix) {
@@ -882,9 +887,6 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     for (var i=lines; i<thiz.kMinLines;i++)
       code = code + "\n";
 
-    // get the knitr options script block and detach it (will move to input div)
-    var options_script = exercise.children('script[data-ui-opts="1"]').detach();
-
     // wrap the remaining elements in an output frame div
     exercise.wrapInner('<div class="tutorial-exercise-output-frame"></div>');
     var output_frame = exercise.children('.tutorial-exercise-output-frame');
@@ -895,7 +897,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // creating heading
     var panel_heading = $('<div class="panel-heading tutorial-panel-heading"></div>');
-    panel_heading.text(caption);
+    panel_heading.html(caption);
     input_div.append(panel_heading);
 
     // create body
@@ -925,7 +927,6 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       return button;
     }
 
-    var chunk_options = options_script.length == 1 ? JSON.parse(options_script.text()) : {};
     // create submit answer button if checks are enabled
     if (chunk_options.has_checker)
       add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
@@ -1063,10 +1064,11 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   var hintDiv = thiz.$exerciseHintDiv(label);
 
   // function to add a helper button
-  function addHelperButton(icon, caption) {
+  function addHelperButton(icon, caption, ele_class) {
     var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
+    button.addClass(ele_class);
     button.append($('<i class="fa ' + icon + '"></i>'));
     button.append(' ' + caption);
     panel_heading.append(button);
@@ -1075,7 +1077,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // function to add a hint button
   function addHintButton(caption) {
-    return addHelperButton("fa-lightbulb-o", caption);
+    return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint");
   }
 
   // helper function to record solution/hint requests
@@ -1088,7 +1090,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // add a startover button
   if (editor.tutorial.startover_code !== null) {
-    var startOverButton = addHelperButton("fa-refresh", "Start Over");
+    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over");
     startOverButton.on('click', function() {
       editor.setValue(editor.tutorial.startover_code, -1);
       thiz.$clearExerciseOutput(exercise);
