@@ -5,7 +5,7 @@
 \title{Set tutorial options}
 \usage{
 tutorial_options(
-  exercise.cap = "Code",
+  exercise.cap = NULL,
   exercise.eval = FALSE,
   exercise.timelimit = 30,
   exercise.lines = NULL,
@@ -17,7 +17,7 @@ tutorial_options(
 )
 }
 \arguments{
-\item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
+\item{exercise.cap}{Caption for exercise chunk (defaults to the engine's icon or the combination of the engine and \code{" code"}).}
 
 \item{exercise.eval}{Whether to pre-evaluate the exercise so the reader can
 see some default output (defaults to \code{FALSE}).}
