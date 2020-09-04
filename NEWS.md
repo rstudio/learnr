@@ -27,7 +27,7 @@ learnr (development version)
 * Added error handling when user specifies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option `exercise.warn_invisible = TRUE` to display an invisible result warning message. ([#373](https://github.com/rstudio/learnr/pull/373))
-* If no `exercise.cap` is provided, an icon of the exercise engine will be displayed. If no icon is known, the `exercise.cap` will default to the combination of the exercise engine and `" code"`. ([#429](https://github.com/rstudio/learnr/pull/429))
+* `exercise.cap` now accepts HTML input. If no `exercise.cap` is provided, an icon of the exercise engine will be displayed. If no icon is known, the `exercise.cap` will default to the combination of the exercise engine and `" code"`. ([#429](https://github.com/rstudio/learnr/pull/429))
 
 ## Bug fixes
 
