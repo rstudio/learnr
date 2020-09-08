@@ -30,6 +30,7 @@ learnr (development version)
 * We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option `exercise.warn_invisible = TRUE` to display an invisible result warning message. ([#373](https://github.com/rstudio/learnr/pull/373))
 * With the addition of multi-language support, the default caption for an exercise has been switched to the combination of the exercise engine and `" code"`. This can be overwritten by setting the chunk option `exercise.cap`. ([#397](https://github.com/rstudio/learnr/pull/397))
 * `engine` is now passed to the `exercise.checker` to help distinguish what language is being checked in the exercise. ([#397](https://github.com/rstudio/learnr/pull/397))
+* Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 
 ## Bug fixes
 
