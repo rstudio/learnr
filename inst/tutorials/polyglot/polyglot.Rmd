@@ -1,6 +1,6 @@
 ---
 title: "Multi-language exercises"
-author: "Zoë Wilkinson Saldaña"
+author: "Cass (Z.) Wilkinson Saldaña"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
