@@ -17,6 +17,7 @@ learnr (development version)
 * Added a new `tutorial_options()`, namely `exercise.error.checker`, for customizing feedback when exercise submission code produces an evaluation error. This option accepts a function with the same arguments as `exercise.checker`. Use `gradethis::grade_learnr_error()` for a sensible default for this option. ([#403](https://github.com/rstudio/learnr/pull/403))
 * Added an event handler system, with the functions `event_register_handler()` and `one_time()`. There is also a new event `"section_viewed"`, which is triggered when a new section becomes visible. ([#398](https://github.com/rstudio/learnr/pull/398))
 * Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset=TRUE`. Now it a separate event, `"reset_question_submission"`. ([#398](https://github.com/rstudio/learnr/pull/398))
+* Added a new `polyglot` tutorial to learnr. This tutorial displays mixing R, python, and sql exercises. See [`run_tutorial("polyglot", "learnr")`](https://learnr-examples.shinyapps.io/polyglot) for a an example. ([#397](https://github.com/rstudio/learnr/pull/397))
 
 ## Minor new features and improvements
 
@@ -27,6 +28,8 @@ learnr (development version)
 * Added error handling when user specifies a non-existent label for `exercise.setup` option with an error message. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer forward the checker code to browser (in html), but instead cache it. ([#390](https://github.com/rstudio/learnr/pull/390))
 * We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option `exercise.warn_invisible = TRUE` to display an invisible result warning message. ([#373](https://github.com/rstudio/learnr/pull/373))
+* With the addition of multi-language support, the default caption for an exercise has been switched to the combination of the exercise engine and `" code"`. This can be overwritten by setting the chunk option `exercise.cap`. ([#397](https://github.com/rstudio/learnr/pull/397))
+* `engine` is now passed to the `exercise.checker` to help distinguish what language is being checked in the exercise. ([#397](https://github.com/rstudio/learnr/pull/397))
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 
 ## Bug fixes

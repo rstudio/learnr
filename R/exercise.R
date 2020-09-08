@@ -210,7 +210,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       envir_result = NULL,
       evaluate_result = NULL,
       envir_prep = envir_prep,
-      last_value = NULL
+      last_value = NULL,
+      engine = exercise$engine
     )
     if (is_exercise_result(checker_feedback)) {
       return(checker_feedback)
@@ -232,7 +233,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       envir_result = envir,
       evaluate_result = rmd_results$evaluate_result,
       envir_prep = envir_prep,
-      last_value = rmd_results$last_value
+      last_value = rmd_results$last_value,
+      engine = exercise$engine
     )
   }
 
@@ -246,7 +248,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
 try_checker <- function(exercise, name, check_code, envir_result,
                         evaluate_result, envir_prep, last_value,
-                        html_output) {
+                        engine) {
   checker_func <- tryCatch(
     get_checker_func(exercise, name, envir_prep),
     error = function(e) {
@@ -267,7 +269,8 @@ try_checker <- function(exercise, name, check_code, envir_result,
     envir_result = envir_result,
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
-    last_value = last_value
+    last_value = last_value,
+    engine = engine
   )
   # Throw better error messaging if the checker function signature is ill-defined
   missing_args <- setdiff(names(args), checker_args)
@@ -402,7 +405,8 @@ render_exercise <- function(exercise, envir, envir_prep) {
         envir_result = envir,
         evaluate_result = evaluate_result,
         envir_prep = envir_prep,
-        last_value = e
+        last_value = e,
+        engine = exercise$engine
       )
       if (is_exercise_result(checker_feedback)) {
         return(checker_feedback)

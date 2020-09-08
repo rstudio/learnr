@@ -34,23 +34,23 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.checker</code></td>
 <td>Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.error.check.code</code></td>
 <td>A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.completion</code></td>
 <td>Whether to enable code completion in the exercise editor.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.diagnostics</code></td>
 <td>Whether to enable code diagnostics in the exercise editor.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.startover</code></td>
 <td>Whether to include a "Start Over" button for the exercise.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.warn_invisible</code></td>
 <td>Whether to display an invisible result warning if the last value returned is invisible.</td>
 </tr>
@@ -105,7 +105,7 @@ You can however arrange for setup code to be run before evaluation of an exercis
 
     <div id="exercisesetupchained" style="width: 95%;"></div>
     <script type="text/javascript">loadSnippet('exercisesetupchained')</script>
-    
+
 5. You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
 
     <div id="exercisechained" style="width: 95%;"></div>
@@ -256,7 +256,7 @@ If, at any one of these stages, feedback should be provided, then `exercise.chec
 </tbody>
 </table>
 
-Below is a rough sketch of how one might implement an `exercise.checker` function. Notice how the presence of `envir_result` may be used to determine which type of check is being done (i.e., code or result check). 
+Below is a rough sketch of how one might implement an `exercise.checker` function. Notice how the presence of `envir_result` may be used to determine which type of check is being done (i.e., code or result check).
 
 <div id="customchecker"></div>
 <script type="text/javascript">loadSnippet('customchecker')</script>
@@ -304,6 +304,10 @@ See the table below for a full description of all the arguments supplied to `exe
 <td>The last value of the evaluated chunk.</td>
 </tr>
 <tr class="odd">
+<td><code>engine</code></td>
+<td>The <code>engine</code> value of the evaluated chunk.</td>
+</tr>
+<tr class="even">
 <td><code>...</code></td>
 <td>Unused (include for compatibility with parameters to be added in the future)</td>
 </tr>
@@ -315,7 +319,7 @@ See the table below for a full description of all the arguments supplied to `exe
 
 ## Exercise Caption
 
-By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. "Exercise" or "Sandbox"). For example:
+By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connotation (e.g. "Exercise" or "Sandbox"). For example:
 
 <div id="exercisecaption"></div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>

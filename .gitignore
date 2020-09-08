@@ -12,6 +12,7 @@ issues
 
 # html tutorial output
 inst/tutorials/*/*.html
+inst/tutorials/*/*.sqlite
 
 # deployment output
 rsconnect/
