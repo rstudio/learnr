@@ -967,6 +967,13 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // get the engine
     var engine = chunk_options["engine"]
 
+    if (engine.toLowerCase() != "r") {
+      // disable ace editor diagnostics if a non-r langauge engine is set
+      diagnostics = null;
+      // disable auto-completion if a non-r language engine is set
+      completion = null;
+    }
+
     // set tutorial options/data
     editor.tutorial = {
       label: label,
