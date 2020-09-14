@@ -82,9 +82,11 @@ local({
 
   Map(names(languages), unname(languages), f = function(language, loc) {
     if (is.null(loc)) return()
+    language <- tolower(language)
+    icon_file <- paste0(language, ".svg")
     download.file(
       paste0("https://simpleicons.org/icons/", loc, ".svg"),
-      file.path(icon_folder, paste0(tolower(language), ".svg"))
+      file.path(icon_folder, icon_file)
     )
   })
 
