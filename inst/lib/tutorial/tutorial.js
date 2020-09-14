@@ -897,8 +897,13 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // creating heading
     var panel_heading = $('<div class="panel-heading tutorial-panel-heading"></div>');
-    panel_heading.html(caption);
     input_div.append(panel_heading);
+    var panel_heading_left = $('<div class="tutorial-panel-heading-left"></div>');
+    var panel_heading_right = $('<div class="tutorial-panel-heading-right"></div>');
+    panel_heading.append(panel_heading_left);
+    panel_heading.append(panel_heading_right);
+
+    panel_heading_left.html(caption);
 
     // create body
     var panel_body = $('<div class="panel-body"></div>');
@@ -906,8 +911,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // function to add a submit button
     function add_submit_button(icon, style, text, check) {
-      var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run ' +
-                       'pull-right"></a>');
+      var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run"></a>');
       button.append($('<i class="fa ' + icon + '"></i>'));
       button.attr('type', 'button');
       button.append(' ' + text);
@@ -923,16 +927,16 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
         thiz.$removeSolution(exercise);
         thiz.$showExerciseProgress(label, button, true);
       });
-      panel_heading.append(button);
+      panel_heading_right.append(button);
       return button;
     }
+
+    // create run button
+    var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false);
 
     // create submit answer button if checks are enabled
     if (chunk_options.has_checker)
       add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
-
-    // create run button
-    var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false);
 
     // create code div and add it to the input div
     var code_div = $('<div class="tutorial-exercise-code-editor"></div>');
@@ -1024,7 +1028,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     editor.getSession().on('change', updateAceHeight);
 
     // add hint/solution/startover buttons if necessary
-    thiz.$addSolution(exercise, panel_heading, editor);
+    thiz.$addSolution(exercise, panel_heading_left, editor);
 
     exercise.parents('.section').on('shown', function() {
       editor.resize(true);

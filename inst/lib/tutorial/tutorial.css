@@ -23,6 +23,12 @@
   font-size: 13px;
   font-weight: 500;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.tutorial-panel-heading-left,
+.tutorial-panel-heading-right {
+  display: flex;
 }
 .tutorial-quiz-title {
   font-weight: 300;
@@ -118,9 +124,11 @@
   border: solid 1px #cccccc;
 }
 
-.tutorial-panel-heading svg {
+.tutorial_engine_icon {
   vertical-align: middle;
   fill: currentColor;
   height: 20px;
-  margin-right: -9px; /* net 6px */
+  width: 20px;
+  margin-right: -9px;
+  /* net 6px */
 }
