@@ -80,14 +80,21 @@ local({
   unlink(icon_folder, recursive = TRUE)
   dir.create(icon_folder, recursive = TRUE)
 
-  Map(names(languages), unname(languages), f = function(language, loc) {
+  pb <- progress::progress_bar$new(
+    total = length(languages),
+    format = "[:bar] :current / :total :language",
+    show_after = 0, clear = TRUE
+  )
+  Map(format(names(languages)), unname(languages), f = function(language, loc) {
+    pb$tick(tokens = list(language = language))
     if (is.null(loc)) return()
-    language <- tolower(language)
-    icon_file <- paste0(language, ".svg")
-    download.file(
-      paste0("https://simpleicons.org/icons/", loc, ".svg"),
-      file.path(icon_folder, icon_file)
-    )
+    language <- tolower(trimws(language))
+    icon_file <- file.path(icon_folder, paste0(language, ".svg"))
+    icon_url <- paste0("https://simpleicons.org/icons/", loc, ".svg")
+    icon_lines <- readLines(icon_url, warn = FALSE) # missing EOL
+    if (length(icon_lines) == 0) stop("Could not download: ", icon_url)
+    # will add a trailing line, which makes readLines happy
+    writeLines(icon_lines, icon_file)
   })
 
 })
