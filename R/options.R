@@ -4,7 +4,7 @@
 #' Set various tutorial options that control the display and evaluation of
 #' exercises.
 #'
-#' @param exercise.cap Caption for exercise chunk (defaults to \code{"Code")}.
+#' @param exercise.cap Caption for exercise chunk (defaults to the engine's icon or the combination of the engine and \code{" code"}).
 #' @param exercise.eval Whether to pre-evaluate the exercise so the reader can
 #'   see some default output (defaults to \code{FALSE}).
 #' @param exercise.timelimit Number of seconds to limit execution time to
@@ -20,7 +20,7 @@
 #' @param exercise.startover Show "Start Over" button on exercise.
 #'
 #' @export
-tutorial_options <- function(exercise.cap = "Code",
+tutorial_options <- function(exercise.cap = NULL,
                              exercise.eval = FALSE,
                              exercise.timelimit = 30,
                              exercise.lines = NULL,
