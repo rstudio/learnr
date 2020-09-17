@@ -23,8 +23,8 @@ local({
   ## [52] "remark"      "solution"
 
   languages <- list(
-    "r" = "rstudio",
-    "rscript" = "rstudio",
+    "r" = "r",
+    "rscript" = "r",
     "asis" = NULL,
     "asy" = NULL,
     "awk" = NULL,
