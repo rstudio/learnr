@@ -147,6 +147,7 @@ jobs:
           -e "library(remotes)"
           -e "update(readRDS('depends.Rds'))"
           -e "remotes::install_cran('sortable')"
+          -e "remotes::install_cran('reticulate')"
 
       - name: Deploy
         env:
