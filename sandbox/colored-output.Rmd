@@ -1,0 +1,191 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_color = "orange"
+)
+```
+
+
+## Using globally set color
+
+Done: 
+
++ `exercise.alert_color` in the setup chunck can be used to change the alert color. 
+
++ The output of the code is now inside the alert, formatted as code/table. 
+
++ There is a default message in the error output, it can be changed by `exercise.execution_error_message`
+
+To do: 
+
++ Add a check that the colors set by the user is valid (we have a finite set of colors)
+
++ Document the colors available
+
+To discuss: 
+
++ Should we allow custom colors? For example, we could have `exercise.alert_color_background = "#f5a67d"`
+
+__Example__
+
+The current tutorial uses the following call in the setup chunk:
+
+```
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_color = "orange"
+)
+```
+
+> Try typing errors in the chunks of this tutorial
+
+> NB: the solution to all is `mtcars`
+
+```{r car, exercise=TRUE, exercise.timelimit = 10}
+list(
+```
+
+```{r car-solution}
+mtcars
+```
+
+Example using a different `exercise.execution_error_message`
+
+```
+{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
+```
+
+```{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
+list(
+```
+
+```{r carbis-solution}
+mtcars
+```
+
+## Using locally set color 
+
+Colors can also be set at the chunk level.
+
+### red
+
+```
+{r car-red, exercise.alert_color = "red"}
+```
+
+```{r car-red, exercise.alert_color = "red", exercise=TRUE}
+list(
+```
+
+
+```{r car-red-solution}
+mtcars
+```
+
+
+### orange
+
+`exercise.alert_color = "orange"`
+
+```{r car-orange, exercise.alert_color = "orange", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-orange-solution}
+mtcars
+```
+
+
+### purple
+
+`exercise.alert_color = "purple"`
+
+```{r car-purple, exercise.alert_color = "purple", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-purple-solution}
+mtcars
+```
+
+### blue
+
+`exercise.alert_color = "blue"`
+
+```{r car-blue, exercise.alert_color = "blue", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-blue-solution}
+mtcars
+```
+
+
+### violet
+
+`exercise.alert_color = "violet"`
+
+```{r car-violet, exercise.alert_color = "violet", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-violet-solution}
+mtcars
+```
+
+
+### yellow
+
+`exercise.alert_color = "yellow"`
+
+```{r car-yellow, exercise.alert_color = "yellow", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-yellow-solution}
+mtcars
+```
+
+### pink
+
+`exercise.alert_color = "pink"`
+
+```{r car-pink, exercise.alert_color = "pink", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-pink-solution}
+mtcars
+```
+
+### green
+
+`exercise.alert_color = "green"`
+
+```{r car-green, exercise.alert_color = "green", exercise=TRUE, exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-green-solution}
+mtcars
+```
+
