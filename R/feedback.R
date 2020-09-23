@@ -41,7 +41,8 @@ feedback_validated <- function(feedback) {
   feedback
 }
 
-feedback_as_html <- function(feedback) {
+feedback_as_html <- function(feedback, exercise) {
+
   if (!length(feedback)) {
     return(feedback)
   }
@@ -52,17 +53,46 @@ feedback_as_html <- function(feedback) {
   if (feedback$type %in% "error") {
     feedback$type <- "danger"
   }
-  if (feedback$type %in% c("success", "info", "warning", "danger")) {
-    return(div(
-      role = "alert",
-      class = paste0("alert alert-", feedback$type),
-      feedback$message
-    ))
+  if (!feedback$type %in% c("success", "info", "warning", "danger")) {
+    stop("Invalid message type specified.", call. = FALSE)
   }
-  stop("Invalid message type specified.", call. = FALSE)
+  # Applying custom colors if they exist
+  if (feedback$type == "success"){
+    feedback$type <- exercise$options$exercise.gradethis_success_color %||% "success"
+  }
+
+  if (feedback$type == "info"){
+    feedback$type <- exercise$options$exercise.gradethis_info_color %||% "info"
+  }
+
+  if (feedback$type == "warning"){
+    feedback$type <- exercise$options$exercise.gradethis_warning_color %||% "warning"
+  }
+
+  if (feedback$type == "danger"){
+    feedback$type <- exercise$options$exercise.gradethis_danger_color %||% "danger"
+  }
+
+  return(div(
+    role = "alert",
+    class = paste0("alert alert-", feedback$type),
+    feedback$message
+  ))
 }
 
 # helper function to create tags for error message
-error_message_html <- function(message) {
-  div(class = "alert alert-danger", role = "alert", message)
+error_message_html <- function(message, exercise) {
+  color <- exercise$options$exercise.alert_color %||% "red"
+  error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
+  div(
+    class = sprintf(
+      "alert alert-%s",
+      color
+    ),
+    role = "alert",
+    error,
+    tags$pre(
+      message
+    )
+  )
 }
