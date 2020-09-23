@@ -1,0 +1,89 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+#options(tutorial.event_recorder = learnr:::debug_event_recorder)
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_color = "orange",
+  exercise.gradethis_success_color = "pink",
+  exercise.gradethis_info_color = "orange",
+  exercise.gradethis_warning_color = "violet",
+  exercise.gradethis_danger_color = "blue"
+)
+gradethis::gradethis_setup()
+```
+
+## Using globally set color
+
+Done: 
+
++ The gradethis colors can be set using options: `exercise.gradethis_success_color`, `exercise.gradethis_info_color`, `exercise.gradethis_warning_color` and `exercise.gradethis_danger_color`
+
+__Example__
+
+The current tutorial uses the following call in the setup chunk:
+
+```
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_color = "orange",
+  exercise.gradethis_success_color = "pink",
+  exercise.gradethis_info_color = "orange",
+  exercise.gradethis_warning_color = "violet",
+  exercise.gradethis_danger_color = "blue"
+)
+```
+
+Enter `mtcars`
+
+```{r mtcars, exercise = TRUE}
+
+```
+
+```{r mtcars-solution}
+mtcars
+```
+
+
+```{r mtcars-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
+## Using locally set color
+
+With the following chunk setup: 
+
+```
+{r mtcars2 exercise.gradethis_success_color = "red", ,exercise.gradethis_info_color = "violet", exercise.gradethis_warning_color = "blue", exercise.gradethis_danger_color = "green"}
+```
+
+Enter `mtcars`
+
+```{r mtcars2, exercise = TRUE, exercise.gradethis_success_color = "red", ,exercise.gradethis_info_color = "violet", exercise.gradethis_warning_color = "blue", exercise.gradethis_danger_color = "green"}
+
+```
+
+```{r mtcars2-solution}
+mtcars
+```
+
+
+```{r mtcars2-check }
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
