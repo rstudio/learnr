@@ -41,6 +41,8 @@ feedback_validated <- function(feedback) {
   feedback
 }
 
+# This function is called to build the html of the feedback
+# provided by gradethis
 feedback_as_html <- function(feedback, exercise) {
 
   if (!length(feedback)) {
@@ -74,18 +76,55 @@ feedback_as_html <- function(feedback, exercise) {
 }
 
 # helper function to create tags for error message
+# It is called by learnr when clicking "Run code" & the
+# code produced an error
 error_message_html <- function(message, exercise) {
-  color <- exercise$options$exercise.alert_color %||% "red"
+  #color <- exercise$options$exercise.alert_color %||% "red"
   error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
-  div(
-    class = sprintf(
-      "alert alert-%s",
-      color
-    ),
-    role = "alert",
-    error,
-    tags$pre(
-      message
-    )
+  class <- sprintf(
+    "alert alert-%s",
+    exercise$options$exercise.alert_color %||% "red"
   )
+  # The trainer want feedbacks and code (the default)
+  if (
+    exercise$options$exercise.feedback_show &
+    exercise$options$exercise.code_show
+  ){
+    div(
+      class = class,
+      role = "alert",
+      error,
+      tags$pre(
+        message
+      )
+
+    )
+  } else if (
+    # The trainer want feedbacks only
+    exercise$options$exercise.feedback_show &
+    ! exercise$options$exercise.code_show
+  ) {
+    div(
+      class = class,
+      role = "alert",
+      error
+    )
+  } else if (
+    # The trainer wants code only
+    ! exercise$options$exercise.feedback_show &
+    exercise$options$exercise.code_show
+  ) {
+    div(
+      tags$pre(
+        message
+      )
+    )
+  } else {
+    # Not sure what to do there, (i.e the trainer want neither feedback nor code)
+    div(
+      class = "alert alert-grey",
+      role = "alert",
+      "Code submitted"
+    )
+  }
 }

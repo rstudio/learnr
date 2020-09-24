@@ -31,20 +31,25 @@ tutorial_options <- function(
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE,
   exercise.alert_color = "red",
+  exercise.feedback_show = TRUE,
+  exercise.code_show = TRUE,
   exercise.execution_error_message = NULL,
   exercise.gradethis_success_color = NULL,
   exercise.gradethis_info_color = NULL,
   exercise.gradethis_warning_color = NULL,
-  exercise.gradethis_danger_color = NULL
+  exercise.gradethis_danger_color = NULL,
+  exercise.gradethis_feedback_show = TRUE,
+  exercise.gradethis_code_show = TRUE
 )
 {
   # string to evalute for setting chunk options  %1$s
-  set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
-
+  set_option_code <- 'if (!is.null(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
+  #browser()
   # set options as required
   for (i in names(formals())){
     eval(parse(text = sprintf(set_option_code, i)))
   }
+  # browser()
   # eval(parse(text = sprintf(set_option_code, "exercise.cap")))
   # eval(parse(text = sprintf(set_option_code, "exercise.eval")))
   # eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
@@ -59,4 +64,7 @@ tutorial_options <- function(
   # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_info_color")))
   # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_warning_color")))
   # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_danger_color")))
+  # for (i in names(formals())){
+  #   eval(parse(text = sprintf(set_option_code, i)))
+  # }
 }
