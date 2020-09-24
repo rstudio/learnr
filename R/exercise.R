@@ -299,7 +299,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
   }
   # If checker doesn't return anything, there's no exercise result to return
   if (length(feedback)) {
-    exercise_result(feedback, exercise)
+    exercise_result(feedback, exercise = exercise)
   } else {
     feedback
   }
@@ -410,7 +410,6 @@ render_exercise <- function(exercise, envir, envir_prep) {
         engine = exercise$engine
       )
       if (is_exercise_result(checker_feedback)) {
-        cli::cat_rule("./R/exercise.R#414")
         return(checker_feedback)
       }
     }
@@ -438,7 +437,6 @@ render_exercise <- function(exercise, envir, envir_prep) {
       message = "The submitted code didn't produce a visible value, so exercise checking may not work correctly.",
       type = "warning", correct = FALSE
     )
-    browser()
     html_output <- htmltools::tagList(
       feedback_as_html(invisible_feedback, exercise),
       html_output
@@ -488,7 +486,6 @@ exercise_result_error <- function(error_message, feedback = NULL, timeout_exceed
 exercise_result <- function(feedback = NULL, html_output = NULL,
                             error_message = NULL, timeout_exceeded = FALSE,
                             exercise = NULL) {
-  #browser()
   feedback <- feedback_validated(feedback)
   feedback_html <- feedback_as_html(feedback, exercise)
 
