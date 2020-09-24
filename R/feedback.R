@@ -57,21 +57,14 @@ feedback_as_html <- function(feedback, exercise) {
     stop("Invalid message type specified.", call. = FALSE)
   }
   # Applying custom colors if they exist
-  if (feedback$type == "success"){
-    feedback$type <- exercise$options$exercise.gradethis_success_color %||% "success"
-  }
 
-  if (feedback$type == "info"){
-    feedback$type <- exercise$options$exercise.gradethis_info_color %||% "info"
-  }
-
-  if (feedback$type == "warning"){
-    feedback$type <- exercise$options$exercise.gradethis_warning_color %||% "warning"
-  }
-
-  if (feedback$type == "danger"){
-    feedback$type <- exercise$options$exercise.gradethis_danger_color %||% "danger"
-  }
+  feedback$type <- switch(
+    feedback$type,
+    success = exercise$options$exercise.gradethis_success_color %||% "success",
+    info = exercise$options$exercise.gradethis_info_color %||% "info",
+    warning = exercise$options$exercise.gradethis_warning_color %||% "warning",
+    danger = exercise$options$exercise.gradethis_danger_color %||% "danger"
+  )
 
   return(div(
     role = "alert",
