@@ -52,19 +52,19 @@ passed with missed options.
 }
 \examples{
 question_anybox(
-  "Select all the toppings that belong on a Margherita Pizza:",
+  "Select at least two toppings that belong on a Margherita Pizza (and no more than one that doesn't):",
   answer("tomato", correct = TRUE, message = "Tomatoes too!"),
-  answer("mozzarella", correct = TRUE, "Don't forget the cheese!"),
-  answer("basil", correct = TRUE, "Basil gives it a distinctive flavor!"),
-  answer("extra virgin olive oil", correct = TRUE, "You need olive oil too!"),
+  answer("mozzarella", correct = TRUE, message = "Don't forget the cheese!"),
+  answer("basil", correct = TRUE, message = "Basil gives it a distinctive flavor!"),
+  answer("extra virgin olive oil", correct = TRUE, message = "You need olive oil too!"),
   answer("pepperoni", message = "Pepperoni is a great topping! ... just not on a Margherita Pizza"),
   answer("onions", message = "Onions!? No and yuck!"),
   answer("bacon", message = "Bacon doesn't belong here!"),
-  answer("spinach", "Spinach? With Olive Oil? Only if you're Popeye!"),
+  answer("spinach", message = "Spinach? With Olive Oil? Only if you're Popeye!"),
   random_answer_order = TRUE,
   allow_retry = TRUE,
   try_again = "Be sure to select all four toppings!",
-  min_right = 3,
+  min_right = 2,
   max_wrong = 1
 )
 }
