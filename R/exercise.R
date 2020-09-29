@@ -252,7 +252,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
   checker_func <- tryCatch(
     get_checker_func(exercise, name, envir_prep),
     error = function(e) {
-      message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
+      message("Error occurred while retrieving 'exercise.checker'. Error:\n", e)
       exercise_result_error(e$message)
     }
   )
