@@ -317,6 +317,7 @@ install_knitr_hooks <- function() {
           } else {
             cap_engine <- knitr_engine(options$engine)
 
+            # use logo shipped within learnr pkg (currently none)
             cap_engine_file <- system.file(file.path("internals", "icons", paste0(cap_engine, ".svg")), package = "learnr")
             if (file.exists(cap_engine_file)) {
               as.character(htmltools::div(
@@ -324,7 +325,35 @@ install_knitr_hooks <- function() {
                 htmltools::HTML(readLines(cap_engine_file))
               ))
             } else {
-              paste0(options$engine, " code")
+              cap_engine_val <-
+                switch(cap_engine,
+                  "bash" = "Bash",
+                  "c" = "C",
+                  "coffee" = "CoffeeScript",
+                  "cc" = "C++",
+                  "css" = "CSS",
+                  "go" = "Go",
+                  "groovy" = "Groovy",
+                  "haskell" = "Haskell",
+                  "js" = "JavaScript",
+                  "mysql" = "MySQL",
+                  "node" = "Node.js",
+                  "octave" = "Octave",
+                  "psql" = "PostgreSQL",
+                  "python" = "Python",
+                  "r" = "R",
+                  "rcpp" = "R C++",
+                  "rscript" = "Rscript",
+                  "ruby" = "Ruby",
+                  "perl" = "Perl",
+                  "sass" = "Sass",
+                  "scala" = "Scala",
+                  "scss" = "SCSS",
+                  "sql" = "SQL",
+                  # else, return as the user provided
+                  options$engine
+                )
+              paste0(cap_engine_val, " code")
             }
           }
         ui_options <- list(
