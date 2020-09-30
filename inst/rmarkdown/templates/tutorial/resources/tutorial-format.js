@@ -251,12 +251,12 @@ $(document).ready(function() {
 
         var topicActions = $('<div class="topicActions"></div>');
         if (topicIndex > 0) {
-          var prevButton = $('<button class="btn btn-default">Previous Topic</button>');
+          var prevButton = $('<button class="btn btn-default" data-i18n="button.previoustopic"></button>');
           prevButton.on('click', handlePreviousTopicClick);
           topicActions.append(prevButton);
         }
         if (topicIndex < topicsDOM.length - 1) {
-          var nextButton = $('<button class="btn btn-primary">Next Topic</button>');
+          var nextButton = $('<button class="btn btn-primary" data-i18n="button.nexttopic"></button>');
           nextButton.on('click', handleNextTopicClick);
           topicActions.append(nextButton);
         }
@@ -289,7 +289,7 @@ $(document).ready(function() {
             var continueButton = $(
               '<button class="btn btn-default skip" id="' +
               'continuebutton-' + sectionElement.id +
-              '" data-section-id="' + sectionElement.id + '">Continue</button>'
+              '" data-section-id="' + sectionElement.id + '" data-i18n="button.continue"></button>'
             );
             continueButton.data('n_clicks', 0);
             continueButton.on('click', handleSkipClick);
@@ -341,7 +341,7 @@ $(document).ready(function() {
 
       var topicsFooter = $('<div class="topicsFooter"></div>');
 
-      var resetButton = $('<span class="resetButton">Start Over</span>');
+      var resetButton = $('<span class="resetButton" data-i18n="text.startover"></span>');
       resetButton.on('click', function() {
         bootbox.confirm("Are you sure you want to start over? (all exercise progress will be reset)",
                         function(result) {
