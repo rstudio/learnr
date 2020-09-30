@@ -256,7 +256,6 @@ try_checker <- function(exercise, name, check_code, envir_result,
       message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
       exercise_result_error(
         e$message,
-        color = exercise$options$exercise.alert_color %||% "red",
         exercise = exercise
       )
     }
@@ -293,7 +292,6 @@ try_checker <- function(exercise, name, check_code, envir_result,
     do.call(checker_func, args),
     error = function(e) {
       msg <- paste("Error occurred while evaluating", sprintf("'%s'", name))
-      cli::cat_rule("./R/exercise.R#292")
       message(msg, ": ", conditionMessage(e))
       exercise_result_error(msg, exercise = exercise)
     }
