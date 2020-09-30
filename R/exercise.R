@@ -521,11 +521,13 @@ exercise_result <- function(
   feedback <- feedback_validated(feedback)
   feedback_html <- feedback_as_html(feedback, exercise)
 
+  exercise.gradethis_feedback_show <- exercise$options$exercise.gradethis_feedback_show %||% TRUE
+  exercise.gradethis_code_show <- exercise$options$exercise.gradethis_code_show %||% TRUE
 
   # The trainer want feedbacks and code (the default)
   if (
-    exercise$options$exercise.gradethis_feedback_show &
-    exercise$options$exercise.gradethis_code_show
+    exercise.gradethis_feedback_show &
+    exercise.gradethis_code_show
   ){
     html_output <- switch(
       feedback$location %||% "append",
@@ -549,22 +551,22 @@ exercise_result <- function(
     )
   } else if (
     # The trainer want feedbacks only
-    exercise$options$exercise.gradethis_feedback_show &
-    ! exercise$options$exercise.gradethis_code_show
+    exercise.gradethis_feedback_show &
+    ! exercise.gradethis_code_show
   ) {
     html_output <- feedback_html
   } else if (
     # The trainer wants code only
-    ! exercise$options$exercise.gradethis_feedback_show &
-    exercise$options$exercise.gradethis_code_show
+    ! exercise.gradethis_feedback_show &
+    exercise.gradethis_code_show
   ) {
     html_output <- tags$div(
       html_output
     )
   } else if (
     # The trainer wants no feedback
-    ! exercise$options$exercise.gradethis_feedback_show &
-    ! exercise$options$exercise.gradethis_code_show
+    ! exercise.gradethis_feedback_show &
+    ! exercise.gradethis_code_show
   ){
     # Not sure what to do there, (i.e the trainer want neither feedback nor code)
     html_output <- div(
