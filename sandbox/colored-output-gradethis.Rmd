@@ -13,7 +13,7 @@ library(dplyr)
 #options(tutorial.event_recorder = learnr:::debug_event_recorder)
 gradethis::gradethis_setup(
   exercise.eval = FALSE,
-  exercise.alert_color = "orange",
+  exercise.alert_class = "orange",
   exercise.gradethis_success_color = "pink",
   exercise.gradethis_info_color = "orange",
   exercise.gradethis_warning_color = "violet",
@@ -40,7 +40,7 @@ The current tutorial uses the following call in the setup chunk:
 ```
 tutorial_options(
 exercise.eval = FALSE,
-exercise.alert_color = "orange",
+exercise.alert_class = "orange",
 exercise.gradethis_success_color = "pink",
 exercise.gradethis_info_color = "orange",
 exercise.gradethis_warning_color = "violet",
