@@ -43,7 +43,7 @@ tutorial_options <- function(
 )
 {
   # string to evalute for setting chunk options  %1$s
-  set_option_code <- 'if (!is.null(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
+  set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
   #browser()
   # set options as required
   for (i in names(formals())){
