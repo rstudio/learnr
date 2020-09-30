@@ -1,3 +1,32 @@
+:root {
+  --red-back: #f2dede;
+  --red-color: #b94a48;
+  --red-border: #eed3d7;
+  --orange-back: #ffa0142e;
+  --orange-color: #b96e00;
+  --orange-border: #ffc10787;
+  --purple-back: #9c27b029;
+  --purple-color: #681876;
+  --purple-border: #9c27b01f;
+  --blue-back: #cce5ff;
+  --blue-color: #004085;
+  --blue-border: #b8daff;
+  --violet-back: #6610f214;
+  --violet-color: #3e246d;
+  --violet-border: #6610f23b;
+  --yellow-back: #ffc10747;
+  --yellow-color: #da6605;
+  --yellow-border: #ffc107;
+  --pink-back: #e83eb424;
+  --pink-color: #9b2158;
+  --pink-border: #e83e8c45;
+  --green-back: #dff0d8;
+  --green-color: #468847;
+  --green-border: #d6e9c6;
+  --grey-back: #f5f5f5;
+  --grey-color: #555555;
+  --grey-border: #dcdcdc;
+}
 
 .tutorial-exercise-support {
   display: none;
@@ -132,3 +161,75 @@
   margin-right: -9px;
   /* net 6px */
 }
+
+.alert{
+  width: 100%!important;
+}
+
+.alert-red {
+  background-color: var(--red-back);
+  color: var(--red-color);
+  border-color: var(--red-border);
+}
+
+.alert-orange {
+  background-color: var(--orange-back);
+  color: var(--orange-color);
+  border-color: var(--orange-border);
+}
+
+.alert-purple {
+  background-color: var(--purple-back);
+  color: var(--purple-color);
+  border-color: var(--purple-border);
+}
+
+.alert-blue {
+  background-color: var(--blue-back);
+  color: var(--blue-color);
+  border-color: var(--blue-border);
+}
+
+.alert-violet {
+  background-color: var(--violet-back);
+  color: var(--violet-color);
+  border-color: var(--violet-border);
+}
+
+.alert-yellow {
+  background-color: var(--yellow-back);
+  color: var(--yellow-color);
+  border-color: var(--yellow-border);
+}
+
+.alert-pink {
+  background-color: var(--pink-back);
+  color: var(--pink-color);
+  border-color: var(--pink-border);
+}
+
+.alert-green {
+  background-color: var(--green-back);
+  color: var(--green-color);
+  border-color: var(--green-border);
+}
+
+.alert-grey {
+  background-color: var(--grey-back);
+  color: var(--grey-color);
+  border-color: var(--grey-border);
+}
+
+/* Class to display pagetable inside an alert without inheriting from it*/
+
+.alert > .pagedtable-wrapper {
+  background-color: white;
+  color: #555555;
+}
+
+.alert > pre {
+    border: none;
+    border-radius: 4px;
+    margin-top: 1em;
+}
+

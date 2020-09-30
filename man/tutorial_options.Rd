@@ -13,7 +13,17 @@ tutorial_options(
   exercise.error.check.code = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
-  exercise.startover = TRUE
+  exercise.startover = TRUE,
+  exercise.alert_class = "red",
+  exercise.feedback_show = TRUE,
+  exercise.code_show = TRUE,
+  exercise.execution_error_message = NULL,
+  exercise.gradethis_success_color = NULL,
+  exercise.gradethis_info_color = NULL,
+  exercise.gradethis_warning_color = NULL,
+  exercise.gradethis_danger_color = NULL,
+  exercise.gradethis_feedback_show = TRUE,
+  exercise.gradethis_code_show = TRUE
 )
 }
 \arguments{
@@ -39,6 +49,21 @@ code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_cod
 \item{exercise.diagnostics}{Show diagnostics in exercise editors.}
 
 \item{exercise.startover}{Show "Start Over" button on exercise.}
+
+\item{exercise.alert_class, exercise.gradethis_info_color, exercise.gradethis_success_color, exercise.gradethis_warning_color, exercise.gradethis_danger_color}{Slug for the CSS class for \code{{learnr}} and \code{{gradethis}} message.
+It can be one of \code{red}, \code{orange}, \code{purple}, \code{blue}, \code{violet}, \code{yellow}, \code{pink}, \code{green},
+or \code{grey}. You can also implement your own CSS rule, in that case you need to define a
+class that starts with \verb{alert-} (for example \code{alert-rainbow}).}
+
+\item{exercise.feedback_show}{Should the \code{{learnr}} feedback be shown?}
+
+\item{exercise.code_show}{Should \code{{learnr}} output code be shown?}
+
+\item{exercise.execution_error_message}{What message should \code{{learnr}} print on error?}
+
+\item{exercise.gradethis_feedback_show}{Should the \code{{gradethis}} feedback be shown?}
+
+\item{exercise.gradethis_code_show}{Should \code{{gradethis}} output code be shown?}
 }
 \description{
 Set various tutorial options that control the display and evaluation of

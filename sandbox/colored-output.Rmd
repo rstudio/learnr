@@ -1,0 +1,242 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_class = "orange"
+)
+```
+
+
+## Using globally set color
+
+Done: 
+
++ `exercise.alert_class` in the setup chunck can be used to change the alert color. 
+
++ The output of the code is now inside the alert, formatted as code/table. 
+
++ There is a default message in the error output, it can be changed by `exercise.execution_error_message`
+
+To do: 
+
++ Add a check that the colors set by the user is valid (we have a finite set of colors)
+
++ Document the colors available
+
+To discuss: 
+
++ Should we allow custom colors? For example, we could have `exercise.alert_class = "#f5a67d"`
+
+__Example__
+
+The current tutorial uses the following call in the setup chunk:
+
+```
+tutorial_options(
+  exercise.eval = FALSE,
+  exercise.alert_class = "orange"
+)
+```
+
+> Try typing errors in the chunks of this tutorial
+
+> NB: the solution to all is `mtcars`
+
+```{r car, exercise=TRUE, exercise.timelimit = 10}
+list(
+```
+
+```{r car-solution}
+mtcars
+```
+
+Example using a different `exercise.execution_error_message`
+
+```
+{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
+```
+
+```{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
+list(
+```
+
+```{r carbis-solution}
+mtcars
+```
+
+## Using locally set color 
+
+Colors can also be set at the chunk level.
+
+### red
+
+```
+{r car-red, exercise.alert_class = "red"}
+```
+
+```{r car-red, exercise.alert_class = "red", exercise=TRUE}
+list(
+```
+
+
+```{r car-red-solution}
+mtcars
+```
+
+
+### orange
+
+`exercise.alert_class = "orange"`
+
+```{r car-orange, exercise.alert_class = "orange", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-orange-solution}
+mtcars
+```
+
+
+### purple
+
+`exercise.alert_class = "purple"`
+
+```{r car-purple, exercise.alert_class = "purple", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-purple-solution}
+mtcars
+```
+
+### blue
+
+`exercise.alert_class = "blue"`
+
+```{r car-blue, exercise.alert_class = "blue", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-blue-solution}
+mtcars
+```
+
+
+### violet
+
+`exercise.alert_class = "violet"`
+
+```{r car-violet, exercise.alert_class = "violet", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-violet-solution}
+mtcars
+```
+
+
+### yellow
+
+`exercise.alert_class = "yellow"`
+
+```{r car-yellow, exercise.alert_class = "yellow", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-yellow-solution}
+mtcars
+```
+
+### pink
+
+`exercise.alert_class = "pink"`
+
+```{r car-pink, exercise.alert_class = "pink", exercise=TRUE,  exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-pink-solution}
+mtcars
+```
+
+### green
+
+`exercise.alert_class = "green"`
+
+```{r car-green, exercise.alert_class = "green", exercise=TRUE, exercise.timelimit = 10}
+list(
+```
+
+
+```{r car-green-solution}
+mtcars
+```
+
+## Toggle Feedback or code display
+
+Done: 
+
++ `exercise.feedback_show` and `exercise.feedback_show` set the content of the feedbacks from learnr
+
+To discuss: 
+
++ What should we print when trainer wants neither feedback nor code?
+
+__Example__
+
+`{r exercise.feedback_show=TRUE, exercise.code_show = TRUE}`
+
+```{r cara, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=TRUE, exercise.code_show = TRUE}
+list(
+```
+
+```{r cara-solution}
+mtcars
+```
+
+`{r exercise.feedback_show=FALSE, exercise.code_show = TRUE}`
+
+```{r carb, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=FALSE, exercise.code_show = TRUE}
+list(
+```
+
+```{r carb-solution}
+mtcars
+```
+
+`{r exercise.feedback_show=TRUE, exercise.code_show = FALSE}`
+
+```{r carc, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=TRUE, exercise.code_show = FALSE}
+list(
+```
+
+```{r carc-solution}
+mtcars
+```
+
+`{r exercise.feedback_show=FALSE, exercise.code_show = FALSE}`
+
+```{r card, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=FALSE, exercise.code_show = FALSE}
+list(
+```
+
+```{r card-solution}
+mtcars
+```

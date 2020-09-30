@@ -41,7 +41,10 @@ feedback_validated <- function(feedback) {
   feedback
 }
 
-feedback_as_html <- function(feedback) {
+# This function is called to build the html of the feedback
+# provided by gradethis
+feedback_as_html <- function(feedback, exercise) {
+
   if (!length(feedback)) {
     return(feedback)
   }
@@ -52,17 +55,80 @@ feedback_as_html <- function(feedback) {
   if (feedback$type %in% "error") {
     feedback$type <- "danger"
   }
-  if (feedback$type %in% c("success", "info", "warning", "danger")) {
-    return(div(
-      role = "alert",
-      class = paste0("alert alert-", feedback$type),
-      feedback$message
-    ))
+  if (!feedback$type %in% c("success", "info", "warning", "danger")) {
+    stop("Invalid message type specified.", call. = FALSE)
   }
-  stop("Invalid message type specified.", call. = FALSE)
+  # Applying custom colors if they exist
+
+  feedback$type <- switch(
+    feedback$type,
+    success = exercise$options$exercise.gradethis_success_color %||% "success",
+    info = exercise$options$exercise.gradethis_info_color %||% "info",
+    warning = exercise$options$exercise.gradethis_warning_color %||% "warning",
+    danger = exercise$options$exercise.gradethis_danger_color %||% "danger"
+  )
+
+  return(div(
+    role = "alert",
+    class = paste0("alert alert-", feedback$type),
+    feedback$message
+  ))
 }
 
 # helper function to create tags for error message
-error_message_html <- function(message) {
-  div(class = "alert alert-danger", role = "alert", message)
+# It is called by learnr when clicking "Run code" & the
+# code produced an error
+error_message_html <- function(message, exercise) {
+  error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
+  class <- sprintf(
+    "alert alert-%s",
+    exercise$options$exercise.alert_class %||% "red"
+  )
+
+  #Default to TRUE if the option is missing
+  exercise.feedback_show <- exercise$options$exercise.feedback_show %||% TRUE
+  exercise.code_show <- exercise$options$exercise.feedback_show %||% TRUE
+
+  # The trainer want feedbacks and code (the default)
+  if (
+    exercise.feedback_show &
+    exercise.code_show
+  ){
+    div(
+      class = class,
+      role = "alert",
+      error,
+      tags$pre(
+        message
+      )
+
+    )
+  } else if (
+    # The trainer want feedbacks only
+    exercise.feedback_show &
+    ! exercise.code_show
+  ) {
+    div(
+      class = class,
+      role = "alert",
+      error
+    )
+  } else if (
+    # The trainer wants code only
+    ! exercise.feedback_show &
+    exercise.code_show
+  ) {
+    div(
+      tags$pre(
+        message
+      )
+    )
+  } else {
+    # Not sure what to do there, (i.e the trainer want neither feedback nor code)
+    div(
+      class = "alert alert-grey",
+      role = "alert",
+      "Code submitted"
+    )
+  }
 }

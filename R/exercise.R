@@ -15,7 +15,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
   # observe input
   observeEvent(exercise_rx(), {
-
     # get exercise
     exercise <- exercise_rx()
 
@@ -239,9 +238,11 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # include any checker feedback with the exercise results
+
   exercise_result(
     feedback = checker_feedback$feedback,
-    html_output = rmd_results$html_output
+    html_output = rmd_results$html_output,
+    exercise = exercise
   )
 }
 
@@ -253,7 +254,10 @@ try_checker <- function(exercise, name, check_code, envir_result,
     get_checker_func(exercise, name, envir_prep),
     error = function(e) {
       message("Error occured while retrieving 'exercise.checker'. Error:\n", e)
-      exercise_result_error(e$message)
+      exercise_result_error(
+        e$message,
+        exercise = exercise
+      )
     }
   )
   # If retrieving checker_func fails, return an error result
@@ -280,7 +284,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
       name, paste(missing_args, collapse = "', '")
     )
     message(msg)
-    return(exercise_result_error(msg))
+    return(exercise_result_error(msg, exercise = exercise))
   }
 
   # Call the check function
@@ -289,7 +293,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
     error = function(e) {
       msg <- paste("Error occurred while evaluating", sprintf("'%s'", name))
       message(msg, ": ", conditionMessage(e))
-      exercise_result_error(msg)
+      exercise_result_error(msg, exercise = exercise)
     }
   )
   # If checker code fails, return an error result
@@ -298,7 +302,7 @@ try_checker <- function(exercise, name, check_code, envir_result,
   }
   # If checker doesn't return anything, there's no exercise result to return
   if (length(feedback)) {
-    exercise_result(feedback)
+    exercise_result(feedback, exercise = exercise)
   } else {
     feedback
   }
@@ -395,7 +399,7 @@ render_exercise <- function(exercise, envir, envir_prep) {
     # make the time limit error message a bit more friendly
     pattern <- gettext("reached elapsed time limit", domain = "R")
     if (grepl(pattern, msg, fixed = TRUE)) {
-      return(exercise_result_timeout())
+      return(exercise_result_timeout(exercise = exercise))
     }
     if (length(exercise$error_check)) {
       # Run the condition through an error checker (the exercise could be to throw an error!)
@@ -412,7 +416,7 @@ render_exercise <- function(exercise, envir, envir_prep) {
         return(checker_feedback)
       }
     }
-    exercise_result_error(msg)
+    exercise_result_error(msg, exercise = exercise)
   })
 
   if (is_exercise_result(output_file)) {
@@ -436,8 +440,9 @@ render_exercise <- function(exercise, envir, envir_prep) {
       message = "The submitted code didn't produce a visible value, so exercise checking may not work correctly.",
       type = "warning", correct = FALSE
     )
+
     html_output <- htmltools::tagList(
-      feedback_as_html(invisible_feedback),
+      feedback_as_html(invisible_feedback, exercise),
       html_output
     )
   }
@@ -463,41 +468,120 @@ exercise_code_chunks <- function(exercise) {
 }
 
 
-exercise_result_timeout <- function() {
+exercise_result_timeout <- function(exercise) {
   exercise_result_error(
     "Error: Your code ran longer than the permitted timelimit for this exercise.",
-    timeout_exceeded = TRUE
+    timeout_exceeded = TRUE,
+    exercise = exercise
   )
 }
 
 # @param timeout_exceeded represents whether or not the error was triggered
 #   because the exercise exceeded the timeout. Use NA if unknown
-exercise_result_error <- function(error_message, feedback = NULL, timeout_exceeded = NA) {
+exercise_result_error <- function(
+  error_message,
+  feedback = NULL,
+  timeout_exceeded = NA,
+  exercise = NULL
+) {
   exercise_result(
     feedback = feedback,
     timeout_exceeded = timeout_exceeded,
     error_message = error_message,
-    html_output = error_message_html(error_message)
+    html_output = error_message_html(error_message, exercise),
+    exercise = exercise
   )
 }
 
-exercise_result <- function(feedback = NULL, html_output = NULL,
-                            error_message = NULL, timeout_exceeded = FALSE) {
+exercise_result <- function(
+  feedback = NULL,
+  html_output = NULL,
+  error_message = NULL,
+  timeout_exceeded = FALSE,
+  exercise = NULL
+) {
+
+  # When `exercise` is empty, we return a list of NULL
+  # `exercise` is NULL when there was no code sent (i.e the
+  # student hasn't entered any code)
+  if (is.null(exercise)){
+    return(
+      structure(
+        list(
+          feedback = feedback,
+          error_message = error_message,
+          timeout_exceeded = timeout_exceeded,
+          html_output = html_output
+        ),
+        class = "learnr_exercise_result"
+      )
+    )
+  }
+
   feedback <- feedback_validated(feedback)
-  feedback_html <- feedback_as_html(feedback)
+  feedback_html <- feedback_as_html(feedback, exercise)
+
+  exercise.gradethis_feedback_show <- exercise$options$exercise.gradethis_feedback_show %||% TRUE
+  exercise.gradethis_code_show <- exercise$options$exercise.gradethis_code_show %||% TRUE
+
+  # The trainer want feedbacks and code (the default)
+  if (
+    exercise.gradethis_feedback_show &
+    exercise.gradethis_code_show
+  ){
+    html_output <- switch(
+      feedback$location %||% "append",
+      append = {
+        feedback_html$children <- list(
+          feedback_html$children[[1]],
+          html_output
+
+        )
+        feedback_html
+      },
+      prepend = {
+        feedback_html$children <- list(
+          html_output,
+          feedback_html$children[[1]]
+        )
+        feedback_html
+      },
+      replace = feedback_html,
+      stop("Feedback location of ", feedback$location, " not supported")
+    )
+  } else if (
+    # The trainer want feedbacks only
+    exercise.gradethis_feedback_show &
+    ! exercise.gradethis_code_show
+  ) {
+    html_output <- feedback_html
+  } else if (
+    # The trainer wants code only
+    ! exercise.gradethis_feedback_show &
+    exercise.gradethis_code_show
+  ) {
+    html_output <- tags$div(
+      html_output
+    )
+  } else if (
+    # The trainer wants no feedback
+    ! exercise.gradethis_feedback_show &
+    ! exercise.gradethis_code_show
+  ){
+    # Not sure what to do there, (i.e the trainer want neither feedback nor code)
+    html_output <- div(
+      class = "alert alert-grey",
+      role = "alert",
+      "Code submitted"
+    )
+  }
 
   structure(
     list(
       feedback = feedback,
       error_message = error_message,
       timeout_exceeded = timeout_exceeded,
-      html_output = switch(
-        feedback$location %||% "append",
-        append = htmltools::tagList(html_output, feedback_html),
-        prepend = htmltools::tagList(feedback_html, html_output),
-        replace = feedback_html,
-        stop("Feedback location of ", feedback$location, " not supported")
-      )
+      html_output = html_output
     ),
     class = "learnr_exercise_result"
   )
