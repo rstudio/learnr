@@ -79,16 +79,20 @@ feedback_as_html <- function(feedback, exercise) {
 # It is called by learnr when clicking "Run code" & the
 # code produced an error
 error_message_html <- function(message, exercise) {
-  #color <- exercise$options$exercise.alert_color %||% "red"
   error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
   class <- sprintf(
     "alert alert-%s",
-    exercise$options$exercise.alert_color %||% "red"
+    exercise$options$exercise.alert_class %||% "red"
   )
+
+  #Default to TRUE if the option is missing
+  exercise.feedback_show <- exercise$options$exercise.feedback_show %||% TRUE
+  exercise.code_show <- exercise$options$exercise.feedback_show %||% TRUE
+
   # The trainer want feedbacks and code (the default)
   if (
-    exercise$options$exercise.feedback_show &
-    exercise$options$exercise.code_show
+    exercise.feedback_show &
+    exercise.code_show
   ){
     div(
       class = class,
@@ -101,8 +105,8 @@ error_message_html <- function(message, exercise) {
     )
   } else if (
     # The trainer want feedbacks only
-    exercise$options$exercise.feedback_show &
-    ! exercise$options$exercise.code_show
+    exercise.feedback_show &
+    ! exercise.code_show
   ) {
     div(
       class = class,
@@ -111,8 +115,8 @@ error_message_html <- function(message, exercise) {
     )
   } else if (
     # The trainer wants code only
-    ! exercise$options$exercise.feedback_show &
-    exercise$options$exercise.code_show
+    ! exercise.feedback_show &
+    exercise.code_show
   ) {
     div(
       tags$pre(
