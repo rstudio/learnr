@@ -13,16 +13,16 @@ library(dplyr)
 #options(tutorial.event_recorder = learnr:::debug_event_recorder)
 gradethis::gradethis_setup(
   exercise.eval = FALSE,
-  exercise.alert_class = "orange",
-  exercise.gradethis_success_color = "pink",
-  exercise.gradethis_info_color = "orange",
-  exercise.gradethis_warning_color = "violet",
-  exercise.gradethis_danger_color = "blue"
+  exercise.alert_class = "alert-orange",
+  exercise.success_class = "alert-pink",
+  exercise.info_class = "alert-orange",
+  exercise.warning_class = "alert-violet",
+  exercise.danger_class = "alert-blue"
 )
 
 tutorial_options(
-  exercise.gradethis_feedback_show = TRUE,
-  exercise.gradethis_code_show = TRUE
+  exercise.submitted_feedback = TRUE,
+  exercise.submitted_output = TRUE
 )
 
 ```
@@ -31,20 +31,20 @@ tutorial_options(
 
 Done: 
 
-+ The gradethis colors can be set using options: `exercise.gradethis_success_color`, `exercise.gradethis_info_color`, `exercise.gradethis_warning_color` and `exercise.gradethis_danger_color`
++ The gradethis colors can be set using options: `exercise.success_class`, `exercise.info_class`, `exercise.warning_class` and `exercise.danger_class`
 
 __Example__
 
 The current tutorial uses the following call in the setup chunk:
 
 ```
-tutorial_options(
-exercise.eval = FALSE,
-exercise.alert_class = "orange",
-exercise.gradethis_success_color = "pink",
-exercise.gradethis_info_color = "orange",
-exercise.gradethis_warning_color = "violet",
-exercise.gradethis_danger_color = "blue"
+gradethis::gradethis_setup(
+  exercise.eval = FALSE,
+  exercise.alert_class = "alert-orange",
+  exercise.success_class = "alert-pink",
+  exercise.info_class = "alert-orange",
+  exercise.warning_class = "alert-violet",
+  exercise.danger_class = "alert-blue"
 )
 ```
 
@@ -71,12 +71,12 @@ grade_result(
 With the following chunk setup: 
 
 ```
-{r mtcars2 exercise.gradethis_success_color = "red", ,exercise.gradethis_info_color = "violet", exercise.gradethis_warning_color = "blue", exercise.gradethis_danger_color = "green"}
+{r mtcars2 exercise.success_class = "alert-red", ,exercise.info_class = "alert-violet", exercise.warning_class = "alert-blue", exercise.danger_class = "alert-green"}
 ```
 
 Enter `mtcars`
 
-```{r mtcars2, exercise = TRUE, exercise.gradethis_success_color = "red", ,exercise.gradethis_info_color = "violet", exercise.gradethis_warning_color = "blue", exercise.gradethis_danger_color = "green"}
+```{r mtcars2, exercise = TRUE, exercise.success_class = "alert-red", ,exercise.info_class = "alert-violet", exercise.warning_class = "alert-blue", exercise.danger_class = "alert-green"}
 
 ```
 
@@ -97,12 +97,12 @@ grade_result(
 With the following chunk: 
 
 ```
-{r mtcars3, exercise.gradethis_feedback_show = TRUE, exercise.gradethis_code_show = TRUE}
+{r mtcars3, exercise.submitted_feedback = TRUE, exercise.submitted_output = TRUE}
 ```
 
 Enter `mtcars`
 
-```{r mtcars3, exercise = TRUE, exercise.gradethis_feedback_show = TRUE, exercise.gradethis_code_show = TRUE}
+```{r mtcars3, exercise = TRUE, exercise.submitted_feedback = TRUE, exercise.submitted_output = TRUE}
 airquality
 ```
 
@@ -121,12 +121,12 @@ grade_result(
 With the following chunk: 
 
 ```
-{r mtcars4, exercise.gradethis_feedback_show = TRUE, exercise.gradethis_code_show = FALSE}
+{r mtcars4, exercise.submitted_feedback = TRUE, exercise.submitted_output = FALSE}
 ```
 
 Enter `mtcars`
 
-```{r mtcars4, exercise = TRUE, exercise.gradethis_feedback_show = TRUE, exercise.gradethis_code_show = FALSE}
+```{r mtcars4, exercise = TRUE, exercise.submitted_feedback = TRUE, exercise.submitted_output = FALSE}
 airquality
 ```
 
@@ -145,12 +145,12 @@ grade_result(
 With the following chunk: 
 
 ```
-{r mtcars5, exercise.gradethis_feedback_show = FALSE, exercise.gradethis_code_show = TRUE}
+{r mtcars5, exercise.submitted_feedback = FALSE, exercise.submitted_output = TRUE}
 ```
 
 Enter `mtcars`
 
-```{r mtcars5, exercise = TRUE, exercise.gradethis_feedback_show = FALSE, exercise.gradethis_code_show = TRUE}
+```{r mtcars5, exercise = TRUE, exercise.submitted_feedback = FALSE, exercise.submitted_output = TRUE}
 airquality
 ```
 
@@ -169,12 +169,12 @@ grade_result(
 With the following chunk: 
 
 ```
-{r mtcars6, exercise.gradethis_feedback_show = FALSE, exercise.gradethis_code_show = FALSE}
+{r mtcars6, exercise.submitted_feedback = FALSE, exercise.submitted_output = FALSE}
 ```
 
 Enter `mtcars`
 
-```{r mtcars6, exercise = TRUE, exercise.gradethis_feedback_show = FALSE, exercise.gradethis_code_show = FALSE}
+```{r mtcars6, exercise = TRUE, exercise.submitted_feedback = FALSE, exercise.submitted_output = FALSE}
 airquality
 ```
 

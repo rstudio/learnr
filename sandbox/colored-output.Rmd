@@ -13,7 +13,7 @@ library(dplyr)
 options(tutorial.event_recorder = learnr:::debug_event_recorder)
 tutorial_options(
   exercise.eval = FALSE,
-  exercise.alert_class = "orange"
+  exercise.alert_class = "alert-orange"
 )
 ```
 
@@ -82,10 +82,10 @@ Colors can also be set at the chunk level.
 ### red
 
 ```
-{r car-red, exercise.alert_class = "red"}
+{r car-red, exercise.alert_class = "alert-red"}
 ```
 
-```{r car-red, exercise.alert_class = "red", exercise=TRUE}
+```{r car-red, exercise.alert_class = "alert-red", exercise=TRUE}
 list(
 ```
 
@@ -97,9 +97,9 @@ mtcars
 
 ### orange
 
-`exercise.alert_class = "orange"`
+`exercise.alert_class = "alert-orange"`
 
-```{r car-orange, exercise.alert_class = "orange", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-orange, exercise.alert_class = "alert-orange", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -111,9 +111,9 @@ mtcars
 
 ### purple
 
-`exercise.alert_class = "purple"`
+`exercise.alert_class = "alert-purple"`
 
-```{r car-purple, exercise.alert_class = "purple", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-purple, exercise.alert_class = "alert-purple", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -124,9 +124,9 @@ mtcars
 
 ### blue
 
-`exercise.alert_class = "blue"`
+`exercise.alert_class = "alert-blue"`
 
-```{r car-blue, exercise.alert_class = "blue", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-blue, exercise.alert_class = "alert-blue", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -138,9 +138,9 @@ mtcars
 
 ### violet
 
-`exercise.alert_class = "violet"`
+`exercise.alert_class = "alert-violet"`
 
-```{r car-violet, exercise.alert_class = "violet", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-violet, exercise.alert_class = "alert-violet", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -152,9 +152,9 @@ mtcars
 
 ### yellow
 
-`exercise.alert_class = "yellow"`
+`exercise.alert_class = "alert-yellow"`
 
-```{r car-yellow, exercise.alert_class = "yellow", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-yellow, exercise.alert_class = "alert-yellow", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -165,9 +165,9 @@ mtcars
 
 ### pink
 
-`exercise.alert_class = "pink"`
+`exercise.alert_class = "alert-pink"`
 
-```{r car-pink, exercise.alert_class = "pink", exercise=TRUE,  exercise.timelimit = 10}
+```{r car-pink, exercise.alert_class = "alert-pink", exercise=TRUE,  exercise.timelimit = 10}
 list(
 ```
 
@@ -178,9 +178,9 @@ mtcars
 
 ### green
 
-`exercise.alert_class = "green"`
+`exercise.alert_class = "alert-green"`
 
-```{r car-green, exercise.alert_class = "green", exercise=TRUE, exercise.timelimit = 10}
+```{r car-green, exercise.alert_class = "alert-green", exercise=TRUE, exercise.timelimit = 10}
 list(
 ```
 
