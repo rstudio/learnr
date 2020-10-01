@@ -47,8 +47,8 @@ tutorial_options <- function(
   exercise.gradethis_info_color = NULL,
   exercise.gradethis_warning_color = NULL,
   exercise.gradethis_danger_color = NULL,
-  exercise.gradethis_feedback_show = TRUE,
-  exercise.gradethis_code_show = TRUE
+  exercise.submitted_feedback = TRUE,
+  exercise.submitted_output = TRUE
 )
 {
   # string to evalute for setting chunk options  %1$s
