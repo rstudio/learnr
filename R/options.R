@@ -25,8 +25,8 @@
 #' @param exercise.feedback_show Should the `{learnr}` feedback be shown?
 #' @param exercise.code_show Should `{learnr}` output code be shown?
 #' @param exercise.execution_error_message What message should `{learnr}` print on error?
-#' @param exercise.gradethis_feedback_show Should the `{gradethis}` feedback be shown?
-#' @param exercise.gradethis_code_show Should `{gradethis}` output code be shown?
+#' @param exercise.submitted_feedback Should submitted exercise feedback be shown?
+#' @param exercise.submitted_output Should submitted exercise output be shown?
 #'
 #' @export
 tutorial_options <- function(
