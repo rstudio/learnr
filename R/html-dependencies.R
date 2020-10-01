@@ -83,3 +83,42 @@ ace_html_dependency <- function() {
     script = "ace.js"
   )
 }
+
+tutorial_i18n <- function() {
+  htmltools::htmlDependency(
+    name = "i18n",
+    version = "1.2.0",
+    src = system.file("lib/i18n", package = "learnr"),
+    script = c("i18next.min.js", "jquery-i18next.min.js")
+  )
+}
+
+tutorial_i18_lang <- function(language) {
+
+  write(
+    as.character(
+      htmltools::htmlTemplate(
+        system.file(
+          "lib/i18n/template.js",
+          package = "learnr"
+        ),
+        language = language
+      )
+    ),
+    file.path(
+      system.file(
+        "lib/i18n",
+        package = "learnr"
+      ), "rendered.js"
+    )
+  )
+
+  htmltools::htmlDependency(
+    name = "i18nlang",
+    version = "1.2.0",
+    src = system.file("lib/i18n", package = "learnr"),
+    script = "rendered.js"
+  )
+}
+
+

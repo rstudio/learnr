@@ -45,6 +45,7 @@ tutorial <- function(fig_width = 6.5,
                      includes = NULL,
                      md_extensions = NULL,
                      pandoc_args = NULL,
+                     language = "en",
                      ...) {
 
   # base pandoc options
@@ -103,6 +104,8 @@ tutorial <- function(fig_width = 6.5,
     tutorial_html_dependency(),
     tutorial_autocompletion_html_dependency(),
     tutorial_diagnostics_html_dependency(),
+    tutorial_i18n(),
+    tutorial_i18_lang(language),
     htmltools::htmlDependency(
       name = "tutorial-format",
       version = utils::packageVersion("learnr"),
