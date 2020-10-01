@@ -18,7 +18,7 @@
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.
-#' @param exercise.alert_class,exercise.gradethis_info_color,exercise.gradethis_success_color,exercise.gradethis_warning_color,exercise.gradethis_danger_color The CSS class for `{learnr}` and `{gradethis}` message.
+#' @param exercise.alert_class,exercise.info_class,exercise.success_class,exercise.warning_class,exercise.danger_class The CSS class for `{learnr}` and `{gradethis}` message.
 #' It can be one of `alert-success`, `alert-info`, `alert-warning`, `alert-danger`,
 #' `alert-red`, `alert-orange`, `alert-purple`, `alert-blue`, `alert-violet`,
 #' `alert-yellow`, `alert-pink`, `alert-green`, or `alert-grey`.
@@ -44,10 +44,10 @@ tutorial_options <- function(
   exercise.feedback_show = TRUE,
   exercise.code_show = TRUE,
   exercise.execution_error_message = NULL,
-  exercise.gradethis_success_color = "alert-success",
-  exercise.gradethis_info_color = "alert-info",
-  exercise.gradethis_warning_color = "alert-warning",
-  exercise.gradethis_danger_color = "alert-danger",
+  exercise.success_class = "alert-success",
+  exercise.info_class = "alert-info",
+  exercise.warning_class = "alert-warning",
+  exercise.danger_class = "alert-danger",
   exercise.submitted_feedback = TRUE,
   exercise.submitted_output = TRUE
 )
@@ -59,19 +59,4 @@ tutorial_options <- function(
   for (i in names(formals())){
     eval(parse(text = sprintf(set_option_code, i)))
   }
-  # browser()
-  # eval(parse(text = sprintf(set_option_code, "exercise.cap")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.eval")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.lines")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.checker")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.error.check.code")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.completion")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.diagnostics")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.startover")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.alert_color")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_success_color")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_info_color")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_warning_color")))
-  # eval(parse(text = sprintf(set_option_code, "exercise.gradethis_danger_color")))
 }
