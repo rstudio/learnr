@@ -4,6 +4,7 @@ output:
   learnr::tutorial:
     progressive: true
     allow_skip: true
+    language: fr
 runtime: shiny_prerendered
 ---
 
@@ -26,13 +27,6 @@ tutorial_options(
   }
 )
 ```
-
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/8.1.0/i18next.min.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.0/jquery-i18next.min.js" ></script>
-    <!-- <script src="/jquery-i18next.min.js" ></script> -->
-  </head>
 
 
 ## intro
@@ -194,4 +188,3 @@ for (i in seq(1,5)){
  }
 ```
 
-`r htmltools::includeScript('i18.js')`

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).on("shiny:sessioninitialized", function() {
     var arr = [
         { val: "en", text: 'English' },
         { val: "fr", text: 'French' }
@@ -18,7 +18,7 @@ $(document).ready(function() {
     $("#tutorial-topic").append(sel);
 
     i18next.init({
-        lng: 'en',
+        lng: 'fr',
         resources: {
             en: {
                 translation: {
