@@ -70,7 +70,7 @@ feedback_as_html <- function(feedback, exercise) {
 
   return(div(
     role = "alert",
-    class = paste0("alert", feedback$type),
+    class = paste0("alert ", feedback$type),
     feedback$message
   ))
 }
