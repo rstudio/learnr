@@ -62,15 +62,15 @@ feedback_as_html <- function(feedback, exercise) {
 
   feedback$type <- switch(
     feedback$type,
-    success = exercise$options$exercise.gradethis_success_color %||% "success",
-    info = exercise$options$exercise.gradethis_info_color %||% "info",
-    warning = exercise$options$exercise.gradethis_warning_color %||% "warning",
-    danger = exercise$options$exercise.gradethis_danger_color %||% "danger"
+    success = exercise$options$exercise.gradethis_success_color %||% "alert-success",
+    info = exercise$options$exercise.gradethis_info_color %||% "alert-info",
+    warning = exercise$options$exercise.gradethis_warning_color %||% "alert-warning",
+    danger = exercise$options$exercise.gradethis_danger_color %||% "alert-danger"
   )
 
   return(div(
     role = "alert",
-    class = paste0("alert alert-", feedback$type),
+    class = paste0("alert", feedback$type),
     feedback$message
   ))
 }
@@ -81,8 +81,8 @@ feedback_as_html <- function(feedback, exercise) {
 error_message_html <- function(message, exercise) {
   error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
   class <- sprintf(
-    "alert alert-%s",
-    exercise$options$exercise.alert_class %||% "red"
+    "alert %s",
+    exercise$options$exercise.alert_class %||% "alert-red"
   )
 
   #Default to TRUE if the option is missing

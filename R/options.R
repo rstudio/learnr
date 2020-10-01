@@ -18,10 +18,11 @@
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.
-#' @param exercise.alert_class,exercise.gradethis_info_color,exercise.gradethis_success_color,exercise.gradethis_warning_color,exercise.gradethis_danger_color Slug for the CSS class for `{learnr}` and `{gradethis}` message.
-#' It can be one of `red`, `orange`, `purple`, `blue`, `violet`, `yellow`, `pink`, `green`,
-#' or `grey`. You can also implement your own CSS rule, in that case you need to define a
-#' class that starts with `alert-` (for example `alert-rainbow`).
+#' @param exercise.alert_class,exercise.gradethis_info_color,exercise.gradethis_success_color,exercise.gradethis_warning_color,exercise.gradethis_danger_color The CSS class for `{learnr}` and `{gradethis}` message.
+#' It can be one of `alert-success`, `alert-info`, `alert-warning`, `alert-danger`,
+#' `alert-red`, `alert-orange`, `alert-purple`, `alert-blue`, `alert-violet`,
+#' `alert-yellow`, `alert-pink`, `alert-green`, or `alert-grey`.
+#' You can also use your own CSS class.
 #' @param exercise.feedback_show Should the `{learnr}` feedback be shown?
 #' @param exercise.code_show Should `{learnr}` output code be shown?
 #' @param exercise.execution_error_message What message should `{learnr}` print on error?
@@ -39,14 +40,14 @@ tutorial_options <- function(
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE,
-  exercise.alert_class = "red",
+  exercise.alert_class = "alert-red",
   exercise.feedback_show = TRUE,
   exercise.code_show = TRUE,
   exercise.execution_error_message = NULL,
-  exercise.gradethis_success_color = NULL,
-  exercise.gradethis_info_color = NULL,
-  exercise.gradethis_warning_color = NULL,
-  exercise.gradethis_danger_color = NULL,
+  exercise.gradethis_success_color = "alert-success",
+  exercise.gradethis_info_color = "alert-info",
+  exercise.gradethis_warning_color = "alert-warning",
+  exercise.gradethis_danger_color = "alert-danger",
   exercise.submitted_feedback = TRUE,
   exercise.submitted_output = TRUE
 )
