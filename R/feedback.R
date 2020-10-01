@@ -85,9 +85,19 @@ error_message_html <- function(message, exercise) {
     exercise$options$exercise.alert_class %||% "alert-red"
   )
 
-  #Default to TRUE if the option is missing
-  exercise.feedback_show <- exercise$options$exercise.feedback_show %||% TRUE
-  exercise.code_show <- exercise$options$exercise.feedback_show %||% TRUE
+  if (
+    is.null(exercise$check) &&
+    is.null(exercise$code_check)
+  ){
+    exercise.feedback_show <- TRUE
+    exercise.code_show <- TRUE
+  } else {
+    #Default to TRUE if the option is missing
+    exercise.feedback_show <- exercise$options$exercise.feedback_show %||% TRUE
+    exercise.code_show <- exercise$options$exercise.feedback_show %||% TRUE
+  }
+
+
 
   # The trainer want feedbacks and code (the default)
   if (
