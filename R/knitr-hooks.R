@@ -104,7 +104,7 @@ install_knitr_hooks <- function() {
           label = setup_label,
           code = paste0(setup_chunk, collapse = "\n"),
           opts = lapply(setup_options, dput_to_string),
-          engine = knitr_engine(options$engine)
+          engine = knitr_engine(setup_options$engine)
         )
       )
     }
