@@ -1,0 +1,77 @@
+---
+title: "Internationalization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{multilang}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Switch UI element language
+
+To change the language of the UI element, you can use the following parameter in your YAML: 
+
+```
+output: 
+  learnr::tutorial:
+    language: fr
+```
+
+Currently, the following languages are supported: 
+
++ `en`, for English (the default)
++ `fr`, for French
+
+## Translating in another language
+
+The translation is done internally inside `{learnr}`. 
+If you want to add a language, you can add it inside the `inst/lib/i18n/template.js` file. 
+
+The translation can be done by adding another entry in `i18next.init`, inside the `resources` object.
+A translation should have the following format:
+
+```json
+en: {
+  translation: {
+    button: {
+      runcode: "Run Code",
+      hints: "Hints",
+      startover: "Start Over",
+      continue: "Continue",
+      submitanswer: "Submit Answer",
+      previoustopic: "Previous Topic",
+      nexttopic: "Next Topic"
+      },
+    text: {
+      startover: "Start Over",
+      areyousure: "Are you sure you want to start over? (all exercise progress will be reset)",
+      youmustcomplete: "You must complete the",
+      inthissection: "in this section before continuing."
+      }
+  }
+}
+```
+
+Alternatively, you can open an issue with the following elements, translated to the language you want:
+
+```
++ lang: "en"
++ button.runcode: "Run Code"
++ button.hints: "Hints"
++ button.startover: "Start Over"
++ button.continue: "Continue"
++ button.submitanswer: "Submit Answer"
++ button.previoustopic: "Previous Topic"
++ button.nexttopic: "Next Topic"
++ text.startover: "Start Over"
++ text.areyousure: "Are you sure you want to start over? (all exercise progress will be reset)"
++ text.youmustcomplete: "You must complete the"
++ text.inthissection: "in this section before continuing."
+```

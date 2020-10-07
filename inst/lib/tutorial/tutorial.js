@@ -914,7 +914,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run"></a>');
       button.append($('<i class="fa ' + icon + '"></i>'));
       button.attr('type', 'button');
-      button.append(' ' + '<span data-i18n="button.' + datai18n + '"></span>')
+      button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>')
       var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       var title = text;
       if (!check)
@@ -1081,7 +1081,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     button.attr('title', caption);
     button.addClass(ele_class);
     button.append($('<i class="fa ' + icon + '"></i>'));
-    button.append(' ' + '<span data-i18n="button.' + datai18n + '"></span>')
+    button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + caption + '</span>')
     panel_heading.append(button);
     return button;
   }

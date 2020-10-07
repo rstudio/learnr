@@ -1,0 +1,190 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    language: fr
+runtime: shiny_prerendered
+---
+
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(nycflights13)
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
+tutorial_options(
+  exercise.eval = FALSE, 
+  exercise.checker = function(label, user_code, envir_result, ...)  {
+    if (is.null(envir_result))
+      list(message = "Bad code!",
+           correct = FALSE)
+    else
+      list(message = "Nice job!", 
+           correct = TRUE, 
+           location = "append")
+  }
+)
+```
+
+
+## intro
+
+This is the intro to the whole ball of wax.
+
+### flights
+
+```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
+
+```{r filter-hint-1}
+filter(flights, ...)
+```
+
+```{r filter-hint-2}
+filter(flights, UniqueCarrier=="AA")
+```
+
+```{r filter-hint-3}
+filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
+```
+
+### YouTube Video
+
+![](https://www.youtube.com/watch?v=TJmNvfhLCoI)
+
+### Vimeo Video
+
+![](https://player.vimeo.com/video/76979871)
+
+
+### in between 
+
+In betwixt and in between.
+
+### solution {style="margin-top: 50px;"}
+
+```{r exercise1-setup}
+library(dplyr)
+nycflights <- nycflights13::flights
+```
+
+```{r exercise1, exercise=TRUE}
+# Change the filter to select February rather than January
+nycflights <- filter(nycflights, month == 1)
+```
+
+<div id="exercise1-hint">
+
+This is the hint for the exercise which I just provided.
+
+</div>
+
+
+## Viewing Data
+
+Modify this code so that it prints only the first 5 rows of the `mtcars` dataset:
+
+```{r cars, exercise=TRUE, exercise.eval=TRUE, exercise.timelimit = 10}
+head(mtcars, n = 5)
+```
+
+
+```{r cars-solution}
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+mtcars <- head(mtcars, n = 5)
+print(mtcars)
+```
+
+```{r cars-code-check}
+#
+```
+
+```{r cars-check}
+#
+```
+
+<div style="margin-top: 10px;">&nbsp;</div>
+
+Modify this plot to use the `cyl` variable rather than the `wt` variable:
+
+```{r ggplot, exercise=TRUE, exercise.eval=TRUE, fig.width=8}
+library(ggplot2)
+qplot(mpg, cyl, data = mtcars)
+```
+
+```{r ggplot-check}
+mtcars <- head(mtcars, n = 5)
+mtcars
+```
+
+## dygraphs
+
+Add a range selector to the following dygraph:
+
+```{r dygraphs, exercise=TRUE}
+library(dygraphs)
+dygraph(ldeaths) 
+```
+
+## quiz
+
+
+```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?", allow_retry = TRUE,
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+
+
+```{r quiz1, echo=FALSE}
+quiz(
+  question("What number is the letter A in the *English* alphabet?",
+    answer("8"),
+    answer("14", message = "That's $x+ 1$ **insane!**"),
+    answer("1", correct = TRUE, message = "Good job!"),
+    answer("23")
+  ),
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", correct = TRUE),
+    answer("Pluto", message = "How could you think we are on Pluto?"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+  ),
+  question(sprintf("Suppose $x = %s$. Choose the correct statement:", 42),
+    answer(sprintf("$\\sqrt{x} = %d$", 42 + 1)),
+    answer(sprintf("$x ^ 2 = %d$", 42^2), correct = TRUE),
+    answer("$\\sin x = 1$")
+  )
+)
+```
+
+## diagnostics buglet
+
+```{r diagnostics-comma, exercise=TRUE}
+# a false 'unexpected comma' diagnostic was printed at the end of line 4 below
+GapMinderPlot(
+  LifeExpectency, 
+  countries = c("Germany", "United States", "New Zealand", "China",
+                 "India", "Japan"))
+GapMinderPlot(LifeExpectency)
+```
+
+## for in
+
+```{r diagnostics-for, exercise=TRUE}
+for (i in seq(1,5)){
+     x <- i
+ }
+```
+

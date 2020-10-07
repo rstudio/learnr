@@ -1,5 +1,7 @@
 $(document).on("shiny:sessioninitialized", function() {
-    var arr = [
+    // This can be uncommented to allow to switch from one lang to the other
+    // For testing
+    /* var arr = [
         { val: "en", text: 'English' },
         { val: "fr", text: 'French' }
     ];
@@ -13,13 +15,14 @@ $(document).on("shiny:sessioninitialized", function() {
     });
 
     $("#tutorial-topic").append(
-        '<label for="lang" data-i18n = "text.choosealang"></label>'
+        '<label for="lang">Switch lang</label>'
     );
-    $("#tutorial-topic").append(sel);
+    $("#tutorial-topic").append(sel); */
 
     i18next.init({
         lng: '{{language}}',
         resources: {
+            // English
             en: {
                 translation: {
                     button: {
@@ -32,11 +35,14 @@ $(document).on("shiny:sessioninitialized", function() {
                         nexttopic: "Next Topic"
                     },
                     text: {
-                        choosealang: "Choose a language:",
-                        startover: "Start Over"
+                        startover: "Start Over",
+                        areyousure: "Are you sure you want to start over? (all exercise progress will be reset)",
+                        youmustcomplete: "You must complete the",
+                        inthissection: "in this section before continuing."
                     }
                 }
             },
+            // French
             fr: {
                 translation: {
                     button: {
@@ -49,8 +55,30 @@ $(document).on("shiny:sessioninitialized", function() {
                         nexttopic: "Chapitre Suivant"
                     },
                     text: {
-                        choosealang: "Choisir une langue:",
-                        startover: "Recommencer"
+                        startover: "Recommencer",
+                        areyousure: "Êtes-vous certains de vouloir recommencer ? (La progression sera remise à zéro)",
+                        youmustcomplete: "Vous devez d'abord compléter l'exercice",
+                        inthissection: "de cette section avec de continuer."
+                    }
+                }
+            },
+            // Emoji
+            emo: {
+                translation: {
+                    button: {
+                        runcode: "🏃",
+                        hints: "🔎",
+                        startover: "⏮",
+                        continue: "✅ ",
+                        submitanswer: "🆗",
+                        previoustopic: "⬅",
+                        nexttopic: "➡"
+                    },
+                    text: {
+                        startover: "⏮",
+                        areyousure: "🤔",
+                        youmustcomplete: "⚠️ 👉",
+                        inthissection: "."
                     }
                 }
             }

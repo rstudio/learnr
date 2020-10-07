@@ -95,29 +95,36 @@ tutorial_i18n <- function() {
 
 tutorial_i18_lang <- function(language) {
 
-  write(
-    as.character(
-      htmltools::htmlTemplate(
-        system.file(
-          "lib/i18n/template.js",
-          package = "learnr"
-        ),
-        language = language
-      )
-    ),
-    file.path(
-      system.file(
-        "lib/i18n",
-        package = "learnr"
-      ), "rendered.js"
+  rendered_lg <- file.path(
+    system.file(
+      "lib/i18n",
+      package = "learnr"
+    ), sprintf(
+      "rendered-%s.js",
+      language
     )
   )
-
+  # We write the rendered language js file
+  # only if it doesn't already exists
+  if (!file.exists(rendered_lg)){
+    write(
+      as.character(
+        htmltools::htmlTemplate(
+          system.file(
+            "lib/i18n/template.js",
+            package = "learnr"
+          ),
+          language = language
+        )
+      ),
+      rendered_lg
+    )
+  }
   htmltools::htmlDependency(
     name = "i18nlang",
     version = "1.2.0",
     src = system.file("lib/i18n", package = "learnr"),
-    script = "rendered.js"
+    script = basename(rendered_lg)
   )
 }
 

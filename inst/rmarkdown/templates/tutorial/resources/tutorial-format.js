@@ -177,7 +177,19 @@ $(document).ready(function() {
       // if the section has exercises and is not complete, don't skip - put up message
       if (section.exercises.length && !section.completed && !section.allowSkip) {
         var exs = section.exercises.length == 1 ? 'exercise' : 'exercises';
-        bootbox.alert("You must complete the " + exs + " in this section before continuing.");
+
+        var youmustcomplete = i18next.t("text.youmustcomplete")
+        // Checking that the translation exists, if not, default to english
+        if (youmustcomplete == "text.youmustcomplete") {
+          youmustcomplete = "You must complete the"
+        }
+        var inthissection = i18next.t("text.inthissection")
+        // Checking that the translation exists, if not, default to english
+        if (inthissection == "text.inthissection") {
+          inthissection = "in this section before continuing."
+        }
+
+        bootbox.alert(inthissection + " " + exs + " " + inthissection);
       }
       else {
         if (sectionIndex == topic.sections.length - 1) {
@@ -251,12 +263,12 @@ $(document).ready(function() {
 
         var topicActions = $('<div class="topicActions"></div>');
         if (topicIndex > 0) {
-          var prevButton = $('<button class="btn btn-default" data-i18n="button.previoustopic"></button>');
+          var prevButton = $('<button class="btn btn-default" data-i18n="button.previoustopic">Previous Topic</button>');
           prevButton.on('click', handlePreviousTopicClick);
           topicActions.append(prevButton);
         }
         if (topicIndex < topicsDOM.length - 1) {
-          var nextButton = $('<button class="btn btn-primary" data-i18n="button.nexttopic"></button>');
+          var nextButton = $('<button class="btn btn-primary" data-i18n="button.nexttopic">Next Topic</button>');
           nextButton.on('click', handleNextTopicClick);
           topicActions.append(nextButton);
         }
@@ -289,7 +301,7 @@ $(document).ready(function() {
             var continueButton = $(
               '<button class="btn btn-default skip" id="' +
               'continuebutton-' + sectionElement.id +
-              '" data-section-id="' + sectionElement.id + '" data-i18n="button.continue"></button>'
+              '" data-section-id="' + sectionElement.id + '" data-i18n="button.continue">Continue</button>'
             );
             continueButton.data('n_clicks', 0);
             continueButton.on('click', handleSkipClick);
@@ -341,9 +353,14 @@ $(document).ready(function() {
 
       var topicsFooter = $('<div class="topicsFooter"></div>');
 
-      var resetButton = $('<span class="resetButton" data-i18n="text.startover"></span>');
+      var resetButton = $('<span class="resetButton" data-i18n="text.startover">Start Over</span>');
       resetButton.on('click', function() {
-        bootbox.confirm("Are you sure you want to start over? (all exercise progress will be reset)",
+        var areyousure = i18next.t("text.areyousure")
+        // Default to english if no translation is found
+         if (inthissection == "text.areyousure") {
+          areyousure = "Are you sure you want to start over? (all exercise progress will be reset)"
+        }
+        bootbox.confirm(areyousure,
                         function(result) {
                           if (result)
                             tutorial.startOver();
