@@ -22,11 +22,9 @@ tutorial_options(
 
 Done: 
 
-+ `exercise.alert_class` in the setup chunck can be used to change the alert color. 
++ `exercise.alert_class` in the setup chunk can be used to change the alert color. 
 
 + The output of the code is now inside the alert, formatted as code/table. 
-
-+ There is a default message in the error output, it can be changed by `exercise.execution_error_message`
 
 To do: 
 
