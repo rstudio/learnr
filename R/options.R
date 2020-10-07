@@ -23,9 +23,7 @@
 #' `alert-red`, `alert-orange`, `alert-purple`, `alert-blue`, `alert-violet`,
 #' `alert-yellow`, `alert-pink`, `alert-green`, or `alert-grey`.
 #' You can also use your own CSS class.
-#' @param exercise.feedback_show Should the `{learnr}` feedback be shown?
-#' @param exercise.code_show Should `{learnr}` output code be shown?
-#' @param exercise.execution_error_message What message should `{learnr}` print on error?
+# #' @param exercise.execution_error_message What message should `{learnr}` print on error?
 #' @param exercise.submitted_feedback Should submitted exercise feedback be shown?
 #' @param exercise.submitted_output Should submitted exercise output be shown?
 #'
@@ -41,9 +39,6 @@ tutorial_options <- function(
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE,
   exercise.alert_class = "alert-red",
-  exercise.feedback_show = TRUE,
-  exercise.code_show = TRUE,
-  exercise.execution_error_message = NULL,
   exercise.success_class = "alert-success",
   exercise.info_class = "alert-info",
   exercise.warning_class = "alert-warning",

@@ -79,66 +79,23 @@ feedback_as_html <- function(feedback, exercise) {
 # It is called by learnr when clicking "Run code" & the
 # code produced an error
 error_message_html <- function(message, exercise) {
-  error <- exercise$options$exercise.execution_error_message %||% "There was an error when running your code:"
+  # When the Run Code button is pressed, the output is __always__ shown.
+  # This html builder function adds colored border around the code output if there is an error.
+
   class <- sprintf(
     "alert %s",
     exercise$options$exercise.alert_class %||% "alert-red"
   )
 
-  if (
-    is.null(exercise$check) &&
-    is.null(exercise$code_check)
-  ){
-    exercise.feedback_show <- TRUE
-    exercise.code_show <- TRUE
-  } else {
-    #Default to TRUE if the option is missing
-    exercise.feedback_show <- exercise$options$exercise.feedback_show %||% TRUE
-    exercise.code_show <- exercise$options$exercise.feedback_show %||% TRUE
-  }
+  div(
+    class = class,
+    role = "alert",
+    tags$pre(
+      message
+    )
+
+  )
 
 
 
-  # The trainer want feedbacks and code (the default)
-  if (
-    exercise.feedback_show &
-    exercise.code_show
-  ){
-    div(
-      class = class,
-      role = "alert",
-      error,
-      tags$pre(
-        message
-      )
-
-    )
-  } else if (
-    # The trainer want feedbacks only
-    exercise.feedback_show &
-    ! exercise.code_show
-  ) {
-    div(
-      class = class,
-      role = "alert",
-      error
-    )
-  } else if (
-    # The trainer wants code only
-    ! exercise.feedback_show &
-    exercise.code_show
-  ) {
-    div(
-      tags$pre(
-        message
-      )
-    )
-  } else {
-    # Not sure what to do there, (i.e the trainer want neither feedback nor code)
-    div(
-      class = "alert alert-grey",
-      role = "alert",
-      "Code submitted"
-    )
-  }
 }

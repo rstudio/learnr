@@ -61,20 +61,6 @@ list(
 mtcars
 ```
 
-Example using a different `exercise.execution_error_message`
-
-```
-{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
-```
-
-```{r carbis, exercise=TRUE, exercise.execution_error_message = "Ouch!"}
-list(
-```
-
-```{r carbis-solution}
-mtcars
-```
-
 ## Using locally set color 
 
 Colors can also be set at the chunk level.
@@ -186,57 +172,5 @@ list(
 
 
 ```{r car-green-solution}
-mtcars
-```
-
-## Toggle Feedback or code display
-
-Done: 
-
-+ `exercise.feedback_show` and `exercise.feedback_show` set the content of the feedbacks from learnr
-
-To discuss: 
-
-+ What should we print when trainer wants neither feedback nor code?
-
-__Example__
-
-`{r exercise.feedback_show=TRUE, exercise.code_show = TRUE}`
-
-```{r cara, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=TRUE, exercise.code_show = TRUE}
-list(
-```
-
-```{r cara-solution}
-mtcars
-```
-
-`{r exercise.feedback_show=FALSE, exercise.code_show = TRUE}`
-
-```{r carb, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=FALSE, exercise.code_show = TRUE}
-list(
-```
-
-```{r carb-solution}
-mtcars
-```
-
-`{r exercise.feedback_show=TRUE, exercise.code_show = FALSE}`
-
-```{r carc, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=TRUE, exercise.code_show = FALSE}
-list(
-```
-
-```{r carc-solution}
-mtcars
-```
-
-`{r exercise.feedback_show=FALSE, exercise.code_show = FALSE}`
-
-```{r card, exercise=TRUE, exercise.timelimit = 10, exercise.feedback_show=FALSE, exercise.code_show = FALSE}
-list(
-```
-
-```{r card-solution}
 mtcars
 ```
