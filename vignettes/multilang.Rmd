@@ -59,7 +59,10 @@ en: {
 }
 ```
 
-Alternatively, you can open an issue with the following elements, translated to the language you want:
+Then, update the `tutorial-format.R` documentation to add this new language (in `#' @param language Language of the UI elements (Currently supported: 'en', and 'fr')`), and this Vignette.
+Update the NEWS file with a bullet for this new language.
+
+Alternatively, you can open an issue with the following elements, translated to the language you want. 
 
 ```
 + lang: "en"
