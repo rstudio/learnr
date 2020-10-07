@@ -24,6 +24,7 @@
 #'        \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
 #'        Deprecated in \pkg{rmarkdown} v2.2.0.
 #' @param ... Forward parameters to html_document
+#' @param language Language of the UI elements (Currently supported: 'en', and 'fr')
 #'
 #' @export
 #' @importFrom utils getFromNamespace
