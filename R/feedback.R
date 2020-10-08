@@ -93,9 +93,5 @@ error_message_html <- function(message, exercise) {
     tags$pre(
       message
     )
-
   )
-
-
-
 }

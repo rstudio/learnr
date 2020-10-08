@@ -501,9 +501,7 @@ exercise_result <- function(
   exercise = NULL
 ) {
 
-  # When `exercise` is empty, we return a list of NULL
-  # `exercise` is NULL when there was no code sent (i.e the
-  # student hasn't entered any code)
+  # When `exercise` is empty, we return a list of as.is values
   if (is.null(exercise)){
     return(
       structure(
