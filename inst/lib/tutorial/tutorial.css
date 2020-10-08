@@ -132,3 +132,40 @@
   margin-right: -9px;
   /* net 6px */
 }
+
+.pageContent.band {
+  position: relative;
+}
+
+.topics {
+  overflow-x: initial;
+  padding-bottom: 100px;
+}
+
+
+@media (min-width: 767px) {
+  .mobile {
+    display: none !important;
+  }
+
+}
+
+@media (max-width: 767px) {
+  .desktop {
+    display: none !important;
+  }
+}
+
+/* Chevrons */
+
+  .bi-chevron-up {
+    display: none;
+  }
+
+  .opened .bi-chevron-down {
+    display: none;
+  }
+
+  .opened .bi-chevron-up {
+    display: block;
+  }
