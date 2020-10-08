@@ -78,6 +78,7 @@ $(document).ready(function() {
         return check;
     }
 
+
     function handleTopicClick(event) {
         if (isMobile()) {
             $('.topicsList').hide();
@@ -89,6 +90,14 @@ $(document).ready(function() {
         $("#progress_upper").css("width", pct + "%")
         hideFloatingTopics();
         updateLocation(this.getAttribute('index'));
+    }
+
+    window.onresize = function() {
+        if (isMobile()) {
+            $('.topicsList').hide();
+        } else {
+            $('.topicsList').show();
+        }
     }
 
     function showFloatingTopics() {
