@@ -1,235 +1,233 @@
 :root {
-  --red-back: #f2dede;
-  --red-color: #b94a48;
-  --red-border: #eed3d7;
-  --orange-back: #ffa0142e;
-  --orange-color: #b96e00;
-  --orange-border: #ffc10787;
-  --purple-back: #9c27b029;
-  --purple-color: #681876;
-  --purple-border: #9c27b01f;
-  --blue-back: #cce5ff;
-  --blue-color: #004085;
-  --blue-border: #b8daff;
-  --violet-back: #6610f214;
-  --violet-color: #3e246d;
-  --violet-border: #6610f23b;
-  --yellow-back: #ffc10747;
-  --yellow-color: #da6605;
-  --yellow-border: #ffc107;
-  --pink-back: #e83eb424;
-  --pink-color: #9b2158;
-  --pink-border: #e83e8c45;
-  --green-back: #dff0d8;
-  --green-color: #468847;
-  --green-border: #d6e9c6;
-  --grey-back: #f5f5f5;
-  --grey-color: #555555;
-  --grey-border: #dcdcdc;
+    --red-back: #f2dede;
+    --red-color: #b94a48;
+    --red-border: #eed3d7;
+    --orange-back: #ffa0142e;
+    --orange-color: #b96e00;
+    --orange-border: #ffc10787;
+    --purple-back: #9c27b029;
+    --purple-color: #681876;
+    --purple-border: #9c27b01f;
+    --blue-back: #cce5ff;
+    --blue-color: #004085;
+    --blue-border: #b8daff;
+    --violet-back: #6610f214;
+    --violet-color: #3e246d;
+    --violet-border: #6610f23b;
+    --yellow-back: #ffc10747;
+    --yellow-color: #da6605;
+    --yellow-border: #ffc107;
+    --pink-back: #e83eb424;
+    --pink-color: #9b2158;
+    --pink-border: #e83e8c45;
+    --green-back: #dff0d8;
+    --green-color: #468847;
+    --green-border: #d6e9c6;
+    --grey-back: #f5f5f5;
+    --grey-color: #555555;
+    --grey-border: #dcdcdc;
 }
 
 .tutorial-exercise-support {
-  display: none;
+    display: none;
 }
 
 .slide .tutorial-exercise {
-  line-height: 1.4;
+    line-height: 1.4;
 }
 
 .tutorial-exercise {
-  position: relative;
+    position: relative;
 }
 
 .tutorial-exercise-input {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 .tutorial-panel-heading {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 8px;
-  padding-right: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
+
 .tutorial-panel-heading-left,
 .tutorial-panel-heading-right {
-  display: flex;
+    display: flex;
 }
+
 .tutorial-quiz-title {
-  font-weight: 300;
-  font-size: 18px;
-  padding-top: 6px;
-  padding-bottom: 0px;
-  padding-left: 0px;
-  padding-right: 8px;
-  width: 100%;
+    font-weight: 300;
+    font-size: 18px;
+    padding-top: 6px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 8px;
+    width: 100%;
 }
 
 .tutorial-question {
-  padding-top: 10px;
-  padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 15px;
 }
 
 .tutorial-exercise-input .btn-xs {
-  margin-right: 0;
-  margin-top: -1px;
-  font-size: 11px;
-  margin-left: 12px;
-  padding-right: 8px;
-  font-weight: normal;
+    margin-right: 0;
+    margin-top: -1px;
+    font-size: 11px;
+    margin-left: 12px;
+    padding-right: 8px;
+    font-weight: normal;
 }
 
 .btn-light {
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
 }
 
 .tutorial-exercise-input .btn-tutorial-solution {
-  margin-left: 15px;
+    margin-left: 15px;
 }
 
 .tutorial-exercise-input .btn-tutorial-next-hint {
-  margin-left: 15px;
-  padding-right: 4px;
+    margin-left: 15px;
+    padding-right: 4px;
 }
 
 .tutorial-exercise-input .btn-xs i {
-  width: 10px;
-  margin-right: 1px;
+    width: 10px;
+    margin-right: 1px;
 }
-
 
 .tutorial-exercise-input .panel-body {
-  padding: 0;
+    padding: 0;
 }
-
 
 .tutorial-exercise-code-editor {
-  width: 100%;
+    width: 100%;
 }
 
-
 .tutorial-solution-popover {
-  max-width: none;
-  width: 100%;
+    max-width: none;
+    width: 100%;
 }
 
 .tutorial-solution-popover.top>.arrow {
-  margin-left: 0;
+    margin-left: 0;
 }
 
-.tutorial-hint {
-
-}
+.tutorial-hint {}
 
 .ace-tm {
-  font-family: monospace;
-  font-size: 90%;
+    font-family: monospace;
+    font-size: 90%;
 }
 
-
 .tutorial-video-container {
-  position: relative;
-  margin-top: 15px;
-  margin-bottom: 15px;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .tutorial-exercise-output>pre {
-  max-height: 500px;
-  overflow-y: auto;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .tutorial-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: solid 1px #cccccc;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: solid 1px #cccccc;
 }
 
 .tutorial_engine_icon {
-  vertical-align: middle;
-  fill: currentColor;
-  height: 20px;
-  width: 20px;
-  margin-right: -9px;
-  /* net 6px */
+    vertical-align: middle;
+    fill: currentColor;
+    height: 20px;
+    width: 20px;
+    margin-right: -9px;
+    /* net 6px */
 }
 
-.alert{
-  width: 100%!important;
+.alert {
+    width: 100%!important;
 }
 
 .alert-red {
-  background-color: var(--red-back);
-  color: var(--red-color);
-  border-color: var(--red-border);
+    background-color: var(--red-back);
+    color: var(--red-color);
+    border-color: var(--red-border);
 }
 
 .alert-orange {
-  background-color: var(--orange-back);
-  color: var(--orange-color);
-  border-color: var(--orange-border);
+    background-color: var(--orange-back);
+    color: var(--orange-color);
+    border-color: var(--orange-border);
 }
 
 .alert-purple {
-  background-color: var(--purple-back);
-  color: var(--purple-color);
-  border-color: var(--purple-border);
+    background-color: var(--purple-back);
+    color: var(--purple-color);
+    border-color: var(--purple-border);
 }
 
 .alert-blue {
-  background-color: var(--blue-back);
-  color: var(--blue-color);
-  border-color: var(--blue-border);
+    background-color: var(--blue-back);
+    color: var(--blue-color);
+    border-color: var(--blue-border);
 }
 
 .alert-violet {
-  background-color: var(--violet-back);
-  color: var(--violet-color);
-  border-color: var(--violet-border);
+    background-color: var(--violet-back);
+    color: var(--violet-color);
+    border-color: var(--violet-border);
 }
 
 .alert-yellow {
-  background-color: var(--yellow-back);
-  color: var(--yellow-color);
-  border-color: var(--yellow-border);
+    background-color: var(--yellow-back);
+    color: var(--yellow-color);
+    border-color: var(--yellow-border);
 }
 
 .alert-pink {
-  background-color: var(--pink-back);
-  color: var(--pink-color);
-  border-color: var(--pink-border);
+    background-color: var(--pink-back);
+    color: var(--pink-color);
+    border-color: var(--pink-border);
 }
 
 .alert-green {
-  background-color: var(--green-back);
-  color: var(--green-color);
-  border-color: var(--green-border);
+    background-color: var(--green-back);
+    color: var(--green-color);
+    border-color: var(--green-border);
 }
 
 .alert-grey {
-  background-color: var(--grey-back);
-  color: var(--grey-color);
-  border-color: var(--grey-border);
+    background-color: var(--grey-back);
+    color: var(--grey-color);
+    border-color: var(--grey-border);
 }
+
 
 /* Class to display pagetable inside an alert without inheriting from it*/
 
-.alert > .pagedtable-wrapper {
-  background-color: white;
-  color: #555555;
+.alert>.pagedtable-wrapper {
+    border: 0px!important;
+    margin-top: 1em;
+    background-color: white;
+    color: #555555;
 }
 
-.alert > pre {
+.alert>pre {
     border: none;
     border-radius: 4px;
     margin-top: 1em;
 }
-
