@@ -22,7 +22,8 @@ initialize_tutorial <- function() {
       idb_html_dependency(),
       tutorial_html_dependency(),
       tutorial_autocompletion_html_dependency(),
-      tutorial_diagnostics_html_dependency()
+      tutorial_diagnostics_html_dependency(),
+      headroom_html_dependency()
     ))
 
     # session initialization (forward tutorial metadata)

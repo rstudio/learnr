@@ -84,7 +84,7 @@ $(document).ready(function() {
             $('.topicsList').hide();
             $('.learnr-nav-items').toggleClass('opened')
         } else {
-            if (window.innerWidth > 767){
+            if (window.innerWidth > 767) {
                 $('.topicsList').show();
             } else {
                 $('.topicsList').hide();
@@ -99,17 +99,7 @@ $(document).ready(function() {
         updateLocation(this.getAttribute('index'));
     }
 
-    window.onresize = function() {
-        // When not on a Mobile, we always want to show the topicList if innerwidth is not mobile like
-        if (!isMobile()) {
-            if (window.innerWidth > 767){
-                $('.topicsList').show();
-            }
-        } else {
-            // Resizing will hide the topicList
-            $('.topicsList').hide();
-        }
-    }
+
 
     function showFloatingTopics() {
         $('.topicsList').removeClass('hideFloating');
@@ -464,7 +454,7 @@ $(document).ready(function() {
         docAllowSkip = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
 
         //var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
-        var tutorialTitle = $(`<div class="learnr-nav-items" onclick="$('.topicsList').toggle(); $(this).toggleClass('opened'); " href="#" style="display: flex; justify-content: space-between;">
+        var tutorialTitle = $(`<header class="learnr-nav-items" onclick="$('.topicsList').toggle(); $(this).toggleClass('opened'); " href="#" style="display: flex; justify-content: space-between;z-index:996">
             <h2 class="tutorialTitle" style="border-bottom: none; cursor: auto; padding-right: 1em;"> ${titleText} </h2>
             <a class="chevron mobile" style="display: flex; align-items: center; justify-content: center;">
 
@@ -479,7 +469,7 @@ $(document).ready(function() {
 
 
             </a>
-        </div>`);
+        </header>`);
         //tutorialTitle.on('click', showFloatingTopics);
         $('.topics').prepend(tutorialTitle);
 
@@ -492,11 +482,20 @@ $(document).ready(function() {
 
         function handleResize() {
             $('.topicsList').css("max-height", window.innerHeight);
+            // When on a Mobile or width is mobile like, we want to hide the topicList
+            // and to pad the sections
+            if (isMobile() | window.innerWidth < 767) {
+                $('.topicsList').hide();
+                $(".section.level2").css("padding-top", $("header").height());
+                $("#tutorial-topic").css("padding-top", $("header").height());
+            } else {
+                $('.topicsList').show();
+                $(".section.level2").css("padding-top", 0)
+            }
         }
 
         handleResize();
         window.addEventListener("resize", handleResize);
-
     }
 
     // support bookmarking of topics
@@ -665,6 +664,16 @@ $(document).ready(function() {
 
     transformDOM();
     handleLocationHash();
+
+    const headroom = new Headroom(
+        document.querySelector("header"), {
+            onUnpin: function() {
+                $("header").removeClass("opened");
+                $("#tutorial-topic").slideUp();
+            }
+        }
+    );
+    headroom.init();
 
     // initialize components within tutorial.onInit event
     tutorial.onInit(function() {
