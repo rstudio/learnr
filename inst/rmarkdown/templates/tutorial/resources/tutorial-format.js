@@ -82,8 +82,15 @@ $(document).ready(function() {
     function handleTopicClick(event) {
         if (isMobile()) {
             $('.topicsList').hide();
+            $('.learnr-nav-items').toggleClass('opened')
         } else {
-            $('.topicsList').show();
+            if (window.innerWidth > 767){
+                $('.topicsList').show();
+            } else {
+                $('.topicsList').hide();
+                $('.learnr-nav-items').toggleClass('opened')
+            }
+
         }
         var topicIndex = parseInt($(event.target).attr("index"));
         var pct = (100 / topics.length - 1) * (topicIndex + 1);
@@ -93,9 +100,11 @@ $(document).ready(function() {
     }
 
     window.onresize = function() {
-        // When not on a Mobile, we always want to show the topicList
+        // When not on a Mobile, we always want to show the topicList if innerwidth is not mobile like
         if (!isMobile()) {
-            $('.topicsList').show();
+            if (window.innerWidth > 767){
+                $('.topicsList').show();
+            }
         } else {
             // Resizing will hide the topicList
             $('.topicsList').hide();
