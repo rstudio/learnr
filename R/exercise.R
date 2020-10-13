@@ -523,7 +523,7 @@ exercise_result <- function(
     is.null(exercise$check) &&
     is.null(exercise$code_check)
   ){
-    exercise.submitted_feedback <- TRUE
+    exercise.submitted_feedback <- FALSE
     exercise.submitted_output <- TRUE
   } else {
     exercise.submitted_feedback <- exercise$options$exercise.submitted_feedback %||% TRUE
