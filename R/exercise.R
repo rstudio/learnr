@@ -186,7 +186,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   # do not consider this an exercise submission
   if (!nzchar(str_trim(paste0(exercise$code, collapse = "\n")))) {
     # " " since html_output needs to pass a req()
-    return(exercise_result(html_output = " "))
+    return(exercise_result(html_output = " ", exercise = NULL))
   }
 
   if (evaluate_global_setup) {
