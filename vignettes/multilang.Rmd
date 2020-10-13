@@ -78,3 +78,6 @@ Alternatively, you can open an issue with the following elements, translated to 
 + text.youmustcomplete: "You must complete the"
 + text.inthissection: "in this section before continuing."
 ```
+
+Note that for the language to be available inside the alert boxes of `{learnr}`, you'll need to set the language to one available at http://bootboxjs.com/documentation.html#bb-locales. 
+If your language is not available for `bootbox`, then the buttons will default to English. 
