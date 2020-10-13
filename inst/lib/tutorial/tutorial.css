@@ -162,6 +162,11 @@
     width: 100%!important;
 }
 
+.run-code {
+    background-color: unset!important;
+    color:  unset!important;
+}
+
 .alert-red {
     background-color: var(--red-back);
     color: var(--red-color);

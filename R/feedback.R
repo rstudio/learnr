@@ -43,6 +43,7 @@ feedback_validated <- function(feedback) {
 
 # This function is called to build the html of the feedback
 # provided by gradethis
+# It's called both when pressing Run Code and Submit Answer
 feedback_as_html <- function(feedback, exercise) {
 
   if (!length(feedback)) {
@@ -78,12 +79,12 @@ feedback_as_html <- function(feedback, exercise) {
 # helper function to create tags for error message
 # It is called by learnr when clicking "Run code" & the
 # code produced an error
+# It's called only when pressing Run Code
 error_message_html <- function(message, exercise) {
   # When the Run Code button is pressed, the output is __always__ shown.
   # This html builder function adds colored border around the code output if there is an error.
-
   class <- sprintf(
-    "alert %s",
+    "alert run-code %s",
     exercise$options$exercise.alert_class %||% "alert-red"
   )
 
