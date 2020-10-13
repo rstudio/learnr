@@ -188,7 +188,8 @@ $(document).ready(function() {
         if (inthissection == "text.inthissection") {
           inthissection = "in this section before continuing."
         }
-
+        // defaulting to english if nothing works
+        bootbox.setLocale(i18next.language || window.localStorage.i18nextLng || "en")
         bootbox.alert(inthissection + " " + exs + " " + inthissection);
       }
       else {
@@ -357,9 +358,11 @@ $(document).ready(function() {
       resetButton.on('click', function() {
         var areyousure = i18next.t("text.areyousure")
         // Default to english if no translation is found
-         if (inthissection == "text.areyousure") {
+         if (areyousure == "text.areyousure") {
           areyousure = "Are you sure you want to start over? (all exercise progress will be reset)"
         }
+        // defaulting to english if nothing works
+        bootbox.setLocale(i18next.language || window.localStorage.i18nextLng || "en")
         bootbox.confirm(areyousure,
                         function(result) {
                           if (result)
