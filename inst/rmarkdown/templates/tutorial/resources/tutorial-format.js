@@ -456,7 +456,7 @@ $(document).ready(function() {
         //var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
         var tutorialTitle = $(`<header class="learnr-nav-items" onclick="$('.topicsList').toggle(); $(this).toggleClass('opened'); " href="#" style="display: flex; justify-content: space-between;z-index:996">
             <h2 class="tutorialTitle" style="border-bottom: none; cursor: auto; padding-right: 1em;"> ${titleText} </h2>
-            <a class="chevron mobile" style="display: flex; align-items: center; justify-content: center;">
+            <a class="chevron mobile" style="display: flex; align-items: center; justify-content: center; margin-right:1em;">
 
             <svg width="2em" height="2em" viewBox="0 -3 16 16" class="bi bi-chevron-up" fill="#555555" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path>
@@ -669,7 +669,7 @@ $(document).ready(function() {
         document.querySelector("header"), {
             onUnpin: function() {
                 $("header").removeClass("opened");
-                $("#tutorial-topic").slideUp();
+                $("#tutorial-topic").slideUp("300ms");
             }
         }
     );
