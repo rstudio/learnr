@@ -442,7 +442,7 @@ render_exercise <- function(exercise, envir, envir_prep) {
     )
 
     html_output <- htmltools::tagList(
-      feedback_as_html(invisible_feedback, exercise),
+      feedback_as_html(invisible_feedback, exercise = exercise),
       html_output
     )
   }
