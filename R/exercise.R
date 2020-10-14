@@ -530,8 +530,6 @@ exercise_result <- function(
     exercise.submitted_output <- exercise$options$exercise.submitted_output %||% TRUE
   }
 
-
-
   # The trainer want feedbacks and code (the default)
   if (
     exercise.submitted_feedback &
