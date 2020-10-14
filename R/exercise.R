@@ -517,7 +517,7 @@ exercise_result <- function(
   }
 
   feedback <- feedback_validated(feedback)
-  feedback_html <- feedback_as_html(feedback, exercise)
+  feedback_html <- feedback_as_html(feedback, exercise = exercise)
 
   if (
     is.null(exercise$check) &&
