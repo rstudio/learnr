@@ -203,6 +203,17 @@
 }
 
 @media screen and (max-width: 767px) {
+
+  #tutorial-topic {
+    width: 100%;
+    border-bottom: 3px dotted rgb(240, 240, 240);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 28px 17px -15px;
+    margin-bottom: 2em;
+    padding: 0px 1em;
+    position: absolute;
+    max-width: 90%;
+  }
+
   .topics {
     width: 99%;
   }
@@ -210,6 +221,10 @@
   .topics .tutorialTitle {
     display: block;
     cursor: pointer;
+  }
+
+  .topicsHeader>.tutorialTitle {
+    display: none;
   }
 
   .topicsContainer {
@@ -232,6 +247,18 @@
 
   .paneCloser {
     display: inline-block;
+  }
+
+  .chevron {
+    z-index: 999;
+  }
+
+  .learnr-nav-items{
+    border-bottom: 3px dotted rgb(240, 240, 240);
+  }
+
+  .learnr-nav-items.opened{
+    border-bottom: unset;
   }
 }
 

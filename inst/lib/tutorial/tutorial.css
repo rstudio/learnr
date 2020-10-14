@@ -132,3 +132,65 @@
   margin-right: -9px;
   /* net 6px */
 }
+
+.pageContent.band {
+  position: relative;
+}
+
+.topics {
+  overflow-x: initial;
+  padding-bottom: 100px;
+}
+
+@media (min-width: 767px) {
+  .mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktop {
+    display: none !important;
+  }
+}
+
+
+/* Chevrons */
+
+.bi-chevron-up {
+  display: none;
+}
+
+.opened .bi-chevron-down {
+  display: none;
+}
+
+.opened .bi-chevron-up {
+  display: block;
+}
+
+header {
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  left: 0;
+  top: 0;
+  background-color: white;
+}
+
+header>h2 {
+  margin-left: 1em;
+}
+
+.headroom {
+  will-change: transform;
+  transition: transform 400ms linear;
+}
+
+.headroom--pinned {
+  transform: translateY(0%);
+}
+
+.headroom--unpinned {
+  transform: translateY(-100%);
+}

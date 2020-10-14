@@ -23,6 +23,7 @@
 #' @param smart Produce typographically correct output, converting straight quotes to curly quotes,
 #'        \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
 #'        Deprecated in \pkg{rmarkdown} v2.2.0.
+#' @param with_headroom Should the menu be dynamically hidden when the user scroll? Defaults to \code{FALSE}.
 #' @param ... Forward parameters to html_document
 #'
 #' @export
@@ -45,6 +46,7 @@ tutorial <- function(fig_width = 6.5,
                      includes = NULL,
                      md_extensions = NULL,
                      pandoc_args = NULL,
+                     with_headroom = FALSE,
                      ...) {
 
   # base pandoc options
@@ -103,6 +105,9 @@ tutorial <- function(fig_width = 6.5,
     tutorial_html_dependency(),
     tutorial_autocompletion_html_dependency(),
     tutorial_diagnostics_html_dependency(),
+    {
+      if (with_headroom) headroom_html_dependency()
+    },
     htmltools::htmlDependency(
       name = "tutorial-format",
       version = utils::packageVersion("learnr"),
