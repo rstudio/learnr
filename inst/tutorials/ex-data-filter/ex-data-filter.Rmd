@@ -232,7 +232,7 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex1-solution}
-    filter(flights, arr_delay >= 2)
+    filter(flights, arr_delay >= 120)
     ```
 
 1. Flew to Houston (`IAH` or `HOU`)
