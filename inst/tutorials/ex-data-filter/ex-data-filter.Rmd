@@ -280,7 +280,7 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex5-solution}
-    filter(flights, arr_delay > 120, dep_delay < 0)
+    filter(flights, arr_delay > 120, dep_delay <= 0)
     ```
     
     <div id="filterex5-hint">
