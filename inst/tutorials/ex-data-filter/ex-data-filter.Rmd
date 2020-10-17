@@ -293,7 +293,7 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex6-solution}
-    filter(flights, dep_delay > 60, (dep_delay - arr_delay) >= 30)
+    filter(flights, dep_delay > 60, (dep_delay - arr_delay) > 30)
     ```
 
     <div id="filterex6-hint">
