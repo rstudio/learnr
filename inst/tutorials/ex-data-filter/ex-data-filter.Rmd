@@ -349,7 +349,7 @@ rule?  (`NA * 0` is a tricky counterexample!)
 ```{r filterex10, exercise = TRUE}
     
 ```
-```{r filterex9-hint}
+```{r filterex10-hint}
 NA ^ 0     # any number with a zero exponent is equal to one
 NA | TRUE  # unknown value or true evaluates to true (because it suffices if one operand of "or" is true and we can be sure the result is true)
 FALSE & NA # false and unknown value evaluates to false (because it suffices if one operand of "and" is true and we can be sure the result is false)
