@@ -115,11 +115,10 @@ tutorial_i18_lang <- function(language) {
   }
   htmltools::htmlDependency(
     name = "learnr_lanaguage",
-    version = packageVersion("learnr"),
+    version = utils::packageVersion("learnr"),
     src = dirname(tmpfile),
     script = basename(tmpfile),
     all_files = FALSE
   )
-  }
-
+}
 
