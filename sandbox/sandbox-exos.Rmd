@@ -1,0 +1,124 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(gradethis)
+library(nycflights13)
+gradethis_setup()
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Flight
+
+
+```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
+
+```{r filter-setup}
+# filter the flights table to include only United and American flights
+library(nycflights13)
+```
+
+```{r filter-hint-1}
+filter(flights, ...)
+```
+
+```{r filter-hint-2}
+filter(flights, UniqueCarrier=="AA")
+```
+
+```{r filter-hint-3}
+filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
+```
+
+```{r filter-solution}
+# filter the flights table to include only United and American flights
+flights
+```
+
+
+## grade_code
+
+```{r grade_code, exercise = TRUE}
+
+```
+
+```{r grade_code-solution}
+sqrt(log(2))
+```
+
+```{r grade_code-check}
+grade_code("Don't worry, things will soon get harder.")
+```
+
+## mtcars
+
+```{r mtcars, exercise = TRUE}
+
+```
+
+```{r mtcars-solution}
+mtcars
+```
+
+```{r mtcars-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
+## SQL
+
+```{sql sql-not-r, exercise = TRUE, connection="mammals"}
+SELECT *
+FROM `surveys`
+LIMIT 10
+```
+
+```{sql sql-not-r-solution}
+mtcars
+```
+
+```{sql sql-not-r-error-check}
+grade_code(incorrect = "This code produces an error (press 'Run Code' to see it).", glue_incorrect = "{ .message } { .incorrect }")
+```
+
+```{sql sql-not-r-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
+## mtcars2
+
+```{r mtcars2, exercise = TRUE}
+
+```
+
+```{r mtcars2-solution}
+mtcars
+```
+
+```{r mtcars2-error-check}
+grade_code(incorrect = "This code produces an error (press 'Run Code' to see it).", glue_incorrect = "{ .message } { .incorrect }")
+```
+
+```{r mtcars2-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
+
