@@ -273,6 +273,10 @@ check_exercise <- function(
 
   }
 
+  # Setting something to return that will be turned to FALSE
+  # if any check fail
+  all_passed <- TRUE
+
   # Now that we have manipulated the chunks, we can build the
   # exercise objects
 
@@ -395,8 +399,9 @@ check_exercise <- function(
         col = "red"
       )
       print(res$error_message)
+      all_passed <- FALSE
     }
   }
 
-  return(invisible(TRUE))
+  return(invisible(all_passed))
 }
