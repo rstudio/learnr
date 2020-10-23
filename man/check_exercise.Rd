@@ -4,12 +4,10 @@
 \alias{check_exercise}
 \title{Check the code from an Exercise}
 \usage{
-check_exercise(path, verbose = TRUE)
+check_exercise(path)
 }
 \arguments{
 \item{path}{Path to the Markdown file containing the RMarkdown.}
-
-\item{verbose}{Should the test output information on the console?}
 }
 \value{
 TRUE or FALSE invisibly.
@@ -17,11 +15,12 @@ TRUE or FALSE invisibly.
 \description{
 This function will take all the chunks with a label that matches \code{setup} or
 \code{-solution}, put them in a separate script and try to run them all.
-This will allow teachers to check that their setup and solution chunks
+This allows teachers to check that their setup and solution chunks
 contain valid code.
 }
 \examples{
 if (interactive()){
-  check_exercise("sandbox/sandbox.Rmd")
+  check_exercise("sandbox/sandbox")
+  check_exercise("sandbox/sandbox-exos.Rmd")
 }
 }
