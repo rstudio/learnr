@@ -78,7 +78,8 @@ is_exercise_setup_chunk <- function(label) {
 #'
 #' @examples
 #' if (interactive()){
-#'   check_exercise("sandbox/sandbox.Rmd")
+#'   check_exercise("sandbox/sandbox")
+#'   check_exercise("sandbox/sandbox-exos.Rmd")
 #' }
 check_exercise <- function(
   path
@@ -365,6 +366,7 @@ check_exercise <- function(
         grab_chunk("solution")[[1]]
       },
       code_check  = {
+        # TODO
         #grab_chunk("code-check")[[1]]
       },
       options = {
