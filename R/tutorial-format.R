@@ -137,6 +137,7 @@ tutorial <- function(fig_width = 6.5,
     template = "default",
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
+    anchor_sections = FALSE,
     ...
   )
 
