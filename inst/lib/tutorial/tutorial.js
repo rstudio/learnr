@@ -1235,6 +1235,11 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
           copyButton.append($('<i class="fa fa-copy"></i>'));
           copyButton.append(" Copy to Clipboard");
           popoverTitle.append(copyButton);
+          var closer = $('<span onclick ="$(this).parent().parent().popover(\'hide\')">X</span>');
+          closer.on("click", function(e){
+            thiz.$removeSolution(exercise);
+          })
+          popoverTitle.append(closer);
           var clipboard = new Clipboard(copyButton[0], {
             text: function(trigger) {
               return solutionEditor.getValue();

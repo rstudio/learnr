@@ -33,6 +33,10 @@ This is the intro to the whole ball of wax.
 mtcars
 ```
 
+```{r mtcars2-hint}
+mt
+```
+
 
 ```{r mtcars2-check }
 grade_result(
