@@ -896,6 +896,8 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     input_div.attr('id', create_id('input'));
 
     // creating heading
+    var panel_heading_top = $(`<div class="top-panel-heading panel-heading tutorial-panel-heading mobile">${JSON.parse(options_script.html()).caption}</div>`);
+    input_div.append(panel_heading_top);
     var panel_heading = $('<div class="panel-heading tutorial-panel-heading"></div>');
     input_div.append(panel_heading);
     var panel_heading_left = $('<div class="tutorial-panel-heading-left"></div>');

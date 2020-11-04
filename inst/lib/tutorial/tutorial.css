@@ -154,6 +154,35 @@
   }
 }
 
+@media (max-width: 767px) {
+  .tutorial-panel-heading-left > .tutorial_engine_icon {
+    display: none !important;
+  }
+
+  .btn-primary[title="Submit Answer"] {
+    background-color: #387fb4!important;
+  }
+
+  .tutorial-panel-heading-right, .tutorial-panel-heading-left {
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  .tutorial-exercise-input .btn-xs {
+    margin-bottom: 6px!important;
+  }
+
+  .tutorial-panel-heading-right > .btn-xs {
+    margin-left: auto;
+  }
+  .tutorial-panel-heading-left > .btn-xs {
+    margin-right: auto;
+  }
+}
+
+.top-panel-heading {
+    background-color: #ebebeb!important;
+}
 
 /* Chevrons */
 
