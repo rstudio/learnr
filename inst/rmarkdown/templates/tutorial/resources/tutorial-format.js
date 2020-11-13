@@ -32,6 +32,17 @@ $(document).ready(function() {
       };
     })();
 
+    const range = (start, stop, step = 1) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+
+    const updateCssUpper = function(e){
+      var pct = $(e.target).data("css-progress");
+      $("#progress_upper").css("width", pct + "%")
+
+      if (pct > parseInt(document.querySelector("#progress_middle").style.width)){
+        $("#progress_middle").css("width", pct + "%")
+      }
+    }
+
 
     function setCurrentTopic(topicIndex, notify) {
       if (typeof(notify) === "undefined") {
@@ -94,7 +105,7 @@ $(document).ready(function() {
       }
       var topicIndex = parseInt($(event.target).attr("index"));
       var pct = (100 / topics.length - 1) * (topicIndex + 1);
-      $("#progress_upper").css("width", pct + "%")
+      // $("#progress_upper").css("width", pct + "%")
       hideFloatingTopics();
       updateLocation(this.getAttribute('index'));
     }
@@ -161,9 +172,6 @@ $(document).ready(function() {
 
     function updateTopicProgressBar(topicIndex) {
 
-      var pct = (100 / topics.length - 1) * (topicIndex + 1);
-      $("#progress_upper").css("width", pct + "%")
-
       var topic = topics[topicIndex];
 
       var percentToDo;
@@ -174,11 +182,12 @@ $(document).ready(function() {
         percentToDo = (1 - topic.sectionsSkipped/topic.sections.length) * 100;
       }
 
-      $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
+      // $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
 
     }
 
     function handleSkipClick(event) {
+
       $(this).data('n_clicks', $(this).data('n_clicks') + 1)
 
       var sectionId = this.getAttribute('data-section-id');
@@ -276,12 +285,12 @@ $(document).ready(function() {
 
         var topicActions = $('<div class="topicActions"></div>');
         if (topicIndex > 0) {
-          var prevButton = $('<button class="btn btn-default">Previous Topic</button>');
+          var prevButton = $('<button class="btn btn-default previous-mover">Previous Topic</button>');
           prevButton.on('click', handlePreviousTopicClick);
           topicActions.append(prevButton);
         }
         if (topicIndex < topicsDOM.length - 1) {
-          var nextButton = $('<button class="btn btn-primary">Next Topic</button>');
+          var nextButton = $('<button class="btn btn-primary progress-mover">Next Topic</button>');
           nextButton.on('click', handleNextTopicClick);
           topicActions.append(nextButton);
         }
@@ -312,7 +321,7 @@ $(document).ready(function() {
 
           if (topic.progressiveReveal) {
             var continueButton = $(
-              '<button class="btn btn-default skip" id="' +
+              '<button class="btn btn-default skip progress-mover" id="' +
               'continuebutton-' + sectionElement.id +
               '" data-section-id="' + sectionElement.id + '">Continue</button>'
             );
@@ -530,12 +539,24 @@ $(document).ready(function() {
       return topicIndex;
     }
 
+    function setProgressBarFromHash(){
+      var next_topics = $(".btn.btn-primary.progress-mover");
+      var steps = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+      var pct = steps[findTopicIndexFromHash()];
+      $("#progress_upper").css("width", pct + "%")
+      if (pct > parseInt(document.querySelector("#progress_middle").style.width)){
+        $("#progress_middle").css("width", pct + "%")
+      }
+    }
     // select topic from hash on the url
-    setCurrentTopic(findTopicIndexFromHash());
+    // Restore the progress bar css
 
+    setCurrentTopic(findTopicIndexFromHash());
+    setProgressBarFromHash()
     // navigate to a topic when the history changes
     window.addEventListener("popstate", function(e) {
       setCurrentTopic(findTopicIndexFromHash());
+      setProgressBarFromHash()
     });
 
   }
@@ -693,6 +714,61 @@ $(document).ready(function() {
       else if (progressEvent.event === "section_skipped")
         sectionSkipped(progressEvent.element);
     });
+
+    // We want the css to move 100/(next_topics.length + 1) %
+    // When clicking on each "Next Topic" button
+    var next_topics = $(".btn.btn-primary.progress-mover");
+    // We need to create a range of next_topics.length + 1, so that the
+    // first progression is not 0
+    var steps = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+    var steps_not_shifted = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+    steps.shift()
+    // adding a data-css-progress attribute to all
+    // we start at 1 cause we don't need the 0%
+    for( var i = 0; i < next_topics.length; i ++){
+      $(next_topics[i]).attr("data-css-progress", steps[i]);
+      $(next_topics[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Same for topics on the left
+    var topic = $(".topic");
+    for( var i = 0; i < topic.length; i ++){
+      $(topic[i]).attr("data-css-progress", steps_not_shifted[i]);
+      $(topic[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Add the css progress amount to previous Topic
+    var previous_topic = $(".previous-mover");
+    for( var i = 0; i < previous_topic.length; i ++){
+      $(previous_topic[i]).attr("data-css-progress", steps_not_shifted[i]);
+      $(previous_topic[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Make the progress bar move on click on Continue button
+    // To do that, we need to compute steps between each `Next Topic` buttons
+    // In each section level2, Potential Continue buttons. We'll use Next and previous
+    // values to compute the range
+    var section_2 = $(".section.level2")
+
+    for( var i = 0; i < section_2.length; i ++){
+      let current = $(section_2[i]);
+      let continue_button = current.find(".btn.btn-default.progress-mover")
+      if (continue_button.length > 0){
+        // Get the lower range. If none, it's because it's the first topic, so we set it to 0
+        let lower_boundary = current.find(".previous-mover").attr("data-css-progress") || 0
+        // Get the upper range. If none, it's because it's the last topic, so we set it to 0
+        let upper_boundary = current.find(".btn.btn-primary.progress-mover").attr("data-css-progress") || 100
+        // build the steps
+        let steps = range(lower_boundary, upper_boundary, Math.round(upper_boundary - lower_boundary) / (continue_button.length + 1));
+        steps.shift()
+        for( var i = 0; i < next_topics.length; i ++){
+          $(continue_button[i]).attr("data-css-progress", steps[i]);
+          $(continue_button[i]).click(function(e){updateCssUpper(e)});
+        }
+      }
+    }
+
+
 
   });
 
