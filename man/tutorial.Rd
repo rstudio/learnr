@@ -23,6 +23,7 @@ tutorial(
   includes = NULL,
   md_extensions = NULL,
   pandoc_args = NULL,
+  with_headroom = FALSE,
   ...
 )
 }
@@ -94,6 +95,8 @@ default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_forma
 additional details.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
+
+\item{with_headroom}{Should the menu be dynamically hidden when the user scroll? Defaults to \code{FALSE}.}
 
 \item{...}{Forward parameters to html_document}
 }
