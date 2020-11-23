@@ -223,10 +223,10 @@ quiz_text <- function(text) {
   if (is_tags(text)) {
     return(text)
   }
-  if (!is.character(text)) {
-    text <- format(text)
-  }
   if (!is.null(text)) {
+    if (!is.character(text)) {
+      text <- format(text)
+    }
     # convert markdown
     md <- markdown::markdownToHTML(
       text = text,
