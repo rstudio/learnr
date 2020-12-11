@@ -206,8 +206,7 @@ internal_external_evaluator <- function(
 
           # Create curl request
           handle <- curl::new_handle(customrequest = "POST",
-                                     postfields = json,
-                                     postfieldsize = nchar(json, type = "bytes"),
+                                     copypostfields = json,
                                      # add 15 seconds for application startup
                                      timeout_ms = timeout_s + 15000,
                                      cookiefile=cookiejar)
@@ -312,8 +311,7 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
   promises::promise(function(resolve, reject){
     json <- jsonlite::toJSON(list(global_setup = global_setup), auto_unbox = TRUE, null = "null")
     handle <- curl::new_handle(customrequest = "POST",
-                               postfields = json,
-                               postfieldsize = nchar(json, type = "bytes"))
+                               copypostfields = json)
 
     # Track whether or not the current request is still active.
     # We cannot use multi_run()$pending because it waits for ALL pending
