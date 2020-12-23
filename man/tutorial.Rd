@@ -97,8 +97,9 @@ additional details.}
 \item{pandoc_args}{Additional command line options to pass to pandoc}
 
 \item{language}{Language or custom text of the UI elements. See the help
-documentation in \code{\link[=tutorial_i18n_custom_language]{tutorial_i18n_custom_language()}} for more
-information about available options and formatting.}
+documentation in \code{\link[=tutorial_i18n_custom_language]{tutorial_i18n_custom_language()}} or the
+\code{multilang} vignette for more information about available options and
+formatting.}
 
 \item{...}{Forward parameters to html_document}
 }

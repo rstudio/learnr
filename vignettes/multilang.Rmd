@@ -12,9 +12,37 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+## Language codes and names borrowed from BootBox
+# library(rvest)
+# read_html("http://bootboxjs.com/documentation.html#bb-locales") %>% 
+#   html_table() %>% 
+#   .[[6]] %>% 
+#   {dplyr::bind_rows(.[, 1:2], .[, 3:4])}
+
+languages <- c("Arabic","Bulgarian","Czech",
+    "German","English","Estonian","Farsi / Persian",
+    "French / Français","Croatian","Indonesian","Japanese",
+    "Korean","Latvian","Norwegian","Portuguese","Slovak",
+    "Albanian","Swahili","Thai","Ukrainian",
+    "Chinese (People's Republic of China)","Azerbaijani",
+    "Portuguese - Brazil","Danish","Greek","Spanish / Español","Basque",
+    "Finnish","Hebrew","Hungarian","Italian","Georgian",
+    "Lithuanian","Dutch","Polish","Russian","Slovenian",
+    "Swedish","Tamil","Turkish","Vietnamese",
+    "Chinese (Taiwan / Republic of China)")
+
+names(languages) <- c("ar","bg_BG","cs","de","en",
+  "et","fa","fr","hr","id","ja","ko","lv","no",
+  "pt","sk","sq","sw","th","uk","zh_CN","az","br",
+  "da","el","es","eu","fi","he","hu","it","ka","lt",
+  "nl","pl","ru","sl","sv","ta","tr","vi","zh_TW")
+
+learnr_langs <- setdiff(names(tutorial_i18n_translations()), "emo")
+bb_langs_code <- paste0("`", names(languages), "`")
 ```
 
-## Switch UI element language
+## Choosing a Tutorial's Language
 
 To change the language of the UI element, you can use the following parameter in your YAML: 
 
@@ -24,60 +52,145 @@ output:
     language: fr
 ```
 
-Currently, the following languages are supported: 
+Currently, `r length(learnr_langs)` language translations are supported:
 
-+ `en`, for English (the default)
-+ `fr`, for French
-
-## Translating in another language
-
-The translation is done internally inside `{learnr}`. 
-If you want to add a language, you can add it inside the `inst/lib/i18n/template.js` file. 
-
-The translation can be done by adding another entry in `i18next.init`, inside the `resources` object.
-A translation should have the following format:
-
-```json
-en: {
-  translation: {
-    button: {
-      runcode: "Run Code",
-      hints: "Hints",
-      startover: "Start Over",
-      continue: "Continue",
-      submitanswer: "Submit Answer",
-      previoustopic: "Previous Topic",
-      nexttopic: "Next Topic"
-      },
-    text: {
-      startover: "Start Over",
-      areyousure: "Are you sure you want to start over? (all exercise progress will be reset)",
-      youmustcomplete: "You must complete the",
-      inthissection: "in this section before continuing."
-      }
-  }
+```{r echo=FALSE, results="asis"}
+for (lng in learnr_langs) {
+  lng_name <- if (lng %in% names(languages)) paste(" for", languages[lng])
+  if (lng == "en") paste(lng_name, "(default)")
+  cat("\n- `", lng, "`", lng_name, sep = "")
 }
 ```
 
-Then, update the `tutorial-format.R` documentation to add this new language (in `#' @param language Language of the UI elements (Currently supported: 'en', and 'fr')`), and this Vignette.
-Update the NEWS file with a bullet for this new language.
+## Customizable UI elements:
 
-Alternatively, you can open an issue with the following elements, translated to the language you want. 
+There are many elements whose language can be translated or customized, each identified by a _key_. 
+Note that you do not need to customize _all_ of the keys,
+the UI will fall back to the default tutorial language for keys that are not specifically customized.
 
-```
-+ lang: "en"
-+ button.runcode: "Run Code"
-+ button.hints: "Hints"
-+ button.startover: "Start Over"
-+ button.continue: "Continue"
-+ button.submitanswer: "Submit Answer"
-+ button.previoustopic: "Previous Topic"
-+ button.nexttopic: "Next Topic"
-+ text.startover: "Start Over"
-+ text.areyousure: "Are you sure you want to start over? (all exercise progress will be reset)"
-+ text.youmustcomplete: "You must complete the"
-+ text.inthissection: "in this section before continuing."
+### Buttons
+
+The following keys are available for translating button text:
+
+```yaml
+`r tutorial_i18n_custom_language_defaults("button")`
 ```
 
-Note that for the language to be available inside the alert boxes of `{learnr}`, you'll need to set the language to one available at http://bootboxjs.com/documentation.html#bb-locales. 
-If your language is not available for `bootbox`, then the buttons will default to English. 
+### Text
+
+The following keys are available for translating text elements:
+
+```yaml
+`r tutorial_i18n_custom_language_defaults("text")`
+```
+
+## Format of `language` Option in YAML Header:
+
+There are several ways that you can use the `language` option
+to choose a language translation or to customize the phrasing used in a particular language.
+
+### Default Language
+
+Chose the default language for the tutorial. 
+learnr currently provides complete translations for
+`r knitr::combine_words(dQuote(setdiff(names(tutorial_i18n_translations()), "emo"), q = FALSE))`.
+A translation does not need to be available for you to use as the default language,
+in particular if you are providing a custom translation for a language without an available complete translation.
+
+If you only want to change the default language, use:
+
+```yaml
+language: "fr"
+```
+
+If you are also providing language customizations, use:
+
+```yaml
+languge:
+  default: "fr"
+  custom: #...
+```
+
+### Customizing a Single Language
+
+To customize the displayed text for a single language, use the following format.
+In this format the customization will be applied to the translations of the default language,
+which will also be the default language of the tutorial.
+
+```yaml
+language:
+  default: en
+  custom:
+    button:
+      runcode: Run!
+    text:
+      startover: Restart!
+```
+
+### Customizing Multiple Languages
+
+To provide custom display text for multiple languages, 
+provide `custom` with a lists containing `language`, `button` and `text` items. 
+Each is optional, and the default language will be `"en"` if `language` is not provided.
+
+```yaml
+language:
+  default: en
+  custom:
+    - language: en
+      button:
+        runcode: Run!
+      text:
+        startover: Restart!
+    - language: es
+      button:
+        runcode: Ejecutar
+```
+
+### Store Customizations in a JSON File
+
+If you intend to reuse the same custom language repeatedly, 
+it may be helpful to store the custom language parameters in a JSON file and simply import the file.
+In this case, you can provide `custom` with a path to a single JSON file. 
+To write the JSON file, adapt the following R code:
+
+```r
+jsonlite::write_json(
+  c(
+    tutorial_i18n_custom_language("en", button = list(runcode = "Run!")),
+    tutorial_i18n_custom_language("es", button = list(runcode = "¡Ejecutar código!"))
+  ),
+  path = "custom_languages.json",
+  auto_unbox = TRUE
+)
+```
+
+And then reference the custom `.json` file in the `custom` item of the `language` option:
+
+```yaml
+language:
+  default: en
+  custom: custom_languages.json
+```
+
+## Complete Translations
+
+Complete translations are provided by the internal function `tutorial_i18n_translations()`.
+To contribute a complete translation for a language not currently provided by learnr,
+please submit a pull request updating the list in `tutorial_i18n_translations()`.
+Or you can open an issue with a list such as the one below translated into the language you want.
+
+```{r echo=FALSE, comment = ""}
+en <- jsonlite::toJSON(tutorial_i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
+en <- gsub("{", "list(", en, fixed = TRUE)
+en <- gsub(": ", " = ", en, fixed = TRUE)
+gsub("}", ")", en, fixed = TRUE)
+```
+
+
+Note that for the language to be available inside the alert boxes of learnr,
+you'll need to set the language to one of the
+[language codes used by bootbox](http://bootboxjs.com/documentation.html#bb-locales)[^1].
+If your language is not available for `bootbox`, then the buttons will default to English.
+
+[^1]: `r knitr::combine_words(bb_langs_code, and = " or ")`

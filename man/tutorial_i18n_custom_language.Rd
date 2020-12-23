@@ -28,127 +28,9 @@ language used in one specific tutorial, the \code{language} option is recommende
 Authors who rely on many customizations or who are providing complete
 language translations can use \code{tutorial_i18n_custom_language()} to setup
 customization settings that can be written into a \code{.json} file and used
-across many tutorials.
+across many tutorials. See \verb{vignette("multilang", package = "learnr')} for
+a complete overview of language customization options.
 }
-\section{Customizable UI elements}{
-
-
-There are many elements whose language can be translated or customized, but
-you do not need to customize \emph{all} element names.
-
-The first step is to designate a base \code{language}. If a translation is
-available in \pkg{learnr}, the UI elements without a custom translation will
-fall back to that language. For best results throughout \pkg{learnr} please
-use a
-\href{http://bootboxjs.com/documentation.html#bb-locales}{language code from this list}.
-\subsection{Buttons}{
-
-The following keys are available for translating button text:\preformatted{button:
-  runcode: Run Code
-  hints: Hints
-  startover: Start Over
-  continue: Continue
-  submitanswer: Submit Answer
-  previoustopic: Previous Topic
-  nexttopic: Next Topic
-}
-}
-
-\subsection{Text}{
-
-The following keys are available for translating text elements:\preformatted{text:
-  startover: Start Over
-  areyousure: Are you sure you want to start over? (all exercise progress will be reset)
-  youmustcomplete: You must complete the
-  inthissection: in this section before continuing.
-}
-}
-}
-
-\section{Format of \code{language} Option in YAML Header}{
-
-
-There are several ways that you can use the \code{language} option to choose a
-language translation or to customize the phrasing used in a particular
-language.
-\subsection{Default Language}{
-
-Chose the default language for the tutorial. \pkg{learnr} currently provides
-complete translations for
-"en" and "fr".
-A translation does not need to be available for you to use as the default
-language, in particular if you are providing a custom translation for a
-language without an available complete translation.
-
-If you only want to change the default language, use:\if{html}{\out{<div class="yaml">}}\preformatted{language: "fr"
-}\if{html}{\out{</div>}}
-
-If you are also providing language customizations, use:\if{html}{\out{<div class="yaml">}}\preformatted{languge:
-  default: "fr"
-  custom: #...
-}\if{html}{\out{</div>}}
-}
-
-\subsection{Customizing a Single Language}{
-
-To customize the displayed text for a single language, use the following
-format. In this format the customization will be applied to the translations
-of the default language, which will also be the default language of the
-tutorial.\if{html}{\out{<div class="yaml">}}\preformatted{language:
-  default: en
-  custom:
-    button:
-      runcode: Run!
-    text:
-      startover: Restart!
-}\if{html}{\out{</div>}}
-}
-
-\subsection{Customizing Multiple Languages}{
-
-To provide custom display text for multiple languages, provide \code{custom} with
-a list of \code{language}, \code{button} and \code{text} items. Each is optional, and the
-default language will be \code{"en"} if \code{language} is not provided.\if{html}{\out{<div class="yaml">}}\preformatted{language:
-  default: en
-  custom:
-    - language: en
-      button:
-        runcode: Run!
-      text:
-        startover: Restart!
-    - language: es
-      button:
-        runcode: Ejecutar
-}\if{html}{\out{</div>}}
-}
-
-\subsection{Store Customizations in a JSON File}{
-
-If you intend to reuse the same custom language repeatedly, it may be helpful
-to store the custom language parameters in a JSON file and simply import the
-file. In this case, you can provide \code{custom} with a path to a single JSON
-file. To write the JSON file, adapt the following R code:\if{html}{\out{<div class="r">}}\preformatted{jsonlite::write_json(
-  c(
-    tutorial_i18n_custom_language(
-      language = "en",
-      button = list(runcode = "Run!"),
-      text = list(startover = "Restart!")
-    ),
-    tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar"))
-  ),
-  path = "custom_languages.json",
-  auto_unbox = TRUE
-)
-}\if{html}{\out{</div>}}
-
-And then reference the custom \code{.json} file in the \code{custom} item of the
-\code{language} option:\if{html}{\out{<div class="yaml">}}\preformatted{language:
-  default: en
-  custom: custom_languages.json
-}\if{html}{\out{</div>}}
-}
-}
-
 \examples{
 tutorial_i18n_custom_language(
   language = "en",
@@ -158,4 +40,7 @@ tutorial_i18n_custom_language(
 
 tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar"))
 
+}
+\seealso{
+\verb{vignette("multilang", package = "learnr')}
 }

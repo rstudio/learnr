@@ -25,8 +25,9 @@
 #'        Deprecated in \pkg{rmarkdown} v2.2.0.
 #' @param ... Forward parameters to html_document
 #' @param language Language or custom text of the UI elements. See the help
-#'        documentation in [tutorial_i18n_custom_language()] for more
-#'        information about available options and formatting.
+#'        documentation in [tutorial_i18n_custom_language()] or the
+#'        `multilang` vignette for more information about available options and
+#'        formatting.
 #'
 #' @export
 #' @importFrom utils getFromNamespace

@@ -199,128 +199,8 @@ tutorial_i18n_process_language_options <- function(language = NULL) {
 #' Authors who rely on many customizations or who are providing complete
 #' language translations can use `tutorial_i18n_custom_language()` to setup
 #' customization settings that can be written into a `.json` file and used
-#' across many tutorials.
-#'
-#' @section Customizable UI elements:
-#'
-#' There are many elements whose language can be translated or customized, but
-#' you do not need to customize _all_ element names.
-#'
-#' The first step is to designate a base `language`. If a translation is
-#' available in \pkg{learnr}, the UI elements without a custom translation will
-#' fall back to that language. For best results throughout \pkg{learnr} please
-#' use a
-#' [language code from this list](http://bootboxjs.com/documentation.html#bb-locales).
-#'
-#' ### Buttons
-#'
-#' The following keys are available for translating button text:
-#'
-#' ````r tutorial_i18n_custom_language_defaults("button")````
-#'
-#' ### Text
-#'
-#' The following keys are available for translating text elements:
-#'
-#' ````r tutorial_i18n_custom_language_defaults("text")````
-#'
-#' @section Format of `language` Option in YAML Header:
-#'
-#' There are several ways that you can use the `language` option to choose a
-#' language translation or to customize the phrasing used in a particular
-#' language.
-#'
-#' ### Default Language
-#'
-#' Chose the default language for the tutorial. \pkg{learnr} currently provides
-#' complete translations for
-#' `r knitr::combine_words(dQuote(setdiff(names(tutorial_i18n_translations()), "emo"), q = FALSE))`.
-#' A translation does not need to be available for you to use as the default
-#' language, in particular if you are providing a custom translation for a
-#' language without an available complete translation.
-#'
-#' If you only want to change the default language, use:
-#'
-#' ```yaml
-#' language: "fr"
-#' ```
-#'
-#' If you are also providing language customizations, use:
-#'
-#' ```yaml
-#' languge:
-#'   default: "fr"
-#'   custom: #...
-#' ```
-#'
-#' ### Customizing a Single Language
-#'
-#' To customize the displayed text for a single language, use the following
-#' format. In this format the customization will be applied to the translations
-#' of the default language, which will also be the default language of the
-#' tutorial.
-#'
-#' ```yaml
-#' language:
-#'   default: en
-#'   custom:
-#'     button:
-#'       runcode: Run!
-#'     text:
-#'       startover: Restart!
-#' ```
-#'
-#' ### Customizing Multiple Languages
-#'
-#' To provide custom display text for multiple languages, provide `custom` with
-#' a list of `language`, `button` and `text` items. Each is optional, and the
-#' default language will be `"en"` if `language` is not provided.
-#'
-#' ```yaml
-#' language:
-#'   default: en
-#'   custom:
-#'     - language: en
-#'       button:
-#'         runcode: Run!
-#'       text:
-#'         startover: Restart!
-#'     - language: es
-#'       button:
-#'         runcode: Ejecutar
-#' ```
-#'
-#' ### Store Customizations in a JSON File
-#'
-#' If you intend to reuse the same custom language repeatedly, it may be helpful
-#' to store the custom language parameters in a JSON file and simply import the
-#' file. In this case, you can provide `custom` with a path to a single JSON
-#' file. To write the JSON file, adapt the following R code:
-#'
-#' ```r
-#' jsonlite::write_json(
-#'   c(
-#'     tutorial_i18n_custom_language(
-#'       language = "en",
-#'       button = list(runcode = "Run!"),
-#'       text = list(startover = "Restart!")
-#'     ),
-#'     tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar"))
-#'   ),
-#'   path = "custom_languages.json",
-#'   auto_unbox = TRUE
-#' )
-#' ```
-#'
-#' And then reference the custom `.json` file in the `custom` item of the
-#' `language` option:
-#'
-#' ```yaml
-#' language:
-#'   default: en
-#'   custom: custom_languages.json
-#' ```
-#'
+#' across many tutorials. See `vignette("multilang", package = "learnr')` for
+#' a complete overview of language customization options.
 #'
 #' @param language Default language for the custom translation. Translateable
 #'   fields without a customization will inherit from the translations for this
@@ -342,6 +222,7 @@ tutorial_i18n_process_language_options <- function(language = NULL) {
 #'
 #' tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar"))
 #'
+#' @seealso `vignette("multilang", package = "learnr')`
 #' @export
 tutorial_i18n_custom_language <- function(language = NULL, button = NULL, text = NULL) {
   if (is.null(button) && is.null(text)) return()
@@ -379,9 +260,8 @@ tutorial_i18n_custom_language_defaults <- function(parent_key, docs = TRUE) {
   x <- default[[parent_key]]
   if (!isTRUE(docs)) return(x)
   paste0(
-    "\n", parent_key, ":\n",
+    parent_key, ":\n",
     paste0("  ", names(x), ": ", unname(unlist(x)), collapse = "\n"),
-    "\n",
     sep = ""
   )
 }
