@@ -38,7 +38,10 @@ names(languages) <- c("ar","bg_BG","cs","de","en",
   "da","el","es","eu","fi","he","hu","it","ka","lt",
   "nl","pl","ru","sl","sv","ta","tr","vi","zh_TW")
 
-learnr_langs <- setdiff(names(tutorial_i18n_translations()), "emo")
+# Can't library(learnr) because this is a vignette
+tutorial_i18n_custom_language <- learnr::tutorial_i18n_custom_language
+
+learnr_langs <- setdiff(names(learnr:::tutorial_i18n_translations()), "emo")
 bb_langs_code <- paste0("`", names(languages), "`")
 ```
 
@@ -73,7 +76,7 @@ the UI will fall back to the default tutorial language for keys that are not spe
 The following keys are available for translating button text:
 
 ```yaml
-`r tutorial_i18n_custom_language_defaults("button")`
+`r learnr:::tutorial_i18n_custom_language_defaults("button")`
 ```
 
 ### Text
@@ -81,7 +84,8 @@ The following keys are available for translating button text:
 The following keys are available for translating text elements:
 
 ```yaml
-`r tutorial_i18n_custom_language_defaults("text")`
+`r learnr:::tutorial_i18n_custom_language_defaults("text")`
+
 ```
 
 ## Format of `language` Option in YAML Header:
@@ -93,7 +97,7 @@ to choose a language translation or to customize the phrasing used in a particul
 
 Chose the default language for the tutorial. 
 learnr currently provides complete translations for
-`r knitr::combine_words(dQuote(setdiff(names(tutorial_i18n_translations()), "emo"), q = FALSE))`.
+`r knitr::combine_words(dQuote(setdiff(names(learnr:::tutorial_i18n_translations()), "emo"), q = FALSE))`.
 A translation does not need to be available for you to use as the default language,
 in particular if you are providing a custom translation for a language without an available complete translation.
 
@@ -181,7 +185,7 @@ please submit a pull request updating the list in `tutorial_i18n_translations()`
 Or you can open an issue with a list such as the one below translated into the language you want.
 
 ```{r echo=FALSE, comment = ""}
-en <- jsonlite::toJSON(tutorial_i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
+en <- jsonlite::toJSON(learnr:::tutorial_i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
 en <- gsub("{", "list(", en, fixed = TRUE)
 en <- gsub(": ", " = ", en, fixed = TRUE)
 gsub("}", ")", en, fixed = TRUE)
