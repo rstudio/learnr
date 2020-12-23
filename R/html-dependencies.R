@@ -295,13 +295,13 @@ tutorial_i18n_translations <- function() {
           startover = "Recommencer",
           continue = "Continuer",
           submitanswer = "Soumettre",
-          previoustopic = "Chapitre précédent",
+          previoustopic = "Chapitre pr\u00e9c\u00e9dent",
           nexttopic = "Chapitre Suivant"
         ),
         text = list(
           startover = "Recommencer",
-          areyousure = "Êtes-vous certains de vouloir recommencer ? (La progression sera remise à zéro)",
-          youmustcomplete = "Vous devez d'abord compléter l'exercice",
+          areyousure = "\u00cates-vous certains de vouloir recommencer ? (La progression sera remise \u00e0 z\u00e9ro)",
+          youmustcomplete = "Vous devez d'abord compl\u00e9ter l'exercice",
           inthissection = "de cette section avec de continuer."
         )
       )
@@ -312,15 +312,15 @@ tutorial_i18n_translations <- function() {
           runcode = "\U0001f3c3",
           hints = "\U0001f50e",
           startover = "\u23ee",
-          continue = "\u2705 ",
+          continue = "\u2705",
           submitanswer = "\U0001f197",
           previoustopic = "\u2b05",
-          nexttopic = "➡"
+          nexttopic = "\u27a1"
         ),
         text = list(
           startover = "\u23ee",
           areyousure = "\U0001f914",
-          youmustcomplete = "\u26a0️ \U0001f449",
+          youmustcomplete = "\u26a0 \U0001f449",
           inthissection = "."
         )
       )
