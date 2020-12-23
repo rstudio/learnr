@@ -24,7 +24,9 @@
 #'        \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
 #'        Deprecated in \pkg{rmarkdown} v2.2.0.
 #' @param ... Forward parameters to html_document
-#' @param language Language of the UI elements (Currently supported: 'en', and 'fr')
+#' @param language Language or custom text of the UI elements. See the help
+#'        documentation in [tutorial_i18n_custom_language()] for more
+#'        information about available options and formatting.
 #'
 #' @export
 #' @importFrom utils getFromNamespace
@@ -106,7 +108,7 @@ tutorial <- function(fig_width = 6.5,
     tutorial_autocompletion_html_dependency(),
     tutorial_diagnostics_html_dependency(),
     tutorial_i18n(),
-    tutorial_i18_lang(language),
+    tutorial_i18n_lang(language),
     htmltools::htmlDependency(
       name = "tutorial-format",
       version = utils::packageVersion("learnr"),

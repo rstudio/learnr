@@ -4,9 +4,29 @@ output:
   learnr::tutorial:
     progressive: true
     allow_skip: true
-    language: fr
+    language: 
+      default: "en"
+      custom:
+        language: en
+        button:
+          continue: Go!
+          runcode: Run!
+          hints: Hint!
+          startover: Redo!
+      # custom: "custom_languages.json"
 runtime: shiny_prerendered
 ---
+
+```{r eval=FALSE, include=FALSE}
+jsonlite::write_json(
+  c(
+    learnr:::tutorial_i18n_custom_language("en", button = list(runcode = "Feedback")),
+    learnr:::tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar Código"))
+  ),
+  "custom_languages.json",
+  auto_unbox = TRUE
+)
+```
 
 
 
