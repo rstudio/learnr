@@ -1353,7 +1353,7 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
         binding.restore = false;
         binding.clicked = true;
-        binding.should_check = ev.target.hasAttribute('data-check');
+        binding.should_check = ev.delegateTarget.hasAttribute('data-check');
         callback(true);
       });
       $(el).on('restore.exerciseInputBinding', function(ev, options) {
