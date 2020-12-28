@@ -42,6 +42,7 @@ names(languages) <- c("ar","bg_BG","cs","de","en",
 tutorial_i18n_custom_language <- learnr::tutorial_i18n_custom_language
 
 learnr_langs <- setdiff(names(learnr:::tutorial_i18n_translations()), "emo")
+learnr_supported_languages <- knitr::combine_words(paste0('`"', learnr_langs, '"`'))
 bb_langs_code <- paste0("`", names(languages), "`")
 ```
 
@@ -97,7 +98,7 @@ to choose a language translation or to customize the phrasing used in a particul
 
 Chose the default language for the tutorial. 
 learnr currently provides complete translations for
-`r knitr::combine_words(dQuote(setdiff(names(learnr:::tutorial_i18n_translations()), "emo"), q = FALSE))`.
+`r learnr_supported_languages`.
 A translation does not need to be available for you to use as the default language,
 in particular if you are providing a custom translation for a language without an available complete translation.
 
