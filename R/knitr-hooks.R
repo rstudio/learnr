@@ -357,9 +357,11 @@ install_knitr_hooks <- function() {
               paste0(cap_engine_val, " code")
             }
           }
+
+        check_chunks <- exercise_cache[grepl("check$", names(exercise_cache))]
         ui_options <- list(
           engine = options$engine,
-          has_checker = (!is.null(check_chunk) || !is.null(code_check_chunk)),
+          has_checker = !all(vapply(check_chunks, is.null, logical(1))),
           caption = caption
         )
         extra_html <- c('<script type="application/json" data-ui-opts="1">',
