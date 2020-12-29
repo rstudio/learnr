@@ -215,6 +215,19 @@ install_knitr_hooks <- function() {
       options$echo <- FALSE
     }
 
+    # If this is an -error-check function, then make sure that -check chunk is provided
+    if (
+      is_exercise_support_chunk(options, type = "error-check") &&
+        is.null(get_knitr_chunk(sub("-error", "", options$label)))
+    ) {
+      stop(
+        "Exercise '", sub("-error-check", "", options$label), "': ",
+        "a *-check chunk is required when using an *-error-check chunk, but",
+        " '", sub("-error", "", options$label), "' was not found in the tutorial.",
+        call. = FALSE
+      )
+    }
+
     # return modified options
     options
   })
