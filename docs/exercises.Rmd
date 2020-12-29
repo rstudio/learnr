@@ -207,7 +207,9 @@ It's worth noting that, when a `*-code-check` chunk is supplied, the check is do
 
 ### Checking errors
 
-In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`, meaning that if a `*-solution` chunk is provided, then more intelligent feedback is provided _for free_.
+In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. If an `*-error-check` chunk is provided, you must also include a `*-check` chunk, typically to provide feedback in case the submission _doesn't_ generate an error. 
+
+With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`. This means that, by default, users will receive intelligent feedback for a submission that generates an error using the `*-solution` chunk, if one is provided.
 
 <img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
@@ -215,17 +217,17 @@ To learn more about grading exercises with **gradethis**, see its grading demo (
 
 ### Custom Checking
 
-If you need custom exercise checking logic that isn't already provided grading packages like [**gradethis**](https://github.com/rstudio-education/gradethis), then you may want to write your own `exercise.checker` function. This function is called on exercise submission whenever `*-check`, `*-code-check`, and/or `*-error-check` chunk(s) exist. When called, this function receives all the information that **learnr** knows about the exercise at the time of the checking, including the `user_code`, `solution_code`, `check_code`, exercise environments, and the `last_value` (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:
+If you need custom exercise checking logic that isn't already provided grading packages like [**gradethis**](https://github.com/rstudio-education/gradethis), then you may want to write your own `exercise.checker` function. This function is called on exercise submission whenever `*-check` or `*-code-check` chunks exist. When called, this function receives all the information that **learnr** knows about the exercise at the time of the checking, including the `user_code`, `solution_code`, `check_code`, exercise environments, and the `last_value` (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:
 
 1. Before exercise evaluation, at this stage:
-  * `check_code` contains `*-code-check` chunk code.
-  * `envir_result`, `evaluate_result`, and `last_value` are all `NULL`.
+    * `check_code` contains `*-code-check` chunk code.
+    * `envir_result`, `evaluate_result`, and `last_value` are all `NULL`.
 2. During evaluation, when an error occurs:
-  * `check_code` contains `*-error-check` chunk code.
-  * `last_value` contains the error condition object.
+    * `check_code` contains `*-error-check` chunk code.
+    * `last_value` contains the error condition object.
 3. After exercise evaluation, at this stage:
-  * `check_code` contains `*-check` chunk code.
-  * `last_value` contains the last printed value.
+    * `check_code` contains `*-check` chunk code.
+    * `last_value` contains the last printed value.
 
 If, at any one of these stages, feedback should be provided, then `exercise.checker` should return an R list with, at the very least, a `correct` flag and feedback `message`:
 
