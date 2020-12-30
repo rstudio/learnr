@@ -5,6 +5,7 @@
 #'
 #' @inheritParams question
 #' @inheritParams shiny::textInput
+#' @inheritParams shiny::textAreaInput
 #' @param ... answers and extra parameters passed onto \code{\link{question}}.
 #' @param trim Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.
 #' @seealso \code{\link{question_radio}}, \code{\link{question_checkbox}}
@@ -31,6 +32,8 @@ question_text <- function(
   random_answer_order = FALSE,
   placeholder = "Enter answer here...",
   trim = TRUE,
+  rows = NULL,
+  cols = NULL,
   options = list()
 ) {
   checkmate::assert_character(placeholder, len = 1, null.ok = TRUE, any.missing = FALSE)
@@ -48,7 +51,9 @@ question_text <- function(
       options,
       list(
         placeholder = placeholder,
-        trim = trim
+        trim = trim,
+        rows = rows,
+        cols = cols
       )
     )
   )
@@ -58,7 +63,16 @@ question_text <- function(
 
 
 question_ui_initialize.learnr_text <- function(question, value, ...) {
-  textInput(
+  # Use textInput() unless one of rows or cols are provided
+  textInputFn <- if (is.null(question$options$rows) && is.null(question$options$cols)) {
+    textInput
+  } else {
+    function(...) {
+      textAreaInput(..., cols = question$options$cols, rows = question$options$rows)
+    }
+  }
+
+  textInputFn(
     question$ids$answer,
     label = question$question,
     placeholder = question$options$placeholder,
