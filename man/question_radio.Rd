@@ -52,5 +52,5 @@ question_radio(
 )
 }
 \seealso{
-\code{\link{question_checkbox}}, \code{\link{question_text}}
+\code{\link{question_checkbox}}, \code{\link{question_text}}, \code{\link{question_numeric}}
 }
