@@ -31,6 +31,7 @@ learnr (development version)
 * `exercise.cap` now accepts HTML input. If no `exercise.cap` is provided, an icon of the exercise engine will be displayed. If no icon is known, the `exercise.cap` will default to the combination of the exercise engine and `" code"`. ([#397](https://github.com/rstudio/learnr/pull/397), [#429](https://github.com/rstudio/learnr/pull/429))
 * `engine` is now passed to the `exercise.checker` to help distinguish what language is being checked in the exercise. ([#397](https://github.com/rstudio/learnr/pull/397))
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
+* `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input. ([#460](https://github.com/rstudio/learnr/pull/460), [#455](https://github.com/rstudio/learnr/issues/455))
 
 ## Bug fixes
 
