@@ -64,13 +64,14 @@ question_text <- function(
 
 question_ui_initialize.learnr_text <- function(question, value, ...) {
   # Use textInput() unless one of rows or cols are provided
-  textInputFn <- if (is.null(question$options$rows) && is.null(question$options$cols)) {
-    textInput
-  } else {
-    function(...) {
-      textAreaInput(..., cols = question$options$cols, rows = question$options$rows)
+  textInputFn <- 
+    if (is.null(question$options$rows) && is.null(question$options$cols)) {
+      textInput
+    } else {
+      function(...) {
+        textAreaInput(..., cols = question$options$cols, rows = question$options$rows)
+      }
     }
-  }
 
   textInputFn(
     question$ids$answer,
