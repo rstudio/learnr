@@ -8,7 +8,7 @@
 #'
 #' @inheritParams question
 #' @param ... answers and extra parameters passed onto \code{\link{question}}.
-#' @seealso \code{\link{question_checkbox}}, \code{\link{question_text}}
+#' @seealso \code{\link{question_checkbox}}, \code{\link{question_text}}, \code{\link{question_numeric}}
 #' @export
 #' @examples
 #' question_radio(

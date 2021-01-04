@@ -243,7 +243,7 @@ quiz(caption = "Quiz 1",
 
 ## Basic Question Types
 
-There are three basic types of quiz questions: radio button, checkbox, and text box.  Each one allows for one choice, multiple choices, and direct user input respectively.
+There are four basic types of quiz questions: radio button, checkbox, text box, and numeric.  Each one allows for one choice, multiple choices, and direct user text or numeric input respectively.
 
 
 
@@ -346,6 +346,47 @@ question_text(
 )
 ```
 
+
+-------------------
+
+### Numeric
+
+If you'd like users to supply numeric answers, use `question_numeric()`. A minimum of one correct answer is required. 
+
+You can provide an initial `value` and a `step` size for the numeric input. Note that the `step` size only affects the numeric input when the up/down arrows are used to increment/decrement the number; users can still manually enter numbers that don't follow the `step` size.
+
+Use `min` and `max` to set the minimum and maximum values. If a user submits a value outside of the min/max bounds, the feedback message will reveal the lower or upper bound.
+
+````markdown
+```{r numeric, echo = FALSE}`r ''`
+question_numeric(
+ "What is pi rounded to 2 digits?",
+ answer(3, message = "Don't forget to use the digits argument"),
+ answer(3.1, message = "Too few digits"),
+ answer(3.142, message = "Too many digits"),
+ answer(3.14, correct = TRUE),
+ allow_retry = TRUE,
+ min = 3,
+ max = 4,
+ step = 0.01
+)
+```
+````
+
+```{r numeric, echo = FALSE}
+question_numeric(
+ "What is pi rounded to 2 digits?",
+ answer(3, message = "Don't forget to use the digits argument"),
+ answer(3.1, message = "Too few digits"),
+ answer(3.142, message = "Too many digits"),
+ answer(3.14, correct = TRUE),
+ allow_retry = TRUE,
+ min = 3,
+ max = 4,
+ step = 0.01
+)
+```
+
 -------------------
 
 ### Extra Arguments
@@ -424,7 +465,7 @@ question(
 
 ## Custom Question Types
 
-`learnr` comes with the three built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, and `question_text`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` cannot implement every possible `question` type.
+`learnr` comes with four built in question types explained in [Basic Question Types](#section-basic-question-types): `question_radio`, `question_checkbox`, `question_text`, and `question_numeric`. Similar to `ggplot2` not being able to implement every possible geom, `learnr` cannot implement every possible `question` type.
 
 To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co.nz/S3.html) to define the behavior of a custom tutorial question.  Each generic [S3 method](http://adv-r.had.co.nz/S3.html) should correspond to one of `type` values supplied to the question.
 

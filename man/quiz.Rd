@@ -12,7 +12,7 @@ question(
   text,
   ...,
   type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox",
-    "learnr_text"),
+    "learnr_text", "learnr_numeric"),
   correct = "Correct!",
   incorrect = "Incorrect",
   try_again = incorrect,
@@ -74,11 +74,12 @@ message alongside the \code{message} message value.}
 \description{
 Add interactive quiz questions to a tutorial.
 Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
-There are three default types of quiz questions:
+There are four default types of quiz questions:
 \describe{
 \item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
 \item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
 \item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
+\item{\code{learnr_numeric}}{Numeric question.  This question type will allow for a number to be submitted by the user.  At least one number must be added for the user to submit their answer.}
 }
 }
 \details{
