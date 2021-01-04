@@ -44,15 +44,11 @@ option.}
 
 \item{trim}{Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.}
 
-\item{rows}{The value of the visible character rows of the input, e.g. \code{6}.
-If the \code{height} argument is specified, \code{height} will take precedence in the
-browser's rendering.}
-
-\item{cols}{Value of the visible character columns of the input, e.g. \code{80}.
-This argument will only take effect if there is not a CSS \code{width} rule
-defined for this element; such a rule could come from the \code{width} argument
-of this function or from a containing page layout such as
-\code{\link[shiny:fluidPage]{fluidPage()}}.}
+\item{rows, cols}{Defines the size of the text input area in terms of the
+number of rows or character columns visible to the user. If either \code{rows}
+or \code{cols} are provided, the quiz input will use \code{\link[shiny:textAreaInput]{shiny::textAreaInput()}}
+for the text input, otherwise the default input element is a single-line
+\code{\link[shiny:textInput]{shiny::textInput()}}.}
 
 \item{options}{Extra options to be stored in the question object.}
 }
