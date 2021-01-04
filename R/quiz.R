@@ -109,7 +109,7 @@ question <- function(text,
                      try_again = incorrect,
                      message = NULL,
                      post_message = NULL,
-                     loading = c("**Loading:** ", text, "<br/><br/><br/>"),
+                     loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
                      submit_button = "Submit Answer",
                      try_again_button = "Try Again",
                      allow_retry = FALSE,
@@ -224,6 +224,9 @@ quiz_text <- function(text) {
     return(text)
   }
   if (!is.null(text)) {
+    if (!is.character(text)) {
+      text <- format(text)
+    }
     # convert markdown
     md <- markdown::markdownToHTML(
       text = text,

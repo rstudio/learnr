@@ -32,6 +32,7 @@ learnr (development version)
 * `engine` is now passed to the `exercise.checker` to help distinguish what language is being checked in the exercise. ([#397](https://github.com/rstudio/learnr/pull/397))
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 * `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input. ([#460](https://github.com/rstudio/learnr/pull/460), [#455](https://github.com/rstudio/learnr/issues/455))
+* Feedback messages can now be an htmltools tag or tagList, or a character message ([#458](https://github.com/rstudio/learnr/pull/458))
 
 ## Bug fixes
 
@@ -42,6 +43,7 @@ learnr (development version)
 * An informative error is now thrown when an exercise chunk's body contains nothing, which lets the tutorial author know that something (e.g., empty line(s)) must be present in the chunk body for it to be rendered as an exercise. ([#410](https://github.com/rstudio/learnr/issues/410)) ([#172](https://github.com/rstudio/learnr/issues/172))
 * When `exercise.completion=TRUE`, completion is no longer performed inside of quotes. This (intentionally) prevents the student from being able to list files on the R server ([#401](https://github.com/rstudio/learnr/issues/401)).
 * Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). ([#417](https://github.com/rstudio/learnr/issues/417)).
+* When a quiz's question or answer text are not characters, e.g. HTML, `htmltools` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz's default loading text ([#450](https://github.com/rstudio/learnr/pull/450)).
 
 learnr 0.10.1
 ===========

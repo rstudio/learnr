@@ -18,7 +18,7 @@ question(
   try_again = incorrect,
   message = NULL,
   post_message = NULL,
-  loading = c("**Loading:** ", text, "<br/><br/><br/>"),
+  loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
   submit_button = "Submit Answer",
   try_again_button = "Try Again",
   allow_retry = FALSE,
