@@ -4,10 +4,11 @@ learnr (development version)
 ## Breaking Changes
 
 * Renamed the `exercise_submission` event to `exercise_result` and added the following fields:
-  1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
+  1. `id` - a randomly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
   3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
 * If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don't provide a `-code-check` chunk). ([#403](https://github.com/rstudio/learnr/pull/403))
+* `random_praise()` no longer includes the phrase _Correct!_. Instead, it returns a random praising statement. ([#463](https://github.com/rstudio/learnr/pull/463), [#453](https://github.com/rstudio/learnr/issues/453))
 
 ## New features
 

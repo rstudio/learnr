@@ -62,7 +62,7 @@ random_encouragements <- c(
 #' @export
 #' @rdname random_praise
 random_praise <- function() {
-  paste0("Correct! ", sample(random_praises, 1))
+  sample(random_praises, 1)
 }
 #' @export
 #' @rdname random_praise
