@@ -5,6 +5,11 @@
 #'
 #' @inheritParams question
 #' @inheritParams shiny::textInput
+#' @param rows,cols Defines the size of the text input area in terms of the
+#'   number of rows or character columns visible to the user. If either `rows`
+#'   or `cols` are provided, the quiz input will use [shiny::textAreaInput()]
+#'   for the text input, otherwise the default input element is a single-line
+#'   [shiny::textInput()].
 #' @param ... answers and extra parameters passed onto \code{\link{question}}.
 #' @param trim Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.
 #' @seealso \code{\link{question_radio}}, \code{\link{question_checkbox}}
@@ -31,6 +36,8 @@ question_text <- function(
   random_answer_order = FALSE,
   placeholder = "Enter answer here...",
   trim = TRUE,
+  rows = NULL,
+  cols = NULL,
   options = list()
 ) {
   checkmate::assert_character(placeholder, len = 1, null.ok = TRUE, any.missing = FALSE)
@@ -48,7 +55,9 @@ question_text <- function(
       options,
       list(
         placeholder = placeholder,
-        trim = trim
+        trim = trim,
+        rows = rows,
+        cols = cols
       )
     )
   )
@@ -58,7 +67,17 @@ question_text <- function(
 
 
 question_ui_initialize.learnr_text <- function(question, value, ...) {
-  textInput(
+  # Use textInput() unless one of rows or cols are provided
+  textInputFn <-
+    if (is.null(question$options$rows) && is.null(question$options$cols)) {
+      textInput
+    } else {
+      function(...) {
+        textAreaInput(..., cols = question$options$cols, rows = question$options$rows)
+      }
+    }
+
+  textInputFn(
     question$ids$answer,
     label = question$question,
     placeholder = question$options$placeholder,
