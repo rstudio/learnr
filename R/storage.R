@@ -91,7 +91,12 @@ get_exercise_submission <- function(session, label) {
   get_object(session = session, object_id = label)
 }
 
-
+#' Get state objects
+#'
+#' @param session tutorial session object
+#' @param exercise_output a logical. Defaults to TRUE.
+#' @return objects in session.
+#' @export
 get_all_state_objects <- function(session, exercise_output = TRUE) {
 
   # get all of the objects
@@ -117,6 +122,11 @@ filter_state_objects <- function(state_objects, types) {
   })
 }
 
+#' Get submissions
+#'
+#' @param state_objects state objects from tutorial
+#' @return answered questions
+#' @export
 submissions_from_state_objects <- function(state_objects) {
   filtered_submissions <- filter_state_objects(state_objects, c("question_submission", "exercise_submission"))
   Filter(x = filtered_submissions, function(object) {

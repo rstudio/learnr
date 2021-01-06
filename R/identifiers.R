@@ -81,6 +81,13 @@ initialize_session_state <- function(session, metadata, location, request) {
   )
 }
 
+#' Get session information
+#'
+#' @param session tutorial session
+#' @param name character string of item
+#' @param default what to return if session does not exist
+#' @return Value of name from session. Defaults to NULL.
+#' @export
 read_request <- function(session, name, default = NULL) {
   if (!is.null(name)) {
     if (exists(name, envir = session$request))
