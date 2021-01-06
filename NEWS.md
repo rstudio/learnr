@@ -34,6 +34,7 @@ learnr (development version)
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 * `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input. ([#460](https://github.com/rstudio/learnr/pull/460), [#455](https://github.com/rstudio/learnr/issues/455))
 * Feedback messages can now be an htmltools tag or tagList, or a character message ([#458](https://github.com/rstudio/learnr/pull/458))
+* Export `get_all_state_objects()`, `read_request()`, and `submissions_from_state_objects()`, per users' requests ([#454](https://github.com/rstudio/learnr/issues/454))
 
 ## Bug fixes
 
