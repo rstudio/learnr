@@ -1,0 +1,46 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    with_headroom: true
+runtime: shiny_prerendered
+---
+
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+#options(tutorial.event_recorder = learnr:::debug_event_recorder)
+gradethis::gradethis_setup()
+```
+
+
+
+## intro
+
+This is the intro to the whole ball of wax.
+
+### flights
+
+```{r mtcars2, exercise = TRUE}
+
+```
+
+```{r mtcars2-solution}
+mtcars
+```
+
+```{r mtcars2-hint}
+mt
+```
+
+
+```{r mtcars2-check }
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```

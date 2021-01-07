@@ -83,3 +83,12 @@ ace_html_dependency <- function() {
     script = "ace.js"
   )
 }
+
+headroom_html_dependency <- function() {
+  htmltools::htmlDependency(
+    name = "headroom",
+    version = "0.11.0",
+    src = system.file("lib/headroom", package = "learnr"),
+    script = "headroom.js"
+  )
+}

@@ -32,6 +32,17 @@ $(document).ready(function() {
       };
     })();
 
+    const range = (start, stop, step = 1) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+
+    const updateCssUpper = function(e){
+      var pct = $(e.target).data("css-progress");
+      $("#progress_upper").css("width", pct + "%")
+
+      if (pct > parseInt(document.querySelector("#progress_middle").style.width)){
+        $("#progress_middle").css("width", pct + "%")
+      }
+    }
+
 
     function setCurrentTopic(topicIndex, notify) {
       if (typeof(notify) === "undefined") {
@@ -73,7 +84,28 @@ $(document).ready(function() {
       window.location = href;
     }
 
+    // Based on http://detectmobilebrowsers.com/ and https://stackoverflow.com/a/11381730/8236642
+    function isMobile() {
+      let check = false;
+      (function(a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true; })(navigator.userAgent || navigator.vendor || window.opera);
+      return check;
+    }
+
     function handleTopicClick(event) {
+      if (isMobile()) {
+            $('.topicsList').hide();
+            $('.learnr-nav-items').toggleClass('opened');
+      } else {
+            if (window.innerWidth > 767) {
+                $('.topicsList').show();
+            } else {
+                $('.topicsList').hide();
+                $('.learnr-nav-items').toggleClass('opened');
+            }
+      }
+      var topicIndex = parseInt($(event.target).attr("index"));
+      var pct = (100 / topics.length - 1) * (topicIndex + 1);
+      // $("#progress_upper").css("width", pct + "%")
       hideFloatingTopics();
       updateLocation(this.getAttribute('index'));
     }
@@ -139,6 +171,7 @@ $(document).ready(function() {
     }
 
     function updateTopicProgressBar(topicIndex) {
+
       var topic = topics[topicIndex];
 
       var percentToDo;
@@ -149,11 +182,12 @@ $(document).ready(function() {
         percentToDo = (1 - topic.sectionsSkipped/topic.sections.length) * 100;
       }
 
-      $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
+      // $(topic.jqListElement).css('background-position-y', percentToDo + '%' );
 
     }
 
     function handleSkipClick(event) {
+
       $(this).data('n_clicks', $(this).data('n_clicks') + 1)
 
       var sectionId = this.getAttribute('data-section-id');
@@ -215,9 +249,9 @@ $(document).ready(function() {
 
       var topicsHeader = $('<div class="topicsHeader"></div>');
       topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'));
-      var topicsCloser = $('<div class="paneCloser"></div>');
-      topicsCloser.on('click', hideFloatingTopics);
-      topicsHeader.append(topicsCloser);
+      //var topicsCloser = $('<div class="paneCloser"></div>');
+      //topicsCloser.on('click', hideFloatingTopics);
+      //topicsHeader.append(topicsCloser);
       topicsList.append(topicsHeader);
 
       $('#doc-metadata').appendTo(topicsList);
@@ -251,12 +285,12 @@ $(document).ready(function() {
 
         var topicActions = $('<div class="topicActions"></div>');
         if (topicIndex > 0) {
-          var prevButton = $('<button class="btn btn-default">Previous Topic</button>');
+          var prevButton = $('<button class="btn btn-default previous-mover">Previous Topic</button>');
           prevButton.on('click', handlePreviousTopicClick);
           topicActions.append(prevButton);
         }
         if (topicIndex < topicsDOM.length - 1) {
-          var nextButton = $('<button class="btn btn-primary">Next Topic</button>');
+          var nextButton = $('<button class="btn btn-primary progress-mover">Next Topic</button>');
           nextButton.on('click', handleNextTopicClick);
           topicActions.append(nextButton);
         }
@@ -287,7 +321,7 @@ $(document).ready(function() {
 
           if (topic.progressiveReveal) {
             var continueButton = $(
-              '<button class="btn btn-default skip" id="' +
+              '<button class="btn btn-default skip progress-mover" id="' +
               'continuebutton-' + sectionElement.id +
               '" data-section-id="' + sectionElement.id + '">Continue</button>'
             );
@@ -420,8 +454,26 @@ $(document).ready(function() {
   });
   Shiny.inputBindings.register(continueButtonInputBinding, 'learnr.continueButtonInputBinding');
 
+  function attachHeadroom(){
+    if (typeof Headroom != "undefined") {
+      if (isMobile() | window.innerWidth < 767) {
+        const headroom = new Headroom(
+        document.querySelector("header"), {
+            onUnpin: function() {
+                    $("header").removeClass("opened");
+                    // slideUp only if mobile like
+                    if (isMobile() | window.innerWidth < 767) {
+                        $("#tutorial-topic").slideUp("300ms");
+                    }
+                }
+            }
+        );
+    headroom.init();
+    }
+  }
+  }
 
-    // transform the DOM here
+  // transform the DOM here
   function transformDOM() {
 
     titleText = $('title')[0].innerText;
@@ -431,8 +483,11 @@ $(document).ready(function() {
     var allowSkipAttr = $('meta[name=allow-skip]').attr("content");
     docAllowSkip = (allowSkipAttr == 'true' || allowSkipAttr == 'TRUE');
 
-    var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
-    tutorialTitle.on('click', showFloatingTopics);
+    // var tutorialTitle = $('<h2 class="tutorialTitle">' + titleText + '</h2>');
+    // tutorialTitle.on('click', showFloatingTopics);
+
+    var tutorialTitle = $(`<header class="learnr-nav-items" onclick="$('.topicsList').toggle(); $(this).toggleClass('opened'); " href="#" style="display: flex; justify-content: space-between;z-index:996"> <h2 class="tutorialTitle" style="border-bottom: none; cursor: auto; padding-right: 1em;"> ${titleText} </h2> <a class="chevron mobile" style="display: flex; align-items: center; justify-content: center; margin-right:1em;"> <svg width="2em" height="2em" viewBox="0 -3 16 16" class="bi bi-chevron-up" fill="#555555" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg> <svg width="2em" height="2em" viewBox="0 -3 16 16" class="bi bi-chevron-down" fill="#555555" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path></svg></a></header>`);
+
     $('.topics').prepend(tutorialTitle);
 
     $('.bandContent.topicsListContainer').append(buildTopicsList());
@@ -443,7 +498,23 @@ $(document).ready(function() {
     }
 
     function handleResize() {
+        if (!$('header').hasClass('headroom')){
+            attachHeadroom();
+        }
       $('.topicsList').css("max-height", window.innerHeight);
+      // When on a Mobile or width is mobile like, we want to hide the topicList
+      // and to pad the sections
+      if (isMobile() | window.innerWidth < 767) {
+            $('.topicsList').hide();
+            $(".section.level2").css("padding-top", $("header").height());
+            $("#tutorial-topic").css("padding-top", $("header").height());
+      } else {
+            $('.learnr-nav-items').removeClass('opened');
+            $(".section.level2").css("padding-top", "unset");
+            $("#tutorial-topic").css("padding-top", "unset");
+            $('.topicsList').show();
+            $(".section.level2").css("padding-top", 0)
+      }
     }
 
     handleResize();
@@ -468,12 +539,24 @@ $(document).ready(function() {
       return topicIndex;
     }
 
+    function setProgressBarFromHash(){
+      var next_topics = $(".btn.btn-primary.progress-mover");
+      var steps = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+      var pct = steps[findTopicIndexFromHash()];
+      $("#progress_upper").css("width", pct + "%")
+      if (pct > parseInt(document.querySelector("#progress_middle").style.width)){
+        $("#progress_middle").css("width", pct + "%")
+      }
+    }
     // select topic from hash on the url
-    setCurrentTopic(findTopicIndexFromHash());
+    // Restore the progress bar css
 
+    setCurrentTopic(findTopicIndexFromHash());
+    setProgressBarFromHash()
     // navigate to a topic when the history changes
     window.addEventListener("popstate", function(e) {
       setCurrentTopic(findTopicIndexFromHash());
+      setProgressBarFromHash()
     });
 
   }
@@ -619,6 +702,7 @@ $(document).ready(function() {
 
   transformDOM();
   handleLocationHash();
+  attachHeadroom();
 
   // initialize components within tutorial.onInit event
   tutorial.onInit(function() {
@@ -630,6 +714,61 @@ $(document).ready(function() {
       else if (progressEvent.event === "section_skipped")
         sectionSkipped(progressEvent.element);
     });
+
+    // We want the css to move 100/(next_topics.length + 1) %
+    // When clicking on each "Next Topic" button
+    var next_topics = $(".btn.btn-primary.progress-mover");
+    // We need to create a range of next_topics.length + 1, so that the
+    // first progression is not 0
+    var steps = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+    var steps_not_shifted = range(0, 100, Math.round(100 / (next_topics.length + 1)));
+    steps.shift()
+    // adding a data-css-progress attribute to all
+    // we start at 1 cause we don't need the 0%
+    for( var i = 0; i < next_topics.length; i ++){
+      $(next_topics[i]).attr("data-css-progress", steps[i]);
+      $(next_topics[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Same for topics on the left
+    var topic = $(".topic");
+    for( var i = 0; i < topic.length; i ++){
+      $(topic[i]).attr("data-css-progress", steps_not_shifted[i]);
+      $(topic[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Add the css progress amount to previous Topic
+    var previous_topic = $(".previous-mover");
+    for( var i = 0; i < previous_topic.length; i ++){
+      $(previous_topic[i]).attr("data-css-progress", steps_not_shifted[i]);
+      $(previous_topic[i]).click(function(e){updateCssUpper(e)});
+    }
+
+    // Make the progress bar move on click on Continue button
+    // To do that, we need to compute steps between each `Next Topic` buttons
+    // In each section level2, Potential Continue buttons. We'll use Next and previous
+    // values to compute the range
+    var section_2 = $(".section.level2")
+
+    for( var i = 0; i < section_2.length; i ++){
+      let current = $(section_2[i]);
+      let continue_button = current.find(".btn.btn-default.progress-mover")
+      if (continue_button.length > 0){
+        // Get the lower range. If none, it's because it's the first topic, so we set it to 0
+        let lower_boundary = current.find(".previous-mover").attr("data-css-progress") || 0
+        // Get the upper range. If none, it's because it's the last topic, so we set it to 0
+        let upper_boundary = current.find(".btn.btn-primary.progress-mover").attr("data-css-progress") || 100
+        // build the steps
+        let steps = range(lower_boundary, upper_boundary, Math.round(upper_boundary - lower_boundary) / (continue_button.length + 1));
+        steps.shift()
+        for( var i = 0; i < next_topics.length; i ++){
+          $(continue_button[i]).attr("data-css-progress", steps[i]);
+          $(continue_button[i]).click(function(e){updateCssUpper(e)});
+        }
+      }
+    }
+
+
 
   });
 
