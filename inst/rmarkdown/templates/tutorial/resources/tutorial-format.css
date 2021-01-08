@@ -100,6 +100,17 @@
   opacity: 1;
 }
 
+.topicsFooter .printButton {
+  padding-left: 10px;
+  font-size: .66em;
+  cursor: pointer;
+  opacity: .7;
+}
+
+.topicsFooter .printButton:hover {
+  opacity: 1;
+}
+
 .topicsList .topic {
   line-height: 40px;
   font-size: 15px;
