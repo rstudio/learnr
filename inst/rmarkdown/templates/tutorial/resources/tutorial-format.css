@@ -246,6 +246,33 @@
   }
 }
 
+@media print {
+  .topicsContainer,
+  .topicActions,
+  .exerciseActions .skip {
+    display: none;
+  }
+  .topics .tutorialTitle,
+  .topics .section.level2,
+  .topics .section.level3:not(.hide) {
+    display: block;
+  }
+  .topics {
+    width: 100%;
+  }
+  .tutorial-exercise, .tutorial-question {
+    page-break-inside: avoid;
+  }
+  .section.level3.done h3 {
+    padding-left: 0;
+    background-image: none;
+  }
+  .topics .showSkip .exerciseActions::before {
+    content: "Topic not yet completed...";
+    font-style: italic;
+  }
+}
+
 /* override the width to be 100%, not 300px wide */
 .shiny-input-container:not(.shiny-input-container-inline) {
   width: 100%;
