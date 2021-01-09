@@ -19,6 +19,7 @@ learnr (development version)
 * Added an event handler system, with the functions `event_register_handler()` and `one_time()`. There is also a new event `"section_viewed"`, which is triggered when a new section becomes visible. ([#398](https://github.com/rstudio/learnr/pull/398))
 * Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset=TRUE`. Now it a separate event, `"reset_question_submission"`. ([#398](https://github.com/rstudio/learnr/pull/398))
 * Added a new `polyglot` tutorial to learnr. This tutorial displays mixing R, python, and sql exercises. See [`run_tutorial("polyglot", "learnr")`](https://learnr-examples.shinyapps.io/polyglot) for a an example. ([#397](https://github.com/rstudio/learnr/pull/397))
+* Added a new `anybox` question type which allows for partially correct checkbox questions to be evaluated as correct. ([#382](https://github.com/rstudio/learnr/pull/382))
 
 ## Minor new features and improvements
 
