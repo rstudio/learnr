@@ -513,6 +513,14 @@ Whether to include a “Start Over” button for the exercise.
 Whether to display an invisible result warning if the last value returned is invisible.
 </td>
 </tr>
+<tr class="odd">
+<td>
+<code>exercise.reveal_solution</code>
+</td>
+<td>
+Whether or not the solution should be revealed to the user (defaults to <code>TRUE</code>). Set in the <a href="#hiding-solutions">solution chunk options</a>.
+</td>
+</tr>
 </tbody>
 </table>
 <p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the <code>setup</code> chunk and also sets some local options on the <code>addition</code> chunk:</p>
@@ -600,7 +608,7 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="hiding-solutions" class="section level3">
 <h3>Hiding Solutions</h3>
-<p>By default, the exercise solution is always shown, although if there are hints those will appear first. If you would prefer not to reveal the solution to an exercise, you can disable the solution by adding <code>exercise.reveal_solution = FALSE</code> to the chunk options of the <code>*-solution</code> chunk.</p>
+<p>By default, the exercise solution is made available to the user with the “Solution” or “Hint” button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding <code>exercise.reveal_solution = FALSE</code> to the chunk options of the <code>*-solution</code> chunk.</p>
 <div id="exercisesolutionhidden">
 
 </div>
