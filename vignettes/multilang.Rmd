@@ -38,10 +38,20 @@ names(languages) <- c("ar","bg_BG","cs","de","en",
   "da","el","es","eu","fi","he","hu","it","ka","lt",
   "nl","pl","ru","sl","sv","ta","tr","vi","zh_TW")
 
-# Can't library(learnr) because this is a vignette
-tutorial_i18n_custom_language <- learnr::tutorial_i18n_custom_language
 
-learnr_langs <- setdiff(names(learnr:::tutorial_i18n_translations()), "emo")
+i18n_custom_language_defaults <- function(parent_key, docs = TRUE) {
+  default <- learnr:::i18n_translations()$en$translation
+  parent_key <- match.arg(parent_key, names(default))
+  x <- default[[parent_key]]
+  if (!isTRUE(docs)) return(x)
+  paste0(
+    parent_key, ":\n",
+    paste0("  ", names(x), ": ", unname(unlist(x)), collapse = "\n"),
+    sep = ""
+  )
+}
+
+learnr_langs <- setdiff(names(learnr:::i18n_translations()), "emo")
 learnr_supported_languages <- knitr::combine_words(paste0('`"', learnr_langs, '"`'))
 bb_langs_code <- paste0("`", names(languages), "`")
 ```
@@ -72,12 +82,14 @@ There are many elements whose language can be translated or customized, each ide
 Note that you do not need to customize _all_ of the keys,
 the UI will fall back to the default tutorial language for keys that are not specifically customized.
 
+The keys are organized into 2 groups: button and text.
+
 ### Buttons
 
 The following keys are available for translating button text:
 
 ```yaml
-`r learnr:::tutorial_i18n_custom_language_defaults("button")`
+`r i18n_custom_language_defaults("button")`
 ```
 
 ### Text
@@ -85,7 +97,7 @@ The following keys are available for translating button text:
 The following keys are available for translating text elements:
 
 ```yaml
-`r learnr:::tutorial_i18n_custom_language_defaults("text")`
+`r i18n_custom_language_defaults("text")`
 
 ```
 
@@ -108,24 +120,17 @@ If you only want to change the default language, use:
 language: "fr"
 ```
 
-If you are also providing language customizations, use:
-
-```yaml
-languge:
-  default: "fr"
-  custom: #...
-```
+If you are also providing language customizations, the first language in the list of customizations will be the default language.
 
 ### Customizing a Single Language
 
 To customize the displayed text for a single language, use the following format.
-In this format the customization will be applied to the translations of the default language,
+In this format the customization will be applied to the English translation,
 which will also be the default language of the tutorial.
 
 ```yaml
 language:
-  default: en
-  custom:
+  en:
     button:
       runcode: Run!
     text:
@@ -135,58 +140,84 @@ language:
 ### Customizing Multiple Languages
 
 To provide custom display text for multiple languages, 
-provide `custom` with a lists containing `language`, `button` and `text` items. 
-Each is optional, and the default language will be `"en"` if `language` is not provided.
+provide a list containing `button` and/or `text` custom labels.
+In the example below, the default tutorial language will be Spanish (`es`).
 
 ```yaml
 language:
-  default: en
-  custom:
-    - language: en
-      button:
-        runcode: Run!
-      text:
-        startover: Restart!
-    - language: es
-      button:
-        runcode: Ejecutar
+  es:
+    button:
+      runcode: Ejecutar
+  en:
+    button:
+      runcode: Run!
+    text:
+      startover: Restart!
 ```
 
 ### Store Customizations in a JSON File
 
 If you intend to reuse the same custom language repeatedly, 
 it may be helpful to store the custom language parameters in a JSON file and simply import the file.
-In this case, you can provide `custom` with a path to a single JSON file. 
-To write the JSON file, adapt the following R code:
+In this case, you can set the language code item to the path to a single JSON file,
+written with the same structure as the YAML.
 
-```r
+For example, you could write Spanish language customizations to `tutorial_es.json` with the following R code:
+
+```{r eval=FALSE}
 jsonlite::write_json(
-  c(
-    tutorial_i18n_custom_language("en", button = list(runcode = "Run!")),
-    tutorial_i18n_custom_language("es", button = list(runcode = "¡Ejecutar código!"))
+  list(
+    button = list(runcode = "Ejecutar"),
+    text = list(startover = "Empezar de nuevo")
   ),
-  path = "custom_languages.json",
+  path = "tutorial_es.json",
   auto_unbox = TRUE
 )
 ```
 
-And then reference the custom `.json` file in the `custom` item of the `language` option:
+You could then load customizations from this file by referencing it in the YAML header.
 
 ```yaml
 language:
-  default: en
-  custom: custom_languages.json
+  es: tutorial_es.json
+```
+
+Similarly, you can store the entire `language` list in a JSON file and 
+provide the path to the JSON file to the `language` key.
+
+```{r eval=FALSE}
+jsonlite::write_json(
+  list(
+    en = list(
+      button = list(runcode = "Run the code"),
+      text = list(startover = "Restart the tutorial")
+    ),
+    es = list(
+      button = list(runcode = "Ejecutar"),
+      text = list(startover = "Empezar de nuevo")
+    )
+  ),
+  path = "custom_language.json",
+  auto_unbox = TRUE
+)
+```
+
+The R code above writes the custom text for `en` and `es` languages into `custom_language.json`,
+which we then reference in the YAML header:
+
+```yaml
+language: custom_language.json
 ```
 
 ## Complete Translations
 
-Complete translations are provided by the internal function `tutorial_i18n_translations()`.
+Complete translations are provided by the internal function `i18n_translations()`.
 To contribute a complete translation for a language not currently provided by learnr,
-please submit a pull request updating the list in `tutorial_i18n_translations()`.
+please submit a pull request updating the list in `i18n_translations()`.
 Or you can open an issue with a list such as the one below translated into the language you want.
 
 ```{r echo=FALSE, comment = ""}
-en <- jsonlite::toJSON(learnr:::tutorial_i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
+en <- jsonlite::toJSON(learnr:::i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
 en <- gsub("{", "list(", en, fixed = TRUE)
 en <- gsub(": ", " = ", en, fixed = TRUE)
 gsub("}", ")", en, fixed = TRUE)
