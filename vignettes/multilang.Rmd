@@ -155,6 +155,9 @@ language:
       startover: Restart!
 ```
 
+Note that only the first language and its customizations are used in the rendered tutorial.
+In the future, we may extend the multi-language features of learnr to accommodate dynamic localization.
+
 ### Store Customizations in a JSON File
 
 If you intend to reuse the same custom language repeatedly, 
