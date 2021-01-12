@@ -5,25 +5,27 @@ output:
     progressive: true
     allow_skip: true
     language: 
-      default: "en"
-      custom:
-        language: en
+      fr:
+        button:
+          runcode: Lancer
+      en:
         button:
           continue: Go!
           runcode: Run!
           hints: Hint!
           startover: Redo!
-      # custom: "custom_languages.json"
+      # es: tutorial_es.json
 runtime: shiny_prerendered
 ---
 
 ```{r eval=FALSE, include=FALSE}
+# write tutorial_es.json for example in YAML header
 jsonlite::write_json(
-  c(
-    learnr:::tutorial_i18n_custom_language("en", button = list(runcode = "Feedback")),
-    learnr:::tutorial_i18n_custom_language("es", button = list(runcode = "Ejecutar Código"))
+  list(
+    button = list(runcode = "Ejecutar"),
+    text = list(startover = "Empezar de nuevo")
   ),
-  "custom_languages.json",
+  path = "tutorial_es.json",
   auto_unbox = TRUE
 )
 ```
