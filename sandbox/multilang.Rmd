@@ -201,7 +201,9 @@ quiz(
     answer("Pluto", message = "How could you think we are on Pluto?"),
     answer("At a computing device", correct = TRUE),
     answer("In the Milky Way", correct = TRUE),
-    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer.",
+    allow_retry = TRUE,
+    try_again_button = "Do Over"
   ),
   question(sprintf("Suppose $x = %s$. Choose the correct statement:", 42),
     answer(sprintf("$\\sqrt{x} = %d$", 42 + 1)),
