@@ -56,4 +56,25 @@ $(document).on("shiny:sessioninitialized", function() {
     i18next.changeLanguage(lang);
     $(selector).localize(opts);
   }
+
+  function localizeHandler(x) {
+    var selector,language;
+    if (
+      typeof x === 'string' ||
+      (Array.isArray(x) && x.every(function(s) { return typeof s === 'string' }))
+    ) {
+      selector = x;
+    } else if (typeof x === 'object') {
+      selector = x.selector || 'html';
+      language = x.language;
+    } else {
+      return console.log('localize message must be a string with selector(s) or an object with optional keys selector and language.');
+    }
+    if (language) {
+      i18next.changeLanguage(language);
+    }
+    $(selector).localize();
+  }
+
+  Shiny.addCustomMessageHandler('localize', localizeHandler);
 });

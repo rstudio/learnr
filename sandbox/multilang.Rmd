@@ -15,6 +15,11 @@ output:
           hints: Hint!
           startover: Redo!
       # es: tutorial_es.json
+      es:
+        button:
+          runcode: Ejecutar
+        text:
+          startover: Empezar de nuevo
 runtime: shiny_prerendered
 ---
 
@@ -54,6 +59,17 @@ tutorial_options(
 ## intro
 
 This is the intro to the whole ball of wax.
+
+```{r context="render"}
+shiny::selectInput("language", "Choose a Language", choices = c("English" = "en", "French" = "fr", "Spanish" = "es"))
+```
+
+```{r context="server"}
+shiny::observeEvent(input$language, {
+  session$sendCustomMessage("localize", list(language = input$language))
+})
+```
+
 
 ### flights
 
