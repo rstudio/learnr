@@ -598,6 +598,15 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 </div>
+<div id="hiding-solutions" class="section level3">
+<h3>Hiding Solutions</h3>
+<p>By default, the exercise solution is always shown, although if there are hints those will appear first. If you would prefer not to reveal the solution to an exercise, you can disable the solution by adding <code>exercise.reveal_solution = FALSE</code> to the chunk options of the <code>*-solution</code> chunk.</p>
+<div id="exercisesolutionhidden">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisesolutionhidden')</script>
+<p>You can also set this option globally in the global <code>setup</code> chunk with <code>tutorial_options()</code>. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise.</p>
+</div>
 </div>
 <div id="progressive-reveal" class="section level2">
 <h2>Progressive Reveal</h2>
