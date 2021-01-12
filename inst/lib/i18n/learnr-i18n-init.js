@@ -40,4 +40,20 @@ $(document).on("shiny:sessioninitialized", function() {
     jqueryI18next.init(i18next, $);
     $('html').localize();
   });
+
+  /* Method for localization of the tutorial
+   *
+   * @param lang New language for tutorial, if undefined returns the object with
+   *   language customizations used to initialize i18next
+   * @param selector CSS selector of elements to localize
+   * @param opts Options passed to .localize() method from jqueryI18next
+   *
+   */
+  window.tutorial.$localize = function(lang, selector = 'html', opts = {}) {
+    if (typeof lang === 'undefined') {
+      return i18nCustom;
+    }
+    i18next.changeLanguage(lang);
+    $(selector).localize(opts);
+  }
 });
