@@ -14,6 +14,8 @@ output:
           runcode: Run!
           hints: Hint!
           startover: Redo!
+          questionsubmit: Let's See
+          questiontryagain: Retry
       # es: tutorial_es.json
       es:
         button:
@@ -34,7 +36,6 @@ jsonlite::write_json(
   auto_unbox = TRUE
 )
 ```
-
 
 
 ```{r setup, include=FALSE}
@@ -61,7 +62,10 @@ tutorial_options(
 This is the intro to the whole ball of wax.
 
 ```{r context="render"}
-shiny::selectInput("language", "Choose a Language", choices = c("English" = "en", "French" = "fr", "Spanish" = "es"))
+shiny::selectInput(
+  "language", "Choose a Language", 
+  choices = c("English" = "en", "French" = "fr", "Spanish" = "es", "Emoji" = "emo")
+)
 ```
 
 ```{r context="server"}

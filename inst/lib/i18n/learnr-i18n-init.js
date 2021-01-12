@@ -57,6 +57,11 @@ $(document).on("shiny:sessioninitialized", function() {
     $(selector).localize(opts);
   }
 
+  // localize question buttons when shown
+  $(document).on('shiny:value', '.tutorial-question', function(ev) {
+    setTimeout(function() { $(ev.target).localize() }, 0);
+  });
+
   function localizeHandler(x) {
     var selector,language;
     if (

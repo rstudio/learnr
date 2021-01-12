@@ -130,7 +130,9 @@ i18n_translations <- function() {
           continue = "Continue",
           submitanswer = "Submit Answer",
           previoustopic = "Previous Topic",
-          nexttopic = "Next Topic"
+          nexttopic = "Next Topic",
+          questionsubmit = "Submit Answer",
+          questiontryagain = "Try Again"
         ),
         text = list(
           startover = "Start Over",
@@ -148,8 +150,10 @@ i18n_translations <- function() {
           startover = "Recommencer",
           continue = "Continuer",
           submitanswer = "Soumettre",
-          previoustopic = "Chapitre pr\u00e9c\u00e9dent",
-          nexttopic = "Chapitre Suivant"
+          previoustopic = "Chapitre Pr\u00e9c\u00e9dent",
+          nexttopic = "Chapitre Suivant",
+          questionsubmit = "Soumettre",
+          questiontryagain = "R\u00e9essayer"
         ),
         text = list(
           startover = "Recommencer",
@@ -168,7 +172,9 @@ i18n_translations <- function() {
           continue = "\u2705",
           submitanswer = "\U0001f197",
           previoustopic = "\u2b05",
-          nexttopic = "\u27a1"
+          nexttopic = "\u27a1",
+          questionsubmit = "\U0001f197",
+          questiontryagain = "\U0001f501"
         ),
         text = list(
           startover = "\u23ee",

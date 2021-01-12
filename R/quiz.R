@@ -565,14 +565,14 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   action_button_id <- NS(question$ids$question)("action_button")
 
   if (label_type == "submit") {
-    button <- actionButton(action_button_id, button_label, class = default_class)
+    button <- actionButton(action_button_id, button_label, class = default_class, `data-i18n` = "button.questionsubmit")
     if (!is_valid) {
       button <- disable_all_tags(button)
     }
     button
   } else if (label_type == "try_again") {
     mutate_tags(
-      actionButton(action_button_id, button_label, class = warning_class),
+      actionButton(action_button_id, button_label, class = warning_class, `data-i18n` = "button.questiontryagain"),
       paste0("#", action_button_id),
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
