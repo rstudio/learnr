@@ -47,7 +47,7 @@ install_knitr_hooks <- function() {
         TRUE
       } else {
         # if this looks like a setup chunk, but no one references it, error
-        if (is.null(options$exercise) && !is.null(options$exercise.setup)) {
+        if (is.null(options[["exercise"]]) && !is.null(options$exercise.setup)) {
           stop(
             "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
             "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
@@ -392,8 +392,16 @@ install_knitr_hooks <- function() {
 
       # send hint and solution to the browser
       # these are visibly displayed in the UI
-      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {
+      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+"))) {
         exercise_wrapper_div(suffix = "support")
+      }
+
+      if (is_exercise_support_chunk(options, type = "solution")) {
+        reveal_solution <- options$exercise.reveal_solution %||%
+          getOption("tutorial.exercise.reveal_solution", TRUE)
+        if (isTRUE(reveal_solution)) {
+          exercise_wrapper_div(suffix = "support")
+        }
       }
 
     }

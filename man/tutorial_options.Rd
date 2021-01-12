@@ -13,7 +13,8 @@ tutorial_options(
   exercise.error.check.code = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
-  exercise.startover = TRUE
+  exercise.startover = TRUE,
+  exercise.reveal_solution = TRUE
 )
 }
 \arguments{
@@ -39,6 +40,9 @@ code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_cod
 \item{exercise.diagnostics}{Show diagnostics in exercise editors.}
 
 \item{exercise.startover}{Show "Start Over" button on exercise.}
+
+\item{exercise.reveal_solution}{Whether to reveal the exercise solution if
+a solution chunk is provided.}
 }
 \description{
 Set various tutorial options that control the display and evaluation of

@@ -18,6 +18,8 @@
 #' @param exercise.completion Use code completion in exercise editors.
 #' @param exercise.diagnostics Show diagnostics in exercise editors.
 #' @param exercise.startover Show "Start Over" button on exercise.
+#' @param exercise.reveal_solution Whether to reveal the exercise solution if
+#'   a solution chunk is provided.
 #'
 #' @export
 tutorial_options <- function(exercise.cap = NULL,
@@ -28,7 +30,8 @@ tutorial_options <- function(exercise.cap = NULL,
                              exercise.error.check.code = NULL,
                              exercise.completion = TRUE,
                              exercise.diagnostics = TRUE,
-                             exercise.startover = TRUE)
+                             exercise.startover = TRUE,
+                             exercise.reveal_solution = TRUE)
 {
   # string to evalute for setting chunk options  %1$s
   set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
@@ -43,4 +46,5 @@ tutorial_options <- function(exercise.cap = NULL,
   eval(parse(text = sprintf(set_option_code, "exercise.completion")))
   eval(parse(text = sprintf(set_option_code, "exercise.diagnostics")))
   eval(parse(text = sprintf(set_option_code, "exercise.startover")))
+  eval(parse(text = sprintf(set_option_code, "exercise.reveal_solution")))
 }
