@@ -153,7 +153,7 @@ By default, the exercise solution is made available to the user with the "Soluti
 <div id="exercisesolutionhidden"></div>
 <script type="text/javascript">loadSnippet('exercisesolutionhidden')</script>
 
-You can also set this option globally in the global `setup` chunk with `tutorial_options()`. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise.
+You can also set this option globally in the global `setup` chunk with `tutorial_options()`. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise. The current default is to reveal exercise solutions, but in a future version of learnr the default behavior will change to hide solutions.
 
 ## Progressive Reveal
 
