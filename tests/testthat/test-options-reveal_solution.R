@@ -5,13 +5,15 @@ render_tutorial_with_reveal_solution <- function(opt_string) {
   ex <- sub("#<<reveal_solution>>", opt_string, ex, fixed = TRUE)
 
   tut_rmd <- tempfile(fileext = ".Rmd")
+  on.exit(unlink(tut_rmd))
+
   writeLines(ex, tut_rmd)
   tut_html <- rmarkdown::render(tut_rmd, quiet = TRUE)
+
   on.exit({
     rmarkdown::shiny_prerendered_clean(tut_rmd)
     unlink(tut_html)
-    unlink(tut_rmd)
-  })
+  }, add = TRUE, after = FALSE)
 
   paste(readLines(tut_html), collapse = "\n")
 }
