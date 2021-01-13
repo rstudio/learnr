@@ -568,6 +568,8 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   # We don't want to localize button labels that were customized by the user
   # If they're default labels, we'll add the `data-i18n` attribute for localization
   default_label <- eval(formals("question")[[paste0(label_type, "_button")]])
+  # At this point, `button_label` has been upgraded to HTML. 
+  # Need to format() for a fair comparison
   is_default_label <- identical(format(button_label), default_label)
 
   default_class <- "btn-primary"
