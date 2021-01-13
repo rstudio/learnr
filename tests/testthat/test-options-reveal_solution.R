@@ -24,6 +24,8 @@ default_solution <- "<code># DEFAULT SOLUTION 4631b0</code>"
 hidden_solution <- "<code># HIDDEN SOLUTION 48da3c</code>"
 shown_solution <- "<code># SHOWN SOLUTION 781cbb</code>"
 ex_opt_solution <- "<code># EXERCISE OPT SOLUTION 15c861</code>"
+var_hide_solution <- "<code># HIDDEN VAR SOLUTION 0b219b</code>"
+var_show_solution <- "<code># SHOWN VAR SOLUTION aba888</code>"
 
 test_that("Solutions are revealed or hidden with tutorial_options()", {
   skip_if_not(rmarkdown::pandoc_available())
@@ -33,12 +35,16 @@ test_that("Solutions are revealed or hidden with tutorial_options()", {
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
   expect_match(ex_show, ex_opt_solution, fixed = TRUE)
+  expect_failure(expect_match(ex_show, var_hide_solution, fixed = TRUE))
+  expect_match(ex_show, var_show_solution, fixed = TRUE)
 
   ex_hide <- render_tutorial_with_reveal_solution("tutorial_options(exercise.reveal_solution = FALSE)")
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)
   expect_match(ex_hide, ex_opt_solution, fixed = TRUE)
+  expect_failure(expect_match(ex_hide, var_hide_solution, fixed = TRUE))
+  expect_match(ex_hide, var_show_solution, fixed = TRUE)
 })
 
 test_that("Solutions are revealed or hidden with global option", {
@@ -49,10 +55,14 @@ test_that("Solutions are revealed or hidden with global option", {
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
   expect_match(ex_show, ex_opt_solution, fixed = TRUE)
+  expect_failure(expect_match(ex_show, var_hide_solution, fixed = TRUE))
+  expect_match(ex_show, var_show_solution, fixed = TRUE)
 
   ex_hide <- render_tutorial_with_reveal_solution("options(tutorial.exercise.reveal_solution = FALSE)")
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)
   expect_match(ex_hide, ex_opt_solution, fixed = TRUE)
+  expect_failure(expect_match(ex_hide, var_hide_solution, fixed = TRUE))
+  expect_match(ex_hide, var_show_solution, fixed = TRUE)
 })

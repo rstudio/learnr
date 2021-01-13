@@ -7,6 +7,9 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 
+HIDE_SOLUTION <- FALSE
+SHOW_SOLUTION <- TRUE
+
 # Set global option reveal solution option
 # options(tutorial.exercise.reveal_solution = FALSE)
 # tutorial_options(exercise.reveal_solution = TRUE)
@@ -85,4 +88,24 @@ library(learnr)
 
 ```{r show-solution, exercise.reveal_solution = TRUE}
 # SHOWN SOLUTION 781cbb
+```
+
+### Hidden Using Variable in Chunk Opt
+
+```{r var-hide, exercise = TRUE, exercise.reveal_solution = HIDE_SOLUTION}
+1 + 1
+```
+
+```{r var-hide-solution}
+# HIDDEN VAR SOLUTION 0b219b
+```
+
+### Shown Using Variable in Chunk Opt
+
+```{r var-shown, exercise = TRUE, exercise.reveal_solution = SHOW_SOLUTION}
+1 + 1
+```
+
+```{r var-shown-solution}
+# SHOWN VAR SOLUTION aba888
 ```

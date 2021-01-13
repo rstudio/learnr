@@ -150,9 +150,9 @@ install_knitr_hooks <- function() {
     # Determine if we should reveal the solution using...
     reveal_solution <-
       # 1. the option explicitly set on the solution chunk
-      eval(sol_opts_user$exercise.reveal_solution) %||%
+      eval(sol_opts_user$exercise.reveal_solution, envir = knitr::knit_global()) %||%
       # 2. the option explicitly set on the exercise chunk
-      eval(exercise_opts$exercise.reveal_solution) %||%
+      eval(exercise_opts$exercise.reveal_solution, envir = knitr::knit_global()) %||%
       # 3. the global knitr chunk option
       solution_opts$exercise.reveal_solution %||%
       # 4. the global R option
