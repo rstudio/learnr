@@ -56,7 +56,7 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 </tr>
 <tr class="odd">
 <td><code>exercise.reveal_solution</code></td>
-<td>Whether or not the solution should be revealed to the user (defaults to `TRUE`). Set in the [solution chunk options](#hiding-solutions).</td>
+<td>Whether or not the solution should be revealed to the user (defaults to `TRUE`). See [Hiding Solutions](#hiding-solutions) below.</td>
 </tr>
 </tbody>
 </table>
@@ -148,7 +148,7 @@ For R code hints you can provide a sequence of hints that reveal progressively m
 
 ### Hiding Solutions
 
-By default, the exercise solution is made available to the user with the "Solution" or "Hint" button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding `exercise.reveal_solution = FALSE` to the chunk options of the `*-solution` chunk.
+By default, the exercise solution is made available to the user with the "Solution" or "Hint" button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding `exercise.reveal_solution = FALSE` to the chunk options of either the exercise or its corresponding `*-solution` chunk.
 
 <div id="exercisesolutionhidden"></div>
 <script type="text/javascript">loadSnippet('exercisesolutionhidden')</script>

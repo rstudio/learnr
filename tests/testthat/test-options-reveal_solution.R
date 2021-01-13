@@ -21,6 +21,7 @@ render_tutorial_with_reveal_solution <- function(opt_string) {
 default_solution <- "<code># DEFAULT SOLUTION 4631b0</code>"
 hidden_solution <- "<code># HIDDEN SOLUTION 48da3c</code>"
 shown_solution <- "<code># SHOWN SOLUTION 781cbb</code>"
+ex_opt_solution <- "<code># EXERCISE OPT SOLUTION 15c861</code>"
 
 test_that("Solutions are revealed or hidden with tutorial_options()", {
   skip_if_not(rmarkdown::pandoc_available())
@@ -29,11 +30,13 @@ test_that("Solutions are revealed or hidden with tutorial_options()", {
   expect_match(ex_show, default_solution, fixed = TRUE)
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
+  expect_match(ex_show, ex_opt_solution, fixed = TRUE)
 
   ex_hide <- render_tutorial_with_reveal_solution("tutorial_options(exercise.reveal_solution = FALSE)")
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)
+  expect_match(ex_hide, ex_opt_solution, fixed = TRUE)
 })
 
 test_that("Solutions are revealed or hidden with global option", {
@@ -43,9 +46,11 @@ test_that("Solutions are revealed or hidden with global option", {
   expect_match(ex_show, default_solution, fixed = TRUE)
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
+  expect_match(ex_show, ex_opt_solution, fixed = TRUE)
 
   ex_hide <- render_tutorial_with_reveal_solution("options(tutorial.exercise.reveal_solution = FALSE)")
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)
+  expect_match(ex_hide, ex_opt_solution, fixed = TRUE)
 })

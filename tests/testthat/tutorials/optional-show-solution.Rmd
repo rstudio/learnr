@@ -17,9 +17,7 @@ library(learnr)
 
 ### Default
 
-<!-- exercise.reveal_solution needs to be on solution chunk -->
-
-```{r default, exercise = TRUE, exercise.reveal_solution = TRUE}
+```{r default, exercise = TRUE}
 1 + 1
 ```
 
@@ -35,9 +33,27 @@ library(learnr)
 # DEFAULT SOLUTION 4631b0
 ```
 
+### Reveal Set on Exercise
+
+```{r set-on-ex, exercise = TRUE, exercise.reveal_solution = TRUE}
+1 + 1
+```
+
+```{r set-on-ex-hint-1}
+# EXERCISE OPT HINT 1
+```
+
+```{r set-on-ex-hint-2}
+# EXERCISE OPT HINT 2
+```
+
+```{r set-on-ex-solution}
+# EXERCISE OPT SOLUTION 15c861
+```
+
 ### Always Hides Solution
 
-```{r hide, exercise = TRUE}
+```{r hide, exercise = TRUE, exercise.reveal_solution = TRUE}
 1 + 1
 ```
 
@@ -55,7 +71,7 @@ library(learnr)
 
 ### Always Shows Solution
 
-```{r show, exercise = TRUE}
+```{r show, exercise = TRUE, exercise.reveal_solution = FALSE}
 1 + 1
 ```
 
