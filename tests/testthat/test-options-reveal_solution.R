@@ -10,10 +10,12 @@ render_tutorial_with_reveal_solution <- function(opt_string) {
   writeLines(ex, tut_rmd)
   tut_html <- rmarkdown::render(tut_rmd, quiet = TRUE)
 
+  # overwrite exit handler to remove all tutorial files
   on.exit({
     rmarkdown::shiny_prerendered_clean(tut_rmd)
     unlink(tut_html)
-  }, add = TRUE, after = FALSE)
+    unlink(tut_rmd)
+  }, add = FALSE)
 
   paste(readLines(tut_html), collapse = "\n")
 }
