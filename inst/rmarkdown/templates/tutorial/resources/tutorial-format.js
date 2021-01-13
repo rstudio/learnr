@@ -153,6 +153,10 @@ $(document).ready(function() {
 
     }
 
+    function i18nextLang(fallbackLng = 'en') {
+      return i18next.language || window.localStorage.i18nextLng || fallbackLng || 'en';
+    }
+
     function handleSkipClick(event) {
       $(this).data('n_clicks', $(this).data('n_clicks') + 1)
 
@@ -176,21 +180,15 @@ $(document).ready(function() {
       })
       // if the section has exercises and is not complete, don't skip - put up message
       if (section.exercises.length && !section.completed && !section.allowSkip) {
-        var exs = section.exercises.length == 1 ? 'exercise' : 'exercises';
+        var exs = i18next.t(
+          ['text.exercise', 'exercise'],
+          {count: section.exercises.length, lngs: [i18nextLang(), 'en']}
+        );
+        var youmustcomplete = i18next.t(['text.youmustcomplete', 'You must complete the']);
+        var inthissection = i18next.t(['text.inthissection', 'in this section before continuing.']);
 
-        var youmustcomplete = i18next.t("text.youmustcomplete")
-        // Checking that the translation exists, if not, default to english
-        if (youmustcomplete == "text.youmustcomplete") {
-          youmustcomplete = "You must complete the"
-        }
-        var inthissection = i18next.t("text.inthissection")
-        // Checking that the translation exists, if not, default to english
-        if (inthissection == "text.inthissection") {
-          inthissection = "in this section before continuing."
-        }
-        // defaulting to english if nothing works
-        bootbox.setLocale(i18next.language || window.localStorage.i18nextLng || "en")
-        bootbox.alert(inthissection + " " + exs + " " + inthissection);
+        bootbox.setLocale(i18nextLang());
+        bootbox.alert(youmustcomplete + " " + exs + " " + inthissection);
       }
       else {
         if (sectionIndex == topic.sections.length - 1) {
@@ -356,18 +354,11 @@ $(document).ready(function() {
 
       var resetButton = $('<span class="resetButton" data-i18n="text.startover">Start Over</span>');
       resetButton.on('click', function() {
-        var areyousure = i18next.t("text.areyousure")
-        // Default to english if no translation is found
-         if (areyousure == "text.areyousure") {
-          areyousure = "Are you sure you want to start over? (all exercise progress will be reset)"
-        }
-        // defaulting to english if nothing works
-        bootbox.setLocale(i18next.language || window.localStorage.i18nextLng || "en")
-        bootbox.confirm(areyousure,
-                        function(result) {
-                          if (result)
-                            tutorial.startOver();
-                        });
+
+        var areyousure = i18next.t(['text.areyousure', 'Are you sure you want to start over? (all exercise progress will be reset)']);
+
+        bootbox.setLocale(i18nextLang());
+        bootbox.confirm(areyousure, function(result) { result && tutorial.startOver(); });
       });
       topicsFooter.append(resetButton);
       topicsList.append(topicsFooter);

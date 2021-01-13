@@ -138,6 +138,8 @@ i18n_translations <- function() {
           startover = "Start Over",
           areyousure = "Are you sure you want to start over? (all exercise progress will be reset)",
           youmustcomplete = "You must complete the",
+          exercise = "exercise",
+          exercise_plural = "exercises",
           inthissection = "in this section before continuing."
         )
       )
@@ -157,9 +159,11 @@ i18n_translations <- function() {
         ),
         text = list(
           startover = "Recommencer",
-          areyousure = "\u00cates-vous certains de vouloir recommencer ? (La progression sera remise \u00e0 z\u00e9ro)",
-          youmustcomplete = "Vous devez d'abord compl\u00e9ter l'exercice",
-          inthissection = "de cette section avec de continuer."
+          areyousure = "\u00cates-vous certains de vouloir recommencer? (La progression sera remise \u00e0 z\u00e9ro)",
+          youmustcomplete = "Vous devez d'abord compl\u00e9ter",
+          inthissection = "de cette section avec de continuer.",
+          exercise = "l'exercice",
+          exercise_plural = "des exercices"
         )
       )
     ),
@@ -180,6 +184,8 @@ i18n_translations <- function() {
           startover = "\u23ee",
           areyousure = "\U0001f914",
           youmustcomplete = "\u26a0 \U0001f449",
+          exercise = "",
+          exercise_plural = "",
           inthissection = "."
         )
       )
