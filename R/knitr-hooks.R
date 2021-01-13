@@ -189,6 +189,12 @@ install_knitr_hooks <- function() {
       options$include <- FALSE
     }
 
+    if (is_exercise_support_chunk(options, type = "solution")) {
+      # only print solution if exercise.reveal_solution is TRUE
+      options$echo <- options$exercise.reveal_solution %||%
+        getOption("tutorial.exercise.reveal_solution", TRUE)
+    }
+
     # if this is an exercise setup chunk then eval it if the corresponding
     # exercise chunk is going to be executed
     if (exercise_setup_chunk) {
@@ -394,9 +400,7 @@ install_knitr_hooks <- function() {
       # these are visibly displayed in the UI
       if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+"))) {
         exercise_wrapper_div(suffix = "support")
-      }
-
-      if (is_exercise_support_chunk(options, type = "solution")) {
+      } else if (is_exercise_support_chunk(options, type = "solution")) {
         reveal_solution <- options$exercise.reveal_solution %||%
           getOption("tutorial.exercise.reveal_solution", TRUE)
         if (isTRUE(reveal_solution)) {
