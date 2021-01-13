@@ -21,7 +21,7 @@ hidden_solution <- "<code># HIDDEN SOLUTION 48da3c</code>"
 shown_solution <- "<code># SHOWN SOLUTION 781cbb</code>"
 
 test_that("Solutions are revealed or hidden with tutorial_options()", {
-  skip_if_not(rmarkdown::pandoc_available("1.12.3"))
+  skip_if_not(rmarkdown::pandoc_available())
 
   ex_show <- render_tutorial_with_reveal_solution("tutorial_options(exercise.reveal_solution = TRUE)")
   expect_match(ex_show, default_solution, fixed = TRUE)
@@ -35,7 +35,7 @@ test_that("Solutions are revealed or hidden with tutorial_options()", {
 })
 
 test_that("Solutions are revealed or hidden with global option", {
-  skip_if_not(rmarkdown::pandoc_available("1.12.3"))
+  skip_if_not(rmarkdown::pandoc_available())
 
   ex_show <- render_tutorial_with_reveal_solution("options(tutorial.exercise.reveal_solution = TRUE)")
   expect_match(ex_show, default_solution, fixed = TRUE)
