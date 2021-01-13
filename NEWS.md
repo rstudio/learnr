@@ -34,7 +34,7 @@ learnr (development version)
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
 * `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input. ([#460](https://github.com/rstudio/learnr/pull/460), [#455](https://github.com/rstudio/learnr/issues/455))
 * Feedback messages can now be an htmltools tag or tagList, or a character message ([#458](https://github.com/rstudio/learnr/pull/458))
-* Added an option to reveal (or hide) the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will be changed to hide solutions. ([#402](https://github.com/rstudio/learnr/issue/402))
+* Added an option to reveal [default] (or hide) the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will be changed to hide solutions. ([#402](https://github.com/rstudio/learnr/issue/402))
 
 ## Bug fixes
 
