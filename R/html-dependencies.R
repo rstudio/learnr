@@ -92,7 +92,7 @@ tutorial_i18n_html_dependency <- function(language = NULL) {
     script = c("i18next.min.js", "jquery-i18next.min.js", "learnr-i18n-init.js"),
     head = format(htmltools::tags$script(
       id = "i18n-cstm-trns",
-      type = "text/json",
+      type = "application/json",
       jsonlite::toJSON(
         i18n_process_language_options(language),
         auto_unbox = TRUE
