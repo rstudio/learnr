@@ -47,6 +47,10 @@ tutorial <- function(fig_width = 6.5,
                      pandoc_args = NULL,
                      ...) {
 
+  if ("anchor_sections" %in% names(list(...))) {
+    stop("learnr tutorials do not support the `anchor_sections` option.")
+  }
+
   # base pandoc options
   args <- c()
 
@@ -137,6 +141,7 @@ tutorial <- function(fig_width = 6.5,
     template = "default",
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
+    anchor_sections = FALSE,
     ...
   )
 

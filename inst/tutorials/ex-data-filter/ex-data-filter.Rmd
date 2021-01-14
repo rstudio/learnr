@@ -105,7 +105,7 @@ filter(flights, month = 1)
 
 ### Multiple tests
 
-If you give `filter()` more than one logical test, `filter()` will combine the tests with an implied "and."In other words, `filter()` will return only the rows that return `TRUE` for every test. You can combine tests in other ways with Boolean operators... 
+If you give `filter()` more than one logical test, `filter()` will combine the tests with an implied "and." In other words, `filter()` will return only the rows that return `TRUE` for every test. You can combine tests in other ways with Boolean operators... 
 
 ## Boolean operators
 
@@ -232,7 +232,7 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex1-solution}
-    filter(flights, arr_delay >= 120)
+    filter(flights, arr_delay >= 120) # arr_delay is in minutes
     ```
 
 1. Flew to Houston (`IAH` or `HOU`)

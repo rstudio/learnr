@@ -1,0 +1,20 @@
+---
+title: "Error checking chunks require standard check chunks"
+author: "Garrick Aden-Buie"
+output: learnr::tutorial
+runtime: shiny_prerendered 
+description: >
+  Error check chunks, -error-check, require a standard -check chunk
+--- 
+
+```{r setup, include = FALSE}
+library(learnr)
+```
+
+```{r ex, exercise = TRUE}
+1
+```
+
+```{r ex-error-check}
+2
+```

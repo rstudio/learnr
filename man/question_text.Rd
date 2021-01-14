@@ -14,6 +14,8 @@ question_text(
   random_answer_order = FALSE,
   placeholder = "Enter answer here...",
   trim = TRUE,
+  rows = NULL,
+  cols = NULL,
   options = list()
 )
 }
@@ -41,6 +43,12 @@ be entered into the control. Internet Explorer 8 and 9 do not support this
 option.}
 
 \item{trim}{Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.}
+
+\item{rows, cols}{Defines the size of the text input area in terms of the
+number of rows or character columns visible to the user. If either \code{rows}
+or \code{cols} are provided, the quiz input will use \code{\link[shiny:textAreaInput]{shiny::textAreaInput()}}
+for the text input, otherwise the default input element is a single-line
+\code{\link[shiny:textInput]{shiny::textInput()}}.}
 
 \item{options}{Extra options to be stored in the question object.}
 }

@@ -4,10 +4,11 @@ learnr (development version)
 ## Breaking Changes
 
 * Renamed the `exercise_submission` event to `exercise_result` and added the following fields:
-  1. `id` - a randombly generated identifier that can be used to align with the associated `exercise_result` event.
+  1. `id` - a randomly generated identifier that can be used to align with the associated `exercise_result` event.
   2. `time_elapsed` - the time required to run the exercise (in seconds)
   3. `timeout_exceeded` - indicates whether the exercise was interrupted due to an exceeded timeout. May be `NA` for some platforms/evaluators if that information is not known or reported. ([#337](https://github.com/rstudio/learnr/pull/337))
 * If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don't provide a `-code-check` chunk). ([#403](https://github.com/rstudio/learnr/pull/403))
+* `random_praise()` no longer includes the phrase _Correct!_. Instead, it returns a random praising statement. ([#463](https://github.com/rstudio/learnr/pull/463), [#453](https://github.com/rstudio/learnr/issues/453))
 
 ## New features
 
@@ -31,6 +32,8 @@ learnr (development version)
 * `exercise.cap` now accepts HTML input. If no `exercise.cap` is provided, an icon of the exercise engine will be displayed. If no icon is known, the `exercise.cap` will default to the combination of the exercise engine and `" code"`. ([#397](https://github.com/rstudio/learnr/pull/397), [#429](https://github.com/rstudio/learnr/pull/429))
 * `engine` is now passed to the `exercise.checker` to help distinguish what language is being checked in the exercise. ([#397](https://github.com/rstudio/learnr/pull/397))
 * Hitting the `TAB` key in an exercise has always opened the auto-completion drop down. Now, hitting the `TAB` key will also complete the currently selected code completion. ([#428](https://github.com/rstudio/learnr/pull/428))
+* `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input. ([#460](https://github.com/rstudio/learnr/pull/460), [#455](https://github.com/rstudio/learnr/issues/455))
+* Feedback messages can now be an htmltools tag or tagList, or a character message ([#458](https://github.com/rstudio/learnr/pull/458))
 
 ## Bug fixes
 
@@ -41,6 +44,7 @@ learnr (development version)
 * An informative error is now thrown when an exercise chunk's body contains nothing, which lets the tutorial author know that something (e.g., empty line(s)) must be present in the chunk body for it to be rendered as an exercise. ([#410](https://github.com/rstudio/learnr/issues/410)) ([#172](https://github.com/rstudio/learnr/issues/172))
 * When `exercise.completion=TRUE`, completion is no longer performed inside of quotes. This (intentionally) prevents the student from being able to list files on the R server ([#401](https://github.com/rstudio/learnr/issues/401)).
 * Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). ([#417](https://github.com/rstudio/learnr/issues/417)).
+* When a quiz's question or answer text are not characters, e.g. HTML, `htmltools` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz's default loading text ([#450](https://github.com/rstudio/learnr/pull/450)).
 
 learnr 0.10.1
 ===========

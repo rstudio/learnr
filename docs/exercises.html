@@ -40,6 +40,15 @@
 }
 </style>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -84,6 +93,7 @@ h6 {
   text-align: left;
 }
 </style>
+
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
@@ -390,7 +400,7 @@ div.tocify {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rstudio/learnr">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -463,7 +473,7 @@ Number of seconds to limit execution time to (defaults to 30).
 Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 <code>exercise.error.check.code</code>
 </td>
@@ -471,7 +481,7 @@ Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</
 A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>“gradethis::grade_code()”</code>).
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 <code>exercise.completion</code>
 </td>
@@ -479,7 +489,7 @@ A string containing R code to use for checking code when an exercise evaluation 
 Whether to enable code completion in the exercise editor.
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 <code>exercise.diagnostics</code>
 </td>
@@ -487,7 +497,7 @@ Whether to enable code completion in the exercise editor.
 Whether to enable code diagnostics in the exercise editor.
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 <code>exercise.startover</code>
 </td>
@@ -495,7 +505,7 @@ Whether to enable code diagnostics in the exercise editor.
 Whether to include a “Start Over” button for the exercise.
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
 <code>exercise.warn_invisible</code>
 </td>
@@ -636,7 +646,7 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="checking-code" class="section level3">
 <h3>Checking code</h3>
-<p>Checking of exercise <em>code</em> may be done through a <code>*-code-check</code> chunk. With a <strong>gradethis</strong> setup, if you supply a <code>*-solution</code> chunk and call <code>grade_code()</code> inside <code>*-code-check</code>, then you get magical detection of issues with the exercise code.</p>
+<p>Checking of exercise <em>code</em> may be done through a <code>*-code-check</code> chunk. With a <strong>gradethis</strong> setup, if you supply a <code>*-solution</code> chunk and call <code>grade_code()</code> inside <code>*-code-check</code>, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.</p>
 <div id="exercisecodecheck">
 
 </div>
@@ -646,34 +656,31 @@ Whether to display an invisible result warning if the last value returned is inv
 </div>
 <div id="checking-errors" class="section level3">
 <h3>Checking errors</h3>
-<p>In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a <code>*-error-check</code> chunk or through the global <code>exercise.error.check.code</code> option. With a <strong>gradethis</strong> setup, <code>exercise.error.check.code</code> is set to <code>grade_code()</code>, meaning that if a <code>*-solution</code> chunk is provided, then more intelligent feedback is provided “for free”.</p>
+<p>In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a <code>*-error-check</code> chunk or through the global <code>exercise.error.check.code</code> option. If an <code>*-error-check</code> chunk is provided, you must also include a <code>*-check</code> chunk, typically to provide feedback in case the submission <em>doesn’t</em> generate an error.</p>
+<p>With a <strong>gradethis</strong> setup, <code>exercise.error.check.code</code> is set to <code>grade_code()</code>. This means that, by default, users will receive intelligent feedback for a submission that generates an error using the <code>*-solution</code> chunk, if one is provided.</p>
 <p><img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
 <p>To learn more about grading exercises with <strong>gradethis</strong>, see its grading demo (<a href="https://github.com/rstudio-education/gradethis/blob/master/inst/tutorials/grading-demo/grading-demo.Rmd"><code>gradethis::gradethis_demo()</code></a>).</p>
 </div>
 <div id="custom-checking" class="section level3">
 <h3>Custom Checking</h3>
-<p>If you need custom exercise checking logic that isn’t already provided grading packages like <a href="https://github.com/rstudio-education/gradethis"><strong>gradethis</strong></a>, then you may want to write your own <code>exercise.checker</code> function. This function is called on exercise submission whenever <code>*-check</code>, <code>*-code-check</code>, and/or <code>*-error-check</code> chunk(s) exist. When called, this function receives all the information that <strong>learnr</strong> knows about the exercise at the time of the checking, including the <code>user_code</code>, <code>solution_code</code>, <code>check_code</code>, exercise environments, and the <code>last_value</code> (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:</p>
+<p>If you need custom exercise checking logic that isn’t already provided grading packages like <a href="https://github.com/rstudio-education/gradethis"><strong>gradethis</strong></a>, then you may want to write your own <code>exercise.checker</code> function. This function is called on exercise submission whenever <code>*-check</code> or <code>*-code-check</code> chunks exist. When called, this function receives all the information that <strong>learnr</strong> knows about the exercise at the time of the checking, including the <code>user_code</code>, <code>solution_code</code>, <code>check_code</code>, exercise environments, and the <code>last_value</code> (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:</p>
 <ol style="list-style-type: decimal">
-<li>Before exercise evaluation, at this stage:</li>
-</ol>
+<li>Before exercise evaluation, at this stage:
 <ul>
 <li><code>check_code</code> contains <code>*-code-check</code> chunk code.</li>
-<li><code>envir_result</code>, <code>evaludate_result</code>, and <code>last_value</code> are all <code>NULL</code>.</li>
-</ul>
-<ol start="2" style="list-style-type: decimal">
-<li>On evaluation error, at this stage:</li>
-</ol>
+<li><code>envir_result</code>, <code>evaluate_result</code>, and <code>last_value</code> are all <code>NULL</code>.</li>
+</ul></li>
+<li>During evaluation, when an error occurs:
 <ul>
 <li><code>check_code</code> contains <code>*-error-check</code> chunk code.</li>
 <li><code>last_value</code> contains the error condition object.</li>
-</ul>
-<ol start="3" style="list-style-type: decimal">
-<li>After exercise evaluation, at this stage:</li>
-</ol>
+</ul></li>
+<li>After exercise evaluation, at this stage:
 <ul>
 <li><code>check_code</code> contains <code>*-check</code> chunk code.</li>
 <li><code>last_value</code> contains the last printed value.</li>
-</ul>
+</ul></li>
+</ol>
 <p>If, at any one of these stages, feedback should be provided, then <code>exercise.checker</code> should return an R list with, at the very least, a <code>correct</code> flag and feedback <code>message</code>:</p>
 <table>
 <thead>
@@ -805,6 +812,14 @@ The last value of the evaluated chunk.
 </tr>
 <tr class="odd">
 <td>
+<code>engine</code>
+</td>
+<td>
+The <code>engine</code> value of the evaluated chunk.
+</td>
+</tr>
+<tr class="even">
+<td>
 <code>…</code>
 </td>
 <td>
@@ -817,7 +832,7 @@ Unused (include for compatibility with parameters to be added in the future)
 </div>
 <div id="exercise-caption" class="section level2">
 <h2>Exercise Caption</h2>
-<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connodation (e.g. “Exercise” or “Sandbox”). For example:</p>
+<p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connotation (e.g. “Exercise” or “Sandbox”). For example:</p>
 <div id="exercisecaption">
 
 </div>
@@ -865,7 +880,7 @@ Unused (include for compatibility with parameters to be added in the future)
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

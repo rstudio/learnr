@@ -16,8 +16,8 @@ feedback_validated <- function(feedback) {
   if (!(is.list(feedback) && all(c("message", "correct") %in% names(feedback)))) {
     stop("Feedback must be a list with 'message' and 'correct' fields", call. = FALSE)
   }
-  if (!is.character(feedback$message)) {
-    stop("The 'message' field of feedback must be a character vector", call. = FALSE)
+  if (!(is.character(feedback$message) || inherits(feedback$message, c("shiny.tag", "shiny.tag.list")))) {
+    stop("The 'message' field of feedback must be a character vector or an htmltools tag or tagList", call. = FALSE)
   }
   if (!is.logical(feedback$correct)) {
     stop("The 'correct' field of feedback must be a logical (i.e., boolean) value", call. = FALSE)
