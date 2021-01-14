@@ -287,7 +287,7 @@ Use the code chunks below to find all flights that
     **Hint:** Remember that departure and arrival delays are recorded in     _minutes_.
     </div>
 
-1. Were delayed by at least an hour, but made up more than 30 minutes in flight
+1. Were delayed more than an hour, but made up more than 30 minutes in flight
     
     ```{r filterex6, exercise = TRUE}
     
