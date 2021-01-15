@@ -560,8 +560,21 @@ question_module_server_impl <- function(
 
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
   label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
+
+  if (label_type %in% c("correct", "incorrect")) {
+    # No button when answer is correct or incorrect (wrong without try again)
+    return(NULL)
+  }
+
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
+
+  # We don't want to localize button labels that were customized by the user
+  # If they're default labels, we'll add the `data-i18n` attribute for localization
+  default_label <- eval(formals("question")[[paste0(label_type, "_button")]])
+  # At this point, `button_label` has been upgraded to HTML. 
+  # Need to format() for a fair comparison
+  is_default_label <- identical(format(button_label), default_label)
 
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
@@ -569,25 +582,28 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   action_button_id <- NS(question$ids$question)("action_button")
 
   if (label_type == "submit") {
-    button <- actionButton(action_button_id, button_label, class = default_class)
+    button <- actionButton(
+      action_button_id, button_label,
+      class = default_class,
+      `data-i18n` = if (is_default_label) "button.questionsubmit"
+    )
     if (!is_valid) {
       button <- disable_all_tags(button)
     }
     button
   } else if (label_type == "try_again") {
     mutate_tags(
-      actionButton(action_button_id, button_label, class = warning_class),
+      actionButton(
+        action_button_id, button_label,
+        class = warning_class,
+        `data-i18n` = if (is_default_label) "button.questiontryagain"
+      ),
       paste0("#", action_button_id),
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
         ele
       }
     )
-  } else if (
-    label_type == "correct" ||
-    label_type == "incorrect"
-  ) {
-    NULL
   }
 }
 

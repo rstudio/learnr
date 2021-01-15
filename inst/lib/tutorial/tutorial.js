@@ -910,11 +910,11 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     input_div.append(panel_body);
 
     // function to add a submit button
-    function add_submit_button(icon, style, text, check) {
+    function add_submit_button(icon, style, text, check, datai18n) {
       var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run"></a>');
       button.append($('<i class="fa ' + icon + '"></i>'));
       button.attr('type', 'button');
-      button.append(' ' + text);
+      button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>')
       var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       var title = text;
       if (!check)
@@ -932,11 +932,11 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     }
 
     // create run button
-    var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false);
+    var run_button = add_submit_button("fa-play", "btn-success", "Run Code", false, "runcode");
 
     // create submit answer button if checks are enabled
     if (chunk_options.has_checker)
-      add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true);
+      add_submit_button("fa-check-square-o", "btn-primary", "Submit Answer", true, "submitanswer");
 
     // create code div and add it to the input div
     var code_div = $('<div class="tutorial-exercise-code-editor"></div>');
@@ -1097,20 +1097,20 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   var hintDiv = thiz.$exerciseHintDiv(label);
 
   // function to add a helper button
-  function addHelperButton(icon, caption, ele_class) {
+  function addHelperButton(icon, caption, ele_class, datai18n = "") {
     var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
     button.addClass(ele_class);
     button.append($('<i class="fa ' + icon + '"></i>'));
-    button.append(' ' + caption);
+    button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + caption + '</span>')
     panel_heading.append(button);
     return button;
   }
 
   // function to add a hint button
   function addHintButton(caption) {
-    return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint");
+    return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint", "hints");
   }
 
   // helper function to record solution/hint requests
@@ -1123,7 +1123,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // add a startover button
   if (editor.tutorial.startover_code !== null) {
-    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over");
+    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over", "startover");
     startOverButton.on('click', function() {
       editor.setValue(editor.tutorial.startover_code, -1);
       thiz.$clearExerciseOutput(exercise);
@@ -1375,7 +1375,7 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       this.runButtons(el).on('click.exerciseInputBinding', function(ev) {
         binding.restore = false;
         binding.clicked = true;
-        binding.should_check = ev.target.hasAttribute('data-check');
+        binding.should_check = ev.delegateTarget.hasAttribute('data-check');
         callback(true);
       });
       $(el).on('restore.exerciseInputBinding', function(ev, options) {

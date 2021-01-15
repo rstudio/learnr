@@ -105,7 +105,7 @@ filter(flights, month = 1)
 
 ### Multiple tests
 
-If you give `filter()` more than one logical test, `filter()` will combine the tests with an implied "and."In other words, `filter()` will return only the rows that return `TRUE` for every test. You can combine tests in other ways with Boolean operators... 
+If you give `filter()` more than one logical test, `filter()` will combine the tests with an implied "and." In other words, `filter()` will return only the rows that return `TRUE` for every test. You can combine tests in other ways with Boolean operators... 
 
 ## Boolean operators
 
@@ -232,7 +232,7 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex1-solution}
-    filter(flights, arr_delay >= 2)
+    filter(flights, arr_delay >= 120) # arr_delay is in minutes
     ```
 
 1. Flew to Houston (`IAH` or `HOU`)
@@ -280,20 +280,20 @@ Use the code chunks below to find all flights that
     
     ```
     ```{r filterex5-solution}
-    filter(flights, arr_delay > 120, dep_delay < 0)
+    filter(flights, arr_delay > 120, dep_delay <= 0)
     ```
     
     <div id="filterex5-hint">
     **Hint:** Remember that departure and arrival delays are recorded in     _minutes_.
     </div>
 
-1. Were delayed by at least an hour, but made up over 30 minutes in flight
+1. Were delayed more than an hour, but made up more than 30 minutes in flight
     
     ```{r filterex6, exercise = TRUE}
     
     ```
     ```{r filterex6-solution}
-    filter(flights, dep_delay > 60, (dep_delay - arr_delay) >= 30)
+    filter(flights, dep_delay > 60, (dep_delay - arr_delay) > 30)
     ```
 
     <div id="filterex6-hint">
@@ -349,4 +349,25 @@ rule?  (`NA * 0` is a tricky counterexample!)
 ```{r filterex10, exercise = TRUE}
     
 ```
+```{r filterex10-hint-1}
+# any number with a zero exponent is equal to one
+NA ^ 0
+```
 
+```{r filterex10-hint-2}
+# unknown value or true evaluates to true 
+# (because if one operand of "or" is true, we can be sure the result is true)
+NA | TRUE
+```
+
+```{r filterex10-hint-3}
+# false and unknown value evaluates to false
+# (because if one operand of "and" is true, we can be sure the result is false)
+FALSE & NA
+```
+
+```{r filterex10-hint-4}
+# this is not a logical comparison, it's a numerical calculation involving an
+# unknown value, thus resulting in an unknown value
+NA * 0
+```

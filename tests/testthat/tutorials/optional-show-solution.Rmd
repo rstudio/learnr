@@ -1,0 +1,111 @@
+---
+title: "Optionally Reveal Exercise Solution"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+
+HIDE_SOLUTION <- FALSE
+SHOW_SOLUTION <- TRUE
+
+# Set global option reveal solution option
+# options(tutorial.exercise.reveal_solution = FALSE)
+# tutorial_options(exercise.reveal_solution = TRUE)
+#<<reveal_solution>>
+```
+
+## Intro
+
+### Default
+
+```{r default, exercise = TRUE}
+1 + 1
+```
+
+```{r default-hint-1}
+# DEFAULT HINT 1
+```
+
+```{r default-hint-2}
+# DEFAULT HINT 2
+```
+
+```{r default-solution}
+# DEFAULT SOLUTION 4631b0
+```
+
+### Reveal Set on Exercise
+
+```{r set-on-ex, exercise = TRUE, exercise.reveal_solution = TRUE}
+1 + 1
+```
+
+```{r set-on-ex-hint-1}
+# EXERCISE OPT HINT 1
+```
+
+```{r set-on-ex-hint-2}
+# EXERCISE OPT HINT 2
+```
+
+```{r set-on-ex-solution}
+# EXERCISE OPT SOLUTION 15c861
+```
+
+### Always Hides Solution
+
+```{r hide, exercise = TRUE, exercise.reveal_solution = TRUE}
+1 + 1
+```
+
+```{r hide-hint-1}
+# HIDDEN HINT 1
+```
+
+```{r hide-hint-2}
+# HIDDEN HINT 2
+```
+
+```{r hide-solution, exercise.reveal_solution = FALSE}
+# HIDDEN SOLUTION 48da3c
+```
+
+### Always Shows Solution
+
+```{r show, exercise = TRUE, exercise.reveal_solution = FALSE}
+1 + 1
+```
+
+```{r show-hint-1}
+# SHOWN HINT 1
+```
+
+```{r show-hint-2}
+# SHOWN HINT 2
+```
+
+```{r show-solution, exercise.reveal_solution = TRUE}
+# SHOWN SOLUTION 781cbb
+```
+
+### Hidden Using Variable in Chunk Opt
+
+```{r var-hide, exercise = TRUE, exercise.reveal_solution = HIDE_SOLUTION}
+1 + 1
+```
+
+```{r var-hide-solution}
+# HIDDEN VAR SOLUTION 0b219b
+```
+
+### Shown Using Variable in Chunk Opt
+
+```{r var-shown, exercise = TRUE, exercise.reveal_solution = SHOW_SOLUTION}
+1 + 1
+```
+
+```{r var-shown-solution}
+# SHOWN VAR SOLUTION aba888
+```

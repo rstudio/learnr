@@ -23,6 +23,7 @@ tutorial(
   includes = NULL,
   md_extensions = NULL,
   pandoc_args = NULL,
+  language = "en",
   ...
 )
 }
@@ -58,7 +59,9 @@ method creates a paginated HTML table (note that this method is only valid
 for formats that produce HTML). In addition to the named methods you can
 also pass an arbitrary function to be used for printing data frames. You
 can disable the \code{df_print} behavior entirely by setting the option
-\code{rmarkdown.df_print} to \code{FALSE}.}
+\code{rmarkdown.df_print} to \code{FALSE}. See
+\href{https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing}{Data
+frame printing section} in bookdown book for examples.}
 
 \item{smart}{Produce typographically correct output, converting straight quotes to curly quotes,
 \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
@@ -94,6 +97,10 @@ default definition or R Markdown. See the \code{\link[rmarkdown]{rmarkdown_forma
 additional details.}
 
 \item{pandoc_args}{Additional command line options to pass to pandoc}
+
+\item{language}{Language or custom text of the UI elements. See
+\code{vignette("multilang", package = "learnr")} for more information
+about available options and formatting}
 
 \item{...}{Forward parameters to html_document}
 }
