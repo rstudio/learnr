@@ -29,11 +29,26 @@ $(document).on("shiny:sessioninitialized", function() {
     i18nCustom = JSON.parse(i18nCustom.innerText);
   }
 
+  if (i18nCustom.resources) {
+    // copy customizations into base translation namespace
+    Object.keys(i18nCustom.resources).forEach(function(lng) {
+      var resource = i18nCustom.resources[lng]
+      if (resource.custom) {
+        if (resource.translation) {
+          Object.keys(resource.custom).forEach(function(keyGroup) {
+            Object.assign(resource.translation[keyGroup], resource.custom[keyGroup])
+          })
+        } else {
+          resource.translation = resource.custom
+        }
+      }
+    })
+  }
+
   i18next.init({
     lng: i18nCustom.language || 'en',
-    ns: ['custom', 'translation'],
-    defaultNS: 'custom',
-    fallbackNS: 'translation',
+    fallbackLng: 'en',
+    ns: 'translation',
     resources: i18nCustom.resources || {}
   }, function(err, t) {
     if (err) return console.log('[i18next] Error loading translations:', err);
