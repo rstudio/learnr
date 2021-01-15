@@ -170,7 +170,7 @@ i18n_translations <- function() {
     es = list(
       translation = list(
         button = list(
-          runcode = "Ejecutar código",
+          runcode = "Ejecutar c\u00F3digo",
           hints = "Sugerencias",
           startover = "Reiniciar",
           continue = "Continuar",
@@ -182,11 +182,11 @@ i18n_translations <- function() {
         ),
         text = list(
           startover = "Reiniciar",
-          areyousure = "¿Segure que quieres empezar de nuevo? (se reiniciará todo el progreso del ejercicio)",
+          areyousure = "\u00BFSegure que quieres empezar de nuevo? (se reiniciar\u00E1 todo el progreso del ejercicio)",
           youmustcomplete = "Debes completar",
           exercise = "el ejercicio",
           exercise_plural = "los ejercicios",
-          inthissection = "en esta sección antes de continuar."
+          inthissection = "en esta secci\u00F3n antes de continuar."
         )
       )
     ),
