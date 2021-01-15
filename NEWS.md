@@ -19,6 +19,7 @@ learnr (development version)
 * Added an event handler system, with the functions `event_register_handler()` and `one_time()`. There is also a new event `"section_viewed"`, which is triggered when a new section becomes visible. ([#398](https://github.com/rstudio/learnr/pull/398))
 * Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset=TRUE`. Now it a separate event, `"reset_question_submission"`. ([#398](https://github.com/rstudio/learnr/pull/398))
 * Added a new `polyglot` tutorial to learnr. This tutorial displays mixing R, python, and sql exercises. See [`run_tutorial("polyglot", "learnr")`](https://learnr-examples.shinyapps.io/polyglot) for a an example. ([#397](https://github.com/rstudio/learnr/pull/397))
+* Text throughout the learnr interface can be customized or localized using the new `language` argument of `tutorial()`. Translations for English and French are provided and contributes will be welcomed. Read more about these features in `vignette("multilang", package = "learnr")`. ([#456](https://github.com/rstudio/learnr/pull/456))
 
 ## Minor new features and improvements
 

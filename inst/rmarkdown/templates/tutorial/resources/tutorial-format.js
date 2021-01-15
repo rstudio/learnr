@@ -153,6 +153,10 @@ $(document).ready(function() {
 
     }
 
+    function i18nextLang(fallbackLng) {
+      return i18next.language || window.localStorage.i18nextLng || fallbackLng || 'en';
+    }
+
     function handleSkipClick(event) {
       $(this).data('n_clicks', $(this).data('n_clicks') + 1)
 
@@ -176,8 +180,15 @@ $(document).ready(function() {
       })
       // if the section has exercises and is not complete, don't skip - put up message
       if (section.exercises.length && !section.completed && !section.allowSkip) {
-        var exs = section.exercises.length == 1 ? 'exercise' : 'exercises';
-        bootbox.alert("You must complete the " + exs + " in this section before continuing.");
+        var exs = i18next.t(
+          ['text.exercise', 'exercise'],
+          {count: section.exercises.length, lngs: [i18nextLang(), 'en']}
+        );
+        var youmustcomplete = i18next.t(['text.youmustcomplete', 'You must complete the']);
+        var inthissection = i18next.t(['text.inthissection', 'in this section before continuing.']);
+
+        bootbox.setLocale(i18nextLang());
+        bootbox.alert(youmustcomplete + " " + exs + " " + inthissection);
       }
       else {
         if (sectionIndex == topic.sections.length - 1) {
@@ -251,12 +262,12 @@ $(document).ready(function() {
 
         var topicActions = $('<div class="topicActions"></div>');
         if (topicIndex > 0) {
-          var prevButton = $('<button class="btn btn-default">Previous Topic</button>');
+          var prevButton = $('<button class="btn btn-default" data-i18n="button.previoustopic">Previous Topic</button>');
           prevButton.on('click', handlePreviousTopicClick);
           topicActions.append(prevButton);
         }
         if (topicIndex < topicsDOM.length - 1) {
-          var nextButton = $('<button class="btn btn-primary">Next Topic</button>');
+          var nextButton = $('<button class="btn btn-primary" data-i18n="button.nexttopic">Next Topic</button>');
           nextButton.on('click', handleNextTopicClick);
           topicActions.append(nextButton);
         }
@@ -289,7 +300,7 @@ $(document).ready(function() {
             var continueButton = $(
               '<button class="btn btn-default skip" id="' +
               'continuebutton-' + sectionElement.id +
-              '" data-section-id="' + sectionElement.id + '">Continue</button>'
+              '" data-section-id="' + sectionElement.id + '" data-i18n="button.continue">Continue</button>'
             );
             continueButton.data('n_clicks', 0);
             continueButton.on('click', handleSkipClick);
@@ -341,13 +352,13 @@ $(document).ready(function() {
 
       var topicsFooter = $('<div class="topicsFooter"></div>');
 
-      var resetButton = $('<span class="resetButton">Start Over</span>');
+      var resetButton = $('<span class="resetButton" data-i18n="text.startover">Start Over</span>');
       resetButton.on('click', function() {
-        bootbox.confirm("Are you sure you want to start over? (all exercise progress will be reset)",
-                        function(result) {
-                          if (result)
-                            tutorial.startOver();
-                        });
+
+        var areyousure = i18next.t(['text.areyousure', 'Are you sure you want to start over? (all exercise progress will be reset)']);
+
+        bootbox.setLocale(i18nextLang());
+        bootbox.confirm(areyousure, function(result) { result && tutorial.startOver(); });
       });
       topicsFooter.append(resetButton);
       topicsList.append(topicsFooter);

@@ -83,3 +83,20 @@ ace_html_dependency <- function() {
     script = "ace.js"
   )
 }
+
+tutorial_i18n_html_dependency <- function(language = NULL) {
+  htmltools::htmlDependency(
+    name = "i18n",
+    version = "1.2.0",
+    src = system.file("lib/i18n", package = "learnr"),
+    script = c("i18next.min.js", "jquery-i18next.min.js", "tutorial-i18n-init.js"),
+    head = format(htmltools::tags$script(
+      id = "i18n-cstm-trns",
+      type = "application/json",
+      jsonlite::toJSON(
+        i18n_process_language_options(language),
+        auto_unbox = TRUE
+      )
+    ))
+  )
+}
