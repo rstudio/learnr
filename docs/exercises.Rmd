@@ -54,6 +54,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 <td><code>exercise.warn_invisible</code></td>
 <td>Whether to display an invisible result warning if the last value returned is invisible.</td>
 </tr>
+<tr class="odd">
+<td><code>exercise.reveal_solution</code></td>
+<td>Whether or not the solution should be revealed to the user (defaults to `TRUE`). See [Hiding Solutions](#hiding-solutions) below.</td>
+</tr>
 </tbody>
 </table>
 
@@ -141,6 +145,15 @@ For R code hints you can provide a sequence of hints that reveal progressively m
 
 <div id="exercisehints"></div>
 <script type="text/javascript">loadSnippet('exercisehints')</script>
+
+### Hiding Solutions
+
+By default, the exercise solution is made available to the user with the "Solution" or "Hint" button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding `exercise.reveal_solution = FALSE` to the chunk options of either the exercise or its corresponding `*-solution` chunk.
+
+<div id="exercisesolutionhidden"></div>
+<script type="text/javascript">loadSnippet('exercisesolutionhidden')</script>
+
+You can also set this option globally in the global `setup` chunk with `tutorial_options()`. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise. The current default is to reveal exercise solutions, but in a future version of learnr the default behavior will change to hide solutions.
 
 ## Progressive Reveal
 

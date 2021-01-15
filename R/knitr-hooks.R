@@ -47,7 +47,7 @@ install_knitr_hooks <- function() {
         TRUE
       } else {
         # if this looks like a setup chunk, but no one references it, error
-        if (is.null(options$exercise) && !is.null(options$exercise.setup)) {
+        if (is.null(options[["exercise"]]) && !is.null(options$exercise.setup)) {
           stop(
             "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
             "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
@@ -135,6 +135,32 @@ install_knitr_hooks <- function() {
     append(setup_chunks, list(list(label = options$label, code = exercise_chunk, opts = chunk_opts, engine = knitr_engine(options$engine))))
   }
 
+  get_reveal_solution_option <- function(solution_opts) {
+    exercise_chunk <- get_knitr_chunk(sub("-solution$", "", solution_opts$label))
+    if (is.null(exercise_chunk)) {
+      stop("Can not find exercise chunk for solution: `", solution_opts$label, "`")
+    }
+
+    # these are unevaluated options at this point
+    exercise_opts <- attr(exercise_chunk, "chunk_opts")
+    # get explicit opts on solution chunk since solution_opts was merged
+    # with the global knitr chunk options
+    sol_opts_user <- attr(get_knitr_chunk(solution_opts$label), "chunk_opts")
+
+    # Determine if we should reveal the solution using...
+    reveal_solution <-
+      # 1. the option explicitly set on the solution chunk
+      eval(sol_opts_user$exercise.reveal_solution, envir = knitr::knit_global()) %||%
+      # 2. the option explicitly set on the exercise chunk
+      eval(exercise_opts$exercise.reveal_solution, envir = knitr::knit_global()) %||%
+      # 3. the global knitr chunk option
+      solution_opts$exercise.reveal_solution %||%
+      # 4. the global R option
+      getOption("tutorial.exercise.reveal_solution", TRUE)
+
+    isTRUE(reveal_solution)
+  }
+
   # hook to turn off evaluation/highlighting for exercise related chunks
   knitr::opts_hooks$set(tutorial = function(options) {
 
@@ -187,6 +213,11 @@ install_knitr_hooks <- function() {
 
     if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check"))) {
       options$include <- FALSE
+    }
+
+    if (is_exercise_support_chunk(options, type = "solution")) {
+      # only print solution if exercise.reveal_solution is TRUE
+      options$echo <- get_reveal_solution_option(options)
     }
 
     # if this is an exercise setup chunk then eval it if the corresponding
@@ -392,8 +423,12 @@ install_knitr_hooks <- function() {
 
       # send hint and solution to the browser
       # these are visibly displayed in the UI
-      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+", "solution"))) {
+      if (is_exercise_support_chunk(options, type = c("hint", "hint-\\d+"))) {
         exercise_wrapper_div(suffix = "support")
+      } else if (is_exercise_support_chunk(options, type = "solution")) {
+        if (get_reveal_solution_option(options)) {
+          exercise_wrapper_div(suffix = "support")
+        }
       }
 
     }
