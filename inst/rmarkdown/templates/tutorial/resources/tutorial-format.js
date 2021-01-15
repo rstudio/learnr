@@ -153,7 +153,7 @@ $(document).ready(function() {
 
     }
 
-    function i18nextLang(fallbackLng = 'en') {
+    function i18nextLang(fallbackLng) {
       return i18next.language || window.localStorage.i18nextLng || fallbackLng || 'en';
     }
 
