@@ -167,6 +167,29 @@ i18n_translations <- function() {
         )
       )
     ),
+    es = list(
+      translation = list(
+        button = list(
+          runcode = "Ejecutar código",
+          hints = "Sugerencias",
+          startover = "Reiniciar",
+          continue = "Continuar",
+          submitanswer = "Enviar respuesta",
+          previoustopic = "Tema anterior",
+          nexttopic = "Siguiente tema",
+          questionsubmit = "Enviar respuesta",
+          questiontryagain = "Volver a intentar"
+        ),
+        text = list(
+          startover = "Reiniciar",
+          areyousure = "¿Segure que quieres empezar de nuevo? (se reiniciará todo el progreso del ejercicio)",
+          youmustcomplete = "Debes completar",
+          exercise = "el ejercicio",
+          exercise_plural = "los ejercicios",
+          inthissection = "en esta sección antes de continuar."
+        )
+      )
+    ),
     emo = list(
       translation = list(
         button = list(
