@@ -1002,6 +1002,28 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     bindExecutionKey("execute1", "Ctrl+Enter");
     bindExecutionKey("execute2", "Ctrl+Shift+Enter");
 
+    function bindInsertKey(name, keys, text) {
+      if (typeof keys === 'string') {
+        keys = {win: keys, mac: keys.replace('Ctrl+', 'Command+')};
+      }
+      if (typeof text === 'string') {
+        text = {r: text, fallback: text};
+      }
+      editor.commands.addCommand({
+        name: name,
+        bindKey: keys,
+        exec: function(editor) {
+          if (text[editor.tutorial.engine]) {
+            editor.insert(text[editor.tutorial.engine]);
+          } else if (text.fallback) {
+            editor.insert(text.fallback);
+          }
+        }
+      });
+    }
+    bindInsertKey('insertPipe', 'Ctrl+Shift+M', {r: ' %>% '});
+    bindInsertKey('insertArrow', 'Alt+-', {r: ' <- ', fallback: ' = '});
+
     // re-focus the editor on run button click
     run_button.on('click', function() {
       editor.focus();
