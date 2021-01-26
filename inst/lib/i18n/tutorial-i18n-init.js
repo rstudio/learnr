@@ -45,6 +45,36 @@ $(document).on("shiny:sessioninitialized", function() {
     })
   }
 
+  function localize(selector, opts) {
+    selector = selector || '[data-i18n]';
+    opts = opts || {};
+    var els;
+
+    // selector is a string or array of strings (CSS selectors) or an element or array of elements
+    if (
+      typeof selector === 'string' ||
+      (Array.isArray(selector) && selector.every(function(x) { return typeof selector === 'string'; }))
+    ) {
+      els = document.querySelectorAll(selector);
+    } else if (selector instanceof HTMLElement) {
+      els = [selector];
+    } else {
+      els = selector;
+    }
+    els = Array.from(els).filter(function(x) { return Object.keys(x.dataset).includes('i18n') });
+    if (!els.length) {
+      return console.error('No elements found for localization with selector ' + selector);
+    }
+    for (var i = 0; i < els.length; i++) {
+      var optsItem = Object.assign({}, opts);
+      if (els[i].dataset.i18nOpts) {
+        optsItem = Object.assign(optsItem, JSON.parse(els[i].dataset.i18nOpts))
+      }
+      els[i].innerHTML = i18next.t(els[i].dataset.i18n, optsItem);
+    }
+    return els;
+  }
+
   i18next.init({
     lng: i18nCustom.language || 'en',
     fallbackLng: 'en',
@@ -52,8 +82,7 @@ $(document).on("shiny:sessioninitialized", function() {
     resources: i18nCustom.resources || {}
   }, function(err, t) {
     if (err) return console.log('[i18next] Error loading translations:', err);
-    jqueryI18next.init(i18next, $);
-    $('html').localize();
+    localize();
   });
 
   /* Method for localization of the tutorial
@@ -64,17 +93,17 @@ $(document).on("shiny:sessioninitialized", function() {
    * @param opts Options passed to .localize() method from jqueryI18next
    *
    */
-  window.tutorial.$localize = function(lang, selector = 'html', opts = {}) {
+  window.tutorial.$localize = function(lang, selector, opts) {
     if (typeof lang === 'undefined') {
       return i18nCustom;
     }
     i18next.changeLanguage(lang);
-    $(selector).localize(opts);
+    localize(selector, opts);
   }
 
   // localize question buttons when shown
   $(document).on('shiny:value', '.tutorial-question', function(ev) {
-    setTimeout(function() { $(ev.target).localize() }, 0);
+    setTimeout(function() { localize(ev.target) }, 0);
   });
 
   function localizeHandler(x) {
@@ -85,7 +114,7 @@ $(document).on("shiny:sessioninitialized", function() {
     ) {
       selector = x;
     } else if (typeof x === 'object') {
-      selector = x.selector || 'html';
+      selector = x.selector || '[data-i18n]';
       language = x.language;
     } else {
       return console.log('localize message must be a string with selector(s) or an object with optional keys selector and language.');
@@ -93,7 +122,7 @@ $(document).on("shiny:sessioninitialized", function() {
     if (language) {
       i18next.changeLanguage(language);
     }
-    $(selector).localize();
+    localize(selector, x.opts || {});
   }
 
   Shiny.addCustomMessageHandler('localize', localizeHandler);

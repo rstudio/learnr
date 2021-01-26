@@ -119,6 +119,13 @@ i18n_validate_customization <- function(lng) {
   lng
 }
 
+i18n_span <- function(key, ..., opts = NULL) {
+  if (!is.null(opts)) {
+    opts <- jsonlite::toJSON(opts, auto_unbox = TRUE, pretty = FALSE)
+  }
+  htmltools::span(..., `data-i18n` = key, `data-i18n-opts` = opts)
+}
+
 i18n_translations <- function() {
   list(
     en = list(
