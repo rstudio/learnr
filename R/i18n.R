@@ -147,7 +147,9 @@ i18n_translations <- function() {
           youmustcomplete = "You must complete the",
           exercise = "exercise",
           exercise_plural = "exercises",
-          inthissection = "in this section before continuing."
+          inthissection = "in this section before continuing.",
+          code = "Code",
+          enginecap = "{{engine}} $t(text.code)"
         )
       )
     ),
