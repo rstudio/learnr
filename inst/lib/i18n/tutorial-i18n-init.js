@@ -56,21 +56,36 @@ $(document).on("shiny:sessioninitialized", function() {
       (Array.isArray(selector) && selector.every(function(x) { return typeof selector === 'string'; }))
     ) {
       els = document.querySelectorAll(selector);
-    } else if (selector instanceof HTMLElement) {
+    } else if (selector instanceof HTMLElement || selector instanceof HTMLDivElement) {
       els = [selector];
     } else {
       els = selector;
     }
-    els = Array.from(els).filter(function(x) { return Object.keys(x.dataset).includes('i18n') });
+    els = Array.from(els).filter(function(x) { return Object.keys(x.dataset).includes('i18n'); });
     if (!els.length) {
-      return console.error('No elements found for localization with selector ' + selector);
+      // console.error('No elements found for localization with selector ' + selector);
+      return;
     }
     for (var i = 0; i < els.length; i++) {
       var optsItem = Object.assign({}, opts);
+      // Can pass options via data-i18n-opts attributes
       if (els[i].dataset.i18nOpts) {
-        optsItem = Object.assign(optsItem, JSON.parse(els[i].dataset.i18nOpts))
+        optsItem = Object.assign(optsItem, JSON.parse(els[i].dataset.i18nOpts));
       }
-      els[i].innerHTML = i18next.t(els[i].dataset.i18n, optsItem);
+
+      // Translate the item iteslf
+      if (els[i].dataset.i18n) {
+        els[i].innerHTML = i18next.t(els[i].dataset.i18n, optsItem);
+      }
+
+      // Translate attribute values, getting keys from data-i18n-attr-<value>
+      var i18nAttrs = Object.keys(els[i].dataset).filter(function(x) { return x.match('i18nAttr'); });
+      for (var j = 0; j < i18nAttrs.length; j++) {
+        els[i].setAttribute(
+          i18nAttrs[j].replace(/^i18nAttr/, '').toLowerCase(),
+          i18next.t(els[i].dataset[i18nAttrs[j]], optsItem)
+        );
+      }
     }
     return els;
   }
@@ -103,7 +118,9 @@ $(document).on("shiny:sessioninitialized", function() {
 
   // localize question buttons when shown
   $(document).on('shiny:value', '.tutorial-question', function(ev) {
-    setTimeout(function() { localize(ev.target) }, 0);
+    setTimeout(function() {
+      localize(ev.target.closest('.tutorial-question').querySelectorAll('[data-i18n]'));
+    }, 0);
   });
 
   function localizeHandler(x) {

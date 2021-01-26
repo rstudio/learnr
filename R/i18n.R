@@ -132,13 +132,23 @@ i18n_translations <- function() {
       translation = list(
         button = list(
           runcode = "Run Code",
-          hints = "Hints",
+          runcodetitle = "$t(button.runcode) ({{kbd}})",
+          hint = "Hint",
+          hint_plural = "Hints",
+          hinttitle = "Show a $t(button.hint)",
+          hintnext = "Next Hint",
+          hintprev = "Previous Hint",
+          solution = "Solution",
+          solutiontitle = "Show a $t(button.solution)",
+          copyclipboard = "Copy to Clipboard",
           startover = "Start Over",
+          startovertitle = "$t(button.startover)",
           continue = "Continue",
           submitanswer = "Submit Answer",
+          submitanswertitle = "$t(button.submitanswer)",
           previoustopic = "Previous Topic",
           nexttopic = "Next Topic",
-          questionsubmit = "Submit Answer",
+          questionsubmit = "$t(button.submitanswer)",
           questiontryagain = "Try Again"
         ),
         text = list(
@@ -149,7 +159,8 @@ i18n_translations <- function() {
           exercise_plural = "exercises",
           inthissection = "in this section before continuing.",
           code = "Code",
-          enginecap = "{{engine}} $t(text.code)"
+          enginecap = "{{engine}} $t(text.code)",
+          quiz = "Quiz"
         )
       )
     ),
@@ -157,10 +168,12 @@ i18n_translations <- function() {
       translation = list(
         button = list(
           runcode = "Lancer le Code",
-          hints = "Indice",
+          runcodetitle = "$t(button.runcode) ({{kbd}})",
+          hint = "Indice",
           startover = "Recommencer",
           continue = "Continuer",
           submitanswer = "Soumettre",
+          submitanswertitle = "$t(button.submitanswer)",
           previoustopic = "Chapitre Pr\u00e9c\u00e9dent",
           nexttopic = "Chapitre Suivant",
           questionsubmit = "Soumettre",

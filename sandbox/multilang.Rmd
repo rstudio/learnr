@@ -7,12 +7,16 @@ output:
     language: 
       fr:
         button:
-          runcode: Lancer
+          runcode: Marcher
+        text:
+          quiz: Las série de questions
       en:
         button:
           continue: Go!
           runcode: Run!
-          hints: Hint!
+          hint: Hint!
+          hint_plural: Hints!
+          hinttitle: Reveal the $t(button.hint)
           startover: Redo!
           questionsubmit: Let's See
           questiontryagain: Retry
@@ -20,8 +24,12 @@ output:
       es:
         button:
           runcode: Ejecutar
+          runcodetitle: "$t(button.runcode) — {{kbd}}"
         text:
           startover: Empezar de nuevo
+          enginecap: "$t(text.code) {{engine}}"
+          code: Código
+          quiz: Examen
 runtime: shiny_prerendered
 ---
 
@@ -55,7 +63,6 @@ tutorial_options(
   }
 )
 ```
-
 
 ## intro
 
