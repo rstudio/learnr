@@ -39,7 +39,8 @@ Imports:
     renv (>= 0.8.0),
     curl,
     promises,
-    digest
+    digest,
+    cli
 Remotes:
     rstudio/htmltools,
     rstudio/shinytest
