@@ -90,10 +90,14 @@ quiz <- function(..., caption = "Quiz") {
     question
   })
 
-  ret <- list(
-    caption = if(!is.null(caption)) quiz_text(caption),
-    questions = questions
-  )
+  caption <-
+    if (identical(caption, "Quiz")) {
+      i18n_span("text.quiz", "Quiz")
+    } else if (!is.null(caption)) {
+      quiz_text(caption)
+    }
+
+  ret <- list(caption = caption, questions = questions)
   class(ret) <- "tutorial_quiz"
   ret
 }
@@ -572,7 +576,7 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   # We don't want to localize button labels that were customized by the user
   # If they're default labels, we'll add the `data-i18n` attribute for localization
   default_label <- eval(formals("question")[[paste0(label_type, "_button")]])
-  # At this point, `button_label` has been upgraded to HTML. 
+  # At this point, `button_label` has been upgraded to HTML.
   # Need to format() for a fair comparison
   is_default_label <- identical(format(button_label), default_label)
 
