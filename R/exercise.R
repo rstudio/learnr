@@ -194,7 +194,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-  envir_prep <- duplicate_env(envir)
 
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
@@ -209,7 +208,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       check_code = exercise$code_check,
       envir_result = NULL,
       evaluate_result = NULL,
-      envir_prep = envir_prep,
+      envir_prep = duplicate_env(envir),
       last_value = NULL,
       engine = exercise$engine
     )
@@ -219,7 +218,10 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Resolve knitr options for the exercise and setup chunks
-  rmd_results <- withr::with_dir(exercise_dir, render_exercise(exercise, envir, envir_prep))
+  rmd_results <- withr::with_dir(
+    exercise_dir,
+    render_exercise(exercise, envir)
+  )
 
   if (is_exercise_result(rmd_results)) {
     return(rmd_results)
@@ -230,9 +232,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$check,
-      envir_result = envir,
+      envir_result = rmd_results$envir_result,
       evaluate_result = rmd_results$evaluate_result,
-      envir_prep = envir_prep,
+      envir_prep = rmd_results$envir_prep,
       last_value = rmd_results$last_value,
       engine = exercise$engine
     )
@@ -318,16 +320,10 @@ get_checker_func <- function(exercise, name, envir) {
   function(...) NULL
 }
 
-render_exercise <- function(exercise, envir, envir_prep) {
+render_exercise <- function(exercise, envir) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
-  # start constructing knitr_options for the output format
-  knitr_options <- rmarkdown::knitr_options_html(
-    fig_width = exercise$options$fig.width,
-    fig_height = exercise$options$fig.height,
-    fig_retina = exercise$options$fig.retina,
-    keep_md = FALSE
-  )
+
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
@@ -336,56 +332,93 @@ render_exercise <- function(exercise, envir, envir_prep) {
   last_value <- NULL
   last_value_is_visible <- TRUE
   evaluate_result <- NULL
-  knitr_options$knit_hooks$evaluate <- function(
-    code, envir, ..., output_handler # knitr's output_handler
-  ) {
-    has_visible_arg <- length(formals(output_handler$value)) > 1
-    # wrap `output_handler$value` to be able to capture the `last_value`
-    # while maintaining the original functionality of `output_handler$value`
-    output_handler_value_fn <- output_handler$value
-    output_handler$value <- function(x, visible) {
-      last_value <<- x
-      last_value_is_visible <<- visible
-
-      if (has_visible_arg) {
-        output_handler_value_fn(x, visible)
-      } else {
-        if (visible) {
-          output_handler_value_fn(x)
-        } else {
-          invisible()
-        }
-      }
-    }
-    evaluate_result <<- evaluate::evaluate(
-      code, envir, ...,
-      output_handler = output_handler
-    )
-    evaluate_result
-  }
 
   # Put the exercise in a minimal HTML doc
-  output_format <- rmarkdown::output_format(
-    knitr = knitr_options,
-    pandoc = NULL,
-    base_format = rmarkdown::html_fragment(
-      df_print = exercise$options$exercise.df_print,
-      pandoc_args = c("--metadata", "title=PREVIEW")
+  output_format_exercise <- function(user = FALSE) {
+    # start constructing knitr_options for the output format
+    knitr_options <- rmarkdown::knitr_options_html(
+      fig_width = exercise$options$fig.width,
+      fig_height = exercise$options$fig.height,
+      fig_retina = exercise$options$fig.retina,
+      keep_md = FALSE
     )
-  )
-  rmd_src <- c(
+
+    if (isTRUE(user)) {
+      knitr_options$knit_hooks$evaluate <- function(
+        code, envir, ..., output_handler # knitr's output_handler
+      ) {
+        has_visible_arg <- length(formals(output_handler$value)) > 1
+        # wrap `output_handler$value` to be able to capture the `last_value`
+        # while maintaining the original functionality of `output_handler$value`
+        output_handler_value_fn <- output_handler$value
+        output_handler$value <- function(x, visible) {
+          last_value <<- x
+          last_value_is_visible <<- visible
+
+          if (has_visible_arg) {
+            output_handler_value_fn(x, visible)
+          } else {
+            if (visible) {
+              output_handler_value_fn(x)
+            } else {
+              invisible()
+            }
+          }
+        }
+        evaluate_result <<- evaluate::evaluate(
+          code, envir, ...,
+          output_handler = output_handler
+        )
+        evaluate_result
+      }
+    }
+
+    rmarkdown::output_format(
+      knitr = knitr_options,
+      pandoc = NULL,
+      base_format = rmarkdown::html_fragment(
+        df_print = exercise$options$exercise.df_print,
+        pandoc_args = c("--metadata", "title=PREVIEW")
+      )
+    )
+  }
+
+  rmd_src_prep <- exercise_code_chunks_prep(exercise)
+  rmd_file_prep <- "exercise_prep.Rmd"
+  writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
+
+  rmd_src_user <- c(
     readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
-    "", exercise_code_chunks(exercise)
+    "", exercise_code_chunks_user(exercise)
   )
-  rmd_file <- "exercise.Rmd"
-  writeLines(rmd_src, con = rmd_file, useBytes = TRUE)
+  rmd_file_user <- "exercise.Rmd"
+  writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
+
+  envir_prep <- duplicate_env(envir)
+  # placeholder envir_result in case an error occurs with setup chunks
+  envir_result <- envir_prep
 
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
+    local({
+      # First pass without user code to get envir_prep
+      on.exit(unlink(rmd_file_prep), add = TRUE)
+      rmarkdown::render(
+        input = rmd_file_prep,
+        output_format = output_format_exercise(user = FALSE),
+        envir = envir_prep,
+        clean = FALSE,
+        quiet = TRUE,
+        run_pandoc = FALSE
+      )
+    })
+
+    # Now render user code for final result
+    envir_result <- duplicate_env(envir_prep)
     rmarkdown::render(
-      input = rmd_file,
-      output_format = output_format,
-      envir = envir,
+      input = rmd_file_user,
+      output_format = output_format_exercise(user = TRUE),
+      envir = envir_result,
       clean = FALSE,
       quiet = TRUE,
       run_pandoc = FALSE
@@ -402,7 +435,7 @@ render_exercise <- function(exercise, envir, envir_prep) {
       checker_feedback <- try_checker(
         exercise, "exercise.checker",
         check_code = exercise$error_check,
-        envir_result = envir,
+        envir_result = envir_result,
         evaluate_result = evaluate_result,
         envir_prep = envir_prep,
         last_value = e,
@@ -422,8 +455,8 @@ render_exercise <- function(exercise, envir, envir_prep) {
   # Render markdown to HTML
   dependencies <- filter_dependencies(attr(output_file, "knit_meta"))
   output_file <- rmarkdown::render(
-    input = output_file, output_format = output_format,
-    envir = envir, quiet = TRUE, clean = FALSE
+    input = output_file, output_format = output_format_exercise(user = TRUE),
+    envir = envir_result, quiet = TRUE, clean = FALSE
   )
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   html_output <- htmltools::attachDependencies(
@@ -445,12 +478,39 @@ render_exercise <- function(exercise, envir, envir_prep) {
   list(
     evaluate_result = evaluate_result,
     last_value = last_value,
-    html_output = html_output
+    html_output = html_output,
+    envir_result = envir_result,
+    envir_prep = envir_prep
   )
 }
 
-exercise_code_chunks <- function(exercise) {
-  vapply(exercise$chunks, function(x) {
+exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
+  type <- match.arg(type)
+  if (type == "all") {
+    return(exercise$chunks)
+  }
+  is_user_chunk <- vapply(
+    exercise$chunks,
+    function(chunk) identical(chunk$label, exercise$label),
+    logical(1)
+  )
+  if (type == "prep") {
+    exercise$chunks[!is_user_chunk]
+  } else {
+    exercise$chunks[is_user_chunk]
+  }
+}
+
+exercise_code_chunks_prep <- function(exercise) {
+  exercise_code_chunks(exercise_get_chunks(exercise, "prep"))
+}
+
+exercise_code_chunks_user <- function(exercise) {
+  exercise_code_chunks(exercise_get_chunks(exercise, "user"))
+}
+
+exercise_code_chunks <- function(chunks) {
+  vapply(chunks, function(x) {
     opts <- paste(names(x$opts), unname(x$opts), sep = "=")
     paste(
       sep = "\n",
