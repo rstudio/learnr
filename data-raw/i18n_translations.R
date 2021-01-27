@@ -70,4 +70,4 @@ translations_list <-
   # Drop null keys again
   map_depth(3, compact)
 
-saveRDS(translations_list, file = here("inst/i18n_translations"))
+saveRDS(translations_list, file = here("inst/i18n_translations"), version = 2)
