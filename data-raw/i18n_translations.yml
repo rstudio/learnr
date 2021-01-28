@@ -25,120 +25,128 @@
 # These items are included in the translated text using `{{<name>}}` where
 # `<name>` is only available within the context of that particular key. These
 # keys are documented in comments and are demonstrated in the English text.
+#
+# ## Tilde and Empty Strings
+#
+# * Use `~` to indicate NULL values that should fall back to the default
+#   English text.
+# * Use an empty string, `""`, when no text should be printed at all
+#   (use with caution)
+# * Quote all strings with double quotes
 
 button:
   runcode:
-    en: Run Code
-    fr: Lancer le Code
-    emo: 🏃
+    en: "Run Code"
+    fr: "Lancer le Code"
+    emo: "🏃"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
-    en: $t(button.runcode) ({{kbd}})
-    fr: $t(button.runcode) ({{kbd}})
-    emo: $t(button.runcode) ({{kbd}})
+    en: "$t(button.runcode) ({{kbd}})"
+    fr: "$t(button.runcode) ({{kbd}})"
+    emo: "$t(button.runcode) ({{kbd}})"
   hint:
-    en: Hint
-    fr: Indice
-    emo: 💡
+    en: "Hint"
+    fr: "Indice"
+    emo: "💡"
   hint_plural:
-    en: Hints
+    en: "Hints"
     fr: ~
-    emo: $t(button.hint)
+    emo: "$t(button.hint)"
   hinttitle:
-    en: Show a $t(button.hint)
+    en: "$t(button.hint)"
     fr: ~
     emo: ~
   hintnext:
-    en: Next Hint
+    en: "Next Hint"
     fr: ~
     emo: ~
   hintprev:
-    en: Previous Hint
+    en: "Previous Hint"
     fr: ~
     emo: ~
   solution:
-    en: Solution
+    en: "Solution"
     fr: ~
-    emo: 🎯
+    emo: "🎯"
   solutiontitle:
-    en: Show a $t(button.solution)
+    en: "$t(button.solution)"
     fr: ~
     emo: ~
   copyclipboard:
-    en: Copy to Clipboard
+    en: "Copy to Clipboard"
     fr: ~
-    emo: 📋
+    emo: "📋"
   startover:
-    en: Start Over
-    fr: Recommencer
-    emo: ⏮
+    en: "Start Over"
+    fr: "Recommencer"
+    emo: "⏮"
   startovertitle:
-    en: $t(button.startover)
+    en: "$t(button.startover)"
     fr: ~
-    emo: Start Over
+    emo: "Start Over"
   continue:
-    en: Continue
-    fr: Continuer
-    emo: ✅
+    en: "Continue"
+    fr: "Continuer"
+    emo: "✅"
   submitanswer:
-    en: Submit Answer
-    fr: Soumettre
-    emo: 🆗
+    en: "Submit Answer"
+    fr: "Soumettre"
+    emo: "🆗"
   submitanswertitle:
-    en: $t(button.submitanswer)
-    fr: $t(button.submitanswer)
-    emo: Submit Answer
+    en: "$t(button.submitanswer)"
+    fr: "$t(button.submitanswer)"
+    emo: "Submit Answer"
   previoustopic:
-    en: Previous Topic
-    fr: Chapitre Précédent
-    emo: ⬅
+    en: "Previous Topic"
+    fr: "Chapitre Précédent"
+    emo: "⬅"
   nexttopic:
-    en: Next Topic
-    fr: Chapitre Suivant
-    emo: ➡
+    en: "Next Topic"
+    fr: "Chapitre Suivant"
+    emo: "➡"
   questionsubmit:
-    en: $t(button.submitanswer)
-    fr: Soumettre
-    emo: 🆗
+    en: "$t(button.submitanswer)"
+    fr: "Soumettre"
+    emo: "🆗"
   questiontryagain:
-    en: Try Again
-    fr: Réessayer
-    emo: 🔁
+    en: "Try Again"
+    fr: "Réessayer"
+    emo: "🔁"
 text:
   startover:
-    en: Start Over
-    fr: Recommencer
-    emo: ⏮
+    en: "Start Over"
+    fr: "Recommencer"
+    emo: "⏮"
   areyousure:
-    en: Are you sure you want to start over? (all exercise progress will be reset)
-    fr: Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)
-    emo: 🤔
+    en: "Are you sure you want to start over? (all exercise progress will be reset)"
+    fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
+    emo: "🤔"
   youmustcomplete:
-    en: You must complete the
-    fr: Vous devez d'abord compléter
-    emo: ⚠️ 👉 🧑‍💻
+    en: "You must complete the"
+    fr: "Vous devez d'abord compléter"
+    emo: "⚠️ 👉 🧑‍💻"
   exercise:
-    en: exercise
-    fr: l'exercice
+    en: "exercise"
+    fr: "l'exercice"
     emo: ""
   exercise_plural:
-    en: exercises
-    fr: des exercices
+    en: "exercises"
+    fr: "des exercices"
     emo: ""
   inthissection:
-    en: in this section before continuing.
-    fr: de cette section avec de continuer.
+    en: "in this section before continuing."
+    fr: "de cette section avec de continuer."
     emo: ""
   code:
-    en: Code
+    en: "Code"
     fr: ~
     emo: ~
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
-    en: '{{engine}} $t(text.code)'
+    en: "'{{engine}} $t(text.code)'"
     fr: ~
     emo: ~
   quiz:
-    en: Quiz
+    en: "Quiz"
     fr: ~
     emo: ~
