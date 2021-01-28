@@ -1,8 +1,6 @@
 #### NOTE: This file is compiled for {learnr} by data-raw/i18n_translations.R ####
 
-# Translations for {learnr} Documents
-#
-# Syntax Notes ----
+# Translations for {learnr} Documents ------------------------------------------
 #
 # ## Re-using keys
 #
@@ -33,6 +31,26 @@
 # * Use an empty string, `""`, when no text should be printed at all
 #   (use with caution)
 # * Quote all strings with double quotes
+#
+# ## Language Codes
+#
+# {learnr}'s internationalization doesn't impose strict requirements around The
+# formatting of the language code. However, for best results, please use one of
+# the language codes used in the bootbox library, to ensure that modals used in
+# tutorials are also translated:
+# <http://bootboxjs.com/documentation.html#bb-locales>.
+#
+# For best results use:
+#
+# * Two letter ISO 639-1 Language Code:
+#   <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>
+# * If necessary, add an additional ISO 3166-1 country code:
+#   <https://en.wikipedia.org/wiki/ISO_3166-1>
+# * Examples:
+#     * `en-US`, `en-GB` for English as spoken in US or Great Britain
+#     * `pt-BR`, `pt-PT` for Portuguese as spoken in Brazil or Portugal
+#
+# ------------------------------------------------------------------------------
 
 button:
   runcode:
