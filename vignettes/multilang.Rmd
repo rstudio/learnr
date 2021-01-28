@@ -216,16 +216,10 @@ language: custom_language.json
 
 Complete translations are provided by the internal function `i18n_translations()`.
 To contribute a complete translation for a language not currently provided by learnr,
-please submit a pull request updating the list in `i18n_translations()`.
-Or you can open an issue with a list such as the one below translated into the language you want.
-
-```{r echo=FALSE, comment = ""}
-en <- jsonlite::toJSON(learnr:::i18n_translations()["en"], auto_unbox = TRUE, pretty = 2)
-en <- gsub("{", "list(", en, fixed = TRUE)
-en <- gsub(": ", " = ", en, fixed = TRUE)
-gsub("}", ")", en, fixed = TRUE)
-```
-
+please submit a pull request to
+[github.com/rstudio/learnr](https://github.com/rstudio/learnr) 
+updating the list in `data-raw/i18n_translations.yml`,
+following the format described in that file.
 
 Note that for the language to be available inside the alert boxes of learnr,
 you'll need to set the language to one of the
