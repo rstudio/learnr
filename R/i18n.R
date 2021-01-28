@@ -123,7 +123,9 @@ i18n_span <- function(key, ..., opts = NULL) {
   if (!is.null(opts)) {
     opts <- jsonlite::toJSON(opts, auto_unbox = TRUE, pretty = FALSE)
   }
-  htmltools::span(..., `data-i18n` = key, `data-i18n-opts` = opts)
+  x <- htmltools::span(..., `data-i18n` = key, `data-i18n-opts` = opts)
+  # return an html character object instead of a shiny.tag
+  htmltools::HTML(format(x))
 }
 
 i18n_translations <- function() {
