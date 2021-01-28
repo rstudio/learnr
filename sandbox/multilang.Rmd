@@ -20,7 +20,8 @@ output:
           startover: Redo!
           questionsubmit: Let's See
           questiontryagain: Retry
-      # es: tutorial_es.json
+        text:
+          quiz: It's a Quiz!
       es:
         button:
           runcode: Ejecutar
