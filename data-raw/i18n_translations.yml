@@ -124,8 +124,8 @@ button:
     emo: "➡"
   questionsubmit:
     en: "$t(button.submitanswer)"
-    fr: "Soumettre"
-    emo: "🆗"
+    fr: "$t(button.submitanswer)"
+    emo: "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"

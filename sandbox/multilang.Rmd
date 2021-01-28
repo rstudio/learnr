@@ -16,7 +16,7 @@ output:
           runcode: Run!
           hint: Hint!
           hint_plural: Hints!
-          hinttitle: Reveal the $t(button.hint)
+          hinttitle: Maybe this can help you...
           startover: Redo!
           questionsubmit: Let's See
           questiontryagain: Retry
@@ -50,7 +50,9 @@ jsonlite::write_json(
 ```{r setup, include=FALSE}
 library(learnr)
 library(nycflights13)
-options(tutorial.event_recorder = learnr:::debug_event_recorder)
+options(tutorial.event_recorder = function(...) {
+  message(capture.output(learnr:::debug_event_recorder(...))) 
+})
 tutorial_options(
   exercise.eval = FALSE, 
   exercise.checker = function(label, user_code, envir_result, ...)  {
