@@ -54,8 +54,28 @@ reencode_utf8 <- function(x) {
   x
 }
 
+# Read raw translations ----
+translations_yml <- yaml::read_yaml(here::here("data-raw/i18n_translations.yml"))
+
+# Validate that language keys appear for every translation key ----
+translations_lang_keys <-
+  translations_yml %>%
+  imap(~ set_names(.x, paste0(.y, ".", names(.x)))) %>%
+  flatten() %>%
+  map(names)
+
+translations_lang_set <- translations_lang_keys %>% reduce(union) %>% sort()
+
+iwalk(translations_lang_keys, function(langs, key) {
+  if (!identical(sort(langs), translations_lang_set)) {
+    missing_keys <- paste(setdiff(translations_lang_set, langs), collapse = ", ")
+    cli::cli_alert_warning("{.code {key}} is missing language(s): {missing_keys}")
+  }
+})
+
+# Compile translation list for i18next ----
 translations_list <-
-  yaml::read_yaml(here::here("data-raw/i18n_translations.yml")) %>%
+  translations_yml %>%
   # Drop null keys
   map_depth(2, compact) %>%
   # Re-encode to UTF-8
