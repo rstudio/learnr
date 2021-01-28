@@ -75,7 +75,7 @@
 #' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
 #' @export
 #' @rdname quiz
-quiz <- function(..., caption = "Quiz") {
+quiz <- function(..., caption = rlang::missing_arg()) {
 
   # create table rows from questions
   index <- 1
@@ -91,7 +91,7 @@ quiz <- function(..., caption = "Quiz") {
   })
 
   caption <-
-    if (identical(caption, "Quiz")) {
+    if (rlang::is_missing(caption)) {
       i18n_span("text.quiz", "Quiz")
     } else if (!is.null(caption)) {
       quiz_text(caption)

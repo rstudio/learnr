@@ -6,7 +6,7 @@
 \alias{answer}
 \title{Tutorial quiz questions}
 \usage{
-quiz(..., caption = "Quiz")
+quiz(..., caption = rlang::missing_arg())
 
 question(
   text,
