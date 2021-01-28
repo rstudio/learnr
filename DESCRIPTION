@@ -39,7 +39,8 @@ Imports:
     renv (>= 0.8.0),
     curl,
     promises,
-    digest
+    digest,
+    rlang
 Remotes:
     rstudio/htmltools,
     rstudio/shinytest
@@ -51,7 +52,6 @@ Suggests:
     testthat (>= 2.1.0),
     shinytest (>= 1.4.0.9002),
     callr,
-    rlang,
     httpuv,
     later
 VignetteBuilder: knitr
