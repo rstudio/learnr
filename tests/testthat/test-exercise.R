@@ -202,7 +202,9 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   ex_eval_rmote <- rmt$get_result()
 
   env_vals <- function(env) {
-    lapply(setNames(nm = sort(ls(env))), function(v) get(v, env))
+    vars <- sort(ls(env))
+    names(vars) <- vars
+    lapply(vars, function(v) get(v, env))
   }
 
   expect_identical(

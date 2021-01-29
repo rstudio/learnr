@@ -681,11 +681,13 @@ debug_exercise_checker <- function(
   collapse <- function(...) paste(..., collapse = "\n")
 
   str_chr <- function(x) {
-    capture.output(str(x))
+    utils::capture.output(utils::str(x))
   }
 
   str_env <- function(env) {
-    x <- str_chr(lapply(setNames(nm = ls(env)), function(v) get(v, env)))
+    vars <- ls(env)
+    names(vars) <- vars
+    x <- str_chr(lapply(vars, function(v) get(v, env)))
     x[-1]
   }
 
