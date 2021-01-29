@@ -1184,9 +1184,6 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   else if (solution || hints) {
     var isSolution = solution !== null;
 
-    // determine caption
-    var caption = isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint');
-
     // determine editor lines
     var editorLines = thiz.kMinLines;
     if (solution)
@@ -1201,7 +1198,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
     // create solution buttion
     var button = addHintButton(
-      caption,
+      isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
       isSolution ? {key: 'solution', count: 1} : {key: 'hint', count: hints.length}
     );
 

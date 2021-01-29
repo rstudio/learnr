@@ -61,7 +61,14 @@ $(document).on("shiny:sessioninitialized", function() {
     $els.each(function(idx) {
       var optsItem = Object.assign({}, opts);
 
-      // Can pass options via data-i18n-opts attributes
+      // Note: `this.dataset.i18nOpts` maps directly to the DOM element attribute `data-i18n-opts`
+      //   And `this.dataset.i18nAttrVALUE` to element attribute `data-i18n-attr-VALUE`
+      // Link: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
+      // Reference:
+      // > To get a data attribute through the dataset object, get the property
+      // > by the part of the attribute name after data
+      // > (note that dashes are converted to camelCase).
+
       if (this.dataset.i18nOpts) {
         optsItem = Object.assign(optsItem, JSON.parse(this.dataset.i18nOpts));
       }
@@ -71,7 +78,10 @@ $(document).on("shiny:sessioninitialized", function() {
         this.innerHTML = i18next.t(this.dataset.i18n, optsItem);
       }
 
-      // Translate attribute values, getting keys from data-i18n-attr-<value>
+      // Translate element attributes, where keys for the translation of
+      // attibute VALUE are stored in element attribute data-i18n-attr-<VALUE>
+      // e.g. <span title="english title" data-i18n-attr-title="title.demo"></span>
+      //      will use title.demo to look up and translated the text in the title attribute
       var i18nAttrs = Object.keys(this.dataset).filter(function(x) { return x.match('i18nAttr'); });
       for (var j = 0; j < i18nAttrs.length; j++) {
         this.setAttribute(
@@ -111,6 +121,7 @@ $(document).on("shiny:sessioninitialized", function() {
 
   // localize question buttons when shown
   $(document).on('shiny:value', '.tutorial-question', function(ev) {
+    // Allow DOM to update before translating question UI
     setTimeout(function() {
       localize(ev.target.closest('.tutorial-question').querySelectorAll('[data-i18n]'));
     }, 0);
