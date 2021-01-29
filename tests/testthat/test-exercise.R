@@ -184,7 +184,8 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
     check = I("identical(eval(parse(text = 'w + x + y + z'), envir_result), 6)")
   )
 
-  exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, pretty = FALSE)
+  # From internal_external_evaluator() in R/evaluators.R
+  exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
 
   ex_eval_local <- evaluate_exercise(exercise, new.env(), TRUE)
 
