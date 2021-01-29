@@ -413,8 +413,13 @@ render_exercise <- function(exercise, envir) {
       )
     })
 
-    # Now render user code for final result
+    # Copy in a full clone `envir_prep` before running user code in `envir_result`
+    # By being a sibling to `envir_prep` (rather than a dependency), 
+    #   alterations to `envir_prep` from eval'ing code in `envir_result` 
+    #   are much more difficult
     envir_result <- duplicate_env(envir_prep)
+    
+    # Now render user code for final result
     rmarkdown::render(
       input = rmd_file_user,
       output_format = output_format_exercise(user = TRUE),
