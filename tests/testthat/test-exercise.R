@@ -186,20 +186,14 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
 
   # From internal_external_evaluator() in R/evaluators.R
   exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
+  # use parse_json() for safest parsing of serialized JSON (simplifyVector = FALSE)
+  exercise_unserialized <- jsonlite::parse_json(exercise_serialized)
+
+  # AsIs attribute doesn't survive serialization, but it's only used for testing
+  exercise_unserialized$check <- I(exercise_unserialized$check)
 
   ex_eval_local <- evaluate_exercise(exercise, new.env(), TRUE)
-
-  rmt <- callr::r_bg(
-    function(exercise) {
-      exercise <- jsonlite::fromJSON(exercise, simplifyDataFrame = FALSE)
-      # AsIs attribute doesn't survive serialization, but it's only used for testing
-      exercise$check <- I(exercise$check)
-      learnr:::evaluate_exercise(exercise, new.env(), TRUE)
-    },
-    args = list(exercise = exercise_serialized)
-  )
-  rmt$wait()
-  ex_eval_rmote <- rmt$get_result()
+  ex_eval_rmote <- evaluate_exercise(exercise_unserialized, new.env(), TRUE)
 
   env_vals <- function(env) {
     vars <- sort(ls(env))
