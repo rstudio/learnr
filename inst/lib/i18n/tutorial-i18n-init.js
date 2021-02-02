@@ -45,6 +45,54 @@ $(document).on("shiny:sessioninitialized", function() {
     })
   }
 
+  function localize(selector, opts) {
+    selector = selector || '[data-i18n]';
+    opts = opts || {};
+
+    var $els = $(selector).filter(function() {
+      return Object.keys(this.dataset).includes('i18n');
+    });
+
+    if (!$els.length) {
+      // console.error('No elements found for localization with selector ' + selector);
+      return;
+    }
+
+    $els.each(function(idx) {
+      var optsItem = Object.assign({}, opts);
+
+      // Note: `this.dataset.i18nOpts` maps directly to the DOM element attribute `data-i18n-opts`
+      //   And `this.dataset.i18nAttrVALUE` to element attribute `data-i18n-attr-VALUE`
+      // Link: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
+      // Reference:
+      // > To get a data attribute through the dataset object, get the property
+      // > by the part of the attribute name after data
+      // > (note that dashes are converted to camelCase).
+
+      if (this.dataset.i18nOpts) {
+        optsItem = Object.assign(optsItem, JSON.parse(this.dataset.i18nOpts));
+      }
+
+      // Translate the item iteslf
+      if (this.dataset.i18n) {
+        this.innerHTML = i18next.t(this.dataset.i18n, optsItem);
+      }
+
+      // Translate element attributes, where keys for the translation of
+      // attibute VALUE are stored in element attribute data-i18n-attr-<VALUE>
+      // e.g. <span title="english title" data-i18n-attr-title="title.demo"></span>
+      //      will use title.demo to look up and translated the text in the title attribute
+      var i18nAttrs = Object.keys(this.dataset).filter(function(x) { return x.match('i18nAttr'); });
+      for (var j = 0; j < i18nAttrs.length; j++) {
+        this.setAttribute(
+          i18nAttrs[j].replace(/^i18nAttr/, '').toLowerCase(),
+          i18next.t(this.dataset[i18nAttrs[j]], optsItem)
+        );
+      }
+    })
+    return $els;
+  }
+
   i18next.init({
     lng: i18nCustom.language || 'en',
     fallbackLng: 'en',
@@ -52,8 +100,7 @@ $(document).on("shiny:sessioninitialized", function() {
     resources: i18nCustom.resources || {}
   }, function(err, t) {
     if (err) return console.log('[i18next] Error loading translations:', err);
-    jqueryI18next.init(i18next, $);
-    $('html').localize();
+    localize();
   });
 
   /* Method for localization of the tutorial
@@ -64,17 +111,28 @@ $(document).on("shiny:sessioninitialized", function() {
    * @param opts Options passed to .localize() method from jqueryI18next
    *
    */
-  window.tutorial.$localize = function(lang, selector = 'html', opts = {}) {
+  window.tutorial.$localize = function(lang, selector, opts) {
     if (typeof lang === 'undefined') {
       return i18nCustom;
     }
     i18next.changeLanguage(lang);
-    $(selector).localize(opts);
+    localize(selector, opts);
   }
 
   // localize question buttons when shown
   $(document).on('shiny:value', '.tutorial-question', function(ev) {
-    setTimeout(function() { $(ev.target).localize() }, 0);
+    // Allow DOM to update before translating question UI
+    setTimeout(function() {
+      localize(ev.target.closest('.tutorial-question').querySelectorAll('[data-i18n]'));
+    }, 0);
+  });
+
+  // translate targets of i18n events
+  $(document).on('i18n', function(ev) {
+    // translate the event target itself
+    localize(ev.target);
+    // and also any descendents
+    localize(ev.target.querySelectorAll('[data-i18n]'));
   });
 
   function localizeHandler(x) {
@@ -85,7 +143,7 @@ $(document).on("shiny:sessioninitialized", function() {
     ) {
       selector = x;
     } else if (typeof x === 'object') {
-      selector = x.selector || 'html';
+      selector = x.selector || '[data-i18n]';
       language = x.language;
     } else {
       return console.log('localize message must be a string with selector(s) or an object with optional keys selector and language.');
@@ -93,7 +151,7 @@ $(document).on("shiny:sessioninitialized", function() {
     if (language) {
       i18next.changeLanguage(language);
     }
-    $(selector).localize();
+    localize(selector, x.opts || {});
   }
 
   Shiny.addCustomMessageHandler('localize', localizeHandler);

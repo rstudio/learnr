@@ -398,13 +398,17 @@ install_knitr_hooks <- function() {
                   # else, return as the user provided
                   options$engine
                 )
-              paste0(cap_engine_val, " code")
+              i18n_span(
+                "text.enginecap",
+                paste(cap_engine_val, "Code"),
+                opts = list(engine = cap_engine_val)
+              )
             }
           }
         ui_options <- list(
           engine = options$engine,
           has_checker = (!is.null(check_chunk) || !is.null(code_check_chunk)),
-          caption = caption
+          caption = as.character(caption)
         )
         extra_html <- c('<script type="application/json" data-ui-opts="1">',
                         jsonlite::toJSON(ui_options, auto_unbox = TRUE),
