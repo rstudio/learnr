@@ -1113,8 +1113,8 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
       if (typeof datai18n === 'string') {
         datai18n = {key: datai18n};
       }
-      button.attr('data-i18n-attr-title', 'button.' + datai18n.key + 'title');
-      button.append(' ' + '<span data-i18n="button.' + datai18n.key + '">' + caption + '</span>');
+      button.attr('data-i18n-attr-title', datai18n.key + 'title');
+      button.append(' ' + '<span data-i18n="' + datai18n.key + '">' + caption + '</span>');
       if (datai18n.opts) {
         button.attr('data-i18n-opts', JSON.stringify(datai18n.opts));
       }
@@ -1127,7 +1127,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // function to add a hint button
   function addHintButton(caption, datai18n) {
-    datai18n = datai18n || 'hint';
+    datai18n = datai18n || 'button.hint';
     return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint", datai18n);
   }
 
@@ -1141,7 +1141,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // add a startover button
   if (editor.tutorial.startover_code !== null) {
-    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over", "startover");
+    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over", "button.startover");
     startOverButton.on('click', function() {
       editor.setValue(editor.tutorial.startover_code, -1);
       thiz.$clearExerciseOutput(exercise);
@@ -1156,7 +1156,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     hintDiv.css('display', 'none');
 
     // create hint button
-    var button = addHintButton("Hint", {key: 'hint', count: 1});
+    var button = addHintButton("Hint", {key: 'button.hint', count: 1});
 
     // handle showing and hiding the hint
     button.on('click', function() {
@@ -1199,7 +1199,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     // create solution buttion
     var button = addHintButton(
       isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
-      isSolution ? {key: 'solution', count: 1} : {key: 'hint', count: hints.length}
+      isSolution ? {key: 'buttton.solution', count: 1} : {key: 'button.hint', count: hints.length}
     );
 
     // handle showing and hiding the popover
@@ -1245,7 +1245,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
           // add next hint button if we have > 1 hint
           if (solution === null && hints.length > 1) {
             var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutorial-next-hint"></a>');
-            nextHintButton.append($('<span data-i18n="hintnext">Next Hint</span>'));
+            nextHintButton.append($('<span data-i18n="button.hintnext">Next Hint</span>'));
             nextHintButton.append(' ');
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
             nextHintButton.on('click', function() {
@@ -1265,7 +1265,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
                              'btn-tutorial-copy-solution pull-right"></a>');
           copyButton.append($('<i class="fa fa-copy"></i>'));
           copyButton.append(' ')
-          copyButton.append($('<span data-i18n="copyclipboard">Copy to Clipboard</span>'));
+          copyButton.append($('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>'));
           popoverTitle.append(copyButton);
           var clipboard = new Clipboard(copyButton[0], {
             text: function(trigger) {
