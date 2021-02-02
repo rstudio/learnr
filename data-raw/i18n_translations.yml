@@ -64,35 +64,35 @@ button:
     emo: "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
-    fr: "Indice"
+    fr: "Indication"
     emo: "💡"
   hint_plural:
     en: "Hints"
-    fr: ~
+    fr: "Indications"
     emo: "$t(button.hint)"
   hinttitle:
     en: "$t(button.hint)"
-    fr: ~
-    emo: ~
+    fr: "$t(button.hint)"
+    emo: "$t(button.hint)"
   hintnext:
     en: "Next Hint"
-    fr: ~
+    fr: "Indication Suivante"
     emo: ~
   hintprev:
     en: "Previous Hint"
-    fr: ~
+    fr: "Indication Précédente"
     emo: ~
   solution:
     en: "Solution"
-    fr: ~
+    fr: "Solution"
     emo: "🎯"
   solutiontitle:
     en: "$t(button.solution)"
-    fr: ~
-    emo: ~
+    fr: "$t(button.solution)"
+    emo: "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
-    fr: ~
+    fr: "Copier dans le Presse-papier"
     emo: "📋"
   startover:
     en: "Start Over"
@@ -100,7 +100,7 @@ button:
     emo: "⏮"
   startovertitle:
     en: "$t(button.startover)"
-    fr: ~
+    fr: "$t(button.startover)"
     emo: "Start Over"
   continue:
     en: "Continue"
@@ -157,14 +157,14 @@ text:
     emo: ""
   code:
     en: "Code"
-    fr: ~
-    emo: ~
+    fr: "Code"
+    emo: "💻"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
-    en: "'{{engine}} $t(text.code)'"
-    fr: ~
-    emo: ~
+    en: "{{engine}} $t(text.code)"
+    fr: "{{engine}} $t(text.code)"
+    emo: "{{engine}} $t(text.code)"
   quiz:
     en: "Quiz"
-    fr: ~
+    fr: "Quiz"
     emo: ~
