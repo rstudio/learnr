@@ -127,8 +127,11 @@ $(document).on("shiny:sessioninitialized", function() {
     }, 0);
   });
 
-  // handle i18n events and i18nize descendents of event target
+  // translate targets of i18n events
   $(document).on('i18n', function(ev) {
+    // translate the event target itself
+    localize(ev.target);
+    // and also any descendents
     localize(ev.target.querySelectorAll('[data-i18n]'));
   });
 
