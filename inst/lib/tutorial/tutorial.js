@@ -1289,6 +1289,9 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
         // scroll into view if necessary
         thiz.scrollIntoView(popoverElement);
+
+        // translate the popover
+        popoverElement.trigger('i18n');
       }
       else {
         thiz.$removeSolution(exercise);
