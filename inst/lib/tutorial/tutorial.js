@@ -1199,7 +1199,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     // create solution buttion
     var button = addHintButton(
       isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
-      isSolution ? {key: 'buttton.solution', count: 1} : {key: 'button.hint', count: hints.length}
+      isSolution ? {key: 'button.solution', count: 1} : {key: 'button.hint', count: hints.length}
     );
 
     // handle showing and hiding the popover
