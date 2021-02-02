@@ -193,3 +193,12 @@ test_that("i18n_read_json() messages if bad json file", {
   writeLines("foo", tmpfile)
   expect_null(expect_message(i18n_read_json(tmpfile)))
 })
+
+test_that("i18n_span() returns an i18n span", {
+  span <- i18n_span("KEY", "DEFAULT", opts = list(interp = "STRING"))
+  expect_s3_class(span, "html")
+  expect_s3_class(span, "character")
+  expect_match(span, 'data-i18n="KEY"')
+  expect_match(span, ">DEFAULT</span>")
+  expect_match(span, 'data-i18n-opts="{&quot;interp&quot;:&quot;STRING&quot;}"', fixed = TRUE)
+})

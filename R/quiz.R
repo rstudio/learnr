@@ -75,7 +75,7 @@
 #' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
 #' @export
 #' @rdname quiz
-quiz <- function(..., caption = "Quiz") {
+quiz <- function(..., caption = rlang::missing_arg()) {
 
   # create table rows from questions
   index <- 1
@@ -90,10 +90,14 @@ quiz <- function(..., caption = "Quiz") {
     question
   })
 
-  ret <- list(
-    caption = if(!is.null(caption)) quiz_text(caption),
-    questions = questions
-  )
+  caption <-
+    if (rlang::is_missing(caption)) {
+      i18n_span("text.quiz", "Quiz")
+    } else if (!is.null(caption)) {
+      quiz_text(caption)
+    }
+
+  ret <- list(caption = caption, questions = questions)
   class(ret) <- "tutorial_quiz"
   ret
 }
@@ -111,8 +115,8 @@ question <- function(text,
                      message = NULL,
                      post_message = NULL,
                      loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
-                     submit_button = "Submit Answer",
-                     try_again_button = "Try Again",
+                     submit_button = rlang::missing_arg(),
+                     try_again_button = rlang::missing_arg(),
                      allow_retry = FALSE,
                      random_answer_order = FALSE,
                      options = list()
@@ -163,14 +167,29 @@ question <- function(text,
   label <- knitr::opts_current$get('label')
   q_id <- label %||% random_question_id()
 
+  # i18nize button labels if default values are used
+  submit_button <-
+    if (rlang::is_missing(submit_button)) {
+      i18n_span("button.questionsubmit", "Submit Answer")
+    } else {
+      quiz_text(submit_button)
+    }
+
+  try_again_button <-
+    if (rlang::is_missing(try_again_button)) {
+      i18n_span("button.questiontryagain", "Try Again")
+    } else {
+      quiz_text(try_again_button)
+    }
+
   ret <- list(
     type = type,
     label = label,
     question = quiz_text(text),
     answers = answers,
     button_labels = list(
-      submit = quiz_text(submit_button),
-      try_again = quiz_text(try_again_button)
+      submit = submit_button,
+      try_again = try_again_button
     ),
     messages = list(
       correct = quiz_text(correct),
@@ -569,13 +588,6 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
 
-  # We don't want to localize button labels that were customized by the user
-  # If they're default labels, we'll add the `data-i18n` attribute for localization
-  default_label <- eval(formals("question")[[paste0(label_type, "_button")]])
-  # At this point, `button_label` has been upgraded to HTML. 
-  # Need to format() for a fair comparison
-  is_default_label <- identical(format(button_label), default_label)
-
   default_class <- "btn-primary"
   warning_class <- "btn-warning"
 
@@ -584,8 +596,7 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   if (label_type == "submit") {
     button <- actionButton(
       action_button_id, button_label,
-      class = default_class,
-      `data-i18n` = if (is_default_label) "button.questionsubmit"
+      class = default_class
     )
     if (!is_valid) {
       button <- disable_all_tags(button)
@@ -595,8 +606,7 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
     mutate_tags(
       actionButton(
         action_button_id, button_label,
-        class = warning_class,
-        `data-i18n` = if (is_default_label) "button.questiontryagain"
+        class = warning_class
       ),
       paste0("#", action_button_id),
       function(ele) {

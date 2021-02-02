@@ -6,7 +6,7 @@
 \alias{answer}
 \title{Tutorial quiz questions}
 \usage{
-quiz(..., caption = "Quiz")
+quiz(..., caption = rlang::missing_arg())
 
 question(
   text,
@@ -19,8 +19,8 @@ question(
   message = NULL,
   post_message = NULL,
   loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
-  submit_button = "Submit Answer",
-  try_again_button = "Try Again",
+  submit_button = rlang::missing_arg(),
+  try_again_button = rlang::missing_arg(),
   allow_retry = FALSE,
   random_answer_order = FALSE,
   options = list()

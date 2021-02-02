@@ -119,76 +119,15 @@ i18n_validate_customization <- function(lng) {
   lng
 }
 
+i18n_span <- function(key, ..., opts = NULL) {
+  if (!is.null(opts)) {
+    opts <- jsonlite::toJSON(opts, auto_unbox = TRUE, pretty = FALSE)
+  }
+  x <- htmltools::span(..., `data-i18n` = key, `data-i18n-opts` = opts)
+  # return an html character object instead of a shiny.tag
+  htmltools::HTML(format(x))
+}
+
 i18n_translations <- function() {
-  list(
-    en = list(
-      translation = list(
-        button = list(
-          runcode = "Run Code",
-          hints = "Hints",
-          startover = "Start Over",
-          continue = "Continue",
-          submitanswer = "Submit Answer",
-          previoustopic = "Previous Topic",
-          nexttopic = "Next Topic",
-          questionsubmit = "Submit Answer",
-          questiontryagain = "Try Again"
-        ),
-        text = list(
-          startover = "Start Over",
-          areyousure = "Are you sure you want to start over? (all exercise progress will be reset)",
-          youmustcomplete = "You must complete the",
-          exercise = "exercise",
-          exercise_plural = "exercises",
-          inthissection = "in this section before continuing."
-        )
-      )
-    ),
-    fr = list(
-      translation = list(
-        button = list(
-          runcode = "Lancer le Code",
-          hints = "Indice",
-          startover = "Recommencer",
-          continue = "Continuer",
-          submitanswer = "Soumettre",
-          previoustopic = "Chapitre Pr\u00e9c\u00e9dent",
-          nexttopic = "Chapitre Suivant",
-          questionsubmit = "Soumettre",
-          questiontryagain = "R\u00e9essayer"
-        ),
-        text = list(
-          startover = "Recommencer",
-          areyousure = "\u00cates-vous certains de vouloir recommencer? (La progression sera remise \u00e0 z\u00e9ro)",
-          youmustcomplete = "Vous devez d'abord compl\u00e9ter",
-          inthissection = "de cette section avec de continuer.",
-          exercise = "l'exercice",
-          exercise_plural = "des exercices"
-        )
-      )
-    ),
-    emo = list(
-      translation = list(
-        button = list(
-          runcode = "\U0001f3c3",
-          hints = "\U0001f50e",
-          startover = "\u23ee",
-          continue = "\u2705",
-          submitanswer = "\U0001f197",
-          previoustopic = "\u2b05",
-          nexttopic = "\u27a1",
-          questionsubmit = "\U0001f197",
-          questiontryagain = "\U0001f501"
-        ),
-        text = list(
-          startover = "\u23ee",
-          areyousure = "\U0001f914",
-          youmustcomplete = "\u26a0 \U0001f449",
-          exercise = "",
-          exercise_plural = "",
-          inthissection = "."
-        )
-      )
-    )
-  )
+  readRDS(system.file("i18n_translations", package = "learnr"))
 }

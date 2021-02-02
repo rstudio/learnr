@@ -1,0 +1,170 @@
+#### NOTE: This file is the original data for {learnr} by data-raw/i18n_translations.R ####
+
+# Translations for {learnr} Documents ------------------------------------------
+#
+# ## Re-using keys
+#
+# To re-use a key in other places, you can wrap the key in `$t(____)`.
+# Hierarchical keys are named by concatenating the key names with `.`. For
+# example, the "runcode" key under "button" is referenced as `button.runcode`.
+# In summary, to re-use the `button.runcode` key, you can write
+# `$t(button.runcode)`.
+#
+# ## Pluralization
+#
+# Several keys may be pluralized. For example, the singular version of "hint"
+# appears in the `hint` key. If there are multiple hints, `hint_plural` will be
+# used. The internationalization library intelligently chooses between `hint`
+# and `hint_plural` based on the language used.
+#
+# ## Interpolation
+#
+# A few keys use additional text that are added when the text is translated.
+# These items are included in the translated text using `{{<name>}}` where
+# `<name>` is only available within the context of that particular key. These
+# keys are documented in comments and are demonstrated in the English text.
+#
+# ## Tilde and Empty Strings
+#
+# * Use `~` to indicate NULL values that should fall back to the default
+#   English text.
+# * Use an empty string, `""`, when no text should be printed at all
+#   (use with caution)
+# * Quote all strings with double quotes
+#
+# ## Language Codes
+#
+# {learnr}'s internationalization doesn't impose strict requirements around The
+# formatting of the language code. However, for best results, please use one of
+# the language codes used in the bootbox library, to ensure that modals used in
+# tutorials are also translated:
+# <http://bootboxjs.com/documentation.html#bb-locales>.
+#
+# For best results use:
+#
+# * Two letter ISO 639-1 Language Code:
+#   <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>
+# * If necessary, add an additional ISO 3166-1 country code:
+#   <https://en.wikipedia.org/wiki/ISO_3166-1>
+# * Examples:
+#     * `en-US`, `en-GB` for English as spoken in US or Great Britain
+#     * `pt-BR`, `pt-PT` for Portuguese as spoken in Brazil or Portugal
+#
+# ------------------------------------------------------------------------------
+
+button:
+  runcode:
+    en: "Run Code"
+    fr: "Lancer le Code"
+    emo: "🏃"
+  runcodetitle:
+    # {{kbd}} — The keyboard shortcut that triggers the runcode button
+    en: "$t(button.runcode) ({{kbd}})"
+    fr: "$t(button.runcode) ({{kbd}})"
+    emo: "$t(button.runcode) ({{kbd}})"
+  hint:
+    en: "Hint"
+    fr: "Indication"
+    emo: "💡"
+  hint_plural:
+    en: "Hints"
+    fr: "Indications"
+    emo: "$t(button.hint)"
+  hinttitle:
+    en: "$t(button.hint)"
+    fr: "$t(button.hint)"
+    emo: "$t(button.hint)"
+  hintnext:
+    en: "Next Hint"
+    fr: "Indication Suivante"
+    emo: ~
+  hintprev:
+    en: "Previous Hint"
+    fr: "Indication Précédente"
+    emo: ~
+  solution:
+    en: "Solution"
+    fr: "Solution"
+    emo: "🎯"
+  solutiontitle:
+    en: "$t(button.solution)"
+    fr: "$t(button.solution)"
+    emo: "$t(button.solution)"
+  copyclipboard:
+    en: "Copy to Clipboard"
+    fr: "Copier dans le Presse-papier"
+    emo: "📋"
+  startover:
+    en: "Start Over"
+    fr: "Recommencer"
+    emo: "⏮"
+  startovertitle:
+    en: "$t(button.startover)"
+    fr: "$t(button.startover)"
+    emo: "Start Over"
+  continue:
+    en: "Continue"
+    fr: "Continuer"
+    emo: "✅"
+  submitanswer:
+    en: "Submit Answer"
+    fr: "Soumettre"
+    emo: "🆗"
+  submitanswertitle:
+    en: "$t(button.submitanswer)"
+    fr: "$t(button.submitanswer)"
+    emo: "Submit Answer"
+  previoustopic:
+    en: "Previous Topic"
+    fr: "Chapitre Précédent"
+    emo: "⬅"
+  nexttopic:
+    en: "Next Topic"
+    fr: "Chapitre Suivant"
+    emo: "➡"
+  questionsubmit:
+    en: "$t(button.submitanswer)"
+    fr: "$t(button.submitanswer)"
+    emo: "$t(button.submitanswer)"
+  questiontryagain:
+    en: "Try Again"
+    fr: "Réessayer"
+    emo: "🔁"
+text:
+  startover:
+    en: "Start Over"
+    fr: "Recommencer"
+    emo: "⏮"
+  areyousure:
+    en: "Are you sure you want to start over? (all exercise progress will be reset)"
+    fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
+    emo: "🤔"
+  youmustcomplete:
+    en: "You must complete the"
+    fr: "Vous devez d'abord compléter"
+    emo: "⚠️ 👉 🧑‍💻"
+  exercise:
+    en: "exercise"
+    fr: "l'exercice"
+    emo: ""
+  exercise_plural:
+    en: "exercises"
+    fr: "des exercices"
+    emo: ""
+  inthissection:
+    en: "in this section before continuing."
+    fr: "de cette section avec de continuer."
+    emo: ""
+  code:
+    en: "Code"
+    fr: "Code"
+    emo: "💻"
+  enginecap:
+    # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
+    en: "{{engine}} $t(text.code)"
+    fr: "$t(text.code) {{engine}}"
+    emo: "$t(text.code) {{engine}}"
+  quiz:
+    en: "Quiz"
+    fr: "Quiz"
+    emo: ~

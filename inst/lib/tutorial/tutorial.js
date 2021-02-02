@@ -917,9 +917,14 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>')
       var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       var title = text;
-      if (!check)
-        title = title + " (" + (isMac ? "Cmd" : "Ctrl") + "+Shift+Enter)";
+      var kbdText = (isMac ? 'Cmd' : 'Ctrl') + '+Shift+Enter';
+      if (!check) {
+        title = title + ' (' + kbdText + ')';
+        button.attr('data-i18n-opts', '{"kbd": "' + kbdText + '"}');
+      }
       button.attr('title', title);
+      button.attr('data-i18n', '');
+      button.attr('data-i18n-attr-title', 'button.' + datai18n + 'title');
       if (check)
         button.attr('data-check', '1');
       button.attr('data-icon', icon);
@@ -1097,20 +1102,33 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   var hintDiv = thiz.$exerciseHintDiv(label);
 
   // function to add a helper button
-  function addHelperButton(icon, caption, ele_class, datai18n = "") {
+  function addHelperButton(icon, caption, ele_class, datai18n) {
     var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
+    button.attr('data-i18n', '');
     button.addClass(ele_class);
     button.append($('<i class="fa ' + icon + '"></i>'));
-    button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + caption + '</span>')
+    if (datai18n) {
+      if (typeof datai18n === 'string') {
+        datai18n = {key: datai18n};
+      }
+      button.attr('data-i18n-attr-title', datai18n.key + 'title');
+      button.append(' ' + '<span data-i18n="' + datai18n.key + '">' + caption + '</span>');
+      if (datai18n.opts) {
+        button.attr('data-i18n-opts', JSON.stringify(datai18n.opts));
+      }
+    } else {
+      button.append(' ' + caption);
+    }
     panel_heading.append(button);
     return button;
   }
 
   // function to add a hint button
-  function addHintButton(caption) {
-    return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint", "hints");
+  function addHintButton(caption, datai18n) {
+    datai18n = datai18n || 'button.hint';
+    return addHelperButton("fa-lightbulb-o", caption, "btn-tutorial-hint", datai18n);
   }
 
   // helper function to record solution/hint requests
@@ -1123,7 +1141,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // add a startover button
   if (editor.tutorial.startover_code !== null) {
-    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over", "startover");
+    var startOverButton = addHelperButton("fa-refresh", "Start Over", "btn-tutorial-start-over", "button.startover");
     startOverButton.on('click', function() {
       editor.setValue(editor.tutorial.startover_code, -1);
       thiz.$clearExerciseOutput(exercise);
@@ -1138,7 +1156,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     hintDiv.css('display', 'none');
 
     // create hint button
-    var button = addHintButton("Hint");
+    var button = addHintButton("Hint", {key: 'button.hint', count: 1});
 
     // handle showing and hiding the hint
     button.on('click', function() {
@@ -1164,18 +1182,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // else if we have a solution or hints
   else if (solution || hints) {
-
-    // determine caption
-    var caption = null;
-    if (solution) {
-      caption = "Solution";
-    }
-    else {
-      if (hints.length > 1)
-        caption = "Hints";
-      else
-        caption = "Hint";
-    }
+    var isSolution = solution !== null;
 
     // determine editor lines
     var editorLines = thiz.kMinLines;
@@ -1190,7 +1197,10 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     var hintIndex = 0;
 
     // create solution buttion
-    var button = addHintButton(caption);
+    var button = addHintButton(
+      isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
+      isSolution ? {key: 'button.solution', count: 1} : {key: 'button.hint', count: hints.length}
+    );
 
     // handle showing and hiding the popover
     button.on('click', function() {
@@ -1235,7 +1245,8 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
           // add next hint button if we have > 1 hint
           if (solution === null && hints.length > 1) {
             var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutorial-next-hint"></a>');
-            nextHintButton.append("Next Hint ");
+            nextHintButton.append($('<span data-i18n="button.hintnext">Next Hint</span>'));
+            nextHintButton.append(' ');
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
             nextHintButton.on('click', function() {
               hintIndex = hintIndex + 1;
@@ -1253,7 +1264,8 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
           var copyButton = $('<a class="btn btn-info btn-xs ' +
                              'btn-tutorial-copy-solution pull-right"></a>');
           copyButton.append($('<i class="fa fa-copy"></i>'));
-          copyButton.append(" Copy to Clipboard");
+          copyButton.append(' ')
+          copyButton.append($('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>'));
           popoverTitle.append(copyButton);
           var clipboard = new Clipboard(copyButton[0], {
             text: function(trigger) {
@@ -1277,6 +1289,9 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
         // scroll into view if necessary
         thiz.scrollIntoView(popoverElement);
+
+        // translate the popover
+        popoverElement.trigger('i18n');
       }
       else {
         thiz.$removeSolution(exercise);

@@ -7,21 +7,30 @@ output:
     language: 
       fr:
         button:
-          runcode: Lancer
+          runcode: Marcher
+        text:
+          quiz: Las série de questions
       en:
         button:
           continue: Go!
           runcode: Run!
-          hints: Hint!
+          hint: Hint!
+          hint_plural: Hints!
+          hinttitle: Maybe this can help you...
           startover: Redo!
           questionsubmit: Let's See
           questiontryagain: Retry
-      # es: tutorial_es.json
+        text:
+          quiz: It's a Quiz!
       es:
         button:
           runcode: Ejecutar
+          runcodetitle: "$t(button.runcode) — {{kbd}}"
         text:
           startover: Empezar de nuevo
+          enginecap: "$t(text.code) {{engine}}"
+          code: Código
+          quiz: Examen
 runtime: shiny_prerendered
 ---
 
@@ -41,7 +50,9 @@ jsonlite::write_json(
 ```{r setup, include=FALSE}
 library(learnr)
 library(nycflights13)
-options(tutorial.event_recorder = learnr:::debug_event_recorder)
+options(tutorial.event_recorder = function(...) {
+  message(capture.output(learnr:::debug_event_recorder(...))) 
+})
 tutorial_options(
   exercise.eval = FALSE, 
   exercise.checker = function(label, user_code, envir_result, ...)  {
@@ -55,7 +66,6 @@ tutorial_options(
   }
 )
 ```
-
 
 ## intro
 

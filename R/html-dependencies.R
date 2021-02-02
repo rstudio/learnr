@@ -89,7 +89,7 @@ tutorial_i18n_html_dependency <- function(language = NULL) {
     name = "i18n",
     version = "1.2.0",
     src = system.file("lib/i18n", package = "learnr"),
-    script = c("i18next.min.js", "jquery-i18next.min.js", "tutorial-i18n-init.js"),
+    script = c("i18next.min.js", "tutorial-i18n-init.js"),
     head = format(htmltools::tags$script(
       id = "i18n-cstm-trns",
       type = "application/json",
