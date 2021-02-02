@@ -162,8 +162,8 @@ text:
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
-    fr: "{{engine}} $t(text.code)"
-    emo: "{{engine}} $t(text.code)"
+    fr: "$t(text.code) {{engine}}"
+    emo: "$t(text.code) {{engine}}"
   quiz:
     en: "Quiz"
     fr: "Quiz"
