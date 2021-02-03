@@ -37,6 +37,7 @@ learnr (development version)
 * Feedback messages can now be an htmltools tag or tagList, or a character message ([#458](https://github.com/rstudio/learnr/pull/458))
 * Added an option to reveal [default] (or hide) the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will be changed to hide solutions. ([#402](https://github.com/rstudio/learnr/issue/402))
 * Added shortcuts for pipe (`Command/Control+Shift+M`) and assignment (`Alt+-`) operators in exercise code boxes. ([#472](https://github.com/rstudio/learnr/pull/472))
+* Added Spanish language support (@yabellini [#483](https://github.com/rstudio/learnr/pull/483))
 
 ## Bug fixes
 
@@ -49,6 +50,7 @@ learnr (development version)
 * Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). ([#417](https://github.com/rstudio/learnr/issues/417)).
 * When a quiz's question or answer text are not characters, e.g. HTML, `htmltools` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz's default loading text ([#450](https://github.com/rstudio/learnr/pull/450)).
 * The `envir_prep` environment used in exercise checking now captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated as described in the documentation. We also ensure that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep`. ([#480](https://github.com/rstudio/learnr/pull/480))
+* HTML dependencies of exercises run by users now excludes dependencies created with `htmltools::tags$head()`. (thanks @andysouth, [#484](https://github.com/rstudio/learnr/issues/484))
 
 learnr 0.10.1
 ===========

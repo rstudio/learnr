@@ -591,12 +591,13 @@ is_error_result <- function(x) {
 
 filter_dependencies <- function(dependencies) {
   # purge dependencies that aren't in a package (to close off reading of
-  # artibtary filesystem locations)
+  # arbitrary filesystem locations)
   Filter(x = dependencies, function(dependency) {
-    if (!is.null(dependency$package)) {
+    if (!is.list(dependency)) {
+      FALSE
+    } else if (!is.null(dependency$package)) {
       TRUE
-    }
-    else {
+    } else {
       ! is.null(tryCatch(
         rprojroot::find_root(rprojroot::is_r_package,
                              path = dependency$src$file),
