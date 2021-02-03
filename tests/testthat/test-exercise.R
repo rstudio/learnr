@@ -218,3 +218,26 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
     env_vals(ex_eval_rmote$feedback$checker_args$envir_result)
   )
 })
+
+# filter_dependencies() ---------------------------------------------------
+
+test_that("filter_dependencies() excludes non-list knit_meta objects", {
+  ex <- mock_exercise(
+    user_code =
+      "htmltools::tagList(
+        htmltools::tags$head(htmltools::tags$style(\".leaflet-container {backround:#FFF}\")),
+        idb_html_dependency()
+      )"
+  )
+
+  ex_res <- expect_silent(withr::with_tempdir(render_exercise(ex, new.env())))
+
+  ex_res_html_deps <- htmltools::htmlDependencies(ex_res$html_output)
+  # The head(style) dependency is dropped because it's not from a package
+  expect_equal(length(ex_res_html_deps), 1L)
+  # But we keep the dependency that came from a pkg
+  expect_equal(
+    ex_res_html_deps[[1]],
+    idb_html_dependency()
+  )
+})
