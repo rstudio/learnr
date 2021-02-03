@@ -158,7 +158,7 @@ text:
   areyousure:
     en: "Are you sure you want to start over? (all exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
-    es: "¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)
+    es: "¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)"
     emo: "🤔"
   youmustcomplete:
     en: "You must complete the"
