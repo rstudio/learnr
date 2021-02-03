@@ -29,6 +29,32 @@ test_that("exercise mocks: mock_prep_setup()", {
 })
 
 
+# exercise_code_chunks() --------------------------------------------------
+
+test_that("exercise_code_chunks_prep() returns setup/user chunks", {
+  exercise <- mock_exercise(
+    user_code = "USER",
+    chunks = list(
+      mock_chunk("setup-a", "SETUP A"),
+      mock_chunk("setup-b", "SETUP B", exercise.setup = "setup-a")
+    )
+  )
+
+  chunks_prep <- exercise_code_chunks_prep(exercise)
+  expect_length(chunks_prep, 2)
+  expect_match(chunks_prep[1], "SETUP A")
+  expect_match(chunks_prep[2], "SETUP B")
+
+  chunks_user <- exercise_code_chunks_user(exercise)
+  expect_length(chunks_user, 1)
+  expect_match(chunks_user, "USER")
+})
+
+test_that("exercise_code_chunks_prep() returns character(0) if no chunks", {
+  expect_length(exercise_code_chunks_prep(mock_exercise()), 0)
+  expect_identical(exercise_code_chunks_prep(mock_exercise()), character(0))
+})
+
 # render_exercise() -------------------------------------------------------
 
 test_that("render_exercise() returns exercise result with invisible value", {
@@ -168,6 +194,84 @@ test_that("render_exercise() with errors and no checker returns exercise result 
   expect_s3_class(exercise_result, "learnr_exercise_result")
   expect_identical(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
+})
+
+test_that("render_exercise() cleans up exercise_prep files", {
+  exercise <- mock_exercise(
+    user_code = "dir()",
+    chunks = list(mock_chunk("ex-setup", "n <- 5"))
+  )
+
+  files <- withr::with_tempdir({
+    res <- render_exercise(exercise, new.env())
+    list(
+      during = res$last_value,
+      after = dir()
+    )
+  })
+
+  # The exercise prep .Rmd is gone before the exercise runs
+  expect_false(all(grepl("exercise_prep", files$during)))
+  expect_false(all(grepl("exercise_prep", files$after)))
+  # Only exercise.Rmd is in the working directory (by default)
+  expect_equal(files$during, "exercise.Rmd")
+})
+
+test_that("render_exercise() cleans up exercise_prep files even when setup fails", {
+  exercise <- mock_exercise(
+    user_code = c("writeLines('nope', 'nope.txt')", "dir()"),
+    # setup chunk throws an error
+    chunks = list(mock_chunk("ex-setup", c("dir_setup <- dir()", "stop('boom')"))),
+    # get file listing after error in setup chunk happens
+    error_check = I("dir()")
+  )
+
+  files <- expect_message(
+    withr::with_tempdir({
+      before <-  dir()
+      res <- render_exercise(exercise, new.env())
+      list(
+        before = before,
+        before_error = get("dir_setup", res$feedback$checker_args$envir_prep),
+        during = res$feedback$checker_result,
+        after = dir()
+      )
+    }),
+    "exercise_prep.Rmd"
+  )
+
+  # start with nothing
+  expect_identical(files$before, character(0))
+  # prep file is present while evaluating prep
+  expect_identical(files$before_error, "exercise_prep.Rmd")
+  # prep files are cleaned up after error
+  expect_identical(files$during, character(0))
+  # nothing in directory after render_exercise() because user code didn't evaluate
+  expect_identical(files$after, character(0))
+})
+
+test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
+  exercise <- mock_exercise(
+    user_code = "readLines('exercise.Rmd')",
+    chunks = list(mock_chunk("ex-setup", "writeLines('nope', 'exercise.Rmd')"))
+  )
+
+  res <- expect_warning(
+    withr::with_tempdir({
+      before <- dir()
+      res <- render_exercise(exercise, new.env())
+      list(
+        before = before,
+        during = res$last_value,
+        after = readLines('exercise.Rmd')
+      )
+    }),
+    "exercise.Rmd"
+  )
+
+  expect_equal(res$before, character(0))
+  expect_false(identical('nope', res$during))
+  expect_equal(res$during, res$after)
 })
 
 # evaluate_exercise() -----------------------------------------------------

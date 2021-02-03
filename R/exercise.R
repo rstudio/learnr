@@ -383,16 +383,12 @@ render_exercise <- function(exercise, envir) {
     )
   }
 
+  # Prepare code chunks containing exercise prep (setup) and user code
   rmd_src_prep <- exercise_code_chunks_prep(exercise)
-  rmd_file_prep <- "exercise_prep.Rmd"
-  writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
-
   rmd_src_user <- c(
     readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
     "", exercise_code_chunks_user(exercise)
   )
-  rmd_file_user <- "exercise.Rmd"
-  writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
 
   envir_prep <- duplicate_env(envir)
   # placeholder envir_result in case an error occurs with setup chunks
@@ -401,24 +397,41 @@ render_exercise <- function(exercise, envir) {
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
     local({
-      # First pass without user code to get envir_prep
-      on.exit(unlink(rmd_file_prep), add = TRUE)
-      rmarkdown::render(
-        input = rmd_file_prep,
-        output_format = output_format_exercise(user = FALSE),
-        envir = envir_prep,
-        clean = FALSE,
-        quiet = TRUE,
-        run_pandoc = FALSE
-      )
+      if (length(rmd_src_prep) > 0) {
+        rmd_file_prep <- "exercise_prep.Rmd"
+        writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
+        on.exit(unlink(dir(pattern = "exercise_prep")), add = TRUE)
+
+        # First pass without user code to get envir_prep
+        rmd_file_prep_html <- rmarkdown::render(
+          input = rmd_file_prep,
+          output_format = output_format_exercise(user = FALSE),
+          envir = envir_prep,
+          clean = TRUE,
+          quiet = TRUE,
+          run_pandoc = FALSE
+        )
+      }
     })
 
+    # Create exercise.Rmd after running setup so it isn't accidentally overwritten
+    if (file.exists("exercise.Rmd")) {
+      warning(
+        "Evaluating user code in exercise '", exercise$label, "' created ",
+        "'exercise.Rmd'. If the setup code for this exercise creates a file ",
+        "with that name, please choose another name.",
+        immediate. = TRUE
+      )
+    }
+    rmd_file_user <- "exercise.Rmd"
+    writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
+
     # Copy in a full clone `envir_prep` before running user code in `envir_result`
-    # By being a sibling to `envir_prep` (rather than a dependency), 
-    #   alterations to `envir_prep` from eval'ing code in `envir_result` 
-    #   are much more difficult
+    # By being a sibling to `envir_prep` (rather than a dependency),
+    # alterations to `envir_prep` from eval'ing code in `envir_result`
+    # are much more difficult
     envir_result <- duplicate_env(envir_prep)
-    
+
     # Now render user code for final result
     rmarkdown::render(
       input = rmd_file_user,
