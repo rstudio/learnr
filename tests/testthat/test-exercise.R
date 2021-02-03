@@ -226,7 +226,7 @@ test_that("filter_dependencies() excludes non-list knit_meta objects", {
     user_code = deparse(quote(
       htmltools::tagList(
         htmltools::tags$head(htmltools::tags$style(".leaflet-container {backround:#FFF}")),
-        learnr::html_dependency_jquery()
+        html_dependency_jquery()
       )
     ))
   )
@@ -239,6 +239,6 @@ test_that("filter_dependencies() excludes non-list knit_meta objects", {
   # But we keep the dependency that came from a pkg
   expect_equal(
     ex_res_html_deps[[1]],
-    learnr::html_dependency_jquery()
+    html_dependency_jquery()
   )
 })
