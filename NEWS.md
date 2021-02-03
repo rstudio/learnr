@@ -49,6 +49,7 @@ learnr (development version)
 * Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). ([#417](https://github.com/rstudio/learnr/issues/417)).
 * When a quiz's question or answer text are not characters, e.g. HTML, `htmltools` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz's default loading text ([#450](https://github.com/rstudio/learnr/pull/450)).
 * The `envir_prep` environment used in exercise checking now captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated as described in the documentation. We also ensure that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep`. ([#480](https://github.com/rstudio/learnr/pull/480))
+* HTML dependencies of exercises run by users now excludes dependencies created with `htmltools::tags$head()`. (thanks @andysouth, [#484](https://github.com/rstudio/learnr/issues/484))
 
 learnr 0.10.1
 ===========

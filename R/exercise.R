@@ -414,11 +414,11 @@ render_exercise <- function(exercise, envir) {
     })
 
     # Copy in a full clone `envir_prep` before running user code in `envir_result`
-    # By being a sibling to `envir_prep` (rather than a dependency), 
-    #   alterations to `envir_prep` from eval'ing code in `envir_result` 
+    # By being a sibling to `envir_prep` (rather than a dependency),
+    #   alterations to `envir_prep` from eval'ing code in `envir_result`
     #   are much more difficult
     envir_result <- duplicate_env(envir_prep)
-    
+
     # Now render user code for final result
     rmarkdown::render(
       input = rmd_file_user,
@@ -578,12 +578,13 @@ is_error_result <- function(x) {
 
 filter_dependencies <- function(dependencies) {
   # purge dependencies that aren't in a package (to close off reading of
-  # artibtary filesystem locations)
+  # arbitrary filesystem locations)
   Filter(x = dependencies, function(dependency) {
-    if (!is.null(dependency$package)) {
+    if (!is.list(dependency)) {
+      FALSE
+    } else if (!is.null(dependency$package)) {
       TRUE
-    }
-    else {
+    } else {
       ! is.null(tryCatch(
         rprojroot::find_root(rprojroot::is_r_package,
                              path = dependency$src$file),
