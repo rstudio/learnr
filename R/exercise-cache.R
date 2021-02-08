@@ -2,7 +2,6 @@ exercise_cache_env <- new.env(parent=emptyenv())
 
 # Store an exercise setup chunk
 # Returns TRUE if it was saved, FALSE if it declined to overwrite an existing value
-# TODO: use this cache instead of serializing the setup chunks into the client.
 store_exercise_setup_chunk <- function(name, code, overwrite = FALSE){
   if (!overwrite && exists(name, envir = exercise_cache_env)) {
     return(FALSE)
