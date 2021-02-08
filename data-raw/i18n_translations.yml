@@ -44,7 +44,7 @@
 #
 # * Two letter ISO 639-1 Language Code:
 #   <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>
-# * If necessary, add an additional ISO 3166-1 country code:
+# * IF NECESSARY, add an additional ISO 3166-1 country code:
 #   <https://en.wikipedia.org/wiki/ISO_3166-1>
 # * Examples:
 #     * `en-US`, `en-GB` for English as spoken in US or Great Britain
@@ -57,142 +57,170 @@ button:
     en: "Run Code"
     fr: "Lancer le Code"
     es: "Ejecutar código"
+    pt: "Executar código"
     emo: "🏃"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
     en: "$t(button.runcode) ({{kbd}})"
     fr: "$t(button.runcode) ({{kbd}})"
     es: "$t(button.runcode) ({{kbd}})"
+    pt: "$t(button.runcode) ({{kbd}})"
     emo: "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
     fr: "Indication"
     es: "Pista"
+    pt: "Dica"
     emo: "💡"
   hint_plural:
     en: "Hints"
     fr: "Indications"
     es: "Pistas"
+    pt: "Dicas"
     emo: "$t(button.hint)"
   hinttitle:
     en: "$t(button.hint)"
     fr: "$t(button.hint)"
     es: "$t(button.hint)"
+    pt: "$t(button.hint)"
     emo: "$t(button.hint)"
   hintnext:
     en: "Next Hint"
     fr: "Indication Suivante"
     es: "Siguiente pista"
+    pt: "Próxima dica"
     emo: ~
   hintprev:
     en: "Previous Hint"
     fr: "Indication Précédente"
     es: "Pista anterior"
+    pt: "Dica anterior"
     emo: ~
   solution:
     en: "Solution"
     fr: "Solution"
     es: "Solución"
+    pt: "Solução"
     emo: "🎯"
   solutiontitle:
     en: "$t(button.solution)"
     fr: "$t(button.solution)"
     es: "$t(button.solution)"
+    pt: "$t(button.solution)"
     emo: "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
     fr: "Copier dans le Presse-papier"
     es: "Copiar al portapapeles"
+    pt: "Copiar para a área de transferência"
     emo: "📋"
   startover:
     en: "Start Over"
     fr: "Recommencer"
     es: "Reiniciar"
+    pt: "Reiniciar"
     emo: "⏮"
   startovertitle:
     en: "$t(button.startover)"
     fr: "$t(button.startover)"
     es: "$t(button.startover)"
+    pt: "$t(button.startover)"
     emo: "Start Over"
   continue:
     en: "Continue"
     fr: "Continuer"
     es: "Continuar"
+    pt: "Continuar"
     emo: "✅"
   submitanswer:
     en: "Submit Answer"
     fr: "Soumettre"
     es: "Enviar respuesta"
+    pt: "Enviar resposta"
     emo: "🆗"
   submitanswertitle:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
     es: "$t(button.submitanswer)"
+    pt: "$t(button.submitanswer)"
     emo: "Submit Answer"
   previoustopic:
     en: "Previous Topic"
     fr: "Chapitre Précédent"
     es: "Tema anterior"
+    pt: "Tópico anterior"
     emo: "⬅"
   nexttopic:
     en: "Next Topic"
     fr: "Chapitre Suivant"
     es: "Tema siguiente"
+    pt: "Próximo tópico"
     emo: "➡"
   questionsubmit:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
     es: "$t(button.submitanswer)"
+    pt: "$t(button.submitanswer)"
     emo: "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"
     es: "Volver a intentar"
+    pt: "Tentar novamente"
     emo: "🔁"
 text:
   startover:
     en: "Start Over"
     fr: "Recommencer"
     es: "Reiniciar"
+    pt: "Reiniciar"
     emo: "⏮"
   areyousure:
     en: "Are you sure you want to start over? (all exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
     es: "¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)"
+    pt: "Tem certeza que deseja começar novamente? (todo o progresso feito será perdido)"
     emo: "🤔"
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
     es: "Debes completar"
+    pt: "Você deve completar"
     emo: "⚠️ 👉 🧑‍💻"
   exercise:
     en: "exercise"
     fr: "l'exercice"
     es: "el ejercicio"
+    pt: "o exercício"
     emo: ""
   exercise_plural:
     en: "exercises"
     fr: "des exercices"
     es: "los ejercicios"
+    pt: "os exercícios"
     emo: ""
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
     es: "en esta sección antes de continuar."
+    pt: "nesta seção antes de continuar."
     emo: ""
   code:
     en: "Code"
     fr: "Code"
     es: "Código"
+    pt: "Código"
     emo: "💻"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
     fr: "$t(text.code) {{engine}}"
     es: "$t(text.code) {{engine}}"
+    pt: "$t(text.code) {{engine}}"
     emo: "$t(text.code) {{engine}}"
   quiz:
     en: "Quiz"
     fr: "Quiz"
     es: "Cuestionario"
+    pt: "Quiz"
     emo: ~

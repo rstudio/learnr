@@ -38,6 +38,7 @@ learnr (development version)
 * Added an option to reveal [default] (or hide) the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will be changed to hide solutions. ([#402](https://github.com/rstudio/learnr/issue/402))
 * Added shortcuts for pipe (`Command/Control+Shift+M`) and assignment (`Alt+-`) operators in exercise code boxes. ([#472](https://github.com/rstudio/learnr/pull/472))
 * Added Spanish language support (@yabellini [#483](https://github.com/rstudio/learnr/pull/483))
+* Added Portuguese language support (@beatrizmilz [#488](https://github.com/rstudio/learnr/pull/488))
 
 ## Bug fixes
 
