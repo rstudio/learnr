@@ -36,8 +36,12 @@ store_exercise_cache <- function(name, chunks, overwrite = FALSE){
 }
 
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
-get_exercise_cache <- function(label){
-  if (exists(label, envir = setup_chunks)) {
+get_exercise_cache <- function(label = NULL){
+  if (is.null(label)) {
+    chunk_labels <- ls(setup_chunks)
+    names(chunk_labels) <- chunk_labels
+    return(lapply(chunk_labels, get, envir = setup_chunks))
+  } else if (exists(label, envir = setup_chunks)) {
     setup <- get(label, envir = setup_chunks)
     return(setup)
   }
