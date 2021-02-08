@@ -40,7 +40,8 @@ get_exercise_cache <- function(label = NULL){
     chunk_labels <- ls(exercise_cache_env)
     names(chunk_labels) <- chunk_labels
     return(lapply(chunk_labels, get, envir = exercise_cache_env))
-  } else if (exists(label, envir = exercise_cache_env)) {
+  }
+  if (exists(label, envir = exercise_cache_env)) {
     setup <- get(label, envir = exercise_cache_env)
     return(setup)
   }
