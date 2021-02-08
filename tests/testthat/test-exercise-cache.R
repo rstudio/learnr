@@ -1,6 +1,4 @@
 
-context("setup")
-
 test_that("store works", {
   # First write works
   expect_equal(store_exercise_setup_chunk("myName", c("code", "here"), FALSE), TRUE)
