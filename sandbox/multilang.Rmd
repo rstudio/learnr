@@ -3,7 +3,7 @@ title: "Tutorial"
 output: 
   learnr::tutorial:
     progressive: true
-    allow_skip: true
+    allow_skip: false
     language: 
       fr:
         button:
@@ -74,7 +74,7 @@ This is the intro to the whole ball of wax.
 ```{r context="render"}
 shiny::selectInput(
   "language", "Choose a Language", 
-  choices = c("English" = "en", "French" = "fr", "Spanish" = "es", "Emoji" = "emo")
+  choices = names(learnr:::i18n_translations())
 )
 ```
 

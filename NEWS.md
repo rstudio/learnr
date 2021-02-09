@@ -39,6 +39,7 @@ learnr (development version)
 * Added shortcuts for pipe (`Command/Control+Shift+M`) and assignment (`Alt+-`) operators in exercise code boxes. ([#472](https://github.com/rstudio/learnr/pull/472))
 * Added Spanish language support (@yabellini [#483](https://github.com/rstudio/learnr/pull/483))
 * Added Portuguese language support (@beatrizmilz [#488](https://github.com/rstudio/learnr/pull/488))
+* Added Basque language support (@mikelmadina [#489](https://github.com/rstudio/learnr/pull/489))
 
 ## Bug fixes
 
