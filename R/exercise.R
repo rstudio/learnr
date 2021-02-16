@@ -16,8 +16,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # observe input
   observeEvent(exercise_rx(), {
 
-    # get exercise
+    # get exercise from app
     exercise <- exercise_rx()
+    # merge with exercise object in cache to fill in all options
+    exercise <- utils::modifyList(exercise_cache_env[[exercise$label]], exercise)
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
