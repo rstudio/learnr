@@ -58,6 +58,7 @@ button:
     fr: "Lancer le Code"
     es: "Ejecutar código"
     pt: "Executar código"
+    tr: "Çalıştırma Kodu"
     emo: "🏃"
     eu: "Kodea egikaritu"
   runcodetitle:
@@ -66,6 +67,7 @@ button:
     fr: "$t(button.runcode) ({{kbd}})"
     es: "$t(button.runcode) ({{kbd}})"
     pt: "$t(button.runcode) ({{kbd}})"
+    tr: "$t(button.runcode) ({{kbd}})"
     emo: "$t(button.runcode) ({{kbd}})"
     eu: "$t(button.runcode) ({{kbd}})"
   hint:
@@ -73,6 +75,7 @@ button:
     fr: "Indication"
     es: "Pista"
     pt: "Dica"
+    tr: "Ipucu"
     emo: "💡"
     eu: "Laguntza"
   hint_plural:
@@ -80,6 +83,7 @@ button:
     fr: "Indications"
     es: "Pistas"
     pt: "Dicas"
+    tr: "İpuçları"
     emo: "$t(button.hint)"
     eu: "Laguntza"
   hinttitle:
@@ -87,6 +91,7 @@ button:
     fr: "$t(button.hint)"
     es: "$t(button.hint)"
     pt: "$t(button.hint)"
+    tr: "$t(button.hint)"
     emo: "$t(button.hint)"
     eu: "$t(button.hint)"
   hintnext:
@@ -94,6 +99,7 @@ button:
     fr: "Indication Suivante"
     es: "Siguiente pista"
     pt: "Próxima dica"
+    tr: "Sonraki İpucu"
     emo: ~
     eu: "Aurreko laguntza"
   hintprev:
@@ -101,6 +107,7 @@ button:
     fr: "Indication Précédente"
     es: "Pista anterior"
     pt: "Dica anterior"
+    tr: "Önceki İpucu"
     emo: ~
     eu: "Hurrengo laguntza"
   solution:
@@ -108,6 +115,7 @@ button:
     fr: "Solution"
     es: "Solución"
     pt: "Solução"
+    tr: "Çözüm"
     emo: "🎯"
     eu: "Ebazpena"
   solutiontitle:
@@ -115,6 +123,7 @@ button:
     fr: "$t(button.solution)"
     es: "$t(button.solution)"
     pt: "$t(button.solution)"
+    tr: "$t(button.solution)"
     emo: "$t(button.solution)"
     eu: "$t(button.solution)"
   copyclipboard:
@@ -122,6 +131,7 @@ button:
     fr: "Copier dans le Presse-papier"
     es: "Copiar al portapapeles"
     pt: "Copiar para a área de transferência"
+    tr: "Pano'ya Kopyala"
     emo: "📋"
     eu: "Arbelean kopiatu"
   startover:
@@ -129,6 +139,7 @@ button:
     fr: "Recommencer"
     es: "Reiniciar"
     pt: "Reiniciar"
+    tr: "Baştan Başlamak"
     emo: "⏮"
     eu: "Berrabiarazi"
   startovertitle:
@@ -136,6 +147,7 @@ button:
     fr: "$t(button.startover)"
     es: "$t(button.startover)"
     pt: "$t(button.startover)"
+    tr: "$t(button.startover)"
     emo: "Start Over"
     eu: "$t(button.startover)"
   continue:
@@ -143,6 +155,7 @@ button:
     fr: "Continuer"
     es: "Continuar"
     pt: "Continuar"
+    tr: "Devam et"
     emo: "✅"
     eu: "Jarraitu"
   submitanswer:
@@ -150,6 +163,7 @@ button:
     fr: "Soumettre"
     es: "Enviar respuesta"
     pt: "Enviar resposta"
+    tr: "Cevabı onayla"
     emo: "🆗"
     eu: "Erantzuna bidali"
   submitanswertitle:
@@ -157,6 +171,7 @@ button:
     fr: "$t(button.submitanswer)"
     es: "$t(button.submitanswer)"
     pt: "$t(button.submitanswer)"
+    tr: "$t(button.submitanswer)"
     emo: "Submit Answer"
     eu: "$t(button.submitanswer)"
   previoustopic:
@@ -164,6 +179,7 @@ button:
     fr: "Chapitre Précédent"
     es: "Tema anterior"
     pt: "Tópico anterior"
+    tr: "Önceki Konu"
     emo: "⬅"
     eu: "Aurreko atala"
   nexttopic:
@@ -171,6 +187,7 @@ button:
     fr: "Chapitre Suivant"
     es: "Tema siguiente"
     pt: "Próximo tópico"
+    tr: "Sonraki Konu"
     emo: "➡"
     eu: "Hurrengo atala"
   questionsubmit:
@@ -178,6 +195,7 @@ button:
     fr: "$t(button.submitanswer)"
     es: "$t(button.submitanswer)"
     pt: "$t(button.submitanswer)"
+    tr: "$t(button.submitanswer)"
     emo: "$t(button.submitanswer)"
     eu: "$t(button.submitanswer)"
   questiontryagain:
@@ -185,6 +203,7 @@ button:
     fr: "Réessayer"
     es: "Volver a intentar"
     pt: "Tentar novamente"
+    tr: "Tekrar Deneyin"
     emo: "🔁"
     eu: "Berriro saiatu"
 text:
@@ -193,6 +212,7 @@ text:
     fr: "Recommencer"
     es: "Reiniciar"
     pt: "Reiniciar"
+    tr: "Baştan Başlamak"
     emo: "⏮"
     eu: "Berrabiarazi"
   areyousure:
@@ -200,6 +220,7 @@ text:
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
     es: "¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)"
     pt: "Tem certeza que deseja começar novamente? (todo o progresso feito será perdido)"
+    tr: "Baştan başlamak istediğinizden emin misiniz? (tüm egzersiz ilerlemesi kaybolacak)"
     emo: "🤔"
     eu: "Berriro hasi nahi duzu? (egindako lana galdu egingo da)"
   youmustcomplete:
@@ -207,6 +228,7 @@ text:
     fr: "Vous devez d'abord compléter"
     es: "Debes completar"
     pt: "Você deve completar"
+    tr: "Tamamlamalısın"
     emo: "⚠️ 👉 🧑‍💻"
     eu: "Aurrera egin baino lehen atal honetako"
   exercise:
@@ -214,6 +236,7 @@ text:
     fr: "l'exercice"
     es: "el ejercicio"
     pt: "o exercício"
+    tr: "egzersiz"
     emo: ""
     eu: "ariketa egin behar duzu."
   exercise_plural:
@@ -221,6 +244,7 @@ text:
     fr: "des exercices"
     es: "los ejercicios"
     pt: "os exercícios"
+    tr: "egzersizler"
     emo: ""
     eu: "ariketak egin behar dituzu."
   inthissection:
@@ -228,6 +252,7 @@ text:
     fr: "de cette section avec de continuer."
     es: "en esta sección antes de continuar."
     pt: "nesta seção antes de continuar."
+    tr: "devam etmeden önce bu bölümde"
     emo: ""
     eu: ""
   code:
@@ -235,6 +260,7 @@ text:
     fr: "Code"
     es: "Código"
     pt: "Código"
+    tr: "Kod"
     emo: "💻"
     eu: "Kodea"
   enginecap:
@@ -243,6 +269,7 @@ text:
     fr: "$t(text.code) {{engine}}"
     es: "$t(text.code) {{engine}}"
     pt: "$t(text.code) {{engine}}"
+    tr: "$t(text.code) {{engine}}"
     emo: "$t(text.code) {{engine}}"
     eu: "$t(text.code) {{engine}}"
   quiz:
@@ -250,5 +277,6 @@ text:
     fr: "Quiz"
     es: "Cuestionario"
     pt: "Quiz"
+    tr: "Sınav"
     emo: ~
     eu: "Galdetegia"
