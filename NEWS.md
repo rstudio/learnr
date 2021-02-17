@@ -40,6 +40,8 @@ learnr (development version)
 * Added Spanish language support (@yabellini [#483](https://github.com/rstudio/learnr/pull/483))
 * Added Portuguese language support (@beatrizmilz [#488](https://github.com/rstudio/learnr/pull/488))
 * Added Basque language support (@mikelmadina [#489](https://github.com/rstudio/learnr/pull/489))
+* Added Turkish language support (@hyigit2, @coatless [#493](https://github.com/rstudio/learnr/pull/493))
+
 
 ## Bug fixes
 
