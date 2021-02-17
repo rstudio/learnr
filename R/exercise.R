@@ -38,7 +38,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
         return()
       }
     }
-    
+
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
@@ -50,7 +50,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
       else
         evaluator_factory <- inline_evaluator
     }
-    
+
     # supplement the exercise with the global setup options
     # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
@@ -62,7 +62,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise <- append(exercise, get_exercise_cache(exercise$label))
     # If there is no locally defined error check code, look for globally defined error check option
     exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
-    
+
     if (!isTRUE(exercise$should_check)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
