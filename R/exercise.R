@@ -18,8 +18,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # get exercise from app
     exercise <- exercise_rx()
-    # merge with exercise object in cache to fill in all options
-    exercise <- utils::modifyList(exercise_cache_env[[exercise$label]], exercise)
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
@@ -40,12 +38,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
         return()
       }
     }
-
-    # get timelimit option (either from chunk option or from global option)
-    timelimit <- exercise$options$exercise.timelimit
-    if (is.null(timelimit))
-      timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
-
+    
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
     if (is.null(evaluator_factory)) {
@@ -57,7 +50,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
       else
         evaluator_factory <- inline_evaluator
     }
-
+    
     # supplement the exercise with the global setup options
     # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
     exercise$global_setup <- get_global_setup()
@@ -69,6 +62,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise <- append(exercise, get_exercise_cache(exercise$label))
     # If there is no locally defined error check code, look for globally defined error check option
     exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
+    
     if (!isTRUE(exercise$should_check)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
@@ -76,6 +70,11 @@ setup_exercise_handler <- function(exercise_rx, session) {
     }
     # variable has now served its purpose so remove it
     exercise$should_check <- NULL
+
+    # get timelimit option (either from chunk option or from global option)
+    timelimit <- exercise$options$exercise.timelimit
+    if (is.null(timelimit))
+      timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
 
     # placeholder for current learnr version to deal with exercise structure differences
     # with other learnr versions
