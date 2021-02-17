@@ -1114,7 +1114,13 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
         datai18n = {key: datai18n};
       }
       button.attr('data-i18n-attr-title', datai18n.key + 'title');
-      button.append(' ' + '<span data-i18n="' + datai18n.key + '">' + caption + '</span>');
+      var buttonText = $('<span>' + caption + '</span>');
+      buttonText.attr('data-i18n', datai18n.key);
+      if (datai18n.opts) {
+        buttonText.attr('data-i18n-opts', JSON.stringify(datai18n.opts));
+      }
+      button.append(document.createTextNode(' '));
+      button.append(buttonText);
       if (datai18n.opts) {
         button.attr('data-i18n-opts', JSON.stringify(datai18n.opts));
       }
@@ -1199,7 +1205,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
     // create solution buttion
     var button = addHintButton(
       isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
-      isSolution ? {key: 'button.solution', count: 1} : {key: 'button.hint', count: hints.length}
+      isSolution ? {key: 'button.solution', count: 1} : {key: 'button.hint', opts: {count: hints.length}}
     );
 
     // handle showing and hiding the popover
