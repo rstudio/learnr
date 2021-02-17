@@ -16,7 +16,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # observe input
   observeEvent(exercise_rx(), {
 
-    # get exercise
+    # get exercise from app
     exercise <- exercise_rx()
 
     # short circuit for restore (we restore some outputs like errors so that
@@ -38,11 +38,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
         return()
       }
     }
-
-    # get timelimit option (either from chunk option or from global option)
-    timelimit <- exercise$options$exercise.timelimit
-    if (is.null(timelimit))
-      timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
 
     # get exercise evaluator factory function (allow replacement via global option)
     evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
@@ -67,6 +62,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise <- append(exercise, get_exercise_cache(exercise$label))
     # If there is no locally defined error check code, look for globally defined error check option
     exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
+
     if (!isTRUE(exercise$should_check)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
@@ -74,6 +70,11 @@ setup_exercise_handler <- function(exercise_rx, session) {
     }
     # variable has now served its purpose so remove it
     exercise$should_check <- NULL
+
+    # get timelimit option (either from chunk option or from global option)
+    timelimit <- exercise$options$exercise.timelimit
+    if (is.null(timelimit))
+      timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
 
     # placeholder for current learnr version to deal with exercise structure differences
     # with other learnr versions
