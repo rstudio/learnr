@@ -1,3 +1,4 @@
+current_exercise_version <- "2"
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
@@ -18,6 +19,12 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # get exercise from app
     exercise <- exercise_rx()
+    # Add tutorial information
+    exercise$tutorial <- list(
+      tutorial_id = read_request(session, "tutorial.tutorial_id"),
+      tutorial_version = read_request(session, "tutorial.tutorial_version"),
+      user_id = read_request(session, "tutorial.user_id")
+    )
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
@@ -78,7 +85,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # placeholder for current learnr version to deal with exercise structure differences
     # with other learnr versions
-    exercise$version <- "1"
+    exercise$version <- current_exercise_version
 
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
@@ -163,9 +170,18 @@ upgrade_exercise <- function(exercise) {
   # for now, raise error when learnr version is not supported
   # else, return the exercise for the correct version, "1"
   switch(exercise$version,
-         "0" = stop("Exercise version not supplied! Unable to upgrade exercise."),
-         "1" = { exercise },
-         stop("Exercise version unknown. Unable to upgrade exercise.")
+    "0" = stop("Exercise version not supplied! Unable to upgrade exercise."),
+    "1" = {
+      # upgrade exercise with tutorial information
+      exercise$tutorial <- list(
+        tutorial_id = "tutorial_id:UPGRADE learnr",
+        tutorial_version = "-1",
+        user_id = "user_id:UPGRADE learnr"
+      )
+      exercise
+    },
+    "2" = exercise,
+    stop("Exercise version unknown. Unable to upgrade exercise.")
   )
 }
 
@@ -540,7 +556,6 @@ exercise_code_chunks <- function(chunks) {
     )
   }, character(1))
 }
-
 
 exercise_result_timeout <- function() {
   exercise_result_error(

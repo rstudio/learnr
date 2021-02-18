@@ -196,6 +196,10 @@ internal_external_evaluator <- function(
           if (identical(exercise$options$exercise.checker, "NULL")){
             exercise$options$exercise.checker <- c()
           }
+          if (!is.null(exercise$tutorial) && "user_id" %in% names(exercise$tutorial)) {
+            # Hide user_id from external evalutators
+            exercise$tutorial$user_id <- "learnr_user"
+          }
           json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
 
           if (is.null(exercise$options$exercise.timelimit) || exercise$options$exercise.timelimit == 0){

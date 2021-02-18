@@ -345,3 +345,19 @@ test_that("filter_dependencies() excludes non-list knit_meta objects", {
     idb_html_dependency()
   )
 })
+
+test_that("exercise versions upgrade correctly", {
+  expect_error(upgrade_exercise(mock_exercise(version = "0")))
+
+  ex_1 <- mock_exercise(version = "1")
+  expect_null(ex_1$tutorial)
+
+  ex_1_upgraded <- upgrade_exercise(ex_1)
+  expect_match(ex_1_upgraded$tutorial$tutorial_id, "UPGRADE")
+  expect_match(ex_1_upgraded$tutorial$tutorial_version, "-1")
+  expect_match(ex_1_upgraded$tutorial$user_id, "UPGRADE")
+
+  ex_2 <- mock_exercise(version = "2")
+  expect_type(ex_2$tutorial, "list")
+  expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+})

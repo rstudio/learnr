@@ -1,6 +1,6 @@
 mock_exercise <- function(
+  user_code = "1 + 1",
   label = "ex",
-  user_code = "",
   chunks = list(),
   engine = "r",
   global_setup = NULL,
@@ -17,6 +17,7 @@ mock_exercise <- function(
   fig.height = 4,
   fig.width = 6.5,
   fig.retina = 2,
+  version = current_exercise_version,
   ...
 ) {
   default_options <- list(
@@ -61,7 +62,7 @@ mock_exercise <- function(
     ))
   }
 
-  list(
+  ex <- list(
     label = label,
     code = user_code,
     restore = FALSE,
@@ -75,8 +76,19 @@ mock_exercise <- function(
     check = check,
     options = utils::modifyList(default_options, list(...)),
     engine = engine,
-    version = "1"
+    version = version
   )
+
+  if (version == "2") {
+    ex$tutorial <- list(
+      id = "mock_tutorial_id",
+      version = "9.9.9",
+      user_id = "the_learnr"
+    )
+    return(ex)
+  }
+
+  ex
 }
 
 mock_prep_setup <- function(chunks, setup_label) {
