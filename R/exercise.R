@@ -160,29 +160,97 @@ setup_exercise_handler <- function(exercise_rx, session) {
   })
 }
 
-# helper function that will upgrade a previous learnr exercise into new learnr exercise
-# TODO: do the actual upgrade
-upgrade_exercise <- function(exercise) {
-  # if version doesn't exist we're at "0" (older learnr)
-  if (is.null(exercise$version)) {
-    exercise$version <- "0"
+# This function exists to synchronize versions of the exercise objects in case
+# an exercise created with an older version of {learnr} is evaluated by a
+# newer version of {learnr}. This may be the case when there is a version
+# mismatch between the version used to serve the tutorial and the version used
+# to evaluate the exercise (external evaluator).
+upgrade_exercise <- function(exercise, require_items = NULL) {
+  if (identical(exercise$version, current_exercise_version)) {
+    return(exercise)
   }
-  # for now, raise error when learnr version is not supported
-  # else, return the exercise for the correct version, "1"
-  switch(exercise$version,
-    "0" = stop("Exercise version not supplied! Unable to upgrade exercise."),
-    "1" = {
-      # upgrade exercise with tutorial information
-      exercise$tutorial <- list(
-        tutorial_id = "tutorial_id:UPGRADE learnr",
-        tutorial_version = "-1",
-        user_id = "user_id:UPGRADE learnr"
-      )
-      exercise
-    },
-    "2" = exercise,
-    stop("Exercise version unknown. Unable to upgrade exercise.")
+
+  if (!is.null(exercise$version)) {
+    exercise$version <- suppressWarnings(as.numeric(exercise$version))
+  }
+
+  if (
+    is.null(exercise$version) ||
+      is.na(exercise$version) ||
+      length(exercise$version) != 1 ||
+      identical(paste(exercise$version), "0")
+  ) {
+    v <- if (is.null(exercise$version)) {
+      "an undefined version"
+    } else if (is.na(exercise$version) || length(exercise$version) != 1) {
+      "an incorrectly formatted version"
+    } else {
+      'version "0"'
+    }
+
+    stop(
+      "Received an exercise with ", v, ", most likely because it's ",
+      "from an older version of {learnr}. This is {learnr} version ",
+      utils::packageVersion("learnr")
+    )
+  }
+
+  current_version <- as.numeric(current_exercise_version)
+
+  if (exercise$version == 1) {
+    # exercise version 2 added $tutorial information
+    exercise$tutorial <- list(
+      tutorial_id = "tutorial_id:UPGRADE learnr",
+      tutorial_version = "-1",
+      user_id = "user_id:UPGRADE learnr"
+    )
+    exercise$version <- 2
+    exercise
+  }
+
+  # Future logic to upgrade an exercise from version 2 to version N goes here...
+
+  if (identical(exercise$version, current_version)) {
+    return(exercise)
+  }
+
+  # What if we get an exercise from the future? We'll try to have backwards
+  # compatibility with the exercise object. But validate_exercise() will find
+  # any catastrophic problems that are incompatible with the _current_ version
+  exercise_problem <- validate_exercise(exercise, require_items)
+
+  if (is.null(exercise_problem)) {
+    # The exercise may not evaluate perfectly, but it's likely that evaluating
+    # this exercise will work out. Or at least won't result in surfacing an
+    # internal learnr error as the culprit.
+    warning(
+      "Expected exercise version ", current_version, ", but received version ",
+      exercise$version, ". This version of {learnr} is likely able to evaluate ",
+      "version ", exercise$version, " exercises, but there may be differences. ",
+      "Please upgrade {learnr}; this version is ",
+      utils::packageVersion("learnr"), "."
+    )
+    return(exercise)
+  }
+
+  stop(
+    "Expected exercise version ", current_version, ", but received version ",
+    exercise$version, ". These versions are incompatible. ", exercise_problem
   )
+}
+
+# The current version of the exercise object will produce _very wrong_ or _very
+# surprising_ results if it doesn't pass this validation check. This function
+# returns NULL if everything is okay, otherwise a character string describing
+# the reason the validation check failed.
+validate_exercise <- function(exercise, require_items = NULL) {
+required_names <- c("code", "label", "options", "chunks", require_items)
+  missing_names <- setdiff(required_names, names(exercise))
+  if (length(missing_names)) {
+    return(paste("Missing exercise items:", paste(missing_names, collapse = ", ")))
+  }
+
+  NULL
 }
 
 # evaluate an exercise and return a list containing output and dependencies
@@ -197,8 +265,11 @@ upgrade_exercise <- function(exercise) {
 #   global setup.
 evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
-  # for compatibility with previous learnr versions, we'll upgrade exercise (if possible)
-  exercise <- upgrade_exercise(exercise)
+  # adjust exercise version to match the current learnr version
+  exercise <- upgrade_exercise(
+    exercise,
+    require_items = if (evaluate_global_setup) "global_setup"
+  )
 
   # return immediately and clear visible results
   # do not consider this an exercise submission

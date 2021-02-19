@@ -79,7 +79,7 @@ mock_exercise <- function(
     version = version
   )
 
-  if (version == "2") {
+  if (!is.null(version) && version == "2") {
     ex$tutorial <- list(
       id = "mock_tutorial_id",
       version = "9.9.9",
