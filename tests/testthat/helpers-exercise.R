@@ -83,7 +83,8 @@ mock_exercise <- function(
     ex$tutorial <- list(
       id = "mock_tutorial_id",
       version = "9.9.9",
-      user_id = "the_learnr"
+      user_id = "the_learnr",
+      learnr_version = "1.2.3"
     )
     return(ex)
   }
