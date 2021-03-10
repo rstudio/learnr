@@ -345,3 +345,47 @@ test_that("filter_dependencies() excludes non-list knit_meta objects", {
     idb_html_dependency()
   )
 })
+
+test_that("exercise versions upgrade correctly", {
+  expect_error(upgrade_exercise(mock_exercise(version = NULL)))
+  expect_error(upgrade_exercise(mock_exercise(version = 1:2)))
+  expect_error(upgrade_exercise(mock_exercise(version = list(a = 1, b = 2))))
+  expect_error(upgrade_exercise(mock_exercise(version = "0")))
+  expect_error(upgrade_exercise(mock_exercise(version = "foo")))
+
+  ex_1 <- mock_exercise(version = "1")
+  expect_null(ex_1$tutorial)
+
+  ex_1_upgraded <- upgrade_exercise(ex_1)
+  expect_match(ex_1_upgraded$tutorial$tutorial_id, "UPGRADE")
+  expect_match(ex_1_upgraded$tutorial$tutorial_version, "-1")
+  expect_match(ex_1_upgraded$tutorial$user_id, "UPGRADE")
+  expect_equal(paste(ex_1_upgraded$version), "2")
+
+  ex_2 <- mock_exercise(version = "2")
+  expect_type(ex_2$tutorial, "list")
+  expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+
+  # future versions
+  ex_99 <- mock_exercise(version = 99)
+  expect_equal(
+    expect_warning(upgrade_exercise(ex_99)),
+    ex_99
+  )
+
+  # broken but okay future version
+  ex_99_broken <- ex_99
+  ex_99_broken$global_setup <- NULL
+  expect_equal(
+    expect_warning(upgrade_exercise(ex_99_broken)),
+    ex_99_broken
+  )
+
+  # broken but not okay
+  expect_error(upgrade_exercise(ex_99_broken, require_items = "global_setup"))
+
+  # broken in other non-optional ways
+  # (this version of learnr makes a strong assumption that "label" is part of exercise)
+  ex_99_broken$label <- NULL
+  expect_error(upgrade_exercise(ex_99_broken))
+})
