@@ -84,7 +84,7 @@ mock_exercise <- function(
       id = "mock_tutorial_id",
       version = "9.9.9",
       user_id = "the_learnr",
-      learnr_version = "1.2.3"
+      learnr_version = as.character(utils::packageVersion("learnr"))
     )
     return(ex)
   }

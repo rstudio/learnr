@@ -24,7 +24,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
       tutorial_id = read_request(session, "tutorial.tutorial_id"),
       tutorial_version = read_request(session, "tutorial.tutorial_version"),
       user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = utils::packageVersion("learnr")
+      learnr_version = as.character(utils::packageVersion("learnr"))
     )
 
     # short circuit for restore (we restore some outputs like errors so that
