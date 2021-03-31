@@ -30,6 +30,17 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
+      if (
+        getOption(
+          "tutorial.quick_restore",
+          identical(Sys.getenv("TUTORIAL_QUICK_RESTORE", "0"), "1")
+        )
+      ) {
+        # don't evaluate at all if quick_restore is enabled
+        rv$result <- list()
+        return()
+      }
+
       object <- get_exercise_submission(session = session, label = exercise$label)
       if (!is.null(object) && !is.null(object$data$output)) {
 
