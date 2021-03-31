@@ -41,6 +41,7 @@ learnr (development version)
 * Added Portuguese language support (@beatrizmilz [#488](https://github.com/rstudio/learnr/pull/488))
 * Added Basque language support (@mikelmadina [#489](https://github.com/rstudio/learnr/pull/489))
 * Added Turkish language support (@hyigit2, @coatless [#493](https://github.com/rstudio/learnr/pull/493))
+* Added option for quickly restoring a tutorial without re-evaluating the last stored exercise submission. This feature is enabled by setting the global option `tutorial.quick_restore = TRUE` or the environment variable `TUTORIAL_QUICK_RESTORE=1` (thanks @mstackhouse, [#509](https://github.com/rstudio/learnr/pull/509)).
 
 
 ## Bug fixes
