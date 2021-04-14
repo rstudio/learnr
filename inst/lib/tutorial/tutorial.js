@@ -1366,7 +1366,7 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
 
       // get the code from the editor
       var editor = ace.edit($(el).attr('id'));
-      value.code = editor.getSession().getValue();
+      value.code = editor.getSelectedText() || editor.getSession().getValue();
 
       // restore flag
       value.restore = this.restore;
