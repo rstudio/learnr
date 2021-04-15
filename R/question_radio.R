@@ -53,7 +53,7 @@ question_ui_initialize.learnr_radio <- function(question, value, ...) {
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
-    selected = value %||% NA # setting to NULL, selects the first item
+    selected = value %||% NA # avoid selecting the first item when value is NULL
   )
 }
 
