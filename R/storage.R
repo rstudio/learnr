@@ -498,3 +498,172 @@ no_storage <- function() {
     remove_all_objects = function(tutorial_id, tutorial_version, user_id) {}
   )
 }
+
+# Storage for storing in browser and restoring from filesystem if cookies are cleared
+hybrid_storage <- function(session, dir, compress = TRUE) {
+
+  # helpers to transform ids into valid filesystem paths
+  id_to_filesystem_path <- function(id) {
+    id <- gsub("..", "", id, fixed = TRUE)
+    utils::URLencode(id, reserved = TRUE, repeated = TRUE)
+  }
+  id_from_filesystem_path <- function(path) {
+    utils::URLdecode(path)
+  }
+
+  # get the path to storage (ensuring that the directory exists)
+  storage_path <- function(tutorial_id, tutorial_version, user_id) {
+    path <- file.path(dir,
+                      id_to_filesystem_path(user_id),
+                      id_to_filesystem_path(tutorial_id),
+                      id_to_filesystem_path(tutorial_version))
+    if (!utils::file_test("-d", path))
+      dir.create(path, recursive = TRUE)
+    path
+  }
+
+  # helper to form a unique tutorial context id (note that we don't utilize the user_id
+  # as there is no concept of server-side user in client_storage, user scope is 100%
+  # determined by connecting user agent)
+  tutorial_context_id <- function(tutorial_id, tutorial_version) {
+    paste(tutorial_id, tutorial_version, sep = "-")
+  }
+
+  # get a reference to the session object cache for a gvien tutorial context
+  object_store <- function(context_id) {
+
+    # create session objects on demand
+    session_objects <- learnr:::read_request(session, "tutorial.session_objects")
+    if (is.null(session_objects)) {
+      # MS Update: if the session object
+      session_objects <- new.env(parent = emptyenv())
+      learnr:::write_request(session, "tutorial.session_objects", session_objects)
+    }
+
+    # create entry for this context on demand
+    if (!exists(context_id, envir = session_objects))
+      assign(context_id, new.env(parent = emptyenv()), envir = session_objects)
+    store <- get(context_id, envir = session_objects)
+
+    # return reference to the store
+    store
+  }
+
+  list(
+
+    type = "hybrid",
+
+    save_object = function(tutorial_id, tutorial_version, user_id, object_id, data, disk_write = TRUE) {
+
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+      store <- object_store(context_id)
+      objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+
+      assign(object_id, data, envir = store)
+
+      tryCatch({
+        # broadcast to client
+        session$sendCustomMessage("tutorial.store_object", list(
+          context = context_id,
+          id = object_id,
+          data = jsonlite::base64_enc(serialize(data, connection = NULL))
+        ))
+      }, error = function(e) {
+        warning(paste0("Error In client save broadcast", e))
+      })
+
+
+      # Save to disk storage
+      if(dir.exists(file.path(storage_path(tutorial_id, tutorial_version, user_id)))) {
+        object_path <- file.path(storage_path(tutorial_id, tutorial_version, user_id),
+                                 paste0(id_to_filesystem_path(object_id), ".rds"))
+        saveRDS(data, file = object_path, compress = compress)
+      }
+    },
+
+
+    get_object = function(tutorial_id, tutorial_version, user_id, object_id) {
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+      store <- object_store(context_id)
+      if (exists(object_id, envir = store))
+        get(object_id, envir = store)
+      else
+        NULL
+    },
+
+    get_objects = function(tutorial_id, tutorial_version, user_id) {
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+      store <- object_store(context_id)
+      objects <- list()
+
+      # If there is only one thing in the client storage, its just the most
+      # recent viewed page and the browser cookies may have been cleared.
+      # Restore them from disk if available
+      if (length(ls(store)) == 1) {
+        objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+        for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
+
+          object <- readRDS(file.path(objects_path, object_path))
+          object_id <- sub("\\.rds$", "", id_from_filesystem_path(object_path))
+          objects[[length(objects) + 1]] <- object
+
+          ## Write out to cookies
+          objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+
+          # save the object to our in-memory store
+          context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+          store <- object_store(context_id)
+          assign(object_id, object, envir = store)
+
+          # broadcast to client
+          tryCatch({
+            session$sendCustomMessage("tutorial.store_object", list(
+              context = context_id,
+              id = object_id,
+              data = jsonlite::base64_enc(serialize(object, connection = NULL))
+            ))
+          }, error = function(e){
+            warning(paste0("Failed to restore Cookies", e))
+          })
+        }
+      } else {
+        for (object in ls(store)){
+          objects[[length(objects) + 1]] <- get(object, envir = store)
+        }
+      }
+      objects
+    },
+
+    remove_all_objects = function(tutorial_id, tutorial_version, user_id) {
+      # remove on client side
+      tryCatch({
+        context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+        store <- object_store(context_id)
+        rm(list = ls(store), envir = store)
+
+      }, error = function(e) {
+        warning(paste0("Failed to remove client storage ", e))
+      })
+
+      # Remove on server side
+      tryCatch({
+        objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+        unlink(objects_path, recursive = TRUE)
+      }, error = function(e){
+        warning("Failed to remove disk storage")
+      })
+
+    },
+
+    # function called from initialize to prime object storage from the browser db
+    initialize_objects_from_client = function(tutorial_id, tutorial_version, user_id, objects) {
+      print("Initializing from client")
+      context_id <- tutorial_context_id(tutorial_id, tutorial_version)
+      store <- object_store(context_id)
+      for (object_id in names(objects)) {
+        data <- unserialize(base64_dec(objects[[object_id]]))
+        assign(object_id, data, envir = store)
+      }
+    }
+  )
+}
