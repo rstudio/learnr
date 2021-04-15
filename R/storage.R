@@ -533,11 +533,11 @@ hybrid_storage <- function(session, dir, compress = TRUE) {
   object_store <- function(context_id) {
 
     # create session objects on demand
-    session_objects <- learnr:::read_request(session, "tutorial.session_objects")
+    session_objects <- read_request(session, "tutorial.session_objects")
     if (is.null(session_objects)) {
       # MS Update: if the session object
       session_objects <- new.env(parent = emptyenv())
-      learnr:::write_request(session, "tutorial.session_objects", session_objects)
+      write_request(session, "tutorial.session_objects", session_objects)
     }
 
     # create entry for this context on demand
@@ -599,7 +599,7 @@ hybrid_storage <- function(session, dir, compress = TRUE) {
       # If there is only one thing in the client storage, its just the most
       # recent viewed page and the browser cookies may have been cleared.
       # Restore them from disk if available
-      if (length(ls(store)) == 1) {
+      if (length(ls(store)) <= 1) {
         objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
         for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
 
