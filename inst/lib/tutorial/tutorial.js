@@ -1364,14 +1364,17 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       // get the label
       value.label = exerciseLabel(el);
 
+      // running code or submitting an answer for checking?
+      value.should_check = this.should_check;
+
       // get the code from the editor
       var editor = ace.edit($(el).attr('id'));
-      value.code = editor.getSelectedText() || editor.getSession().getValue();
+      value.code = value.should_check
+        ? editor.getSession().getValue()
+        : editor.getSelectedText() || editor.getSession().getValue();
 
       // restore flag
       value.restore = this.restore;
-
-      value.should_check = this.should_check;
 
       // some randomness to ensure we re-execute on button clicks
       value.timestamp = new Date().getTime();
