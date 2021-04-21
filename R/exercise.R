@@ -154,7 +154,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
         # assign reactive result value
         rv$triggered <- isolate({ rv$triggered + 1})
-        rv$result <- result$html_output
+        rv$result <- exercise_result_as_html(result)
 
         # destroy the observer
         o$destroy()
@@ -661,20 +661,17 @@ exercise_result_error <- function(error_message, feedback = NULL, timeout_exceed
 exercise_result <- function(feedback = NULL, html_output = NULL,
                             error_message = NULL, timeout_exceeded = FALSE) {
   feedback <- feedback_validated(feedback)
-  feedback_html <- feedback_as_html(feedback)
+
+  if (!is.null(feedback)) {
+    feedback$html <- feedback_as_html(feedback)
+  }
 
   structure(
     list(
       feedback = feedback,
       error_message = error_message,
       timeout_exceeded = timeout_exceeded,
-      html_output = switch(
-        feedback$location %||% "append",
-        append = htmltools::tagList(html_output, feedback_html),
-        prepend = htmltools::tagList(feedback_html, html_output),
-        replace = feedback_html,
-        stop("Feedback location of ", feedback$location, " not supported")
-      )
+      html_output = html_output
     ),
     class = "learnr_exercise_result"
   )
@@ -686,6 +683,24 @@ is_exercise_result <- function(x) {
 
 is_error_result <- function(x) {
   is_exercise_result(x) && length(x$error_message)
+}
+
+exercise_result_as_html <- function(x) {
+  if (!is_exercise_result(x)) {
+    return(NULL)
+  }
+
+  if (is.null(x$feedback)) {
+    return(x$html_output)
+  }
+
+  switch(
+    x$feedback$location %||% "append",
+    append = htmltools::tagList(x$html_output, x$feedback$html),
+    prepend = htmltools::tagList(x$feedback$html, x$html_output),
+    replace = x$feedback$html,
+    stop("Feedback location of ", feedback$location, " not supported")
+  )
 }
 
 filter_dependencies <- function(dependencies) {
