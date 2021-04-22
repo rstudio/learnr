@@ -323,6 +323,90 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   )
 })
 
+
+# exercise_result() -------------------------------------------------------
+
+test_that("exercise_result() doesn't concatenate feedback and code output", {
+  feedback <- list(correct = TRUE, message = "<p>FEEDBACK</p>")
+  result <- exercise_result(
+    feedback = feedback,
+    html_output = "<pre><code>## output</code></pre>"
+  )
+
+  expect_s3_class(result, "learnr_exercise_result")
+  expect_equal(result$html_output, "<pre><code>## output</code></pre>")
+  expect_equal(
+    result$feedback$html,
+    feedback_as_html(feedback)
+  )
+  expect_match(as.character(result$feedback$html), "FEEDBACK", fixed = TRUE)
+  expect_false(grepl("FEEDBACK", result$html_output))
+})
+
+test_that("exercise_result() throws an error for invalid feedback", {
+  expect_error(exercise_result(feedback = list(bad = TRUE)))
+  expect_error(exercise_result(feedback = list(correct = FALSE)))
+  expect_error(exercise_result(feedback = list(correct = "wrong")))
+})
+
+test_that("exercise_result_as_html() creates html for learnr", {
+  expect_null(exercise_result_as_html("nope"))
+  expect_null(exercise_result_as_html(list()))
+
+  code_output <- htmltools::HTML("<pre><code>## output</code></pre>")
+  feedback <- list(message = htmltools::HTML("<p>FEEDBACK</p>"), correct = TRUE)
+
+  result_no_feedback <- exercise_result(html_output = code_output)
+  result <- exercise_result(feedback = feedback, html_output = code_output)
+
+  # exercise_result() doesn't include feedback in the html_output
+  expect_equal(result_no_feedback$html_output, result$html_output)
+
+  # code output is found in the output in both cases
+  expect_match(
+    as.character(exercise_result_as_html(result)),
+    as.character(exercise_result_as_html(result_no_feedback)),
+    fixed = TRUE
+  )
+
+  # feedback is added to the html output by exercise_result_as_html()
+  expect_true(
+    grepl(
+      "FEEDBACK",
+      as.character(exercise_result_as_html(result)),
+      fixed = TRUE
+    )
+  )
+
+  # feedback is appended
+  feedback_html <- as.character(feedback_as_html(feedback))
+  result_html <- as.character(exercise_result_as_html(result))
+
+  str_locate <- function(x, pattern) {
+    r <- regexec(as.character(pattern), as.character(x))
+    r[[1]][[1]]
+  }
+
+  expect_equal(
+    str_locate(result_html, feedback_html),
+    nchar(result_html) - nchar(feedback_html) + 1
+  )
+
+  # feedback is prepended
+  result$feedback$location <- "prepend"
+  result_html <- as.character(exercise_result_as_html(result))
+  expect_equal(str_locate(result_html, feedback_html), 1)
+
+  # feedback replaces output
+  result$feedback$location <- "replace"
+  result_html <- as.character(exercise_result_as_html(result))
+  expect_equal(result_html, feedback_html)
+
+  # bad feedback location results in error
+  result$feedback$location <- "nope"
+  expect_error(exercise_result_as_html(result))
+})
+
 # filter_dependencies() ---------------------------------------------------
 
 test_that("filter_dependencies() excludes non-list knit_meta objects", {
