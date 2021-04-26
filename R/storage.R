@@ -595,20 +595,20 @@ hybrid_storage <- function(session, dir, compress = TRUE) {
       context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
       objects <- list()
+      objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
 
-      # If there is only one thing in the client storage, its just the most
-      # recent viewed page and the browser cookies may have been cleared.
-      # Restore them from disk if available
-      if (length(ls(store)) <= 1) {
-        objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
-        for (object_path in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
+      for(file in list.files(objects_path, pattern = utils::glob2rx("*.rds"))) {
+        obj_name <- tools::file_path_sans_ext(file)
 
-          object <- readRDS(file.path(objects_path, object_path))
-          object_id <- sub("\\.rds$", "", id_from_filesystem_path(object_path))
-          objects[[length(objects) + 1]] <- object
+        # If item isn't in current store
+        if(!exists(obj_name, envir = store)) {
 
-          ## Write out to cookies
+          if(obj_name == client_state_object_id) next
+
           objects_path <- storage_path(tutorial_id, tutorial_version, user_id)
+          object <- readRDS(file.path(objects_path, file))
+          object_id <- sub("\\.rds$", "", id_from_filesystem_path(file))
+          objects[[length(objects) + 1]] <- object
 
           # save the object to our in-memory store
           context_id <- tutorial_context_id(tutorial_id, tutorial_version)
@@ -625,12 +625,15 @@ hybrid_storage <- function(session, dir, compress = TRUE) {
           }, error = function(e){
             warning(paste0("Failed to restore Cookies", e))
           })
+
+          # Item is found in current store
+        } else {
+          objects[[length(objects) + 1]] <- get(obj_name, envir = store)
         }
-      } else {
-        for (object in ls(store)){
-          objects[[length(objects) + 1]] <- get(object, envir = store)
-        }
+
       }
+
+
       objects
     },
 
