@@ -221,12 +221,12 @@ Compare `air_time` with `arr_time - dep_time`. What do you expect to see? What d
     
 ```{r mutateex2, exercise = TRUE}
 # flights <- mutate(flights, total_time = _____________)
-# flight_times <- select(airtime, total_time)
+# flight_times <- select(flights, air_time, total_time)
 # filter(flight_times, air_time != total_time)
 ```
 ```{r mutateex2-solution}
 flights <- mutate(flights, total_time = arr_time - dep_time)
-flight_times <- select(airtime, total_time)
+flight_times <- select(flights, air_time, total_time)
 filter(flight_times, air_time != total_time)
 ```
 
