@@ -148,8 +148,9 @@ $(document).on("shiny:sessioninitialized", function () {
 
     i18next.changeLanguage(lang);
     localize(selector, opts);
-  }; // localize question buttons when shown
+  };
 
+  // localize question buttons when shown
   $(document).on("shiny:value", ".tutorial-question", function (ev) {
     // Allow DOM to update before translating question UI
     setTimeout(function () {
@@ -157,12 +158,14 @@ $(document).on("shiny:sessioninitialized", function () {
         ev.target.closest(".tutorial-question").querySelectorAll("[data-i18n]")
       );
     }, 0);
-  }); // translate targets of i18n events
+  });
 
+  // translate targets of i18n events
   $(document).on("i18n", function (ev) {
     // translate the event target itself
-    localize(ev.target); // and also any descendents
-
+    localize(ev.target); 
+    
+    // and also any descendents
     localize(ev.target.querySelectorAll("[data-i18n]"));
   });
 
