@@ -1,23 +1,16 @@
 "use strict";
 
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function _typeof(obj) {
-      return obj &&
-        typeof Symbol === "function" &&
-        obj.constructor === Symbol &&
-        obj !== Symbol.prototype
-        ? "symbol"
-        : typeof obj;
-    };
-  }
-  return _typeof(obj);
-}
+$.extend({
+    keys: function(obj) {
+      return $.map(obj, function(v, k) {
+        return k;
+      });
+    },
+    includes: function(arr, val) {
+      return $.inArray(val, arr);
+    }
+})
+
 
 $(document).on("shiny:sessioninitialized", function () {
   // This can be uncommented to allow to switch from one lang to the other
@@ -53,13 +46,13 @@ $(document).on("shiny:sessioninitialized", function () {
 
   if (i18nCustom.resources) {
     // copy customizations into base translation namespace
-    Object.keys(i18nCustom.resources).forEach(function (lng) {
+    $.keys(i18nCustom.resources).forEach(function (lng) {
       var resource = i18nCustom.resources[lng];
 
       if (resource.custom) {
         if (resource.translation) {
-          Object.keys(resource.custom).forEach(function (keyGroup) {
-            Object.assign(
+          $.keys(resource.custom).forEach(function (keyGroup) {
+            $.extend(
               resource.translation[keyGroup],
               resource.custom[keyGroup]
             );
@@ -75,7 +68,7 @@ $(document).on("shiny:sessioninitialized", function () {
     selector = selector || "[data-i18n]";
     opts = opts || {};
     var $els = $(selector).filter(function () {
-      return Object.keys(this.dataset).includes("i18n");
+      return $.includes(this.dataset, "i18n");
     });
 
     if (!$els.length) {
@@ -84,7 +77,7 @@ $(document).on("shiny:sessioninitialized", function () {
     }
 
     $els.each(function (idx) {
-      var optsItem = Object.assign({}, opts);
+      var optsItem = $.extend({}, opts);
       // Note: `this.dataset.i18nOpts` maps directly to the DOM element attribute `data-i18n-opts`
       //   And `this.dataset.i18nAttrVALUE` to element attribute `data-i18n-attr-VALUE`
       // Link: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
@@ -94,7 +87,7 @@ $(document).on("shiny:sessioninitialized", function () {
       // > (note that dashes are converted to camelCase).
 
       if (this.dataset.i18nOpts) {
-        optsItem = Object.assign(optsItem, JSON.parse(this.dataset.i18nOpts));
+        optsItem = $.extend(optsItem, JSON.parse(this.dataset.i18nOpts));
       }
 
       // Translate the item iteslf
@@ -106,7 +99,7 @@ $(document).on("shiny:sessioninitialized", function () {
       // attibute VALUE are stored in element attribute data-i18n-attr-<VALUE>
       // e.g. <span title="english title" data-i18n-attr-title="title.demo"></span>
       //      will use title.demo to look up and translated the text in the title attribute
-      var i18nAttrs = Object.keys(this.dataset).filter(function (x) {
+      var i18nAttrs = $.keys(this.dataset).filter(function (x) {
         return x.match("i18nAttr");
       });
 
@@ -163,8 +156,8 @@ $(document).on("shiny:sessioninitialized", function () {
   // translate targets of i18n events
   $(document).on("i18n", function (ev) {
     // translate the event target itself
-    localize(ev.target); 
-    
+    localize(ev.target);
+
     // and also any descendents
     localize(ev.target.querySelectorAll("[data-i18n]"));
   });
@@ -180,7 +173,7 @@ $(document).on("shiny:sessioninitialized", function () {
         }))
     ) {
       selector = x;
-    } else if (_typeof(x) === "object") {
+    } else if (typeof x === "object") {
       selector = x.selector || "[data-i18n]";
       language = x.language;
     } else {
