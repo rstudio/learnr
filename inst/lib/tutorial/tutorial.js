@@ -1388,6 +1388,11 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       editor.getSession().setValue(value.code);
       // Need to trigger a click for progressive mode.
       this.runButtons(el).trigger('click');
+      if (window.shinytest) {
+        // remove focus from editor when updating the value in shinyTest
+        // to avoid false differences due to the blinking cursor
+        setTimeout(function() {editor.blur()}, 0);
+      }
     },
 
     getType: function(el) {
@@ -1700,6 +1705,9 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
         // restore code
         var editor = ace.edit(editorContainer.attr('id'));
         editor.setValue(code, -1);
+        if (window.shinytest) {
+          setTimeout(function() {editor.blur()}, 0);
+        }
 
         // fire restore event on the container (also set
         // restoring flag on the exercise so we don't scroll it
