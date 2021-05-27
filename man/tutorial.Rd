@@ -59,7 +59,9 @@ method creates a paginated HTML table (note that this method is only valid
 for formats that produce HTML). In addition to the named methods you can
 also pass an arbitrary function to be used for printing data frames. You
 can disable the \code{df_print} behavior entirely by setting the option
-\code{rmarkdown.df_print} to \code{FALSE}.}
+\code{rmarkdown.df_print} to \code{FALSE}. See
+\href{https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing}{Data
+frame printing section} in bookdown book for examples.}
 
 \item{smart}{Produce typographically correct output, converting straight quotes to curly quotes,
 \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
@@ -85,7 +87,10 @@ copied into the output directory). You can pass an alternate URL or pass
 \item{extra_dependencies}{Additional function arguments to pass to the
 base R Markdown HTML output formatter \code{\link[rmarkdown]{html_document_base}}}
 
-\item{css}{One or more css files to include}
+\item{css}{CSS and/or Sass files to include. Files with an extension of .sass
+or .scss are compiled to CSS via \code{sass::sass()}. Also, if \code{theme} is a
+\code{\link[bslib:bs_theme]{bslib::bs_theme()}} object, Sass code may reference the relevant Bootstrap
+Sass variables, functions, mixins, etc.}
 
 \item{includes}{Named list of additional content to include within the
 document (typically created using the \code{\link[rmarkdown]{includes}} function).}

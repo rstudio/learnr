@@ -45,6 +45,27 @@
   padding-bottom: 15px;
 }
 
+.tutorial-question .question-final .correct::before {
+  content: '\2713';
+  position: absolute;
+  left: 2px;
+  top: 0;
+}
+.tutorial-question .question-final .incorrect::before {
+  content: '\2717';
+  position: absolute;
+  left: 2px;
+  top: 0;
+}
+.tutorial-question .question-final .radio label,
+.tutorial-question .question-final .checkbox label {
+  position: relative;
+}
+.tutorial-question .question-final .radio input.disabled,
+.tutorial-question .question-final .checkbox input.disabled {
+  display: none;
+}
+
 .tutorial-exercise-input .btn-xs {
   margin-right: 0;
   margin-top: -1px;
