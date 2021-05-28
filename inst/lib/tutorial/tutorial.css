@@ -50,14 +50,14 @@
   content: '\2713';
   position: absolute;
   left: 2px;
-  top: 0;
+  top: 1px;
 }
 
 .tutorial-question .question-final .incorrect::before {
   content: '\2717';
   position: absolute;
   left: 2px;
-  top: 0;
+  top: 1px;
 }
 
 .tutorial-question .question-final .radio label,
