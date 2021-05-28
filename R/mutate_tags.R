@@ -157,6 +157,12 @@ disable_all_tags <- function(ele) {
 #' @export
 finalize_question <- function(ele) {
   ele <- disable_all_tags(ele)
-  ele$attribs$class <- paste(ele$attribs$class, "question-final")
+  if (inherits(ele, "shiny.tag.list")) {
+    ele_class <- class(ele)
+    ele <- lapply(ele, function(el) tagAppendAttributes(el, class = "question-final"))
+    class(ele) <- ele_class
+  } else {
+    ele <- tagAppendAttributes(ele, class = "question-final")
+  }
   ele
 }
