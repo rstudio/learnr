@@ -50,7 +50,7 @@ If you are ready to begin, click on!
 
 `filter()` lets you use a logical test to extract specific rows from a data frame. To use `filter()`, pass it the data frame followed by one or more logical tests. `filter()` will return every row that passes each logical test.
 
-So for example, we can use `filter()` to select every flight in flights that departed on January 1st. Click Submit Answer to give it a try:
+So for example, we can use `filter()` to select every flight in flights that departed on January 1st. Click Run Code to give it a try:
 
 ```{r filter1, exercise = TRUE, exercise.eval = FALSE}
 filter(flights, month == 1, day == 1)
