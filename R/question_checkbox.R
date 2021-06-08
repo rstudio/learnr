@@ -129,16 +129,14 @@ question_ui_completed.learnr_checkbox <- function(question, value, ...) {
   # update select answers to have X or √
   choice_names_final <- lapply(question$answers, function(ans) {
     if (ans$correct) {
-      tag <- " &#10003; "
       tagClass <- "correct"
     } else {
-      tag <- " &#10007; "
       tagClass <- "incorrect"
     }
-    tags$span(ans$label, HTML(tag), class = tagClass)
+    tags$span(ans$label, class = tagClass)
   })
 
-  disable_all_tags(
+  finalize_question(
     checkboxGroupInput(
       question$ids$answer,
       label = question$question,

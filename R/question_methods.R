@@ -88,7 +88,7 @@ question_ui_try_again.default <- function(question, value, ...) {
 #' @export
 #' @rdname question_methods
 question_ui_completed.default <- function(question, value, ...) {
-  disable_all_tags(
+  finalize_question(
     question_ui_initialize(question, value, ...)
   )
 }

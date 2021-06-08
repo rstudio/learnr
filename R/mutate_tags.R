@@ -136,3 +136,33 @@ disable_tags <- function(ele, selector) {
 disable_all_tags <- function(ele) {
   mutate_tags(ele, "*", disable_element_fn)
 }
+
+#' Finalize a question
+#'
+#' Mark a question as finalized by adding a `question-final` class to the HTML
+#' output at the top level, in addition to disabling all tags with
+#' [disable_all_tags()].
+#'
+#' @examples
+#' # finalize the question UI
+#' finalize_question(
+#'   htmltools::div(
+#'     class = "custom-question",
+#'     htmltools::div("answer 1"),
+#'     htmltools::div("answer 2")
+#'   )
+#' )
+#'
+#' @inheritParams disable_all_tags
+#' @export
+finalize_question <- function(ele) {
+  ele <- disable_all_tags(ele)
+  if (inherits(ele, "shiny.tag.list")) {
+    ele_class <- class(ele)
+    ele <- lapply(ele, function(el) tagAppendAttributes(el, class = "question-final"))
+    class(ele) <- ele_class
+  } else {
+    ele <- tagAppendAttributes(ele, class = "question-final")
+  }
+  ele
+}
