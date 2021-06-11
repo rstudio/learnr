@@ -91,3 +91,6 @@ translations_list <-
   map_depth(3, compact)
 
 saveRDS(translations_list, file = here("inst/i18n_translations"), version = 2)
+
+i18n_random_phrases <- yaml::read_yaml(here("data-raw", "i18n_random-phrases.yml"))
+saveRDS(i18n_random_phrases, file = here("inst", "18n_random_phrases"), version = 2)
