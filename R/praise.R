@@ -30,7 +30,7 @@ random_phrases_languages <- function() {
 }
 
 random_phrases <- function(type, language = NULL) {
-  .random_phrases <- read_random_phrases()
+  .random_phrases <- merge_random_phrases()
 
   if (!type %in% names(.random_phrases)) {
     stop.(
@@ -56,4 +56,115 @@ random_phrases <- function(type, language = NULL) {
   language <- warn_unsupported_language(language, i18n_get_language_option())
 
   .random_phrases[[type]][[language]]
+}
+
+#' Add Phrases to the bank of random phrases
+#'
+#' Augment the random phrases available in [random_praise()] and
+#' [random_encouragement()] with phrases of your own. Note that these phrases
+#' are added to the existing phrases, rather than overwriting them.
+#'
+#' @section Usage in learnr tutorials:
+#'
+#' To add random phrases in a learnr tutorial, you can either include one or
+#' more calls to `random_phrases_add()` in your global setup chunk:
+#'
+#' ````
+#' ```{r setup, include = FALSE}`r ''`
+#' library(learnr)
+#' random_phrases_add(
+#'   language = "en",
+#'   praise = "Great work!",
+#'   encouragement = "I believe in you."
+#' )
+#' ```
+#' ````
+#'
+#' Alternatively, you can call `random_phrases_add()` in a separate, standard
+#' R chunk (with `echo = FALSE`):
+#'
+#' #' ````
+#' ```{r setup-phrases, echo = FALSE}`r ''`
+#' random_phrases_add(
+#'   language = "en",
+#'   praise = c("Great work!", "You're awesome!"),
+#'   encouragement = c("I believe in you.", "Yes we can!")
+#' )
+#' ```
+#' ````
+#'
+#' @examples
+#' random_phrases_add("demo", praise = "Great!", encouragement = "Try again.")
+#' random_praise(language = "demo")
+#' random_encouragement(language = "demo")
+#'
+#'
+#' @param language The language of the phrases to be added.
+#' @param praise,encouragement A vector of praising or encouraging phrases,
+#'   including final punctuation.
+#'
+#' @return Returns the previous custom phrases invisibly when called in the
+#'   global setup chunk or interactively. Otherwise, it returns a shiny pre-
+#'   rendered chunk.
+#'
+#' @export
+random_phrases_add <- function(language = "en", praise = NULL, encouragement = NULL) {
+  phrases <- list()
+  if (!is.null(praise)) {
+    stopifnot(is.character(praise))
+    phrases$praise <- list()
+    phrases$praise[[language]] <- praise
+  }
+  if (!is.null(encouragement)) {
+    stopifnot(is.character(encouragement))
+    phrases$encouragement <- list()
+    phrases$encouragement[[language]] <- encouragement
+  }
+  if (
+    isTRUE(getOption('knitr.in.progress'))
+  ) {
+    if (!identical(knitr::opts_current$get("label"), "setup")) {
+      rmarkdown::shiny_prerendered_chunk(
+        context = "server-start",
+        singleton = TRUE,
+        sprintf(
+          "learnr:::update_custom_random_phrases(%s)",
+          dput_to_string(phrases)
+        )
+      )
+    }
+  } else {
+    update_custom_random_phrases(phrases)
+  }
+}
+
+update_custom_random_phrases <- function(x) {
+  custom_phrases <- knitr::opts_chunk$get("tutorial.random_phrases")
+  if (is.null(custom_phrases)) {
+    knitr::opts_chunk$set("tutorial.random_phrases" = x)
+    return(invisible(custom_phrases))
+  }
+
+  new_phrases <- merge_random_phrases(x, custom_phrases)
+
+  knitr::opts_chunk$set("tutorial.random_phrases" = new_phrases)
+  invisible(custom_phrases)
+}
+
+merge_random_phrases <- function(
+  new = knitr::opts_chunk$get("tutorial.random_phrases"),
+  current = read_random_phrases()
+) {
+  if (is.null(new)) {
+    return(current)
+  }
+  for (type in names(new)) {
+    for (lang in names(new[[type]])) {
+      current[[type]][[lang]] <- c(
+        current[[type]][[lang]],
+        new[[type]][[lang]]
+      )
+    }
+  }
+  current
 }

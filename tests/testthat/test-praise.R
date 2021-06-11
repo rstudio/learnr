@@ -12,3 +12,20 @@ test_that("random_phrases()", {
   expect_equal(random_phrases("praise", "debug"), "RANDOM PRAISE.")
   expect_equal(random_phrases("encouragement", "debug"), "RANDOM ENCOURAGEMENT.")
 })
+
+test_that("random_phrases_add()", {
+  random_phrases_add(
+    language = "bogus",
+    praise = "Praise here!",
+    encouragement = c("Go 1", "Go 2")
+  )
+
+  expect_equal(random_phrases("praise", "bogus"), "Praise here!")
+  expect_equal(random_phrases("encouragement", "bogus"), c("Go 1", "Go 2"))
+
+  random_phrases_add("bogus", encouragement = "Go 3")
+  expect_equal(random_phrases("encouragement", "bogus"), c("Go 1", "Go 2", "Go 3"))
+
+  expect_error(random_phrases_add("bogus", list("bad")))
+  expect_error(random_phrases_add("bogus", 1:4))
+})
