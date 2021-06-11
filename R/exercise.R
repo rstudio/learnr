@@ -1,4 +1,4 @@
-current_exercise_version <- "2"
+current_exercise_version <- "3"
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
@@ -211,6 +211,7 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
   current_version <- as.numeric(current_exercise_version)
 
   if (exercise$version == 1) {
+    # upgrade from version 1 to version 2
     # exercise version 2 added $tutorial information
     exercise$tutorial <- list(
       tutorial_id = "tutorial_id:UPGRADE learnr",
@@ -218,10 +219,16 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
       user_id = "user_id:UPGRADE learnr"
     )
     exercise$version <- 2
-    exercise
   }
 
-  # Future logic to upgrade an exercise from version 2 to version N goes here...
+  if (exercise$version == 2) {
+    # upgrade from version 2 to version 3
+    # => add language $tutorial information
+    exercise$tutorial$language <- i18n_get_language_option()
+    exercise$version <- 3
+  }
+
+  # Future logic to upgrade an exercise from version 3 to version N goes here...
 
   if (identical(exercise$version, current_version)) {
     return(exercise)
