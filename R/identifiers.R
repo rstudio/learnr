@@ -42,7 +42,8 @@ initialize_session_state <- function(session, metadata, location, request) {
       "tutorial_version",
       default = default_tutorial_version(metadata$version, pkg)
     ),
-    user_id = initialize_identifer("user_id", default = default_user_id())
+    user_id = initialize_identifier("user_id", default = default_user_id()),
+    language = initialize_identifier("language", default = default_language())
   )
 }
 
@@ -96,6 +97,12 @@ default_tutorial_version <- function(version = NULL, pkg = package_info()) {
 
 default_user_id <- function() {
   unname(Sys.info()["user"])
+}
+
+default_language <- function() {
+  # knitr option > R global option > default
+  knitr::opts_knit$get("tutorial.language") %||%
+    getOption("tutorial.language", "en")
 }
 
 read_request <- function(session, name, default = NULL) {

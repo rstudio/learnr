@@ -24,7 +24,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
       tutorial_id = read_request(session, "tutorial.tutorial_id"),
       tutorial_version = read_request(session, "tutorial.tutorial_version"),
       user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = as.character(utils::packageVersion("learnr"))
+      learnr_version = as.character(utils::packageVersion("learnr")),
+      language = read_request(session, "tutorial.language")
     )
 
     # short circuit for restore (we restore some outputs like errors so that
@@ -282,6 +283,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     exercise,
     require_items = if (evaluate_global_setup) "global_setup"
   )
+
+  i18n_set_language_option(exercise$tutorial$language)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission

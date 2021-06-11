@@ -131,3 +131,51 @@ i18n_span <- function(key, ..., opts = NULL) {
 i18n_translations <- function() {
   readRDS(system.file("i18n_translations", package = "learnr"))
 }
+
+i18n_set_language_option <- function(language = NULL) {
+  # Sets a knitr option for `tutorial.language` using language found in this order
+  # 1. `language` provided
+  # 2. From read_request()
+  # 3. Default
+
+  current <- knitr::opts_knit$get("tutorial.language")
+  if (is.null(language)) {
+    session <- shiny::getDefaultReactiveDomain()
+    language <-
+      if (!is.null(session)) {
+        read_request(session, "tutorial.language", default_language())
+      } else {
+        default_language()
+      }
+  }
+
+  knitr::opts_knit$set(tutorial.language = language)
+
+  invisible(current)
+}
+
+i18n_get_language_option <- function() {
+  # 1. knitr option
+  lang_knit_opt <- knitr::opts_knit$get("tutorial.language")
+  if (!is.null(lang_knit_opt)) {
+    return(lang_knit_opt)
+  }
+
+  # 2. Shiny current language session as last reported if available
+  session <- shiny::getDefaultReactiveDomain()
+  lang_session <- if (!is.null(session)) {
+    read_request(session, "tutorial.language", NULL)
+  }
+  if (!is.null(lang_session)) {
+    return(lang_session)
+  }
+
+  # 3. R option
+  lang_r_opt <- getOption("tutorial.language")
+  if (!is.null(lang_r_opt)) {
+    return(lang_r_opt)
+  }
+
+  # 4. final default
+  default_language()
+}
