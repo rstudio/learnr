@@ -446,12 +446,10 @@ render_exercise <- function(exercise, envir) {
   # Put the exercise in a minimal HTML doc
   output_format_exercise <- function(user = FALSE) {
     # start constructing knitr_options for the output format
-    knitr_options <- rmarkdown::knitr_options_html(
-      fig_width = exercise$options$fig.width,
-      fig_height = exercise$options$fig.height,
-      fig_retina = exercise$options$fig.retina,
-      keep_md = FALSE
-    )
+    knitr_options <- exercise$options
+    knitr_options$opts_chunk$dev <- "png"
+    knitr_options$opts_chunk$dpi <- 96
+    knitr_options$opts_chunk$fig.retina <- NULL
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
@@ -634,7 +632,11 @@ exercise_code_chunks_prep <- function(exercise) {
 }
 
 exercise_code_chunks_user <- function(exercise) {
-  exercise_code_chunks(exercise_get_chunks(exercise, "user"))
+  # chunk options on the user chunk just duplicate the exercise$options
+  # which are set globally for the exercise
+  user_chunk <- exercise_get_chunks(exercise, "user")
+  user_chunk[[1]]$opts <- NULL
+  exercise_code_chunks(user_chunk)
 }
 
 exercise_code_chunks <- function(chunks) {
