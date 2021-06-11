@@ -37,14 +37,14 @@ random_phrases_add(
 }
 
 Alternatively, you can call \code{random_phrases_add()} in a separate, standard
-R chunk (with \code{echo = FALSE}):
-
-#' ````\if{html}{\out{<div class="{r setup-phrases, echo = FALSE}">}}\preformatted{random_phrases_add(
+R chunk (with \code{echo = FALSE}):\preformatted{```\{r setup-phrases, echo = FALSE\}`r ''`
+random_phrases_add(
   language = "en",
   praise = c("Great work!", "You're awesome!"),
   encouragement = c("I believe in you.", "Yes we can!")
 )
-}\if{html}{\out{</div>}}\preformatted{}
+```
+}
 }
 
 \examples{

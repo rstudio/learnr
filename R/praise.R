@@ -83,7 +83,7 @@ random_phrases <- function(type, language = NULL) {
 #' Alternatively, you can call `random_phrases_add()` in a separate, standard
 #' R chunk (with `echo = FALSE`):
 #'
-#' #' ````
+#' ````
 #' ```{r setup-phrases, echo = FALSE}`r ''`
 #' random_phrases_add(
 #'   language = "en",
