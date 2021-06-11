@@ -10,7 +10,7 @@ initialize_session_state <- function(session, metadata, location, request) {
   }
 
   # function to initialize an identifier (read from http header or take default)
-  initialize_identifer <- function(identifier, default) {
+  initialize_identifier <- function(identifier, default) {
 
     # determine whether a custom header provides the value (fallback to default)
     header <- as_rook_header(getOption(sprintf("tutorial.http_header_%s", identifier)))
@@ -34,11 +34,11 @@ initialize_session_state <- function(session, metadata, location, request) {
 
   # initialize and return identifiers
   list(
-    tutorial_id = initialize_identifer(
+    tutorial_id = initialize_identifier(
       "tutorial_id",
       default = default_tutorial_id(metadata$id, location, pkg)
     ),
-    tutorial_version = initialize_identifer(
+    tutorial_version = initialize_identifier(
       "tutorial_version",
       default = default_tutorial_version(metadata$version, pkg)
     ),
