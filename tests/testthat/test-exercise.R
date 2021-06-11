@@ -444,11 +444,23 @@ test_that("exercise versions upgrade correctly", {
   expect_match(ex_1_upgraded$tutorial$tutorial_id, "UPGRADE")
   expect_match(ex_1_upgraded$tutorial$tutorial_version, "-1")
   expect_match(ex_1_upgraded$tutorial$user_id, "UPGRADE")
-  expect_equal(paste(ex_1_upgraded$version), "2")
+  expect_equal(paste(ex_1_upgraded$version), "3")
 
   ex_2 <- mock_exercise(version = "2")
   expect_type(ex_2$tutorial, "list")
+  ex_2$tutorial$language <- "en"
   expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+
+  i18n_set_language_option("foo")
+  ex_2 <- mock_exercise(version = "2")
+  expect_type(ex_2$tutorial, "list")
+  ex_2$tutorial$language <- "foo"
+  expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+  knitr::opts_knit$set("tutorial.language" = NULL)
+
+  ex_3 <- mock_exercise(version = "3")
+  expect_type(ex_3$tutorial, "list")
+  expect_identical(ex_3$tutorial, upgrade_exercise(ex_3)$tutorial)
 
   # future versions
   ex_99 <- mock_exercise(version = 99)

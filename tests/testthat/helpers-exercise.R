@@ -79,13 +79,16 @@ mock_exercise <- function(
     version = version
   )
 
-  if (!is.null(version) && version == "2") {
+  if (!is.null(version) && version %in% c("2", "3")) {
     ex$tutorial <- list(
       id = "mock_tutorial_id",
       version = "9.9.9",
       user_id = "the_learnr",
       learnr_version = as.character(utils::packageVersion("learnr"))
     )
+    if (version == "3") {
+      ex$tutorial$language <- "en"
+    }
     return(ex)
   }
 
