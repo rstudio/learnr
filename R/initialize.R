@@ -40,6 +40,14 @@ initialize_tutorial <- function() {
       singleton = TRUE
     )
 
+    # Move remote files to data directory
+    rmarkdown::shiny_prerendered_chunk(
+      'server-start',
+      'learnr:::prepare_data_files()',
+      singleton = TRUE
+    )
+
+
     # Register session stop handler
     rmarkdown::shiny_prerendered_chunk(
       'server',

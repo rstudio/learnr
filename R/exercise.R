@@ -497,6 +497,11 @@ render_exercise <- function(exercise, envir) {
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
     local({
+      # Copy data files into tutorial working directory
+      if (!is.null(knitr::opts_chunk$get("exercise.files"))) {
+        copy_data_files(knitr::opts_chunk$get("exercise.files"))
+      }
+
       if (length(rmd_src_prep) > 0) {
         rmd_file_prep <- "exercise_prep.Rmd"
         writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
