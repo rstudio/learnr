@@ -447,9 +447,9 @@ render_exercise <- function(exercise, envir) {
   output_format_exercise <- function(user = FALSE) {
     # start constructing knitr_options for the output format
     knitr_options <- exercise$options
+    # Recreate the logic of `rmarkdown::knitr_options_html()` by setting these options
     knitr_options$opts_chunk$dev <- "png"
     knitr_options$opts_chunk$dpi <- 96
-    knitr_options$opts_chunk$fig.retina <- NULL
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
