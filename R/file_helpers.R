@@ -124,12 +124,10 @@ get_option_exercise_files <- function(exercise = NULL) {
 
   if (!is.null(c(manual_exercise_files, manual_remote_files))) {
     warning(
-      strwrap(
-        paste(
-          "Manually setting the `exercise.files` or `exercise.remote.files`",
-          " chunk options causes suboptimal performance.\nPlease see",
-          "`?learnr::use_remote_files` for more information."
-        )
+      paste(
+        "Manually setting the `exercise.files` or `exercise.remote.files`",
+        "chunk options causes suboptimal performance.\nPlease see",
+        "`?learnr::use_remote_files` for more information."
       )
     )
   }
