@@ -87,9 +87,9 @@ jobs:
         if: runner.os == 'Windows' && matrix.config.r == 'devel'
         shell: Rscript {0}
         run: |
-          readLines(file.path("C:\\", "Documents", ".Rprofile"))
+          readLines(file.path("C:", "Documents", ".Rprofile"))
           cat("\noptions(pkgType = 'source')\n", file = file.path("C:", "Documents", ".Rprofile"), append = TRUE)
-          readLines(file.path("C:\\", "Documents", ".Rprofile"))
+          readLines(file.path("C:", "Documents", ".Rprofile"))
 
       - name: Install dependencies
         shell: Rscript {0}
