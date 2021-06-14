@@ -82,11 +82,11 @@ jobs:
           New-Item -Path "C:\" -Name "tmp" -ItemType Directory
           echo "TMPDIR=c:\tmp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Install with remotes
+      - name: Install digest on Win devel
+        if: runner.os == 'Windows' && matrix.config.r == 'devel'
         shell: Rscript {0}
         run: |
-          pak::pkg_install("remotes")
-          remotes::install_local(dependencies = TRUE, quiet = FALSE)
+          install.packages("digest", type = "source")
 
       - name: Install dependencies
         shell: Rscript {0}
