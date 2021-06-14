@@ -136,6 +136,14 @@ get_option_exercise_files <- function(exercise = NULL) {
 }
 
 set_option_remote_files <- function(files) {
+  if (any(!is_url(files) & !is_system_file(files))) {
+    stop(
+      "Remote files must be either URLs or the result of a call to ",
+      "`system.file()`.",
+      call. = FALSE
+    )
+  }
+
   knitr::opts_chunk$set(exercise.remote.files = files)
 }
 
@@ -166,6 +174,16 @@ copy_file <- function(from, to, ...) {
   } else {
     file.copy(from, to, ...)
   }
+}
+
+is_system_file <- function(path) {
+  apply(
+    as.matrix(
+      vapply(.libPaths(), grepl, logical(length(path)), path, fixed = TRUE)
+    ),
+    1,
+    any
+  )
 }
 
 is_url <- function(path) {
