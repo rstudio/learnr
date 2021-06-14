@@ -83,17 +83,17 @@ jobs:
           New-Item -Path "C:\" -Name "tmp" -ItemType Directory
           echo "TMPDIR=c:\tmp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Force source pkg install
-        if: runner.os == 'Windows' && matrix.config.r == 'devel'
-        shell: Rscript {0}
-        run: |
-          readLines(file.path("C:", "Documents", ".Rprofile"))
-          cat("\noptions(pkgType = 'source')\n", file = file.path("C:", "Documents", ".Rprofile"), append = TRUE)
-          readLines(file.path("C:", "Documents", ".Rprofile"))
+      # - name: Force source pkg install
+      #   if: runner.os == 'Windows' && matrix.config.r == 'devel'
+      #   shell: Rscript {0}
+      #   run: |
+      #     cat("\noptions(pkgType = 'source')\n", file = file.path("C:", "Documents", ".Rprofile"), append = TRUE)
+      #     readLines(file.path("C:", "Documents", ".Rprofile"))
 
       - name: Install dependencies
         shell: Rscript {0}
         run: |
+          options(pkgType = 'source')
           pak::local_install_dev_deps(upgrade = TRUE)
           pak::pkg_install("rcmdcheck")
 
