@@ -88,7 +88,7 @@ jobs:
         shell: Rscript {0}
         run: |
           readLines(file.path("C:\\", "Documents", ".Rprofile"))
-          cat("\noptions(pkgType = 'source')\n", file = file.path("C:\\", "Documents", ".Rprofile"), append = TRUE)
+          cat("\noptions(pkgType = 'source')\n", file = file.path("C:", "Documents", ".Rprofile"), append = TRUE)
           readLines(file.path("C:\\", "Documents", ".Rprofile"))
 
       - name: Install dependencies
