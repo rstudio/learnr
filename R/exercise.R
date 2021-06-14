@@ -498,9 +498,7 @@ render_exercise <- function(exercise, envir) {
   output_file <- tryCatch({
     local({
       # Copy data files into tutorial working directory
-      if (!is.null(knitr::opts_chunk$get("exercise.files"))) {
-        copy_data_files(knitr::opts_chunk$get("exercise.files"))
-      }
+      copy_data_files(get_option_exercise_files(exercise))
 
       if (length(rmd_src_prep) > 0) {
         rmd_file_prep <- "exercise_prep.Rmd"

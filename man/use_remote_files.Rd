@@ -8,50 +8,50 @@ use_remote_files(...)
 }
 \arguments{
 \item{...}{Remote files to include in the tutorial.
-Each file will be accessible at \verb{data/<name of input>}.
+Each file will be accessible at \code{"data/<name of input>"}.
 Unnamed arguments have their name set by default with \code{\link[=basename]{basename()}}.}
 }
 \value{
-Sets \link[knitr:opts_chunk]{\code{knitr} chunk options}
+Sets \link[knitr:opts_chunk]{knitr chunk options}
 }
 \description{
 By default, all files in the \verb{data/} directory alongside a tutorial will be
 accessible within the tutorial.
 \code{use_remote_files()} makes files stored remotely (e.g. online) accessible
 as well.
-}
-\section{Usage in learnr tutorials}{
-
 
 To use remote files in a \code{learnr} tutorial, you can either include a call to
-\code{use_remote_files()} in your global setup chunk:\preformatted{```\{r setup, include = FALSE\}`r ''`
+\code{use_remote_files()} in your global setup chunk:\preformatted{```\{r setup, include = FALSE\}
 library(learnr)
 use_remote_files(
-
+ "https://covidtracking.com/api/v1/states/daily.csv",
+  "taxi.csv" = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
 )
 ```
 }
 
-Alternatively, you can call \code{random_phrases_add()} in a separate, standard
-R chunk (with \code{echo = FALSE}):\preformatted{```\{r setup-phrases, echo = FALSE\}`r ''`
-use_remote_file(
+Alternatively, you can call \code{use_remote_files()} in a separate, standard
+R chunk (with \code{echo = FALSE}):\preformatted{```\{r setup-files, echo = FALSE\}
+use_remote_files(
   "https://covidtracking.com/api/v1/states/daily.csv",
   "taxi.csv" = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
 )
 ```
 }
 }
-
 \examples{
-use_remote_file(
+use_remote_files(
   "https://covidtracking.com/api/v1/states/daily.csv",
   "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
 )
 
-use_remote_file(
+use_remote_files(
   "covid.csv" = "https://covidtracking.com/api/v1/states/daily.csv",
   "taxi.csv"  = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
 )
 
-
+use_remote_files(
+  "covid/daily.csv" = "https://covidtracking.com/api/v1/states/daily.csv",
+  "taxi/trips.csv"  = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+)
 }
