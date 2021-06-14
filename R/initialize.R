@@ -40,12 +40,10 @@ initialize_tutorial <- function() {
       singleton = TRUE
     )
 
-    # watch for language changes
+    # record tutorial language in session object
     rmarkdown::shiny_prerendered_chunk(
       "server",
-      "observeEvent(input[['__tutorial_language']], {
-        learnr:::write_request(session, 'tutorial.language', input[['__tutorial_language']])
-      })"
+      "learnr:::i18n_observe_tutorial_language(input, session)"
     )
 
     # Register session stop handler

@@ -179,3 +179,9 @@ i18n_get_language_option <- function() {
   # 4. final default
   default_language()
 }
+
+i18n_observe_tutorial_language <- function(input, session) {
+  shiny::observeEvent(input[['__tutorial_language']], {
+    write_request(session, 'tutorial.language', input[['__tutorial_language']])
+  })
+}
