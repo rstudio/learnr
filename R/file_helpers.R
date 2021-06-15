@@ -13,8 +13,8 @@
 #' ```{r setup, include = FALSE}
 #' library(learnr)
 #' use_remote_files(
-#'  "https://covidtracking.com/api/v1/states/daily.csv",
-#'   "taxi.csv" = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+#'   system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
+#'   "covid.csv" = "https://covidtracking.com/api/v1/states/daily.csv"
 #' )
 #' ```
 #' ````
@@ -25,8 +25,8 @@
 #' ````
 #' ```{r setup-files, echo = FALSE}
 #' use_remote_files(
-#'   "https://covidtracking.com/api/v1/states/daily.csv",
-#'   "taxi.csv" = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+#'   system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
+#'   "covid.csv" = "https://covidtracking.com/api/v1/states/daily.csv"
 #' )
 #' ```
 #' ````
@@ -42,17 +42,17 @@
 #' @examples
 #' use_remote_files(
 #'   "https://covidtracking.com/api/v1/states/daily.csv",
-#'   "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+#'   system.file("examples", "knitr-minimal.Rnw", package = "knitr")
 #' )
 #'
 #' use_remote_files(
-#'   "covid.csv" = "https://covidtracking.com/api/v1/states/daily.csv",
-#'   "taxi.csv"  = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+#'   "covid.csv"    = "https://covidtracking.com/api/v1/states/daily.csv",
+#'   "notebook.Rnw" = system.file("examples", "knitr-minimal.Rnw", package = "knitr")
 #' )
 #'
 #' use_remote_files(
-#'   "covid/daily.csv" = "https://covidtracking.com/api/v1/states/daily.csv",
-#'   "taxi/trips.csv"  = "https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2020-01.csv"
+#'   "tables/covid.csv"      = "https://covidtracking.com/api/v1/states/daily.csv",
+#'   "notebooks/example.Rnw" = system.file("examples", "knitr-minimal.Rnw", package = "knitr")
 #' )
 
 use_remote_files <- function(...) {
