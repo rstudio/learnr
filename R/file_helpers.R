@@ -57,6 +57,7 @@
 
 use_remote_files <- function(...) {
   remote_files <- rlang::flatten_chr(list(...))
+  remote_files <- c(get_option_remote_files(), remote_files)
 
   if (isTRUE(getOption('knitr.in.progress'))) {
     if (!identical(knitr::opts_current$get("label"), "setup")) {

@@ -6,18 +6,19 @@ knitr_minimal.Rnw <- system.file(
 )
 
 test_that("use_remote_files()", {
+  use_remote_files("https://covidtracking.com/api/v1/states/daily.csv")
+  expect_equal(
+    get_option_remote_files(),
+    "https://covidtracking.com/api/v1/states/daily.csv"
+  )
+
+  knitr::opts_chunk$restore(default_opts)
   use_remote_files(
     system.file("examples", "knitr-minimal.Rnw", package = "knitr")
   )
   expect_equal(
     get_option_remote_files(),
     system.file("examples", "knitr-minimal.Rnw", package = "knitr")
-  )
-
-  use_remote_files("https://covidtracking.com/api/v1/states/daily.csv")
-  expect_equal(
-    get_option_remote_files(),
-    "https://covidtracking.com/api/v1/states/daily.csv"
   )
 
   result <- c(
@@ -25,12 +26,18 @@ test_that("use_remote_files()", {
     "https://covidtracking.com/api/v1/states/daily.csv"
   )
 
+  # Test that additional calls add to existing list
+  use_remote_files("https://covidtracking.com/api/v1/states/daily.csv")
+  expect_equal(get_option_remote_files(), result)
+
+  knitr::opts_chunk$restore(default_opts)
   use_remote_files(
     system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
     "https://covidtracking.com/api/v1/states/daily.csv"
   )
   expect_equal(get_option_remote_files(), result)
 
+  knitr::opts_chunk$restore(default_opts)
   use_remote_files(
     c(
       system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
@@ -41,12 +48,14 @@ test_that("use_remote_files()", {
 
   names(result) <- c("x.Rnw", "y.csv")
 
+  knitr::opts_chunk$restore(default_opts)
   use_remote_files(
     "x.Rnw" = system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
     "y.csv" = "https://covidtracking.com/api/v1/states/daily.csv"
   )
   expect_equal(get_option_remote_files(), result)
 
+  knitr::opts_chunk$restore(default_opts)
   use_remote_files(
     c(
       "x.Rnw" = system.file("examples", "knitr-minimal.Rnw", package = "knitr"),
