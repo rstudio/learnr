@@ -75,29 +75,26 @@ use_remote_files <- function(...) {
 }
 
 prepare_data_files <- function() {
-  local_files <- find_local_files() # Find files in `data/` directory
+  # Find files in `data/` directory
+  local_files <- find_local_files()
 
   # Find files set by `use_remote_files()`
   remote_files <- get_option_remote_files()
 
+  # Cache remote files in temporary directory
   if (!is.null(remote_files)) {
-    # Create temporary directory to cache remote files
-    temp_dir     <- file.path(tempdir(), "data")
-    # Copy remote files into temporary directory
-    remote_files <- copy_data_files(remote_files, temp_dir)
-
-    # Generate paths to files in the temporary directory
-    remote_files <- normalizePath(
-      dir(temp_dir, recursive = TRUE, full.names = TRUE)
-    )
+    temp_dir            <- file.path(tempdir(), "data")
+    remote_files        <- copy_data_files(remote_files, temp_dir)
+    remote_files        <- normalizePath(remote_files)
     names(remote_files) <- dir(temp_dir, recursive = TRUE)
   }
 
-  # Combine paths to local files and remote files
   files <- c(local_files, remote_files)
 
   # Specify full paths in chunk options
   set_option_exercise_files(files)
+
+  invisible(files)
 }
 
 find_local_files <- function() {
@@ -165,7 +162,7 @@ copy_data_files <- function(files, dest_dir = "data") {
     copy_file(files[[i]], dest_path[[i]])
   }
 
-  files
+  invisible(dest_path)
 }
 
 copy_file <- function(from, to, ...) {
