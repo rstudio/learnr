@@ -170,7 +170,7 @@ copy_data_files <- function(files, dest_dir = "data") {
 
 copy_file <- function(from, to, ...) {
   if (is_url(from)) {
-    download.file(from, to, ...)
+    utils::download.file(from, to, ...)
   } else {
     file.copy(from, to, ...)
   }
