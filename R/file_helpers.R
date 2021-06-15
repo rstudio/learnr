@@ -174,13 +174,10 @@ copy_file <- function(from, to, ...) {
 }
 
 is_system_file <- function(path) {
-  apply(
-    as.matrix(
-      vapply(.libPaths(), grepl, logical(length(path)), path, fixed = TRUE)
-    ),
-    1,
-    any
-  )
+  if (length(path) > 1) {
+    return(vapply(path, is_system_file, logical(1)))
+  }
+  any(vapply(.libPaths(), grepl, x = path, fixed = TRUE, logical(1)))
 }
 
 is_url <- function(path) {
