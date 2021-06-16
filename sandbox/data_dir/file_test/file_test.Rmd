@@ -15,3 +15,17 @@ library(readr)
 ```{r read_mpg, exercise=TRUE}
 read_csv("data/mpg.csv")
 ```
+
+### Files thhat are overwritten within an exercise are changed
+
+```{r write_mpg, exercise=TRUE}
+write_csv(mtcars, "data/mpg.csv")
+read_csv("data/mpg.csv")
+```
+
+### But overwritten files are restored between exercises
+
+```{r read_mpg_again, exercise=TRUE}
+read_csv("data/mpg.csv")
+!identical(read_csv("data/mpg.csv"), read_csv("data/mtcars.csv"))
+```
