@@ -1,0 +1,17 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+library(readr)
+```
+
+### This exercise doesn't use any data
+
+```{r read_mpg, exercise=TRUE}
+read_csv(readr_example("mtcars.csv"))
+```
