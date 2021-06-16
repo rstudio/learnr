@@ -12,9 +12,7 @@
 
 use_data_dir <- function(dir = "data") {
   if (!dir.exists(dir)) {
-    rlang::warn(cli::format_warning(
-      'The data directory "{.path {dir}}" could not be found.'
-    ))
+    rlang::warn(paste0('The data directory "', dir, '" could not be found.'))
   }
 
   options(learnr.data_dir = dir)
@@ -34,9 +32,7 @@ copy_data_dir <- function(exercise_dir) {
   dir.create(dest_dir)
 
   if (!dir.exists(dest_dir)) {
-    rlang::abort(cli::format_warning(
-      'The user-facing data directory was not created successfully.'
-    ))
+    rlang::abort('The user-facing data directory was not created successfully.')
   }
 
   file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
