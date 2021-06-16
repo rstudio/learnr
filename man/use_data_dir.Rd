@@ -2,7 +2,7 @@
 % Please edit documentation in R/use_data_dir.R
 \name{use_data_dir}
 \alias{use_data_dir}
-\title{Make files in a directory accessbile to tutorials}
+\title{Make files in a directory accessible to tutorials}
 \usage{
 use_data_dir(dir = "data")
 }
@@ -17,4 +17,9 @@ By default, \code{learnr} tutorials can access files in a \verb{data/} directory
 the same directory as the tutorial's R Markdown file. \code{use_data_dir()} allows
 you to expose files in a different directory (e.g. the \verb{data/} directory of a
 different tutorial) to avoid duplicating files.
+}
+\examples{
+\dontrun{
+use_data_dir("../other_tutorial/data")
+}
 }

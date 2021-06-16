@@ -1,4 +1,4 @@
-#' Make files in a directory accessbile to tutorials
+#' Make files in a directory accessible to tutorials
 #'
 #' By default, `learnr` tutorials can access files in a `data/` directory within
 #' the same directory as the tutorial's R Markdown file. `use_data_dir()` allows
@@ -9,6 +9,9 @@
 #'
 #' @return Invisibly returns the specified directory
 #' @export
+#' @examples \dontrun{
+#' use_data_dir("../other_tutorial/data")
+#' }
 
 use_data_dir <- function(dir = "data") {
   if (!dir.exists(dir)) {
