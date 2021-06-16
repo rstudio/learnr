@@ -23,6 +23,13 @@ use_data_dir <- function(dir = "data") {
 }
 
 copy_data_dir <- function(exercise_dir) {
+  # First check `options()`, then environment variables, then default to "data/"
+  source_dir <- getOption(
+    "learnr.data_dir", default = Sys.getenv("LEARNR_DATA_DIR", unset = "data")
+  )
+
+  if (!dir.exists(source_dir)) {return(invisible(NULL))}
+
   dest_dir <- file.path(exercise_dir, "data")
   dir.create(dest_dir)
 
@@ -32,16 +39,7 @@ copy_data_dir <- function(exercise_dir) {
     ))
   }
 
-  # First check `options()`, then environment variables, then default to "data/"
-  source_dir <- getOption(
-    "learnr.data_dir", default = Sys.getenv("LEARNR_DATA_DIR", unset = "data")
-  )
-
-  if (!dir.exists(source_dir)) {
-    rlang::abort(cli::format_warning(
-      'The data directory "{.path {source_dir}}" could not be found.'
-    ))
-  }
-
   file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
+
+  return(invisible(dest_dir))
 }
