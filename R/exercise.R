@@ -300,6 +300,15 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   dir.create(exercise_dir)
   on.exit(unlink(exercise_dir), add = TRUE)
 
+  # Copy files from data directory into exercise
+  dest_dir <- file.path(exercise_dir, "data")
+  dir.create(dest_dir)
+  # First check `options()`, then environment variables, then default to "data/"
+  source_dir <- getOption(
+    "learnr.data_dir", default = Sys.getenv("LEARNR_DATA_DIR", unset = "data")
+  )
+  file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
+
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
   if (length(exercise$code_check)) {
@@ -497,9 +506,6 @@ render_exercise <- function(exercise, envir) {
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
     local({
-      # Copy data files into tutorial working directory
-      copy_data_files(get_option_exercise_files(exercise))
-
       if (length(rmd_src_prep) > 0) {
         rmd_file_prep <- "exercise_prep.Rmd"
         writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
