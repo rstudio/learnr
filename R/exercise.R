@@ -301,13 +301,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   on.exit(unlink(exercise_dir), add = TRUE)
 
   # Copy files from data directory into exercise
-  dest_dir <- file.path(exercise_dir, "data")
-  dir.create(dest_dir)
-  # First check `options()`, then environment variables, then default to "data/"
-  source_dir <- getOption(
-    "learnr.data_dir", default = Sys.getenv("LEARNR_DATA_DIR", unset = "data")
-  )
-  file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
+  copy_data_dir(exercise_dir)
 
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
