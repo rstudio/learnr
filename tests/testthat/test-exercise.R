@@ -486,6 +486,28 @@ test_that("options() are protected from user modification", {
   expect_match(getOption("test"),  "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
+    user_code   = "getOption('test')",
+    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label = "setup"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "SETUP", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code    = "options(test = 'USER')\ngetOption('test')",
+    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label = "setup"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
     user_code    = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')"
   )
@@ -498,6 +520,18 @@ test_that("options() are protected from user modification", {
   ex <- mock_exercise(
     user_code    = "options(test = 'USER')\ngetOption('test')",
     global_setup = "options(test = 'GLOBAL')"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "USER",   fixed = TRUE)
+  expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code    = "options(test = 'USER')\ngetOption('test')",
+    global_setup = "options(test = 'GLOBAL')",
+    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label  = "setup"
   )
   output <- evaluate_exercise(
     ex, envir = new.env(), evaluate_global_setup = TRUE
