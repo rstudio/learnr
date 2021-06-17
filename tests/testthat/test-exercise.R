@@ -473,3 +473,39 @@ test_that("exercise versions upgrade correctly", {
   ex_99_broken$label <- NULL
   expect_error(upgrade_exercise(ex_99_broken))
 })
+
+test_that("options() are protected from user modification", {
+  withr::with_options(
+    list(test = "WITHR"),
+    {
+      expect_match(getOption("test"), "WITHR", fixed = TRUE)
+
+      ex <- mock_exercise(
+        user_code = "options(test = 'USER')\ngetOption('test')"
+      )
+      output <- evaluate_exercise(ex, envir = new.env())
+      expect_match(output$html_output, "USER", fixed = TRUE)
+      expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+
+      ex <- mock_exercise(
+        user_code    = "getOption('test')",
+        global_setup = "options(test = 'GLOBAL')"
+      )
+      output <- evaluate_exercise(
+        ex, envir = new.env(), evaluate_global_setup = TRUE
+      )
+      expect_match(output$html_output, "GLOBAL", fixed = TRUE)
+      expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+
+      ex <- mock_exercise(
+        user_code    = "options(test = 'USER')\ngetOption('test')",
+        global_setup = "options(test = 'GLOBAL')"
+      )
+      output <- evaluate_exercise(
+        ex, envir = new.env(), evaluate_global_setup = TRUE
+      )
+      expect_match(output$html_output, "USER",   fixed = TRUE)
+      expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+    }
+  )
+})
