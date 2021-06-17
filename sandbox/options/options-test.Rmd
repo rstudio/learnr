@@ -1,0 +1,28 @@
+---
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+options("test" = "test")
+```
+
+### This tests `options()`
+
+```{r get_option, exercise = TRUE}
+getOption("test")
+```
+
+```{r set_option, exercise = TRUE}
+options(test = "not a test")
+getOption("test")
+```
+
+```{r get_option_again, exercise = TRUE}
+getOption("test")
+```

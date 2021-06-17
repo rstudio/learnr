@@ -294,7 +294,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
@@ -317,10 +316,18 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
+  # Store `options()` before any chunks have been evaluated
+  if (!exists("options", mode = "list")) {
+    options <- options()
+  }
+
   # Resolve knitr options for the exercise and setup chunks
-  rmd_results <- withr::with_dir(
-    exercise_dir,
-    render_exercise(exercise, envir)
+  rmd_results <- withr::with_options(
+    options,
+    withr::with_dir(
+      exercise_dir,
+      render_exercise(exercise, envir)
+    )
   )
 
   if (is_exercise_result(rmd_results)) {
