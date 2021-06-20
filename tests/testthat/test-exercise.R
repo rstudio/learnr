@@ -473,3 +473,98 @@ test_that("exercise versions upgrade correctly", {
   ex_99_broken$label <- NULL
   expect_error(upgrade_exercise(ex_99_broken))
 })
+
+test_that("data files", {
+  withr::with_tempdir({
+    dir.create("data")
+    writeLines("ORIGINAL", "data/test.txt")
+
+    ex <- mock_exercise(
+      user_code = 'readLines("data/test.txt")'
+    )
+    output <- evaluate_exercise(ex, envir = new.env())
+    expect_match(output$html_output,         "ORIGINAL", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
+
+    ex <- mock_exercise(
+      user_code = '
+      writeLines("MODIFIED", "data/test.txt")
+      readLines("data/test.txt")
+      '
+    )
+    output <- evaluate_exercise(ex, envir = new.env())
+    expect_match(output$html_output,         "MODIFIED", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
+  })
+
+  withr::with_tempdir({
+    dir.create("data")
+    writeLines("DEFAULT", "data/test.txt")
+    dir.create("nested/structure/data", recursive = TRUE)
+    writeLines("NESTED", "nested/structure/test.txt")
+
+    ex <- mock_exercise(
+      user_code = 'readLines("data/test.txt")'
+    )
+    output <- evaluate_exercise(ex, envir = new.env())
+    expect_match(output$html_output, "DEFAULT", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+
+    ex <- mock_exercise(
+      user_code    = 'readLines("data/test.txt")',
+      global_setup = 'use_data_dir("nested/structure")'
+    )
+    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+    expect_match(output$html_output, "NESTED", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+
+    ex <- mock_exercise(
+      user_code = '
+        writeLines("MODIFIED", "data/test.txt")
+        readLines("data/test.txt")
+      ',
+      global_setup = 'use_data_dir("nested/structure")'
+    )
+    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+    expect_match(output$html_output, "MODIFIED", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+
+    withr::with_envvar(list("LEARNR_DATA_DIR" = "envvar"), {
+      dir.create("envvar")
+      writeLines("ENVVAR", "envvar/test.txt")
+
+      ex <- mock_exercise(
+        user_code = 'readLines("data/test.txt")'
+      )
+      output <- evaluate_exercise(ex, envir = new.env())
+      expect_match(output$html_output, "ENVVAR", fixed = TRUE)
+      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+
+      ex <- mock_exercise(
+        user_code    = 'readLines("data/test.txt")',
+        global_setup = 'use_data_dir("nested/structure")'
+      )
+      output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+      expect_match(output$html_output, "ENVVAR", fixed = TRUE)
+      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+
+      ex <- mock_exercise(
+        user_code = '
+          writeLines("MODIFIED", "data/test.txt")
+          readLines("data/test.txt")
+        ',
+        global_setup = 'use_data_dir("nested/structure")'
+      )
+      output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+      expect_match(output$html_output, "MODIFIED", fixed = TRUE)
+      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+      expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+    })
+  })
+})
