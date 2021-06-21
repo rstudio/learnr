@@ -474,7 +474,9 @@ test_that("exercise versions upgrade correctly", {
   expect_error(upgrade_exercise(ex_99_broken))
 })
 
-test_that("options() are protected from user modification", {
+# global options are restored after running user code ---------------------
+
+test_that("options() are protected from student modification", {
   withr::local_options(test = "WITHR")
   expect_match(getOption("test"), "WITHR", fixed = TRUE)
 
@@ -484,7 +486,9 @@ test_that("options() are protected from user modification", {
   output <- evaluate_exercise(ex, envir = new.env())
   expect_match(output$html_output, "USER", fixed = TRUE)
   expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+})
 
+test_that("options() can be set in setup chunk", {
   ex <- mock_exercise(
     user_code   = "getOption('test')",
     chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
@@ -506,7 +510,9 @@ test_that("options() are protected from user modification", {
   )
   expect_match(output$html_output, "USER", fixed = TRUE)
   expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+})
 
+test_that("options() in global setup chunk are preserved", {
   ex <- mock_exercise(
     user_code    = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')"
@@ -540,7 +546,7 @@ test_that("options() are protected from user modification", {
   expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
 })
 
-test_that("envvars are protected from user modification", {
+test_that("envvars are protected from student modification", {
   withr::local_envvar(list(TEST = "WITHR"))
   expect_match(Sys.getenv("TEST"), "WITHR", fixed = TRUE)
 
