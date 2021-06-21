@@ -18,7 +18,7 @@ use_data_dir <- function(dir = "data") {
     rlang::warn(paste0('The data directory "', dir, '" could not be found.'))
   }
 
-  options(learnr.data_dir = dir)
+  options(tutorial.data.dir = dir)
 
   invisible(dir)
 }
