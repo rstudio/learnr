@@ -26,7 +26,7 @@ use_data_dir <- function(dir = "data") {
 copy_data_dir <- function(exercise_dir) {
   # First check environment variable, then options(), then default to "data/"
   source_dir <- Sys.getenv(
-    "LEARNR_DATA_DIR", unset = getOption("learnr.data_dir", default = "data")
+    "TUTORIAL_DATA_DIR", unset = getOption("tutorial.data.dir", default = "data")
   )
 
   if (!dir.exists(source_dir)) {
