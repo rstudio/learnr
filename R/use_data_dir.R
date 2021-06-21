@@ -24,9 +24,9 @@ use_data_dir <- function(dir = "data") {
 }
 
 copy_data_dir <- function(exercise_dir) {
-  # First check environment variable, then options(), then default to "data/"
-  source_dir <- Sys.getenv(
-    "TUTORIAL_DATA_DIR", unset = getOption("tutorial.data.dir", default = "")
+  # First check options(), then environment variable, then default to "data/"
+  source_dir <- getOption(
+    "tutorial.data.dir", default = Sys.getenv("TUTORIAL_DATA_DIR", unset = "")
   )
 
   if (identical(source_dir, "")) {
