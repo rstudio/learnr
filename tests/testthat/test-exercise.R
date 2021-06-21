@@ -490,6 +490,16 @@ test_that("files in data/ directory can be accessed", {
   })
 })
 
+test_that("no issues if data directory does not exist", {
+  withr::with_tempdir({
+    ex <- mock_exercise(
+      user_code = '"SUCCESS"'
+    )
+    output <- evaluate_exercise(ex, envir = new.env())
+    expect_match(output$html_output,         "SUCCESS", fixed = TRUE)
+  })
+})
+
 test_that("files in data/ directory are protected from modification", {
   withr::with_tempdir({
     dir.create("data")
@@ -542,6 +552,21 @@ test_that("alternate data directory specified with `use_data_dir()`", {
     expect_match(output$html_output, "MODIFIED", fixed = TRUE)
     expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
     expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+  })
+})
+
+test_that("error if `use_data_dir()` directory does not exist", {
+  withr::with_tempdir({
+    ex <- mock_exercise(
+      user_code    = 'readLines("data/test.txt")',
+      global_setup = 'use_data_dir("nested/structure")'
+    )
+    expect_error(
+      suppressWarnings(
+        evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+      ),
+      "weren't able to find the data directory"
+    )
   })
 })
 
