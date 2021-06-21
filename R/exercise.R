@@ -316,10 +316,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
-  # Protect global options and environment vars from modification by student
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
-
   # Render exercise in temporary exercise directory
   rmd_results <- withr::with_dir(
     exercise_dir,
@@ -424,6 +420,10 @@ get_checker_func <- function(exercise, name, envir) {
 }
 
 render_exercise <- function(exercise, envir) {
+  # Protect global options and environment vars from modification by student
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
+
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
 
