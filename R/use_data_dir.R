@@ -35,7 +35,10 @@ copy_data_dir <- function(exercise_dir) {
   dir.create(dest_dir)
 
   if (!dir.exists(dest_dir)) {
-    rlang::abort('The user-facing data directory was not created successfully.')
+    rlang::abort(paste(
+      "An error occurred:",
+      "we weren't able to create the data directory for this exercise."
+    ))
   }
 
   file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
