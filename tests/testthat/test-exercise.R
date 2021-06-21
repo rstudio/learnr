@@ -539,3 +539,15 @@ test_that("options() are protected from user modification", {
   expect_match(output$html_output, "USER",   fixed = TRUE)
   expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
 })
+
+test_that("envvars are protected from user modification", {
+  withr::local_envvar(list(TEST = "WITHR"))
+  expect_match(Sys.getenv("TEST"), "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code = "Sys.setenv(TEST = 'USER')\nSys.getenv('TEST')"
+  )
+  output <- evaluate_exercise(ex, envir = new.env())
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(Sys.getenv("TEST"),  "WITHR", fixed = TRUE)
+})

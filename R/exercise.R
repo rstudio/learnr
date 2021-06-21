@@ -316,13 +316,14 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
-  # Render exercise in temporary exercise directory, protecting global options
-  rmd_results <- withr::with_options(
-    list(),
-    withr::with_dir(
-      exercise_dir,
-      render_exercise(exercise, envir)
-    )
+  # Protect global options and environment vars from modification by student
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
+
+  # Render exercise in temporary exercise directory
+  rmd_results <- withr::with_dir(
+    exercise_dir,
+    render_exercise(exercise, envir)
   )
 
   if (is_exercise_result(rmd_results)) {
