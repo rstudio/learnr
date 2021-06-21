@@ -26,13 +26,21 @@ use_data_dir <- function(dir = "data") {
 copy_data_dir <- function(exercise_dir) {
   # First check environment variable, then options(), then default to "data/"
   source_dir <- Sys.getenv(
-    "TUTORIAL_DATA_DIR", unset = getOption("tutorial.data.dir", default = "data")
+    "TUTORIAL_DATA_DIR", unset = getOption("tutorial.data.dir", default = "")
   )
 
+  if (identical(source_dir, "")) {
+    if (dir.exists("data")) {
+      source_dir <- "data"
+    } else {
+      return(invisible(NULL))
+    }
+  }
+
   if (!dir.exists(source_dir)) {
-    if (source_dir == "data") return(invisible(NULL))
     rlang::abort(
-      err_msg("we weren't able to find the data directory for this exercise.")
+      paste("An error occured:",
+            "we weren't able to find the data directory for this exercise.")
     )
   }
 
@@ -41,15 +49,12 @@ copy_data_dir <- function(exercise_dir) {
 
   if (!dir.exists(dest_dir)) {
     rlang::abort(
-      err_msg("we weren't able to create the data directory for this exercise.")
+      paste("An error occurred:",
+            "we weren't able to create the data directory for this exercise.")
     )
   }
 
   file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
 
   return(invisible(dest_dir))
-}
-
-err_msg <- function(...) {
-  paste("An error occurred:", ...)
 }
