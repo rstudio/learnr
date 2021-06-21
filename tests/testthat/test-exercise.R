@@ -489,6 +489,8 @@ test_that("options() are protected from student modification", {
 })
 
 test_that("options() can be set in setup chunk", {
+  withr::local_options(test = "WITHR")
+
   ex <- mock_exercise(
     user_code   = "getOption('test')",
     chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
@@ -513,6 +515,8 @@ test_that("options() can be set in setup chunk", {
 })
 
 test_that("options() in global setup chunk are preserved", {
+  withr::local_options(test = "WITHR")
+
   ex <- mock_exercise(
     user_code    = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')"
