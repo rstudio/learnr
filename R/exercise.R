@@ -316,14 +316,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
-  # Store `options()` before any chunks have been evaluated
-  if (!exists("options", mode = "list")) {
-    options <- options()
-  }
-
-  # Resolve knitr options for the exercise and setup chunks
+  # Render exercise in temporary exercise directory, protecting global options
   rmd_results <- withr::with_options(
-    options,
+    list(),
     withr::with_dir(
       exercise_dir,
       render_exercise(exercise, envir)
