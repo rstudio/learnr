@@ -275,7 +275,9 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 #   been executed, so they'd typically use `FALSE`, the default. Remote
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
-evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+evaluate_exercise <- function(
+  exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
+) {
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -301,7 +303,17 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   on.exit(unlink(exercise_dir), add = TRUE)
 
   # Copy files from data directory into exercise
-  copy_data_dir(exercise_dir)
+  if (is.null(data_dir)) {
+    # First check options(), then environment variable, then default to "data/"
+    source_dir <- getOption(
+      "tutorial.data.dir",
+      default = Sys.getenv(
+        "TUTORIAL_DATA_DIR",
+        unset = if (dir.exists("data")) {"data"} else {""}
+      )
+    )
+  }
+  copy_data_dir(source_dir, exercise_dir)
 
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do

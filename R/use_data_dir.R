@@ -23,18 +23,9 @@ use_data_dir <- function(dir = "data") {
   invisible(dir)
 }
 
-copy_data_dir <- function(exercise_dir) {
-  # First check options(), then environment variable, then default to "data/"
-  source_dir <- getOption(
-    "tutorial.data.dir", default = Sys.getenv("TUTORIAL_DATA_DIR", unset = "")
-  )
-
+copy_data_dir <- function(source_dir, exercise_dir) {
   if (identical(source_dir, "")) {
-    if (dir.exists("data")) {
-      source_dir <- "data"
-    } else {
-      return(invisible(NULL))
-    }
+    return(invisible(NULL))
   }
 
   if (!dir.exists(source_dir)) {
