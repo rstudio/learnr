@@ -29,19 +29,27 @@ copy_data_dir <- function(exercise_dir) {
     "LEARNR_DATA_DIR", unset = getOption("learnr.data_dir", default = "data")
   )
 
-  if (!dir.exists(source_dir)) {return(invisible(NULL))}
+  if (!dir.exists(source_dir)) {
+    if (source_dir == "data") return(invisible(NULL))
+    rlang::abort(
+      err_msg("we weren't able to find the data directory for this exercise.")
+    )
+  }
 
   dest_dir <- file.path(exercise_dir, "data")
   dir.create(dest_dir)
 
   if (!dir.exists(dest_dir)) {
-    rlang::abort(paste(
-      "An error occurred:",
-      "we weren't able to create the data directory for this exercise."
-    ))
+    rlang::abort(
+      err_msg("we weren't able to create the data directory for this exercise.")
+    )
   }
 
   file.copy(dir(source_dir, full.names = TRUE), dest_dir, recursive = TRUE)
 
   return(invisible(dest_dir))
+}
+
+err_msg <- function(...) {
+  paste("An error occurred:", ...)
 }
