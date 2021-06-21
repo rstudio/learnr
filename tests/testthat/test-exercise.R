@@ -517,6 +517,36 @@ test_that("files in data/ directory are protected from modification", {
   })
 })
 
+test_that("alternate data directory specified with envvar", {
+  withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
+
+  withr::with_tempdir({
+    dir.create("data")
+    writeLines("DEFAULT", "data/test.txt")
+    dir.create("envvar")
+    writeLines("ENVVAR", "envvar/test.txt")
+
+    ex <- mock_exercise(
+      user_code = 'readLines("data/test.txt")'
+    )
+    output <- evaluate_exercise(ex, envir = new.env())
+    expect_match(output$html_output, "ENVVAR", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+
+    ex <- mock_exercise(
+      user_code = '
+      writeLines("MODIFIED", "data/test.txt")
+      readLines("data/test.txt")
+    '
+    )
+    output <- evaluate_exercise(ex, new.env())
+    expect_match(output$html_output, "MODIFIED", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+  })
+})
+
 test_that("alternate data directory specified with `use_data_dir()`", {
   withr::with_tempdir({
     dir.create("data")
@@ -570,45 +600,25 @@ test_that("error if `use_data_dir()` directory does not exist", {
   })
 })
 
-test_that("alternate data directory specified with envvar", {
+test_that("data directory option has precendence over env var", {
+  withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
+
   withr::with_tempdir({
-    withr::with_envvar(list("TUTORIAL_DATA_DIR" = "envvar"), {
-      dir.create("data")
-      writeLines("DEFAULT", "data/test.txt")
-      dir.create("nested/structure/data", recursive = TRUE)
-      writeLines("NESTED", "nested/structure/test.txt")
-      dir.create("envvar")
-      writeLines("ENVVAR", "envvar/test.txt")
+    dir.create("data")
+    writeLines("DEFAULT", "data/test.txt")
+    dir.create("nested/structure/data", recursive = TRUE)
+    writeLines("NESTED", "nested/structure/test.txt")
+    dir.create("envvar")
+    writeLines("ENVVAR", "envvar/test.txt")
 
-      ex <- mock_exercise(
-        user_code = 'readLines("data/test.txt")'
-      )
-      output <- evaluate_exercise(ex, envir = new.env())
-      expect_match(output$html_output, "ENVVAR", fixed = TRUE)
-      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
-
-      ex <- mock_exercise(
-        user_code    = 'readLines("data/test.txt")',
-        global_setup = 'use_data_dir("nested/structure")'
-      )
-      output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-      expect_match(output$html_output, "ENVVAR", fixed = TRUE)
-      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
-
-      ex <- mock_exercise(
-        user_code = '
-          writeLines("MODIFIED", "data/test.txt")
-          readLines("data/test.txt")
-        ',
-        global_setup = 'use_data_dir("nested/structure")'
-      )
-      output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-      expect_match(output$html_output, "MODIFIED", fixed = TRUE)
-      expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-      expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-      expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
-    })
+    ex <- mock_exercise(
+      user_code    = 'readLines("data/test.txt")',
+      global_setup = 'use_data_dir("nested/structure")'
+    )
+    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+    expect_match(output$html_output, "NESTED", fixed = TRUE)
+    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
+    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+    expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
   })
 })
