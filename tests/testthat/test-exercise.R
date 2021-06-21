@@ -474,7 +474,9 @@ test_that("exercise versions upgrade correctly", {
   expect_error(upgrade_exercise(ex_99_broken))
 })
 
-test_that("data files", {
+# data files -----------------------------------------------------------------
+
+test_that("files in data/ directory can be accessed", {
   withr::with_tempdir({
     dir.create("data")
     writeLines("ORIGINAL", "data/test.txt")
@@ -485,6 +487,13 @@ test_that("data files", {
     output <- evaluate_exercise(ex, envir = new.env())
     expect_match(output$html_output,         "ORIGINAL", fixed = TRUE)
     expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
+  })
+})
+
+test_that("files in data/ directory are protected from modification", {
+  withr::with_tempdir({
+    dir.create("data")
+    writeLines("ORIGINAL", "data/test.txt")
 
     ex <- mock_exercise(
       user_code = '
@@ -496,7 +505,9 @@ test_that("data files", {
     expect_match(output$html_output,         "MODIFIED", fixed = TRUE)
     expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
   })
+})
 
+test_that("alternate data directory specified with `use_data_dir()`", {
   withr::with_tempdir({
     dir.create("data")
     writeLines("DEFAULT", "data/test.txt")
@@ -531,8 +542,16 @@ test_that("data files", {
     expect_match(output$html_output, "MODIFIED", fixed = TRUE)
     expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
     expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+  })
+})
 
-    withr::with_envvar(list("LEARNR_DATA_DIR" = "envvar"), {
+test_that("alternate data directory specified with envvar", {
+  withr::with_tempdir({
+    withr::with_envvar(list("TUTORIAL_DATA_DIR" = "envvar"), {
+      dir.create("data")
+      writeLines("DEFAULT", "data/test.txt")
+      dir.create("nested/structure/data", recursive = TRUE)
+      writeLines("NESTED", "nested/structure/test.txt")
       dir.create("envvar")
       writeLines("ENVVAR", "envvar/test.txt")
 
