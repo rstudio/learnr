@@ -496,7 +496,7 @@ test_that("no issues if data directory does not exist", {
       user_code = '"SUCCESS"'
     )
     output <- evaluate_exercise(ex, envir = new.env())
-    expect_match(output$html_output,         "SUCCESS", fixed = TRUE)
+    expect_match(output$html_output, "SUCCESS", fixed = TRUE)
   })
 })
 
@@ -547,78 +547,17 @@ test_that("alternate data directory specified with envvar", {
   })
 })
 
-test_that("alternate data directory specified with `use_data_dir()`", {
-  withr::with_tempdir({
-    dir.create("data")
-    writeLines("DEFAULT", "data/test.txt")
-    dir.create("nested/structure/data", recursive = TRUE)
-    writeLines("NESTED", "nested/structure/test.txt")
-
-    ex <- mock_exercise(
-      user_code = 'readLines("data/test.txt")'
-    )
-    output <- evaluate_exercise(ex, envir = new.env())
-    expect_match(output$html_output, "DEFAULT", fixed = TRUE)
-    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-
-    ex <- mock_exercise(
-      user_code    = 'readLines("data/test.txt")',
-      global_setup = 'use_data_dir("nested/structure")'
-    )
-    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-    expect_match(output$html_output, "NESTED", fixed = TRUE)
-    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-
-    ex <- mock_exercise(
-      user_code = '
-        writeLines("MODIFIED", "data/test.txt")
-        readLines("data/test.txt")
-      ',
-      global_setup = 'use_data_dir("nested/structure")'
-    )
-    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-    expect_match(output$html_output, "MODIFIED", fixed = TRUE)
-    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-  })
-})
-
-test_that("error if `use_data_dir()` directory does not exist", {
-  withr::with_tempdir({
-    ex <- mock_exercise(
-      user_code    = 'readLines("data/test.txt")',
-      global_setup = 'use_data_dir("nested/structure")'
-    )
-    expect_error(
-      suppressWarnings(
-        evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-      ),
-      "weren't able to find the data directory"
-    )
-  })
-})
-
-test_that("data directory option has precendence over env var", {
+test_that("error if env var directory does not exist", {
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
 
   withr::with_tempdir({
     dir.create("data")
     writeLines("DEFAULT", "data/test.txt")
-    dir.create("nested/structure/data", recursive = TRUE)
-    writeLines("NESTED", "nested/structure/test.txt")
-    dir.create("envvar")
-    writeLines("ENVVAR", "envvar/test.txt")
 
-    ex <- mock_exercise(
-      user_code    = 'readLines("data/test.txt")',
-      global_setup = 'use_data_dir("nested/structure")'
+    ex <- mock_exercise(user_code = 'readLines("data/test.txt")')
+    expect_error(
+      evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+      class = "learnr.missing_source_dir"
     )
-    output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-    expect_match(output$html_output, "NESTED", fixed = TRUE)
-    expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-    expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-    expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
   })
 })

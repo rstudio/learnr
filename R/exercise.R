@@ -304,13 +304,10 @@ evaluate_exercise <- function(
 
   # Copy files from data directory into exercise
   if (is.null(data_dir)) {
-    # First check options(), then environment variable, then default to "data/"
-    source_dir <- getOption(
-      "tutorial.data.dir",
-      default = Sys.getenv(
-        "TUTORIAL_DATA_DIR",
-        unset = if (dir.exists("data")) {"data"} else {""}
-      )
+    # First check environment variable, then default to "data/" if it exists
+    source_dir <- Sys.getenv(
+      "TUTORIAL_DATA_DIR",
+      unset = if (dir.exists("data")) {"data"} else {""}
     )
   }
   copy_data_dir(source_dir, exercise_dir)
