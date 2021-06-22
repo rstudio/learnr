@@ -318,7 +318,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Resolve knitr options for the exercise and setup chunks
-  # evaluate() ####
   rmd_results <- withr::with_dir(
     exercise_dir,
     tryCatch(
@@ -555,7 +554,6 @@ render_exercise <- function(exercise, envir) {
     envir_result <- duplicate_env(envir_prep)
 
     # Now render user code for final result
-    # render() ####
     rmarkdown::render(
       input = rmd_file_user,
       output_format = output_format_exercise(user = TRUE),
