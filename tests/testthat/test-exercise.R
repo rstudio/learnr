@@ -140,11 +140,9 @@ test_that("render_exercise() returns identical envir_prep and envir_result if an
     error_check = "unevaluated, triggers error_check in render_exercise()"
   )
 
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-
-  # the error during render causes a checker evaluation, so we can recover
-  # the environments from the checker_args returned by the debug checker
-  exercise_result <- exercise_result$feedback$checker_args
+  exercise_result <- withr::with_tempdir(
+    tryCatch(render_exercise(exercise, new.env()), error = identity)
+  )
 
   expect_s3_class(exercise_result$last_value, "simpleError")
   expect_equal(conditionMessage(exercise_result$last_value), "boom")
@@ -162,11 +160,9 @@ test_that("render_exercise() returns envir_result up to error", {
     error_check = "unevaluated, triggers error_check in render_exercise()"
   )
 
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-
-  # the error during render causes a checker evaluation, so we can recover
-  # the environments from the checker_args returned by the debug checker
-  exercise_result <- exercise_result$feedback$checker_args
+  exercise_result <- withr::with_tempdir(
+    tryCatch(render_exercise(exercise, new.env()), error = identity)
+  )
 
   expect_s3_class(exercise_result$last_value, "simpleError")
   expect_equal(conditionMessage(exercise_result$last_value), "boom")
@@ -184,13 +180,17 @@ test_that("render_exercise() with errors and no checker returns exercise result 
     setup_label = "setup-1"
   )
 
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
+  exercise_result <- withr::with_tempdir(
+    tryCatch(render_exercise(exercise, new.env()), error = identity)
+  )
   expect_s3_class(exercise_result, "learnr_exercise_result")
   expect_identical(exercise_result$error_message, "setup")
   expect_null(exercise_result$feedback)
 
   exercise <- mock_exercise(user_code = "stop('user')")
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
+  exercise_result <- withr::with_tempdir(
+    tryCatch(render_exercise(exercise, new.env()), error = identity)
+  )
   expect_s3_class(exercise_result, "learnr_exercise_result")
   expect_identical(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
@@ -228,8 +228,18 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
 
   files <- expect_message(
     withr::with_tempdir({
-      before <-  dir()
-      res <- render_exercise(exercise, new.env())
+      before <- dir()
+      e <- tryCatch(render_exercise(exercise, new.env()), error = identity)
+      res <- try_checker(
+        exercise, "exercise.checker",
+        check_code = exercise$error_check,
+        envir_result = e$envir_result,
+        evaluate_result = e$evaluate_result,
+        envir_prep = e$envir_prep,
+        last_value = e$e,
+        engine = exercise$engine
+      )
+
       list(
         before = before,
         before_error = get("dir_setup", res$feedback$checker_args$envir_prep),

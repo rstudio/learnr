@@ -318,9 +318,31 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Resolve knitr options for the exercise and setup chunks
+  # evaluate() ####
   rmd_results <- withr::with_dir(
     exercise_dir,
-    render_exercise(exercise, envir)
+    tryCatch(
+      render_exercise(exercise, envir),
+      error = function(e) {
+        if (length(exercise$error_check)) {
+          # Run the condition through an error checker
+          # (the exercise could be to throw an error!)
+          checker_feedback <- try_checker(
+            exercise, "exercise.checker",
+            check_code = exercise$error_check,
+            envir_result = e$envir_result,
+            evaluate_result = e$evaluate_result,
+            envir_prep = e$envir_prep,
+            last_value = e$e,
+            engine = exercise$engine
+          )
+          if (is_exercise_result(checker_feedback)) {
+            return(checker_feedback)
+          }
+        }
+        exercise_result_error(e$msg)
+      }
+    )
   )
 
   if (is_exercise_result(rmd_results)) {
@@ -533,6 +555,7 @@ render_exercise <- function(exercise, envir) {
     envir_result <- duplicate_env(envir_prep)
 
     # Now render user code for final result
+    # render() ####
     rmarkdown::render(
       input = rmd_file_user,
       output_format = output_format_exercise(user = TRUE),
@@ -548,22 +571,14 @@ render_exercise <- function(exercise, envir) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
-    if (length(exercise$error_check)) {
-      # Run the condition through an error checker (the exercise could be to throw an error!)
-      checker_feedback <- try_checker(
-        exercise, "exercise.checker",
-        check_code = exercise$error_check,
-        envir_result = envir_result,
-        evaluate_result = evaluate_result,
-        envir_prep = envir_prep,
-        last_value = e,
-        engine = exercise$engine
-      )
-      if (is_exercise_result(checker_feedback)) {
-        return(checker_feedback)
-      }
-    }
-    exercise_result_error(msg)
+    rlang::abort(
+      class = "learnr_exercise_result",
+      envir_result = envir_result,
+      evaluate_result = evaluate_result,
+      envir_prep = envir_prep,
+      last_value = e,
+      error_message = msg
+    )
   })
 
   if (is_exercise_result(output_file)) {
