@@ -9,8 +9,8 @@ test_that("random_phrases()", {
   expect_equal(random_phrases("encouragement"), random_phrases("encouragement", "en"))
   knitr::opts_knit$set("tutorial.language" = NULL)
 
-  expect_equal(random_phrases("praise", "debug"), "RANDOM PRAISE.")
-  expect_equal(random_phrases("encouragement", "debug"), "RANDOM ENCOURAGEMENT.")
+  expect_equal(random_phrases("praise", "testing"), "RANDOM PRAISE.")
+  expect_equal(random_phrases("encouragement", "testing"), "RANDOM ENCOURAGEMENT.")
 })
 
 test_that("random_phrases_add()", {
