@@ -561,3 +561,56 @@ test_that("envvars are protected from student modification", {
   expect_match(output$html_output, "USER", fixed = TRUE)
   expect_match(Sys.getenv("TEST"),  "WITHR", fixed = TRUE)
 })
+
+test_that("options are protected from both user and author modification", {
+  withr::local_options(list(TEST = "APP"))
+
+  ex <- mock_exercise(
+    user_code = "user <- getOption('TEST')\noptions(TEST = 'USER')",
+    check = I(paste(
+      'check <- getOption("TEST")',
+      'options(TEST = "CHECK")',
+      'list(user = envir_result$user, check = check)',
+      sep = "\n"
+    ))
+  )
+
+  res <- evaluate_exercise(ex, new.env())$feedback$checker_result
+  res$after_eval <- getOption("TEST")
+
+  # user code sees TEST = "APP" but overwrites it
+  expect_equal(res$user, "APP")
+
+  # it's reset after render_exercise() so check code sees "APP", also overwrites
+  expect_equal(res$check, "APP")
+
+  # evaluate_exercise() restores the TEST option after checking too
+  expect_equal(res$after_eval, "APP")
+})
+
+test_that("env vars are protected from both user and author modification", {
+  withr::local_envvar(list(TEST = "APP"))
+
+  ex <- mock_exercise(
+    user_code = "user <- Sys.getenv('TEST')\nSys.setenv(TEST = 'USER')",
+    check = I(paste(
+      'check <- Sys.getenv("TEST")',
+      'Sys.setenv(TEST = "CHECK")',
+      'list(user = envir_result$user, check = check)',
+      sep = "\n"
+    ))
+  )
+
+  res <- evaluate_exercise(ex, new.env())$feedback$checker_result
+  res$after_eval <- Sys.getenv("TEST")
+
+  # user code sees TEST = "APP" but overwrites it
+  expect_equal(res$user, "APP")
+
+  # it's reset after render_exercise() so check code sees "APP", also overwrites
+  expect_equal(res$check, "APP")
+
+  # evaluate_exercise() restores the TEST option after checking too
+  expect_equal(res$after_eval, "APP")
+})
+
