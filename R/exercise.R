@@ -307,7 +307,7 @@ evaluate_exercise <- function(
     # First check environment variable, then default to "data/" if it exists
     source_dir <- Sys.getenv(
       "TUTORIAL_DATA_DIR",
-      unset = if (dir.exists("data")) {"data"} else {""}
+      unset = if (dir.exists("data")) "data" else ""
     )
   }
   copy_data_dir(source_dir, exercise_dir)
