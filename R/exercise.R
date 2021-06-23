@@ -1,4 +1,4 @@
-current_exercise_version <- "2"
+current_exercise_version <- "3"
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
@@ -24,7 +24,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
       tutorial_id = read_request(session, "tutorial.tutorial_id"),
       tutorial_version = read_request(session, "tutorial.tutorial_version"),
       user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = as.character(utils::packageVersion("learnr"))
+      learnr_version = as.character(utils::packageVersion("learnr")),
+      language = read_request(session, "tutorial.language")
     )
 
     # short circuit for restore (we restore some outputs like errors so that
@@ -210,6 +211,7 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
   current_version <- as.numeric(current_exercise_version)
 
   if (exercise$version == 1) {
+    # upgrade from version 1 to version 2
     # exercise version 2 added $tutorial information
     exercise$tutorial <- list(
       tutorial_id = "tutorial_id:UPGRADE learnr",
@@ -217,10 +219,16 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
       user_id = "user_id:UPGRADE learnr"
     )
     exercise$version <- 2
-    exercise
   }
 
-  # Future logic to upgrade an exercise from version 2 to version N goes here...
+  if (exercise$version == 2) {
+    # upgrade from version 2 to version 3
+    # => add language $tutorial information
+    exercise$tutorial$language <- i18n_get_language_option()
+    exercise$version <- 3
+  }
+
+  # Future logic to upgrade an exercise from version 3 to version N goes here...
 
   if (identical(exercise$version, current_version)) {
     return(exercise)
@@ -282,6 +290,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     exercise,
     require_items = if (evaluate_global_setup) "global_setup"
   )
+
+  i18n_set_language_option(exercise$tutorial$language)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
@@ -436,12 +446,10 @@ render_exercise <- function(exercise, envir) {
   # Put the exercise in a minimal HTML doc
   output_format_exercise <- function(user = FALSE) {
     # start constructing knitr_options for the output format
-    knitr_options <- rmarkdown::knitr_options_html(
-      fig_width = exercise$options$fig.width,
-      fig_height = exercise$options$fig.height,
-      fig_retina = exercise$options$fig.retina,
-      keep_md = FALSE
-    )
+    knitr_options <- exercise$options
+    # Recreate the logic of `rmarkdown::knitr_options_html()` by setting these options
+    knitr_options$opts_chunk$dev <- "png"
+    knitr_options$opts_chunk$dpi <- 96
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
@@ -624,7 +632,11 @@ exercise_code_chunks_prep <- function(exercise) {
 }
 
 exercise_code_chunks_user <- function(exercise) {
-  exercise_code_chunks(exercise_get_chunks(exercise, "user"))
+  # chunk options on the user chunk just duplicate the exercise$options
+  # which are set globally for the exercise
+  user_chunk <- exercise_get_chunks(exercise, "user")
+  user_chunk[[1]]$opts <- NULL
+  exercise_code_chunks(user_chunk)
 }
 
 exercise_code_chunks <- function(chunks) {
