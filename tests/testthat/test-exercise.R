@@ -514,7 +514,7 @@ test_that("options() can be set in setup chunk", {
   expect_match(getOption("test"),  "WITHR", fixed = TRUE)
 })
 
-test_that("options() in global setup chunk are preserved", {
+test_that("options() can be set in global setup chunk", {
   withr::local_options(test = "WITHR")
 
   ex <- mock_exercise(
@@ -525,7 +525,7 @@ test_that("options() in global setup chunk are preserved", {
     ex, envir = new.env(), evaluate_global_setup = TRUE
   )
   expect_match(output$html_output, "GLOBAL", fixed = TRUE)
-  expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR",  fixed = TRUE)
 
   ex <- mock_exercise(
     user_code    = "options(test = 'USER')\ngetOption('test')",
@@ -534,20 +534,20 @@ test_that("options() in global setup chunk are preserved", {
   output <- evaluate_exercise(
     ex, envir = new.env(), evaluate_global_setup = TRUE
   )
-  expect_match(output$html_output, "USER",   fixed = TRUE)
-  expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+  expect_match(output$html_output, "USER",  fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
-    user_code    = "options(test = 'USER')\ngetOption('test')",
+    user_code    = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')",
-    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    chunks       = list(mock_chunk("setup", "options(test = 'SETUP')")),
     setup_label  = "setup"
   )
   output <- evaluate_exercise(
     ex, envir = new.env(), evaluate_global_setup = TRUE
   )
-  expect_match(output$html_output, "USER",   fixed = TRUE)
-  expect_match(getOption("test"),  "GLOBAL", fixed = TRUE)
+  expect_match(output$html_output, "SETUP", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
 })
 
 test_that("envvars are protected from student modification", {
