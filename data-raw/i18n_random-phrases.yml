@@ -1,5 +1,5 @@
 praise:
-  debug:
+  testing:
     - RANDOM PRAISE.
   en:
     - Absolutely fabulous!
@@ -50,7 +50,7 @@ praise:
     - 🎉
     - 💯
 encouragement:
-  debug:
+  testing:
     - RANDOM ENCOURAGEMENT.
   en:
     - Please try again.
