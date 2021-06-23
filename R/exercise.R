@@ -284,6 +284,9 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
 evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+  # Protect global options and environment vars from permanent modification
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -303,7 +306,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   if (evaluate_global_setup) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
-
 
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
@@ -327,7 +329,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
-  # Resolve knitr options for the exercise and setup chunks
+  # Render exercise in temporary exercise directory
   rmd_results <- withr::with_dir(
     exercise_dir,
     render_exercise(exercise, envir)
@@ -431,6 +433,10 @@ get_checker_func <- function(exercise, name, envir) {
 }
 
 render_exercise <- function(exercise, envir) {
+  # Protect global options and environment vars from modification by student
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
+
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
 
@@ -830,6 +836,9 @@ debug_exercise_checker <- function(
   }
 
   str_env <- function(env) {
+    if (is.null(env)) {
+      return("NO ENVIRONMENT")
+    }
     vars <- ls(env)
     names(vars) <- vars
     x <- str_chr(lapply(vars, function(v) get(v, env)))

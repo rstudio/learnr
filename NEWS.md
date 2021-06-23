@@ -45,6 +45,7 @@ learnr (development version)
 * Clicking "Run Code" or using the keyboard shortcut (Cmd/Ctrl + Enter) now runs the selected code only, if any code is selected ([#512](https://github.com/rstudio/learnr/issues/512)).
 * `exercise_result()` no longer combines the code output and feedback; this now happens just before presenting the exercise result to the user ([#522](https://github.com/rstudio/learnr/pull/522)).
 * Correct/incorrect question markers are now configurable via CSS. You can change or style these markers using the `.tutorial-question .question-final .correct::before` and `.tutorial-qusetion .question-final .incorrect::before` selectors. A new helper function, `finalize_question()`, can be used to apply the `.question-final` class to custom learnr questions. ([#531](https://github.com/rstudio/learnr/pull/531))
+* `options()` and environment variables are now reset after rendering exercises so changes made by user input or checking code cannot affect other exercises. ([#542](https://github.com/rstudio/learnr/pull/542))
 
 ## Bug fixes
 
