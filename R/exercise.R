@@ -276,6 +276,9 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
 evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+  # Protect global options and environment vars from permanent modification
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
