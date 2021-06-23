@@ -129,7 +129,7 @@ i18n_span <- function(key, ..., opts = NULL) {
 }
 
 i18n_translations <- function() {
-  readRDS(system.file("i18n_translations", package = "learnr"))
+  readRDS(system.file("internals", "i18n_translations.rds", package = "learnr"))
 }
 
 i18n_set_language_option <- function(language = NULL) {

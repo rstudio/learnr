@@ -90,7 +90,7 @@ translations_list <-
   # Drop null keys again
   map_depth(3, compact)
 
-saveRDS(translations_list, file = here("inst/i18n_translations"), version = 2)
+saveRDS(translations_list, file = here("inst", "internals", "i18n_translations.rds"), version = 2)
 
 i18n_random_phrases <-
   here("data-raw", "i18n_random-phrases.yml") %>%
@@ -98,4 +98,4 @@ i18n_random_phrases <-
   map_depth(3, reencode_utf8) %>%
   map_depth(2, map_chr, stri_unescape_unicode)
 
-saveRDS(i18n_random_phrases, file = here("inst", "18n_random_phrases"), version = 2)
+saveRDS(i18n_random_phrases, file = here("inst", "internals", "i18n_random_phrases.rds"), version = 2)

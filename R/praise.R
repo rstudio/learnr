@@ -21,7 +21,7 @@ random_encouragement <- function(language = NULL) {
 }
 
 read_random_phrases <- function() {
-  readRDS(system.file("18n_random_phrases", package = "learnr"))
+  readRDS(system.file("internals", "i18n_random_phrases.rds", package = "learnr"))
 }
 
 random_phrases_languages <- function() {
