@@ -96,6 +96,6 @@ i18n_random_phrases <-
   here("data-raw", "i18n_random-phrases.yml") %>%
   yaml::read_yaml() %>%
   map_depth(3, reencode_utf8) %>%
-  map_depth(3, stri_unescape_unicode)
+  map_depth(2, map_chr, stri_unescape_unicode)
 
 saveRDS(i18n_random_phrases, file = here("inst", "18n_random_phrases"), version = 2)
