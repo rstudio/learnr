@@ -824,6 +824,9 @@ debug_exercise_checker <- function(
   }
 
   str_env <- function(env) {
+    if (is.null(env)) {
+      return("NO ENVIRONMENT")
+    }
     vars <- ls(env)
     names(vars) <- vars
     x <- str_chr(lapply(vars, function(v) get(v, env)))
