@@ -5,8 +5,7 @@ copy_data_dir <- function(source_dir, exercise_dir) {
 
   if (!dir.exists(source_dir)) {
     rlang::abort(
-      paste("An error occured:",
-            "we weren't able to find the data directory for this exercise."),
+      "An error occurred with the tutorial: the data directory does not exist.",
       class = "learnr.missing_source_dir"
     )
   }
