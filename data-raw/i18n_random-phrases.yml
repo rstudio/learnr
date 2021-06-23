@@ -39,7 +39,16 @@ praise:
     - You aced it!
     - You rock!
     - You should be proud.
-    - :)
+  emo:
+    - 😀
+    - 😁
+    - 😇
+    - 🥳
+    - 😻
+    - 😎
+    - 🥇
+    - 🎉
+    - 💯
 encouragement:
   debug:
     - RANDOM ENCOURAGEMENT.
@@ -54,3 +63,9 @@ encouragement:
     - Try it again. You get better each time.
     - Try it again. Perseverence is the key to success.
     - "That's okay: you learn more from mistakes than successes. Let's do it one more time."
+  emo:
+    - 🤗
+    - 🤘
+    - 💪
+    - 🤞
+    - 🙌
