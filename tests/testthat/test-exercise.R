@@ -481,22 +481,18 @@ test_that("files in data/ directory can be accessed", {
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
 
-  ex <- mock_exercise(
-    user_code = 'readLines("data/test.txt")'
-  )
-  output <- evaluate_exercise(ex, envir = new.env())
-  expect_match(output$html_output,         "ORIGINAL", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "ORIGINAL")
+  expect_equal(readLines("data/test.txt"),           "ORIGINAL")
 })
 
 test_that("no issues if data directory does not exist", {
   withr::local_dir(withr::local_tempdir())
 
-  ex <- mock_exercise(
-    user_code = '"SUCCESS"'
-  )
-  output <- evaluate_exercise(ex, envir = new.env())
-  expect_match(output$html_output, "SUCCESS", fixed = TRUE)
+  ex  <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "SUCCESS")
 })
 
 test_that("files in data/ directory are protected from modification", {
@@ -508,11 +504,12 @@ test_that("files in data/ directory are protected from modification", {
     user_code = '
     writeLines("MODIFIED", "data/test.txt")
     readLines("data/test.txt")
-    '
+    ',
+    check = TRUE
   )
-  output <- evaluate_exercise(ex, envir = new.env())
-  expect_match(output$html_output,         "MODIFIED", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "ORIGINAL", fixed = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
+  expect_equal(readLines("data/test.txt"),           "ORIGINAL")
 })
 
 test_that("alternate data directory specified with envvar", {
@@ -523,24 +520,23 @@ test_that("alternate data directory specified with envvar", {
   dir.create("envvar")
   writeLines("ENVVAR", "envvar/test.txt")
 
-  ex <- mock_exercise(
-    user_code = 'readLines("data/test.txt")'
-  )
-  output <- evaluate_exercise(ex, envir = new.env())
-  expect_match(output$html_output, "ENVVAR", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "ENVVAR")
+  expect_equal(readLines("data/test.txt"),           "DEFAULT")
+  expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
 
   ex <- mock_exercise(
     user_code = '
-    writeLines("MODIFIED", "data/test.txt")
-    readLines("data/test.txt")
-  '
+      writeLines("MODIFIED", "data/test.txt")
+      readLines("data/test.txt")
+    ',
+    check = TRUE
   )
-  output <- evaluate_exercise(ex, new.env())
-  expect_match(output$html_output, "MODIFIED", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
+  expect_equal(readLines("data/test.txt"),           "DEFAULT")
+  expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
 })
 
 test_that("error if env var directory does not exist", {
@@ -563,34 +559,34 @@ test_that("alternate data directory specified with `options()`", {
   dir.create("nested/structure/data", recursive = TRUE)
   writeLines("NESTED", "nested/structure/test.txt")
 
-  ex <- mock_exercise(
-    user_code = 'readLines("data/test.txt")'
-  )
-  output <- evaluate_exercise(ex, envir = new.env())
-  expect_match(output$html_output, "DEFAULT", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value,   "DEFAULT")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 
   ex <- mock_exercise(
     user_code    = 'readLines("data/test.txt")',
-    global_setup = 'options(tutorial.data_dir = "nested/structure")'
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
   )
-  output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_match(output$html_output, "NESTED", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value,   "NESTED")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 
   ex <- mock_exercise(
     user_code = '
       writeLines("MODIFIED", "data/test.txt")
       readLines("data/test.txt")
     ',
-    global_setup = 'options(tutorial.data_dir = "nested/structure")'
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
   )
-  output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_match(output$html_output, "MODIFIED", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value,   "MODIFIED")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 })
 
 test_that("error if `options()` data directory does not exist", {
@@ -617,11 +613,12 @@ test_that("data directory option has precendence over env var", {
 
   ex <- mock_exercise(
     user_code    = 'readLines("data/test.txt")',
-    global_setup = 'options(tutorial.data_dir = "nested/structure")'
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
   )
-  output <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_match(output$html_output, "NESTED", fixed = TRUE)
-  expect_match(readLines("data/test.txt"), "DEFAULT", fixed = TRUE)
-  expect_match(readLines("nested/structure/test.txt"), "NESTED", fixed = TRUE)
-  expect_match(readLines("envvar/test.txt"), "ENVVAR", fixed = TRUE)
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value,   "NESTED")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
+  expect_equal(readLines("envvar/test.txt"),           "ENVVAR")
 })
