@@ -141,7 +141,9 @@ test_that("render_exercise() returns identical envir_prep and envir_result if an
   )
 
   exercise_result <- withr::with_tempdir(
-    tryCatch(render_exercise(exercise, new.env()), error = identity)
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
   )
 
   expect_s3_class(exercise_result$last_value, "simpleError")
@@ -161,7 +163,9 @@ test_that("render_exercise() returns envir_result up to error", {
   )
 
   exercise_result <- withr::with_tempdir(
-    tryCatch(render_exercise(exercise, new.env()), error = identity)
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
   )
 
   expect_s3_class(exercise_result$last_value, "simpleError")
@@ -181,7 +185,9 @@ test_that("render_exercise() with errors and no checker returns exercise result 
   )
 
   exercise_result <- withr::with_tempdir(
-    tryCatch(render_exercise(exercise, new.env()), error = identity)
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
   )
   expect_s3_class(exercise_result, "learnr_render_exercise_error")
   expect_identical(exercise_result$error_message, "setup")
@@ -189,7 +195,9 @@ test_that("render_exercise() with errors and no checker returns exercise result 
 
   exercise <- mock_exercise(user_code = "stop('user')")
   exercise_result <- withr::with_tempdir(
-    tryCatch(render_exercise(exercise, new.env()), error = identity)
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
   )
   expect_s3_class(exercise_result, "learnr_render_exercise_error")
   expect_identical(exercise_result$error_message, "user")
@@ -229,7 +237,9 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   files <- expect_message(
     withr::with_tempdir({
       before <- dir()
-      e      <- rlang::catch_cnd(render_exercise(exercise, new.env()))
+      e      <- rlang::catch_cnd(
+        render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+      )
 
       list(
         before = before,
