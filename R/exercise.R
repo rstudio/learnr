@@ -294,12 +294,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-
-  # Setup a temporary directory for rendering the exercise
-  exercise_dir <- tempfile(pattern = "lnr-ex")
-  dir.create(exercise_dir)
-  on.exit(unlink(exercise_dir), add = TRUE)
-
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
   if (length(exercise$code_check)) {
@@ -316,6 +310,11 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
       return(checker_feedback)
     }
   }
+
+  # Setup a temporary directory for rendering the exercise
+  exercise_dir <- tempfile(pattern = "lnr-ex")
+  dir.create(exercise_dir)
+  on.exit(unlink(exercise_dir), add = TRUE)
 
   # Resolve knitr options for the exercise and setup chunks
   rmd_results <- withr::with_dir(
