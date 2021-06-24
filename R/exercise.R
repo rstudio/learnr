@@ -312,10 +312,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Setup a temporary directory for rendering the exercise
-  exercise_dir <- tempfile(pattern = "lnr-ex")
-  dir.create(exercise_dir)
+  exercise_dir <- withr::local_tempdir(pattern = "lrn-ex")
   withr::local_dir(exercise_dir)
-  on.exit(unlink(exercise_dir), add = TRUE)
 
   # Resolve knitr options for the exercise and setup chunks
   rmd_results <- tryCatch(
