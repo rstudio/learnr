@@ -140,16 +140,26 @@ test_that("render_exercise() returns identical envir_prep and envir_result if an
     error_check = "unevaluated, triggers error_check in render_exercise()"
   )
 
-  exercise_result <- withr::with_tempdir(
+  render_result <- withr::with_tempdir(
     rlang::catch_cnd(
       render_exercise(exercise, new.env()), "learnr_render_exercise_error"
     )
   )
+  expect_s3_class(render_result$last_value, "simpleError")
+  expect_equal(conditionMessage(render_result$last_value), "boom")
+  expect_identical(render_result$envir_prep, render_result$envir_result)
 
-  expect_s3_class(exercise_result$last_value, "simpleError")
-  expect_equal(conditionMessage(exercise_result$last_value), "boom")
-
-  expect_identical(exercise_result$envir_prep, exercise_result$envir_result)
+  eval_result <- evaluate_exercise(exercise, new.env())
+  expect_s3_class(
+    eval_result$feedback$checker_args$last_value, "learnr_render_exercise_error"
+  )
+  expect_equal(
+    eval_result$feedback$checker_args$last_value$error_message, "boom"
+  )
+  expect_identical(
+    eval_result$feedback$checker_args$envir_prep,
+    eval_result$feedback$checker_args$envir_result
+  )
 })
 
 test_that("render_exercise() returns envir_result up to error", {
@@ -171,7 +181,9 @@ test_that("render_exercise() returns envir_result up to error", {
   expect_s3_class(exercise_result$last_value, "simpleError")
   expect_equal(conditionMessage(exercise_result$last_value), "boom")
 
-  expect_false(identical(exercise_result$envir_prep, exercise_result$envir_result))
+  expect_false(
+    identical(exercise_result$envir_prep, exercise_result$envir_result)
+  )
   expect_setequal(ls(exercise_result$envir_prep), "x")
   expect_setequal(ls(exercise_result$envir_result), c("x", "y"))
   expect_identical(get("y", exercise_result$envir_result), 2)

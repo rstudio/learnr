@@ -328,7 +328,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
           envir_result = e$envir_result,
           evaluate_result = e$evaluate_result,
           envir_prep = e$envir_prep,
-          last_value = e$e,
+          last_value = e,
           engine = exercise$engine
         )
         if (is_exercise_result(checker_feedback)) {
