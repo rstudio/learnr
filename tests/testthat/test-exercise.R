@@ -229,22 +229,12 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   files <- expect_message(
     withr::with_tempdir({
       before <- dir()
-      e <- tryCatch(render_exercise(exercise, new.env()), error = identity)
-      res <- try_checker(
-        exercise, "exercise.checker",
-        check_code = exercise$error_check,
-        envir_result = e$envir_result,
-        evaluate_result = e$evaluate_result,
-        envir_prep = e$envir_prep,
-        last_value = e$e,
-        engine = exercise$engine
-      )
+      e      <- rlang::catch_cnd(render_exercise(exercise, new.env()))
 
       list(
         before = before,
-        before_error = get("dir_setup", res$feedback$checker_args$envir_prep),
-        during = res$feedback$checker_result,
-        after = dir()
+        during = get("dir_setup", e$envir_prep),
+        after  = dir()
       )
     }),
     "exercise_prep.Rmd"
@@ -253,9 +243,7 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   # start with nothing
   expect_identical(files$before, character(0))
   # prep file is present while evaluating prep
-  expect_identical(files$before_error, "exercise_prep.Rmd")
-  # prep files are cleaned up after error
-  expect_identical(files$during, character(0))
+  expect_identical(files$during, "exercise_prep.Rmd")
   # nothing in directory after render_exercise() because user code didn't evaluate
   expect_identical(files$after, character(0))
 })
