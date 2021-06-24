@@ -484,7 +484,6 @@ test_that("files in data/ directory can be accessed", {
   ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "ORIGINAL")
-  expect_equal(readLines("data/test.txt"),           "ORIGINAL")
 })
 
 test_that("no issues if data directory does not exist", {
@@ -523,8 +522,6 @@ test_that("alternate data directory specified with envvar", {
   ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "ENVVAR")
-  expect_equal(readLines("data/test.txt"),           "DEFAULT")
-  expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
 
   ex <- mock_exercise(
     user_code = '
@@ -571,9 +568,7 @@ test_that("alternate data directory specified with `options()`", {
     check        = TRUE
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_equal(res$feedback$checker_args$last_value,   "NESTED")
-  expect_equal(readLines("data/test.txt"),             "DEFAULT")
-  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
+  expect_equal(res$feedback$checker_args$last_value, "NESTED")
 
   ex <- mock_exercise(
     user_code = '
@@ -617,8 +612,5 @@ test_that("data directory option has precendence over env var", {
     check        = TRUE
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_equal(res$feedback$checker_args$last_value,   "NESTED")
-  expect_equal(readLines("data/test.txt"),             "DEFAULT")
-  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
-  expect_equal(readLines("envvar/test.txt"),           "ENVVAR")
+  expect_equal(res$feedback$checker_args$last_value, "NESTED")
 })
