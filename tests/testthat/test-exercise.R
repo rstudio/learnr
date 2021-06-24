@@ -183,7 +183,7 @@ test_that("render_exercise() with errors and no checker returns exercise result 
   exercise_result <- withr::with_tempdir(
     tryCatch(render_exercise(exercise, new.env()), error = identity)
   )
-  expect_s3_class(exercise_result, "learnr_exercise_result")
+  expect_s3_class(exercise_result, "learnr_render_exercise_error")
   expect_identical(exercise_result$error_message, "setup")
   expect_null(exercise_result$feedback)
 
@@ -191,7 +191,7 @@ test_that("render_exercise() with errors and no checker returns exercise result 
   exercise_result <- withr::with_tempdir(
     tryCatch(render_exercise(exercise, new.env()), error = identity)
   )
-  expect_s3_class(exercise_result, "learnr_exercise_result")
+  expect_s3_class(exercise_result, "learnr_render_exercise_error")
   expect_identical(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
 })

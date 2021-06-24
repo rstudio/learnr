@@ -570,7 +570,7 @@ render_exercise <- function(exercise, envir) {
       return(exercise_result_timeout())
     }
     rlang::abort(
-      class = "learnr_exercise_result",
+      class = "learnr_render_exercise_error",
       envir_result = envir_result,
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,
