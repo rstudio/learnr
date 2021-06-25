@@ -148,18 +148,7 @@ test_that("render_exercise() returns identical envir_prep and envir_result if an
   expect_s3_class(render_result$last_value, "simpleError")
   expect_equal(conditionMessage(render_result$last_value), "boom")
   expect_identical(render_result$envir_prep, render_result$envir_result)
-
-  eval_result <- evaluate_exercise(exercise, new.env())
-  expect_s3_class(
-    eval_result$feedback$checker_args$last_value, "learnr_render_exercise_error"
-  )
-  expect_equal(
-    eval_result$feedback$checker_args$last_value$error_message, "boom"
-  )
-  expect_identical(
-    eval_result$feedback$checker_args$envir_prep,
-    eval_result$feedback$checker_args$envir_result
-  )
+  expect_equal(get("x", render_result$envir_prep), 1)
 })
 
 test_that("render_exercise() returns envir_result up to error", {
@@ -189,30 +178,19 @@ test_that("render_exercise() returns envir_result up to error", {
   expect_identical(get("y", exercise_result$envir_result), 2)
 })
 
-test_that("render_exercise() with errors and no checker returns exercise result error", {
+test_that("evaluate_exercise() with errors and no checker includes exercise result error", {
   exercise <- mock_exercise(
     user_code = "stop('user')",
     chunks = list(mock_chunk("setup-1", "stop('setup')")),
     setup_label = "setup-1"
   )
-
-  exercise_result <- withr::with_tempdir(
-    rlang::catch_cnd(
-      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
-    )
-  )
-  expect_s3_class(exercise_result, "learnr_render_exercise_error")
-  expect_identical(exercise_result$error_message, "setup")
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  expect_equal(exercise_result$error_message, "setup")
   expect_null(exercise_result$feedback)
 
-  exercise <- mock_exercise(user_code = "stop('user')")
-  exercise_result <- withr::with_tempdir(
-    rlang::catch_cnd(
-      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
-    )
-  )
-  expect_s3_class(exercise_result, "learnr_render_exercise_error")
-  expect_identical(exercise_result$error_message, "user")
+  exercise        <- mock_exercise(user_code = "stop('user')")
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  expect_equal(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
 })
 
