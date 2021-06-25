@@ -8,6 +8,8 @@ runtime: shiny_prerendered
 library(learnr)
 knitr::opts_chunk$set(echo = FALSE)
 library(readr)
+
+write_csv(mtcars, "data/mtcars.csv")
 ```
 
 ### This exercise uses files in the `data/` directory
@@ -16,10 +18,10 @@ library(readr)
 read_csv("data/mpg.csv")
 ```
 
-### Files thhat are overwritten within an exercise are changed
+### Files that are overwritten within an exercise are changed
 
 ```{r write_mpg, exercise=TRUE}
-write_csv(mtcars, "data/mpg.csv")
+write_csv(data.frame(x = "junk", y = "values"), "data/mpg.csv")
 read_csv("data/mpg.csv")
 ```
 
@@ -27,5 +29,4 @@ read_csv("data/mpg.csv")
 
 ```{r read_mpg_again, exercise=TRUE}
 read_csv("data/mpg.csv")
-!identical(read_csv("data/mpg.csv"), read_csv("data/mtcars.csv"))
 ```
