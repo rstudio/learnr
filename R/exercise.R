@@ -562,6 +562,18 @@ render_exercise <- function(exercise, envir) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
+
+    pattern <- paste0(
+      gettext("unexpected input", domain = "R"),
+      "\n1: _\n    ^"
+    )
+    if (grepl(pattern, msg, fixed = TRUE)) {
+      return(exercise_result_error(paste(
+        "The exercise contains underscores.",
+        "Please replace the _ with valid R code."
+      )))
+    }
+
     if (length(exercise$error_check)) {
       # Run the condition through an error checker (the exercise could be to throw an error!)
       checker_feedback <- try_checker(
