@@ -335,7 +335,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
           return(checker_feedback)
         }
       }
-      exercise_result_error(e$msg)
+      exercise_result_error(e$error_message)
     }
   )
 
