@@ -307,6 +307,13 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
+  parse_results <- tryCatch(
+    parse(text = exercise$code),
+    error = function(e) exercise_result_parse_error(e, exercise)
+  )
+
+  if (is_exercise_result(parse_results)) {return(parse_results)}
+
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
@@ -562,18 +569,6 @@ render_exercise <- function(exercise, envir) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
-
-    pattern <- paste0(
-      gettext("unexpected input", domain = "R"),
-      "\n1: _\n    ^"
-    )
-    if (grepl(pattern, msg, fixed = TRUE)) {
-      return(exercise_result_error(paste(
-        "The exercise contains underscores.",
-        "Please replace the _ with valid R code."
-      )))
-    }
-
     if (length(exercise$error_check)) {
       # Run the condition through an error checker (the exercise could be to throw an error!)
       checker_feedback <- try_checker(
@@ -668,6 +663,36 @@ exercise_code_chunks <- function(chunks) {
       "```"
     )
   }, character(1))
+}
+
+exercise_result_parse_error <- function(error, exercise) {
+  # Code scaffolding in exercise code will cause parse errors, so first check
+  # for blanks. We consider a blank to be 3+ "_" characters.
+  n_blanks <- sum(vapply(
+    gregexpr("_{3,}", exercise$code),
+    function(x) sum(x > 0),
+    integer(1)
+  ))
+
+  msg <- if (n_blanks > 0) {
+    paste0(
+      "The exercise contains ", n_blanks, " blank",
+      if (n_blanks != 1L) {"s"},
+      ". Please replace the `____` with valid R code."
+    )
+  } else {
+    paste0(
+      "It looks like this might not be valid R code:\n\n```r\n",
+      conditionMessage(error),
+      "\n```\n\nR cannot determine how to turn your text into ",
+      "a complete command. You may have forgotten to fill in a blank, ",
+      "to remove an underscore, to include a comma between arguments, ",
+      "or to close an opening `\"`, `'`, `(`, or `{{` ",
+      "with a matching `\"`, `'`, `)`, or `}}`. "
+    )
+  }
+
+  exercise_result_error(msg)
 }
 
 exercise_result_timeout <- function() {
