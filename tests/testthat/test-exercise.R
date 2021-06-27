@@ -626,3 +626,28 @@ test_that("env vars are protected from both user and author modification", {
   expect_equal(res$after_eval, "APP")
 })
 
+# unparsable input -----------------------------------------------------------
+
+test_that("evaluate_exercise() returns a message if code contains ___", {
+  ex     <- mock_exercise(user_code = '____("test")')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "contains 1 blank")
+
+  ex     <- mock_exercise(user_code = '____("____")')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "contains 2 blanks")
+})
+
+est_that("evaluate_exercise() returns a message if code is unparsable", {
+  ex     <- mock_exercise(user_code = 'print("test"')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "this might not be valid R code")
+
+  ex     <- mock_exercise(user_code = 'print("test)')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "this might not be valid R code")
+
+  ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "this might not be valid R code")
+})

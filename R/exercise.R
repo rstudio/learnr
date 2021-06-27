@@ -307,6 +307,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
+  # Check if user code is parsable
   parse_results <- tryCatch(
     parse(text = exercise$code),
     error = function(e) exercise_result_parse_error(e, exercise)
