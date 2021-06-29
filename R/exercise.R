@@ -313,7 +313,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     error = function(e) exercise_result_parse_error(e, exercise)
   )
 
-  if (is_exercise_result(parse_results)) {return(parse_results)}
+  if (is_exercise_result(parse_results)) {
+    return(parse_results)
+  }
 
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
