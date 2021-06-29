@@ -303,18 +303,17 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     return(exercise_result(html_output = " "))
   }
 
-  if (evaluate_global_setup) {
-    eval(parse(text = exercise$global_setup), envir = envir)
-  }
-
   # Check if user code is parsable
   parse_results <- tryCatch(
     parse(text = exercise$code),
     error = function(e) exercise_result_parse_error(e, exercise)
   )
-
   if (is_exercise_result(parse_results)) {
     return(parse_results)
+  }
+
+  if (evaluate_global_setup) {
+    eval(parse(text = exercise$global_setup), envir = envir)
   }
 
   # Setup a temporary directory for rendering the exercise
