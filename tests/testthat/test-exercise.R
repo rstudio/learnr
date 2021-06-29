@@ -648,7 +648,7 @@ test_that("no error if code containing ___ is parsable", {
   expect_null(result$error_message)
 })
 
-est_that("evaluate_exercise() returns a message if code is unparsable", {
+test_that("evaluate_exercise() returns a message if code is unparsable", {
   ex     <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$error_message, "this might not be valid R code")
