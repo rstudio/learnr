@@ -633,9 +633,19 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$error_message, "contains 1 blank")
 
+  ex     <- mock_exercise(user_code = '____(____)')
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$error_message, "contains 2 blanks")
+
   ex     <- mock_exercise(user_code = '____("____")')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$error_message, "contains 2 blanks")
+})
+
+test_that("no error if code containing ___ is parsable", {
+  ex     <- mock_exercise(user_code = 'print("____")')
+  result <- evaluate_exercise(ex, new.env())
+  expect_null(result$error_message)
 })
 
 est_that("evaluate_exercise() returns a message if code is unparsable", {
