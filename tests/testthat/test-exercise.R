@@ -476,7 +476,7 @@ test_that("exercise versions upgrade correctly", {
 
 # data files -----------------------------------------------------------------
 
-test_that("files in data/ directory can be accessed", {
+test_that("data/ - files in data/ directory can be accessed", {
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
@@ -486,7 +486,7 @@ test_that("files in data/ directory can be accessed", {
   expect_equal(res$feedback$checker_args$last_value, "ORIGINAL")
 })
 
-test_that("no issues if data directory does not exist", {
+test_that("data/ - no issues if data directory does not exist", {
   withr::local_dir(withr::local_tempdir())
 
   ex  <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
@@ -494,7 +494,7 @@ test_that("no issues if data directory does not exist", {
   expect_equal(res$feedback$checker_args$last_value, "SUCCESS")
 })
 
-test_that("files in data/ directory are protected from modification", {
+test_that("data/ - original files are modified by exercise code", {
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
@@ -511,7 +511,7 @@ test_that("files in data/ directory are protected from modification", {
   expect_equal(readLines("data/test.txt"),           "ORIGINAL")
 })
 
-test_that("alternate data directory specified with envvar", {
+test_that("data/ - specify alternate data directory with envvar", {
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
@@ -536,7 +536,7 @@ test_that("alternate data directory specified with envvar", {
   expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
 })
 
-test_that("error if env var directory does not exist", {
+test_that("data/ - errors if envvar directory does not exist", {
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
@@ -549,7 +549,7 @@ test_that("error if env var directory does not exist", {
   )
 })
 
-test_that("alternate data directory specified with `options()`", {
+test_that("data/ - specify alternate data directory with `options()`", {
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
   writeLines("DEFAULT", "data/test.txt")
@@ -584,7 +584,7 @@ test_that("alternate data directory specified with `options()`", {
   expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 })
 
-test_that("error if `options()` data directory does not exist", {
+test_that("data/ - errors if `options()` directory does not exist", {
   withr::local_dir(withr::local_tempdir())
   ex <- mock_exercise(
     user_code    = 'readLines("data/test.txt")',
@@ -596,7 +596,7 @@ test_that("error if `options()` data directory does not exist", {
   )
 })
 
-test_that("data directory option has precendence over env var", {
+test_that("data/ - data directory option has precendence over envvar", {
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
   dir.create("data")
