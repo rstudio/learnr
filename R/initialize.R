@@ -40,6 +40,12 @@ initialize_tutorial <- function() {
       singleton = TRUE
     )
 
+    # record tutorial language in session object
+    rmarkdown::shiny_prerendered_chunk(
+      "server",
+      "learnr:::i18n_observe_tutorial_language(input, session)"
+    )
+
     # Register session stop handler
     rmarkdown::shiny_prerendered_chunk(
       'server',

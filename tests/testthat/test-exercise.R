@@ -444,11 +444,23 @@ test_that("exercise versions upgrade correctly", {
   expect_match(ex_1_upgraded$tutorial$tutorial_id, "UPGRADE")
   expect_match(ex_1_upgraded$tutorial$tutorial_version, "-1")
   expect_match(ex_1_upgraded$tutorial$user_id, "UPGRADE")
-  expect_equal(paste(ex_1_upgraded$version), "2")
+  expect_equal(paste(ex_1_upgraded$version), "3")
 
   ex_2 <- mock_exercise(version = "2")
   expect_type(ex_2$tutorial, "list")
+  ex_2$tutorial$language <- "en"
   expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+
+  i18n_set_language_option("foo")
+  ex_2 <- mock_exercise(version = "2")
+  expect_type(ex_2$tutorial, "list")
+  ex_2$tutorial$language <- "foo"
+  expect_identical(ex_2$tutorial, upgrade_exercise(ex_2)$tutorial)
+  knitr::opts_knit$set("tutorial.language" = NULL)
+
+  ex_3 <- mock_exercise(version = "3")
+  expect_type(ex_3$tutorial, "list")
+  expect_identical(ex_3$tutorial, upgrade_exercise(ex_3)$tutorial)
 
   # future versions
   ex_99 <- mock_exercise(version = 99)
@@ -613,4 +625,144 @@ test_that("data/ - data directory option has precendence over envvar", {
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_equal(res$feedback$checker_args$last_value, "NESTED")
+})
+
+# global options are restored after running user code ---------------------
+
+test_that("options() are protected from student modification", {
+  withr::local_options(test = "WITHR")
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code = "options(test = 'USER')\ngetOption('test')"
+  )
+  output <- evaluate_exercise(ex, envir = new.env())
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+})
+
+test_that("options() can be set in setup chunk", {
+  withr::local_options(test = "WITHR")
+
+  ex <- mock_exercise(
+    user_code   = "getOption('test')",
+    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label = "setup"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "SETUP", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code    = "options(test = 'USER')\ngetOption('test')",
+    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label = "setup"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+})
+
+test_that("options() can be set in global setup chunk", {
+  withr::local_options(test = "WITHR")
+
+  ex <- mock_exercise(
+    user_code    = "getOption('test')",
+    global_setup = "options(test = 'GLOBAL')"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "GLOBAL", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR",  fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code    = "options(test = 'USER')\ngetOption('test')",
+    global_setup = "options(test = 'GLOBAL')"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "USER",  fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code    = "getOption('test')",
+    global_setup = "options(test = 'GLOBAL')",
+    chunks       = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label  = "setup"
+  )
+  output <- evaluate_exercise(
+    ex, envir = new.env(), evaluate_global_setup = TRUE
+  )
+  expect_match(output$html_output, "SETUP", fixed = TRUE)
+  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+})
+
+test_that("envvars are protected from student modification", {
+  withr::local_envvar(list(TEST = "WITHR"))
+  expect_match(Sys.getenv("TEST"), "WITHR", fixed = TRUE)
+
+  ex <- mock_exercise(
+    user_code = "Sys.setenv(TEST = 'USER')\nSys.getenv('TEST')"
+  )
+  output <- evaluate_exercise(ex, envir = new.env())
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(Sys.getenv("TEST"),  "WITHR", fixed = TRUE)
+})
+
+test_that("options are protected from both user and author modification", {
+  withr::local_options(list(TEST = "APP"))
+
+  ex <- mock_exercise(
+    user_code = "user <- getOption('TEST')\noptions(TEST = 'USER')",
+    check = I(paste(
+      'check <- getOption("TEST")',
+      'options(TEST = "CHECK")',
+      'list(user = envir_result$user, check = check)',
+      sep = "\n"
+    ))
+  )
+
+  res <- evaluate_exercise(ex, new.env())$feedback$checker_result
+  res$after_eval <- getOption("TEST")
+
+  # user code sees TEST = "APP" but overwrites it
+  expect_equal(res$user, "APP")
+
+  # it's reset after render_exercise() so check code sees "APP", also overwrites
+  expect_equal(res$check, "APP")
+
+  # evaluate_exercise() restores the TEST option after checking too
+  expect_equal(res$after_eval, "APP")
+})
+
+test_that("env vars are protected from both user and author modification", {
+  withr::local_envvar(list(TEST = "APP"))
+
+  ex <- mock_exercise(
+    user_code = "user <- Sys.getenv('TEST')\nSys.setenv(TEST = 'USER')",
+    check = I(paste(
+      'check <- Sys.getenv("TEST")',
+      'Sys.setenv(TEST = "CHECK")',
+      'list(user = envir_result$user, check = check)',
+      sep = "\n"
+    ))
+  )
+
+  res <- evaluate_exercise(ex, new.env())$feedback$checker_result
+  res$after_eval <- Sys.getenv("TEST")
+
+  # user code sees TEST = "APP" but overwrites it
+  expect_equal(res$user, "APP")
+
+  # it's reset after render_exercise() so check code sees "APP", also overwrites
+  expect_equal(res$check, "APP")
+
+  # evaluate_exercise() restores the TEST option after checking too
+  expect_equal(res$after_eval, "APP")
 })
