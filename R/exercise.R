@@ -315,14 +315,7 @@ evaluate_exercise <- function(
   on.exit(unlink(exercise_dir), add = TRUE)
 
   # Copy files from data directory into exercise
-  if (is.null(data_dir)) {
-    # First check options(), then environment variable, then default to "data/"
-    source_dir <- getOption(
-      "tutorial.data_dir",
-      Sys.getenv("TUTORIAL_DATA_DIR", if (dir.exists("data")) "data" else "")
-    )
-  }
-  copy_data_dir(source_dir, exercise_dir)
+  copy_data_dir(data_dir, exercise_dir)
 
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
