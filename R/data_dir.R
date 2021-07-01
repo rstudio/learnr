@@ -1,4 +1,12 @@
 copy_data_dir <- function(source_dir, exercise_dir) {
+  if (is.null(source_dir)) {
+    # First check options(), then environment variable, then default to "data/"
+    source_dir <- getOption(
+      "tutorial.data_dir",
+      Sys.getenv("TUTORIAL_DATA_DIR", if (dir.exists("data")) "data" else "")
+    )
+  }
+
   if (identical(source_dir, "")) {
     return(invisible(NULL))
   }

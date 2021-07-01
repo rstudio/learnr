@@ -71,15 +71,18 @@ $(document).on("shiny:sessioninitialized", function () {
       return $.includes(this.dataset, "i18n");
     });
 
+    // tell the shiny process that the language was changed
+    Shiny.setInputValue("__tutorial_language", i18next.language)
+
     if (!$els.length) {
-      // console.error('No elements found for localization with selector ' + selector);
+      // No elements found for localization with selector
       return;
     }
 
     $els.each(function (idx) {
       var optsItem = $.extend({}, opts);
       // Note: `this.dataset.i18nOpts` maps directly to the DOM element attribute `data-i18n-opts`
-      //   And `this.dataset.i18nAttrVALUE` to element attribute `data-i18n-attr-VALUE`
+      //       And `this.dataset.i18nAttrVALUE` to element attribute `data-i18n-attr-VALUE`
       // Link: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
       // Reference:
       // > To get a data attribute through the dataset object, get the property

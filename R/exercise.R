@@ -1,4 +1,4 @@
-current_exercise_version <- "2"
+current_exercise_version <- "3"
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
@@ -24,7 +24,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
       tutorial_id = read_request(session, "tutorial.tutorial_id"),
       tutorial_version = read_request(session, "tutorial.tutorial_version"),
       user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = as.character(utils::packageVersion("learnr"))
+      learnr_version = as.character(utils::packageVersion("learnr")),
+      language = read_request(session, "tutorial.language")
     )
 
     # short circuit for restore (we restore some outputs like errors so that
@@ -210,6 +211,7 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
   current_version <- as.numeric(current_exercise_version)
 
   if (exercise$version == 1) {
+    # upgrade from version 1 to version 2
     # exercise version 2 added $tutorial information
     exercise$tutorial <- list(
       tutorial_id = "tutorial_id:UPGRADE learnr",
@@ -217,10 +219,16 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
       user_id = "user_id:UPGRADE learnr"
     )
     exercise$version <- 2
-    exercise
   }
 
-  # Future logic to upgrade an exercise from version 2 to version N goes here...
+  if (exercise$version == 2) {
+    # upgrade from version 2 to version 3
+    # => add language $tutorial information
+    exercise$tutorial$language <- i18n_get_language_option()
+    exercise$version <- 3
+  }
+
+  # Future logic to upgrade an exercise from version 3 to version N goes here...
 
   if (identical(exercise$version, current_version)) {
     return(exercise)
@@ -278,12 +286,17 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 evaluate_exercise <- function(
   exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
 ) {
+  # Protect global options and environment vars from permanent modification
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
     exercise,
     require_items = if (evaluate_global_setup) "global_setup"
   )
+
+  i18n_set_language_option(exercise$tutorial$language)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
@@ -296,21 +309,13 @@ evaluate_exercise <- function(
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
   on.exit(unlink(exercise_dir), add = TRUE)
 
   # Copy files from data directory into exercise
-  if (is.null(data_dir)) {
-    # First check options(), then environment variable, then default to "data/"
-    source_dir <- getOption(
-      "tutorial.data_dir",
-      Sys.getenv("TUTORIAL_DATA_DIR", if (dir.exists("data")) "data" else "")
-    )
-  }
-  copy_data_dir(source_dir, exercise_dir)
+  copy_data_dir(data_dir, exercise_dir)
 
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
@@ -329,7 +334,7 @@ evaluate_exercise <- function(
     }
   }
 
-  # Resolve knitr options for the exercise and setup chunks
+  # Render exercise in temporary exercise directory
   rmd_results <- withr::with_dir(
     exercise_dir,
     render_exercise(exercise, envir)
@@ -433,6 +438,10 @@ get_checker_func <- function(exercise, name, envir) {
 }
 
 render_exercise <- function(exercise, envir) {
+  # Protect global options and environment vars from modification by student
+  withr::local_options(list())
+  withr::local_envvar(as.list(Sys.getenv()))
+
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
 
@@ -448,12 +457,10 @@ render_exercise <- function(exercise, envir) {
   # Put the exercise in a minimal HTML doc
   output_format_exercise <- function(user = FALSE) {
     # start constructing knitr_options for the output format
-    knitr_options <- rmarkdown::knitr_options_html(
-      fig_width = exercise$options$fig.width,
-      fig_height = exercise$options$fig.height,
-      fig_retina = exercise$options$fig.retina,
-      keep_md = FALSE
-    )
+    knitr_options <- exercise$options
+    # Recreate the logic of `rmarkdown::knitr_options_html()` by setting these options
+    knitr_options$opts_chunk$dev <- "png"
+    knitr_options$opts_chunk$dpi <- 96
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
@@ -636,7 +643,11 @@ exercise_code_chunks_prep <- function(exercise) {
 }
 
 exercise_code_chunks_user <- function(exercise) {
-  exercise_code_chunks(exercise_get_chunks(exercise, "user"))
+  # chunk options on the user chunk just duplicate the exercise$options
+  # which are set globally for the exercise
+  user_chunk <- exercise_get_chunks(exercise, "user")
+  user_chunk[[1]]$opts <- NULL
+  exercise_code_chunks(user_chunk)
 }
 
 exercise_code_chunks <- function(chunks) {
@@ -830,6 +841,9 @@ debug_exercise_checker <- function(
   }
 
   str_env <- function(env) {
+    if (is.null(env)) {
+      return("NO ENVIRONMENT")
+    }
     vars <- ls(env)
     names(vars) <- vars
     x <- str_chr(lapply(vars, function(v) get(v, env)))
