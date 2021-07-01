@@ -287,8 +287,7 @@ evaluate_exercise <- function(
   exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
 ) {
   # Protect global options and environment vars from permanent modification
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  protect_options()
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -439,8 +438,7 @@ get_checker_func <- function(exercise, name, envir) {
 
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  protect_options()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
@@ -794,6 +792,27 @@ merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) 
   opts[!grepl("^exercise", names(opts))]
 }
 
+protect_options <- function() {
+  withr::defer(restore_options(options()),    envir = parent.frame())
+  withr::defer(restore_envvars(Sys.getenv()), envir = parent.frame())
+  invisible(NULL)
+}
+
+restore_options <- function(old) {
+  current          <- options()
+  nulls            <- setdiff(names(current), names(old))
+  null_list        <- rep.int(list(NULL), length(nulls))
+  names(null_list) <- nulls
+  options(c(null_list, old))
+}
+
+restore_envvars <- function(old) {
+  current          <- Sys.getenv()
+  nulls            <- setdiff(names(current), names(old))
+  null_list        <- rep.int(list(""), length(nulls))
+  names(null_list) <- nulls
+  do.call(Sys.setenv, c(null_list, old))
+}
 
 #' An Exercise Checker for Debugging
 #'
