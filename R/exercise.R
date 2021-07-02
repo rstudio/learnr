@@ -327,7 +327,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     !isFALSE(exercise$options$exercise.parse.check.code)
   ) {
     # Check if user code is parsable
-    exercise$options$exercise.parse.check.code <- exercise$parse_check %||%
+    exercise$options$exercise.parse.check.code <-
       exercise$options$exercise.parse.check.code %||%
       dput_to_string(exercise_parse_checker)
 
