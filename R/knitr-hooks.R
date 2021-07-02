@@ -29,6 +29,7 @@ install_knitr_hooks <- function() {
                                                           "solution",
                                                           "error-check",
                                                           "code-check",
+                                                          "parse-check",
                                                           "check")) {
     support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")
     if (grepl(support_regex, options$label)) {
@@ -319,6 +320,7 @@ install_knitr_hooks <- function() {
 
         code_check_chunk <- get_knitr_chunk(paste0(options$label, "-code-check"))
         error_check_chunk <- get_knitr_chunk(paste0(options$label, "-error-check"))
+        parse_check_chunk <- get_knitr_chunk(paste0(options$label, "-parse-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
 
@@ -339,8 +341,9 @@ install_knitr_hooks <- function() {
                                chunks = all_chunks,
                                code_check = code_check_chunk,
                                error_check = error_check_chunk,
+                               parse_check = parse_check_chunk,
                                check = check_chunk,
-                               solution  = solution,
+                               solution = solution,
                                options = options,
                                engine = options$engine)
 

@@ -303,14 +303,41 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     return(exercise_result(html_output = " "))
   }
 
-  if (!isFALSE(exercise$options$exercise.parse.error.check)) {
-    # Check if user code is parsable
-    parse_results <- tryCatch(
-      parse(text = exercise$code),
-      error = function(e) exercise_result_parse_error(e, exercise)
+  checker_feedback <- NULL
+
+  if (!isFALSE(exercise$options$exercise.blank.check.code)) {
+    # Check if user code contains blanks
+    exercise$options$exercise.blank.check.code <-
+      exercise$options$exercise.blank.check.code %||%
+      dput_to_string(exercise_blank_checker)
+
+    checker_feedback <- try_checker(
+      exercise, "exercise.blank.check.code",
+      check_code = exercise$options$exercise.blanks %||% "_{3,}",
+      envir_prep = duplicate_env(envir),
+      engine = exercise$engine
     )
-    if (is_exercise_result(parse_results)) {
-      return(parse_results)
+    if (is_exercise_result(checker_feedback)) {
+      return(checker_feedback)
+    }
+  }
+
+  if (
+    tolower(exercise$engine) == "r" &&
+    !isFALSE(exercise$options$exercise.parse.check.code)
+  ) {
+    # Check if user code is parsable
+    exercise$options$exercise.parse.check.code <- exercise$parse_check %||%
+      exercise$options$exercise.parse.check.code %||%
+      dput_to_string(exercise_parse_checker)
+
+    checker_feedback <- try_checker(
+      exercise, "exercise.parse.check.code",
+      envir_prep = duplicate_env(envir),
+      engine = exercise$engine
+    )
+    if (is_exercise_result(checker_feedback)) {
+      return(checker_feedback)
     }
   }
 
@@ -323,7 +350,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   dir.create(exercise_dir)
   on.exit(unlink(exercise_dir), add = TRUE)
 
-  checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
   if (length(exercise$code_check)) {
     checker_feedback <- try_checker(
@@ -371,8 +397,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 }
 
 
-try_checker <- function(exercise, name, check_code, envir_result,
-                        evaluate_result, envir_prep, last_value,
+try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
+                        evaluate_result = NULL, envir_prep, last_value = NULL,
                         engine) {
   checker_func <- tryCatch(
     get_checker_func(exercise, name, envir_prep),
@@ -669,34 +695,39 @@ exercise_code_chunks <- function(chunks) {
   }, character(1))
 }
 
-exercise_result_parse_error <- function(error, exercise) {
-  # Code scaffolding in exercise code will cause parse errors, so first check
-  # for blanks. We consider a blank to be 3+ "_" characters.
+exercise_blank_checker <- function(label, user_code, check_code, ...) {
   n_blanks <- sum(vapply(
-    gregexpr("_{3,}", exercise$code),
+    gregexpr(check_code, user_code),
     function(x) sum(x > 0),
     integer(1)
   ))
 
-  msg <- if (n_blanks > 0) {
-    paste0(
-      "The exercise contains ", n_blanks, " blank",
-      if (n_blanks != 1L) {"s"},
-      ". Please replace the `____` with valid R code."
-    )
-  } else {
-    paste0(
-      "It looks like this might not be valid R code:\n\n```r\n",
-      conditionMessage(error),
-      "\n```\n\nR cannot determine how to turn your text into ",
-      "a complete command. You may have forgotten to fill in a blank, ",
-      "to remove an underscore, to include a comma between arguments, ",
-      "or to close an opening `\"`, `'`, `(`, or `{{` ",
-      "with a matching `\"`, `'`, `)`, or `}}`. "
-    )
+  if (n_blanks == 0) {
+    return(NULL)
   }
 
-  exercise_result_error(msg)
+  msg <- paste0(
+    "The exercise contains ", n_blanks, " blank", if (n_blanks != 1L) {"s"},
+    ". Please replace the `___` with valid code."
+  )
+
+  list(message = msg, correct = FALSE, location = "append")
+}
+
+exercise_parse_checker <- function(label, user_code, ...) {
+  error <- rlang::catch_cnd(parse(text = user_code), "error")
+  if (is.null(error)) {return(NULL)}
+
+  msg <- paste(
+    "It looks like this might not be valid R code.",
+    "R cannot determine how to turn your text into a complete command.",
+    "You may have forgotten to fill in a blank,",
+    "to remove an underscore, to include a comma between arguments,",
+    "or to close an opening `\"`, `'`, `(`, or `{{`",
+    "with a matching `\"`, `'`, `)`, or `}}`."
+  )
+
+  list(message = msg, correct = FALSE, type = "error", location = "append")
 }
 
 exercise_result_timeout <- function() {
