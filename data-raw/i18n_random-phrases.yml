@@ -39,7 +39,7 @@ praise:
     - You aced it!
     - You rock!
     - You should be proud.
-  pt: 
+  pt:
     - Muito bom!
     - Parabéns!
     - Bom trabalho!
@@ -48,6 +48,44 @@ praise:
     - Excelente!
     - Você sabe o que está fazendo :D
     - Ótimo!
+  es:
+    - ¡Absolutamente fabuloso!
+    - ¡Increíble!
+    - ¡Impresionante!
+    - ¡Hermoso!
+    - ¡Bravo!
+    - ¡Buen trabajo!
+    - ¡Muy bien hecho!
+    - ¡Excelente!
+    - ¡Fantástico!
+    - ¡Excelente trabajo!
+    - Yo no podría haberlo hecho mejor.
+    - ¡Impresionante trabajo!
+    - ¡Bien hecho!
+    - ¡Magnífico!
+    - ¡Un trabajo bien hecho!
+    - ¡Fuera de este mundo!
+    - ¡Felicitaciones, bien hecho!
+    - ¡La estás rompiendo!
+    - Alguien sabe lo que está haciendo :)
+    - ¡Un trabajo espectacular!
+    - ¡Espléndido!
+    - ¡Éxito!
+    - ¡Super trabajo!
+    - ¡Excelente trabajo!
+    - ¡Buen trabajo!
+    - ¡Fantástico!
+    - ¡Esa es una respuesta de primera clase!
+    - ¡Esa solución es gloriosa!
+    - ¡Esto es maravilloso!
+    - ¡Muy bien!
+    - ¡Fabuloso!
+    - ¡Qué trabajo de primera!
+    - ¡Genial!
+    - ¡Maravilloso!
+    - ¡Lo superaste!
+    - ¡Excelente respuesta!
+    - Deberias sentir mucho orgullo.
   emo:
     - 😀
     - 😁
@@ -80,6 +118,17 @@ encouragement:
     - Tudo bem, nós aprendemos mais com os nossos erros do que com os acertos. Vamos tentar novamente.
     - Não foi dessa vez, tente novamente!
     - Vamos lá, tente novamente!
+  es:
+    - Inténtalo de nuevo.
+    - Prueba otra vez.
+    - Vamos a intentarlo otra vez.
+    - Pruéba de nuevo; ¡La próxima es la vencida!
+    - No te rindas ahora, inténtalo una vez más.
+    - No hay necesidad de preocuparse, inténtalo de nuevo.
+    - Prueba otra vez. Tengo un buen presentimiento.
+    - Intenta otra vez. Mejoras cada vez.
+    - Inténtalo nuevamente. La perseverancia es la clave del éxito.
+    - "Está bien: se aprende más de los errores que de los éxitos. Hagámoslo una vez más."
   emo:
     - 🤗
     - 🤘

@@ -5,7 +5,7 @@
 #' quiz experience.
 #'
 #' @param language The language for the random phrase. The currently supported
-#'   languages include: `en`, `emo`, and `testing` (static phrases).
+#'   languages include: `en`, `es`, `emo`, and `testing` (static phrases).
 #'
 #' @return Character string with a random saying
 #' @export
