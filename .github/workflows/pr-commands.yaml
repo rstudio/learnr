@@ -31,7 +31,7 @@ jobs:
   i18n:
     if: startsWith(github.event.comment.body, '/i18nize')
     name: document
-    runs-on: ubuntu-18.04-latest
+    runs-on: ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
