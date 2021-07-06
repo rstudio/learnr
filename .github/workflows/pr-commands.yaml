@@ -6,7 +6,7 @@ jobs:
   document:
     if: startsWith(github.event.comment.body, '/document')
     name: document
-    runs-on: macOS-latest
+    runs-on: ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -16,13 +16,17 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: r-lib/actions/setup-r@v1
       - name: Install dependencies
-        run: Rscript -e 'install.packages(c("remotes", "roxygen2"))' -e 'remotes::install_deps(dependencies = TRUE)'
+        run: |
+          options(repos = c(CRAN = "https://demo.rstudiopm.com/all/__linux__/bionic/latest"))
+          install.packages(c("remotes", "roxygen2"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
       - name: Document
         run: Rscript -e 'roxygen2::roxygenise()'
       - name: commit
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add man/\* NAMESPACE
           git commit -m 'Document'
       - uses: r-lib/actions/pr-push@v1
@@ -30,7 +34,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   i18n:
     if: startsWith(github.event.comment.body, '/i18nize')
-    name: document
+    name: i18nize
     runs-on: ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
