@@ -39,6 +39,15 @@ praise:
     - You aced it!
     - You rock!
     - You should be proud.
+  pt: 
+    - Muito bom!
+    - Parabéns!
+    - Bom trabalho!
+    - Está fantástico!
+    - Sucesso!
+    - Excelente!
+    - Você sabe o que está fazendo :D
+    - Ótimo!
   emo:
     - 😀
     - 😁
@@ -63,6 +72,14 @@ encouragement:
     - Try it again. You get better each time.
     - Try it again. Perseverence is the key to success.
     - "That's okay: you learn more from mistakes than successes. Let's do it one more time."
+  pt:
+    - Tente novamente, sinto que na próxima vai dar certo!
+    - Vamos tentar novamente?
+    - Não desista, tente novamente!
+    - Tente novamente. A perseverança é a chave para o sucesso.
+    - Tudo bem, nós aprendemos mais com os nossos erros do que com os acertos. Vamos tentar novamente.
+    - Não foi dessa vez, tente novamente!
+    - Vamos lá, tente novamente!
   emo:
     - 🤗
     - 🤘
