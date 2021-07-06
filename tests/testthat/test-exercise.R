@@ -632,6 +632,7 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
   ex     <- mock_exercise(user_code = '____("test")')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "contains 1 blank")
+  expect_match(result$feedback$message, "____")
 
   ex     <- mock_exercise(user_code = '____(____)')
   result <- evaluate_exercise(ex, new.env())
@@ -643,35 +644,48 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
 })
 
 test_that("setting a different blank for the blank checker", {
-  ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "#{3,}")
+  ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "contains 1 blank")
+  expect_match(result$feedback$message, "###")
 
-  ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "#{3,}")
+  ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "contains 2 blanks")
 
-  ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "#{3,}")
+  ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "contains 2 blanks")
+})
 
+test_that("setting a different blank for the blank checker in global setup", {
   ex     <- mock_exercise(
     user_code    = '####("test")',
-    global_setup = 'knitr::opts_chunk$set(exercise.blanks = "#{3,}")'
+    global_setup = 'knitr::opts_chunk$set(exercise.blanks = "###")'
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_match(result$feedback$message, "contains 1 blank")
 })
 
-test_that("default message if exercise.blank.error.check is FALSE", {
+test_that("setting a regex blank for the blank checker", {
+  ex     <- mock_exercise(
+    user_code       = '..function..("..string..")',
+    exercise.blanks = "\\.\\.\\S+?\\.\\."
+  )
+  result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_match(result$feedback$message, "contains 2 blanks")
+  expect_match(result$feedback$message, "`..function..` and `..string..`")
+})
+
+test_that("default message if exercise.blanks is FALSE", {
   ex <- mock_exercise(
-    user_code = 'print("____")', exercise.blank.check.code = FALSE
+    user_code = 'print("____")', exercise.blanks = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_null(result$feedback$message)
 
   ex <- mock_exercise(
-    user_code = '____("test")', exercise.blank.check.code = FALSE
+    user_code = '____("test")', exercise.blanks = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "this might not be valid R code")

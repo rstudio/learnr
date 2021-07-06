@@ -309,24 +309,12 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   checker_feedback <- NULL
 
-  if (!isFALSE(exercise$options$exercise.blank.check.code)) {
-    # Check if user code contains blanks
-    exercise$options$exercise.blank.check.code <-
-      exercise$options$exercise.blank.check.code %||%
-      knitr::opts_chunk$get("exercise.blank.check.code") %||%
-      dput_to_string(exercise_blank_checker)
+  exercise_blanks <- exercise$options$exercise.blanks %||%
+    knitr::opts_chunk$get("exercise.blanks") %||%
+    "_{3,}"
 
-    checker_feedback <- try_checker(
-      exercise, "exercise.blank.check.code",
-      check_code = exercise$options$exercise.blanks %||%
-        knitr::opts_chunk$get("exercise.blanks") %||%
-        "_{3,}",
-      envir_prep = duplicate_env(envir),
-      engine = exercise$engine
-    )
-    if (is_exercise_result(checker_feedback)) {
-      return(checker_feedback)
-    }
+  if (isTruthy(exercise_blanks)) {
+    checker_feedback <- check_blanks(exercise$code, exercise_blanks)
   }
 
   if (
@@ -699,23 +687,27 @@ exercise_code_chunks <- function(chunks) {
   }, character(1))
 }
 
-exercise_blank_checker <- function(label, user_code, check_code, ...) {
-  n_blanks <- sum(vapply(
-    gregexpr(check_code, user_code),
-    function(x) sum(x > 0),
-    integer(1)
-  ))
+check_blanks <- function(user_code, blank_regex) {
+  blank_regex <- paste(blank_regex, collapse = "|")
 
-  if (n_blanks == 0) {
+  blanks <- str_match_all(user_code, blank_regex)
+
+  if (!length(blanks)) {
     return(NULL)
   }
 
   msg <- paste0(
-    "The exercise contains ", n_blanks, " blank", if (n_blanks != 1L) {"s"},
-    ". Please replace the `___` with valid code."
+    "The exercise contains ", length(blanks),
+    " blank", if (length(blanks) != 1L) {"s"},
+    ". Please replace ",
+    knitr::combine_words(unique(blanks), before = "`"),
+    " with valid code."
   )
 
-  list(message = msg, correct = FALSE, location = "append")
+  rlang::return_from(
+    rlang::caller_env(),
+    exercise_result(list(message = msg, correct = FALSE, location = "append"))
+  )
 }
 
 exercise_parse_checker <- function(label, user_code, ...) {
