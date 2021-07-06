@@ -303,17 +303,24 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     return(exercise_result(html_output = " "))
   }
 
+  if (evaluate_global_setup) {
+    eval(parse(text = exercise$global_setup), envir = envir)
+  }
+
   checker_feedback <- NULL
 
   if (!isFALSE(exercise$options$exercise.blank.check.code)) {
     # Check if user code contains blanks
     exercise$options$exercise.blank.check.code <-
       exercise$options$exercise.blank.check.code %||%
+      knitr::opts_chunk$get("exercise.blank.check.code") %||%
       dput_to_string(exercise_blank_checker)
 
     checker_feedback <- try_checker(
       exercise, "exercise.blank.check.code",
-      check_code = exercise$options$exercise.blanks %||% "_{3,}",
+      check_code = exercise$options$exercise.blanks %||%
+        knitr::opts_chunk$get("exercise.blanks") %||%
+        "_{3,}",
       envir_prep = duplicate_env(envir),
       engine = exercise$engine
     )
@@ -329,6 +336,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     # Check if user code is parsable
     exercise$options$exercise.parse.check.code <-
       exercise$options$exercise.parse.check.code %||%
+      knitr::opts_chunk$get("exercise.parse.check.code") %||%
       dput_to_string(exercise_parse_checker)
 
     checker_feedback <- try_checker(
@@ -339,10 +347,6 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     if (is_exercise_result(checker_feedback)) {
       return(checker_feedback)
     }
-  }
-
-  if (evaluate_global_setup) {
-    eval(parse(text = exercise$global_setup), envir = envir)
   }
 
   # Setup a temporary directory for rendering the exercise

@@ -642,6 +642,27 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
   expect_match(result$feedback$message, "contains 2 blanks")
 })
 
+test_that("setting a different blank for the blank checker", {
+  ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "#{3,}")
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "contains 1 blank")
+
+  ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "#{3,}")
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "contains 2 blanks")
+
+  ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "#{3,}")
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "contains 2 blanks")
+
+  ex     <- mock_exercise(
+    user_code    = '####("test")',
+    global_setup = 'knitr::opts_chunk$set(exercise.blanks = "#{3,}")'
+  )
+  result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_match(result$feedback$message, "contains 1 blank")
+})
+
 test_that("default message if exercise.blank.error.check is FALSE", {
   ex <- mock_exercise(
     user_code = 'print("____")', exercise.blank.check.code = FALSE
