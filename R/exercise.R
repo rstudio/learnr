@@ -314,7 +314,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     "_{3,}"
 
   if (isTruthy(exercise_blanks)) {
-    checker_feedback <- check_blanks(exercise$code, exercise_blanks)
+    check_blanks(exercise$code, exercise_blanks)
   }
 
   if (
@@ -698,17 +698,24 @@ check_blanks <- function(user_code, blank_regex) {
     return(NULL)
   }
 
-  msg <- paste0(
-    "The exercise contains ", length(blanks),
-    " blank", if (length(blanks) != 1L) {"s"},
-    ". Please replace ",
-    knitr::combine_words(unique(blanks), before = "`"),
-    " with valid code."
+  msg <- paste(
+    i18n_span(
+      "text.exercisecontainsblank", opts = list(count = length(blanks))
+    ),
+    i18n_span(
+      "text.pleasereplaceblank",
+      opts = list(
+        count = length(blanks),
+        blank = i18n_combine_words(unique(blanks), before = "`")
+      )
+    )
   )
 
   rlang::return_from(
     rlang::caller_env(),
-    exercise_result(list(message = msg, correct = FALSE, location = "append"))
+    exercise_result(
+      list(message = HTML(msg), correct = FALSE, location = "append")
+    )
   )
 }
 

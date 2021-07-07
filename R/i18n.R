@@ -128,6 +128,16 @@ i18n_span <- function(key, ..., opts = NULL) {
   htmltools::HTML(format(x))
 }
 
+i18n_combine_words <- function(
+  words, and = c("and", "or"), before = "", after = before
+) {
+  and   <- match.arg(and)
+  sep   <- "$t(text.listcomma) "
+  last  <- glue::glue(" $t(text.{and}) ")
+  words <- glue::glue("{before}{words}{after}")
+  glue::glue_collapse(words, sep = sep, last = last)
+}
+
 i18n_translations <- function() {
   readRDS(system.file("internals", "i18n_translations.rds", package = "learnr"))
 }

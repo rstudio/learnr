@@ -630,7 +630,7 @@ test_that("env vars are protected from both user and author modification", {
 
 test_that("evaluate_exercise() returns a message if code contains ___", {
   ex     <- mock_exercise(user_code = '____("test")')
-  result <- evaluate_exercise(ex, new.env())
+  z <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "contains 1 blank")
   expect_match(result$feedback$message, "____")
 

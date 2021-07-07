@@ -280,3 +280,63 @@ text:
     tr: "Sınav"
     emo: ~
     eu: "Galdetegia"
+  blank:
+    en: "blank"
+    fr: ~
+    es: "espacio en blanco" # Added by Alex, not a real translator
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  blank_plural:
+    en: "blanks"
+    fr: ~
+    es: "espacios en blanco" # Added by Alex, not a real translator
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  exercisecontainsblank:
+    # {{count}} - the number of blanks detected in the exercise
+    en: "This exercise contains {{count}} $t(text.blank)."
+    fr: ~
+    es: "Este ejercicio contiene {{count}} $t(text.blank)." # Added by Alex, not a real translator
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  pleasereplaceblank:
+    # {{blank}} - the string representing a blank in the exercise (e.g. "___")
+    en: "Please replace {{blank}} with valid code."
+    fr: ~
+    es: "Reemplace {{blank}} con código real." # Added by Alex, not a real translator
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  and:
+    en: "and"
+    fr: "et"  # Added by Alex, not a real translator
+    es: "y"   # Added by Alex, not a real translator
+    pt: "e"   # Added by Alex, not a real translator
+    tr: "ve"  # Added by Alex, not a real translator
+    emo: ~
+    eu: "eta" # Added by Alex, not a real translator
+  or:
+    en: "or"
+    fr: "ou" # Added by Alex, not a real translator
+    es: "o"  # Added by Alex, not a real translator
+    pt: "ou" # Added by Alex, not a real translator
+    tr: ~
+    emo: ~
+    eu: ~
+  listcomma:
+    # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
+    #   separating list items
+    en: ", "
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
