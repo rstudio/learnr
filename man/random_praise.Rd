@@ -11,7 +11,8 @@ random_encouragement(language = NULL)
 }
 \arguments{
 \item{language}{The language for the random phrase. The currently supported
-languages include: \code{en}, \code{es}, \code{tr}, \code{emo}, and \code{testing} (static phrases).}
+languages include: \code{en}, \code{es}, \code{pt}, \code{tr}, \code{emo}, and \code{testing} (static
+phrases).}
 }
 \value{
 Character string with a random saying
