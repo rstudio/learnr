@@ -40,7 +40,7 @@ learnr (development version)
 * Added Spanish language support (@yabellini [#483](https://github.com/rstudio/learnr/pull/483))
 * Added Portuguese language support (@beatrizmilz [#488](https://github.com/rstudio/learnr/pull/488))
 * Added Basque language support (@mikelmadina [#489](https://github.com/rstudio/learnr/pull/489))
-* Added Turkish language support (@hyigit2, @coatless [#493](https://github.com/rstudio/learnr/pull/493))
+* Added Turkish language support (@hyigit2, @coatless [#493](https://github.com/rstudio/learnr/pull/493), [#554](https://github.com/rstudio/learnr/pull/554))
 * Added option for quickly restoring a tutorial without re-evaluating the last stored exercise submission. This feature is enabled by setting the global option `tutorial.quick_restore = TRUE` or the environment variable `TUTORIAL_QUICK_RESTORE=1` (thanks @mstackhouse, [#509](https://github.com/rstudio/learnr/pull/509)).
 * Clicking "Run Code" or using the keyboard shortcut (Cmd/Ctrl + Enter) now runs the selected code only, if any code is selected ([#512](https://github.com/rstudio/learnr/issues/512)).
 * `exercise_result()` no longer combines the code output and feedback; this now happens just before presenting the exercise result to the user ([#522](https://github.com/rstudio/learnr/pull/522)).
