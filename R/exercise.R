@@ -799,7 +799,7 @@ local_restore_options <- function(.local_envir = parent.frame()) {
   withr::defer(restore_options(opts), envir = .local_envir)
 }
 
-local_restore_envvars <- function() {
+local_restore_envvars <- function(.local_envir = parent.frame()) {
   envvars <- Sys.getenv()
   withr::defer(restore_envvars(envvars), envir = .local_envir)
 }
