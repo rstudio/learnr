@@ -142,7 +142,7 @@ A "Hint" or "Solution" button is added to the left side of the exercise header r
 
 ### Markdown Hints
 
-To create a hint based on custom markdown content simply add a `<div>` tag with an `id` attribue that marks it as hint for your exercise (e.g. "filter-hint"). For example:
+To create a hint based on custom markdown content simply add a `<div>` tag with an `id` attribute that marks it as hint for your exercise (e.g. "filter-hint"). For example:
 
 <div id="exercisehintdiv"></div>
 <script type="text/javascript">loadSnippet('exercisehintdiv', 'markdown')</script>
@@ -205,7 +205,7 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 **learnr** provides allows full control over feedback provided to exercise submissions via `exercise.checker` in `tutorial_options()`. We'll eventually cover how to implement a custom `exercise.checker`, but for sake of demonstration, this section uses [**gradethis**](https://github.com/rstudio-education/gradethis)'s approach to exercise checking, which doesn't require knowledge of `exercise.checker` (**NOTE**: **gradethis** is still a work-in-progress. You may want to consider alternatives such as [**checkr**](https://github.com/dtkaplan/checkr)). To use **gradethis**'s approach to exercise checking inside of **learnr**, just call `gradethis_setup()` in a [setup](#Exercise_Setup) chunk, which will set `tutorial_options(exercise.checker = gradethis::grade_learnr)` (among other things).
 
-### Checking results
+### Checking Results
 
 Checking of exercise results may be done through a `*-check` chunk. With a **gradethis** setup, results can be graded with `grade_result()`, like so:
 
@@ -216,7 +216,7 @@ When an exercise `*-check` chunk is provided, **learnr** provides an additional 
 
 <img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
-### Checking code
+### Checking Code
 
 Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.
 
@@ -228,7 +228,7 @@ Checking of exercise *code* may be done through a `*-code-check` chunk. With a *
 It's worth noting that, when a `*-code-check` chunk is supplied, the check is done *prior* to evaluation of the exercise submission, meaning that if the `*-code-check` chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.
 
 
-### Checking errors
+### Checking Errors
 
 In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. If an `*-error-check` chunk is provided, you must also include a `*-check` chunk, typically to provide feedback in case the submission _doesn't_ generate an error. 
 
