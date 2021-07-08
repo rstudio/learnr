@@ -288,6 +288,7 @@ evaluate_exercise <- function(
 ) {
   # Protect global options and environment vars from permanent modification
   local_restore_options()
+  local_restore_envvars()
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
