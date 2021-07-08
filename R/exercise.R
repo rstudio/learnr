@@ -439,6 +439,7 @@ get_checker_func <- function(exercise, name, envir) {
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
   local_restore_options()
+  local_restore_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
