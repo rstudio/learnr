@@ -503,8 +503,14 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <p>Code chunks with <code>exercise=TRUE</code> are evaluated within standalone environments. This means that they don’t have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).</p>
 <div id="exercise-setup-chunks" class="section level3">
 <h3>Exercise Setup Chunks</h3>
-<p>You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise.</p>
-<div id="add-code-to-the-global-setup-chunk" class="section level4">
+<p>You can arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:</p>
+<ol style="list-style-type: decimal">
+<li>Add code to a <a href="#setup-global">global <code>setup</code> chunk</a></li>
+<li>Create a <a href="#setup-shared">shared setup chunk</a></li>
+<li>Create an <a href="#setup-exercise-specific">exercise-specific setup chunk</a></li>
+</ol>
+<p>Each of these is described in more detail below. Note that you may also <a href="#setup-chained">chain setup chunks</a>, which is particularly helpful when exercises build upon each other.</p>
+<div id="setup-global" class="section level4">
 <h4>Add code to the global <code>setup</code> chunk</h4>
 <p>Code in the global <code>setup</code> chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
 <div id="exercisesetup" style="width: 95%;">
@@ -512,7 +518,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </div>
 <script type="text/javascript">loadSnippet('exercisesetup')</script>
 </div>
-<div id="create-a-shared-setup-chunk" class="section level4">
+<div id="setup-shared" class="section level4">
 <h4>Create a shared setup chunk</h4>
 <p>If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
 <div id="exercisesetupshared" style="width: 95%;">
@@ -520,7 +526,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 </div>
-<div id="create-an-exercise-specific--setup-chunk" class="section level4">
+<div id="setup-exercise-specific" class="section level4">
 <h4>Create an exercise-specific <code>-setup</code> chunk</h4>
 <p><strong>learnr</strong> will automatically associate any chunk with a label in the format <code>&lt;exercise&gt;-setup</code> as a setup chunk specifically associated with <code>&lt;exercise&gt;</code>, where <code>&lt;exercise&gt;</code> is replaced with the label of the exercise chunk. For example, the <code>filter-setup</code> chunk will be used as the setup chunk for the <code>filter</code> exercise:</p>
 <div id="exercisesetupsuffix" style="width: 95%;">
@@ -528,7 +534,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
 </div>
-<div id="chained-setup-chunks" class="section level4">
+<div id="setup-chained" class="section level4">
 <h4>Chained setup chunks</h4>
 <p>If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the <code>exercise.setup</code> chunk option. (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <strong>learnr</strong> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
 <div id="exercisesetupchained" style="width: 95%;">

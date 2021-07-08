@@ -90,30 +90,36 @@ Code chunks with `exercise=TRUE` are evaluated within standalone environments. T
 
 ### Exercise Setup Chunks
 
-You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise.
+You can arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:
 
-#### Add code to the global `setup` chunk
+1. Add code to a [global `setup` chunk](#setup-global)
+1. Create a [shared setup chunk](#setup-shared)
+1. Create an [exercise-specific setup chunk](#setup-exercise-specific)
+
+Each of these is described in more detail below. Note that you may also [chain setup chunks](#setup-chained), which is particularly helpful when exercises build upon each other.
+
+#### Add code to the global `setup` chunk {#setup-global}
 
 Code in the global `setup` chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:
 
 <div id="exercisesetup" style="width: 95%;"></div>
 <script type="text/javascript">loadSnippet('exercisesetup')</script>
     
-#### Create a shared setup chunk
+#### Create a shared setup chunk {#setup-shared}
 
 If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
 
 <div id="exercisesetupshared" style="width: 95%;"></div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 
-#### Create an exercise-specific `-setup` chunk
+#### Create an exercise-specific `-setup` chunk {#setup-exercise-specific}
 
 **learnr** will automatically associate any chunk with a label in the format `<exercise>-setup` as a setup chunk specifically associated with `<exercise>`, where `<exercise>` is replaced with the label of the exercise chunk. For example, the `filter-setup` chunk will be used as the setup chunk for the `filter` exercise:
 
 <div id="exercisesetupsuffix" style="width: 95%;"></div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
     
-#### Chained setup chunks
+#### Chained setup chunks {#setup-chained}
 
 If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the `exercise.setup` chunk option. (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) **learnr** will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
 
