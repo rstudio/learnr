@@ -793,8 +793,8 @@ merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) 
 }
 
 local_restore_options <- function(.local_envir = parent.frame()) {
-  options <- options()
-  withr::defer(restore_options(options), envir = .local_envir)
+  opts <- options()
+  withr::defer(restore_options(opts), envir = .local_envir)
 
   envvars <- Sys.getenv()
   withr::defer(restore_envvars(envvars), envir = .local_envir)
