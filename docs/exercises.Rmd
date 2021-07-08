@@ -124,6 +124,25 @@ You can chain use exercise chunks in the setup chunk chain, but keep in mind tha
 
 <div id="exercisechained" style="width: 95%;"></div>
 <script type="text/javascript">loadSnippet('exercisechained')</script>
+    
+### Using Files in Exercises
+
+Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in `.csv` or `.rds` format. **learnr** will look for a folder named `data/` in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial. 
+
+To ensure consistency between each evaluation of the user's code, users interact with a temporary copy of the original directory. This way, users cannot overwrite or delete the original files. Additionally, in the exercise, the directory is always called `data/`.
+
+There are three ways authors can include files for use in exercises:
+
+1. Store the files in a `data/` directory in the same directory as the tutorial.
+
+1. Use the setup chunk to download or write the files to a `data/` directory.
+
+1. Use the `tutorial.data_dir` global option or the `TUTORIAL_DATA_DIR` environment variables to specify a path to a data directory.
+
+In the example below, the global setup chunk is used to write `data/flights_jan.csv` and users are asked to load this file with `read_csv()`.
+
+<div id="exercisedata" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisedata')</script>
 
 ## Hints and Solutions
 
