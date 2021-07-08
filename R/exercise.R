@@ -287,8 +287,7 @@ evaluate_exercise <- function(
   exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
 ) {
   # Protect global options and environment vars from permanent modification
-  local_restore_options()
-  local_restore_envvars()
+  local_restore_options_and_envvars()
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -439,8 +438,7 @@ get_checker_func <- function(exercise, name, envir) {
 
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
-  local_restore_options()
-  local_restore_envvars()
+  local_restore_options_and_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
@@ -792,6 +790,11 @@ merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) 
   # filter out options we don't need for the exercise.Rmd
   opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
   opts[!grepl("^exercise", names(opts))]
+}
+
+local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
+  local_restore_options(.local_envir)
+  local_restore_envvars(.local_envir)
 }
 
 local_restore_options <- function(.local_envir = parent.frame()) {
