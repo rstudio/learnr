@@ -35,7 +35,7 @@ reencode_utf8 <- function(x) {
       USE.NAMES = FALSE,
       FUN = function(x) {
 
-        bytes_nz <- x[x > 0]
+        bytes_nz <- x[min(which(x > 0)):length(x)]
 
         if (length(bytes_nz) > 2) {
           out <- paste("\\U", paste(as.hexmode(x), collapse = ""), sep = "")
@@ -90,4 +90,12 @@ translations_list <-
   # Drop null keys again
   map_depth(3, compact)
 
-saveRDS(translations_list, file = here("inst/i18n_translations"), version = 2)
+saveRDS(translations_list, file = here("inst", "internals", "i18n_translations.rds"), version = 2)
+
+i18n_random_phrases <-
+  here("data-raw", "i18n_random-phrases.yml") %>%
+  yaml::read_yaml() %>%
+  map_depth(3, reencode_utf8) %>%
+  map_depth(2, map_chr, stri_unescape_unicode)
+
+saveRDS(i18n_random_phrases, file = here("inst", "internals", "i18n_random_phrases.rds"), version = 2)

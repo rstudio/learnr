@@ -25,3 +25,4 @@ rsconnect/
 ^Meta$
 ^\.github
 ^data-raw$
+^\.github$

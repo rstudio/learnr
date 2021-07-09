@@ -5,13 +5,19 @@
 \alias{random_encouragement}
 \title{Random praise and encouragement}
 \usage{
-random_praise()
+random_praise(language = NULL)
 
-random_encouragement()
+random_encouragement(language = NULL)
+}
+\arguments{
+\item{language}{The language for the random phrase. The currently supported
+languages include: \code{en}, \code{es}, \code{pt}, \code{tr}, \code{emo}, and \code{testing} (static
+phrases).}
 }
 \value{
 Character string with a random saying
 }
 \description{
-Random praises and encouragements sayings to compliment your question and quiz experience.
+Random praises and encouragements sayings to compliment your question and
+quiz experience.
 }

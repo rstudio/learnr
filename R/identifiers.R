@@ -10,7 +10,7 @@ initialize_session_state <- function(session, metadata, location, request) {
   }
 
   # function to initialize an identifier (read from http header or take default)
-  initialize_identifer <- function(identifier, default) {
+  initialize_identifier <- function(identifier, default) {
 
     # determine whether a custom header provides the value (fallback to default)
     header <- as_rook_header(getOption(sprintf("tutorial.http_header_%s", identifier)))
@@ -34,15 +34,16 @@ initialize_session_state <- function(session, metadata, location, request) {
 
   # initialize and return identifiers
   list(
-    tutorial_id = initialize_identifer(
+    tutorial_id = initialize_identifier(
       "tutorial_id",
       default = default_tutorial_id(metadata$id, location, pkg)
     ),
-    tutorial_version = initialize_identifer(
+    tutorial_version = initialize_identifier(
       "tutorial_version",
       default = default_tutorial_version(metadata$version, pkg)
     ),
-    user_id = initialize_identifer("user_id", default = default_user_id())
+    user_id = initialize_identifier("user_id", default = default_user_id()),
+    language = initialize_identifier("language", default = default_language())
   )
 }
 
@@ -96,6 +97,12 @@ default_tutorial_version <- function(version = NULL, pkg = package_info()) {
 
 default_user_id <- function() {
   unname(Sys.info()["user"])
+}
+
+default_language <- function() {
+  # knitr option > R global option > default
+  knitr::opts_knit$get("tutorial.language") %||%
+    getOption("tutorial.language", "en")
 }
 
 read_request <- function(session, name, default = NULL) {
