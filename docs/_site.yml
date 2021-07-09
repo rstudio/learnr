@@ -5,9 +5,9 @@ output:
     theme: cosmo
     highlight: textmate
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     toc_float: 
-      collapsed: false
+      collapsed: true
     css: styles.css
     includes:
       in_header: _include/header.html
