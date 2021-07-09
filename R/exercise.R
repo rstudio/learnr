@@ -264,13 +264,27 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
 # returns NULL if everything is okay, otherwise a character string describing
 # the reason the validation check failed.
 validate_exercise <- function(exercise, require_items = NULL) {
-required_names <- c("code", "label", "options", "chunks", require_items)
+  required_names <- c("code", "label", "options", "chunks", require_items)
   missing_names <- setdiff(required_names, names(exercise))
   if (length(missing_names)) {
     return(paste("Missing exercise items:", paste(missing_names, collapse = ", ")))
   }
 
   NULL
+}
+
+standardize_exercise_code <- function(exercise) {
+  for (type in c("error_check", "code_check", "check", "code", "global_setup")) {
+    if (inherits(exercise[[type]], "AsIs")) {
+      next
+    }
+    if (is.null(exercise[[type]]) || !length(exercise[[type]])) {
+      exercise[[type]] <- ""
+      next
+    }
+    exercise[[type]] <- str_trim(paste0(exercise[[type]], collapse = "\n"))
+  }
+  exercise
 }
 
 # evaluate an exercise and return a list containing output and dependencies
@@ -295,11 +309,14 @@ evaluate_exercise <- function(
     require_items = if (evaluate_global_setup) "global_setup"
   )
 
+  # standardize exercise code to single string (code, *check, global_setup)
+  exercise <- standardize_exercise_code(exercise)
+
   i18n_set_language_option(exercise$tutorial$language)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
-  if (!nzchar(str_trim(paste0(exercise$code, collapse = "\n")))) {
+  if (!nzchar(exercise$code)) {
     # " " since html_output needs to pass a req()
     return(exercise_result(html_output = " "))
   }
@@ -309,8 +326,8 @@ evaluate_exercise <- function(
   }
 
   checker_feedback <- NULL
-  # Run the checker pre-evaluation _if_ there is code checking to do
-  if (length(exercise$code_check)) {
+  # Check the code pre-evaluation, if code_check is provided
+  if (nzchar(exercise$code_check)) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$code_check,
@@ -338,7 +355,7 @@ evaluate_exercise <- function(
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(err_render) {
-      if (!is.null(exercise$error_check) && any(nzchar(exercise$error_check))) {
+      if (nzchar(exercise$error_check)) {
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
         checker_feedback <- try_checker(
@@ -363,7 +380,7 @@ evaluate_exercise <- function(
   }
 
   # Run the checker post-evaluation (for checking code results)
-  if (length(exercise$check)) {
+  if (nzchar(exercise$check)) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$check,
@@ -375,7 +392,7 @@ evaluate_exercise <- function(
     )
   }
 
-  # include any checker feedback with the exercise results
+  # Return checker feedback (if any) with the exercise results
   exercise_result(
     feedback = checker_feedback$feedback,
     html_output = rmd_results$html_output

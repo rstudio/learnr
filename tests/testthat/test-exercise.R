@@ -321,6 +321,26 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   )
 })
 
+test_that("standardize_exercise_result() ensures top-level code is length-1 string", {
+  ex <- standardize_exercise_code(
+    list(
+      code = c("a", "b"),
+      check = character(),
+      code_check = c("  ", "  ", "\t\t\t"),
+      global_setup = c(
+        "",
+        "def return_one():",
+        "\treturn 1",
+        ""
+      )
+    )
+  )
+
+  expect_equal(ex$code, "a\nb")
+  expect_equal(ex$check, "")
+  expect_equal(ex$code_check, "")
+  expect_equal(ex$global_setup, "def return_one():\n\treturn 1")
+})
 
 # exercise_result() -------------------------------------------------------
 
