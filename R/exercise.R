@@ -595,6 +595,7 @@ render_exercise <- function(exercise, envir) {
   })
 
   if (is_exercise_result(output_file)) {
+    # this only happens when the render result is a timeout error
     return(output_file)
   }
 

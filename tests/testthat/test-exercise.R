@@ -764,3 +764,29 @@ test_that("env vars are protected from both user and author modification", {
   # evaluate_exercise() restores the TEST option after checking too
   expect_equal(res$after_eval, "APP")
 })
+
+
+# Timelimit ---------------------------------------------------------------
+
+test_that("Exercise timelimit error is returned when exercise takes too long", {
+  skip_on_cran()
+
+  ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
+
+  make_evaluator <- setup_forked_evaluator_factory(max_forked_procs = 1)
+  evaluator <- make_evaluator(
+    evaluate_exercise(ex, new.env()),
+    timelimit = ex$options$exercise.timelimit
+  )
+
+  evaluator$start()
+  while (!evaluator$completed()) {
+    Sys.sleep(1)
+  }
+  res <- evaluator$result()
+
+  expect_s3_class(res, "learnr_exercise_result")
+  expect_true(res$timeout_exceeded)
+  expect_match(res$error_message, "permitted timelimit")
+  expect_match(as.character(res$html_output), "alert-danger")
+})
