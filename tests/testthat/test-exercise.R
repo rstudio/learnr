@@ -486,6 +486,147 @@ test_that("exercise versions upgrade correctly", {
   expect_error(upgrade_exercise(ex_99_broken))
 })
 
+# data files -----------------------------------------------------------------
+
+test_that("data/ - files in data/ directory can be accessed", {
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("ORIGINAL", "data/test.txt")
+
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "ORIGINAL")
+})
+
+test_that("data/ - no issues if data directory does not exist", {
+  withr::local_dir(withr::local_tempdir())
+
+  ex  <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "SUCCESS")
+})
+
+test_that("data/ - original files are modified by exercise code", {
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("ORIGINAL", "data/test.txt")
+
+  ex <- mock_exercise(
+    user_code = '
+    writeLines("MODIFIED", "data/test.txt")
+    readLines("data/test.txt")
+    ',
+    check = TRUE
+  )
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
+  expect_equal(readLines("data/test.txt"),           "ORIGINAL")
+})
+
+test_that("data/ - specify alternate data directory with envvar", {
+  withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("DEFAULT", "data/test.txt")
+  dir.create("envvar")
+  writeLines("ENVVAR", "envvar/test.txt")
+
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "ENVVAR")
+
+  ex <- mock_exercise(
+    user_code = '
+      writeLines("MODIFIED", "data/test.txt")
+      readLines("data/test.txt")
+    ',
+    check = TRUE
+  )
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
+  expect_equal(readLines("data/test.txt"),           "DEFAULT")
+  expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
+})
+
+test_that("data/ - errors if envvar directory does not exist", {
+  withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("DEFAULT", "data/test.txt")
+
+  ex <- mock_exercise(user_code = 'readLines("data/test.txt")')
+  expect_error(
+    evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+    class = "learnr_missing_source_data_dir"
+  )
+})
+
+test_that("data/ - specify alternate data directory with `options()`", {
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("DEFAULT", "data/test.txt")
+  dir.create("nested/structure/data", recursive = TRUE)
+  writeLines("NESTED", "nested/structure/test.txt")
+
+  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  res <- evaluate_exercise(ex, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value,   "DEFAULT")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
+
+  ex <- mock_exercise(
+    user_code    = 'readLines("data/test.txt")',
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
+  )
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value, "NESTED")
+
+  ex <- mock_exercise(
+    user_code = '
+      writeLines("MODIFIED", "data/test.txt")
+      readLines("data/test.txt")
+    ',
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
+  )
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value,   "MODIFIED")
+  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(readLines("nested/structure/test.txt"), "NESTED")
+})
+
+test_that("data/ - errors if `options()` directory does not exist", {
+  withr::local_dir(withr::local_tempdir())
+  ex <- mock_exercise(
+    user_code    = 'readLines("data/test.txt")',
+    global_setup = 'options(tutorial.data_dir = "nested/structure")'
+  )
+  expect_error(
+    evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+    class = "learnr_missing_source_data_dir"
+  )
+})
+
+test_that("data/ - data directory option has precendence over envvar", {
+  withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
+  withr::local_dir(withr::local_tempdir())
+  dir.create("data")
+  writeLines("DEFAULT", "data/test.txt")
+  dir.create("nested/structure/data", recursive = TRUE)
+  writeLines("NESTED", "nested/structure/test.txt")
+  dir.create("envvar")
+  writeLines("ENVVAR", "envvar/test.txt")
+
+  ex <- mock_exercise(
+    user_code    = 'readLines("data/test.txt")',
+    global_setup = 'options(tutorial.data_dir = "nested/structure")',
+    check        = TRUE
+  )
+  res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(res$feedback$checker_args$last_value, "NESTED")
+})
+
 # global options are restored after running user code ---------------------
 
 test_that("options() are protected from student modification", {
@@ -625,4 +766,3 @@ test_that("env vars are protected from both user and author modification", {
   # evaluate_exercise() restores the TEST option after checking too
   expect_equal(res$after_eval, "APP")
 })
-

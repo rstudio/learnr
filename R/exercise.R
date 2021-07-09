@@ -283,10 +283,11 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 #   been executed, so they'd typically use `FALSE`, the default. Remote
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
-evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+evaluate_exercise <- function(
+  exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
+) {
   # Protect global options and environment vars from permanent modification
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  local_restore_options_and_envvars()
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -311,6 +312,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   exercise_dir <- tempfile(pattern = "lnr-ex")
   dir.create(exercise_dir)
   on.exit(unlink(exercise_dir), add = TRUE)
+
+  # Copy files from data directory into exercise
+  copy_data_dir(data_dir, exercise_dir)
 
   checker_feedback <- NULL
   # Run the checker pre-evaluation _if_ there is code checking to do
@@ -434,8 +438,7 @@ get_checker_func <- function(exercise, name, envir) {
 
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  local_restore_options_and_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
@@ -789,6 +792,34 @@ merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) 
   opts[!grepl("^exercise", names(opts))]
 }
 
+local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
+  local_restore_options(.local_envir)
+  local_restore_envvars(.local_envir)
+}
+
+local_restore_options <- function(.local_envir = parent.frame()) {
+  opts <- options()
+  withr::defer(restore_options(opts), envir = .local_envir)
+}
+
+local_restore_envvars <- function(.local_envir = parent.frame()) {
+  envvars <- Sys.getenv()
+  withr::defer(restore_envvars(envvars), envir = .local_envir)
+}
+
+restore_options <- function(old) {
+  current    <- options()
+  nulls      <- setdiff(names(current), names(old))
+  old[nulls] <- list(NULL)
+  options(old)
+}
+
+restore_envvars <- function(old) {
+  current <- Sys.getenv()
+  nulls   <- setdiff(names(current), names(old))
+  Sys.unsetenv(nulls)
+  do.call(Sys.setenv, as.list(old))
+}
 
 #' An Exercise Checker for Debugging
 #'

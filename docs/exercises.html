@@ -13,12 +13,22 @@
 
 <title>Exercises</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -50,11 +60,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -67,32 +72,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
@@ -104,10 +83,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -124,40 +99,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -185,7 +133,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -197,7 +145,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -208,10 +156,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -223,7 +184,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -335,12 +295,6 @@ div.tocify {
   border-radius: 0px;
 }
 
-.tocify-subheader {
-  display: inline;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-}
 
 </style>
 
@@ -355,7 +309,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -400,7 +354,7 @@ div.tocify {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rstudio/learnr">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -409,7 +363,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -547,34 +501,69 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <div id="exercise-setup" class="section level2">
 <h2>Exercise Setup</h2>
 <p>Code chunks with <code>exercise=TRUE</code> are evaluated within standalone environments. This means that they don’t have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).</p>
-<p>You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:</p>
+<div id="exercise-setup-chunks" class="section level3">
+<h3>Exercise Setup Chunks</h3>
+<p>You can arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:</p>
 <ol style="list-style-type: decimal">
-<li><p>Add code to the global <code>setup</code> chunk. This code is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
+<li>Add code to a <a href="#setup-global">global <code>setup</code> chunk</a></li>
+<li>Create a <a href="#setup-shared">shared setup chunk</a></li>
+<li>Create an <a href="#setup-exercise-specific">exercise-specific setup chunk</a></li>
+</ol>
+<p>Each of these is described in more detail below. Note that you may also <a href="#setup-chained">chain setup chunks</a>, which is particularly helpful when exercises build upon each other.</p>
+<div id="setup-global" class="section level4">
+<h4>Add code to the global <code>setup</code> chunk</h4>
+<p>Code in the global <code>setup</code> chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
 <div id="exercisesetup" style="width: 95%;">
 
 </div>
-<script type="text/javascript">loadSnippet('exercisesetup')</script></li>
-<li><p>Create a setup chunk that’s shared by several exercises. If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
+<script type="text/javascript">loadSnippet('exercisesetup')</script>
+</div>
+<div id="setup-shared" class="section level4">
+<h4>Create a shared setup chunk</h4>
+<p>If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
 <div id="exercisesetupshared" style="width: 95%;">
 
 </div>
-<script type="text/javascript">loadSnippet('exercisesetupshared')</script></li>
-<li><p>Create a setup chunk that’s specific to another chunk using a <code>-setup</code> chunk suffix. To do this give your exercise chunk a label (e.g. <code>filter</code>) then add another chunk with the same label plus a <code>-setup</code> suffix (e.g. <code>filter-setup</code>). For example:</p>
+<script type="text/javascript">loadSnippet('exercisesetupshared')</script>
+</div>
+<div id="setup-exercise-specific" class="section level4">
+<h4>Create an exercise-specific <code>-setup</code> chunk</h4>
+<p><strong>learnr</strong> will automatically associate any chunk with a label in the format <code>&lt;exercise&gt;-setup</code> as a setup chunk specifically associated with <code>&lt;exercise&gt;</code>, where <code>&lt;exercise&gt;</code> is replaced with the label of the exercise chunk. For example, the <code>filter-setup</code> chunk will be used as the setup chunk for the <code>filter</code> exercise:</p>
 <div id="exercisesetupsuffix" style="width: 95%;">
 
 </div>
-<script type="text/javascript">loadSnippet('exercisesetupsuffix')</script></li>
-<li><p>If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can use <code>exercise.setup</code> (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <code>learnr</code> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, let’s turn the first exercise in the previous examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
+<script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
+</div>
+<div id="setup-chained" class="section level4">
+<h4>Chained setup chunks</h4>
+<p>If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the <code>exercise.setup</code> chunk option. (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <strong>learnr</strong> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
 <div id="exercisesetupchained" style="width: 95%;">
 
 </div>
-<script type="text/javascript">loadSnippet('exercisesetupchained')</script></li>
-<li><p>You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for the <code>arrange</code> exercise that use it as its setup:</p>
+<script type="text/javascript">loadSnippet('exercisesetupchained')</script>
+<p>You can chain use exercise chunks in the setup chunk chain, but keep in mind that the code as it appears in the R Markdown source is used to serve as the setup code, not the user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for the <code>arrange</code> exercise that use it as its setup:</p>
 <div id="exercisechained" style="width: 95%;">
 
 </div>
-<script type="text/javascript">loadSnippet('exercisechained')</script></li>
+<script type="text/javascript">loadSnippet('exercisechained')</script>
+</div>
+</div>
+<div id="using-files-in-exercises" class="section level3">
+<h3>Using Files in Exercises</h3>
+<p>Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in <code>.csv</code> or <code>.rds</code> format. <strong>learnr</strong> will look for a folder named <code>data/</code> in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial.</p>
+<p>To ensure consistency between each evaluation of the user’s code, users interact with a temporary copy of the original directory. This way, users cannot overwrite or delete the original files. Additionally, in the exercise, the directory is always called <code>data/</code>.</p>
+<p>There are three ways authors can include files for use in exercises:</p>
+<ol style="list-style-type: decimal">
+<li><p>Store the files in a <code>data/</code> directory in the same directory as the tutorial.</p></li>
+<li><p>Use the setup chunk to download or write the files to a <code>data/</code> directory.</p></li>
+<li><p>Use the <code>tutorial.data_dir</code> global option or the <code>TUTORIAL_DATA_DIR</code> environment variables to specify a path to a data directory.</p></li>
 </ol>
+<p>In the example below, the global setup chunk is used to write <code>data/flights_jan.csv</code> and users are asked to load this file with <code>read_csv()</code>.</p>
+<div id="exercisedata" style="width: 95%;">
+
+</div>
+<script type="text/javascript">loadSnippet('exercisedata')</script>
+</div>
 </div>
 <div id="hints-and-solutions" class="section level2">
 <h2>Hints and Solutions</h2>
@@ -591,7 +580,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </div>
 <div id="markdown-hints" class="section level3">
 <h3>Markdown Hints</h3>
-<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribue that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
+<p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribute that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
 <div id="exercisehintdiv">
 
 </div>
@@ -652,7 +641,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h2>Exercise Checking</h2>
 <p><strong>learnr</strong> provides allows full control over feedback provided to exercise submissions via <code>exercise.checker</code> in <code>tutorial_options()</code>. We’ll eventually cover how to implement a custom <code>exercise.checker</code>, but for sake of demonstration, this section uses <a href="https://github.com/rstudio-education/gradethis"><strong>gradethis</strong></a>’s approach to exercise checking, which doesn’t require knowledge of <code>exercise.checker</code> (<strong>NOTE</strong>: <strong>gradethis</strong> is still a work-in-progress. You may want to consider alternatives such as <a href="https://github.com/dtkaplan/checkr"><strong>checkr</strong></a>). To use <strong>gradethis</strong>’s approach to exercise checking inside of <strong>learnr</strong>, just call <code>gradethis_setup()</code> in a <a href="#Exercise_Setup">setup</a> chunk, which will set <code>tutorial_options(exercise.checker = gradethis::grade_learnr)</code> (among other things).</p>
 <div id="checking-results" class="section level3">
-<h3>Checking results</h3>
+<h3>Checking Results</h3>
 <p>Checking of exercise results may be done through a <code>*-check</code> chunk. With a <strong>gradethis</strong> setup, results can be graded with <code>grade_result()</code>, like so:</p>
 <div id="exercisecheck">
 
@@ -662,7 +651,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <p><img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
 </div>
 <div id="checking-code" class="section level3">
-<h3>Checking code</h3>
+<h3>Checking Code</h3>
 <p>Checking of exercise <em>code</em> may be done through a <code>*-code-check</code> chunk. With a <strong>gradethis</strong> setup, if you supply a <code>*-solution</code> chunk and call <code>grade_code()</code> inside <code>*-code-check</code>, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.</p>
 <div id="exercisecodecheck">
 
@@ -672,7 +661,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <p>It’s worth noting that, when a <code>*-code-check</code> chunk is supplied, the check is done <em>prior</em> to evaluation of the exercise submission, meaning that if the <code>*-code-check</code> chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.</p>
 </div>
 <div id="checking-errors" class="section level3">
-<h3>Checking errors</h3>
+<h3>Checking Errors</h3>
 <p>In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a <code>*-error-check</code> chunk or through the global <code>exercise.error.check.code</code> option. If an <code>*-error-check</code> chunk is provided, you must also include a <code>*-check</code> chunk, typically to provide feedback in case the submission <em>doesn’t</em> generate an error.</p>
 <p>With a <strong>gradethis</strong> setup, <code>exercise.error.check.code</code> is set to <code>grade_code()</code>. This means that, by default, users will receive intelligent feedback for a submission that generates an error using the <code>*-solution</code> chunk, if one is provided.</p>
 <p><img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
@@ -915,7 +904,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -925,6 +914,9 @@ $(document).ready(function () {
 <script>
 $(document).ready(function ()  {
 
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
         .removeClass('toc-ignore')
@@ -932,7 +924,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -941,7 +933,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = false;
+    options.showAndHide = true;
     options.smoothScroll = true;
 
     // tocify
