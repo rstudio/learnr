@@ -327,6 +327,11 @@ evaluate_exercise <- function(
 
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- withr::local_tempdir(pattern = "lrn-ex")
+
+  # Copy files from data directory into exercise
+  copy_data_dir(data_dir, exercise_dir)
+
+  # Move into the temp exercise directory for evaluation and checking
   withr::local_dir(exercise_dir)
 
   # Resolve knitr options for the exercise and setup chunks
