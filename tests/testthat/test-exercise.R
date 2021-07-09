@@ -790,6 +790,7 @@ test_that("env vars are protected from both user and author modification", {
 
 test_that("Exercise timelimit error is returned when exercise takes too long", {
   skip_on_cran()
+  skip_on_os("windows")
 
   ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
 
