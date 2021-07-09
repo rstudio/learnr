@@ -334,7 +334,7 @@ evaluate_exercise <- function(
   # Move into the temp exercise directory for evaluation and checking
   withr::local_dir(exercise_dir)
 
-  # Resolve knitr options for the exercise and setup chunks
+  # Evaluate the submitted code by rendering the exercise in a special .Rmd
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(e) {
