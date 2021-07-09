@@ -337,24 +337,24 @@ evaluate_exercise <- function(
   # Evaluate the submitted code by rendering the exercise in a special .Rmd
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
-    error = function(e) {
+    error = function(err_render) {
       if (length(exercise$error_check)) {
         # Run the condition through an error checker
         # (the exercise could be to throw an error!)
         checker_feedback <- try_checker(
           exercise, "exercise.checker",
           check_code = exercise$error_check,
-          envir_result = e$envir_result,
-          evaluate_result = e$evaluate_result,
-          envir_prep = e$envir_prep,
-          last_value = e,
+          envir_result = err_render$envir_result,
+          evaluate_result = err_render$evaluate_result,
+          envir_prep = err_render$envir_prep,
+          last_value = err_render,
           engine = exercise$engine
         )
         if (is_exercise_result(checker_feedback)) {
           return(checker_feedback)
         }
       }
-      exercise_result_error(e$error_message)
+      exercise_result_error(err_render$error_message)
     }
   )
 
