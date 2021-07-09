@@ -140,16 +140,15 @@ test_that("render_exercise() returns identical envir_prep and envir_result if an
     error_check = "unevaluated, triggers error_check in render_exercise()"
   )
 
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-
-  # the error during render causes a checker evaluation, so we can recover
-  # the environments from the checker_args returned by the debug checker
-  exercise_result <- exercise_result$feedback$checker_args
-
-  expect_s3_class(exercise_result$last_value, "simpleError")
-  expect_equal(conditionMessage(exercise_result$last_value), "boom")
-
-  expect_identical(exercise_result$envir_prep, exercise_result$envir_result)
+  render_result <- withr::with_tempdir(
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
+  )
+  expect_s3_class(render_result$last_value, "simpleError")
+  expect_equal(conditionMessage(render_result$last_value), "boom")
+  expect_identical(render_result$envir_prep, render_result$envir_result)
+  expect_equal(get("x", render_result$envir_prep), 1)
 })
 
 test_that("render_exercise() returns envir_result up to error", {
@@ -162,37 +161,36 @@ test_that("render_exercise() returns envir_result up to error", {
     error_check = "unevaluated, triggers error_check in render_exercise()"
   )
 
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-
-  # the error during render causes a checker evaluation, so we can recover
-  # the environments from the checker_args returned by the debug checker
-  exercise_result <- exercise_result$feedback$checker_args
+  exercise_result <- withr::with_tempdir(
+    rlang::catch_cnd(
+      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+    )
+  )
 
   expect_s3_class(exercise_result$last_value, "simpleError")
   expect_equal(conditionMessage(exercise_result$last_value), "boom")
 
-  expect_false(identical(exercise_result$envir_prep, exercise_result$envir_result))
+  expect_false(
+    identical(exercise_result$envir_prep, exercise_result$envir_result)
+  )
   expect_setequal(ls(exercise_result$envir_prep), "x")
   expect_setequal(ls(exercise_result$envir_result), c("x", "y"))
   expect_identical(get("y", exercise_result$envir_result), 2)
 })
 
-test_that("render_exercise() with errors and no checker returns exercise result error", {
+test_that("evaluate_exercise() with errors and no checker includes exercise result error", {
   exercise <- mock_exercise(
     user_code = "stop('user')",
     chunks = list(mock_chunk("setup-1", "stop('setup')")),
     setup_label = "setup-1"
   )
-
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-  expect_s3_class(exercise_result, "learnr_exercise_result")
-  expect_identical(exercise_result$error_message, "setup")
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  expect_equal(exercise_result$error_message, "setup")
   expect_null(exercise_result$feedback)
 
-  exercise <- mock_exercise(user_code = "stop('user')")
-  exercise_result <- withr::with_tempdir(render_exercise(exercise, new.env()))
-  expect_s3_class(exercise_result, "learnr_exercise_result")
-  expect_identical(exercise_result$error_message, "user")
+  exercise        <- mock_exercise(user_code = "stop('user')")
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  expect_equal(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
 })
 
@@ -228,13 +226,15 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
 
   files <- expect_message(
     withr::with_tempdir({
-      before <-  dir()
-      res <- render_exercise(exercise, new.env())
+      before <- dir()
+      e      <- rlang::catch_cnd(
+        render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+      )
+
       list(
         before = before,
-        before_error = get("dir_setup", res$feedback$checker_args$envir_prep),
-        during = res$feedback$checker_result,
-        after = dir()
+        during = get("dir_setup", e$envir_prep),
+        after  = dir()
       )
     }),
     "exercise_prep.Rmd"
@@ -243,9 +243,7 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   # start with nothing
   expect_identical(files$before, character(0))
   # prep file is present while evaluating prep
-  expect_identical(files$before_error, "exercise_prep.Rmd")
-  # prep files are cleaned up after error
-  expect_identical(files$during, character(0))
+  expect_identical(files$during, "exercise_prep.Rmd")
   # nothing in directory after render_exercise() because user code didn't evaluate
   expect_identical(files$after, character(0))
 })
@@ -323,6 +321,26 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   )
 })
 
+test_that("standardize_exercise_result() ensures top-level code is length-1 string", {
+  ex <- standardize_exercise_code(
+    list(
+      code = c("a", "b"),
+      check = character(),
+      code_check = c("  ", "  ", "\t\t\t"),
+      global_setup = c(
+        "",
+        "def return_one():",
+        "\treturn 1",
+        ""
+      )
+    )
+  )
+
+  expect_equal(ex$code, "a\nb")
+  expect_equal(ex$check, "")
+  expect_equal(ex$code_check, "")
+  expect_equal(ex$global_setup, "def return_one():\n\treturn 1")
+})
 
 # exercise_result() -------------------------------------------------------
 
@@ -765,4 +783,31 @@ test_that("env vars are protected from both user and author modification", {
 
   # evaluate_exercise() restores the TEST option after checking too
   expect_equal(res$after_eval, "APP")
+})
+
+
+# Timelimit ---------------------------------------------------------------
+
+test_that("Exercise timelimit error is returned when exercise takes too long", {
+  skip_on_cran()
+  skip_on_os("windows")
+
+  ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
+
+  make_evaluator <- setup_forked_evaluator_factory(max_forked_procs = 1)
+  evaluator <- make_evaluator(
+    evaluate_exercise(ex, new.env()),
+    timelimit = ex$options$exercise.timelimit
+  )
+
+  evaluator$start()
+  while (!evaluator$completed()) {
+    Sys.sleep(1)
+  }
+  res <- evaluator$result()
+
+  expect_s3_class(res, "learnr_exercise_result")
+  expect_true(res$timeout_exceeded)
+  expect_match(res$error_message, "permitted timelimit")
+  expect_match(as.character(res$html_output), "alert-danger")
 })
