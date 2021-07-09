@@ -338,9 +338,9 @@ evaluate_exercise <- function(
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(err_render) {
-      if (length(exercise$error_check)) {
-        # Run the condition through an error checker
-        # (the exercise could be to throw an error!)
+      if (!is.null(exercise$error_check) && any(nzchar(exercise$error_check))) {
+        # Check the error thrown by the submitted code when there's error
+        # checking: the exercise could be to throw an error!
         checker_feedback <- try_checker(
           exercise, "exercise.checker",
           check_code = exercise$error_check,
