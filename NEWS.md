@@ -47,6 +47,7 @@ learnr (development version)
 * `exercise_result()` no longer combines the code output and feedback; this now happens just before presenting the exercise result to the user ([#522](https://github.com/rstudio/learnr/pull/522)).
 * Correct/incorrect question markers are now configurable via CSS. You can change or style these markers using the `.tutorial-question .question-final .correct::before` and `.tutorial-qusetion .question-final .incorrect::before` selectors. A new helper function, `finalize_question()`, can be used to apply the `.question-final` class to custom learnr questions. ([#531](https://github.com/rstudio/learnr/pull/531))
 * `options()` and environment variables are now reset after rendering exercises so changes made by user input or checking code cannot affect other exercises. ([#542](https://github.com/rstudio/learnr/pull/542))
+* Exercise checking is now conducted in the same temporary directory where exercises are evaluated. ([#544](https://github.com/rstudio/learnr/pull/544/))
 
 ## Bug fixes
 
