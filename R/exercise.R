@@ -326,31 +326,38 @@ evaluate_exercise <- function(
   }
 
   # Setup a temporary directory for rendering the exercise
-  exercise_dir <- withr::local_tempdir(pattern = "lrn-ex")
-  withr::local_dir(exercise_dir)
+  exercise_dir <- tempfile(pattern = "lnr-ex")
+  dir.create(exercise_dir)
+  on.exit(unlink(exercise_dir), add = TRUE)
+
+  # Copy files from data directory into exercise
+  copy_data_dir(data_dir, exercise_dir)
 
   # Resolve knitr options for the exercise and setup chunks
-  rmd_results <- tryCatch(
-    render_exercise(exercise, envir),
-    error = function(e) {
-      if (length(exercise$error_check)) {
-        # Run the condition through an error checker
-        # (the exercise could be to throw an error!)
-        checker_feedback <- try_checker(
-          exercise, "exercise.checker",
-          check_code = exercise$error_check,
-          envir_result = e$envir_result,
-          evaluate_result = e$evaluate_result,
-          envir_prep = e$envir_prep,
-          last_value = e,
-          engine = exercise$engine
-        )
-        if (is_exercise_result(checker_feedback)) {
-          return(checker_feedback)
+  rmd_results <- withr::with_dir(
+    exercise_dir,
+    tryCatch(
+      render_exercise(exercise, envir),
+      error = function(e) {
+        if (length(exercise$error_check)) {
+          # Run the condition through an error checker
+          # (the exercise could be to throw an error!)
+          checker_feedback <- try_checker(
+            exercise, "exercise.checker",
+            check_code = exercise$error_check,
+            envir_result = e$envir_result,
+            evaluate_result = e$evaluate_result,
+            envir_prep = e$envir_prep,
+            last_value = e,
+            engine = exercise$engine
+          )
+          if (is_exercise_result(checker_feedback)) {
+            return(checker_feedback)
+          }
         }
+        exercise_result_error(e$error_message)
       }
-      exercise_result_error(e$error_message)
-    }
+    )
   )
 
   if (is_exercise_result(rmd_results)) {
