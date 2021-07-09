@@ -273,17 +273,19 @@ validate_exercise <- function(exercise, require_items = NULL) {
   NULL
 }
 
-standardize_exercise_code <- function(exercise) {
-  for (type in c("error_check", "code_check", "check", "code", "global_setup")) {
-    if (inherits(exercise[[type]], "AsIs")) {
-      next
-    }
-    if (is.null(exercise[[type]]) || !length(exercise[[type]])) {
-      exercise[[type]] <- ""
-      next
-    }
-    exercise[[type]] <- str_trim(paste0(exercise[[type]], collapse = "\n"))
+standardize_code <- function(code) {
+  if (inherits(code, "AsIs")) {
+    return(code)
   }
+  if (is.null(code) || !length(code)) {
+    return("")
+  }
+  str_trim(paste0(code, collapse = "\n"))
+}
+
+standardize_exercise_code <- function(exercise) {
+  ex_code_items <- c("error_check", "code_check", "check", "code", "global_setup")
+  exercise[ex_code_items] <- lapply(exercise[ex_code_items], standardize_code)
   exercise
 }
 
