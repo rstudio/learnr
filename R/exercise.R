@@ -722,11 +722,9 @@ exercise_code_chunks <- function(chunks) {
 }
 
 check_blanks <- function(user_code, blank_regex) {
-  # Ensure `user_code` is a character vector to avoid issue with unserialized
-  #   code which comes as a list in R < 3.5
-  user_code   <- as.character(user_code)
   blank_regex <- paste(blank_regex, collapse = "|")
-  blanks      <- str_match_all(user_code, blank_regex)
+
+  blanks <- str_match_all(user_code, blank_regex)
 
   if (!length(blanks)) {
     return(NULL)
