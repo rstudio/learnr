@@ -630,51 +630,53 @@ test_that("env vars are protected from both user and author modification", {
 
 test_that("evaluate_exercise() returns a message if code contains ___", {
   ex     <- mock_exercise(user_code = '____("test")')
-  z <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 1 blank")
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "____")
 
   ex     <- mock_exercise(user_code = '____(____)')
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 2 blanks")
+  expect_match(result$feedback$message, "&quot;count&quot;:2")
 
   ex     <- mock_exercise(user_code = '____("____")')
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 2 blanks")
+  expect_match(result$feedback$message, "&quot;count&quot;:2")
 })
 
 test_that("setting a different blank for the blank checker", {
   ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 1 blank")
+  expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "###")
 
   ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 2 blanks")
+  expect_match(result$feedback$message, "&quot;count&quot;:2")
 
   ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "contains 2 blanks")
+  expect_match(result$feedback$message, "&quot;count&quot;:2")
 })
 
 test_that("setting a different blank for the blank checker in global setup", {
-  ex     <- mock_exercise(
+  ex <- mock_exercise(
     user_code    = '####("test")',
     global_setup = 'knitr::opts_chunk$set(exercise.blanks = "###")'
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_match(result$feedback$message, "contains 1 blank")
+  expect_match(result$feedback$message, "&quot;count&quot;:1")
 })
 
 test_that("setting a regex blank for the blank checker", {
-  ex     <- mock_exercise(
+  ex <- mock_exercise(
     user_code       = '..function..("..string..")',
     exercise.blanks = "\\.\\.\\S+?\\.\\."
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_match(result$feedback$message, "contains 2 blanks")
-  expect_match(result$feedback$message, "`..function..` and `..string..`")
+  expect_match(result$feedback$message, "&quot;count&quot;:2")
+  expect_match(
+    result$feedback$message, "`..function..` \\$t\\(text.and\\) `..string..`"
+  )
 })
 
 test_that("default message if exercise.blanks is FALSE", {
@@ -688,21 +690,21 @@ test_that("default message if exercise.blanks is FALSE", {
     user_code = '____("test")', exercise.blanks = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "this might not be valid R code")
+  expect_match(result$feedback$message, "text.unparsable")
 })
 
 test_that("evaluate_exercise() returns a message if code is unparsable", {
   ex     <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "this might not be valid R code")
+  expect_match(result$feedback$message, "text.unparsable")
 
   ex     <- mock_exercise(user_code = 'print("test)')
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "this might not be valid R code")
+  expect_match(result$feedback$message, "text.unparsable")
 
   ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
   result <- evaluate_exercise(ex, new.env())
-  expect_match(result$feedback$message, "this might not be valid R code")
+  expect_match(result$feedback$message, "text.unparsable")
 })
 
 test_that("default error message if exercise.parse.check is FALSE", {
