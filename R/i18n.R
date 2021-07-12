@@ -131,12 +131,12 @@ i18n_span <- function(key, ..., opts = NULL) {
 i18n_combine_words <- function(
   words, and = c("and", "or"), before = "", after = before
 ) {
-  and  <- match.arg(and)
-  last <- paste0(" $t(text.", and, ") ")
+  and <- match.arg(and)
+  and <- paste0(" $t(text.", and, ") ")
   knitr::combine_words(
     words,
     sep = "$t(text.listcomma) ",
-    last = last, before = before, after = after, oxford_comma = FALSE
+    and = and, before = before, after = after, oxford_comma = FALSE
   )
 }
 
