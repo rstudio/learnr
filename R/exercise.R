@@ -264,13 +264,29 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
 # returns NULL if everything is okay, otherwise a character string describing
 # the reason the validation check failed.
 validate_exercise <- function(exercise, require_items = NULL) {
-required_names <- c("code", "label", "options", "chunks", require_items)
+  required_names <- c("code", "label", "options", "chunks", require_items)
   missing_names <- setdiff(required_names, names(exercise))
   if (length(missing_names)) {
     return(paste("Missing exercise items:", paste(missing_names, collapse = ", ")))
   }
 
   NULL
+}
+
+standardize_code <- function(code) {
+  if (inherits(code, "AsIs")) {
+    return(code)
+  }
+  if (is.null(code) || !length(code)) {
+    return("")
+  }
+  str_trim(paste0(code, collapse = "\n"))
+}
+
+standardize_exercise_code <- function(exercise) {
+  ex_code_items <- c("error_check", "code_check", "check", "code", "global_setup")
+  exercise[ex_code_items] <- lapply(exercise[ex_code_items], standardize_code)
+  exercise
 }
 
 # evaluate an exercise and return a list containing output and dependencies
@@ -283,10 +299,11 @@ required_names <- c("code", "label", "options", "chunks", require_items)
 #   been executed, so they'd typically use `FALSE`, the default. Remote
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
-evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
+evaluate_exercise <- function(
+  exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
+) {
   # Protect global options and environment vars from permanent modification
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  local_restore_options_and_envvars()
 
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
@@ -294,11 +311,14 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     require_items = if (evaluate_global_setup) "global_setup"
   )
 
+  # standardize exercise code to single string (code, *check, global_setup)
+  exercise <- standardize_exercise_code(exercise)
+
   i18n_set_language_option(exercise$tutorial$language)
 
   # return immediately and clear visible results
   # do not consider this an exercise submission
-  if (!nzchar(str_trim(paste0(exercise$code, collapse = "\n")))) {
+  if (!nzchar(exercise$code)) {
     # " " since html_output needs to pass a req()
     return(exercise_result(html_output = " "))
   }
@@ -324,13 +344,8 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     check_parsable(exercise$code)
   }
 
-  # Setup a temporary directory for rendering the exercise
-  exercise_dir <- tempfile(pattern = "lnr-ex")
-  dir.create(exercise_dir)
-  on.exit(unlink(exercise_dir), add = TRUE)
-
-  # Run the checker pre-evaluation _if_ there is code checking to do
-  if (length(exercise$code_check)) {
+  # Check the code pre-evaluation, if code_check is provided
+  if (nzchar(exercise$code_check)) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$code_check,
@@ -345,10 +360,37 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     }
   }
 
-  # Render exercise in temporary exercise directory
-  rmd_results <- withr::with_dir(
-    exercise_dir,
-    render_exercise(exercise, envir)
+  # Setup a temporary directory for rendering the exercise
+  exercise_dir <- withr::local_tempdir(pattern = "lrn-ex")
+
+  # Copy files from data directory into exercise
+  copy_data_dir(data_dir, exercise_dir)
+
+  # Move into the temp exercise directory for evaluation and checking
+  withr::local_dir(exercise_dir)
+
+  # Evaluate the submitted code by rendering the exercise in a special .Rmd
+  rmd_results <- tryCatch(
+    render_exercise(exercise, envir),
+    error = function(err_render) {
+      if (nzchar(exercise$error_check)) {
+        # Check the error thrown by the submitted code when there's error
+        # checking: the exercise could be to throw an error!
+        checker_feedback <- try_checker(
+          exercise, "exercise.checker",
+          check_code = exercise$error_check,
+          envir_result = err_render$envir_result,
+          evaluate_result = err_render$evaluate_result,
+          envir_prep = err_render$envir_prep,
+          last_value = err_render,
+          engine = exercise$engine
+        )
+        if (is_exercise_result(checker_feedback)) {
+          return(checker_feedback)
+        }
+      }
+      exercise_result_error(err_render$error_message)
+    }
   )
 
   if (is_exercise_result(rmd_results)) {
@@ -356,7 +398,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
   }
 
   # Run the checker post-evaluation (for checking code results)
-  if (length(exercise$check)) {
+  if (nzchar(exercise$check)) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$check,
@@ -368,7 +410,7 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
     )
   }
 
-  # include any checker feedback with the exercise results
+  # Return checker feedback (if any) with the exercise results
   exercise_result(
     feedback = checker_feedback$feedback,
     html_output = rmd_results$html_output
@@ -450,8 +492,7 @@ get_checker_func <- function(exercise, name, envir) {
 
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
-  withr::local_options(list())
-  withr::local_envvar(as.list(Sys.getenv()))
+  local_restore_options_and_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- prepare_exercise(exercise)
@@ -578,25 +619,18 @@ render_exercise <- function(exercise, envir) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
-    if (length(exercise$error_check)) {
-      # Run the condition through an error checker (the exercise could be to throw an error!)
-      checker_feedback <- try_checker(
-        exercise, "exercise.checker",
-        check_code = exercise$error_check,
-        envir_result = envir_result,
-        evaluate_result = evaluate_result,
-        envir_prep = envir_prep,
-        last_value = e,
-        engine = exercise$engine
-      )
-      if (is_exercise_result(checker_feedback)) {
-        return(checker_feedback)
-      }
-    }
-    exercise_result_error(msg)
+    rlang::abort(
+      class = "learnr_render_exercise_error",
+      envir_result = envir_result,
+      evaluate_result = evaluate_result,
+      envir_prep = envir_prep,
+      last_value = e,
+      error_message = msg
+    )
   })
 
   if (is_exercise_result(output_file)) {
+    # this only happens when the render result is a timeout error
     return(output_file)
   }
 
@@ -675,11 +709,9 @@ exercise_code_chunks <- function(chunks) {
 }
 
 check_blanks <- function(user_code, blank_regex) {
-  # Ensure `user_code` is a character vector to avoid issue with unserialized
-  #   code which comes as a list in R < 3.5
-  user_code   <- as.character(user_code)
   blank_regex <- paste(blank_regex, collapse = "|")
-  blanks      <- str_match_all(user_code, blank_regex)
+
+  blanks <- str_match_all(user_code, blank_regex)
 
   if (!length(blanks)) {
     return(NULL)
@@ -852,6 +884,34 @@ merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) 
   opts[!grepl("^exercise", names(opts))]
 }
 
+local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
+  local_restore_options(.local_envir)
+  local_restore_envvars(.local_envir)
+}
+
+local_restore_options <- function(.local_envir = parent.frame()) {
+  opts <- options()
+  withr::defer(restore_options(opts), envir = .local_envir)
+}
+
+local_restore_envvars <- function(.local_envir = parent.frame()) {
+  envvars <- Sys.getenv()
+  withr::defer(restore_envvars(envvars), envir = .local_envir)
+}
+
+restore_options <- function(old) {
+  current    <- options()
+  nulls      <- setdiff(names(current), names(old))
+  old[nulls] <- list(NULL)
+  options(old)
+}
+
+restore_envvars <- function(old) {
+  current <- Sys.getenv()
+  nulls   <- setdiff(names(current), names(old))
+  Sys.unsetenv(nulls)
+  do.call(Sys.setenv, as.list(old))
+}
 
 #' An Exercise Checker for Debugging
 #'

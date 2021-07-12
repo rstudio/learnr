@@ -88,32 +88,67 @@ You can arrange for an exercise to be pre-evaluated (and its output shown) using
 
 Code chunks with `exercise=TRUE` are evaluated within standalone environments. This means that they don't have access to previous computations from within the document. This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
 
-You can however arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:
+### Exercise Setup Chunks
 
-1. Add code to the global `setup` chunk. This code is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:
+You can arrange for setup code to be run before evaluation of an exercise to ensure that the environment is primed correctly. There are three ways to provide setup code for an exercise:
 
-    <div id="exercisesetup" style="width: 95%;"></div>
-    <script type="text/javascript">loadSnippet('exercisesetup')</script>
+1. Add code to a [global `setup` chunk](#setup-global)
+1. Create a [shared setup chunk](#setup-shared)
+1. Create an [exercise-specific setup chunk](#setup-exercise-specific)
 
-2. Create a setup chunk that's shared by several exercises. If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
+Each of these is described in more detail below. Note that you may also [chain setup chunks](#setup-chained), which is particularly helpful when exercises build upon each other.
 
-    <div id="exercisesetupshared" style="width: 95%;"></div>
-    <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
+#### Add code to the global `setup` chunk {#setup-global}
 
-3. Create a setup chunk that's specific to another chunk using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `filter`) then add another chunk with the same label plus a `-setup` suffix (e.g. `filter-setup`). For example:
+Code in the global `setup` chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:
 
-    <div id="exercisesetupsuffix" style="width: 95%;"></div>
-    <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
+<div id="exercisesetup" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisesetup')</script>
+    
+#### Create a shared setup chunk {#setup-shared}
 
-4. If you want to chain setup chunks such that a setup chunk can inherit its parent setup chunk and so on, you can use `exercise.setup` (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) `learnr` will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, let's turn the first exercise in the previous examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
+If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
 
-    <div id="exercisesetupchained" style="width: 95%;"></div>
-    <script type="text/javascript">loadSnippet('exercisesetupchained')</script>
+<div id="exercisesetupshared" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 
-5. You can chain exercise chunks as well, but keep in mind that pre-filled code is used to serve as the setup code instead of user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
+#### Create an exercise-specific `-setup` chunk {#setup-exercise-specific}
 
-    <div id="exercisechained" style="width: 95%;"></div>
-    <script type="text/javascript">loadSnippet('exercisechained')</script>
+**learnr** will automatically associate any chunk with a label in the format `<exercise>-setup` as a setup chunk specifically associated with `<exercise>`, where `<exercise>` is replaced with the label of the exercise chunk. For example, the `filter-setup` chunk will be used as the setup chunk for the `filter` exercise:
+
+<div id="exercisesetupsuffix" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
+    
+#### Chained setup chunks {#setup-chained}
+
+If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the `exercise.setup` chunk option. (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) **learnr** will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
+
+<div id="exercisesetupchained" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisesetupchained')</script>
+
+You can chain use exercise chunks in the setup chunk chain, but keep in mind that the code as it appears in the R Markdown source is used to serve as the setup code, not the user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
+
+<div id="exercisechained" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisechained')</script>
+    
+### Using Files in Exercises
+
+Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in `.csv` or `.rds` format. **learnr** will look for a folder named `data/` in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial. 
+
+To ensure consistency between each evaluation of the user's code, users interact with a temporary copy of the original directory. This way, users cannot overwrite or delete the original files. Additionally, in the exercise, the directory is always called `data/`.
+
+There are three ways authors can include files for use in exercises:
+
+1. Store the files in a `data/` directory in the same directory as the tutorial.
+
+1. Use the setup chunk to download or write the files to a `data/` directory.
+
+1. Use the `tutorial.data_dir` global option or the `TUTORIAL_DATA_DIR` environment variables to specify a path to a data directory.
+
+In the example below, the global setup chunk is used to write `data/flights_jan.csv` and users are asked to load this file with `read_csv()`.
+
+<div id="exercisedata" style="width: 95%;"></div>
+<script type="text/javascript">loadSnippet('exercisedata')</script>
 
 ## Hints and Solutions
 
@@ -132,7 +167,7 @@ A "Hint" or "Solution" button is added to the left side of the exercise header r
 
 ### Markdown Hints
 
-To create a hint based on custom markdown content simply add a `<div>` tag with an `id` attribue that marks it as hint for your exercise (e.g. "filter-hint"). For example:
+To create a hint based on custom markdown content simply add a `<div>` tag with an `id` attribute that marks it as hint for your exercise (e.g. "filter-hint"). For example:
 
 <div id="exercisehintdiv"></div>
 <script type="text/javascript">loadSnippet('exercisehintdiv', 'markdown')</script>
@@ -195,7 +230,7 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 **learnr** provides allows full control over feedback provided to exercise submissions via `exercise.checker` in `tutorial_options()`. We'll eventually cover how to implement a custom `exercise.checker`, but for sake of demonstration, this section uses [**gradethis**](https://github.com/rstudio-education/gradethis)'s approach to exercise checking, which doesn't require knowledge of `exercise.checker` (**NOTE**: **gradethis** is still a work-in-progress. You may want to consider alternatives such as [**checkr**](https://github.com/dtkaplan/checkr)). To use **gradethis**'s approach to exercise checking inside of **learnr**, just call `gradethis_setup()` in a [setup](#Exercise_Setup) chunk, which will set `tutorial_options(exercise.checker = gradethis::grade_learnr)` (among other things).
 
-### Checking results
+### Checking Results
 
 Checking of exercise results may be done through a `*-check` chunk. With a **gradethis** setup, results can be graded with `grade_result()`, like so:
 
@@ -206,7 +241,7 @@ When an exercise `*-check` chunk is provided, **learnr** provides an additional 
 
 <img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
-### Checking code
+### Checking Code
 
 Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.
 
@@ -218,7 +253,7 @@ Checking of exercise *code* may be done through a `*-code-check` chunk. With a *
 It's worth noting that, when a `*-code-check` chunk is supplied, the check is done *prior* to evaluation of the exercise submission, meaning that if the `*-code-check` chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.
 
 
-### Checking errors
+### Checking Errors
 
 In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. If an `*-error-check` chunk is provided, you must also include a `*-check` chunk, typically to provide feedback in case the submission _doesn't_ generate an error. 
 
