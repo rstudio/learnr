@@ -327,8 +327,7 @@ evaluate_exercise <- function(
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-  checker_feedback <- NULL
-
+  # Check if user code has unfilled blanks; if it does, early return
   exercise_blanks <- exercise$options$exercise.blanks %||%
     knitr::opts_chunk$get("exercise.blanks") %||%
     "_{3,}"
@@ -337,6 +336,7 @@ evaluate_exercise <- function(
     check_blanks(exercise$code, exercise_blanks)
   }
 
+  # Check if user code is parsable; if not, early return
   if (
     tolower(exercise$engine) == "r" &&
     !isFALSE(exercise$options$exercise.parse.check)
@@ -344,20 +344,15 @@ evaluate_exercise <- function(
     check_parsable(exercise$code)
   }
 
+  checker_feedback <- NULL
+
   # Check the code pre-evaluation, if code_check is provided
   if (nzchar(exercise$code_check)) {
     checker_feedback <- try_checker(
       exercise, "exercise.checker",
       check_code = exercise$code_check,
-      envir_result = NULL,
-      evaluate_result = NULL,
-      envir_prep = duplicate_env(envir),
-      last_value = NULL,
-      engine = exercise$engine
+      envir_prep = duplicate_env(envir)
     )
-    if (is_exercise_result(checker_feedback)) {
-      return(checker_feedback)
-    }
   }
 
   # Setup a temporary directory for rendering the exercise
@@ -382,17 +377,12 @@ evaluate_exercise <- function(
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
           envir_prep = err_render$envir_prep,
-          last_value = err_render,
-          engine = exercise$engine
+          last_value = err_render
         )
-        if (is_exercise_result(checker_feedback)) {
-          return(checker_feedback)
-        }
       }
       exercise_result_error(err_render$error_message)
     }
   )
-
   if (is_exercise_result(rmd_results)) {
     return(rmd_results)
   }
@@ -405,8 +395,7 @@ evaluate_exercise <- function(
       envir_result = rmd_results$envir_result,
       evaluate_result = rmd_results$evaluate_result,
       envir_prep = rmd_results$envir_prep,
-      last_value = rmd_results$last_value,
-      engine = exercise$engine
+      last_value = rmd_results$last_value
     )
   }
 
@@ -420,7 +409,7 @@ evaluate_exercise <- function(
 
 try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
                         evaluate_result = NULL, envir_prep, last_value = NULL,
-                        engine) {
+                        engine = exercise$engine) {
   checker_func <- tryCatch(
     get_checker_func(exercise, name, envir_prep),
     error = function(e) {
@@ -430,7 +419,7 @@ try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
   )
   # If retrieving checker_func fails, return an error result
   if (is_error_result(checker_func)) {
-    return(checker_func)
+    rlang::return_from(rlang::caller_env(), checker_func)
   }
   checker_args <- names(formals(checker_func))
   args <- list(
@@ -452,7 +441,7 @@ try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
       name, paste(missing_args, collapse = "', '")
     )
     message(msg)
-    return(exercise_result_error(msg))
+    rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
   }
 
   # Call the check function
@@ -466,11 +455,11 @@ try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
   )
   # If checker code fails, return an error result
   if (is_error_result(feedback)) {
-    return(feedback)
+    rlang::return_from(rlang::caller_env(), feedback)
   }
   # If checker doesn't return anything, there's no exercise result to return
   if (length(feedback)) {
-    exercise_result(feedback)
+    rlang::return_from(rlang::caller_env(), exercise_result(feedback))
   } else {
     feedback
   }
