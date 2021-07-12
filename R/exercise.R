@@ -319,22 +319,9 @@ evaluate_exercise <- function(exercise, envir, evaluate_global_setup = FALSE) {
 
   if (
     tolower(exercise$engine) == "r" &&
-    !isFALSE(exercise$options$exercise.parse.check.code)
+    !isFALSE(exercise$options$exercise.parse.check)
   ) {
-    # Check if user code is parsable
-    exercise$options$exercise.parse.check.code <-
-      exercise$options$exercise.parse.check.code %||%
-      knitr::opts_chunk$get("exercise.parse.check.code") %||%
-      dput_to_string(exercise_parse_checker)
-
-    checker_feedback <- try_checker(
-      exercise, "exercise.parse.check.code",
-      envir_prep = duplicate_env(envir),
-      engine = exercise$engine
-    )
-    if (is_exercise_result(checker_feedback)) {
-      return(checker_feedback)
-    }
+    check_parsable(exercise$code)
   }
 
   # Setup a temporary directory for rendering the exercise
@@ -719,20 +706,19 @@ check_blanks <- function(user_code, blank_regex) {
   )
 }
 
-exercise_parse_checker <- function(label, user_code, ...) {
+check_parsable <- function(user_code) {
   error <- rlang::catch_cnd(parse(text = user_code), "error")
   if (is.null(error)) {return(NULL)}
 
-  msg <- paste(
-    "It looks like this might not be valid R code.",
-    "R cannot determine how to turn your text into a complete command.",
-    "You may have forgotten to fill in a blank,",
-    "to remove an underscore, to include a comma between arguments,",
-    "or to close an opening `\"`, `'`, `(`, or `{{`",
-    "with a matching `\"`, `'`, `)`, or `}}`."
+  rlang::return_from(
+    rlang::caller_env(),
+    exercise_result(
+      list(
+        message = HTML(i18n_span("text.unparsable")),
+        correct = FALSE, type = "error", location = "append"
+      )
+    )
   )
-
-  list(message = msg, correct = FALSE, type = "error", location = "append")
 }
 
 exercise_result_timeout <- function() {

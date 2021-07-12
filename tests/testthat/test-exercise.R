@@ -705,15 +705,15 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   expect_match(result$feedback$message, "this might not be valid R code")
 })
 
-test_that("default error message if exercise.parse.error.check is FALSE", {
+test_that("default error message if exercise.parse.check is FALSE", {
   ex <- mock_exercise(
-    user_code = 'print("test"', exercise.parse.check.code = FALSE
+    user_code = 'print("test"', exercise.parse.check = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$error_message, "unexpected end of input")
 
   ex <- mock_exercise(
-    user_code = 'mean(1:10 na.rm = TRUE)', exercise.parse.check.code = FALSE
+    user_code = 'mean(1:10 na.rm = TRUE)', exercise.parse.check = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$error_message, "unexpected symbol")

@@ -314,6 +314,20 @@ text:
     tr: ~
     emo: ~
     eu: ~
+  unparsable:
+    en: >
+      It looks like this might not be valid R code.
+      R cannot determine how to turn your text into a complete command.
+      You may have forgotten to fill in a blank,
+      to remove an underscore, to include a comma between arguments,
+      or to close an opening `\"`, `'`, `(` or `{`
+      with a matching `\"`, `'`, `)` or `}`.
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
   and:
     en: "and"
     fr: "et"  # Added by Alex, not a real translator
