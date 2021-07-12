@@ -856,14 +856,17 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   ex     <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(result$error_message, "unexpected end of input")
 
   ex     <- mock_exercise(user_code = 'print("test)')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(result$error_message, "unexpected INCOMPLETE_STRING")
 
   ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
   result <- evaluate_exercise(ex, new.env())
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(result$error_message, "unexpected symbol")
 })
 
 test_that("default error message if exercise.parse.check is FALSE", {

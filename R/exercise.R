@@ -733,10 +733,11 @@ check_parsable <- function(user_code) {
 
   rlang::return_from(
     rlang::caller_env(),
-    exercise_result(
+    exercise_result_error(
+      error$message,
       list(
         message = HTML(i18n_span("text.unparsable")),
-        correct = FALSE, type = "error", location = "append"
+        correct = FALSE, location = "append"
       )
     )
   )
