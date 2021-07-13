@@ -349,7 +349,7 @@ evaluate_exercise <- function(
   # Check the code pre-evaluation, if code_check is provided
   if (nzchar(exercise$code_check)) {
     checker_feedback <- try_checker(
-      exercise, "exercise.checker",
+      exercise,
       check_code = exercise$code_check,
       envir_prep = duplicate_env(envir)
     )
@@ -372,7 +372,7 @@ evaluate_exercise <- function(
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
         checker_feedback <- try_checker(
-          exercise, "exercise.checker",
+          exercise,
           check_code = exercise$error_check,
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
@@ -390,7 +390,7 @@ evaluate_exercise <- function(
   # Run the checker post-evaluation (for checking code results)
   if (nzchar(exercise$check)) {
     checker_feedback <- try_checker(
-      exercise, "exercise.checker",
+      exercise,
       check_code = exercise$check,
       envir_result = rmd_results$envir_result,
       evaluate_result = rmd_results$evaluate_result,
@@ -407,13 +407,15 @@ evaluate_exercise <- function(
 }
 
 
-try_checker <- function(exercise, name, check_code = NULL, envir_result = NULL,
-                        evaluate_result = NULL, envir_prep, last_value = NULL,
-                        engine = exercise$engine) {
+try_checker <- function(
+  exercise, name = "exercise.checker", check_code = NULL, envir_result = NULL,
+  evaluate_result = NULL, envir_prep, last_value = NULL,
+  engine = exercise$engine
+) {
   checker_func <- tryCatch(
     get_checker_func(exercise, name, envir_prep),
     error = function(e) {
-      message("Error occurred while retrieving 'exercise.checker'. Error:\n", e)
+      message("Error occurred while retrieving '", name, "'. Error:\n", e)
       exercise_result_error(e$message)
     }
   )
