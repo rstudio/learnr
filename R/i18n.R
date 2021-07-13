@@ -132,7 +132,7 @@ i18n_combine_words <- function(
   words, and = c("and", "or"), before = "", after = before, oxford_comma = TRUE
 ) {
   and   <- match.arg(and)
-  and   <- paste0(" $t(text.", and, ") ")
+  and   <- sprintf(" $t(text.%s) ", and)
   words <- paste0(before, words, after)
 
   n <- length(words)
