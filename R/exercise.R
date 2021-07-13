@@ -332,7 +332,7 @@ evaluate_exercise <- function(
     knitr::opts_chunk$get("exercise.blanks") %||%
     "_{3,}"
 
-  if (isTruthy(exercise_blanks)) {
+  if (shiny::isTruthy(exercise_blanks)) {
     check_blanks(exercise$code, exercise_blanks)
   }
 
