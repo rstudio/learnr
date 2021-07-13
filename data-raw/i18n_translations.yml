@@ -354,3 +354,11 @@ text:
     tr: ~
     emo: ~
     eu: ~
+  oxfordcomma:
+    en: ","
+    fr: ""
+    es: ""
+    pt: ""
+    tr: ""
+    emo: ""
+    eu: ""
