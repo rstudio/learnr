@@ -760,6 +760,17 @@ check_parsable <- function(user_code) {
     return(NULL)
   }
 
+  exercise_result(
+    list(
+      message = HTML(i18n_span("text.unparsable")),
+      correct = FALSE,
+      location = "append",
+      type = "error"
+    ),
+    html_output = HTML(
+      paste0("<pre><code>", htmltools::htmlEscape(error$message), "</code></pre>")
+    ),
+    error_message = error$message
   )
 }
 
