@@ -743,7 +743,8 @@ check_blanks <- function(user_code, blank_regex) {
       "text.pleasereplaceblank",
       opts = list(
         count = length(blanks),
-        blank = i18n_combine_words(unique(blanks), before = "`")
+        blank = i18n_combine_words(unique(blanks), before = "<code>", after = "</code>"),
+        interpolation = list(escapeValue = FALSE)
       )
     )
   )
