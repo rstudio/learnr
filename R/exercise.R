@@ -337,12 +337,6 @@ evaluate_exercise <- function(
     blank_feedback <- check_blanks(exercise$code, exercise_blanks)
   }
 
-  if (!is.null(blank_feedback)) {
-    # Don't need to do exercise checking, since it will be replaced with
-    # feedback about the detected blanks
-    exercise$check <- ""
-  }
-
   return_if_exercise_result <- function(res) {
     # early return if the we've received an exercise result,
     # but also replace the feedback with the blank feedback if any were found
@@ -415,7 +409,8 @@ evaluate_exercise <- function(
   return_if_exercise_result(rmd_results)
 
   # Run the checker post-evaluation (for checking code results)
-  if (nzchar(exercise$check)) {
+  # Don't need to do exercise checking if there are blanks
+  if (is.null(blank_feedback) && nzchar(exercise$check)) {
     checker_feedback <- try_checker(
       exercise,
       check_code = exercise$check,
