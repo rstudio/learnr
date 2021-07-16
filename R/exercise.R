@@ -769,7 +769,8 @@ check_parsable <- function(user_code) {
 exercise_result_timeout <- function() {
   exercise_result_error(
     "Error: Your code ran longer than the permitted timelimit for this exercise.",
-    timeout_exceeded = TRUE
+    timeout_exceeded = TRUE,
+    style = "alert"
   )
 }
 
