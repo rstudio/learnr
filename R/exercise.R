@@ -389,10 +389,11 @@ evaluate_exercise <- function(
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(err_render) {
+      error_feedback <- NULL
       if (nzchar(exercise$error_check)) {
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
-        checker_feedback <- try_checker(
+        error_feedback <- try_checker(
           exercise,
           check_code = exercise$error_check,
           envir_result = err_render$envir_result,
@@ -400,9 +401,8 @@ evaluate_exercise <- function(
           envir_prep = err_render$envir_prep,
           last_value = err_render
         )
-        return(checker_feedback)
       }
-      exercise_result_error(err_render$error_message)
+      exercise_result_error(err_render$error_message, error_feedback$feedback)
     }
   )
 
