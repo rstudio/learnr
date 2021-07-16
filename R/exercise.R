@@ -360,8 +360,6 @@ evaluate_exercise <- function(
     return_if_exercise_result(check_parsable(exercise$code))
   }
 
-  checker_feedback <- NULL
-
   # Check the code pre-evaluation, if code_check is provided
   if (nzchar(exercise$code_check)) {
     # treat the blank check like a code check, if blanks were detected
@@ -410,6 +408,7 @@ evaluate_exercise <- function(
 
   # Run the checker post-evaluation (for checking code results)
   # Don't need to do exercise checking if there are blanks
+  checker_feedback <- NULL
   if (is.null(blank_feedback) && nzchar(exercise$check)) {
     checker_feedback <- try_checker(
       exercise,
