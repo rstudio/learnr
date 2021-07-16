@@ -834,7 +834,8 @@ test_that("setting a regex blank for the blank checker", {
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
   expect_match(
-    result$feedback$message, "`..function..` \\$t\\(text.and\\) `..string..`"
+    result$feedback$message,
+    "\\.\\.function\\.\\..*\\$t\\(text.and\\).*\\.\\.string\\.\\."
   )
 })
 
