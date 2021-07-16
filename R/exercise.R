@@ -330,7 +330,8 @@ evaluate_exercise <- function(
   # Check if user code has unfilled blanks; if it does, early return
   exercise_blanks <- exercise$options$exercise.blanks %||%
     knitr::opts_chunk$get("exercise.blanks") %||%
-    "_{3,}"
+    TRUE
+  if (isTRUE(exercise_blanks)) exercise_blanks <- "_{3,}"
 
   blank_feedback <- NULL
   if (shiny::isTruthy(exercise_blanks)) {

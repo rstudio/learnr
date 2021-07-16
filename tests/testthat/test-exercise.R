@@ -853,6 +853,22 @@ test_that("default message if exercise.blanks is FALSE", {
   expect_match(result$feedback$message, "text.unparsable")
 })
 
+test_that("use underscores as blanks if exercise.blanks is TRUE", {
+  ex <- mock_exercise(
+    user_code = 'print("____")', exercise.blanks = TRUE
+  )
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "&quot;count&quot;:1")
+  expect_match(result$feedback$message, "____")
+
+  ex <- mock_exercise(
+    user_code = '____("test")', exercise.blanks = TRUE
+  )
+  result <- evaluate_exercise(ex, new.env())
+  expect_match(result$feedback$message, "&quot;count&quot;:1")
+  expect_match(result$feedback$message, "____")
+})
+
 test_that("evaluate_exercise() returns a message if code is unparsable", {
   ex     <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
