@@ -387,10 +387,11 @@ evaluate_exercise <- function(
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(err_render) {
+      error_feedback <- NULL
       if (nzchar(exercise$error_check)) {
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
-        checker_feedback <- try_checker(
+        error_feedback <- try_checker(
           exercise,
           check_code = exercise$error_check,
           envir_result = err_render$envir_result,
@@ -398,9 +399,8 @@ evaluate_exercise <- function(
           envir_prep = err_render$envir_prep,
           last_value = err_render
         )
-        return(checker_feedback)
       }
-      exercise_result_error(err_render$error_message)
+      exercise_result_error(err_render$error_message, error_feedback$feedback)
     }
   )
 
@@ -761,9 +761,7 @@ check_parsable <- function(user_code) {
       location = "append",
       type = "error"
     ),
-    html_output = HTML(
-      paste0("<pre><code>", htmltools::htmlEscape(error$message), "</code></pre>")
-    ),
+    html_output = error_message_html(error$message),
     error_message = error$message
   )
 }
@@ -777,12 +775,12 @@ exercise_result_timeout <- function() {
 
 # @param timeout_exceeded represents whether or not the error was triggered
 #   because the exercise exceeded the timeout. Use NA if unknown
-exercise_result_error <- function(error_message, feedback = NULL, timeout_exceeded = NA) {
+exercise_result_error <- function(error_message, feedback = NULL, timeout_exceeded = NA, style = "code") {
   exercise_result(
     feedback = feedback,
     timeout_exceeded = timeout_exceeded,
     error_message = error_message,
-    html_output = error_message_html(error_message)
+    html_output = error_message_html(error_message, style = style)
   )
 }
 
