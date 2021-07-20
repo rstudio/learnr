@@ -204,15 +204,41 @@ test_that("i18n_span() returns an i18n span", {
 })
 
 test_that("i18n_set_language_option() changes message language", {
-  withr::local_envvar(list("LANGUAGE" = Sys.getenv("LANGUAGE")))
+  withr::defer(i18n_set_language_option("en"))
 
   i18n_set_language_option("fr")
   expect_equal(knitr::opts_knit$get("tutorial.language"), "fr")
   expect_equal(Sys.getenv("LANGUAGE"), "fr")
-  expect_error(mean$x, "objet de type 'closure' non indiçable")
 
-  i18n_set_language_option("pt_BR")
-  expect_equal(knitr::opts_knit$get("tutorial.language"), "pt_BR")
+  ex <- mock_exercise(user_code = "mean$x")
+  ex$tutorial$language <- "fr"
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$error_message, "objet de type 'closure' non indiçable")
+
+  ex <- mock_exercise(
+    user_code = "mean$x",
+    global_setup = "i18n_set_language_option('fr')"
+  )
+  result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(result$error_message, "objet de type 'closure' non indiçable")
+})
+
+test_that("i18n_set_language_option() has a special case for Portuguese", {
+  withr::defer(i18n_set_language_option("en"))
+
+  i18n_set_language_option("pt")
+  expect_equal(knitr::opts_knit$get("tutorial.language"), "pt")
   expect_equal(Sys.getenv("LANGUAGE"), "pt_BR")
-  expect_error(mean$x, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+
+  ex <- mock_exercise(user_code = "mean$x")
+  ex$tutorial$language <- "pt"
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$error_message, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+
+  ex <- mock_exercise(
+    user_code = "mean$x",
+    global_setup = "i18n_set_language_option('pt')"
+  )
+  result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
+  expect_equal(result$error_message, "objeto de tipo 'closure' não possível dividir em subconjuntos")
 })
