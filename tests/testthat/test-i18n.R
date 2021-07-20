@@ -202,3 +202,17 @@ test_that("i18n_span() returns an i18n span", {
   expect_match(span, ">DEFAULT</span>")
   expect_match(span, 'data-i18n-opts="{&quot;interp&quot;:&quot;STRING&quot;}"', fixed = TRUE)
 })
+
+test_that("i18n_set_language_option() changes message language", {
+  withr::local_envvar(list("LANGUAGE" = Sys.getenv("LANGUAGE")))
+
+  i18n_set_language_option("fr")
+  expect_equal(knitr::opts_knit$get("tutorial.language"), "fr")
+  expect_equal(Sys.getenv("LANGUAGE"), "fr")
+  expect_error(mean$x, "objet de type 'closure' non indiçable")
+
+  i18n_set_language_option("pt_BR")
+  expect_equal(knitr::opts_knit$get("tutorial.language"), "pt_BR")
+  expect_equal(Sys.getenv("LANGUAGE"), "pt_BR")
+  expect_error(mean$x, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+})

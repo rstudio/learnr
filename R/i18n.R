@@ -150,6 +150,7 @@ i18n_set_language_option <- function(language = NULL) {
   }
 
   knitr::opts_knit$set(tutorial.language = language)
+  Sys.setenv("LANGUAGE" = language)
 
   invisible(current)
 }
