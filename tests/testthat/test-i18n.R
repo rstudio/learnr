@@ -206,9 +206,16 @@ test_that("i18n_span() returns an i18n span", {
 test_that("i18n_set_language_option() changes message language", {
   withr::defer(i18n_set_language_option("en"))
 
-  i18n_set_language_option("fr")
-  expect_equal(knitr::opts_knit$get("tutorial.language"), "fr")
-  expect_equal(Sys.getenv("LANGUAGE"), "fr")
+  ex <- mock_exercise(
+    user_code = c(
+      'i18n_set_language_option("fr")',
+      'knit_opt <- knitr::opts_knit$get("tutorial.language")',
+      'env_var <- Sys.getenv("LANGUAGE")'
+    )
+  )
+  result <- withr::with_tempdir(render_exercise(ex, new.env()))
+  expect_equal(result$envir_result$knit_opt, "fr")
+  expect_equal(result$envir_result$env_var, "fr")
 
   ex <- mock_exercise(user_code = "mean$x")
   ex$tutorial$language <- "fr"
@@ -226,9 +233,16 @@ test_that("i18n_set_language_option() changes message language", {
 test_that("i18n_set_language_option() has a special case for Portuguese", {
   withr::defer(i18n_set_language_option("en"))
 
-  i18n_set_language_option("pt")
-  expect_equal(knitr::opts_knit$get("tutorial.language"), "pt")
-  expect_equal(Sys.getenv("LANGUAGE"), "pt_BR")
+  ex <- mock_exercise(
+    user_code = c(
+      'i18n_set_language_option("pt")',
+      'knit_opt <- knitr::opts_knit$get("tutorial.language")',
+      'env_var <- Sys.getenv("LANGUAGE")'
+    )
+  )
+  result <- withr::with_tempdir(render_exercise(ex, new.env()))
+  expect_equal(result$envir_result$knit_opt, "pt")
+  expect_equal(result$envir_result$env_var, "pt_BR")
 
   ex <- mock_exercise(user_code = "mean$x")
   ex$tutorial$language <- "pt"
