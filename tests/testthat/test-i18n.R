@@ -244,8 +244,6 @@ test_that("i18n_set_language_option() has a special case for Portuguese", {
   expect_equal(result$envir_result$knit_opt, "pt")
   expect_equal(result$envir_result$env_var, "pt_BR")
 
-  skip_on_os(c("linux", "solaris"))
-
   ex <- mock_exercise(user_code = "mean$x")
   ex$tutorial$language <- "pt"
   result <- evaluate_exercise(ex, new.env())

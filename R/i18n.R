@@ -151,12 +151,26 @@ i18n_set_language_option <- function(language = NULL) {
 
   knitr::opts_knit$set(tutorial.language = language)
 
+  old_lang <- Sys.getenv("LANGUAGE", unset = "en")
+  old_text <- gettext("subscript out of bounds", domain = "R")
+
   switch(
     language,
     pt = Sys.setenv("LANGUAGE" = "pt_BR"),
     Sys.setenv("LANGUAGE" = language)
   )
 
+  new_lang <- Sys.getenv("LANGUAGE", unset = "en")
+  new_text <- gettext("subscript out of bounds", domain = "R")
+
+  if (old_lang != new_lang && old_text == new_text) {
+    # On Linux, message translations are cached
+    # Messages from the old language may be shown in the new language
+    # If this happens, invalidate the cache so new messages have to generate
+    temp <- tempfile()
+    bindtextdomain("R-base", temp)
+    unlink(temp, recursive = TRUE)
+  }
 
   invisible(current)
 }
