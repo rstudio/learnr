@@ -173,9 +173,7 @@ set_language <- function(lang) {
     # On Linux, message translations are cached
     # Messages from the old language may be shown in the new language
     # If this happens, invalidate the cache so new messages have to generate
-    temp <- tempfile()
-    bindtextdomain("R-base", temp)
-    unlink(temp, recursive = TRUE)
+    bindtextdomain("R-base", tempfile())
   }
 }
 
