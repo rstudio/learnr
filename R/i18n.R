@@ -151,14 +151,20 @@ i18n_set_language_option <- function(language = NULL) {
 
   knitr::opts_knit$set(tutorial.language = language)
 
+  switch(
+    language,
+    pt = set_language("pt_BR"),
+    set_language(language)
+  )
+
+  invisible(current)
+}
+
+set_language <- function(lang) {
   old_lang <- Sys.getenv("LANGUAGE", unset = "en")
   old_text <- gettext("subscript out of bounds", domain = "R")
 
-  switch(
-    language,
-    pt = Sys.setenv("LANGUAGE" = "pt_BR"),
-    Sys.setenv("LANGUAGE" = language)
-  )
+  Sys.setenv("LANGUAGE" = lang)
 
   new_lang <- Sys.getenv("LANGUAGE", unset = "en")
   new_text <- gettext("subscript out of bounds", domain = "R")
@@ -171,8 +177,6 @@ i18n_set_language_option <- function(language = NULL) {
     bindtextdomain("R-base", temp)
     unlink(temp, recursive = TRUE)
   }
-
-  invisible(current)
 }
 
 i18n_get_language_option <- function() {
