@@ -150,17 +150,14 @@ i18n_set_language_option <- function(language = NULL) {
   }
 
   knitr::opts_knit$set(tutorial.language = language)
-
-  switch(
-    language,
-    pt = set_language("pt_BR"),
-    set_language(language)
-  )
+  setenv_language(language)
 
   invisible(current)
 }
 
-set_language <- function(lang) {
+setenv_language <- function(lang) {
+  lang <- determine_language_inheritance(lang)
+
   old_lang <- Sys.getenv("LANGUAGE", unset = "en")
   old_text <- gettext("subscript out of bounds", domain = "R")
 
@@ -177,6 +174,41 @@ set_language <- function(lang) {
     bindtextdomain("R-base", tempfile())
     bindtextdomain("R-base", base_dir)
   }
+}
+
+determine_language_inheritance <- function(lang) {
+  lang <- gsub("-", "_", lang)
+
+  # Find available translations of base R
+  base_langs <- dir(bindtextdomain("R"))
+  base_langs <- base_langs[grepl("^[a-z]{2,3}(_[A-Z]{2})?$", base_langs)]
+
+  # If `lang` is a base R translation, return `lang`
+  if (lang %in% base_langs) {
+    return(lang)
+  }
+
+  lang_code <- substr(lang, 1, 2)
+
+  # If `lang` is a variant of English, base R does not need to be translated
+  if (lang_code == "en") {
+    return(lang)
+  }
+
+  # If `lang` is a variant of a language with a base R translation,
+  # use ":" to inherit closest translation
+  if (lang_code %in% substr(base_langs, 1, 2)) {
+    # Special case for Hong Kong and Macao, which should inherit Traditional
+    # Chinese (zh_TW) before Simplified Chinese (zh_CN)
+    if (lang %in% c("zh_HK", "zh_MO")) {
+      return(paste0(lang, ":zh_TW:zh_CN"))
+    }
+
+    return(paste0(lang, ":", base_langs[lang_code == substr(base_langs, 1, 2)]))
+  }
+
+  # If `lang` does not match any base R translation, it will inherit English
+  return(lang)
 }
 
 i18n_get_language_option <- function() {
