@@ -184,7 +184,7 @@ i18n_determine_base_r_language <- function(lang) {
   base_langs <- base_langs[grepl("^[a-z]{2,3}(_[A-Z]{2})?$", base_langs)]
 
   # If `lang` is a base R translation, return `lang`
-  if (lang %in% base_langs) {
+  if (!length(base_langs) || lang %in% base_langs) {
     return(lang)
   }
 
