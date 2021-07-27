@@ -197,18 +197,24 @@ determine_language_inheritance <- function(lang) {
 
   # If `lang` is a variant of a language with a base R translation,
   # use ":" to inherit closest translation
-  if (lang_code %in% substr(base_langs, 1, 2)) {
-    # Special case for Hong Kong and Macao, which should inherit Traditional
-    # Chinese (zh_TW) before Simplified Chinese (zh_CN)
-    if (lang %in% c("zh_HK", "zh_MO")) {
-      return(paste0(lang, ":zh_TW:zh_CN"))
-    }
-
-    return(paste0(lang, ":", base_langs[lang_code == substr(base_langs, 1, 2)]))
+  # Special case for Hong Kong and Macao, which should inherit Traditional
+  # Chinese (zh_TW) before Simplified Chinese (zh_CN)
+  if (lang %in% c("zh_HK", "zh_MO")) {
+    zh_langs <- intersect(c("zh_TW", "zh_CN"), base_langs)
+    return(paste0(c(lang, zh_langs), collapse = ":"))
   }
 
-  # If `lang` does not match any base R translation, it will inherit English
-  return(lang)
+  # If `lang` is a variant of a language with a base R translation,
+  # use ":" to inherit closest translation. If unmatched, R falls back to English
+  has_base_lang_variant <- lang_code == substr(base_langs, 1, 2)
+  if (any(has_base_lang_variant)) {
+    base_lang_variants <- base_langs[has_base_lang_variant]
+    # in case of future added translations, use more generic variant first
+    base_lang_variants <- base_lang_variants[order(nchar(base_lang_variants))]
+    lang <- c(lang, base_lang_variants)
+  }
+
+  paste(lang, collapse = ":")
 }
 
 i18n_get_language_option <- function() {
