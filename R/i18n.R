@@ -150,13 +150,13 @@ i18n_set_language_option <- function(language = NULL) {
   }
 
   knitr::opts_knit$set(tutorial.language = language)
-  setenv_language(language)
+  i18n_setenv_language(language)
 
   invisible(current)
 }
 
-setenv_language <- function(lang) {
-  lang <- determine_language_inheritance(lang)
+i18n_setenv_language <- function(lang) {
+  lang <- i18n_determine_base_r_language(lang)
 
   old_lang <- Sys.getenv("LANGUAGE", unset = "en")
   old_text <- gettext("subscript out of bounds", domain = "R")
@@ -176,7 +176,7 @@ setenv_language <- function(lang) {
   }
 }
 
-determine_language_inheritance <- function(lang) {
+i18n_determine_base_r_language <- function(lang) {
   lang <- gsub("-", "_", lang)
 
   # Find available translations of base R
