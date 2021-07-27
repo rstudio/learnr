@@ -1319,7 +1319,8 @@ Tutorial.prototype.$removeSolution = function(exercise) {
     solutionButton.data('clipboard').destroy();
 
   // destroy popover
-  exercise.find('.btn-tutorial-solution').popover('destroy');
+  // If window.bootstrap is found (>= bs4), use `'dispose'` method name. Otherwise, use `'destroy'` (bs3)
+  exercise.find('.btn-tutorial-solution').popover(window.bootstrap ? 'dispose' : 'destroy');
 };
 
 
