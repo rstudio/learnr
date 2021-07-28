@@ -166,7 +166,7 @@ i18n_setenv_language <- function(lang) {
   new_lang <- Sys.getenv("LANGUAGE", unset = "en")
   new_text <- gettext("subscript out of bounds", domain = "R")
 
-  if (old_lang != new_lang && old_text == new_text) {
+  if (!identical(old_lang, new_lang) && identical(old_text, new_text)) {
     # On Linux, message translations are cached
     # Messages from the old language may be shown in the new language
     # If this happens, invalidate the cache so new messages have to generate
