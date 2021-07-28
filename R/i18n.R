@@ -195,8 +195,6 @@ i18n_determine_base_r_language <- function(lang) {
     return(lang)
   }
 
-  # If `lang` is a variant of a language with a base R translation,
-  # use ":" to inherit closest translation
   # Special case for Hong Kong and Macao, which should inherit Traditional
   # Chinese (zh_TW) before Simplified Chinese (zh_CN)
   if (lang %in% c("zh_HK", "zh_MO")) {
