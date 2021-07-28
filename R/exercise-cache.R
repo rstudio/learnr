@@ -43,7 +43,7 @@ store_exercise_cache <- function(name, chunks, overwrite = FALSE){
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
 get_exercise_cache <- function(label = NULL){
   if (is.null(label)) {
-    chunk_labels <- ls(exercise_cache_env)
+    chunk_labels <- ls(envir = exercise_cache_env, all.names = TRUE)
     names(chunk_labels) <- chunk_labels
     return(lapply(chunk_labels, get, envir = exercise_cache_env))
   }
@@ -80,7 +80,7 @@ store_question_cache <- function(question, overwrite = FALSE){
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
 get_question_cache <- function(label = NULL){
   if (is.null(label)) {
-    labels <- ls(question_cache_env)
+    labels <- ls(envir = question_cache_env, all.names = TRUE)
     names(labels) <- labels
     return(lapply(labels, get, envir = question_cache_env))
   }
