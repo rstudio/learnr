@@ -150,8 +150,69 @@ i18n_set_language_option <- function(language = NULL) {
   }
 
   knitr::opts_knit$set(tutorial.language = language)
+  i18n_setenv_language(language)
 
   invisible(current)
+}
+
+i18n_setenv_language <- function(lang) {
+  lang <- i18n_determine_base_r_language(lang)
+
+  old_lang <- Sys.getenv("LANGUAGE", unset = "en")
+  old_text <- gettext("subscript out of bounds", domain = "R")
+
+  Sys.setenv("LANGUAGE" = lang)
+
+  new_lang <- Sys.getenv("LANGUAGE", unset = "en")
+  new_text <- gettext("subscript out of bounds", domain = "R")
+
+  if (!identical(old_lang, new_lang) && identical(old_text, new_text)) {
+    # On Linux, message translations are cached
+    # Messages from the old language may be shown in the new language
+    # If this happens, invalidate the cache so new messages have to generate
+    base_dir <- bindtextdomain("R-base")
+    bindtextdomain("R-base", tempfile())
+    bindtextdomain("R-base", base_dir)
+  }
+}
+
+i18n_determine_base_r_language <- function(lang) {
+  lang <- gsub("-", "_", lang)
+
+  # Find available translations of base R
+  base_langs <- dir(bindtextdomain("R"))
+  base_langs <- base_langs[grepl("^[a-z]{2,3}(_[A-Z]{2})?$", base_langs)]
+
+  # If `lang` is a base R translation, return `lang`
+  if (!length(base_langs) || lang %in% base_langs) {
+    return(lang)
+  }
+
+  lang_code <- substr(lang, 1, 2)
+
+  # If `lang` is a variant of English, base R does not need to be translated
+  if (lang_code == "en") {
+    return(lang)
+  }
+
+  # Special case for Hong Kong and Macao, which should inherit Traditional
+  # Chinese (zh_TW) before Simplified Chinese (zh_CN)
+  if (lang %in% c("zh_HK", "zh_MO")) {
+    zh_langs <- intersect(c("zh_TW", "zh_CN"), base_langs)
+    return(paste0(c(lang, zh_langs), collapse = ":"))
+  }
+
+  # If `lang` is a variant of a language with a base R translation,
+  # use ":" to inherit closest translation. If unmatched, R falls back to English
+  has_base_lang_variant <- lang_code == substr(base_langs, 1, 2)
+  if (any(has_base_lang_variant)) {
+    base_lang_variants <- base_langs[has_base_lang_variant]
+    # in case of future added translations, use more generic variant first
+    base_lang_variants <- base_lang_variants[order(nchar(base_lang_variants))]
+    lang <- c(lang, base_lang_variants)
+  }
+
+  paste(lang, collapse = ":")
 }
 
 i18n_get_language_option <- function() {
