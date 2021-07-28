@@ -44,6 +44,7 @@ question_radio <- function(
 
 
 
+#' @export
 question_ui_initialize.learnr_radio <- function(question, value, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
@@ -61,6 +62,7 @@ question_ui_initialize.learnr_radio <- function(question, value, ...) {
 # question_is_valid.radio <- question_is_valid.default
 
 
+#' @export
 question_is_correct.learnr_radio <- function(question, value, ...) {
   for (ans in question$answers) {
     if (as.character(ans$option) == value) {
@@ -74,6 +76,7 @@ question_is_correct.learnr_radio <- function(question, value, ...) {
 }
 
 
+#' @export
 question_ui_completed.learnr_radio <- function(question, value, ...) {
   choice_values <- answer_values(question)
 
