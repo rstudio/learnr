@@ -64,8 +64,7 @@ question_text <- function(
 }
 
 
-
-
+#' @export
 question_ui_initialize.learnr_text <- function(question, value, ...) {
   # Use textInput() unless one of rows or cols are provided
   textInputFn <-
@@ -85,7 +84,7 @@ question_ui_initialize.learnr_text <- function(question, value, ...) {
   )
 }
 
-
+#' @export
 question_is_valid.learnr_text <- function(question, value, ...) {
   if (is.null(value)) {
     return(FALSE)
@@ -97,7 +96,7 @@ question_is_valid.learnr_text <- function(question, value, ...) {
   }
 }
 
-
+#' @export
 question_is_correct.learnr_text <- function(question, value, ...) {
 
   if (nchar(value) == 0) {
