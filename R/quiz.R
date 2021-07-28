@@ -354,6 +354,7 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
 
 question_prerendered_chunk <- function(question, ...) {
+  store_question_cache(question)
   callModule(
     question_module_server,
     question$ids$question,
