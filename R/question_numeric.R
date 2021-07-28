@@ -64,7 +64,7 @@ question_numeric <- function(
 
 
 
-
+#' @export
 question_ui_initialize.learnr_numeric <- function(question, value, ...) {
   numericInput(
     question$ids$answer,
@@ -76,7 +76,7 @@ question_ui_initialize.learnr_numeric <- function(question, value, ...) {
   )
 }
 
-
+#' @export
 question_is_valid.learnr_numeric <- function(question, value, ...) {
   if (is.null(value)) {
     return(FALSE)
@@ -85,7 +85,7 @@ question_is_valid.learnr_numeric <- function(question, value, ...) {
   !is.na(value)
 }
 
-
+#' @export
 question_is_correct.learnr_numeric <- function(question, value, ...) {
   value <- suppressWarnings(as.numeric(value))
 
