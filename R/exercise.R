@@ -88,14 +88,9 @@ setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
 
-    exercise_has_checks <- any(
-      vapply(
-        exercise[c("check", "code_check", "error_check")],
-        function(x) !(is.null(x) || all(!nzchar(x))),
-        logical(1)
-      )
-    )
     check_was_requested <- exercise$should_check
+    # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
+    exercise$should_check <- NULL
 
     if (!isTRUE(check_was_requested)) {
       exercise$check <- NULL
@@ -105,8 +100,6 @@ setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
       # If there is no locally defined error check code, look for globally defined error check option
       exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     }
-    # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
-    exercise$should_check <- NULL
 
     # get timelimit option (either from chunk option or from global option)
     timelimit <- exercise$options$exercise.timelimit
@@ -174,10 +167,10 @@ setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
         rv$triggered <- isolate({ rv$triggered + 1})
         rv$result <- exercise_result_as_html(result)
 
-        # update the user_state with this submission
-        # - always update exercises without checks (correct will be NA)
-        # - only update exercises with checks if a check was requested
-        if (!exercise_has_checks || check_was_requested) {
+        # update the user_state with this submission, matching the behavior of
+        # questions: always update exercises until correct answer is submitted
+        current_state <- user_state[[exercise$label]][["correct"]]
+        if (!isTRUE(current_state)) {
           user_state[[exercise$label]] <- list(
             type = "exercise",
             answer = exercise$code,
