@@ -38,7 +38,7 @@ initialize_tutorial <- function() {
       'server',
       paste(
         'learnr:::clear_tutorial_cache()',
-        'user_state <- reactiveValues()',
+        'tutorial_user_state <- reactiveValues()',
         sep = "\n"
       ),
       singleton = TRUE

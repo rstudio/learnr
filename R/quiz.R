@@ -304,7 +304,7 @@ knit_print.tutorial_question <- function(x, ...) {
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::question_prerendered_chunk(%s, user_state = user_state)',
+      'learnr:::question_prerendered_chunk(%s, user_state = tutorial_user_state)',
       dput_to_string(question)
     )
   )
