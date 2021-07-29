@@ -1,7 +1,7 @@
 current_exercise_version <- "3"
 
 # run an exercise and return HTML UI
-setup_exercise_handler <- function(exercise_rx, session) {
+setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
 
   # get the environment where shared setup and data is located. one environment up
   # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two
@@ -44,6 +44,13 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
       object <- get_exercise_submission(session = session, label = exercise$label)
       if (!is.null(object) && !is.null(object$data$output)) {
+        # restore user state, but don't report correct
+        # since the user's code wasn't re-evaluated
+        user_state[[exercise$label]] <- list(
+          type = "exercise",
+          answer = object$data$code,
+          correct = NA
+        )
 
         # get the output
         output <- object$data$output
@@ -80,15 +87,25 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # - solution
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
-    # If there is no locally defined error check code, look for globally defined error check option
-    exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
 
-    if (!isTRUE(exercise$should_check)) {
+    exercise_has_checks <- any(
+      vapply(
+        exercise[c("check", "code_check", "error_check")],
+        function(x) !(is.null(x) || all(!nzchar(x))),
+        logical(1)
+      )
+    )
+    check_was_requested <- exercise$should_check
+
+    if (!isTRUE(check_was_requested)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
       exercise$error_check <- NULL
+    } else {
+      # If there is no locally defined error check code, look for globally defined error check option
+      exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     }
-    # variable has now served its purpose so remove it
+    # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
     exercise$should_check <- NULL
 
     # get timelimit option (either from chunk option or from global option)
@@ -148,14 +165,25 @@ setup_exercise_handler <- function(exercise_rx, session) {
             timeout_exceeded = result$timeout_exceeded,
             time_elapsed     = as.numeric(difftime(Sys.time(), start, units="secs")),
             error_message    = result$error_message,
-            checked          = !is.null(exercise$code_check) || !is.null(exercise$check),
+            checked          = check_was_requested,
             feedback         = result$feedback
           )
         )
 
-        # assign reactive result value
+        # assign reactive result to be sent to the UI
         rv$triggered <- isolate({ rv$triggered + 1})
         rv$result <- exercise_result_as_html(result)
+
+        # update the user_state with this submission
+        # - always update exercises without checks (correct will be NA)
+        # - only update exercises with checks if a check was requested
+        if (!exercise_has_checks || check_was_requested) {
+          user_state[[exercise$label]] <- list(
+            type = "exercise",
+            answer = exercise$code,
+            correct = result$feedback$correct %||% NA
+          )
+        }
 
         # destroy the observer
         o$destroy()
