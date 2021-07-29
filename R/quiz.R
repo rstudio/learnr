@@ -304,7 +304,7 @@ knit_print.tutorial_question <- function(x, ...) {
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::question_prerendered_chunk(%s)',
+      'learnr:::question_prerendered_chunk(%s, user_state = user_state)',
       dput_to_string(question)
     )
   )
@@ -353,14 +353,14 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
 
 
-question_prerendered_chunk <- function(question, ...) {
+question_prerendered_chunk <- function(question, ..., user_state = list()) {
   store_question_cache(question)
   callModule(
     question_module_server,
     question$ids$question,
-    question = question
+    question = question,
+    user_state = user_state
   )
-  invisible(TRUE)
 }
 
 question_module_ui <- function(id) {
@@ -380,7 +380,8 @@ question_module_ui <- function(id) {
 
 question_module_server <- function(
   input, output, session,
-  question
+  question,
+  user_state = list()
 ) {
 
   output$answer_container <- renderUI({ div(class="loading", question$loading) })
@@ -388,15 +389,14 @@ question_module_server <- function(
   observeEvent(
     req(session$userData$learnr_state() == "restored"),
     once = TRUE,
-    {
-      question_module_server_impl(input, output, session, question)
-    }
+    question_module_server_impl(input, output, session, question, user_state)
   )
 }
 
 question_module_server_impl <- function(
   input, output, session,
-  question
+  question,
+  user_state = list()
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
@@ -573,6 +573,16 @@ question_module_server_impl <- function(
       )
     )
 
+  })
+
+  observe({
+    # Update the `user_state` reactive to report state back to the Shiny session
+    req(submitted_answer())
+    user_state[[question$label]] <- list(
+      type = "question",
+      answer = submitted_answer(),
+      correct = is_correct_info()$correct
+    )
   })
 }
 
