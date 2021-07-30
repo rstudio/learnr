@@ -36,11 +36,7 @@ initialize_tutorial <- function() {
     # clear exercise/question and initialize user state reactive
     rmarkdown::shiny_prerendered_chunk(
       'server',
-      paste(
-        'learnr:::clear_tutorial_cache()',
-        'tutorial_user_state <- reactiveValues()',
-        sep = "\n"
-      ),
+      'learnr:::prepare_tutorial_state(session)',
       singleton = TRUE
     )
 

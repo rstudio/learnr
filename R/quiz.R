@@ -304,7 +304,7 @@ knit_print.tutorial_question <- function(x, ...) {
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::question_prerendered_chunk(%s, user_state = tutorial_user_state)',
+      'learnr:::question_prerendered_chunk(%s, session)',
       dput_to_string(question)
     )
   )
@@ -353,14 +353,22 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
 
 
-question_prerendered_chunk <- function(question, ..., user_state = list()) {
+question_prerendered_chunk <- function(question, ..., session = getDefaultReactiveDomain()) {
   store_question_cache(question)
-  callModule(
-    question_module_server,
-    question$ids$question,
-    question = question,
-    user_state = user_state
+
+  question_state <-
+    callModule(
+      question_module_server,
+      question$ids$question,
+      question = question,
+      session = session
+    )
+
+  observe(
+    session$userData$tutorial_state[[question$label]] <- question_state()
   )
+
+  question_state
 }
 
 question_module_ui <- function(id) {
@@ -380,23 +388,27 @@ question_module_ui <- function(id) {
 
 question_module_server <- function(
   input, output, session,
-  question,
-  user_state = list()
+  question
 ) {
 
   output$answer_container <- renderUI({ div(class="loading", question$loading) })
 
+  # Setup reactive here that will be updated by the question modules
+  question_state <- reactiveVal()
+
   observeEvent(
     req(session$userData$learnr_state() == "restored"),
     once = TRUE,
-    question_module_server_impl(input, output, session, question, user_state)
+    question_module_server_impl(input, output, session, question, question_state)
   )
+
+  question_state
 }
 
 question_module_server_impl <- function(
   input, output, session,
   question,
-  user_state = list()
+  question_state = NULL
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
@@ -577,12 +589,13 @@ question_module_server_impl <- function(
 
   observe({
     # Update the `user_state` reactive to report state back to the Shiny session
-    req(submitted_answer())
-    user_state[[question$label]] <- list(
+    req(submitted_answer(), is.reactive(question_state))
+    current_answer_state <- list(
       type = "question",
       answer = submitted_answer(),
       correct = is_correct_info()$correct
     )
+    question_state(current_answer_state)
   })
 }
 

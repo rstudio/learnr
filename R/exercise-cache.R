@@ -1,9 +1,10 @@
 exercise_cache_env <- new.env(parent=emptyenv())
 question_cache_env <- new.env(parent = emptyenv())
 
-clear_tutorial_cache <- function() {
+prepare_tutorial_state <- function(session) {
   clear_exercise_cache_env()
   clear_question_cache_env()
+  session$userData$tutorial_state <- reactiveValues()
 }
 
 # Store an exercise setup chunk

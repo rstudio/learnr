@@ -1,7 +1,7 @@
 current_exercise_version <- "3"
 
 # run an exercise and return HTML UI
-setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
+setup_exercise_handler <- function(exercise_rx, session) {
 
   # get the environment where shared setup and data is located. one environment up
   # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two
@@ -167,16 +167,19 @@ setup_exercise_handler <- function(exercise_rx, session, user_state = list()) {
         rv$triggered <- isolate({ rv$triggered + 1})
         rv$result <- exercise_result_as_html(result)
 
-        # update the user_state with this submission, matching the behavior of
-        # questions: always update exercises until correct answer is submitted
-        current_state <- user_state[[exercise$label]][["correct"]]
-        if (!isTRUE(current_state)) {
-          user_state[[exercise$label]] <- list(
-            type = "exercise",
-            answer = exercise$code,
-            correct = result$feedback$correct %||% NA
-          )
-        }
+        isolate({
+          # update the user_state with this submission, matching the behavior of
+          # questions: always update exercises until correct answer is submitted
+          current_state <- session$userData$tutorial_state[[exercise$label]]
+          if (!isTRUE(current_state)) {
+            session$userData$tutorial_state[[exercise$label]] <- list(
+              type = "exercise",
+              answer = exercise$code,
+              correct = result$feedback$correct %||% NA
+            )
+          }
+        })
+
 
         # destroy the observer
         o$destroy()

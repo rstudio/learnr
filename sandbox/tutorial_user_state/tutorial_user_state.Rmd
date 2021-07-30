@@ -13,6 +13,7 @@ library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 # switch between "local" and "client" to verify that feedback and correct are removed
 options(tutorial.storage = "client")
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
 ```
 
 
@@ -22,8 +23,8 @@ The current state of your progress in this tutorial:
 
 ```{r tutorial-user-state, echo=TRUE, context = "server"}
 output$tutorial_user_state <- renderPrint({
-  cat("tutorial_user_state:\n")
-  str(reactiveValuesToList(tutorial_user_state))
+  cat("session$userData$tutorial_state:\n")
+  str(reactiveValuesToList(session$userData$tutorial_state))
 })
 ```
 
