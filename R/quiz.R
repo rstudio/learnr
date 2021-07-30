@@ -588,7 +588,7 @@ question_module_server_impl <- function(
   })
 
   observe({
-    # Update the `user_state` reactive to report state back to the Shiny session
+    # Update the `question_state()` reactive to report state back to the Shiny session
     req(submitted_answer(), is.reactive(question_state))
     current_answer_state <- list(
       type = "question",
