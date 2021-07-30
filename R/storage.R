@@ -438,6 +438,7 @@ client_storage <- function(session) {
       # save the object to our in-memory store
       context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
+      # scrub "answers" from the state stored on the client (client storage only)
       data <- scrub_correct_and_feedback(data)
       assign(object_id, data, envir = store)
 
