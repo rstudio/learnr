@@ -1,8 +1,8 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.10.1.9010
-Authors@R: 
+Version: 0.10.1.9011
+Authors@R:
     c(person(given = "Barret",
              family = "Schloerke",
              role = c("aut", "cre"),
@@ -77,7 +77,7 @@ Suggests:
     later,
     shinytest (>= 1.4.0.9002),
     testthat (>= 2.1.0)
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Remotes:
     rstudio/htmltools,
