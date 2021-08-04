@@ -43,7 +43,7 @@ question_checkbox <- function(
   )
 }
 
-
+#' @export
 question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
   choice_names <- answer_labels(question)
   choice_values <- answer_values(question)
@@ -60,7 +60,7 @@ question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
 
 # question_is_valid.learnr_checkbox <- question_is_valid.default
 
-
+#' @export
 question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   append_message <- function(x, ans) {
@@ -121,7 +121,7 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
   ))
 }
 
-
+#' @export
 question_ui_completed.learnr_checkbox <- function(question, value, ...) {
 
   choice_values <- answer_values(question)
