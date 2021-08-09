@@ -822,7 +822,11 @@ test_that("Shiny session is diabled", {
 
   ex <- mock_exercise(user_code = "shiny::getDefaultReactiveDomain()")
 
-  res <- evaluate_exercise(ex, new.env())
+  shiny::withReactiveDomain(list(internal_test = TRUE), {
+    expect_equal(shiny::getDefaultReactiveDomain(), list(internal_test = TRUE))
+    res <- evaluate_exercise(ex, new.env())
+    expect_equal(shiny::getDefaultReactiveDomain(), list(internal_test = TRUE))
+  })
 
   expect_match(res$html_output, "<code>NULL</code>", fixed = TRUE)
 
