@@ -628,6 +628,7 @@ render_exercise <- function(exercise, envir) {
 
   # Render markdown to HTML
   dependencies <- filter_dependencies(attr(output_file, "knit_meta"))
+  output_redact_secrets(output_file)
   output_file <- rmarkdown::render(
     input = output_file, output_format = output_format_exercise(user = TRUE),
     envir = envir_result, quiet = TRUE, clean = FALSE
@@ -980,4 +981,65 @@ debug_exercise_checker <- function(
       "..."           = list(...)
     )
   )
+}
+
+
+output_redact_secrets <- function(path) {
+  # inspired by https://github.com/auth0/repo-supervisor
+  # and https://github.com/trufflesecurity/truffleHog
+  #
+  # Detects long strings of high entropy, i.e. 13+ random base64 characters in a
+  # row, and removes them from the output, redacting the key with "..."
+  min_nchar <- 13
+  min_entropy <- 4
+  base64_chars <- strsplit(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=_-@$",
+    split = ""
+  )[[1]]
+
+  word_entropy <- function(x) {
+    if (!length(x) || nchar(x) < min_nchar) {
+      return(0)
+    }
+
+    letters <- c(table(strsplit(x, "")[[1]]))
+
+    if (!all(names(letters) %in% base64_chars)) {
+      return(0)
+    }
+
+    # Calculate entropy: \sum_i{ - p_i * \log_2{p_i} }
+    Reduce(
+      x = letters,
+      f = function(acc, letter) {
+        p <- letter / nchar(x)
+        acc - p * log(p, base = 2)
+      },
+      init = 0,
+    )
+  }
+
+  line_words_entropy <- function(line) {
+    words <- strsplit(line, split = "[ \"'()/|]")[[1]]
+    words <- lapply(words, function(x) { names(x) <- x; x })
+    names(words) <- words
+    vapply(words, word_entropy, numeric(1))
+  }
+
+  lines <- readLines(path, warn = FALSE)
+
+  for (i in seq_along(lines)) {
+    line_entropy <- line_words_entropy(lines[i])
+    is_key <- line_entropy > min_entropy
+    if (any(is_key)) {
+      for (redact_text in names(line_entropy)[is_key]) {
+        redacted_text <- paste0(substr(redact_text, 1, 5), "...redacted...")
+        lines <- gsub(redact_text, redacted_text, lines, fixed = TRUE)
+      }
+    }
+  }
+
+  writeLines(lines, path)
+
+  invisible(lines)
 }
