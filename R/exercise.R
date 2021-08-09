@@ -994,7 +994,7 @@ output_hook_redact_secrets <- function(x, options) {
   min_nchar <- 13
   min_entropy <- 4
   base64_chars <- strsplit(
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=_-@",
     split = ""
   )[[1]]
 

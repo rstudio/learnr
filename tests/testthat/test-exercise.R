@@ -840,7 +840,8 @@ test_that("Keys are redacted from exercise output", {
     "oVHzQgQvNaod5Qbchog3m6sicGEZaM",
     "C4gnKRtbk7rIHpkftrM4kqvEjQTdwZnnfAoM0p",
     "De5Zsa05m4XsiGGhdAwyGas450ufICU5",
-    "iX4GtPZKp7ZWx3Cg8Ch"
+    "iX4GtPZKp7ZWx3Cg8Ch",
+    "ghp_383a3dfb8efa9f0eab8bc50a6a024e477616"
   )
 
   for (key in keys) {
