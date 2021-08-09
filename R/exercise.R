@@ -528,6 +528,8 @@ render_exercise <- function(exercise, envir) {
       }
     }
 
+    knitr_options$knit_hooks$output <- output_hook_redact_secrets
+
     rmarkdown::output_format(
       knitr = knitr_options,
       pandoc = NULL,
@@ -590,11 +592,7 @@ render_exercise <- function(exercise, envir) {
     # Disable shiny domain
     shiny::withReactiveDomain(NULL, {
       # Disable connect api keys, connect server info, and other env vars
-      withr::local_envvar(list(
-        CONNECT_API_KEY = "", 
-        CONNECT_SERVER = "",
-        GITHUB_PAT = ""
-      ))
+      withr::local_envvar(list(CONNECT_API_KEY = "",  CONNECT_SERVER = ""))
 
       # Now render user code for final result
       rmarkdown::render(
@@ -984,4 +982,74 @@ debug_exercise_checker <- function(
       "..."           = list(...)
     )
   )
+}
+
+
+output_hook_redact_secrets <- function(x, options) {
+  # inspired by https://github.com/auth0/repo-supervisor
+  # and https://github.com/trufflesecurity/truffleHog
+  #
+  # Detects long strings of high entropy, i.e. 13+ random base64 characters in a
+  # row, and removes them from the output, redacting the key with "..."
+  min_nchar <- 13
+  min_entropy <- 4
+  base64_chars <- strsplit(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    split = ""
+  )[[1]]
+
+  word_entropy <- function(x) {
+    if (!length(x) || nchar(x) < min_nchar) {
+      return(0)
+    }
+
+    letters <- c(table(strsplit(x, "")[[1]]))
+
+    if (!all(names(letters) %in% base64_chars)) {
+      return(0)
+    }
+
+    # Calculate entropy: \sum_i{ - p_i * \log_2{p_i} }
+    Reduce(
+      x = letters,
+      f = function(acc, letter) {
+        p <- letter / nchar(x)
+        acc - p * log(p, base = 2)
+      },
+      init = 0,
+    )
+  }
+
+  line_words_entropy <- function(line) {
+    words <- strsplit(line, split = "[ \"()/|]")[[1]]
+    words <- lapply(words, function(x) { names(x) <- x; x })
+    names(words) <- words
+    vapply(words, word_entropy, numeric(1))
+  }
+
+  x <- paste(x, collapse = "\n")
+  lines <- strsplit(x, split = "\n", fixed = TRUE)[[1]]
+
+  for (i in seq_along(lines)) {
+    line_entropy <- line_words_entropy(lines[i])
+    is_key <- line_entropy > min_entropy
+    if (any(is_key)) {
+      for (redact_text in names(line_entropy)[is_key]) {
+        redacted_text <- paste0(substr(redact_text, 1, 5), "...")
+        lines <- gsub(redact_text, redacted_text, lines, fixed = TRUE)
+      }
+    }
+  }
+
+  # original HTML output hook inlined from knitr but made to match previous {learnr} appearance
+  # https://github.com/yihui/knitr/blob/55a2df9353af1157b3954a968cfef5c1e30dd64c/R/hooks-html.R#L250-L252
+  escape_html <- function (x) {
+    x = gsub("&", "&amp;", x)
+    x = gsub("<", "&lt;", x)
+    x = gsub(">", "&gt;", x)
+    x = gsub("\"", "&quot;", x)
+    x
+  }
+  x <- paste(lines, collapse = "\n")
+  sprintf('<pre><code>%s</code></pre>\n', x)
 }
