@@ -831,24 +831,3 @@ test_that("Shiny session is diabled", {
   expect_match(res$html_output, "<code>NULL</code>", fixed = TRUE)
 
 })
-
-
-# Redacting keys from output ----------------------------------------------
-
-test_that("Keys are redacted from exercise output", {
-  keys <- c(
-    "oVHzQgQvNaod5Qbchog3m6sicGEZaM",
-    "C4gnKRtbk7rIHpkftrM4kqvEjQTdwZnnfAoM0p",
-    "De5Zsa05m4XsiGGhdAwyGas450ufICU5",
-    "iX4GtPZKp7ZWx3Cg8Ch"
-  )
-
-  for (key in keys) {
-    text <- paste0("foo\nthis is my key ", key, "\nbar")
-    text_expected <- paste0('<pre><code>foo\nthis is my key ', substr(key, 1, 5), "...\nbar</code></pre>\n")
-    expect_equal(
-      output_hook_redact_secrets(text, list(engine = "r")),
-      text_expected
-    )
-  }
-})
