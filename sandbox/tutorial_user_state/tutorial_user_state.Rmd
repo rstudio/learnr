@@ -40,7 +40,7 @@ Write whatever R code you want. This isn't graded (but the tutorial state record
 runif(1)
 ```
 
-Write the R code required to add two plus two. This is graded, so only submissions are recorded in the tutorial state.
+Write the R code required to add two plus two. This is graded, so all submissions are recorded in the tutorial state until the first correct submission. Once a correct submission is received, the state is no longer updated.
 
 ```{r two-plus-two, exercise=TRUE}
 
