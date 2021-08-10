@@ -380,10 +380,7 @@ evaluate_exercise <- function(
 
   # Evaluate the submitted code by rendering the exercise in a special .Rmd
   rmd_results <- tryCatch(
-    # disable the reactive domain so user code can't reach the shiny app
-    withReactiveDomain(NULL, {
-      render_exercise(exercise, envir)
-    }),
+    render_exercise(exercise, envir),
     error = function(err_render) {
       if (nzchar(exercise$error_check)) {
         # Check the error thrown by the submitted code when there's error
