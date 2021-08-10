@@ -811,3 +811,23 @@ test_that("Exercise timelimit error is returned when exercise takes too long", {
   expect_match(res$error_message, "permitted timelimit")
   expect_match(as.character(res$html_output), "alert-danger")
 })
+
+
+
+# Shiny Session ---------------------------------------------------------------
+
+test_that("Shiny session is diabled", {
+  skip_on_cran()
+  skip_on_os("windows")
+
+  ex <- mock_exercise(user_code = "shiny::getDefaultReactiveDomain()")
+
+  shiny::withReactiveDomain(list(internal_test = TRUE), {
+    expect_equal(shiny::getDefaultReactiveDomain(), list(internal_test = TRUE))
+    res <- evaluate_exercise(ex, new.env())
+    expect_equal(shiny::getDefaultReactiveDomain(), list(internal_test = TRUE))
+  })
+
+  expect_match(res$html_output, "<code>NULL</code>", fixed = TRUE)
+
+})
