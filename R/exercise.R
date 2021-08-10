@@ -589,12 +589,8 @@ render_exercise <- function(exercise, envir) {
 
     # Disable shiny domain
     shiny::withReactiveDomain(NULL, {
-      # Disable connect api keys, connect server info, and other env vars
-      withr::local_envvar(list(
-        CONNECT_API_KEY = "", 
-        CONNECT_SERVER = "",
-        GITHUB_PAT = ""
-      ))
+      # Disable connect api keys and connect server info
+      withr::local_envvar(list(CONNECT_API_KEY = "", CONNECT_SERVER = ""))
 
       # Now render user code for final result
       rmarkdown::render(
