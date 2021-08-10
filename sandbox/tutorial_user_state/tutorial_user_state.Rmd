@@ -24,7 +24,7 @@ The current state of your progress in this tutorial:
 ```{r tutorial-user-state, echo=TRUE, context = "server"}
 output$tutorial_user_state <- renderPrint({
   cat("session$userData$tutorial_state:\n")
-  str(reactiveValuesToList(session$userData$tutorial_state))
+  str(reactiveValuesToList(learnr:::get_tutorial_state()))
 })
 ```
 

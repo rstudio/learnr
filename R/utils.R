@@ -107,3 +107,7 @@ is_installed <- function(package, version = NULL) {
   }
   TRUE
 }
+
+timestamp_utc <- function() {
+  strftime(Sys.time(), "%F %H:%M:%OS3 %Z", tz = "UTC")
+}

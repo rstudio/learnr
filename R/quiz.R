@@ -365,7 +365,7 @@ question_prerendered_chunk <- function(question, ..., session = getDefaultReacti
     )
 
   observe(
-    session$userData$tutorial_state[[question$label]] <- question_state()
+    set_tutorial_state(question$label, question_state(), session = session)
   )
 
   question_state

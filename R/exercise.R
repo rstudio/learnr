@@ -171,13 +171,14 @@ setup_exercise_handler <- function(exercise_rx, session) {
         isolate({
           # update the user_state with this submission, matching the behavior of
           # questions: always update exercises until correct answer is submitted
-          current_state <- session$userData$tutorial_state[[exercise$label]]
-          if (!isTRUE(current_state)) {
-            session$userData$tutorial_state[[exercise$label]] <- list(
+          current_state <- get_tutorial_state(exercise$label, session = session)
+          if (!isTRUE(current_state$correct)) {
+            new_state <- list(
               type = "exercise",
               answer = exercise$code,
               correct = result$feedback$correct %||% NA
             )
+            set_tutorial_state(exercise$label, new_state, session = session)
           }
         })
 

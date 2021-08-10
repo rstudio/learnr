@@ -95,3 +95,30 @@ get_question_cache <- function(label = NULL){
 clear_question_cache_env <- function(){
   rm(list=ls(question_cache_env, all.names=TRUE), envir=question_cache_env)
 }
+
+
+# Tutorial State ----------------------------------------------------------
+
+get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
+  if (is.null(label)) {
+    session$userData$tutorial_state
+  } else {
+    session$userData$tutorial_state[[label]]
+  }
+}
+
+set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()) {
+  if (is.reactive(data)) {
+    data <- data()
+  }
+
+  if (is.null(data)) {
+    session$userData$tutorial_state[[label]] <- NULL
+    return()
+  }
+
+  stopifnot(is.list(data), is.character(label))
+  data$timestamp <- timestamp_utc()
+  session$userData$tutorial_state[[label]] <- data
+  invisible(data)
+}
