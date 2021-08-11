@@ -133,6 +133,7 @@ clear_question_cache_env <- function(){
 #'   - `timestamp`: The time at which the user's submission was completed, as
 #'     a character string in UTC, formatted as `"%F %H:%M:%OS3 %Z"`.
 #'
+#' @seealso [get_tutorial_info()]
 #' @export
 get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
   if (is.null(label)) {
@@ -157,4 +158,57 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
   data$timestamp <- timestamp_utc()
   session$userData$tutorial_state[[label]] <- data
   invisible(data)
+}
+
+
+# Tutorial Info -----------------------------------------------------------
+
+#' Get information about the current tutorial
+#'
+#' Returns information about the current tutorial. Ideally the function should
+#' be evaluated in a Shiny context, i.e. in a chunk with option
+#' `context = "server"`. Note that the values of this function may change after
+#' the tutorial is completely initialized. If called in a non-reactive context,
+#' `get_tutorial_info()` will return default values that will most likely
+#' correspond to the current tutorial.
+#'
+#' @inheritParams get_tutorial_state
+#'
+#' @return Returns an ordinary list with the following elements:
+#'
+#'   - `tutorial_id`: The ID of the tutorial, auto-generated or from the
+#'     `tutorial$id` key in the tutorial's YAML front matter.
+#'   - `tutorial_version`: The tutorial's version, auto-generated or from the
+#'     `tutorial$version` key in the tutorial's YAML front matter.
+#'   - `user_id`: The current user.
+#'   - `learnr_version`: The current version of the running learnr package.
+#'   - `language`: The current language of the tutorial, either as chosen by the
+#'     user or as specified in the `language` item of the YAML front matter.
+#'
+#' @seealso [get_tutorial_state()]
+#'
+#' @export
+get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
+  read_session_request <- function(key) {
+    if (is.null(session)) {
+      value <- switch(
+        key,
+        "tutorial.tutorial_id" = rmarkdown::metadata$tutorial$id %||% default_tutorial_id(),
+        "tutorial.tutorial_version" = rmarkdown::metadata$tutorial$version %||% default_tutorial_version(),
+        "tutorial.user_id" = default_user_id(),
+        "tutorial.language" = default_language(),
+        NULL
+      )
+      return(value)
+    }
+    read_request(session, key)
+  }
+
+  list(
+    tutorial_id = read_session_request("tutorial.tutorial_id"),
+    tutorial_version = read_session_request("tutorial.tutorial_version"),
+    user_id = read_session_request("tutorial.user_id"),
+    learnr_version = as.character(utils::packageVersion("learnr")),
+    language = read_session_request("tutorial.language")
+  )
 }

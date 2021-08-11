@@ -86,6 +86,8 @@ h4("Storage")
 verbatimTextOutput("storage")
 h4("Submissions")
 verbatimTextOutput("submissions")
+h4("Tutorial Info")
+verbatimTextOutput("info")
 ```
 
 ```{r storage-server, context="server"}
@@ -99,4 +101,14 @@ output$storage <- renderPrint({
 output$submissions <- renderPrint({
   str(learnr:::submissions_from_state_objects(objs()))
 })
+output$info <- renderPrint({
+  input$storage
+  learnr::get_tutorial_info()
+})
+```
+
+The tutorial information in the static portion of a tutorial may not be the same as the running tutorial application.
+
+```{r tutorial-info, echo=TRUE}
+get_tutorial_info()
 ```

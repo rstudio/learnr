@@ -42,3 +42,6 @@ be used in a reactive context, i.e. within \code{\link[shiny:observe]{shiny::obs
 user's tutorial state must be written inside a \code{context="server"} chunk in
 the tutorial's R Markdown source.
 }
+\seealso{
+\code{\link[=get_tutorial_info]{get_tutorial_info()}}
+}
