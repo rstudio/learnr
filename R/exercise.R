@@ -610,18 +610,17 @@ render_exercise <- function(exercise, envir) {
     # Disable shiny domain
     shiny::withReactiveDomain(NULL, {
       # Disable connect api keys and connect server info
-      withr::local_envvar(list(CONNECT_API_KEY = "", CONNECT_SERVER = ""))
-
-      # Now render user code for final result
-      rmarkdown::render(
-        input = rmd_file_user,
-        output_format = output_format_exercise(user = TRUE),
-        envir = envir_result,
-        clean = FALSE,
-        quiet = TRUE,
-        run_pandoc = FALSE
-      )
-
+      withr::with_envvar(list(CONNECT_API_KEY = "", CONNECT_SERVER = ""), {
+        # Now render user code for final result
+        rmarkdown::render(
+          input = rmd_file_user,
+          output_format = output_format_exercise(user = TRUE),
+          envir = envir_result,
+          clean = FALSE,
+          quiet = TRUE,
+          run_pandoc = FALSE
+        )
+      })
     })
 
   }, error = function(e) {
