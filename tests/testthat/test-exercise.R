@@ -814,12 +814,9 @@ test_that("Exercise timelimit error is returned when exercise takes too long", {
 
 
 
-# Shiny Session ---------------------------------------------------------------
+# Sensitive env vars and options are masked from user -----------------------
 
 test_that("Shiny session is diabled", {
-  skip_on_cran()
-  skip_on_os("windows")
-
   ex <- mock_exercise(user_code = "shiny::getDefaultReactiveDomain()")
 
   shiny::withReactiveDomain(list(internal_test = TRUE), {
@@ -829,5 +826,26 @@ test_that("Shiny session is diabled", {
   })
 
   expect_match(res$html_output, "<code>NULL</code>", fixed = TRUE)
+})
 
+test_that("Sensitive env vars and options are masked", {
+  withr::local_envvar(
+    CONNECT_API_KEY = "T_CONNECT_API_KEY",
+    CONNECT_SERVER = "T_CONNECT_SERVER"
+  )
+  withr::local_options(shiny.sharedSecret = "T_sharedSecret")
+
+  ex <- mock_exercise(user_code = paste(
+    "list(",
+    "  Sys.getenv('CONNECT_API_KEY', 'USER_LOCAL_CONNECT_API_KEY'),",
+    "  Sys.getenv('CONNECT_SERVER', 'USER_LOCAL_CONNECT_SERVER'),",
+    "  getOption('shiny.sharedSecret', 'USER_LOCAL_sharedSecret')",
+    ")",
+    sep = "\n"
+  ))
+  res <- evaluate_exercise(ex, new.env())
+
+  expect_no_match(res$html_output, "T_CONNECT_API_KEY", fixed = TRUE)
+  expect_no_match(res$html_output, "T_CONNECT_SERVER", fixed = TRUE)
+  expect_no_match(res$html_output, "T_sharedSecret", fixed = TRUE)
 })

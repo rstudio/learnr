@@ -607,11 +607,7 @@ render_exercise <- function(exercise, envir) {
     # are much more difficult
     envir_result <- duplicate_env(envir_prep)
 
-    # Disable shiny domain
-    shiny::withReactiveDomain(NULL, {
-      # Disable connect api keys and connect server info
-      withr::local_envvar(list(CONNECT_API_KEY = "", CONNECT_SERVER = ""))
-
+    with_masked_env_vars(
       # Now render user code for final result
       rmarkdown::render(
         input = rmd_file_user,
@@ -621,9 +617,7 @@ render_exercise <- function(exercise, envir) {
         quiet = TRUE,
         run_pandoc = FALSE
       )
-
-    })
-
+    )
   }, error = function(e) {
     msg <- conditionMessage(e)
     # make the time limit error message a bit more friendly
@@ -676,6 +670,21 @@ render_exercise <- function(exercise, envir) {
     envir_result = envir_result,
     envir_prep = envir_prep
   )
+}
+
+with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
+  # Always disable connect api keys and connect server info
+  env_vars$CONNECT_API_KEY <- ""
+  env_vars$CONNECT_SERVER <- ""
+  # Hide shiny server sharedSecret
+  opts$shiny.sharedSecret <- ""
+
+  # Disable shiny domain
+  shiny::withReactiveDomain(NULL, {
+    withr::with_envvar(env_vars, {
+      withr::with_options(opts, code)
+    })
+  })
 }
 
 exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
