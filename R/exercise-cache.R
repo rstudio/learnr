@@ -143,6 +143,7 @@ get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain(
 }
 
 set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()) {
+  stopifnot(is.character(label))
   if (is.reactive(data)) {
     data <- data()
   }
@@ -152,7 +153,7 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
     return()
   }
 
-  stopifnot(is.list(data), is.character(label))
+  stopifnot(is.list(data))
   data$timestamp <- timestamp_utc()
   session$userData$tutorial_state[[label]] <- data
   invisible(data)
