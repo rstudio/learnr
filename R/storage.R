@@ -212,8 +212,6 @@ update_object <- function(object) {
       # rename answers -> answer
       object$data$answer <- object$data$answers
       object$data$answers <- NULL
-      # do not record correct information
-      object$data$correct <- NULL
     }
   }
   object
@@ -440,6 +438,8 @@ client_storage <- function(session) {
       # save the object to our in-memory store
       context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
+      # scrub "answers" from the state stored on the client (client storage only)
+      data <- scrub_correct_and_feedback(data)
       assign(object_id, data, envir = store)
 
       # broadcast to client
@@ -497,4 +497,20 @@ no_storage <- function() {
     get_objects = function(tutorial_id, tutorial_version, user_id) { list() },
     remove_all_objects = function(tutorial_id, tutorial_version, user_id) {}
   )
+}
+
+scrub_correct_and_feedback <- function(data) {
+  if (is.null(data)) {
+    return(data)
+  }
+
+  if (identical(data$type, "question_submission")) {
+    data$data$correct <- NULL
+  }
+
+  if (identical(data$type, "exercise_submission")) {
+    data$data$feedback <- NULL
+  }
+
+  data
 }

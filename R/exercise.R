@@ -20,13 +20,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise from app
     exercise <- exercise_rx()
     # Add tutorial information
-    exercise$tutorial <- list(
-      tutorial_id = read_request(session, "tutorial.tutorial_id"),
-      tutorial_version = read_request(session, "tutorial.tutorial_version"),
-      user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = as.character(utils::packageVersion("learnr")),
-      language = read_request(session, "tutorial.language")
-    )
+    exercise$tutorial <- get_tutorial_info()
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
@@ -44,6 +38,14 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
       object <- get_exercise_submission(session = session, label = exercise$label)
       if (!is.null(object) && !is.null(object$data$output)) {
+        # restore user state, but don't report correct
+        # since the user's code wasn't re-evaluated
+        session$user_state$tutorial_state[[exercise$label]] <- list(
+          type = "exercise",
+          answer = object$data$code,
+          correct = NA,
+          timestamp = paste(as.numeric(Sys.time()))
+        )
 
         # get the output
         output <- object$data$output
@@ -80,16 +82,19 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # - solution
     # - engine
     exercise <- append(exercise, get_exercise_cache(exercise$label))
-    # If there is no locally defined error check code, look for globally defined error check option
-    exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
 
-    if (!isTRUE(exercise$should_check)) {
+    check_was_requested <- exercise$should_check
+    # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
+    exercise$should_check <- NULL
+
+    if (!isTRUE(check_was_requested)) {
       exercise$check <- NULL
       exercise$code_check <- NULL
       exercise$error_check <- NULL
+    } else {
+      # If there is no locally defined error check code, look for globally defined error check option
+      exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     }
-    # variable has now served its purpose so remove it
-    exercise$should_check <- NULL
 
     # get timelimit option (either from chunk option or from global option)
     timelimit <- exercise$options$exercise.timelimit
@@ -148,14 +153,29 @@ setup_exercise_handler <- function(exercise_rx, session) {
             timeout_exceeded = result$timeout_exceeded,
             time_elapsed     = as.numeric(difftime(Sys.time(), start, units="secs")),
             error_message    = result$error_message,
-            checked          = !is.null(exercise$code_check) || !is.null(exercise$check),
+            checked          = check_was_requested,
             feedback         = result$feedback
           )
         )
 
-        # assign reactive result value
+        # assign reactive result to be sent to the UI
         rv$triggered <- isolate({ rv$triggered + 1})
         rv$result <- exercise_result_as_html(result)
+
+        isolate({
+          # update the user_state with this submission, matching the behavior of
+          # questions: always update exercises until correct answer is submitted
+          current_state <- get_tutorial_state(exercise$label, session = session)
+          if (!isTRUE(current_state$correct)) {
+            new_state <- list(
+              type = "exercise",
+              answer = exercise$code,
+              correct = result$feedback$correct %||% NA
+            )
+            set_tutorial_state(exercise$label, new_state, session = session)
+          }
+        })
+
 
         # destroy the observer
         o$destroy()
