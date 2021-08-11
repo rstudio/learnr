@@ -1026,7 +1026,10 @@ output_redact_secrets <- function(path) {
     vapply(words, word_entropy, numeric(1))
   }
 
-  lines <- readLines(path, warn = FALSE)
+  lines <- path
+  if (length(path) == 1) {
+    lines <- readLines(path, warn = FALSE)
+  }
 
   for (i in seq_along(lines)) {
     line_entropy <- line_words_entropy(lines[i])
@@ -1039,7 +1042,10 @@ output_redact_secrets <- function(path) {
     }
   }
 
-  writeLines(lines, path)
-
-  invisible(lines)
+  if (length(path) == 1) {
+    writeLines(lines, path)
+    invisible(lines)
+  } else {
+    lines
+  }
 }
