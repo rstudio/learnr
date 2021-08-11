@@ -20,13 +20,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # get exercise from app
     exercise <- exercise_rx()
     # Add tutorial information
-    exercise$tutorial <- list(
-      tutorial_id = read_request(session, "tutorial.tutorial_id"),
-      tutorial_version = read_request(session, "tutorial.tutorial_version"),
-      user_id = read_request(session, "tutorial.user_id"),
-      learnr_version = as.character(utils::packageVersion("learnr")),
-      language = read_request(session, "tutorial.language")
-    )
+    exercise$tutorial <- get_tutorial_info()
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
