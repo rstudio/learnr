@@ -856,3 +856,90 @@ test_that("Keys are redacted from exercise output", {
     )
   }
 })
+
+test_that("medium-entropy strings aren't redacted", {
+  # dput(format(floor(runif(18) * `^`(10, 13:30)), scientific = FALSE))
+  random_digits <- c(
+    "                 4356007429305", "                94872069801203",
+    "                31984614906832", "              7731033924501389",
+    "             85275528556667264", "            490413971478119488",
+    "           4137905822135507968", "          17641392536461352960",
+    "         597542588133364858880", "          65719310659915210752",
+    "       99646528065204605943808", "      191320676123723369021440",
+    "     2752337642014027154456576", "    13267046725377441323286528",
+    "   170193689875304717339328512", "  4087918642908334818980790272",
+    " 20444140862673519004182642688", "742781542707234648351714574336"
+  )
+
+  expect_equal(
+    output_redact_secrets(random_digits),
+    random_digits
+  )
+
+  # dput(uuid::UUIDgenerate(n = 10))
+  uuids <- c(
+    "8c9f0bc8-96ff-45b3-8543-537ff17f80cd", "4c005139-701b-40a1-81aa-8a1536c6d1f7",
+    "604f4733-5250-4a35-bcc5-9839ec4762dd", "076e5201-7684-4e13-adfb-9665b657b2b9",
+    "c5757335-6e8d-45e3-9415-5ea5b9386761", "2f965ca5-62fc-448e-8e6b-307f9278efc9",
+    "4ad01d63-51bb-4ed0-97cf-96bbaaaf5588", "847cf279-27b8-46a0-bfc1-e7e8e3a0b4f1",
+    "998caf08-c50e-4b0c-8cd0-9000b4343f8b", "cb31371c-5cc5-413c-a2f4-695b26bb05ca"
+  )
+
+  expect_equal(
+    output_redact_secrets(uuids),
+    uuids
+  )
+})
+
+test_that("should_redact_secrets() determines if secrets should be redacted", {
+  ex_plain <- ex_true <- ex_false <- mock_exercise(user_code = 'Sys.getenv("GITHUB_PAT")')
+  ex_true$options$exercise.redact_potential_secrets <- TRUE
+  ex_false$options$exercise.redact_potential_secrets <- FALSE
+
+  mock_key <- "ghp_383a3dfb8efa9f0eab8bc50a6a024e477616"
+
+  expect_false(should_redact_secrets())
+  expect_false(should_redact_secrets(ex_plain))
+  expect_true(should_redact_secrets(ex_true))
+  expect_false(should_redact_secrets(ex_false))
+
+  withr::with_envvar(list(CONNECT_API_KEY = "key", GITHUB_PAT = mock_key), {
+    expect_true(should_redact_secrets())
+    expect_true(should_redact_secrets(ex_plain))
+    expect_true(should_redact_secrets(ex_true))
+    expect_false(should_redact_secrets(ex_false))
+
+    expect_match(
+      withr::with_tempdir(render_exercise(ex_plain, new.env())$html_output),
+      "redacted"
+    )
+    expect_match(
+      withr::with_tempdir(render_exercise(ex_true, new.env())$html_output),
+      "redacted"
+    )
+    expect_no_match(
+      withr::with_tempdir(render_exercise(ex_false, new.env())$html_output),
+      "redacted"
+    )
+  })
+
+  withr::with_envvar(list(SHINY_SERVER_VERSION = "1.2.3.4", GITHUB_PAT = mock_key), {
+    expect_true(should_redact_secrets())
+    expect_true(should_redact_secrets(ex_plain))
+    expect_true(should_redact_secrets(ex_true))
+    expect_false(should_redact_secrets(ex_false))
+
+    expect_match(
+      withr::with_tempdir(render_exercise(ex_plain, new.env())$html_output),
+      "redacted"
+    )
+    expect_match(
+      withr::with_tempdir(render_exercise(ex_true, new.env())$html_output),
+      "redacted"
+    )
+    expect_no_match(
+      withr::with_tempdir(render_exercise(ex_false, new.env())$html_output),
+      "redacted"
+    )
+  })
+})
