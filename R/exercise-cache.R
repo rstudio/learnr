@@ -99,6 +99,41 @@ clear_question_cache_env <- function(){
 
 # Tutorial State ----------------------------------------------------------
 
+#' Observe the user's progress in the tutorial
+#'
+#' @description
+#' As a student progresses through a \pkg{learnr} tutorial, their progress is
+#' stored in a Shiny reactive values list for their session (see
+#' [shiny::reactiveValues()]). Without arguments, `get_tutorial_state()` returns
+#' the full reactiveValues object that can be converted to a conventional list
+#' with [shiny::reactiveValuesToList()]. If the `label` argument is provided,
+#' the state of an individual question or exercise with that label is returned.
+#'
+#' Calling `get_tutorial_state()` introduces a reactive dependency on the state
+#' of returned questions or exercises unless called within `isolate()`. Note
+#' that `get_tutorial_state()` will only work for the tutorial author and must
+#' be used in a reactive context, i.e. within [shiny::observe()],
+#' [shiny::observeEvent()], or [shiny::reactive()]. Any logic observing the
+#' user's tutorial state must be written inside a `context="server"` chunk in
+#' the tutorial's R Markdown source.
+#'
+#' @param label A length-1 character label of the exercise or question.
+#' @param session The `session` object passed to function given to
+#'   `shinyServer.` Default is [shiny::getDefaultReactiveDomain()].
+#'
+#' @return A reactiveValues object or a single reactive value (if `label` is
+#'   provided). The names of the full reactiveValues object correspond to the
+#'   label of the question or exercise. Each item contains the following
+#'   entries:
+#'
+#'   - `type`: One of `"question"` or `"exercise"`.
+#'   - `answer`: A character vector containing the user's submitted answer(s).
+#'   - `correct`: A logical indicating whether the user's answer was correct,
+#'     or a logical `NA` if the submission was not checked for correctness.
+#'   - `timestamp`: The time at which the user's submission was completed, as
+#'     a character string in UTC, formatted as `"%F %H:%M:%OS3 %Z"`.
+#'
+#' @export
 get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
   if (is.null(label)) {
     session$userData$tutorial_state
