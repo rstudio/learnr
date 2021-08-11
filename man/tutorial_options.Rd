@@ -14,7 +14,8 @@ tutorial_options(
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
   exercise.startover = TRUE,
-  exercise.reveal_solution = TRUE
+  exercise.reveal_solution = TRUE,
+  exercise.redact_potential_secrets = NULL
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_cod
 
 \item{exercise.reveal_solution}{Whether to reveal the exercise solution if
 a solution chunk is provided.}
+
+\item{exercise.redact_potential_secrets}{Whether to hide potential secrets if
+a user attempts to print them in an interactive exercise.}
 }
 \description{
 Set various tutorial options that control the display and evaluation of

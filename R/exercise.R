@@ -627,7 +627,9 @@ render_exercise <- function(exercise, envir) {
 
   # Render markdown to HTML
   dependencies <- filter_dependencies(attr(output_file, "knit_meta"))
-  output_redact_secrets(output_file)
+  if (should_redact_secrets(exercise)) {
+    output_redact_secrets(output_file)
+  }
   output_file <- rmarkdown::render(
     input = output_file, output_format = output_format_exercise(user = TRUE),
     envir = envir_result, quiet = TRUE, clean = FALSE
@@ -982,6 +984,20 @@ debug_exercise_checker <- function(
   )
 }
 
+should_redact_secrets <- function(exercise = list()) {
+  ex_opt_redact <- exercise$options$exercise.redact_potential_secrets
+  if (is.null(ex_opt_redact)) {
+    # redact by default on connect/shiny server unless instructed otherwise
+    is_on_connect <- !identical(Sys.getenv("CONNECT_API_KEY", ""), "")
+    is_on_shiny_server <- !identical(Sys.getenv("SHINY_SERVER_VERSION", ""), "")
+    is_on_connect || is_on_shiny_server
+  } else {
+    if (is.character(ex_opt_redact)) {
+      ex_opt_redact <- eval(parse(text = ex_opt_redact))
+    }
+    isTRUE(ex_opt_redact)
+  }
+}
 
 output_redact_secrets <- function(path) {
   # inspired by https://github.com/auth0/repo-supervisor
