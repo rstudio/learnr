@@ -845,10 +845,13 @@ test_that("Keys are redacted from exercise output", {
   )
 
   for (key in keys) {
-    text <- paste0("foo\nthis is my key ", key, "\nbar")
-    text_expected <- paste0('<pre><code>foo\nthis is my key ', substr(key, 1, 5), "...\nbar</code></pre>\n")
+    text <- c("foo", paste0("this is my key ", key), "bar")
+    tmpfile <- withr::local_tempfile()
+    writeLines(text, tmpfile)
+
+    text_expected <- c("foo", paste0("this is my key ", substr(key, 1, 5), "...redacted..."), "bar")
     expect_equal(
-      output_hook_redact_secrets(text, list(engine = "r")),
+      output_redact_secrets(tmpfile),
       text_expected
     )
   }
