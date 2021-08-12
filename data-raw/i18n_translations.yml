@@ -283,7 +283,7 @@ text:
   blank:
     en: "blank"
     fr: ~
-    es: "espacio en blanco" # Added by Alex, not a real translator
+    es: ~
     pt: ~
     tr: ~
     emo: ~
@@ -291,7 +291,7 @@ text:
   blank_plural:
     en: "blanks"
     fr: ~
-    es: "espacios en blanco" # Added by Alex, not a real translator
+    es: ~
     pt: ~
     tr: ~
     emo: ~
@@ -300,7 +300,7 @@ text:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
     fr: ~
-    es: "Este ejercicio contiene {{count}} $t(text.blank)." # Added by Alex, not a real translator
+    es: ~
     pt: ~
     tr: ~
     emo: ~
@@ -309,7 +309,7 @@ text:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
     fr: ~
-    es: "Reemplace {{blank}} con código real." # Added by Alex, not a real translator
+    es: ~
     pt: ~
     tr: ~
     emo: ~
@@ -330,17 +330,17 @@ text:
     eu: ~
   and:
     en: "and"
-    fr: "et"  # Added by Alex, not a real translator
-    es: "y"   # Added by Alex, not a real translator
-    pt: "e"   # Added by Alex, not a real translator
-    tr: "ve"  # Added by Alex, not a real translator
+    fr: "et"
+    es: "y"
+    pt: "e"
+    tr: ~
     emo: ~
-    eu: "eta" # Added by Alex, not a real translator
+    eu: ~
   or:
     en: "or"
-    fr: "ou" # Added by Alex, not a real translator
-    es: "o"  # Added by Alex, not a real translator
-    pt: "ou" # Added by Alex, not a real translator
+    fr: "ou"
+    es: "o"
+    pt: "ou"
     tr: ~
     emo: ~
     eu: ~
