@@ -316,10 +316,9 @@ evaluate_exercise <- function(
 
   i18n_set_language_option(exercise$tutorial$language)
 
-  # return immediately and clear visible results
-  # do not consider this an exercise submission
   if (!nzchar(exercise$code)) {
-    # " " since html_output needs to pass a req()
+    # return immediately and clear visible results - do not consider this an
+    # exercise submission but return " " since html_output needs to pass a req()
     return(exercise_result(html_output = " "))
   }
 
@@ -327,20 +326,20 @@ evaluate_exercise <- function(
     eval(parse(text = exercise$global_setup), envir = envir)
   }
 
-  # Check if user code has unfilled blanks; if it does, early return
-  exercise_blanks <- exercise$options$exercise.blanks %||%
-    knitr::opts_chunk$get("exercise.blanks") %||%
-    TRUE
-  if (isTRUE(exercise_blanks)) exercise_blanks <- "_{3,}"
-
+  # Check if user code has unfilled blanks ----------------------------------
+  # If blanks are detected we store the feedback for use at the standard
+  # feedback-returning exit points, but still try to render the user code since
+  # the output may still be valid even if the user needs to fill in some blanks
   blank_feedback <- NULL
-  if (shiny::isTruthy(exercise_blanks)) {
-    blank_feedback <- check_blanks(exercise$code, exercise_blanks)
+  exercise_blanks_pattern <- exercise_get_blanks_pattern(exercise)
+  if (shiny::isTruthy(exercise_blanks_pattern)) {
+    blank_feedback <- check_blanks(exercise$code, exercise_blanks_pattern)
   }
 
+  here <- rlang::current_env()
   return_if_exercise_result <- function(res) {
-    # early return if the we've received an exercise result,
-    # but also replace the feedback with the blank feedback if any were found
+    # early return if we've received an exercise result, but also replace the
+    # feedback with the blank feedback if any blanks were found
     if (!is_exercise_result(res)) {
       return(NULL)
     }
@@ -349,11 +348,10 @@ evaluate_exercise <- function(
       res$feedback <- blank_feedback$feedback
     }
 
-    rlang::return_from(rlang::caller_env(), res)
+    rlang::return_from(here, res)
   }
 
-
-  # Check if user code is parsable; if not, early return
+  # Check that user R code is parsable -------------------------------------
   if (
     tolower(exercise$engine) == "r" &&
     !isFALSE(exercise$options$exercise.parse.check)
@@ -361,7 +359,7 @@ evaluate_exercise <- function(
     return_if_exercise_result(check_parsable(exercise$code))
   }
 
-  # Check the code pre-evaluation, if code_check is provided
+  # Code check, pre-evaluation ---------------------------------------------
   if (nzchar(exercise$code_check)) {
     # treat the blank check like a code check, if blanks were detected
     return_if_exercise_result(blank_feedback)
@@ -375,6 +373,7 @@ evaluate_exercise <- function(
     )
   }
 
+  # Render user code --------------------------------------------------------
   # Setup a temporary directory for rendering the exercise
   exercise_dir <- withr::local_tempdir(pattern = "lrn-ex")
 
@@ -390,6 +389,7 @@ evaluate_exercise <- function(
     error = function(err_render) {
       error_feedback <- NULL
       if (nzchar(exercise$error_check)) {
+        # Error check -------------------------------------------------------
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
         error_feedback <- try_checker(
@@ -407,6 +407,7 @@ evaluate_exercise <- function(
 
   return_if_exercise_result(rmd_results)
 
+  # Check -------------------------------------------------------------------
   # Run the checker post-evaluation (for checking code results)
   # Don't need to do exercise checking if there are blanks
   checker_feedback <- NULL
@@ -677,6 +678,20 @@ render_exercise <- function(exercise, envir) {
     envir_result = envir_result,
     envir_prep = envir_prep
   )
+}
+
+exercise_get_blanks_pattern <- function(exercise) {
+  exercise_blanks_opt <-
+    exercise$options$exercise.blanks %||%
+    knitr::opts_chunk$get("exercise.blanks") %||%
+    TRUE
+
+  if (isTRUE(exercise_blanks_opt)) {
+    # TRUE is a stand-in for the default ___+
+    return("_{3,}")
+  }
+
+  exercise_blanks_opt
 }
 
 exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
