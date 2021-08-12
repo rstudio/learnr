@@ -1,0 +1,114 @@
+---
+title: "Tutorial User State"
+output: learnr::tutorial
+tutorial:
+  id: tutorial-user-state
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(gradethis)
+
+knitr::opts_chunk$set(echo = FALSE)
+# switch between "local" and "client" to verify that feedback and correct are removed
+options(tutorial.storage = "client")
+options(tutorial.event_recorder = learnr:::debug_event_recorder)
+```
+
+
+## Topic 1
+
+The current state of your progress in this tutorial:
+
+```{r tutorial-user-state, echo=TRUE, context = "server"}
+output$tutorial_user_state <- renderPrint({
+  cat("learnr::get_tutorial_state():\n")
+  str(reactiveValuesToList(learnr::get_tutorial_state()))
+})
+```
+
+```{r tutorial-user-state-ui}
+verbatimTextOutput("tutorial_user_state")
+```
+
+### Exercise 
+
+Write whatever R code you want. This isn't graded (but the tutorial state records your latest run).
+
+```{r anything, exercise=TRUE}
+runif(1)
+```
+
+Write the R code required to add two plus two. This is graded, so all submissions are recorded in the tutorial state until the first correct submission. Once a correct submission is received, the state is no longer updated.
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+```{r two-plus-two-check}
+grade_this({
+  pass_if_equal(4, "Good job!")
+  fail("Not quite, try again.")
+})
+```
+
+
+Questions are always recorded in the tutorial state.
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools"),
+    allow_retry = TRUE
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    answer("grid", correct = TRUE),
+    allow_retry = TRUE
+  )
+)
+```
+
+
+## Storage
+
+Using `` `r getOption("tutorial.storage", "auto")` `` storage.
+
+```{r storage-ui}
+actionButton("storage", "Get Storage")
+h4("Storage")
+verbatimTextOutput("storage")
+h4("Submissions")
+verbatimTextOutput("submissions")
+h4("Tutorial Info")
+verbatimTextOutput("info")
+```
+
+```{r storage-server, context="server"}
+objs <- reactive({
+  input$storage
+  learnr:::get_all_state_objects(session)
+})
+output$storage <- renderPrint({
+  str(objs())
+})
+output$submissions <- renderPrint({
+  str(learnr:::submissions_from_state_objects(objs()))
+})
+output$info <- renderPrint({
+  input$storage
+  learnr::get_tutorial_info()
+})
+```
+
+The tutorial information in the static portion of a tutorial may not be the same as the running tutorial application.
+
+```{r tutorial-info, echo=TRUE}
+get_tutorial_info()
+```
