@@ -135,8 +135,10 @@ clear_question_cache_env <- function() {
 #' @seealso [get_tutorial_info()]
 #' @export
 get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
+  object_labels <- names(get_tutorial_cache())
   if (is.null(label)) {
-    session$userData$tutorial_state
+    state <- shiny::reactiveValuesToList(session$userData$tutorial_state)
+    state[intersect(object_labels, names(state))]
   } else {
     session$userData$tutorial_state[[label]]
   }
