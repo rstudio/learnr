@@ -718,11 +718,12 @@ exercise_code_chunks_user <- function(exercise) {
 
 exercise_code_chunks <- function(chunks) {
   vapply(chunks, function(x) {
-    opts <- paste(names(x$opts), unname(x$opts), sep = "=")
+    opts <- x$opts[setdiff(names(x$opts), "label")]
+    opts <- paste(names(opts), unname(opts), sep = "=")
     paste(
       sep = "\n",
       # we quote the label to ensure that it is treated as a label and not a symbol for instance
-      sprintf("```{%s}", paste0(c(x$engine, dput_to_string(x$label), opts), collapse = ", ")),
+      sprintf("```{%s %s}", x$engine, paste0(c(dput_to_string(x$label), opts), collapse = ", ")),
       paste0(x$code, collapse = "\n"),
       "```"
     )
