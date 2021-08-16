@@ -1,99 +1,98 @@
-exercise_cache_env <- new.env(parent=emptyenv())
-question_cache_env <- new.env(parent = emptyenv())
+tutorial_cache_env <- new.env(parent = emptyenv())
 
 prepare_tutorial_state <- function(session) {
-  clear_exercise_cache_env()
-  clear_question_cache_env()
+  assign("objects", list(), tutorial_cache_env)
   session$userData$tutorial_state <- reactiveValues()
 }
 
-# Store an exercise setup chunk
-# Returns TRUE if it was saved, FALSE if it declined to overwrite an existing value
-store_exercise_setup_chunk <- function(name, code, overwrite = FALSE){
-  if (!overwrite && exists(name, envir = exercise_cache_env)) {
+store_tutorial_cache <- function(name, object, overwrite = FALSE) {
+  if (!overwrite && name %in% names(tutorial_cache_env$objects)) {
     return(FALSE)
   }
-  if (is.null(code)){
-    code <- ""
+  if (is.null(object)){
+    return(FALSE)
   }
-  assign(name, code, envir = exercise_cache_env)
+  tutorial_cache_env$objects[[name]] <- object
   TRUE
 }
 
+get_tutorial_cache <- function(type = c("all", "question", "exercise")) {
+  type <- match.arg(type)
+
+  filter_type <- function(x) {
+    inherits(x, paste0("learnr_", type))
+  }
+
+  switch(
+    type,
+    "all" = tutorial_cache_env$objects,
+    Filter(filter_type, tutorial_cache_env$objects)
+  )
+}
+
+
+# Exercises ---------------------------------------------------------------
+
 # Gets the global setup chunk to run for out-of-process evaluators.
-get_global_setup <- function(){
-  if (exists("__setup__", envir = exercise_cache_env)) {
-    setup <- get("__setup__", envir = exercise_cache_env)
+get_global_setup <- function() {
+  if ("__setup__" %in% names(tutorial_cache_env$objects)) {
+    setup <- tutorial_cache_env$objects[["__setup__"]]
     return(paste0(setup, collapse="\n"))
   }
   NULL
 }
 
 # Store setup chunks for an exercise or non-exercise chunk.
-store_exercise_cache <- function(name, chunks, overwrite = FALSE){
-  if (!overwrite && exists(name, envir = exercise_cache_env)) {
-    return(FALSE)
-  }
-  if (is.null(chunks)){
-    return(FALSE)
-  }
-  assign(name, chunks, envir = exercise_cache_env)
-  TRUE
+store_exercise_cache <- function(exercise, overwrite = FALSE) {
+  label <- exercise$options$label
+  store_tutorial_cache(name = label, object = exercise, overwrite = overwrite)
 }
 
-# Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
+# Return the exercise object from the cache for a given label
 get_exercise_cache <- function(label = NULL){
+  exercises <- get_tutorial_cache(type = "exercise")
   if (is.null(label)) {
-    chunk_labels <- ls(envir = exercise_cache_env, all.names = TRUE)
-    names(chunk_labels) <- chunk_labels
-    return(lapply(chunk_labels, get, envir = exercise_cache_env))
+    return(exercises)
   }
-  if (exists(label, envir = exercise_cache_env)) {
-    setup <- get(label, envir = exercise_cache_env)
-    return(setup)
-  }
-  NULL
+  exercises[[label]]
 }
 
-clear_exercise_cache_env <- function(){
-  rm(list=ls(exercise_cache_env, all.names=TRUE), envir=exercise_cache_env)
+clear_exercise_cache_env <- function() {
+  exercises <- get_tutorial_cache(type = "exercise")
+  if (!length(exercises)) {
+    return()
+  }
+  tutorial_cache_env$objects[names(exercises)] <- NULL
+  invisible(exercises)
 }
 
 # For backwards compatibility, exercise_cache_env was previously called setup_chunks
 clear_exercise_setup_chunks <- clear_exercise_cache_env
 
 
-
-# Question Cache ----------------------------------------------------------
+# Questions ---------------------------------------------------------------
 
 store_question_cache <- function(question, overwrite = FALSE){
   label <- question$label
-  if (!overwrite && exists(label, envir = question_cache_env)) {
-    return(FALSE)
-  }
-  if (is.null(question)){
-    return(FALSE)
-  }
-  assign(label, question, envir = question_cache_env)
-  TRUE
+  store_tutorial_cache(name = label, object = question, overwrite = overwrite)
 }
 
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
 get_question_cache <- function(label = NULL){
+  questions <- get_tutorial_cache(type = "question")
   if (is.null(label)) {
-    labels <- ls(envir = question_cache_env, all.names = TRUE)
-    names(labels) <- labels
-    return(lapply(labels, get, envir = question_cache_env))
+    return(questions)
   }
-  if (exists(label, envir = question_cache_env)) {
-    q <- get(label, envir = question_cache_env)
-    return(q)
-  }
-  NULL
+  questions[[label]]
 }
 
-clear_question_cache_env <- function(){
-  rm(list=ls(question_cache_env, all.names=TRUE), envir=question_cache_env)
+clear_question_cache_env <- function() {
+  questions <- get_tutorial_cache(type = "question")
+  if (!length(questions)) {
+    return()
+  }
+  tutorial_cache_env$objects[names(questions)] <- NULL
+  invisible(questions)
 }
 
 

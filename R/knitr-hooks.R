@@ -335,21 +335,25 @@ install_knitr_hooks <- function() {
           )
         }
 
-        exercise_cache <- list(setup = all_setup_code,
-                               chunks = all_chunks,
-                               code_check = code_check_chunk,
-                               error_check = error_check_chunk,
-                               check = check_chunk,
-                               solution  = solution,
-                               options = options,
-                               engine = options$engine)
+        exercise_cache <- structure(
+          list(
+            setup = all_setup_code,
+            chunks = all_chunks,
+            code_check = code_check_chunk,
+            error_check = error_check_chunk,
+            check = check_chunk,
+            solution  = solution,
+            options = options,
+            engine = options$engine
+          ),
+          class = "learnr_exercise"
+        )
 
         # serialize the list of chunks to server
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
-            'learnr:::store_exercise_cache(%s, %s)',
-            dput_to_string(options$label),
+            'learnr:::store_exercise_cache(%s)',
             dput_to_string(exercise_cache)
           )
         )
@@ -465,10 +469,13 @@ install_knitr_hooks <- function() {
 knitr_hook_cache <- new.env(parent=emptyenv())
 
 write_setup_chunk <- function(code, overwrite = FALSE){
+  if (is.null(code)) {
+    code <- ""
+  }
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = %s)',
+      'learnr:::store_tutorial_cache("__setup__", %s, overwrite = %s)',
       dput_to_string(code),
       overwrite
     )
