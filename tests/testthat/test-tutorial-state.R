@@ -41,3 +41,23 @@ test_that("tutorial_cache_works", {
   expect_equal(all$`two-plus-two`$global_setup, all$`print-limit`$global_setup)
   expect_equal(all$`add-function`$options$exercise.lines, 5)
 })
+
+
+test_that("setup-global-exercise chunk is used for global_setup", {
+  prepare_tutorial_cache_from_source(test_path("setup-chunks", "exercise-global-setup.Rmd"))
+  withr::defer(clear_tutorial_cache())
+
+  all <- get_tutorial_cache()
+
+  expect_equal(as.character(all$data1$global_setup), "global <- 0")
+  expect_equal(attr(all$data1$global_setup, "chunk_opts")$label, "setup-global-exercise")
+
+  ex <- mock_exercise(user_code = "global", label = "data1", check = I("global"))
+  ex$chunks <- all$data1$chunks
+  ex$global_setup <- all$data1$global_setup
+  ex$setup <- all$data1$setup
+
+  # global setup chunk is force-evaluated
+  res <- evaluate_exercise(ex, evaluate_global_setup = FALSE, envir = new.env())
+  expect_equal(res$feedback$checker_args$last_value, 0)
+})

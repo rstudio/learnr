@@ -37,6 +37,9 @@ install_knitr_hooks <- function() {
       all_exercise_labels <- eval(parse(text = label_query))
       exercise_label %in% all_exercise_labels
     }
+    else if (identical(options$label, "setup-global-exercise")) {
+      TRUE
+    }
     else if ("setup" %in% type) {
       # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
       # this second condition is for support chunks that isn't referenced by an exercise yet

@@ -322,6 +322,14 @@ evaluate_exercise <- function(
   # Protect global options and environment vars from permanent modification
   local_restore_options_and_envvars()
 
+  # if global_setup was set with a `setup-global-exercise` chunk, and not the
+  # "setup" chunk, we need to evaluate the global setup code
+  evaluate_global_setup <- evaluate_global_setup ||
+    identical(
+      attr(exercise$global_setup,"chunk_opts")$label,
+      "setup-global-exercise"
+    )
+
   # adjust exercise version to match the current learnr version
   exercise <- upgrade_exercise(
     exercise,
