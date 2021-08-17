@@ -17,8 +17,10 @@ Returns an ordinary list with the following elements:
 \code{tutorial$id} key in the tutorial's YAML front matter.
 \item \code{tutorial_version}: The tutorial's version, auto-generated or from the
 \code{tutorial$version} key in the tutorial's YAML front matter.
-\item \code{items}: A data frame with columns \code{order}, \code{label} and \code{type} describing
-the items (questions and exercises) in the tutorial.
+\item \code{items}: A data frame with columns \code{order}, \code{label}, \code{type} and \code{data}
+describing the items (questions and exercises) in the tutorial. This item
+is only available in the running tutorial, not during the static
+pre-render step.
 \item \code{user_id}: The current user.
 \item \code{learnr_version}: The current version of the running learnr package.
 \item \code{language}: The current language of the tutorial, either as chosen by the

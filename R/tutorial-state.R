@@ -181,8 +181,10 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'     `tutorial$id` key in the tutorial's YAML front matter.
 #'   - `tutorial_version`: The tutorial's version, auto-generated or from the
 #'     `tutorial$version` key in the tutorial's YAML front matter.
-#'   - `items`: A data frame with columns `order`, `label` and `type` describing
-#'     the items (questions and exercises) in the tutorial.
+#'   - `items`: A data frame with columns `order`, `label`, `type` and `data`
+#'     describing the items (questions and exercises) in the tutorial. This item
+#'     is only available in the running tutorial, not during the static
+#'     pre-render step.
 #'   - `user_id`: The current user.
 #'   - `learnr_version`: The current version of the running learnr package.
 #'   - `language`: The current language of the tutorial, either as chosen by the
