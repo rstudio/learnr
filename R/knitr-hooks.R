@@ -452,33 +452,12 @@ install_knitr_hooks <- function() {
 # cache to hold the original knit hook
 knitr_hook_cache <- new.env(parent=emptyenv())
 
-# takes in the write_set_chk which we can use to mock this side-effect in testing.
-new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {
-  function(x, options) {
-    # By configuring `setup` to not overwrite, and `setup-global-exercise` to
-    # overwrite, we ensure that:
-    #  1. If a chunk named `setup-global-exercise` exists, we use that
-    #  2. If not, it would return the chunk named `setup` if it exists
-    if (identical(options$label, "setup-global-exercise")){
-      write_set_chk(options$code, TRUE)
-    } else if (identical(options$label, "setup")){
-      write_set_chk(options$code, FALSE)
-    }
-
-    if(!is.null(knitr_hook_cache$source)) {
-      knitr_hook_cache$source(x, options)
-    }
-  }
-}
-
 remove_knitr_hooks <- function() {
   knitr::opts_hooks$set(tutorial = NULL)
   knitr::knit_hooks$set(tutorial = NULL)
-  knitr::knit_hooks$set(source = knitr_hook_cache$source)
 }
 
 exercise_server_chunk <- function(label) {
-
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
 '`tutorial-exercise-%s-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-%s-code-editor`)), session)
