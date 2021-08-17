@@ -41,11 +41,15 @@ get_tutorial_cache <- function(type = c("all", "question", "exercise")) {
 
 # Gets the global setup chunk to run for out-of-process evaluators.
 get_global_setup <- function() {
-  if ("__setup__" %in% names(tutorial_cache_env$objects)) {
-    setup <- tutorial_cache_env$objects[["__setup__"]]
-    return(paste0(setup, collapse="\n"))
+  warning(
+    "`get_global_setup()` is deprecated. The `global_setup` code is now ",
+    "included in the exercise object."
+  )
+  ex <- get_exercise_cache()
+  if (!length(ex)) {
+    return("")
   }
-  NULL
+  x[[1]]$global_setup
 }
 
 # Store setup chunks for an exercise or non-exercise chunk.
@@ -229,14 +233,12 @@ describe_tutorial_items <- function() {
   items <- list(
     label = names(tutorial_cache_env$objects),
     type = vapply(
-      names(tutorial_cache_env$objects),
+      tutorial_cache_env$objects,
       FUN.VALUE = character(1),
       function(x) {
-        if (identical(x, "__setup__")) {
-          "setup"
-        } else if (inherits(tutorial_cache_env$objects[[x]], "learnr_exercise")) {
+        if (inherits(x, "tutorial_exercise")) {
           "exercise"
-        } else if (inherits(tutorial_cache_env$objects[[x]], "tutorial_question")) {
+        } else if (inherits(x, "tutorial_question")) {
           "question"
         } else {
           "other"
@@ -248,17 +250,7 @@ describe_tutorial_items <- function() {
 
   items <- as.data.frame(items, stringsAsFactors = FALSE)
   class(items$data) <- "list"
-
-  idx_setup <- which(items$label == "__setup__")
-  if (length(idx_setup)) {
-    # make __setup__ the first item with order 0
-    order <- c(idx_setup, setdiff(seq_along(items$label), idx_setup))
-    items[order, ]
-    items$order <- seq_len(nrow(items)) - 1
-  } else {
-    items$order <- seq_len(nrow(items))
-  }
-
+  items$order <- seq_len(nrow(items))
   class(items) <- c("tbl_df", "tbl", "data.frame")
   items[c("order", "label", "type", "data")]
 }

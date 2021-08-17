@@ -73,6 +73,11 @@ install_knitr_hooks <- function() {
     knitr::knit_code$get(label)
   }
 
+  get_setup_global_exercise <- function() {
+    knitr::knit_code$get("setup-global-exercise") %||%
+      knitr::knit_code$get("setup")
+  }
+
   # helper function to find all the setup chunks associated with an exercise chunk
   # it goes up the chain of setup dependencies and returns a list of raw knitr chunks (if any)
   find_parent_setup_chunks <- function(options, visited = NULL) {
@@ -337,6 +342,7 @@ install_knitr_hooks <- function() {
 
         exercise_cache <- structure(
           list(
+            global_setup = get_setup_global_exercise(),
             setup = all_setup_code,
             chunks = all_chunks,
             code_check = code_check_chunk,
@@ -440,47 +446,11 @@ install_knitr_hooks <- function() {
       }
 
     }
-
-    # Possibly redundant with the new_source_knit_hook, but that hook skips
-    # chunks that are empty. This makes it more likely that we catch the setup-
-    # global-exercise chunk. We keep the source hook, however, because we want
-    # to be less sensitive to the ordering of the chunks.
-    else if (identical(options$label, "setup-global-exercise")){
-      write_setup_chunk(options$code, TRUE)
-    }
-
   })
-
-  # Preserve any existing `source` hook
-  # We generally namespace our hooks under `tutorial` by calling `opts_chunk$set(tutorial = TRUE)`.
-  # Unfortunately, that only applies to subsequent chunks, not the current one.
-  # Since learnr is typically loaded in the `setup` chunk and we want to capture
-  # that chunk, that's unfortunately too late. Therefore we have to set a global
-  # `source` chunk to capture setup. However, we do take precautions to preserve
-  # any existing hook that might have been installed before creating our own.
-  knitr_hook_cache$source <- knitr::knit_hooks$get("source")
-
-  # Note: Empirically, this function gets called twice
-  knitr::knit_hooks$set(source = new_source_knit_hook())
-
 }
 
 # cache to hold the original knit hook
 knitr_hook_cache <- new.env(parent=emptyenv())
-
-write_setup_chunk <- function(code, overwrite = FALSE){
-  if (is.null(code)) {
-    code <- ""
-  }
-  rmarkdown::shiny_prerendered_chunk(
-    'server',
-    sprintf(
-      'learnr:::store_tutorial_cache("__setup__", %s, overwrite = %s)',
-      dput_to_string(code),
-      overwrite
-    )
-  )
-}
 
 # takes in the write_set_chk which we can use to mock this side-effect in testing.
 new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {

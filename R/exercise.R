@@ -73,9 +73,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
         evaluator_factory <- inline_evaluator
     }
 
-    # supplement the exercise with the global setup options
-    # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
-    exercise$global_setup <- get_global_setup()
     # retrieve exercise cache information:
     # - chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
     # - checker code (check, code-check, error-check)
