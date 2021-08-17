@@ -271,10 +271,12 @@ prepare_tutorial_cache_from_source <- function(path_rmd) {
 
   rmarkdown::render(path_rmd, output_file = path_html, quiet = TRUE)
 
-  prerendered_chunks <- rmarkdown:::shiny_prerendered_extract_context(
-    html_lines = readLines(path_html),
-    context = "server"
-  )
+  prerendered_extract_context <-
+    getFromNamespace("shiny_prerendered_extract_context", ns = "rmarkdown")
+
+  prerendered_chunks <-
+    prerendered_extract_context(readLines(path_html), context = "server")
+
   prerendered_chunks <- parse(text = prerendered_chunks)
 
   is_cache_chunk <- vapply(
