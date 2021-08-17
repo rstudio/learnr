@@ -2,6 +2,7 @@
 
 S3method(format,learnr_available_tutorials)
 S3method(format,learnr_exercise)
+S3method(format,mock_exercise)
 S3method(format,tutorial_question)
 S3method(format,tutorial_question_answer)
 S3method(format,tutorial_quiz)
