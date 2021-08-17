@@ -181,6 +181,8 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'     `tutorial$id` key in the tutorial's YAML front matter.
 #'   - `tutorial_version`: The tutorial's version, auto-generated or from the
 #'     `tutorial$version` key in the tutorial's YAML front matter.
+#'   - `items`: A data frame with columns `order`, `label` and `type` describing
+#'     the items (questions and exercises) in the tutorial.
 #'   - `user_id`: The current user.
 #'   - `learnr_version`: The current version of the running learnr package.
 #'   - `language`: The current language of the tutorial, either as chosen by the
@@ -208,8 +210,35 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
   list(
     tutorial_id = read_session_request("tutorial.tutorial_id"),
     tutorial_version = read_session_request("tutorial.tutorial_version"),
+    items = describe_tutorial_items(),
     user_id = read_session_request("tutorial.user_id"),
     learnr_version = as.character(utils::packageVersion("learnr")),
     language = read_session_request("tutorial.language")
   )
+}
+
+describe_tutorial_items <- function() {
+  if (!length(tutorial_cache_env$objects)) {
+    return()
+  }
+
+  items <- list(
+    label = names(tutorial_cache_env$objects),
+    type = vapply(
+      tutorial_cache_env$objects,
+      FUN.VALUE = character(1),
+      function(x) { sub("learnr_", "", utils::tail(class(x), 1)) }
+    )
+  )
+
+  idx_global_setup <- which(items$label == "__setup__")
+  if (length(idx_global_setup)) {
+    items <- items[-idx_global_setup]
+  }
+
+  items$order <- seq_along(items$label)
+
+  items <- as.data.frame(items, stringsAsFactors = FALSE)
+  class(items) <- c("tbl_df", "tbl", "data.frame")
+  items[c("order", "label", "type")]
 }

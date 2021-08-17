@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # switch between "local" and "client" to verify that feedback and correct are removed
 options(tutorial.storage = "client")
 options(tutorial.event_recorder = learnr:::debug_event_recorder)
+options(crayon.enabled = FALSE)
 ```
 
 
