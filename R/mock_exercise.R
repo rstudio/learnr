@@ -33,7 +33,6 @@ mock_exercise <- function(
     fig.height = fig.height,
     fig.retina = fig.retina,
     engine = engine,
-    tutorial = TRUE,
     max.print = 1000,
     exercise.checker = exercise.checker,
     label = label,

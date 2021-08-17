@@ -349,7 +349,7 @@ install_knitr_hooks <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
-            options = options,
+            options = options[setdiff(names(options), "tutorial")],
             engine = options$engine
           ),
           class = "tutorial_exercise"
@@ -449,12 +449,9 @@ install_knitr_hooks <- function() {
   })
 }
 
-# cache to hold the original knit hook
-knitr_hook_cache <- new.env(parent=emptyenv())
-
 remove_knitr_hooks <- function() {
-  knitr::opts_hooks$set(tutorial = NULL)
-  knitr::knit_hooks$set(tutorial = NULL)
+  knitr::opts_chunk$delete("tutorial")
+  knitr::knit_hooks$delete("tutorial")
 }
 
 exercise_server_chunk <- function(label) {
