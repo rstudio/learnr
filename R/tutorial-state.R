@@ -194,6 +194,10 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'
 #' @export
 get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
+  if (identical(Sys.getenv("LEARNR_EXERCISE_USER_CODE", ""), "TRUE")) {
+    return()
+  }
+
   read_session_request <- function(key) {
     if (is.null(session)) {
       value <- switch(

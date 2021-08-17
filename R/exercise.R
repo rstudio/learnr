@@ -676,8 +676,14 @@ with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
   # Always disable connect api keys and connect server info
   env_vars$CONNECT_API_KEY <- ""
   env_vars$CONNECT_SERVER <- ""
+  env_vars$LEARNR_EXERCISE_USER_CODE <- "TRUE"
   # Hide shiny server sharedSecret
   opts$shiny.sharedSecret <- ""
+
+  # Mask tutorial cache for user code evaluation
+  cache_current <- tutorial_cache_env$objects
+  tutorial_cache_env$objects <- NULL
+  withr::defer(tutorial_cache_env$objects <- cache_current)
 
   # Disable shiny domain
   shiny::withReactiveDomain(NULL, {
