@@ -49,7 +49,7 @@ get_global_setup <- function() {
   if (!length(ex)) {
     return("")
   }
-  x[[1]]$global_setup
+  ex[[1]]$global_setup
 }
 
 # Store setup chunks for an exercise or non-exercise chunk.
