@@ -13,7 +13,7 @@ test_that("store works", {
   expect_equal(tutorial_cache_env$objects[["myName"]], c("updated", "code"))
 
   # clear clears
-  clear_exercise_cache_env()
+  expect_warning(clear_exercise_cache_env(), "deprecated")
   expect_equal(length(get_tutorial_cache("exercise")), 0)
 })
 

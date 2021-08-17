@@ -1,8 +1,14 @@
 tutorial_cache_env <- new.env(parent = emptyenv())
 
 prepare_tutorial_state <- function(session) {
-  assign("objects", list(), tutorial_cache_env)
+  clear_tutorial_cache()
   session$userData$tutorial_state <- reactiveValues()
+}
+
+clear_tutorial_cache <- function() {
+  assign("objects", list(), tutorial_cache_env)
+  tutorial_cache_env$setup <- NULL
+  invisible(TRUE)
 }
 
 store_tutorial_cache <- function(name, object, overwrite = FALSE) {
@@ -58,12 +64,8 @@ get_exercise_cache <- function(label = NULL){
 }
 
 clear_exercise_cache_env <- function() {
-  exercises <- get_tutorial_cache(type = "exercise")
-  if (!length(exercises)) {
-    return()
-  }
-  tutorial_cache_env$objects[names(exercises)] <- NULL
-  invisible(exercises)
+  .Deprecated("clear_tutorial_cache")
+  clear_tutorial_cache()
 }
 
 # For backwards compatibility, exercise_cache_env was previously called setup_chunks
@@ -87,12 +89,8 @@ get_question_cache <- function(label = NULL){
 }
 
 clear_question_cache_env <- function() {
-  questions <- get_tutorial_cache(type = "question")
-  if (!length(questions)) {
-    return()
-  }
-  tutorial_cache_env$objects[names(questions)] <- NULL
-  invisible(questions)
+  .Deprecated("clear_tutorial_cache")
+  clear_tutorial_cache()
 }
 
 
