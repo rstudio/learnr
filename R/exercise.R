@@ -1016,12 +1016,12 @@ debug_exercise_checker <- function(
 }
 
 #' @export
-format.learnr_exercise <- function (x, ...) {
+format.tutorial_exercise <- function (x, ...) {
   chunks <- exercise_code_chunks(x$chunks)
   paste(chunks, collapse = "\n\n")
 }
 
 #' @export
-print.learnr_exercise <- function(x, ...) {
+print.tutorial_exercise <- function(x, ...) {
   cat(format(x, ...))
 }

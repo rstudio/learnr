@@ -352,7 +352,7 @@ install_knitr_hooks <- function() {
             options = options,
             engine = options$engine
           ),
-          class = "learnr_exercise"
+          class = "tutorial_exercise"
         )
 
         # serialize the list of chunks to server

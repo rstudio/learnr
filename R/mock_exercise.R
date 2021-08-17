@@ -91,7 +91,7 @@ mock_exercise <- function(
     }
   }
 
-  structure(ex, class = c("mock_exercise", "learnr_exercise"))
+  structure(ex, class = c("mock_exercise", "tutorial_exercise"))
 }
 
 mock_prep_setup <- function(chunks, setup_label) {
@@ -156,6 +156,6 @@ format.mock_exercise <- function(x, ...) {
     chunk$opts <- vapply(chunk$opts, dput_to_string, character(1))
     chunk
   })
-  class(x) <- "learnr_exercise"
+  class(x) <- "tutorial_exercise"
   format(x, ...)
 }

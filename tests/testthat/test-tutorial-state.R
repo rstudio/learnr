@@ -17,16 +17,65 @@ test_that("store works", {
   expect_equal(length(get_tutorial_cache("exercise")), 0)
 })
 
-test_that("get_global works", {
-  # If no setup chunk, you'll see NULL.
-  expect_equal(get_global_setup(), NULL)
+test_that("tutorial_cache_works", {
+  # 1. Render basic.Rmd
+  # 2. Extract prerendered chunks and filter to question/exercise chunks
+  # 3. Evaluate the prerendered code to populate the tutorial cache
+  # 4. Test the structure of the cache
 
-  # If a chunk is empty, its passed-in value is NULL which we convert to an empty
-  # string to show that the chunk existed and was empty. This now happens in the
-  # knitr hooks with `write_setup_chunk` rather than in a cache helper function.
-  expect_equal(store_tutorial_cache("__setup__", "", FALSE), TRUE)
-  expect_equal(get_global_setup(), "")
+  basic_rmd <- test_path("tutorials", "basic.Rmd")
+  basic_html <- tempfile(fileext = ".html")
+  withr::defer(unlink(basic_html))
 
-  expect_equal(store_tutorial_cache("__setup__", c("code", "here"), TRUE), TRUE)
-  expect_equal(get_global_setup(), c("code\nhere"))
+  install_knitr_hooks()
+  withr::defer(remove_knitr_hooks())
+
+  rmarkdown::render(basic_rmd, output_file = basic_html, quiet = TRUE)
+  prerendered_chunks <- rmarkdown:::shiny_prerendered_extract_context(
+    html_lines = readLines(basic_html),
+    context = "server"
+  )
+  prerendered_chunks <- parse(text = prerendered_chunks)
+
+  is_cache_chunk <- vapply(
+    prerendered_chunks,
+    function(x) {
+      as.character(x[[1]])[3] %in% c("store_exercise_cache", "question_prerendered_chunk")
+    },
+    logical(1)
+  )
+
+  clear_tutorial_cache()
+  withr::defer(clear_tutorial_cache())
+
+  res <- vapply(
+    prerendered_chunks[is_cache_chunk],
+    FUN.VALUE = logical(1),
+    function(x) {
+      shiny::withReactiveDomain(NULL, {
+        session <- shiny::MockShinySession$new()
+        eval(x)
+        TRUE
+      })
+    }
+  )
+
+  all <- get_tutorial_cache()
+  # tutorial cache lists items in order of appearance
+  exercises <- c("two-plus-two", "add-function", "print-limit")
+  questions <- c("quiz-1", "quiz-2")
+  expect_equal(names(all), c(exercises, questions))
+
+  expect_equal(all[exercises], get_exercise_cache())
+  expect_equal(all$`two-plus-two`, get_exercise_cache("two-plus-two"))
+  expect_true(all(vapply(all[exercises], inherits, logical(1), "tutorial_exercise")))
+
+  expect_equal(all[questions], get_question_cache())
+  expect_equal(all$`quiz-2`, get_question_cache("quiz-2"))
+  expect_true(all(vapply(all[questions], inherits, logical(1), "tutorial_question")))
+
+  # exercises have the same `global_setup`
+  expect_equal(all$`two-plus-two`$global_setup, all$`add-function`$global_setup)
+  expect_equal(all$`two-plus-two`$global_setup, all$`print-limit`$global_setup)
+  expect_equal(all$`add-function`$options$exercise.lines, 5)
 })

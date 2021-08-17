@@ -26,7 +26,7 @@ get_tutorial_cache <- function(type = c("all", "question", "exercise")) {
   type <- match.arg(type)
 
   filter_type <- function(x) {
-    inherits(x, paste0("learnr_", type))
+    inherits(x, paste0("tutorial_", type))
   }
 
   switch(
