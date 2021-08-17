@@ -17,48 +17,10 @@ test_that("store works", {
   expect_equal(length(get_tutorial_cache("exercise")), 0)
 })
 
+
 test_that("tutorial_cache_works", {
-  # 1. Render basic.Rmd
-  # 2. Extract prerendered chunks and filter to question/exercise chunks
-  # 3. Evaluate the prerendered code to populate the tutorial cache
-  # 4. Test the structure of the cache
-
-  basic_rmd <- test_path("tutorials", "basic.Rmd")
-  basic_html <- tempfile(fileext = ".html")
-  withr::defer(unlink(basic_html))
-
-  install_knitr_hooks()
-  withr::defer(remove_knitr_hooks())
-
-  rmarkdown::render(basic_rmd, output_file = basic_html, quiet = TRUE)
-  prerendered_chunks <- rmarkdown:::shiny_prerendered_extract_context(
-    html_lines = readLines(basic_html),
-    context = "server"
-  )
-  prerendered_chunks <- parse(text = prerendered_chunks)
-
-  is_cache_chunk <- vapply(
-    prerendered_chunks,
-    function(x) {
-      as.character(x[[1]])[3] %in% c("store_exercise_cache", "question_prerendered_chunk")
-    },
-    logical(1)
-  )
-
-  clear_tutorial_cache()
+  prepare_tutorial_cache_from_source(test_path("tutorials", "basic.Rmd"))
   withr::defer(clear_tutorial_cache())
-
-  res <- vapply(
-    prerendered_chunks[is_cache_chunk],
-    FUN.VALUE = logical(1),
-    function(x) {
-      shiny::withReactiveDomain(NULL, {
-        session <- shiny::MockShinySession$new()
-        eval(x)
-        TRUE
-      })
-    }
-  )
 
   all <- get_tutorial_cache()
   # tutorial cache lists items in order of appearance

@@ -254,3 +254,52 @@ describe_tutorial_items <- function() {
   class(items) <- c("tbl_df", "tbl", "data.frame")
   items[c("order", "label", "type", "data")]
 }
+
+
+# Helpers -----------------------------------------------------------------
+
+prepare_tutorial_cache_from_source <- function(path_rmd) {
+  # 1. Render input Rmd
+  # 2. Extract prerendered chunks and filter to question/exercise chunks
+  # 3. Evaluate the prerendered code to populate the tutorial cache
+  path_html <- tempfile(fileext = ".html")
+  withr::defer(unlink(path_html))
+  message(path_html)
+
+  install_knitr_hooks()
+  withr::defer(remove_knitr_hooks())
+
+  rmarkdown::render(path_rmd, output_file = path_html, quiet = TRUE)
+
+  prerendered_chunks <- rmarkdown:::shiny_prerendered_extract_context(
+    html_lines = readLines(path_html),
+    context = "server"
+  )
+  prerendered_chunks <- parse(text = prerendered_chunks)
+
+  is_cache_chunk <- vapply(
+    prerendered_chunks,
+    function(x) {
+      as.character(x[[1]])[3] %in% c("store_exercise_cache", "question_prerendered_chunk")
+    },
+    logical(1)
+  )
+
+  clear_tutorial_cache()
+  session <- shiny::MockShinySession$new()
+
+  res <- vapply(
+    prerendered_chunks[is_cache_chunk],
+    FUN.VALUE = logical(1),
+    function(x) {
+      shiny::withReactiveDomain(NULL, {
+        session <- session
+        eval(x)
+        TRUE
+      })
+    }
+  )
+
+  get_tutorial_cache()
+}
+
