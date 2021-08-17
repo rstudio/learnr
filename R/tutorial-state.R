@@ -225,20 +225,36 @@ describe_tutorial_items <- function() {
   items <- list(
     label = names(tutorial_cache_env$objects),
     type = vapply(
-      tutorial_cache_env$objects,
+      names(tutorial_cache_env$objects),
       FUN.VALUE = character(1),
-      function(x) { sub("learnr_", "", utils::tail(class(x), 1)) }
-    )
+      function(x) {
+        if (identical(x, "__setup__")) {
+          "setup"
+        } else if (inherits(tutorial_cache_env$objects[[x]], "learnr_exercise")) {
+          "exercise"
+        } else if (inherits(tutorial_cache_env$objects[[x]], "tutorial_question")) {
+          "question"
+        } else {
+          "other"
+        }
+      }
+    ),
+    data = I(unname(tutorial_cache_env$objects))
   )
 
-  idx_global_setup <- which(items$label == "__setup__")
-  if (length(idx_global_setup)) {
-    items <- items[-idx_global_setup]
+  items <- as.data.frame(items, stringsAsFactors = FALSE)
+  class(items$data) <- "list"
+
+  idx_setup <- which(items$label == "__setup__")
+  if (length(idx_setup)) {
+    # make __setup__ the first item with order 0
+    order <- c(idx_setup, setdiff(seq_along(items$label), idx_setup))
+    items[order, ]
+    items$order <- seq_len(nrow(items)) - 1
+  } else {
+    items$order <- seq_len(nrow(items))
   }
 
-  items$order <- seq_along(items$label)
-
-  items <- as.data.frame(items, stringsAsFactors = FALSE)
   class(items) <- c("tbl_df", "tbl", "data.frame")
-  items[c("order", "label", "type")]
+  items[c("order", "label", "type", "data")]
 }
