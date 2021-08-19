@@ -40,12 +40,12 @@ setup_exercise_handler <- function(exercise_rx, session) {
       if (!is.null(object) && !is.null(object$data$output)) {
         # restore user state, but don't report correct
         # since the user's code wasn't re-evaluated
-        session$user_state$tutorial_state[[exercise$label]] <- list(
+        restored_state <- list(
           type = "exercise",
           answer = object$data$code,
-          correct = NA,
-          timestamp = paste(as.numeric(Sys.time()))
+          correct = NA
         )
+        set_tutorial_state(exercise$label, restored_state, session = session)
 
         # get the output
         output <- object$data$output
