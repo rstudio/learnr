@@ -353,7 +353,10 @@ evaluate_exercise <- function(
   blank_feedback <- NULL
   exercise_blanks_pattern <- exercise_get_blanks_pattern(exercise)
   if (shiny::isTruthy(exercise_blanks_pattern)) {
-    blank_feedback <- check_blanks(exercise$code, exercise_blanks_pattern)
+    blank_feedback <- exercise_check_code_for_blanks(
+      user_code = exercise$code,
+      blank_regex = exercise_blanks_pattern
+    )
   }
 
   here <- rlang::current_env()
@@ -772,7 +775,7 @@ exercise_code_chunks <- function(chunks) {
   }, character(1))
 }
 
-check_blanks <- function(user_code, blank_regex) {
+exercise_check_code_for_blanks <- function(user_code, blank_regex) {
   blank_regex <- paste(blank_regex, collapse = "|")
 
   blanks <- str_match_all(user_code, blank_regex)
@@ -801,7 +804,7 @@ check_blanks <- function(user_code, blank_regex) {
   )
 }
 
-check_parsable <- function(user_code) {
+exercise_check_code_is_parsable <- function(user_code) {
   error <- rlang::catch_cnd(parse(text = user_code), "error")
   if (is.null(error)) {
     return(NULL)
