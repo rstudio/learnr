@@ -801,7 +801,8 @@ check_blanks <- function(user_code, blank_regex) {
 
   msg <- paste(
     i18n_span(
-      "text.exercisecontainsblank", opts = list(count = length(blanks))
+      "text.exercisecontainsblank",
+      opts = list(count = length(blanks))
     ),
     i18n_span(
       "text.pleasereplaceblank",
