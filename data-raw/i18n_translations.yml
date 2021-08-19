@@ -320,8 +320,9 @@ text:
       R cannot determine how to turn your text into a complete command.
       You may have forgotten to fill in a blank,
       to remove an underscore, to include a comma between arguments,
-      or to close an opening `\"`, `'`, `(` or `{`
-      with a matching `\"`, `'`, `)` or `}`.
+      or to close an opening <code>&quot;</code>, <code>'</code>, <code>(</code>
+      or <code>{</code> with a matching <code>&quot;</code>, <code>'</code>,
+      <code>)</code> or <code>}</code>.
     fr: ~
     es: ~
     pt: ~
