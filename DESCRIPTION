@@ -74,13 +74,10 @@ Suggests:
     callr,
     httpuv,
     later,
-    shinytest (>= 1.4.0.9002),
+    shinytest (>= 1.5.0),
     testthat (>= 2.1.0)
 VignetteBuilder:
     knitr
-Remotes:
-    rstudio/htmltools,
-    rstudio/shinytest
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
