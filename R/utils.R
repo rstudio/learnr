@@ -108,10 +108,6 @@ is_installed <- function(package, version = NULL) {
   TRUE
 }
 
-isFALSE <- function(x) {
-  is.logical(x) && length(x) == 1L && !is.na(x) && !x
-}
-
 timestamp_utc <- function() {
   strftime(Sys.time(), "%F %H:%M:%OS3 %Z", tz = "UTC")
 }

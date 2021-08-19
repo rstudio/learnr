@@ -372,10 +372,7 @@ evaluate_exercise <- function(
   }
 
   # Check that user R code is parsable -------------------------------------
-  if (
-    tolower(exercise$engine) == "r" &&
-    !isFALSE(exercise$options$exercise.parse.check)
-  ) {
+  if (exercise_should_check_parsability(exercise)) {
     return_if_exercise_result(check_parsable(exercise$code))
   }
 
@@ -746,6 +743,26 @@ exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
   } else {
     exercise$chunks[is_user_chunk]
   }
+}
+
+exercise_should_check_parsability <- function(exercise) {
+  if (!identical(tolower(exercise$engine), "r")) {
+    return(FALSE)
+  }
+
+  opt <-
+    exercise$options$exercise.parse.check %||%
+    knitr::opts_chunk$get("exercise.parse.check") %||%
+    TRUE
+
+  if (isTRUE(opt)) {
+    return(TRUE)
+  }
+
+  skip_parse_check <- identical(opt, "FALSE") ||
+    (is.logical(opt) && length(opt) == 1L && !is.na(opt) && !opt)
+
+  !skip_parse_check
 }
 
 exercise_code_chunks_prep <- function(exercise) {
