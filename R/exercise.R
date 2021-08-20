@@ -349,15 +349,9 @@ evaluate_exercise <- function(
   # Check if user code has unfilled blanks ----------------------------------
   # If blanks are detected we store the feedback for use at the standard
   # feedback-returning exit points, but still try to render the user code since
-  # the output may still be valid even if the user needs to fill in some blanks
-  blank_feedback <- NULL
-  exercise_blanks_pattern <- exercise_get_blanks_pattern(exercise)
-  if (shiny::isTruthy(exercise_blanks_pattern)) {
-    blank_feedback <- exercise_check_code_for_blanks(
-      user_code = exercise$code,
-      blank_regex = exercise_blanks_pattern
-    )
-  }
+  # the output may still be valid even if the user needs to fill in some blanks.
+  # Importantly, `blank_feedback` is `NULL` if no blanks are detected.
+  blank_feedback <- exercise_check_code_for_blanks(exercise)
 
   here <- rlang::current_env()
   return_if_exercise_result <- function(res) {
@@ -377,7 +371,7 @@ evaluate_exercise <- function(
   # Check that user R code is parsable -------------------------------------
   if (identical(tolower(exercise$engine), "r")) {
     return_if_exercise_result(
-      exercise_check_code_is_parsable(exercise$code)
+      exercise_check_code_is_parsable(exercise)
     )
   }
 
@@ -775,9 +769,16 @@ exercise_code_chunks <- function(chunks) {
   }, character(1))
 }
 
-exercise_check_code_for_blanks <- function(user_code, blank_regex) {
+exercise_check_code_for_blanks <- function(exercise) {
+  blank_regex <- exercise_get_blanks_pattern(exercise)
+
+  if (!shiny::isTruthy(blank_regex)) {
+    return(NULL)
+  }
+
   blank_regex <- paste(blank_regex, collapse = "|")
 
+  user_code <- exercise$code
   blanks <- str_match_all(user_code, blank_regex)
 
   if (!length(blanks)) {
@@ -804,8 +805,8 @@ exercise_check_code_for_blanks <- function(user_code, blank_regex) {
   )
 }
 
-exercise_check_code_is_parsable <- function(user_code) {
-  error <- rlang::catch_cnd(parse(text = user_code), "error")
+exercise_check_code_is_parsable <- function(exercise) {
+  error <- rlang::catch_cnd(parse(text = exercise$code), "error")
   if (is.null(error)) {
     return(NULL)
   }
