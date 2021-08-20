@@ -9,6 +9,7 @@ tutorial_options(
   exercise.eval = FALSE,
   exercise.timelimit = 30,
   exercise.lines = NULL,
+  exercise.blanks = NULL,
   exercise.checker = NULL,
   exercise.error.check.code = NULL,
   exercise.completion = TRUE,
@@ -28,6 +29,11 @@ see some default output (defaults to \code{FALSE}).}
 
 \item{exercise.lines}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
+
+\item{exercise.blanks}{A regular expression to be used to identify blanks in
+submitted code that the user should fill in. If \code{TRUE} (default), blanks
+are three or more underscores in a row. If \code{FALSE}, blank checking is not
+performed.}
 
 \item{exercise.checker}{Function used to check exercise answers
 (e.g., \code{gradethis::grade_learnr()}).}
