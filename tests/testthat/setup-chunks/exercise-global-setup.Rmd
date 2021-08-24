@@ -1,0 +1,26 @@
+---
+title: "Exercise-specific global setup chunk"
+output: learnr::tutorial
+runtime: shiny_prerendered 
+description: >
+  A demo tutorial with a separate global exercise setup chunk
+--- 
+
+```{r setup, include = FALSE}
+library(learnr)
+```
+
+```{r setup-global-exercise}
+global <- 0
+```
+
+<!-- Note: when an exercise is missing a `exercise.setup`, we default to finding a `-setup` chunk. -->
+
+```{r data1, exercise = TRUE}
+1
+```
+
+```{r data1-setup}
+2
+```
+

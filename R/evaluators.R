@@ -197,7 +197,7 @@ internal_external_evaluator <- function(
             exercise$options$exercise.checker <- c()
           }
 
-          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
+          json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null", force = TRUE)
 
           if (is.null(exercise$options$exercise.timelimit) || exercise$options$exercise.timelimit == 0){
             timeout_s <- 30 * 1000

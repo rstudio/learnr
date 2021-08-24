@@ -1,99 +1,100 @@
-exercise_cache_env <- new.env(parent=emptyenv())
-question_cache_env <- new.env(parent = emptyenv())
+tutorial_cache_env <- new.env(parent = emptyenv())
 
 prepare_tutorial_state <- function(session) {
-  clear_exercise_cache_env()
-  clear_question_cache_env()
+  clear_tutorial_cache()
   session$userData$tutorial_state <- reactiveValues()
 }
 
-# Store an exercise setup chunk
-# Returns TRUE if it was saved, FALSE if it declined to overwrite an existing value
-store_exercise_setup_chunk <- function(name, code, overwrite = FALSE){
-  if (!overwrite && exists(name, envir = exercise_cache_env)) {
+clear_tutorial_cache <- function() {
+  assign("objects", list(), tutorial_cache_env)
+  tutorial_cache_env$setup <- NULL
+  invisible(TRUE)
+}
+
+store_tutorial_cache <- function(name, object, overwrite = FALSE) {
+  if (!overwrite && name %in% names(tutorial_cache_env$objects)) {
     return(FALSE)
   }
-  if (is.null(code)){
-    code <- ""
+  if (is.null(object)){
+    return(FALSE)
   }
-  assign(name, code, envir = exercise_cache_env)
+  tutorial_cache_env$objects[[name]] <- object
   TRUE
 }
 
-# Gets the global setup chunk to run for out-of-process evaluators.
-get_global_setup <- function(){
-  if (exists("__setup__", envir = exercise_cache_env)) {
-    setup <- get("__setup__", envir = exercise_cache_env)
-    return(paste0(setup, collapse="\n"))
+get_tutorial_cache <- function(type = c("all", "question", "exercise")) {
+  type <- match.arg(type)
+
+  filter_type <- function(x) {
+    inherits(x, paste0("tutorial_", type))
   }
-  NULL
+
+  switch(
+    type,
+    "all" = tutorial_cache_env$objects,
+    Filter(filter_type, tutorial_cache_env$objects)
+  )
+}
+
+
+# Exercises ---------------------------------------------------------------
+
+# Gets the global setup chunk to run for out-of-process evaluators.
+get_global_setup <- function() {
+  warning(
+    "`get_global_setup()` is deprecated. The `global_setup` code is now ",
+    "included in the exercise object."
+  )
+  ex <- get_exercise_cache()
+  if (!length(ex)) {
+    return("")
+  }
+  ex[[1]]$global_setup
 }
 
 # Store setup chunks for an exercise or non-exercise chunk.
-store_exercise_cache <- function(name, chunks, overwrite = FALSE){
-  if (!overwrite && exists(name, envir = exercise_cache_env)) {
-    return(FALSE)
-  }
-  if (is.null(chunks)){
-    return(FALSE)
-  }
-  assign(name, chunks, envir = exercise_cache_env)
-  TRUE
+store_exercise_cache <- function(exercise, overwrite = FALSE) {
+  label <- exercise$options$label
+  store_tutorial_cache(name = label, object = exercise, overwrite = overwrite)
 }
 
-# Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
+# Return the exercise object from the cache for a given label
 get_exercise_cache <- function(label = NULL){
+  exercises <- get_tutorial_cache(type = "exercise")
   if (is.null(label)) {
-    chunk_labels <- ls(envir = exercise_cache_env, all.names = TRUE)
-    names(chunk_labels) <- chunk_labels
-    return(lapply(chunk_labels, get, envir = exercise_cache_env))
+    return(exercises)
   }
-  if (exists(label, envir = exercise_cache_env)) {
-    setup <- get(label, envir = exercise_cache_env)
-    return(setup)
-  }
-  NULL
+  exercises[[label]]
 }
 
-clear_exercise_cache_env <- function(){
-  rm(list=ls(exercise_cache_env, all.names=TRUE), envir=exercise_cache_env)
+clear_exercise_cache_env <- function() {
+  .Deprecated("clear_tutorial_cache")
+  clear_tutorial_cache()
 }
 
 # For backwards compatibility, exercise_cache_env was previously called setup_chunks
 clear_exercise_setup_chunks <- clear_exercise_cache_env
 
 
-
-# Question Cache ----------------------------------------------------------
+# Questions ---------------------------------------------------------------
 
 store_question_cache <- function(question, overwrite = FALSE){
   label <- question$label
-  if (!overwrite && exists(label, envir = question_cache_env)) {
-    return(FALSE)
-  }
-  if (is.null(question)){
-    return(FALSE)
-  }
-  assign(label, question, envir = question_cache_env)
-  TRUE
+  store_tutorial_cache(name = label, object = question, overwrite = overwrite)
 }
 
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
 get_question_cache <- function(label = NULL){
+  questions <- get_tutorial_cache(type = "question")
   if (is.null(label)) {
-    labels <- ls(envir = question_cache_env, all.names = TRUE)
-    names(labels) <- labels
-    return(lapply(labels, get, envir = question_cache_env))
+    return(questions)
   }
-  if (exists(label, envir = question_cache_env)) {
-    q <- get(label, envir = question_cache_env)
-    return(q)
-  }
-  NULL
+  questions[[label]]
 }
 
-clear_question_cache_env <- function(){
-  rm(list=ls(question_cache_env, all.names=TRUE), envir=question_cache_env)
+clear_question_cache_env <- function() {
+  .Deprecated("clear_tutorial_cache")
+  clear_tutorial_cache()
 }
 
 
@@ -136,8 +137,10 @@ clear_question_cache_env <- function(){
 #' @seealso [get_tutorial_info()]
 #' @export
 get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
+  object_labels <- names(get_tutorial_cache())
   if (is.null(label)) {
-    session$userData$tutorial_state
+    state <- shiny::reactiveValuesToList(session$userData$tutorial_state)
+    state[intersect(object_labels, names(state))]
   } else {
     session$userData$tutorial_state[[label]]
   }
@@ -180,6 +183,10 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'     `tutorial$id` key in the tutorial's YAML front matter.
 #'   - `tutorial_version`: The tutorial's version, auto-generated or from the
 #'     `tutorial$version` key in the tutorial's YAML front matter.
+#'   - `items`: A data frame with columns `order`, `label`, `type` and `data`
+#'     describing the items (questions and exercises) in the tutorial. This item
+#'     is only available in the running tutorial, not during the static
+#'     pre-render step.
 #'   - `user_id`: The current user.
 #'   - `learnr_version`: The current version of the running learnr package.
 #'   - `language`: The current language of the tutorial, either as chosen by the
@@ -189,6 +196,10 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'
 #' @export
 get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
+  if (identical(Sys.getenv("LEARNR_EXERCISE_USER_CODE", ""), "TRUE")) {
+    return()
+  }
+
   read_session_request <- function(key) {
     if (is.null(session)) {
       value <- switch(
@@ -207,8 +218,90 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
   list(
     tutorial_id = read_session_request("tutorial.tutorial_id"),
     tutorial_version = read_session_request("tutorial.tutorial_version"),
+    items = describe_tutorial_items(),
     user_id = read_session_request("tutorial.user_id"),
     learnr_version = as.character(utils::packageVersion("learnr")),
     language = read_session_request("tutorial.language")
   )
 }
+
+describe_tutorial_items <- function() {
+  if (!length(tutorial_cache_env$objects)) {
+    return()
+  }
+
+  items <- list(
+    label = names(tutorial_cache_env$objects),
+    type = vapply(
+      tutorial_cache_env$objects,
+      FUN.VALUE = character(1),
+      function(x) {
+        if (inherits(x, "tutorial_exercise")) {
+          "exercise"
+        } else if (inherits(x, "tutorial_question")) {
+          "question"
+        } else {
+          "other"
+        }
+      }
+    ),
+    data = I(unname(tutorial_cache_env$objects))
+  )
+
+  items <- as.data.frame(items, stringsAsFactors = FALSE)
+  class(items$data) <- "list"
+  items$order <- seq_len(nrow(items))
+  class(items) <- c("tbl_df", "tbl", "data.frame")
+  items[c("order", "label", "type", "data")]
+}
+
+
+# Helpers -----------------------------------------------------------------
+
+prepare_tutorial_cache_from_source <- function(path_rmd) {
+  # 1. Render input Rmd
+  # 2. Extract prerendered chunks and filter to question/exercise chunks
+  # 3. Evaluate the prerendered code to populate the tutorial cache
+  path_html <- tempfile(fileext = ".html")
+  withr::defer(unlink(path_html))
+  message(path_html)
+
+  install_knitr_hooks()
+  withr::defer(remove_knitr_hooks())
+
+  rmarkdown::render(path_rmd, output_file = path_html, quiet = TRUE)
+
+  prerendered_extract_context <-
+    getFromNamespace("shiny_prerendered_extract_context", ns = "rmarkdown")
+
+  prerendered_chunks <-
+    prerendered_extract_context(readLines(path_html), context = "server")
+
+  prerendered_chunks <- parse(text = prerendered_chunks)
+
+  is_cache_chunk <- vapply(
+    prerendered_chunks,
+    function(x) {
+      as.character(x[[1]])[3] %in% c("store_exercise_cache", "question_prerendered_chunk")
+    },
+    logical(1)
+  )
+
+  clear_tutorial_cache()
+  session <- shiny::MockShinySession$new()
+
+  res <- vapply(
+    prerendered_chunks[is_cache_chunk],
+    FUN.VALUE = logical(1),
+    function(x) {
+      shiny::withReactiveDomain(NULL, {
+        session <- session
+        eval(x)
+        TRUE
+      })
+    }
+  )
+
+  get_tutorial_cache()
+}
+

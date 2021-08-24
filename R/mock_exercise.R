@@ -33,7 +33,6 @@ mock_exercise <- function(
     fig.height = fig.height,
     fig.retina = fig.retina,
     engine = engine,
-    tutorial = TRUE,
     max.print = 1000,
     exercise.checker = exercise.checker,
     label = label,
@@ -90,10 +89,9 @@ mock_exercise <- function(
     if (version == "3") {
       ex$tutorial$language <- "en"
     }
-    return(ex)
   }
 
-  ex
+  structure(ex, class = c("mock_exercise", "tutorial_exercise"))
 }
 
 mock_prep_setup <- function(chunks, setup_label) {
@@ -136,10 +134,28 @@ mock_chunk <- function(label, code, exercise = FALSE, engine = "r", ...) {
   opts$label <- label
   opts$exercise <- exercise
 
+  if (is.null(opts[["exercise.setup"]])) {
+    opts[["exercise.setup"]] <- NULL
+  }
+
   list(
     label = label,
     code = paste(code, collapse = "\n"),
     opts = opts,
     engine = engine
   )
+}
+
+#' @export
+format.mock_exercise <- function(x, ...) {
+  # in real exercises, the chunk options are stored as un-evaluated strings
+  x$chunks <- lapply(x$chunks, function(chunk) {
+    if (!isTRUE(chunk$opts$exercise)) {
+      chunk$opts$exercise <- NULL
+    }
+    chunk$opts <- vapply(chunk$opts, dput_to_string, character(1))
+    chunk
+  })
+  class(x) <- "tutorial_exercise"
+  format(x, ...)
 }

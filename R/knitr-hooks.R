@@ -37,6 +37,9 @@ install_knitr_hooks <- function() {
       all_exercise_labels <- eval(parse(text = label_query))
       exercise_label %in% all_exercise_labels
     }
+    else if (identical(options$label, "setup-global-exercise")) {
+      TRUE
+    }
     else if ("setup" %in% type) {
       # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
       # this second condition is for support chunks that isn't referenced by an exercise yet
@@ -71,6 +74,14 @@ install_knitr_hooks <- function() {
     # Note: we directly call the knitr function in this case because we do not
     # need to pass expressions which required delayed evaluation.
     knitr::knit_code$get(label)
+  }
+
+  get_setup_global_exercise <- function() {
+    # setup-global-exercise is a special chunk name that will over-ride the
+    # global setup chunk, but only for external evaluators. This lets tutorials
+    # have separate setup code for the local shiny app and the remote evaluator.
+    knitr::knit_code$get("setup-global-exercise") %||%
+      knitr::knit_code$get("setup")
   }
 
   # helper function to find all the setup chunks associated with an exercise chunk
@@ -335,21 +346,26 @@ install_knitr_hooks <- function() {
           )
         }
 
-        exercise_cache <- list(setup = all_setup_code,
-                               chunks = all_chunks,
-                               code_check = code_check_chunk,
-                               error_check = error_check_chunk,
-                               check = check_chunk,
-                               solution = solution,
-                               options = options,
-                               engine = options$engine)
+        exercise_cache <- structure(
+          list(
+            global_setup = get_setup_global_exercise(),
+            setup = all_setup_code,
+            chunks = all_chunks,
+            code_check = code_check_chunk,
+            error_check = error_check_chunk,
+            check = check_chunk,
+            solution  = solution,
+            options = options[setdiff(names(options), "tutorial")],
+            engine = options$engine
+          ),
+          class = "tutorial_exercise"
+        )
 
         # serialize the list of chunks to server
         rmarkdown::shiny_prerendered_chunk(
           'server',
           sprintf(
-            'learnr:::store_exercise_cache(%s, %s)',
-            dput_to_string(options$label),
+            'learnr:::store_exercise_cache(%s)',
             dput_to_string(exercise_cache)
           )
         )
@@ -436,72 +452,15 @@ install_knitr_hooks <- function() {
       }
 
     }
-
-    # Possibly redundant with the new_source_knit_hook, but that hook skips
-    # chunks that are empty. This makes it more likely that we catch the setup-
-    # global-exercise chunk. We keep the source hook, however, because we want
-    # to be less sensitive to the ordering of the chunks.
-    else if (identical(options$label, "setup-global-exercise")){
-      write_setup_chunk(options$code, TRUE)
-    }
-
   })
-
-  # Preserve any existing `source` hook
-  # We generally namespace our hooks under `tutorial` by calling `opts_chunk$set(tutorial = TRUE)`.
-  # Unfortunately, that only applies to subsequent chunks, not the current one.
-  # Since learnr is typically loaded in the `setup` chunk and we want to capture
-  # that chunk, that's unfortunately too late. Therefore we have to set a global
-  # `source` chunk to capture setup. However, we do take precautions to preserve
-  # any existing hook that might have been installed before creating our own.
-  knitr_hook_cache$source <- knitr::knit_hooks$get("source")
-
-  # Note: Empirically, this function gets called twice
-  knitr::knit_hooks$set(source = new_source_knit_hook())
-
-}
-
-# cache to hold the original knit hook
-knitr_hook_cache <- new.env(parent=emptyenv())
-
-write_setup_chunk <- function(code, overwrite = FALSE){
-  rmarkdown::shiny_prerendered_chunk(
-    'server',
-    sprintf(
-      'learnr:::store_exercise_setup_chunk("__setup__", %s, overwrite = %s)',
-      dput_to_string(code),
-      overwrite
-    )
-  )
-}
-
-# takes in the write_set_chk which we can use to mock this side-effect in testing.
-new_source_knit_hook <- function(write_set_chk = write_setup_chunk) {
-  function(x, options) {
-    # By configuring `setup` to not overwrite, and `setup-global-exercise` to
-    # overwrite, we ensure that:
-    #  1. If a chunk named `setup-global-exercise` exists, we use that
-    #  2. If not, it would return the chunk named `setup` if it exists
-    if (identical(options$label, "setup-global-exercise")){
-      write_set_chk(options$code, TRUE)
-    } else if (identical(options$label, "setup")){
-      write_set_chk(options$code, FALSE)
-    }
-
-    if(!is.null(knitr_hook_cache$source)) {
-      knitr_hook_cache$source(x, options)
-    }
-  }
 }
 
 remove_knitr_hooks <- function() {
-  knitr::opts_hooks$set(tutorial = NULL)
-  knitr::knit_hooks$set(tutorial = NULL)
-  knitr::knit_hooks$set(source = knitr_hook_cache$source)
+  knitr::opts_chunk$delete("tutorial")
+  knitr::knit_hooks$delete("tutorial")
 }
 
 exercise_server_chunk <- function(label) {
-
   # reactive for exercise execution
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
 '`tutorial-exercise-%s-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-%s-code-editor`)), session)
