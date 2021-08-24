@@ -176,6 +176,8 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #' correspond to the current tutorial.
 #'
 #' @inheritParams get_tutorial_state
+#' @param tutorial_path Path to a tutorial `.Rmd` source file
+#' @inheritDotParams rmarkdown::yaml_front_matter
 #'
 #' @return Returns an ordinary list with the following elements:
 #'
@@ -195,19 +197,41 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #' @seealso [get_tutorial_state()]
 #'
 #' @export
-get_tutorial_info <- function(session = getDefaultReactiveDomain()) {
+get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_path = NULL, ...) {
   if (identical(Sys.getenv("LEARNR_EXERCISE_USER_CODE", ""), "TRUE")) {
     return()
   }
+
+  if (!is.null(session) && !is.null(tutorial_path)) {
+    warning(
+      "Calling `get_tutorial_info()` with the `tutorial_path` argument inside ",
+      "a Shiny reactive domain may mask the metadata of the currently running tutorial."
+    )
+  }
+
+  rmd_meta <- rmarkdown::metadata
+  metadata <-
+    if (!is.null(rmd_meta) && length(rmd_meta)) {
+      rmd_meta
+    } else if (!is.null(tutorial_path)) {
+      rmarkdown::yaml_front_matter(tutorial_path, ...)
+    }
+
+  tutorial_language <-
+    if (is.list(metadata$output) && "learnr::tutorial" %in% names(metadata$output)) {
+      language_front_matter <- metadata$output[["learnr::tutorial"]]$language
+      # get default tutorial language from the yaml header
+      i18n_process_language_options(language_front_matter)$language
+    }
 
   read_session_request <- function(key) {
     if (is.null(session)) {
       value <- switch(
         key,
-        "tutorial.tutorial_id" = rmarkdown::metadata$tutorial$id %||% default_tutorial_id(),
-        "tutorial.tutorial_version" = rmarkdown::metadata$tutorial$version %||% default_tutorial_version(),
+        "tutorial.tutorial_id" = metadata$tutorial$id %||% default_tutorial_id(),
+        "tutorial.tutorial_version" = metadata$tutorial$version %||% default_tutorial_version(),
         "tutorial.user_id" = default_user_id(),
-        "tutorial.language" = default_language(),
+        "tutorial.language" = tutorial_language %||% default_language(),
         NULL
       )
       return(value)
@@ -302,6 +326,6 @@ prepare_tutorial_cache_from_source <- function(path_rmd) {
     }
   )
 
-  get_tutorial_cache()
+  get_tutorial_info(tutorial_path = path_rmd)
 }
 
