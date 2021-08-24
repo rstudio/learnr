@@ -76,9 +76,9 @@ str_match <- function(x, pattern) {
   )
 
 }
-str_match_all <- function(x, pattern) {
+str_match_all <- function(x, pattern, ...) {
   if_no_match_return_null(
-    regmatches(x, gregexpr(pattern, x))[[1]]
+    regmatches(x, gregexpr(pattern, x, ...))[[1]]
   )
 }
 str_replace <- function(x, pattern, replacement) {

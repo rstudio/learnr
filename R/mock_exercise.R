@@ -78,6 +78,7 @@ mock_exercise <- function(
     version = version
   )
 
+  stopifnot(is.null(version) || length(version) == 1)
   if (!is.null(version) && version %in% c("2", "3")) {
     ex$tutorial <- list(
       id = "mock_tutorial_id",

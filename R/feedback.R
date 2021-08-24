@@ -63,6 +63,14 @@ feedback_as_html <- function(feedback) {
 }
 
 # helper function to create tags for error message
-error_message_html <- function(message) {
-  div(class = "alert alert-danger", role = "alert", message)
+error_message_html <- function(message, style = "code") {
+  switch(
+    style,
+    alert = div(class = "alert alert-danger", role = "alert", message),
+    code = ,
+    pre(
+      code(class = "text-danger", message, .noWS = c("before", "after")),
+      .noWS = c("before", "after")
+    )
+  )
 }

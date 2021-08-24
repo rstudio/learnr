@@ -156,6 +156,16 @@ $(document).on("shiny:sessioninitialized", function () {
     }, 0);
   });
 
+  // localize exericse output when shown
+  $(document).on("shiny:value", ".tutorial-exercise-output", function (ev) {
+    // Allow DOM to update before translating question UI
+    setTimeout(function () {
+      localize(
+        ev.target.closest(".tutorial-exercise-output").querySelectorAll("[data-i18n]")
+      );
+    }, 0);
+  });
+
   // translate targets of i18n events
   $(document).on("i18n", function (ev) {
     // translate the event target itself

@@ -11,6 +11,10 @@
 #'   (defaults to \code{30}).
 #' @param exercise.lines Lines of code for exercise editor (defaults to the
 #'   number of lines in the code chunk).
+#' @param exercise.blanks A regular expression to be used to identify blanks in
+#'   submitted code that the user should fill in. If `TRUE` (default), blanks
+#'   are three or more underscores in a row. If `FALSE`, blank checking is not
+#'   performed.
 #' @param exercise.checker Function used to check exercise answers
 #'   (e.g., `gradethis::grade_learnr()`).
 #' @param exercise.error.check.code A string containing R code to use for checking
@@ -26,6 +30,7 @@ tutorial_options <- function(exercise.cap = NULL,
                              exercise.eval = FALSE,
                              exercise.timelimit = 30,
                              exercise.lines = NULL,
+                             exercise.blanks = NULL,
                              exercise.checker = NULL,
                              exercise.error.check.code = NULL,
                              exercise.completion = TRUE,
@@ -41,6 +46,7 @@ tutorial_options <- function(exercise.cap = NULL,
   eval(parse(text = sprintf(set_option_code, "exercise.eval")))
   eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
   eval(parse(text = sprintf(set_option_code, "exercise.lines")))
+  eval(parse(text = sprintf(set_option_code, "exercise.blanks")))
   eval(parse(text = sprintf(set_option_code, "exercise.checker")))
   eval(parse(text = sprintf(set_option_code, "exercise.error.check.code")))
   eval(parse(text = sprintf(set_option_code, "exercise.completion")))

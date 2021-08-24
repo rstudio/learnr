@@ -128,6 +128,25 @@ i18n_span <- function(key, ..., opts = NULL) {
   htmltools::HTML(format(x))
 }
 
+i18n_combine_words <- function(
+  words, and = c("and", "or"), before = "", after = before, oxford_comma = TRUE
+) {
+  and   <- match.arg(and)
+  and   <- sprintf(" $t(text.%s) ", and)
+  words <- paste0(before, words, after)
+
+  n <- length(words)
+  if (oxford_comma && n > 2) {
+    words[n - 1] <- paste0(words[n - 1], "$t(text.oxfordcomma)")
+  }
+
+  knitr::combine_words(
+    words,
+    sep = "$t(text.listcomma) ",
+    and = and, oxford_comma = FALSE
+  )
+}
+
 i18n_translations <- function() {
   readRDS(system.file("internals", "i18n_translations.rds", package = "learnr"))
 }

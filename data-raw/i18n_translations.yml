@@ -280,3 +280,86 @@ text:
     tr: "Sınav"
     emo: ~
     eu: "Galdetegia"
+  blank:
+    en: "blank"
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  blank_plural:
+    en: "blanks"
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  exercisecontainsblank:
+    # {{count}} - the number of blanks detected in the exercise
+    en: "This exercise contains {{count}} $t(text.blank)."
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  pleasereplaceblank:
+    # {{blank}} - the string representing a blank in the exercise (e.g. "___")
+    en: "Please replace {{blank}} with valid code."
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  unparsable:
+    en: >
+      It looks like this might not be valid R code.
+      R cannot determine how to turn your text into a complete command.
+      You may have forgotten to fill in a blank,
+      to remove an underscore, to include a comma between arguments,
+      or to close an opening <code>&quot;</code>, <code>'</code>, <code>(</code>
+      or <code>{</code> with a matching <code>&quot;</code>, <code>'</code>,
+      <code>)</code> or <code>}</code>.
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  and:
+    en: "and"
+    fr: "et"
+    es: "y"
+    pt: "e"
+    tr: ~
+    emo: ~
+    eu: ~
+  or:
+    en: "or"
+    fr: "ou"
+    es: "o"
+    pt: "ou"
+    tr: ~
+    emo: ~
+    eu: ~
+  listcomma:
+    # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
+    #   separating list items
+    en: ", "
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+  oxfordcomma:
+    en: ","
+    fr: ""
+    es: ""
+    pt: ""
+    tr: ""
+    emo: ""
+    eu: ""

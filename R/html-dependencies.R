@@ -93,9 +93,11 @@ tutorial_i18n_html_dependency <- function(language = NULL) {
     head = format(htmltools::tags$script(
       id = "i18n-cstm-trns",
       type = "application/json",
-      jsonlite::toJSON(
-        i18n_process_language_options(language),
-        auto_unbox = TRUE
+      htmltools::HTML(
+        jsonlite::toJSON(
+          i18n_process_language_options(language),
+          auto_unbox = TRUE
+        )
       )
     ))
   )
