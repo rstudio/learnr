@@ -721,20 +721,6 @@ with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
   })
 }
 
-exercise_get_blanks_pattern <- function(exercise) {
-  exercise_blanks_opt <-
-    exercise$options$exercise.blanks %||%
-    knitr::opts_chunk$get("exercise.blanks") %||%
-    TRUE
-
-  if (isTRUE(exercise_blanks_opt)) {
-    # TRUE is a stand-in for the default ___+
-    return("_{3,}")
-  }
-
-  exercise_blanks_opt
-}
-
 exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
   type <- match.arg(type)
   if (type == "all") {
@@ -775,6 +761,20 @@ exercise_code_chunks <- function(chunks) {
       "```"
     )
   }, character(1))
+}
+
+exercise_get_blanks_pattern <- function(exercise) {
+  exercise_blanks_opt <-
+    exercise$options$exercise.blanks %||%
+    knitr::opts_chunk$get("exercise.blanks") %||%
+    TRUE
+
+  if (isTRUE(exercise_blanks_opt)) {
+    # TRUE is a stand-in for the default ___+
+    return("_{3,}")
+  }
+
+  exercise_blanks_opt
 }
 
 exercise_check_code_for_blanks <- function(exercise) {
