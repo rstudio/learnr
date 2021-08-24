@@ -358,7 +358,7 @@ evaluate_exercise <- function(
     # early return if we've received an exercise result, but also replace the
     # feedback with the blank feedback if any blanks were found
     if (!is_exercise_result(res)) {
-      return(NULL)
+      return()
     }
 
     if (!is.null(blank_feedback$feedback)) {
