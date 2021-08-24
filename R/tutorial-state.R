@@ -204,9 +204,10 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_pat
 
   if (!is.null(session) && !is.null(tutorial_path)) {
     warning(
-      "Calling `get_tutorial_info()` with the `tutorial_path` argument inside ",
-      "a Shiny reactive domain may mask the metadata of the currently running tutorial."
+      "The `tutorial_path` argument is ignored when `get_tutorial_info()` is ",
+      "called inside a Shiny reactive domain."
     )
+    tutorial_path <- NULL
   }
 
   rmd_meta <- rmarkdown::metadata
