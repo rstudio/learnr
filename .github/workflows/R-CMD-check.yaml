@@ -2,10 +2,12 @@ on:
   push:
     branches:
       - master
+      - main
       - ghactions
   pull_request:
     branches:
       - master
+      - main
 
 name: R-CMD-check
 
