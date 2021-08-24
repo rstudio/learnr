@@ -58,7 +58,7 @@ Imports:
     htmltools (>= 0.3.5),
     htmlwidgets,
     jsonlite,
-    knitr (>= 1.14),
+    knitr (>= 1.31),
     markdown,
     parallel,
     promises,
