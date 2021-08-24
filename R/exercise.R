@@ -73,9 +73,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
         evaluator_factory <- inline_evaluator
     }
 
-    # supplement the exercise with the global setup options
-    # TODO: warn if falling back to the `setup` chunk with an out-of-process evaluator.
-    exercise$global_setup <- get_global_setup()
     # retrieve exercise cache information:
     # - chunks (setup + exercise) for the exercise to be processed in `evaluate_exercise`
     # - checker code (check, code-check, error-check)
@@ -676,8 +673,14 @@ with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
   # Always disable connect api keys and connect server info
   env_vars$CONNECT_API_KEY <- ""
   env_vars$CONNECT_SERVER <- ""
+  env_vars$LEARNR_EXERCISE_USER_CODE <- "TRUE"
   # Hide shiny server sharedSecret
   opts$shiny.sharedSecret <- ""
+
+  # Mask tutorial cache for user code evaluation
+  cache_current <- tutorial_cache_env$objects
+  tutorial_cache_env$objects <- NULL
+  withr::defer(tutorial_cache_env$objects <- cache_current)
 
   # Disable shiny domain
   shiny::withReactiveDomain(NULL, {
@@ -718,11 +721,12 @@ exercise_code_chunks_user <- function(exercise) {
 
 exercise_code_chunks <- function(chunks) {
   vapply(chunks, function(x) {
-    opts <- paste(names(x$opts), unname(x$opts), sep = "=")
+    opts <- x$opts[setdiff(names(x$opts), "label")]
+    opts <- paste(names(opts), unname(opts), sep = "=")
     paste(
       sep = "\n",
       # we quote the label to ensure that it is treated as a label and not a symbol for instance
-      sprintf("```{%s}", paste0(c(x$engine, dput_to_string(x$label), opts), collapse = ", ")),
+      sprintf("```{%s %s}", x$engine, paste0(c(dput_to_string(x$label), opts), collapse = ", ")),
       paste0(x$code, collapse = "\n"),
       "```"
     )
@@ -1009,4 +1013,15 @@ debug_exercise_checker <- function(
       "..."           = list(...)
     )
   )
+}
+
+#' @export
+format.tutorial_exercise <- function (x, ...) {
+  chunks <- exercise_code_chunks(x$chunks)
+  paste(chunks, collapse = "\n\n")
+}
+
+#' @export
+print.tutorial_exercise <- function(x, ...) {
+  cat(format(x, ...))
 }

@@ -287,7 +287,7 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   )
 
   # From internal_external_evaluator() in R/evaluators.R
-  exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null")
+  exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null", force = TRUE)
   # use parse_json() for safest parsing of serialized JSON (simplifyVector = FALSE)
   exercise_unserialized <- jsonlite::parse_json(exercise_serialized)
 
