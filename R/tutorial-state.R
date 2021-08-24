@@ -330,6 +330,6 @@ prepare_tutorial_cache_from_source <- function(path_rmd) {
     }
   )
 
-  get_tutorial_info(tutorial_path = path_rmd)
+  get_tutorial_info(NULL, tutorial_path = path_rmd)
 }
 
