@@ -65,6 +65,7 @@ learnr (development version)
 * The `envir_prep` environment used in exercise checking now captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated as described in the documentation. We also ensure that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep`. ([#480](https://github.com/rstudio/learnr/pull/480))
 * HTML dependencies of exercises run by users now excludes dependencies created with `htmltools::tags$head()`. (thanks @andysouth, [#484](https://github.com/rstudio/learnr/issues/484))
 * Avoid selecting the answer labeled `"FALSE"` by default in `question_radio()` ([#515](https://github.com/rstudio/learnr/pull/515)).
+* Custom CSS files are now loaded last, after all of learnr's other web dependencies. ([#574](https://github.com/rstudio/learnr/pull/574))
 
 learnr 0.10.1
 ===========
