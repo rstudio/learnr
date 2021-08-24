@@ -423,24 +423,32 @@ evaluate_exercise <- function(
 
   return_if_exercise_result(rmd_results)
 
-  # Check -------------------------------------------------------------------
-  # Run the checker post-evaluation (for checking code results)
-  # Don't need to do exercise checking if there are blanks
-  checker_feedback <- NULL
-  if (is.null(blank_feedback) && nzchar(exercise$check)) {
-    checker_feedback <- try_checker(
-      exercise,
-      check_code = exercise$check,
-      envir_result = rmd_results$envir_result,
-      evaluate_result = rmd_results$evaluate_result,
-      envir_prep = rmd_results$envir_prep,
-      last_value = rmd_results$last_value
+  if (!is.null(blank_feedback)) {
+    # No further checking required if we detected blanks
+    return(
+      exercise_result(
+        feedback = blank_feedback$feedback,
+        html_output = rmd_results$html_output
+      )
     )
   }
 
-  # Return checker feedback (if any) with the exercise results
+  # Check -------------------------------------------------------------------
+  # Run the checker post-evaluation (for checking results of evaluated code)
+  checker_feedback <-
+    if (nzchar(exercise$check)) {
+      try_checker(
+        exercise,
+        check_code = exercise$check,
+        envir_result = rmd_results$envir_result,
+        evaluate_result = rmd_results$evaluate_result,
+        envir_prep = rmd_results$envir_prep,
+        last_value = rmd_results$last_value
+      )
+    }
+
   exercise_result(
-    feedback = checker_feedback$feedback %||% blank_feedback$feedback,
+    feedback = checker_feedback$feedback,
     html_output = rmd_results$html_output
   )
 }
