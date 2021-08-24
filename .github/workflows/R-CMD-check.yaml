@@ -2,10 +2,12 @@ on:
   push:
     branches:
       - master
+      - main
       - ghactions
   pull_request:
     branches:
       - master
+      - main
 
 name: R-CMD-check
 
@@ -125,6 +127,7 @@ jobs:
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v1
@@ -160,14 +163,6 @@ jobs:
         run: |
           sudo -s apt-get update
           sudo -s apt-get install -y libcurl4-openssl-dev
-
-      # Use a shorter temp directory for pak installations, due to filename
-      # length issues on Windows. https://github.com/r-lib/pak/issues/252
-      - name: Windows temp dir
-        if: runner.os == 'Windows'
-        run: |
-          New-Item -Path "C:\" -Name "tmp" -ItemType Directory
-          echo "TMPDIR=c:\tmp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Install dependencies
         shell: Rscript {0}
