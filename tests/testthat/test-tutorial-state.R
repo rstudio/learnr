@@ -19,10 +19,18 @@ test_that("store works", {
 
 
 test_that("tutorial_cache_works", {
-  prepare_tutorial_cache_from_source(test_path("tutorials", "basic.Rmd"))
+  info <- prepare_tutorial_cache_from_source(test_path("tutorials", "basic.Rmd"))
   withr::defer(clear_tutorial_cache())
 
+  # prepare_tutorial_cache() returns get_tutorial_info()
+  expect_equal(info$tutorial_id, "test-basic")
+  expect_equal(info$tutorial_version, "9.9.9")
+  expect_s3_class(info$items, "data.frame")
+  expect_named(info$items, c("order", "label", "type", "data"))
+
   all <- get_tutorial_cache()
+  expect_equal(info$items$data, unname(all))
+
   # tutorial cache lists items in order of appearance
   exercises <- c("two-plus-two", "add-function", "print-limit")
   questions <- c("quiz-1", "quiz-2")

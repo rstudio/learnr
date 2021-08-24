@@ -4,11 +4,24 @@
 \alias{get_tutorial_info}
 \title{Get information about the current tutorial}
 \usage{
-get_tutorial_info(session = getDefaultReactiveDomain())
+get_tutorial_info(
+  session = getDefaultReactiveDomain(),
+  tutorial_path = NULL,
+  ...
+)
 }
 \arguments{
 \item{session}{The \code{session} object passed to function given to
 \code{shinyServer.} Default is \code{\link[shiny:domains]{shiny::getDefaultReactiveDomain()}}.}
+
+\item{tutorial_path}{Path to a tutorial \code{.Rmd} source file}
+
+\item{...}{
+  Arguments passed on to \code{\link[rmarkdown:yaml_front_matter]{rmarkdown::yaml_front_matter}}
+  \describe{
+    \item{\code{input}}{Input file (Rmd or plain markdown)}
+    \item{\code{encoding}}{Ignored. The encoding is always assumed to be UTF-8.}
+  }}
 }
 \value{
 Returns an ordinary list with the following elements:

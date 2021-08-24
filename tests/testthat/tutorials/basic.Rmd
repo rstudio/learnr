@@ -1,6 +1,9 @@
 ---
 title: "Tutorial"
 output: learnr::tutorial
+tutorial:
+  id: test-basic
+  version: 9.9.9
 runtime: shiny_prerendered
 ---
 
