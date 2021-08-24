@@ -50,6 +50,8 @@ test_that("setup-global-exercise chunk is used for global_setup", {
   all <- get_tutorial_cache()
 
   expect_equal(as.character(all$data1$global_setup), "global <- 0")
+  # check that the correct chunk was used for the `global_setup`
+  # NOTE: this may change if the knitr hooks are refactored
   expect_equal(attr(all$data1$global_setup, "chunk_opts")$label, "setup-global-exercise")
 
   ex <- mock_exercise(user_code = "global", label = "data1", check = I("global"))
@@ -57,7 +59,10 @@ test_that("setup-global-exercise chunk is used for global_setup", {
   ex$global_setup <- all$data1$global_setup
   ex$setup <- all$data1$setup
 
-  # global setup chunk is force-evaluated
+  # global setup chunk is not evaluated unless explicitly requested
   res <- evaluate_exercise(ex, evaluate_global_setup = FALSE, envir = new.env())
+  expect_equal(res$error_message, "object 'global' not found")
+
+  res <- evaluate_exercise(ex, evaluate_global_setup = TRUE, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, 0)
 })

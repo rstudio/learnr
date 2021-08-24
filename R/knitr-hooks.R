@@ -77,6 +77,9 @@ install_knitr_hooks <- function() {
   }
 
   get_setup_global_exercise <- function() {
+    # setup-global-exercise is a special chunk name that will over-ride the
+    # global setup chunk, but only for external evaluators. This lets tutorials
+    # have separate setup code for the local shiny app and the remote evaluator.
     knitr::knit_code$get("setup-global-exercise") %||%
       knitr::knit_code$get("setup")
   }
