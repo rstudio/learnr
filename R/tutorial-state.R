@@ -214,7 +214,10 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_pat
     if (!is.null(rmd_meta) && length(rmd_meta)) {
       rmd_meta
     } else if (!is.null(tutorial_path)) {
-      rmarkdown::yaml_front_matter(tutorial_path, ...)
+      tryCatch(
+        rmarkdown::yaml_front_matter(tutorial_path, ...),
+        error = function(e) NULL
+      )
     }
 
   tutorial_language <-
