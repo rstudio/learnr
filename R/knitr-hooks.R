@@ -457,6 +457,7 @@ install_knitr_hooks <- function() {
 
 remove_knitr_hooks <- function() {
   knitr::opts_chunk$delete("tutorial")
+  knitr::opts_hooks$delete("tutorial")
   knitr::knit_hooks$delete("tutorial")
 }
 
