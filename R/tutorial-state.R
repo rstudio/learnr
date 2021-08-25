@@ -286,18 +286,38 @@ describe_tutorial_items <- function() {
 
 # Helpers -----------------------------------------------------------------
 
-prepare_tutorial_cache_from_source <- function(path_rmd) {
-  # 1. Render input Rmd
-  # 2. Extract prerendered chunks and filter to question/exercise chunks
+prepare_tutorial_cache_from_source <- function(path_rmd, render_args = NULL) {
+  # 1. Render input Rmd in its directory but to a temp html file
+  # 2. Extract prerendered chunks and filter to question/exercise chunks from html
   # 3. Evaluate the prerendered code to populate the tutorial cache
-  path_html <- tempfile(fileext = ".html")
-  withr::defer(unlink(path_html))
-  message(path_html)
+  # 4. Clean up files on exit
+  path_rmd <- normalizePath(path_rmd)
+  path_html <- file.path(dirname(path_rmd), basename(tempfile(fileext = ".html")))
 
-  install_knitr_hooks()
-  withr::defer(remove_knitr_hooks())
+  # remove html and supporting files on exit
+  withr::defer({
+    unlink(path_html)
+    unlink(sub("[.]html$", "_files", path_html), recursive = TRUE)
+  })
 
-  rmarkdown::render(path_rmd, output_file = path_html, quiet = TRUE)
+  default_render_args <- list(
+    envir = new.env(parent = globalenv()),
+    input = basename(path_rmd),
+    output_file = basename(path_html),
+    quiet = TRUE,
+    clean = TRUE
+  )
+
+  render_args <- utils::modifyList(render_args %||% list(), default_render_args)
+
+  withr::with_dir(dirname(path_rmd), {
+    if (!detect_installed_knitr_hooks()) {
+      install_knitr_hooks()
+      withr::defer(remove_knitr_hooks())
+    }
+
+    do.call(rmarkdown::render, render_args)
+  })
 
   prerendered_extract_context <-
     getFromNamespace("shiny_prerendered_extract_context", ns = "rmarkdown")
