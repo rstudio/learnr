@@ -1,6 +1,19 @@
+detect_installed_knitr_hooks <- function() {
+  tutorial_chunk_opt <- knitr::opts_chunk$get("tutorial")
+  if (!(isTRUE(tutorial_chunk_opt) || identical(tutorial_chunk_opt, "TRUE"))) {
+    return(FALSE)
+  }
+
+  tutorial_opts_hook <- knitr::opts_hooks$get("tutorial")
+  if (!is.function(tutorial_opts_hook)) {
+    return(FALSE)
+  }
+
+  tutorial_knit_hook <- knitr::knit_hooks$get("tutorial")
+  is.function(tutorial_knit_hook)
+}
 
 install_knitr_hooks <- function() {
-
   # set global tutorial option which we can use as a basis for hooks
   # (this is so we don't collide with hooks set by the user or
   # by other packages or Rmd output formats)
