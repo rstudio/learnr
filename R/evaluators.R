@@ -290,7 +290,14 @@ internal_external_evaluator <- function(
       },
 
       result = function() {
-        result
+        result$feedback <- tryCatch(
+          feedback_validated(result$feedback),
+          error = function(e) {
+            warning(e$message)
+            NULL
+          }
+        )
+        do.call(exercise_result, result)
       }
     )
   }
