@@ -290,7 +290,23 @@ internal_external_evaluator <- function(
       },
 
       result = function() {
-        result
+        tryCatch({
+          result$feedback <- tryCatch(
+            feedback_validated(result$feedback),
+            error = function(e) {
+              warning(e$message)
+              NULL
+            }
+          )
+          do.call(exercise_result, result)
+        }, error = function(e) {
+          warning(
+            "Unable to convert exercise result from external evaluator ",
+            "into a learnr exercise result.",
+            e$message
+          )
+          exercise_result_error("An internal error occurred, please try again or contact the tutorial author.")
+        })
       }
     )
   }

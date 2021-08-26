@@ -854,8 +854,12 @@ exercise_result_error <- function(error_message, feedback = NULL, timeout_exceed
   )
 }
 
-exercise_result <- function(feedback = NULL, html_output = NULL,
-                            error_message = NULL, timeout_exceeded = FALSE) {
+exercise_result <- function(
+  feedback = NULL,
+  html_output = NULL,
+  error_message = NULL,
+  timeout_exceeded = FALSE
+) {
   feedback <- feedback_validated(feedback)
 
   if (!is.null(feedback)) {
