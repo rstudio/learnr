@@ -18,6 +18,6 @@ debug_event_recorder <- function(tutorial_id,
                                  data) {
   cat(tutorial_id, " (", tutorial_version, "): ", user_id , "\n", sep = "")
   cat("event: ", event, "\n", sep = "")
-  utils::str(data)
+  if (is.character(data)) cat(data) else utils::str(data)
   cat("\n")
 }
