@@ -198,6 +198,12 @@ internal_external_evaluator <- function(
           }
 
           json <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null", force = TRUE)
+          if (
+            identical(tolower(Sys.getenv("TUTORIAL_DEBUG_EXTERNAL_EVALUATOR_EVENT_SUBMISSION", "")), "true") ||
+            "submission" %in% getOption("tutorial.debug.external_evaluator_event", "")
+          ) {
+            event_trigger(session, "external_evaluator_submission", as.character(json))
+          }
 
           if (is.null(exercise$options$exercise.timelimit) || exercise$options$exercise.timelimit == 0){
             timeout_s <- 30 * 1000
@@ -230,6 +236,13 @@ internal_external_evaluator <- function(
               }
 
               r <- rawToChar(res$content)
+              if (
+                identical(tolower(Sys.getenv("TUTORIAL_DEBUG_EXTERNAL_EVALUATOR_EVENT_RESULT", "")), "true") ||
+                "result" %in% getOption("tutorial.debug.external_evaluator_event", "")
+              ) {
+                event_trigger(session, "external_evaluator_result", r)
+              }
+
               p <- jsonlite::fromJSON(r)
               p$html_output <- htmltools::HTML(p$html_output)
               result <<- p
