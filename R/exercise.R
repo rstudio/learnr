@@ -21,6 +21,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
     exercise <- exercise_rx()
     # Add tutorial information
     exercise$tutorial <- get_tutorial_info()
+    # Remove tutorial items from exercise object
+    exercise$tutorial$items <- NULL
 
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
