@@ -802,10 +802,21 @@ exercise_check_code_for_blanks <- function(exercise) {
   msg <- paste(
     i18n_span(
       "text.exercisecontainsblank",
+      paste0(
+        "This exercise contains ", length(blanks),
+        ngettext(length(blanks), " blank.", " blanks.")
+      ),
       opts = list(count = length(blanks))
     ),
     i18n_span(
       "text.pleasereplaceblank",
+      HTML(
+        paste(
+          "Please replace",
+          knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
+          "with valid code."
+        )
+      ),
       opts = list(
         count = length(blanks),
         blank = i18n_combine_words(unique(blanks), before = "<code>", after = "</code>"),
@@ -827,7 +838,12 @@ exercise_check_code_is_parsable <- function(exercise) {
 
   exercise_result(
     list(
-      message = HTML(i18n_span("text.unparsable")),
+      message = HTML(
+        i18n_span(
+          "text.unparsable",
+          HTML(i18n_translations()$en$translation$text$unparsable)
+        )
+      ),
       correct = FALSE,
       location = "append",
       type = "error"
