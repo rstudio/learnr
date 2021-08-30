@@ -792,17 +792,22 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
-  expect_match(result$feedback$message, "____")
+  expect_match(result$feedback$message, "This exercise contains 1 blank.")
+  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
 
   ex     <- mock_exercise(user_code = '____(____)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
+  expect_match(result$feedback$message, "This exercise contains 2 blanks.")
+  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
 
   ex     <- mock_exercise(user_code = '____("____")')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
+  expect_match(result$feedback$message, "This exercise contains 2 blanks.")
+  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
 })
 
 test_that("setting a different blank for the blank checker", {
@@ -810,17 +815,22 @@ test_that("setting a different blank for the blank checker", {
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
-  expect_match(result$feedback$message, "###")
+  expect_match(result$feedback$message, "This exercise contains 1 blank.")
+  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
 
   ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
+  expect_match(result$feedback$message, "This exercise contains 2 blanks.")
+  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
 
   ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
+  expect_match(result$feedback$message, "This exercise contains 2 blanks.")
+  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
 })
 
 test_that("setting a different blank for the blank checker in global setup", {
@@ -834,6 +844,9 @@ test_that("setting a different blank for the blank checker in global setup", {
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
+
+  expect_match(result$feedback$message, "This exercise contains 1 blank.")
+  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
 })
 
 test_that("setting a regex blank for the blank checker", {
@@ -844,10 +857,9 @@ test_that("setting a regex blank for the blank checker", {
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
-  expect_match(
-    result$feedback$message,
-    "\\.\\.function\\.\\..*\\$t\\(text.and\\).*\\.\\.string\\.\\."
-  )
+
+  expect_match(result$feedback$message, "This exercise contains 2 blanks.")
+  expect_match(result$feedback$message, "Please replace <code>..function..</code> and <code>..string..</code> with valid code.")
 })
 
 test_that("use underscores as blanks if exercise.blanks is TRUE", {
@@ -857,7 +869,8 @@ test_that("use underscores as blanks if exercise.blanks is TRUE", {
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
-  expect_match(result$feedback$message, "____")
+  expect_match(result$feedback$message, "This exercise contains 1 blank.")
+  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
 
   ex <- mock_exercise(
     user_code = '____("test")', exercise.blanks = TRUE
@@ -865,7 +878,8 @@ test_that("use underscores as blanks if exercise.blanks is TRUE", {
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
-  expect_match(result$feedback$message, "____")
+  expect_match(result$feedback$message, "This exercise contains 1 blank.")
+  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
 })
 
 test_that("default message if exercise.blanks is FALSE", {
@@ -882,6 +896,10 @@ test_that("default message if exercise.blanks is FALSE", {
   result <- evaluate_exercise(ex, new.env())
   expect_null(exercise_check_code_for_blanks(ex))
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(
+    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    fixed = TRUE
+  )
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
 })
 
@@ -893,18 +911,30 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(
+    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    fixed = TRUE
+  )
   expect_match(result$error_message, "unexpected end of input")
 
   ex     <- mock_exercise(user_code = 'print("test)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(
+    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    fixed = TRUE
+  )
   expect_match(result$error_message, "unexpected INCOMPLETE_STRING")
 
   ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
+  expect_match(
+    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    fixed = TRUE
+  )
   expect_match(result$error_message, "unexpected symbol")
 })
 
