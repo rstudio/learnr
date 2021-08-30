@@ -802,19 +802,26 @@ exercise_check_code_for_blanks <- function(exercise) {
   msg <- paste(
     i18n_span(
       "text.exercisecontainsblank",
-      paste0(
-        "This exercise contains ", length(blanks),
-        ngettext(length(blanks), " blank.", " blanks.")
+      gsub(
+        "{{count}}", length(blanks),
+        gsub(
+          "$t(text.blank)", ngettext(length(blanks), "blank", "blanks"),
+          i18n_translations()$en$translation$text$exercisecontainsblank,
+          fixed = TRUE
+        ),
+        i18n_translations()$en$translation$text$exercisecontainsblank,
+        fixed = TRUE
       ),
       opts = list(count = length(blanks))
     ),
     i18n_span(
       "text.pleasereplaceblank",
       HTML(
-        paste(
-          "Please replace",
+        gsub(
+          "{{blank}}",
           knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
-          "with valid code."
+          i18n_translations()$en$translation$text$pleasereplaceblank,
+          fixed = TRUE
         )
       ),
       opts = list(
