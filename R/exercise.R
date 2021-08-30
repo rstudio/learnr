@@ -864,7 +864,9 @@ exercise_result <- function(
 ) {
   feedback <- feedback_validated(feedback)
 
-  if (!is.null(feedback)) {
+  if (is.character(feedback$html) && any(nzchar(feedback$html))) {
+    feedback$html <- htmltools::HTML(feedback$html)
+  } else if (!inherits(feedback$html, c("shiny.tag", "shiny.tag.list", "html"))) {
     feedback$html <- feedback_as_html(feedback)
   }
 
