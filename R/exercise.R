@@ -799,6 +799,7 @@ exercise_check_code_for_blanks <- function(exercise) {
     return(NULL)
   }
 
+  # default message is stored in data-raw/i18n_translations.yml
   text <- i18n_translations()$en$translation$text
 
   msg <- paste(
