@@ -799,13 +799,33 @@ exercise_check_code_for_blanks <- function(exercise) {
     return(NULL)
   }
 
+  # default message is stored in data-raw/i18n_translations.yml
+  i18n_text <- i18n_translations()$en$translation$text
+
+  text_blanks <- gsub(
+    "$t(text.blank)",
+    ngettext(length(blanks), "blank", "blanks"),
+    i18n_text$exercisecontainsblank,
+    fixed = TRUE
+  )
+  text_blanks <- gsub("{{count}}", length(blanks), text_blanks, fixed = TRUE)
+
+  text_please <- gsub(
+    "{{blank}}",
+    knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
+    i18n_text$pleasereplaceblank,
+    fixed = TRUE
+  )
+
   msg <- paste(
     i18n_span(
-      "text.exercisecontainsblank",
+      HTML(text_blanks),
+      key = "text.exercisecontainsblank",
       opts = list(count = length(blanks))
     ),
     i18n_span(
-      "text.pleasereplaceblank",
+      HTML(text_please),
+      key = "text.pleasereplaceblank",
       opts = list(
         count = length(blanks),
         blank = i18n_combine_words(unique(blanks), before = "<code>", after = "</code>"),
@@ -827,7 +847,12 @@ exercise_check_code_is_parsable <- function(exercise) {
 
   exercise_result(
     list(
-      message = HTML(i18n_span("text.unparsable")),
+      message = HTML(
+        i18n_span(
+          "text.unparsable",
+          HTML(i18n_translations()$en$translation$text$unparsable)
+        )
+      ),
       correct = FALSE,
       location = "append",
       type = "error"
