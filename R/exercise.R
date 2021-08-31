@@ -802,31 +802,30 @@ exercise_check_code_for_blanks <- function(exercise) {
   # default message is stored in data-raw/i18n_translations.yml
   text <- i18n_translations()$en$translation$text
 
+  text_blanks <- gsub(
+    "$t(text.blank)",
+    ngettext(length(blanks), "blank", "blanks"),
+    text$exercisecontainsblank,
+    fixed = TRUE
+  )
+  text_blanks <- gsub("{{count}}", length(blanks), text_blanks, fixed = TRUE)
+
+  text_please <- gsub(
+    "{{blank}}",
+    knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
+    text$pleasereplaceblank,
+    fixed = TRUE
+  )
+
   msg <- paste(
     i18n_span(
-      "text.exercisecontainsblank",
-      gsub(
-        "{{count}}", length(blanks),
-        gsub(
-          "$t(text.blank)", ngettext(length(blanks), "blank", "blanks"),
-          text$exercisecontainsblank,
-          fixed = TRUE
-        ),
-        i18n_translations()$en$translation$text$exercisecontainsblank,
-        fixed = TRUE
-      ),
+      HTML(text_blanks),
+      key = "text.exercisecontainsblank",
       opts = list(count = length(blanks))
     ),
     i18n_span(
-      "text.pleasereplaceblank",
-      HTML(
-        gsub(
-          "{{blank}}",
-          knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
-          text$pleasereplaceblank,
-          fixed = TRUE
-        )
-      ),
+      HTML(text_please),
+      key = "text.pleasereplaceblank",
       opts = list(
         count = length(blanks),
         blank = i18n_combine_words(unique(blanks), before = "<code>", after = "</code>"),
