@@ -799,6 +799,8 @@ exercise_check_code_for_blanks <- function(exercise) {
     return(NULL)
   }
 
+  text <- i18n_translations()$en$translation$text
+
   msg <- paste(
     i18n_span(
       "text.exercisecontainsblank",
@@ -806,7 +808,7 @@ exercise_check_code_for_blanks <- function(exercise) {
         "{{count}}", length(blanks),
         gsub(
           "$t(text.blank)", ngettext(length(blanks), "blank", "blanks"),
-          i18n_translations()$en$translation$text$exercisecontainsblank,
+          text$exercisecontainsblank,
           fixed = TRUE
         ),
         i18n_translations()$en$translation$text$exercisecontainsblank,
@@ -820,7 +822,7 @@ exercise_check_code_for_blanks <- function(exercise) {
         gsub(
           "{{blank}}",
           knitr::combine_words(unique(blanks), before = "<code>", after = "</code>"),
-          i18n_translations()$en$translation$text$pleasereplaceblank,
+          text$pleasereplaceblank,
           fixed = TRUE
         )
       ),
