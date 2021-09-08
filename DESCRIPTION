@@ -30,7 +30,7 @@ Authors@R:
              family = "Rossell Hayes",
              role = "ctb",
              email = "alex.rossellhayes@rstudio.com",
-             comment = c(ORCID = "0000-0001-9412-0457"))
+             comment = c(ORCID = "0000-0001-9412-0457")),
       person(given = "Angela",
              family = "Li",
              role = "ctb",
