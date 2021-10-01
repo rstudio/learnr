@@ -332,6 +332,7 @@ evaluate_exercise <- function(
 
   # standardize exercise code to single string (code, *check, global_setup)
   exercise <- standardize_exercise_code(exercise)
+  exercise$envir <- envir
 
   i18n_set_language_option(exercise$tutorial$language)
 
@@ -342,7 +343,12 @@ evaluate_exercise <- function(
   }
 
   if (evaluate_global_setup) {
-    eval(parse(text = exercise$global_setup), envir = envir)
+    tryCatch({
+      eval(parse(text = exercise$global_setup), envir = envir)
+      NULL
+    }, error = function(err) {
+      exercise_result_error()
+    })
   }
 
   # Check if user code has unfilled blanks ----------------------------------
@@ -843,6 +849,29 @@ exercise_check_code_is_parsable <- function(exercise) {
   error <- rlang::catch_cnd(parse(text = exercise$code), "error")
   if (is.null(error)) {
     return(NULL)
+  }
+
+  # apply the error checker to the parse error, if there is an error
+  if (nzchar(exercise$error_check)) {
+    error_feedback <- try_checker(
+      exercise,
+      check_code = exercise[["error_check"]],
+      envir_result = exercise[["envir"]],
+      evaluate_result = error,
+      envir_prep = exercise[["envir"]],
+      last_value = error
+    )
+
+    if (is_exercise_result(error_feedback)) {
+      # if we have feedback from the error checker, then return the original
+      # parse error with the feedback from the error
+      return(
+        exercise_result_error(
+          conditionMessage(error),
+          error_feedback[["feedback"]]
+        )
+      )
+    }
   }
 
   exercise_result(
