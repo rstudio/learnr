@@ -340,12 +340,19 @@ evaluate_exercise <- function(
   }
 
   if (evaluate_global_setup) {
-    tryCatch({
-      eval(parse(text = exercise$global_setup), envir = envir)
-      NULL
-    }, error = function(err) {
-      exercise_result_error()
-    })
+    res_global <-
+      tryCatch({
+        eval(parse(text = exercise$global_setup), envir = envir)
+        NULL
+      }, error = function(err) {
+        message("Error evaluating global setup for exercise '", exercise$label, "': ", conditionMessage(err))
+        exercise_result_error(
+          "An internal error occurred while setting up the tutorial. Please try again or contact the tutorial author."
+        )
+      })
+    if (is_exercise_result(res_global)) {
+      return(res_global)
+    }
   }
 
   # Check if user code has unfilled blanks ----------------------------------

@@ -954,6 +954,17 @@ test_that("evaluate_exercise() passes parse error to explicit exercise checker f
   expect_equal(res$feedback, exercise_check_code_is_parsable(ex)$feedback)
 })
 
+test_that("Errors with global setup code result in an internal error", {
+  ex <- mock_exercise(global_setup = "stop('boom')")
+  expect_message(
+    res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+    "global setup"
+  )
+
+  expect_match(res$error_message, "internal error occurred while setting up the tutorial")
+  expect_match(format(res$html_output), "internal error occurred while setting up the tutorial")
+})
+
 
 # Timelimit ---------------------------------------------------------------
 
