@@ -850,7 +850,7 @@ exercise_check_code_is_parsable <- function(exercise) {
   }
 
   # apply the error checker to the parse error, if there is an error
-  if (nzchar(exercise$error_check)) {
+  if (nzchar(exercise$error_check %||% "")) {
     error_feedback <- try_checker(
       exercise,
       check_code = exercise[["error_check"]],
