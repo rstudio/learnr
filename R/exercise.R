@@ -90,9 +90,6 @@ setup_exercise_handler <- function(exercise_rx, session) {
       exercise$check <- NULL
       exercise$code_check <- NULL
       exercise$error_check <- NULL
-    } else {
-      # If there is no locally defined error check code, look for globally defined error check option
-      exercise$error_check <- exercise$error_check %||% exercise$options$exercise.error.check.code
     }
 
     # get timelimit option (either from chunk option or from global option)
@@ -415,7 +412,8 @@ evaluate_exercise <- function(
         # checking: the exercise could be to throw an error!
         error_feedback <- try_checker(
           exercise,
-          check_code = exercise$error_check,
+          # If there is no locally defined error check code, look for globally defined error check option
+          check_code = exercise$error_check %||% exercise$options$exercise.error.check.code,
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
           envir_prep = err_render$envir_prep,
