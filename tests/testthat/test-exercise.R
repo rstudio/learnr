@@ -938,6 +938,22 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   expect_match(result$error_message, "unexpected symbol")
 })
 
+test_that("evaluate_exercise() passes parse error to explicit exercise checker function", {
+  ex <- mock_exercise(
+    "_foo",
+    check = "check",
+    error_check = "error_check",
+    exercise.error.check.code = "default_error_check"
+  )
+
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback$checker_args$check_code, "error_check")
+
+  ex$error_check <- ""
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback, exercise_check_code_is_parsable(ex)$feedback)
+})
+
 
 # Timelimit ---------------------------------------------------------------
 
