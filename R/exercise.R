@@ -856,7 +856,7 @@ exercise_check_code_is_parsable <- function(exercise) {
     return(NULL)
   }
 
-  # apply the error checker to the parse error, if there is an error
+  # apply the error checker (if explicitly provided) to the parse error
   if (nzchar(exercise$error_check %||% "")) {
     error_feedback <- try_checker(
       exercise,
@@ -868,8 +868,8 @@ exercise_check_code_is_parsable <- function(exercise) {
     )
 
     if (is_exercise_result(error_feedback)) {
-      # if we have feedback from the error checker, then return the original
-      # parse error with the feedback from the error
+      # we have feedback from the error checker so we return the original parse
+      # error with the feedback from the error checker
       return(
         exercise_result_error(
           conditionMessage(error),
