@@ -345,9 +345,11 @@ evaluate_exercise <- function(
         eval(parse(text = exercise$global_setup), envir = envir)
         NULL
       }, error = function(err) {
-        message("Error evaluating global setup for exercise '", exercise$label, "': ", conditionMessage(err))
-        exercise_result_error(
-          "An internal error occurred while setting up the tutorial. Please try again or contact the tutorial author."
+        exercise_result_error_internal(
+          exercise,
+          err,
+          task_internal = "evaluating the global setup",
+          task_external = "setting up the tutorial"
         )
       })
     if (is_exercise_result(res_global)) {
@@ -413,18 +415,22 @@ evaluate_exercise <- function(
     render_exercise(exercise, envir),
     error = function(err_render) {
       error_feedback <- NULL
-      if (nzchar(exercise$error_check)) {
+      error_check_code <- exercise$error_check
+      if (!nzchar(error_check_code)) {
+        # If there is no locally defined error check code, look for globally defined error check option
+        error_check_code <- standardize_code(exercise$options$exercise.error.check.code)
+      }
+      if (nzchar(error_check_code)) {
         # Error check -------------------------------------------------------
         # Check the error thrown by the submitted code when there's error
         # checking: the exercise could be to throw an error!
         error_feedback <- try_checker(
           exercise,
-          # If there is no locally defined error check code, look for globally defined error check option
-          check_code = exercise$error_check %||% exercise$options$exercise.error.check.code,
+          check_code = error_check_code,
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
           envir_prep = err_render$envir_prep,
-          last_value = err_render
+          last_value = err_render$last_value
         )
       }
       exercise_result_error(err_render$error_message, error_feedback$feedback)
@@ -615,6 +621,7 @@ render_exercise <- function(exercise, envir) {
 
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
+    render_stage <- "setup"
     local({
       if (length(rmd_src_prep) > 0) {
         rmd_file_prep <- "exercise_prep.Rmd"
@@ -651,6 +658,7 @@ render_exercise <- function(exercise, envir) {
     # are much more difficult
     envir_result <- duplicate_env(envir_prep)
 
+    render_stage <- "user"
     with_masked_env_vars(
       # Now render user code for final result
       rmarkdown::render(
@@ -669,6 +677,19 @@ render_exercise <- function(exercise, envir) {
     if (grepl(pattern, msg, fixed = TRUE)) {
       return(exercise_result_timeout())
     }
+
+    if (render_stage == "setup") {
+      # errors in setup code should be returned as internal error results
+      return(
+        exercise_result_error_internal(
+          exercise = exercise,
+          error = e,
+          task_external = "setting up the exercise",
+          task_internal = "rendering exercise setup"
+        )
+      )
+    }
+
     rlang::abort(
       class = "learnr_render_exercise_error",
       envir_result = envir_result,
@@ -680,7 +701,7 @@ render_exercise <- function(exercise, envir) {
   })
 
   if (is_exercise_result(output_file)) {
-    # this only happens when the render result is a timeout error
+    # this only happens when the render result is a timeout error or setup error
     return(output_file)
   }
 
@@ -912,6 +933,37 @@ exercise_result_error <- function(error_message, feedback = NULL, timeout_exceed
     timeout_exceeded = timeout_exceeded,
     error_message = error_message,
     html_output = error_message_html(error_message, style = style)
+  )
+}
+
+exercise_result_error_internal <- function(
+  exercise,
+  error,
+  task_external = "",
+  task_internal = task_external
+) {
+  task_external <- paste0(if (nzchar(task_external %||% "")) " while ", task_external)
+  task_internal <- paste0(if (nzchar(task_internal %||% "")) " while ", task_internal)
+
+  msg_internal <- sprintf(
+    "An error occurred%s for exercise '%s': %s",
+    task_internal,
+    exercise$label,
+    conditionMessage(error)
+  )
+
+  message(msg_internal)
+  exercise_result(
+    list(
+      correct = logical(),
+      type = "warning",
+      location = "replace",
+      message = sprintf(
+        "An internal error occurred%s. Please try again or contact the tutorial author.",
+        task_external
+      ),
+      error = error
+    )
   )
 }
 
