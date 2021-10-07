@@ -318,6 +318,8 @@ standardize_exercise_code <- function(exercise) {
 evaluate_exercise <- function(
   exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
 ) {
+
+  # Exercise Prep and Standardization ---------------------------------------
   # Protect global options and environment vars from permanent modification
   local_restore_options_and_envvars()
 
@@ -339,6 +341,7 @@ evaluate_exercise <- function(
     return(exercise_result(html_output = " "))
   }
 
+  # Evaluate Global Setup ---------------------------------------------------
   if (evaluate_global_setup) {
     res_global <-
       tryCatch({
@@ -352,6 +355,7 @@ evaluate_exercise <- function(
           task_external = "setting up the tutorial"
         )
       })
+
     if (is_exercise_result(res_global)) {
       return(res_global)
     }
