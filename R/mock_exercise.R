@@ -42,7 +42,8 @@ mock_exercise <- function(
     fig.num = 0,
     exercise.df_print = exercise.df_print,
     exercise.warn_invisible = exercise.warn_invisible,
-    exercise.timelimit = exercise.timelimit
+    exercise.timelimit = exercise.timelimit,
+    exercise.error.check.code = exercise.error.check.code
   )
 
   has_exercise_chunk <- any(

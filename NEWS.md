@@ -53,6 +53,7 @@ learnr (development version)
 * `options()` and environment variables are now reset after rendering exercises so changes made by user input or checking code cannot affect other exercises. ([#542](https://github.com/rstudio/learnr/pull/542))
 * Exercise checking is now conducted in the same temporary directory where exercises are evaluated. ([#544](https://github.com/rstudio/learnr/pull/544/))
 * User submissions for R code exercises are now checked for parsing errors prior to any other checks. If the submitted code is unparsable, a friendly error feedback message is returned and no further evaluation or checking is performed. ([#547](https://github.com/rstudio/learnr/pull/547))
+* Parse errors from user code that fails to parse can now be inspected by the error checker, but errors in exercise setup chunks cannot. Instead, global setup and setup chunk errors are raised as internal errors with a user-facing warning. In general, internal errors are now handled more consistently. ([#596](https://github.com/rstudio/learnr/pull/596))
 
 ## Bug fixes
 
