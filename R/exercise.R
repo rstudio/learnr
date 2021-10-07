@@ -950,13 +950,12 @@ exercise_result_error_internal <- function(
   task_internal <- paste0(if (nzchar(task_internal %||% "")) " while ", task_internal)
 
   msg_internal <- sprintf(
-    "An error occurred%s for exercise '%s': %s",
+    "An error occurred%s for exercise '%s'",
     task_internal,
-    exercise$label,
-    conditionMessage(error)
+    exercise$label
   )
+  rlang::warn(c(msg_internal, "x" = conditionMessage(error)))
 
-  message(msg_internal)
   exercise_result(
     list(
       correct = logical(),

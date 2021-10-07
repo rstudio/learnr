@@ -164,7 +164,7 @@ test_that("evaluate_exercise() returns internal error if setup chunk throws an e
     setup_label = "setup-1",
     exercise.error.check.code = NULL
   )
-  expect_message(
+  expect_warning(
     exercise_result <- evaluate_exercise(exercise, new.env()),
     "rendering exercise setup"
   )
@@ -192,7 +192,7 @@ test_that("evaluate_exercise() errors from setup chunks aren't checked by error 
     error_check = I("'error_check'"),
     exercise.error.check.code = I("'default_error_check'")
   )
-  expect_message(
+  expect_warning(
     exercise_result <- evaluate_exercise(exercise, new.env()),
     "error occurred while rendering"
   )
@@ -240,7 +240,7 @@ test_that("evaluate_exercise() errors from user code are checked by default erro
 
 test_that("evaluate_exercise() returns an internal error for global setup chunk evaluation errors", {
   ex <- mock_exercise(global_setup = "stop('global setup failure')")
-  expect_message(
+  expect_warning(
     res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
     "evaluating the global setup"
   )
@@ -279,18 +279,20 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
     error_check = I("dir()")
   )
 
-  files <- expect_message(
-    withr::with_tempdir({
-      before <- dir()
-      env <- new.env()
-      res <- render_exercise(exercise, env)
-      list(
-        before = before,
-        during = res$feedback$error$dir,
-        after  = dir()
-      )
-    }),
-    "exercise_prep.Rmd"
+  files <- expect_warning(
+    expect_message(
+      withr::with_tempdir({
+        before <- dir()
+        env <- new.env()
+        res <- render_exercise(exercise, env)
+        list(
+          before = before,
+          during = res$feedback$error$dir,
+          after  = dir()
+        )
+      }),
+      "exercise_prep.Rmd"
+    )
   )
 
   # start with nothing
@@ -1022,7 +1024,7 @@ test_that("evaluate_exercise() passes parse error to explicit exercise checker f
 
 test_that("Errors with global setup code result in an internal error", {
   ex <- mock_exercise(global_setup = "stop('boom')")
-  expect_message(
+  expect_warning(
     res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
     "global setup"
   )
