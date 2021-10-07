@@ -1,7 +1,7 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.10.1.9015
+Version: 0.10.1.9016
 Authors@R:
     c(person(given = "Garrick",
              family = "Aden-Buie",
