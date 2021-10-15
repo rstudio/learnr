@@ -62,13 +62,13 @@ tutorial <- function(fig_width = 6.5,
   args <- c(args, "--section-divs")
 
   # template
-  args <- c(args, "--template", pandoc_path_arg(
+  args <- c(args, "--template", rmarkdown::pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",
                 package = "learnr")
   ))
 
   # content includes
-  args <- c(args, includes_to_pandoc_args(includes))
+  args <- c(args, rmarkdown::includes_to_pandoc_args(includes))
 
   # pagedtables
   if (identical(df_print, "paged")) {
@@ -94,7 +94,7 @@ tutorial <- function(fig_width = 6.5,
 
   # additional css
   for (css_file in css)
-    args <- c(args, "--css", pandoc_path_arg(css_file))
+    args <- c(args, "--css", rmarkdown::pandoc_path_arg(css_file))
 
   # resolve theme (ammend base stylesheet for "rstudio" theme
   stylesheets <- "tutorial-format.css"
@@ -123,12 +123,12 @@ tutorial <- function(fig_width = 6.5,
 
   # additional pandoc variables
   jsbool <- function(value) ifelse(value, "true", "false")
-  args <- c(args, pandoc_variable_arg("progressive", jsbool(progressive)))
-  args <- c(args, pandoc_variable_arg("allow-skip", jsbool(allow_skip)))
+  args <- c(args, rmarkdown::pandoc_variable_arg("progressive", jsbool(progressive)))
+  args <- c(args, rmarkdown::pandoc_variable_arg("allow-skip", jsbool(allow_skip)))
 
   # knitr and pandoc options
-  knitr_options <- knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
-  pandoc_options <- pandoc_options(to = "html4",
+  knitr_options <- rmarkdown::knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
+  pandoc_options <- rmarkdown::pandoc_options(to = "html4",
     from = rmarkdown::from_rmarkdown(fig_caption, md_extensions),
     args = args,
     ext = ".html")

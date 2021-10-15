@@ -1,5 +1,4 @@
 #' @keywords internal
-#' @import rmarkdown
 "_PACKAGE"
 
 ## usethis namespace: start
