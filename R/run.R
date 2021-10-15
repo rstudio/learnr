@@ -68,7 +68,7 @@ run_tutorial <- function(
     shiny_args <- list()
   }
   if (is.null(shiny_args$launch.browser)) {
-    is_interactive <- interactive() ||
+    is_interactive <- rlang::is_interactive() ||
       identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
 
     shiny_args$launch.browser <- if (!is_interactive) {
@@ -138,10 +138,10 @@ validate_tutorial_path_is_dir <- function(path = NULL) {
   }
 
   if (!utils::file_test("-d", path)) {
-    stop.("If `name` is a path to a tutorial, it must be the path to a directory containing a signle tutorial.")
+    stop.("If `name` is a path to a tutorial, it must be the path to a directory containing a single tutorial.")
   }
 
-  rmds <- list.files(path, pattern = "rmd$", ignore.case = TRUE)
+  rmds <- list.files(path, pattern = "\\.rmd$", ignore.case = TRUE)
   if (length(rmds) == 0) {
     stop.("No R Markdown files found in the directory ", path)
   }
@@ -160,7 +160,7 @@ validate_tutorial_path_is_dir <- function(path = NULL) {
 }
 
 clean_tutorial_prerendered <- function(path) {
-  rmds <- list.files(path, pattern = "rmd$", ignore.case = TRUE)
+  rmds <- list.files(path, pattern = "\\.rmd$", ignore.case = TRUE)
   if (length(rmds) == 0) {
     return(FALSE)
   }
@@ -177,8 +177,9 @@ clean_tutorial_prerendered <- function(path) {
     TRUE
   }, error = function(err) {
     msg <- sprintf(
-      'Could not clean shiny prerendered content. Try running `rmarkdown::shiny_prerendered_clean("%s")`',
-      file.path(path, rmds)
+      'Could not clean shiny prerendered content. Error found while running `rmarkdown::shiny_prerendered_clean("%s")`:\n%s',
+      file.path(path, rmds),
+      conditionMessage(err)
     )
     message(msg)
     FALSE
