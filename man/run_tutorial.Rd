@@ -8,9 +8,12 @@ run_tutorial(name = NULL, package = NULL, shiny_args = NULL)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
-directory of installed package).}
+directory of installed package), or the path to a local directory
+containing a learnr tutorial. If \code{package} is provided, \code{name} must be the
+tutorial name.}
 
-\item{package}{Name of package}
+\item{package}{Name of package. If \code{name} is a path to the local directory
+containing a learnr tutorials, then \code{package} should not be provided.}
 
 \item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}

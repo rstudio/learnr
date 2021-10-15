@@ -3,8 +3,11 @@
 #' Run a tutorial which is contained within an R package.
 #'
 #' @param name Tutorial name (subdirectory within \code{tutorials/}
-#'   directory of installed package).
-#' @param package Name of package
+#'   directory of installed package), or the path to a local directory
+#'   containing a learnr tutorial. If `package` is provided, `name` must be the
+#'   tutorial name.
+#' @param package Name of package. If `name` is a path to the local directory
+#'   containing a learnr tutorials, then `package` should not be provided.
 #' @param shiny_args Additional arguments to forward to
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
 #'
@@ -23,20 +26,32 @@
 #' # run basic example within learnr
 #' \dontrun{run_tutorial("hello", "learnr")}
 run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
+  checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
+  checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
 
-  if (is.null(package) && !is.null(name)) {
-    stop.("`package` must be provided if `name` is provided.")
+  # is `name` a valid and existing directory for `rmarkdown::run()`?
+  name <- validate_tutorial_path_is_dir(name)
+  name_is_tutorial_path <- is.null(package) && name$valid
+  name <- name$value
+
+  if (!name_is_tutorial_path && !is.null(name) && is.null(package)) {
+    stop.("`package` must be provided if `name` is the name of a packaged tutorial. Otherwise, `name` must be a directory.")
   }
 
   # works for package = NULL and if package is provided
-  tutorials <- available_tutorials(package = package)
-  if (is.null(name)) {
+  if (!name_is_tutorial_path && is.null(name)) {
+    tutorials <- available_tutorials(package = package)
     message(format(tutorials))
     return(invisible(tutorials))
   }
 
-  # get path to tutorial
-  tutorial_path <- get_tutorial_path(name, package)
+  # get path to tutorial directory
+  tutorial_path <-
+    if (name_is_tutorial_path) {
+      normalizePath(name)
+    } else {
+      get_tutorial_path(name, package)
+    }
 
   # check for necessary tutorial package dependencies
   install_tutorial_dependencies(tutorial_path)
@@ -98,6 +113,34 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
     }
     rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args, render_args = render_args)
   })
+}
+
+validate_tutorial_path_is_dir <- function(path = NULL) {
+  if (is.null(path)) return(list(valid = FALSE))
+  if (!file.exists(path)) {
+    return(list(valid = FALSE, value = path))
+  }
+
+  if (!utils::file_test("-d", path)) {
+    stop.("If `name` is a path to a tutorial, it must be the path to a directory containing a signle tutorial.")
+  }
+
+  rmds <- list.files(path, pattern = "rmd$", ignore.case = TRUE)
+  if (length(rmds) == 0) {
+    stop.("No R Markdown files found in the directory ", path)
+  }
+
+  if (length(rmds) > 1) {
+    if (!"index.Rmd" %in% rmds) {
+      stop.(
+        "Multiple `.Rmd` files found in the directory, but none are named `index.Rmd`.",
+        "\ndirectory: ", path,
+        "\n     rmds: ", paste(rmds, collapse = ", ")
+      )
+    }
+  }
+
+  list(valid = TRUE, value = path)
 }
 
 
