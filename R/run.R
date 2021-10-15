@@ -176,7 +176,11 @@ clean_tutorial_prerendered <- function(path) {
     rmarkdown::shiny_prerendered_clean(file.path(path, rmds))
     TRUE
   }, error = function(err) {
-    message("Could not clean shiny prerendered content for ", file.path(path, rmds))
+    msg <- sprintf(
+      'Could not clean shiny prerendered content. Try running `rmarkdown::shiny_prerendered_clean("%s")`',
+      file.path(path, rmds)
+    )
+    message(msg)
     FALSE
   })
 }
