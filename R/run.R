@@ -36,10 +36,14 @@ run_tutorial <- function(
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
 
-  # is `name` a valid and existing directory for `rmarkdown::run()`?
-  name <- validate_tutorial_path_is_dir(name)
-  name_is_tutorial_path <- is.null(package) && name$valid
-  name <- name$value
+  if (is.null(package)) {
+    # is `name` a valid and existing directory for `rmarkdown::run()`?
+    name <- validate_tutorial_path_is_dir(name)
+    name_is_tutorial_path <- name$valid
+    name <- name$value
+  } else {
+    name_is_tutorial_path <- FALSE
+  }
 
   if (!name_is_tutorial_path && !is.null(name) && is.null(package)) {
     stop.("`package` must be provided if `name` is the name of a packaged tutorial. Otherwise, `name` must be a directory.")
