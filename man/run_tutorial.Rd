@@ -4,7 +4,7 @@
 \alias{run_tutorial}
 \title{Run a tutorial}
 \usage{
-run_tutorial(name = NULL, package = NULL, shiny_args = NULL)
+run_tutorial(name = NULL, package = NULL, shiny_args = NULL, clean = FALSE)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
@@ -17,6 +17,9 @@ containing a learnr tutorials, then \code{package} should not be provided.}
 
 \item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}
+
+\item{clean}{When \code{TRUE}, the shiny prerendered HTML files are removed and
+the tutorial is re-rendered prior to starting the tutorial.}
 }
 \description{
 Run a tutorial which is contained within an R package.

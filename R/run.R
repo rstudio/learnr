@@ -10,6 +10,8 @@
 #'   containing a learnr tutorials, then `package` should not be provided.
 #' @param shiny_args Additional arguments to forward to
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
+#' @param clean When `TRUE`, the shiny prerendered HTML files are removed and
+#'   the tutorial is re-rendered prior to starting the tutorial.
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
@@ -25,7 +27,12 @@
 #'
 #' # run basic example within learnr
 #' \dontrun{run_tutorial("hello", "learnr")}
-run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
+run_tutorial <- function(
+  name = NULL,
+  package = NULL,
+  shiny_args = NULL,
+  clean = FALSE
+) {
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
 
@@ -99,6 +106,10 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
       )
     })
 
+  if (isTRUE(clean)) {
+    clean_tutorial_prerendered(tutorial_path)
+  }
+
   # ensure hooks are available for a tutorial and clean up after run_tutorial()
   if (!detect_installed_knitr_hooks()) {
     withr::defer(remove_knitr_hooks())
@@ -141,6 +152,28 @@ validate_tutorial_path_is_dir <- function(path = NULL) {
   }
 
   list(valid = TRUE, value = path)
+}
+
+clean_tutorial_prerendered <- function(path) {
+  rmds <- list.files(path, pattern = "rmd$", ignore.case = TRUE)
+  if (length(rmds) == 0) {
+    return(FALSE)
+  }
+
+  if (length(rmds) > 1) {
+    if (!"index.Rmd" %in% rmds) {
+      return(FALSE)
+    }
+    rmds <- "index.Rmd"
+  }
+
+  tryCatch({
+    rmarkdown::shiny_prerendered_clean(file.path(path, rmds))
+    TRUE
+  }, error = function(err) {
+    message("Could not clean shiny prerendered content for ", file.path(path, rmds))
+    FALSE
+  })
 }
 
 
