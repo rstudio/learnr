@@ -64,13 +64,18 @@ run_tutorial <- function(
   install_tutorial_dependencies(tutorial_path)
 
   # provide launch_browser if it's not specified in the shiny_args
-  if (is.null(shiny_args))
+  if (is.null(shiny_args)) {
     shiny_args <- list()
+  }
   if (is.null(shiny_args$launch.browser)) {
-    shiny_args$launch.browser <- (
-      interactive() ||
-        identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
-    )
+    is_interactive <- interactive() ||
+      identical(Sys.getenv("LEARNR_INTERACTIVE", "0"), "1")
+
+    shiny_args$launch.browser <- if (!is_interactive) {
+      utils::browseURL
+    } else {
+      getOption("viewer", utils::browseURL)
+    }
   }
 
   render_args <-
