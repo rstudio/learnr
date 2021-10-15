@@ -463,9 +463,10 @@ tutorial_knitr_options <- function() {
   }
 
   list(
-    # set global tutorial option which we can use as a basis for hooks
-    # (this is so we don't collide with hooks set by the user or
-    # by other packages or Rmd output formats)
+    # learnr uses `tutorial` for options and hooks, and we also globally set the
+    # chunk option `tutorial = TRUE`. This allows the learnr tutorial hooks to
+    # visit every chunk without colliding with hooks or options set by other
+    # packages or Rmd formats.
     opts_chunk = list(tutorial = TRUE),
     opts_hooks = list(tutorial = tutorial_opts_hook),
     knit_hooks = list(tutorial = tutorial_knit_hook)
