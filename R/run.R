@@ -133,6 +133,11 @@ run_tutorial <- function(
 
 validate_tutorial_path_is_dir <- function(path = NULL) {
   if (is.null(path)) return(list(valid = FALSE))
+
+  # remove trailing slash, otherwise file.exists() returns FALSE on Windows
+  # even if the directory exits. At this point we want to check that the input
+  # does or doesn't exist. If it doesn't we don't need to do any more tests
+  path <- sub("/$", "", path)
   if (!file.exists(path)) {
     return(list(valid = FALSE, value = path))
   }
