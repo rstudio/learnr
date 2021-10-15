@@ -13,12 +13,7 @@ detect_installed_knitr_hooks <- function() {
   is.function(tutorial_knit_hook)
 }
 
-install_knitr_hooks <- function() {
-  # set global tutorial option which we can use as a basis for hooks
-  # (this is so we don't collide with hooks set by the user or
-  # by other packages or Rmd output formats)
-  knitr::opts_chunk$set(tutorial = TRUE)
-
+tutorial_knitr_options <- function() {
   # helper to check for runtime: shiny_prerendered being active
   is_shiny_prerendered_active <- function() {
     identical(knitr::opts_knit$get("rmarkdown.runtime"),"shiny_prerendered")
@@ -186,7 +181,7 @@ install_knitr_hooks <- function() {
   }
 
   # hook to turn off evaluation/highlighting for exercise related chunks
-  knitr::opts_hooks$set(tutorial = function(options) {
+  tutorial_opts_hook <-  function(options) {
 
     # check for chunk type
     exercise_chunk <- is_exercise_chunk(options)
@@ -285,10 +280,10 @@ install_knitr_hooks <- function() {
 
     # return modified options
     options
-  })
+  }
 
   # hook to amend output for exercise related chunks
-  knitr::knit_hooks$set(tutorial = function(before, options, envir) {
+  tutorial_knit_hook <- function(before, options, envir) {
 
     # helper to produce an exercise wrapper div w/ the specified class
     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
@@ -465,7 +460,23 @@ install_knitr_hooks <- function() {
       }
 
     }
-  })
+  }
+
+  list(
+    # set global tutorial option which we can use as a basis for hooks
+    # (this is so we don't collide with hooks set by the user or
+    # by other packages or Rmd output formats)
+    opts_chunk = list(tutorial = TRUE),
+    opts_hooks = list(tutorial = tutorial_opts_hook),
+    knit_hooks = list(tutorial = tutorial_knit_hook)
+  )
+}
+
+install_knitr_hooks <- function() {
+  knit_opts <- tutorial_knitr_options()
+  knitr::opts_chunk$set(tutorial = knit_opts$opts_chunk$tutorial)
+  knitr::opts_hooks$set(tutorial = knit_opts$opts_hooks$tutorial)
+  knitr::knit_hooks$set(tutorial = knit_opts$knit_hooks$tutorial)
 }
 
 remove_knitr_hooks <- function() {

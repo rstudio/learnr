@@ -133,6 +133,9 @@ tutorial <- function(fig_width = 6.5,
     args = args,
     ext = ".html")
 
+  tutorial_opts <- tutorial_knitr_options()
+  knitr_options <- utils::modifyList(knitr_options, tutorial_opts)
+
   # set 1000 as the default maximum number of rows in paged tables
   knitr_options$opts_chunk$max.print <- 1000
 
