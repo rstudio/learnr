@@ -22,6 +22,8 @@
 #'   `shiny.launch.browser` global option to in your current R session to set
 #'   the default behavior when the tutorial is run. See [the shiny options
 #'   documentation][shiny::getShinyOption()] for more information.
+#' @param ... Unused. Included for future expansion and to ensure named
+#'   arguments are used.
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
@@ -40,10 +42,12 @@
 run_tutorial <- function(
   name = NULL,
   package = NULL,
+  ...,
   shiny_args = NULL,
   clean = FALSE,
   as_rstudio_job = NULL
 ) {
+  ellipsis::check_dots_empty()
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   if (!is.null(name)) {

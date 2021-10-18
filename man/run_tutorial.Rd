@@ -7,6 +7,7 @@
 run_tutorial(
   name = NULL,
   package = NULL,
+  ...,
   shiny_args = NULL,
   clean = FALSE,
   as_rstudio_job = NULL
@@ -20,6 +21,9 @@ tutorial name.}
 
 \item{package}{Name of package. If \code{name} is a path to the local directory
 containing a learnr tutorials, then \code{package} should not be provided.}
+
+\item{...}{Unused. Included for future expansion and to ensure named
+arguments are used.}
 
 \item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}
