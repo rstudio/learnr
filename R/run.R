@@ -46,7 +46,7 @@ run_tutorial <- function(
 ) {
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
-  name <- sub("/$", "", name)
+  name <- sub("/+$", "", name)
 
   if (is.null(package)) {
     # is `name` a valid and existing directory for `rmarkdown::run()`?
@@ -162,7 +162,7 @@ run_validate_tutorial_path_is_dir <- function(path = NULL) {
   # remove trailing slash, otherwise file.exists() returns FALSE on Windows
   # even if the directory exits. At this point we want to check that the input
   # does or doesn't exist. If it doesn't we don't need to do any more tests
-  path <- sub("/$", "", path)
+  path <- sub("/+$", "", path)
   if (!file.exists(path)) {
     return(list(valid = FALSE, value = path))
   }
