@@ -378,15 +378,23 @@ run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean
   host <- if (is.null(shiny_args$host)) "127.0.0.1" else shiny_args$host
   url <- sprintf("http://%s:%s", sub("^https?://", "", host), shiny_args$port)
 
-  script <- sprintf(
-    'library(learnr)
-    run_tutorial(%s, %s, shiny_args = %s, clean = %s)
-    ',
-    if (is.null(name)) "NULL" else paste0('"', name, '"'),
-    if (is.null(package)) "NULL" else paste0('"', package, '"'),
-    dput_to_string(shiny_args),
-    if (isTRUE(clean)) "TRUE" else "FALSE"
+  call <- substitute(
+    run_tutorial(
+      name = name,
+      package = package,
+      shiny_args = shiny_args,
+      clean = clean,
+      as_rstudio_job = FALSE
+    ),
+    list(
+      name = name,
+      package = package,
+      shiny_args = shiny_args,
+      clean = clean
+    )
   )
+
+  script <- paste(c("library(learnr)", deparse(call)), collapse = "\n")
 
   tmpfile <- tempfile("run_tutorial", fileext = ".R")
   writeLines(script, tmpfile)
