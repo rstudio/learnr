@@ -50,9 +50,6 @@ run_tutorial <- function(
   ellipsis::check_dots_empty()
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
-  if (!is.null(name)) {
-    name <- sub("/+$", "", name)
-  }
 
   if (is.null(package)) {
     # is `name` a valid and existing directory for `rmarkdown::run()`?
@@ -388,7 +385,7 @@ run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean
   tmpfile <- tempfile("run_tutorial", fileext = ".R")
   writeLines(script, tmpfile)
 
-  job_name <- if (file.exists(name)) {
+  job_name <- if (file.exists(sub("/+$", "", name))) {
     rmd <- run_find_tutorial_rmd(name)
     if (!is.null(rmd)) {
       rmarkdown::yaml_front_matter(file.path(name, rmd))$title
