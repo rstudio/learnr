@@ -37,7 +37,7 @@ is available and can run jobs. Set to \code{FALSE} to disable and to run the
 tutorial in the current R session.
 
 When running as an RStudio job, \code{run_tutorial()} sets or overrides the
-\code{launch.browser} option for \code{shiny_args}. You can isntead use the
+\code{launch.browser} option for \code{shiny_args}. You can instead use the
 \code{shiny.launch.browser} global option to in your current R session to set
 the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
 }
