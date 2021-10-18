@@ -193,19 +193,36 @@ run_validate_tutorial_path_is_dir <- function(path = NULL) {
 }
 
 run_find_tutorial_rmd <- function(path) {
-  rmds <- list.files(path, pattern = "\\.rmd$", ignore.case = TRUE)
+  # TODO: replace when rstudio/rmarkdown#2236 is resolved
+  # see https://github.com/rstudio/rmarkdown/blob/0af6b355/R/shiny.R#L69-L113
+  # with a couple shortcuts because we know we need a learnr tutorial
+  rmds <- list.files(path, pattern = "^[^_].*\\.[Rrq][Mm][Dd]$")
   if (length(rmds) == 0) {
     return(NULL)
   }
 
-  if (length(rmds) > 1) {
-    if (!"index.Rmd" %in% rmds) {
-      return(NULL)
-    }
-    return("index.Rmd")
+  if (length(rmds) == 1) {
+    return(rmds)
   }
 
-  return(rmds)
+  rmds_is_shiny <- vapply(rmds, FUN.VALUE = logical(1), function(x) {
+    # this is one shortcut, we need a shiny prerendered or shinyrmd document
+    runtime <- rmarkdown::yaml_front_matter(file.path(path, x))
+    identical(runtime, "shinyrmd") || identical(runtime, "shiny_prerendered")
+  })
+
+  rmds <- rmds[rmds_is_shiny]
+
+  if (length(rmds) == 1) {
+    return(rmds)
+  }
+
+  primary_rmds <- grepl("^(index|ui)[.]", tolower(rmds))
+  if (sum(primary_rmds) == 1) {
+    return(rmds[primary_rmds])
+  }
+
+  NULL
 }
 
 run_clean_tutorial_prerendered <- function(path) {
