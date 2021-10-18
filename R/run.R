@@ -38,7 +38,7 @@ run_tutorial <- function(
 
   if (is.null(package)) {
     # is `name` a valid and existing directory for `rmarkdown::run()`?
-    name <- validate_tutorial_path_is_dir(name)
+    name <- run_validate_tutorial_path_is_dir(name)
     name_is_tutorial_path <- name$valid
     name <- name$value
   } else {
@@ -116,7 +116,7 @@ run_tutorial <- function(
     })
 
   if (isTRUE(clean)) {
-    clean_tutorial_prerendered(tutorial_path)
+    run_clean_tutorial_prerendered(tutorial_path)
   }
 
   # ensure hooks are available for a tutorial and clean up after run_tutorial()
@@ -135,7 +135,7 @@ run_tutorial <- function(
   })
 }
 
-validate_tutorial_path_is_dir <- function(path = NULL) {
+run_validate_tutorial_path_is_dir <- function(path = NULL) {
   if (is.null(path)) return(list(valid = FALSE))
 
   # remove trailing slash, otherwise file.exists() returns FALSE on Windows
@@ -168,17 +168,26 @@ validate_tutorial_path_is_dir <- function(path = NULL) {
   list(valid = TRUE, value = path)
 }
 
-clean_tutorial_prerendered <- function(path) {
+run_find_tutorial_rmd <- function(path) {
   rmds <- list.files(path, pattern = "\\.rmd$", ignore.case = TRUE)
   if (length(rmds) == 0) {
-    return(FALSE)
+    return(NULL)
   }
 
   if (length(rmds) > 1) {
     if (!"index.Rmd" %in% rmds) {
-      return(FALSE)
+      return(NULL)
     }
-    rmds <- "index.Rmd"
+    return("index.Rmd")
+  }
+
+  return(rmds)
+}
+
+run_clean_tutorial_prerendered <- function(path) {
+  rmd <- run_find_tutorial_rmd(path)
+  if (is.null(rmd)) {
+    return(FALSE)
   }
 
   tryCatch({
@@ -280,3 +289,12 @@ safe <- function(expr, ..., show = TRUE, env = safe_env()) {
     })
   })
 }
+
+can_run_rstudio_job <- function() {
+  if (!requireNamespace("rstudioapi", quietly = TRUE) || !rlang::is_interactive()) {
+    return(FALSE)
+  }
+  # rstudioapi::jobRunScript is internally called runScriptJob
+  rstudioapi::hasFun("runScriptJob")
+}
+

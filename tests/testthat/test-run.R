@@ -20,40 +20,46 @@ test_that("run_tutorial() with bad inputs", {
   expect_error(run_tutorial(package = letters[1:3]))
 })
 
-test_that("validate_tutorial_path_is_dir()", {
+test_that("validating and finding tutorials", {
   # returns NULL if NULL
-  expect_null(validate_tutorial_path_is_dir(NULL)$value)
-  expect_equal(validate_tutorial_path_is_dir(NULL), list(valid = FALSE))
+  expect_null(run_validate_tutorial_path_is_dir(NULL)$value)
+  expect_equal(run_validate_tutorial_path_is_dir(NULL), list(valid = FALSE))
 
   # returns name if not an existing file
-  expect_equal(validate_tutorial_path_is_dir("foo"), list(valid = FALSE, value = "foo"))
+  expect_equal(run_validate_tutorial_path_is_dir("foo"), list(valid = FALSE, value = "foo"))
+  expect_null(run_find_tutorial_rmd("foo"))
 
   tmpdir <- tempfile()
   withr::defer(unlink(tmpdir, recursive = TRUE))
   expect_equal(
-    validate_tutorial_path_is_dir(tmpdir),
+    run_validate_tutorial_path_is_dir(tmpdir),
     list(valid = FALSE, value = tmpdir)
   )
+  expect_null(run_find_tutorial_rmd(tmpdir))
 
   # returns error if it's a directory without any Rmds
   dir.create(tmpdir)
-  expect_error(validate_tutorial_path_is_dir(tmpdir), "No R Markdown files")
+  expect_error(run_validate_tutorial_path_is_dir(tmpdir), "No R Markdown files")
+  expect_null(run_find_tutorial_rmd(tmpdir))
 
   # returns directory if it exists with one tutorial
   file.create(file.path(tmpdir, "one.Rmd"))
   expect_equal(
-    validate_tutorial_path_is_dir(tmpdir),
+    run_validate_tutorial_path_is_dir(tmpdir),
     list(valid = TRUE, value = tmpdir)
   )
+  expect_equal(run_find_tutorial_rmd(tmpdir), "one.Rmd")
 
   # returns error if there's more than one tutorial in that directory
   file.create(file.path(tmpdir, "two.Rmd"))
-  expect_error(validate_tutorial_path_is_dir(tmpdir), "Multiple `.Rmd` files")
+  expect_error(run_validate_tutorial_path_is_dir(tmpdir), "Multiple `.Rmd` files")
+  expect_null(run_find_tutorial_rmd(tmpdir))
 
   # returns valid if directory has an index.Rmd file
   file.create(file.path(tmpdir, "index.Rmd"))
   expect_equal(
-    validate_tutorial_path_is_dir(tmpdir),
+    run_validate_tutorial_path_is_dir(tmpdir),
     list(valid = TRUE, value = tmpdir)
   )
+  expect_equal(run_find_tutorial_rmd(tmpdir), "index.Rmd")
 })
