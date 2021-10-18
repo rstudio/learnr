@@ -80,7 +80,7 @@ Suggests:
     callr,
     httpuv,
     later,
-    rstudioapi,
+    rstudioapi (>= 0.11),
     shinytest (>= 1.5.0),
     testthat (>= 2.1.0)
 VignetteBuilder:
