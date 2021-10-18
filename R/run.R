@@ -363,9 +363,9 @@ run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean
       job_call_parent(
         sprintf('getOption("shiny.launch.browser", utils::browseURL)("%s")', url)
       )
-      message("✓ Opened tutorial available at ", url)
+      message("\u2713 Opened tutorial available at ", url)
     }, error = function(e) {
-      message("✓ Open the tutorial in your browser: ", url)
+      message("\u2713 Open the tutorial in your browser: ", url)
     })
     message("! Stop or cancel this job to stop running the tutorial")
     message("+", strrep("-", getOption("width", 60) * 0.9), "+\n")
