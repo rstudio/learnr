@@ -25,6 +25,11 @@ learnr (development version)
 * Tutorial authors can now access the current state of the user's progress in a tutorial with `get_tutorial_state()` or get information about the current tutorial with `get_tutorial_info()`. ([#562](https://github.com/rstudio/learnr/pull/562))
 * Tutorial state is now returned by `get_tutorial_state()` in order of appearance in the tutorial. The full list of exercises and questions is included as `items` in the list returned by `get_tutorial_info()`. ([#570](https://github.com/rstudio/learnr/issues/570), [#571](https://github.com/rstudio/learnr/pull/571))
 * Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. `____`. The pattern for blanks can be set with the `exercise.blanks` chunk or tutorial option. ([#547](https://github.com/rstudio/learnr/pull/547))
+* Running learnr tutorials with `run_tutorial()` has been improved ([#601](https://github.com/rstudio/learnr/pull/601)):
+    * **Breaking change:** names must be provided for all arguments to `run_tutorial()` other than `name` and `package`.
+    * `run_tutorial()` gains a `clean` argument to completely re-render the tutorial if needed.
+    * The `name` argument was modified to allow users to specify a local directory containing a learnr tutorial. 
+    * learnr tutorials are now run as background RStudio jobs and open in the viewer pane when `run_tutorial()` is called in RStudio. This default is disabled in non-interactive settings or when  `as_rstudio_job = FALSE`. You can control where the tutorial is opened with the `shiny.launch.browser` global option.
 
 ## Minor new features and improvements
 
