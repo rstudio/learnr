@@ -174,44 +174,38 @@ run_validate_tutorial_path_is_dir <- function(path = NULL) {
     stop.("If `name` is a path to a tutorial, it must be the path to a directory containing a single tutorial.")
   }
 
-  rmds <- list.files(path, pattern = "\\.rmd$", ignore.case = TRUE)
-  if (length(rmds) == 0) {
-    stop.("No R Markdown files found in the directory ", path)
-  }
-
-  if (length(rmds) > 1) {
-    if (!"index.Rmd" %in% rmds) {
-      stop.(
-        "Multiple `.Rmd` files found in the directory, but none are named `index.Rmd`.",
-        "\ndirectory: ", path,
-        "\n     rmds: ", paste(rmds, collapse = ", ")
-      )
-    }
-  }
+  run_find_tutorial_rmd(path, stop_if_not = TRUE)
 
   list(valid = TRUE, value = path)
 }
 
-run_find_tutorial_rmd <- function(path) {
+run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
   # TODO: replace when rstudio/rmarkdown#2236 is resolved
   # see https://github.com/rstudio/rmarkdown/blob/0af6b355/R/shiny.R#L69-L113
   # with a couple shortcuts because we know we need a learnr tutorial
   rmds <- list.files(path, pattern = "^[^_].*\\.[Rrq][Mm][Dd]$")
+
   if (length(rmds) == 0) {
+    if (isTRUE(stop_if_not)) {
+      stop.("No R Markdown files found in the directory ", path)
+    }
     return(NULL)
   }
 
-  if (length(rmds) == 1) {
-    return(rmds)
-  }
-
-  rmds_is_shiny <- vapply(rmds, FUN.VALUE = logical(1), function(x) {
+  is_shiny_rmd <- vapply(rmds, FUN.VALUE = logical(1), function(x) {
     # this is one shortcut, we need a shiny prerendered or shinyrmd document
-    runtime <- rmarkdown::yaml_front_matter(file.path(path, x))
+    runtime <- rmarkdown::yaml_front_matter(file.path(path, x))[["runtime"]]
     identical(runtime, "shinyrmd") || identical(runtime, "shiny_prerendered")
   })
 
-  rmds <- rmds[rmds_is_shiny]
+  rmds <- rmds[is_shiny_rmd]
+
+  if (length(rmds) == 0) {
+    if (isTRUE(stop_if_not)) {
+      stop.("No `shiny_prerenderd` or `shinyrmd` R Markdown files found in the directory ", path)
+    }
+    return(NULL)
+  }
 
   if (length(rmds) == 1) {
     return(rmds)
@@ -220,6 +214,15 @@ run_find_tutorial_rmd <- function(path) {
   primary_rmds <- grepl("^(index|ui)[.]", tolower(rmds))
   if (sum(primary_rmds) == 1) {
     return(rmds[primary_rmds])
+  }
+
+  if (isTRUE(stop_if_not)) {
+    stop.(
+      "Unable to determine which of multiple R Markdown files is the primary app. ",
+      "Name the primary app `index` with extension `.Rmd` or `.qmd`.",
+      "\ndirectory: ", path,
+      "\n     rmds: ", paste(rmds, collapse = ", ")
+    )
   }
 
   NULL

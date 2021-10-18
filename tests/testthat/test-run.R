@@ -43,7 +43,18 @@ test_that("validating and finding tutorials", {
   expect_null(run_find_tutorial_rmd(tmpdir))
 
   # returns directory if it exists with one tutorial
-  file.create(file.path(tmpdir, "one.Rmd"))
+  writeLines(
+    c("---", "runtime: shiny_prerendered", "---"),
+    file.path(tmpdir, "one.Rmd")
+  )
+  expect_equal(
+    run_validate_tutorial_path_is_dir(tmpdir),
+    list(valid = TRUE, value = tmpdir)
+  )
+  expect_equal(run_find_tutorial_rmd(tmpdir), "one.Rmd")
+
+  # returns directory if more than one Rmd but one is clearly a tutorial
+  file.create(file.path(tmpdir, "two.Rmd"))
   expect_equal(
     run_validate_tutorial_path_is_dir(tmpdir),
     list(valid = TRUE, value = tmpdir)
@@ -51,12 +62,18 @@ test_that("validating and finding tutorials", {
   expect_equal(run_find_tutorial_rmd(tmpdir), "one.Rmd")
 
   # returns error if there's more than one tutorial in that directory
-  file.create(file.path(tmpdir, "two.Rmd"))
-  expect_error(run_validate_tutorial_path_is_dir(tmpdir), "Multiple `.Rmd` files")
+  writeLines(
+    c("---", "runtime: shiny_prerendered", "---"),
+    file.path(tmpdir, "two.Rmd")
+  )
+  expect_error(run_validate_tutorial_path_is_dir(tmpdir), "multiple R Markdown files")
   expect_null(run_find_tutorial_rmd(tmpdir))
 
   # returns valid if directory has an index.Rmd file
-  file.create(file.path(tmpdir, "index.Rmd"))
+  writeLines(
+    c("---", "runtime: shiny_prerendered", "---"),
+    file.path(tmpdir, "index.Rmd")
+  )
   expect_equal(
     run_validate_tutorial_path_is_dir(tmpdir),
     list(valid = TRUE, value = tmpdir)

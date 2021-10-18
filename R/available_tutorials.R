@@ -70,18 +70,12 @@ available_tutorials_for_package <- function(package) {
   tutorial_folders <- list.dirs(tutorials_dir, full.names = TRUE, recursive = FALSE)
   names(tutorial_folders) <- basename(tutorial_folders)
   rmd_info <- lapply(tutorial_folders, function(tut_dir) {
-    dir_rmd_files <- dir(tut_dir, pattern = "\\.Rmd$", recursive = FALSE, full.names = TRUE)
-    dir_rmd_files_length <- length(dir_rmd_files)
-    if (dir_rmd_files_length == 0) {
+    dir_rmd_file <- run_find_tutorial_rmd(tut_dir)
+    if (length(dir_rmd_file) == 0) {
       return(NULL)
     }
-    if (dir_rmd_files_length > 1) {
-      warning(
-        "Found multiple .Rmd files in \"", package, "\"'s \"", tut_dir, "\" folder.",
-        "  Using: ", dir_rmd_files[1]
-      )
-    }
-    yaml_front_matter <- rmarkdown::yaml_front_matter(dir_rmd_files[1])
+    dir_rmd_file <- file.path(tut_dir, dir_rmd_file)
+    yaml_front_matter <- rmarkdown::yaml_front_matter(dir_rmd_file)
     data.frame(
       package = package,
       name = basename(tut_dir),
