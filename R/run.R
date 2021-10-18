@@ -12,6 +12,16 @@
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
 #' @param clean When `TRUE`, the shiny prerendered HTML files are removed and
 #'   the tutorial is re-rendered prior to starting the tutorial.
+#' @param as_rstudio_job Runs the tutorial in the background as an RStudio job.
+#'   This is the default behavior when `run_tutorial()` detects that RStudio
+#'   is available and can run jobs. Set to `FALSE` to disable and to run the
+#'   tutorial in the current R session.
+#'
+#'   When running as an RStudio job, `run_tutorial()` sets or overrides the
+#'   `launch.browser` option for `shiny_args`. You can isntead use the
+#'   `shiny.launch.browser` global option to in your current R session to set
+#'   the default behavior when the tutorial is run. See [the shiny options
+#'   documentation][shiny::getShinyOption()] for more information.
 #'
 #' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
 #'   the tutorial Rmd should have already been rendered as part of the
@@ -31,10 +41,12 @@ run_tutorial <- function(
   name = NULL,
   package = NULL,
   shiny_args = NULL,
-  clean = FALSE
+  clean = FALSE,
+  as_rstudio_job = NULL
 ) {
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
+  name <- sub("/$", "", name)
 
   if (is.null(package)) {
     # is `name` a valid and existing directory for `rmarkdown::run()`?
@@ -80,6 +92,15 @@ run_tutorial <- function(
     } else {
       getOption("viewer", utils::browseURL)
     }
+  }
+
+  as_rstudio_job <-
+    (isTRUE(as_rstudio_job) && can_run_rstudio_job(TRUE)) ||
+    (is.null(as_rstudio_job) && can_run_rstudio_job())
+
+  if (as_rstudio_job) {
+    run_tutorial_as_job(name, package, shiny_args = shiny_args, clean = clean)
+    return(invisible())
   }
 
   render_args <-
@@ -290,11 +311,93 @@ safe <- function(expr, ..., show = TRUE, env = safe_env()) {
   })
 }
 
-can_run_rstudio_job <- function() {
-  if (!requireNamespace("rstudioapi", quietly = TRUE) || !rlang::is_interactive()) {
+can_run_rstudio_job <- function(stop_if_not = FALSE) {
+  if (!rlang::is_interactive()) {
     return(FALSE)
   }
+
+  has_needed_pkgs <- vapply(
+    c("rstudioapi", "httpuv"), requireNamespace, logical(1), quietly = TRUE
+  )
+
+  if (any(!has_needed_pkgs)) {
+    if (isTRUE(stop_if_not)) {
+      pkgs <- c("rstudioapi", "httpuv")[!has_needed_pkgs]
+      msg_err <- paste(
+        ngettext(
+          length(pkgs),
+          sprintf("The %s package is", pkgs[1]),
+          sprintf("The %s packages are", knitr::combine_words(pkgs))
+        ),
+        "required to run a tutorial as an RStudio job."
+      )
+      pkgs <- paste(pkgs, collapse = '", "')
+      msg <- c(msg_err, "i" = sprintf('install.packages(c("%s"))', pkgs))
+      rlang::abort(msg)
+    }
+    return(FALSE)
+  }
+
   # rstudioapi::jobRunScript is internally called runScriptJob
   rstudioapi::hasFun("runScriptJob")
 }
 
+run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean = FALSE) {
+  if (!can_run_rstudio_job() || !requireNamespace("httpuv", quietly = TRUE)) {
+    stop("Cannot run tutorial as RStudio job")
+  }
+
+  if (is.null(shiny_args$port)) {
+    shiny_args$port <- httpuv::randomPort()
+  }
+
+  shiny_args$launch.browser <- function(url) {
+    message("\n+", strrep("-", getOption("width", 60) * 0.9), "+")
+    tryCatch({
+      job_call_parent <- function(expr) {
+        expr <- rlang::parse_expr(expr)
+        utils::getFromNamespace("callRemote", "rstudioapi")(expr, .GlobalEnv)
+      }
+      job_call_parent(
+        sprintf('getOption("shiny.launch.browser", utils::browseURL)("%s")', url)
+      )
+      message("✓ Opened tutorial available at ", url)
+    }, error = function(e) {
+      message("✓ Open the tutorial in your browser: ", url)
+    })
+    message("! Stop or cancel this job to stop running the tutorial")
+    message("+", strrep("-", getOption("width", 60) * 0.9), "+\n")
+  }
+
+  host <- if (is.null(shiny_args$host)) "127.0.0.1" else shiny_args$host
+  url <- sprintf("http://%s:%s", sub("^https?://", "", host), shiny_args$port)
+
+  script <- sprintf(
+    'library(learnr)
+    run_tutorial(%s, %s, shiny_args = %s, clean = %s)
+    ',
+    if (is.null(name)) "NULL" else paste0('"', name, '"'),
+    if (is.null(package)) "NULL" else paste0('"', package, '"'),
+    dput_to_string(shiny_args),
+    if (isTRUE(clean)) "TRUE" else "FALSE"
+  )
+
+  tmpfile <- tempfile("run_tutorial", fileext = ".R")
+  writeLines(script, tmpfile)
+
+  job_name <- if (file.exists(name)) {
+    rmd <- run_find_tutorial_rmd(name)
+    if (!is.null(rmd)) {
+      rmarkdown::yaml_front_matter(file.path(name, rmd))$title
+    }
+  } else {
+    sprintf("%s {%s}", name, package)
+  }
+
+  rstudioapi::jobRunScript(
+    path = tmpfile,
+    workingDir = getwd(),
+    name = job_name
+  )
+  invisible(url)
+}

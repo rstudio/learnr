@@ -4,7 +4,13 @@
 \alias{run_tutorial}
 \title{Run a tutorial}
 \usage{
-run_tutorial(name = NULL, package = NULL, shiny_args = NULL, clean = FALSE)
+run_tutorial(
+  name = NULL,
+  package = NULL,
+  shiny_args = NULL,
+  clean = FALSE,
+  as_rstudio_job = NULL
+)
 }
 \arguments{
 \item{name}{Tutorial name (subdirectory within \code{tutorials/}
@@ -20,6 +26,16 @@ containing a learnr tutorials, then \code{package} should not be provided.}
 
 \item{clean}{When \code{TRUE}, the shiny prerendered HTML files are removed and
 the tutorial is re-rendered prior to starting the tutorial.}
+
+\item{as_rstudio_job}{Runs the tutorial in the background as an RStudio job.
+This is the default behavior when \code{run_tutorial()} detects that RStudio
+is available and can run jobs. Set to \code{FALSE} to disable and to run the
+tutorial in the current R session.
+
+When running as an RStudio job, \code{run_tutorial()} sets or overrides the
+\code{launch.browser} option for \code{shiny_args}. You can isntead use the
+\code{shiny.launch.browser} global option to in your current R session to set
+the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
 }
 \description{
 Run a tutorial which is contained within an R package.
