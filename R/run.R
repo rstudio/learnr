@@ -18,7 +18,7 @@
 #'   tutorial in the current R session.
 #'
 #'   When running as an RStudio job, `run_tutorial()` sets or overrides the
-#'   `launch.browser` option for `shiny_args`. You can isntead use the
+#'   `launch.browser` option for `shiny_args`. You can instead use the
 #'   `shiny.launch.browser` global option to in your current R session to set
 #'   the default behavior when the tutorial is run. See [the shiny options
 #'   documentation][shiny::getShinyOption()] for more information.
@@ -328,18 +328,7 @@ can_run_rstudio_job <- function(stop_if_not = FALSE) {
 
   if (any(!has_needed_pkgs)) {
     if (isTRUE(stop_if_not)) {
-      pkgs <- c("rstudioapi", "httpuv")[!has_needed_pkgs]
-      msg_err <- paste(
-        ngettext(
-          length(pkgs),
-          sprintf("The %s package is", pkgs[1]),
-          sprintf("The %s packages are", knitr::combine_words(pkgs))
-        ),
-        "required to run a tutorial as an RStudio job."
-      )
-      pkgs <- paste(pkgs, collapse = '", "')
-      msg <- c(msg_err, "i" = sprintf('install.packages(c("%s"))', pkgs))
-      rlang::abort(msg)
+      rlang::check_installed(c("rstudioapi", "httpuv"), "Required to run a tutorial as an RStudio job")
     }
     return(FALSE)
   }
