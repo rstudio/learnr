@@ -3,11 +3,13 @@
 # If there is a valid label, then attach the server env to allow for local overrides of functions
 auto_complete_r <- function(line, label = NULL, server_env = NULL) {
 
-  # If the last line starts with a `#`, then it should be treated as a comment
-  # No completions will be found if the last line is in a quote
-  # If the line is within a quote then no completions will be found, so pre-emptively returning here is ok
+  # If the last line includes comments then we don't return any completions.
+  # It's okay to consider only the last line for comments: Comment detection
+  # takes into account quotes on the same line, but `quotes = FALSE` in the
+  # completion settings below ensures completions aren't returned if the last
+  # line is part of a multi-line quote.
   last_line <- tail(strsplit(line, "\n")[[1]], 1)
-  if (grepl("^\\s*#", last_line)) {
+  if (detect_comment(last_line)) {
     # If a comment is found, return `list()` to signify no completions are found
     # (Similar to the output of Map(list, list()))
     return(list())
@@ -73,4 +75,37 @@ auto_complete_r <- function(line, label = NULL, server_env = NULL) {
 
   # return completions
   as.list(result)
+}
+
+detect_comment <- function(line = "") {
+  line <- strsplit(line, "")[[1]]
+  quote_str <- ""
+  in_quote <- FALSE
+  in_escape <- FALSE
+  for (char in line) {
+    if (identical(char, "\\")) {
+      in_escape <- TRUE
+      next
+    }
+    if (char %in% c("'", '"')) {
+      if (in_escape) {
+        in_escape <- FALSE
+      } else if (identical(quote_str, "")) {
+        in_quote <- TRUE
+        quote_str <- char
+      } else if (identical(char, quote_str)) {
+        in_quote <- FALSE
+        quote_str <- ""
+      } else {
+        # ignore a quote within a quote
+      }
+      next
+    }
+    in_escape <- FALSE
+    if (!identical(char, "#")) next
+    if (in_quote) next
+    return(TRUE)
+  }
+
+  FALSE
 }

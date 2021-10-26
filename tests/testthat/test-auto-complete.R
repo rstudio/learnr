@@ -20,6 +20,8 @@ test_that("R auto completions are not added when the line is a comment or quotes
   # Completions should not be found when in a quote (even when started from a prior line)
   expect_equal(auto_complete_r("1 + 1\n'runif"), list())
   expect_equal(auto_complete_r("'1 + 1\nrunif"), list())
+  expect_equal(auto_complete_r("\" ' #  # runif"), list())
+  expect_equal(auto_complete_r("\" '   # runif"), list())
 
   # Comments on a prior line do not affect the auto completion
   expect_equal(auto_complete_r("# 1 + 1\nrunif"), runif_fn)
@@ -69,4 +71,25 @@ test_that("Local env overrides global env", {
   #   list("a = ", FALSE),
   #   list("b = ", FALSE)
   # ))
+})
+
+test_that("detect_comments()", {
+  expect_false(detect_comment(""))
+  expect_false(detect_comment("runif()"))
+  expect_true(detect_comment("#runif()"))
+  expect_true(detect_comment("runif() # random uniform"))
+  expect_true(detect_comment("#runif() # random uniform"))
+  expect_false(detect_comment("paste('# not a comment')"))
+  expect_false(detect_comment("paste('# \'still\' # not a comment')"))
+  expect_false(detect_comment("paste('# \"still\" # not a comment')"))
+  expect_true(detect_comment("paste('# \"still\" # not a comment') # is a comment"))
+
+  expect_false(detect_comment('" \' # "'))
+  expect_true(detect_comment('" \' # " # runif'))
+  expect_false(detect_comment('" \' # "'))
+  expect_true(detect_comment('" \'  " # runif'))
+  expect_false(detect_comment('" \' # "'))
+  expect_true(detect_comment("' \" # ' # runif"))
+  expect_false(detect_comment('" \' # "'))
+  expect_true(detect_comment("' \"  ' # runif"))
 })
