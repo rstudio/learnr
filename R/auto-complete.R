@@ -8,7 +8,7 @@ auto_complete_r <- function(line, label = NULL, server_env = NULL) {
   # takes into account quotes on the same line, but `quotes = FALSE` in the
   # completion settings below ensures completions aren't returned if the last
   # line is part of a multi-line quote.
-  last_line <- tail(strsplit(line, "\n")[[1]], 1)
+  last_line <- utils::tail(strsplit(line, "\n")[[1]], 1)
   if (detect_comment(last_line)) {
     # If a comment is found, return `list()` to signify no completions are found
     # (Similar to the output of Map(list, list()))
