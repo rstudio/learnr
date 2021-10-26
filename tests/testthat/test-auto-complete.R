@@ -21,11 +21,12 @@ test_that("R auto completions are not added when the line is a comment or quotes
   expect_equal(auto_complete_r("1 + 1\n'runif"), list())
   expect_equal(auto_complete_r("'1 + 1\nrunif"), list())
 
-  # Quotes on a prior line do not affect the auto completion
+  # Comments on a prior line do not affect the auto completion
   expect_equal(auto_complete_r("# 1 + 1\nrunif"), runif_fn)
 
-  # Quotes on a the last line do affect the auto completion
+  # comments on a the last line do affect the auto completion
   expect_equal(auto_complete_r("1 + 1 \n# runif"), list())
+  expect_equal(auto_complete_r("1 + 1 \nrunif #runif"), list())
   expect_equal(auto_complete_r("1 + 1 \n     \t   # runif"), list())
 })
 
