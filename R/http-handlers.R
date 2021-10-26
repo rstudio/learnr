@@ -215,6 +215,17 @@ register_http_handlers <- function(session, metadata) {
       completions <- as.character(utils$.retrieveCompletions())
     })
 
+    if (length(completions) > 0) {
+      # If the last line starts with a `#` and completions were found, then it should be treated as a comment
+      # No completions will be found if the last line is in a quote
+      last_line <- tail(strsplit(line, "\n")[[1]], 1)
+      if (grepl("^\\s*#", last_line)) {
+        # If a comment is found, return `list()` to signify no completions are found
+        # (Similar to the output of Map(list, list()))
+        return(list())
+      }
+    }
+
     # detect functions
     splat <- strsplit(completions, ":{2,3}")
     fn <- vapply(splat, function(el) {
