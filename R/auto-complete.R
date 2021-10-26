@@ -1,7 +1,7 @@
 
 # Given a line buffer, return a list of possible auto completions.
-# If there is a valid label, then attache the server env to allow for local overrides of functions
-auto_complete_r <- function(line, label, server_env) {
+# If there is a valid label, then attach the server env to allow for local overrides of functions
+auto_complete_r <- function(line, label = NULL, server_env = NULL) {
 
   # If the last line starts with a `#`, then it should be treated as a comment
   # No completions will be found if the last line is in a quote
@@ -36,7 +36,7 @@ auto_complete_r <- function(line, label, server_env) {
 
   # temporarily attach env to search path
   # for R completion engine
-  if (nzchar(label) && is.environment(server_env[[label]])) {
+  if (isTRUE(nzchar(label)) && is.environment(server_env[[label]])) {
     do.call("attach", list(server_env[[label]], name = "tutorial:question_env"))
     on.exit(detach("tutorial:question_env"), add = TRUE)
   }
