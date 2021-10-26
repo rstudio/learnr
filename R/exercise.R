@@ -420,7 +420,8 @@ evaluate_exercise <- function(
     error = function(err_render) {
       error_feedback <- NULL
       error_check_code <- exercise$error_check
-      if (!nzchar(error_check_code)) {
+      error_should_check <- nzchar(exercise$check) || nzchar(exercise$code_check)
+      if (error_should_check && !nzchar(error_check_code)) {
         # If there is no locally defined error check code, look for globally defined error check option
         error_check_code <- standardize_code(exercise$options$exercise.error.check.code)
       }
