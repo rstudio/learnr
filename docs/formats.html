@@ -13,7 +13,8 @@
 
 <title>Formats</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -407,9 +408,9 @@ div.tocify {
 <p>The <strong>learnr</strong> package exposes a JavaScript API which can be used to create new R Markdown formats that include progress tracking similar to that which is provided by the <code>learnr::tutorial</code> format.</p>
 <p>The implementation of the <code>learnr::tutorial</code> format is extremely straightforward and provides a template for creating additional new formats via the API:</p>
 <ol style="list-style-type: decimal">
-<li><p>The <strong><a href="https://github.com/rstudio/learnr/blob/master/R/tutorial-format.R">tutorial-format.R</a></strong> file includes the definition of the custom R Markdown format function.</p></li>
-<li><p>The <strong><a href="https://github.com/rstudio/learnr/blob/master/inst/rmarkdown/templates/tutorial/resources/tutorial-format.js">tutorial-format.js</a></strong> file demonstrates the use of the tutor JavaScript API to add progress tracking features to the default R Markdown floating table of contents.</p></li>
-<li><p>The <strong><a href="https://github.com/rstudio/learnr/tree/master/inst/rmarkdown/templates/tutorial">inst/rmarkdown/templates/tutorial</a></strong> directory includes all the files and configuration required to make the format available as a custom R Markdown template within the RStudio IDE.</p></li>
+<li><p>The <strong><a href="https://github.com/rstudio/learnr/blob/main/R/tutorial-format.R">tutorial-format.R</a></strong> file includes the definition of the custom R Markdown format function.</p></li>
+<li><p>The <strong><a href="https://github.com/rstudio/learnr/blob/main/inst/rmarkdown/templates/tutorial/resources/tutorial-format.js">tutorial-format.js</a></strong> file demonstrates the use of the tutor JavaScript API to add progress tracking features to the default R Markdown floating table of contents.</p></li>
+<li><p>The <strong><a href="https://github.com/rstudio/learnr/tree/main/inst/rmarkdown/templates/tutorial">inst/rmarkdown/templates/tutorial</a></strong> directory includes all the files and configuration required to make the format available as a custom R Markdown template within the RStudio IDE.</p></li>
 </ol>
 </div>
 

@@ -60,8 +60,8 @@ The **learnr** package exposes a JavaScript API which can be used to create new 
 
 The implementation of the `learnr::tutorial` format is extremely straightforward and provides a template for creating additional new formats via the API:
 
-1. The **[tutorial-format.R](https://github.com/rstudio/learnr/blob/master/R/tutorial-format.R)** file includes the definition of the custom R Markdown format function.
+1. The **[tutorial-format.R](https://github.com/rstudio/learnr/blob/main/R/tutorial-format.R)** file includes the definition of the custom R Markdown format function.
 
-2. The **[tutorial-format.js](https://github.com/rstudio/learnr/blob/master/inst/rmarkdown/templates/tutorial/resources/tutorial-format.js)** file demonstrates the use of the tutor JavaScript API to add progress tracking features to the default R Markdown floating table of contents.
+2. The **[tutorial-format.js](https://github.com/rstudio/learnr/blob/main/inst/rmarkdown/templates/tutorial/resources/tutorial-format.js)** file demonstrates the use of the tutor JavaScript API to add progress tracking features to the default R Markdown floating table of contents.
 
-3. The **[inst/rmarkdown/templates/tutorial](https://github.com/rstudio/learnr/tree/master/inst/rmarkdown/templates/tutorial)** directory includes all the files and configuration required to make the format available as a custom R Markdown template within the RStudio IDE.
+3. The **[inst/rmarkdown/templates/tutorial](https://github.com/rstudio/learnr/tree/main/inst/rmarkdown/templates/tutorial)** directory includes all the files and configuration required to make the format available as a custom R Markdown template within the RStudio IDE.

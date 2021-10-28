@@ -17,7 +17,7 @@ tutorial_options(exercise.timelimit = 60)
 
 ## Welcome
 
-This is a demo tutorial. Compare it to the [source code](https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd) that made it.
+This is a demo tutorial. Compare it to the [source code](https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-setup-r/ex-setup-r.Rmd) that made it.
 
 ### Outline
 

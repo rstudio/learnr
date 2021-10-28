@@ -192,7 +192,7 @@ The two default evaluators (used for Windows/MacOS and UNIX systems, respectivel
 
 2. `forked_evaluator` --- Evaluate exercises within a forked child process (this is the default on UNIX systems).
 
-You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/master/R/evaluators.R>.
+You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/main/R/evaluators.R>.
 
 The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
 

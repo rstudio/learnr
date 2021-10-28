@@ -277,7 +277,7 @@ With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`
 
 <img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
-To learn more about grading exercises with **gradethis**, see its grading demo ([`gradethis::gradethis_demo()`](https://github.com/rstudio-education/gradethis/blob/master/inst/tutorials/grading-demo/grading-demo.Rmd)).
+To learn more about grading exercises with **gradethis**, see its grading demo ([`gradethis::gradethis_demo()`](https://github.com/rstudio-education/gradethis/blob/main/inst/tutorials/grading-demo/grading-demo.Rmd)).
 
 ### Custom Checking
 

@@ -13,7 +13,8 @@
 
 <title>Exercises</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -596,7 +597,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </div>
 <div id="multiple-hints" class="section level3">
 <h3>Multiple Hints</h3>
-<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3", etc.) for your exercise chunk. For example:</p>
+<p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3”, etc.) for your exercise chunk. For example:</p>
 <div id="exercisehints">
 
 </div>
@@ -683,7 +684,7 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <p>In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a <code>*-error-check</code> chunk or through the global <code>exercise.error.check.code</code> option. If an <code>*-error-check</code> chunk is provided, you must also include a <code>*-check</code> chunk, typically to provide feedback in case the submission <em>doesn’t</em> generate an error.</p>
 <p>With a <strong>gradethis</strong> setup, <code>exercise.error.check.code</code> is set to <code>grade_code()</code>. This means that, by default, users will receive intelligent feedback for a submission that generates an error using the <code>*-solution</code> chunk, if one is provided.</p>
 <p><img src="images/exercise-error.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/></p>
-<p>To learn more about grading exercises with <strong>gradethis</strong>, see its grading demo (<a href="https://github.com/rstudio-education/gradethis/blob/master/inst/tutorials/grading-demo/grading-demo.Rmd"><code>gradethis::gradethis_demo()</code></a>).</p>
+<p>To learn more about grading exercises with <strong>gradethis</strong>, see its grading demo (<a href="https://github.com/rstudio-education/gradethis/blob/main/inst/tutorials/grading-demo/grading-demo.Rmd"><code>gradethis::gradethis_demo()</code></a>).</p>
 </div>
 <div id="custom-checking" class="section level3">
 <h3>Custom Checking</h3>

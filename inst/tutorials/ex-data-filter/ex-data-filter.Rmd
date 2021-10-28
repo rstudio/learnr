@@ -23,7 +23,7 @@ knitr::opts_chunk$set(error = TRUE)
 
 ## Welcome
 
-This is a demo tutorial. Compare it to the [source code](https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd) that made it.
+This is a demo tutorial. Compare it to the [source code](https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-filter/ex-data-filter.Rmd) that made it.
 
 ###  
 

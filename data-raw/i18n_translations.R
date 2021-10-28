@@ -1,7 +1,7 @@
 # Prepares inst/i18n_translations with complete translations
 #
 # Code borrowed from {pointblank}, thank you @rich-iannone
-# https://github.com/rich-iannone/pointblank/blob/master/data-raw/00-reencode_text.R
+# https://github.com/rich-iannone/pointblank/blob/main/data-raw/00-reencode_text.R
 
 library(here)
 library(yaml)
