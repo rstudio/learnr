@@ -53,6 +53,7 @@ learnr (development version)
 * `options()` and environment variables are now reset after rendering exercises so changes made by user input or checking code cannot affect other exercises. ([#542](https://github.com/rstudio/learnr/pull/542))
 * Exercise checking is now conducted in the same temporary directory where exercises are evaluated. ([#544](https://github.com/rstudio/learnr/pull/544/))
 * User submissions for R code exercises are now checked for parsing errors prior to any other checks. If the submitted code is unparsable, a friendly error feedback message is returned and no further evaluation or checking is performed. ([#547](https://github.com/rstudio/learnr/pull/547))
+* The native R pipe, introduced in R 4.1, is now recognized as a valid R operator in the interactive exercise editor. (thanks @ijlyttle, [#595](https://github.com/rstudio/learnr/pull/595))
 
 ## Bug fixes
 
