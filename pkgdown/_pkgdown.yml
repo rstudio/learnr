@@ -1,0 +1,102 @@
+destination: reference
+
+# url: https://pkgs.rstudio.com/learnr
+
+template:
+  package: tidytemplate
+  bootstrap: 5
+  bslib:
+    primary: "#096B72"
+    navbar-background: "#e6f3fc"
+  trailing_slash_redirect: true
+
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: "learnr package"
+    twitter:
+      creator: "@rstudio"
+      card: summary
+
+home:
+  links:
+  - text: Learn more about R Markdown
+    href: "https://rmarkdown.rstudio.com"
+
+authors:
+  Garrick Aden-Buie:
+    href: https://www.garrickadenbuie.com
+  Nischal Shrestha:
+    href: http://nischalshrestha.me/
+  Barret Schloerke:
+    href: http://schloerke.com/
+  "RStudio, PBC":
+    href: https://www.rstudio.com
+    html: <img src="https://www.tidyverse.org/rstudio-logo.svg" height="24" />
+
+navbar:
+  structure:
+    left:  [intro, examples, articles, reference, news]
+  components:
+    examples:
+      text: Examples
+      href: articles/articles/examples.html
+
+# https://pkgdown.r-lib.org/dev/reference/build_articles.html#index-and-navbar
+articles:
+- title: Vignettes
+  navbar: ~
+  contents:
+  - '`articles/examples`'
+  - '`articles/exercises`'
+  - '`articles/formats`'
+  - '`articles/index`'
+  - '`articles/publishing`'
+  - '`articles/questions`'
+  - '`multilang`'
+  - '`shinyapps-publishing`'
+
+# custom footer for rmarkdown ecosystem
+footer:
+  structure:
+    left: [learnr]
+    right: [developed_by, p, built_with]
+  components:
+      p: "\n\n"
+      learnr: |
+        learnr is a part of the **R Markdown** ecosystem of packages for creating
+        computational documents in R. Learn more at
+        [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
+
+reference:
+- title: All functions
+  contents:
+  - '`available_tutorials`'
+  - '`disable_all_tags`'
+  - '`duplicate_env`'
+  - '`event_register_handler`'
+  - '`external_evaluator`'
+  - '`filesystem_storage`'
+  - '`finalize_question`'
+  - '`format.tutorial_question_answer`'
+  - '`get_tutorial_info`'
+  - '`get_tutorial_state`'
+  - '`initialize_tutorial`'
+  - '`knit_print.tutorial_question`'
+  - '`correct`'
+  - '`one_time`'
+  - '`question_checkbox`'
+  - '`question_ui_initialize`'
+  - '`question_numeric`'
+  - '`question_radio`'
+  - '`question_text`'
+  - '`quiz`'
+  - '`random_phrases_add`'
+  - '`random_praise`'
+  - '`run_tutorial`'
+  - '`safe`'
+  - '`safe_env`'
+  - '`tutorial`'
+  - '`tutorial_html_dependency`'
+  - '`tutorial_options`'
+  - '`tutorial_package_dependencies`'

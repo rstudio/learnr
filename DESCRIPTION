@@ -84,6 +84,10 @@ Suggests:
     testthat (>= 2.1.0)
 VignetteBuilder:
     knitr
+Config/Needs/connect: rsconnect
+Config/Needs/coverage: covr
+Config/Needs/website: r-lib/pkgdown, tidyverse/tidytemplate,
+    rstudio/quillt@tidytemplate
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

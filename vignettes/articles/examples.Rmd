@@ -1,0 +1,35 @@
+---
+title: "Examples"
+output:
+  html_document:
+    toc_float: false
+resource_files:
+  - images/tutorial-ex-setup-r.png
+  - images/tutorial-ex-data-filter.png
+  - images/tutorial-ex-data-summarise.png
+  - images/tutorial-quiz_question.png
+  - images/tutorial-slidy.png
+  - images/tutorial-external-sortable.png
+---
+
+Some examples of tutorials created using the **learnr** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/learnr/tree/main/inst/tutorials/.
+
+```{r echo=FALSE, results="asis"}
+ex <- yaml::read_yaml("examples.yml")
+res <- lapply(ex, function(x) {
+  if (!grepl("^https?://", x$img)) x$img
+})
+res <- res[vapply(res, Negate(is.null), logical(1))]
+if (length(res)) {
+  cat(
+    "\n---\n", 
+    yaml::as.yaml(list(resource_files = res)),
+    "\n---",
+    sep = ""
+  )
+}
+```
+
+```{r echo=FALSE}
+quillt::examples("examples.yml")
+```
