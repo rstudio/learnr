@@ -130,27 +130,6 @@ test_that("render_exercise() envir_prep and envir_result are distinct", {
   expect_equal(get("x", exercise_result$envir_result), 2)
 })
 
-test_that("render_exercise() returns identical envir_prep and envir_result if an error occurs in setup", {
-  exercise <- mock_exercise(
-    user_code = c("x <- 2"),
-    chunks = list(
-      mock_chunk("setup-1", c("x <- 1", "stop('boom')"))
-    ),
-    setup_label = "setup-1",
-    error_check = "unevaluated, triggers error_check in render_exercise()"
-  )
-
-  render_result <- withr::with_tempdir(
-    rlang::catch_cnd(
-      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
-    )
-  )
-  expect_s3_class(render_result$last_value, "simpleError")
-  expect_equal(conditionMessage(render_result$last_value), "boom")
-  expect_identical(render_result$envir_prep, render_result$envir_result)
-  expect_equal(get("x", render_result$envir_prep), 1)
-})
-
 test_that("render_exercise() returns envir_result up to error", {
   exercise <- mock_exercise(
     user_code = c("y <- 2", "stop('boom')", "z <- 3"),
@@ -178,20 +157,97 @@ test_that("render_exercise() returns envir_result up to error", {
   expect_identical(get("y", exercise_result$envir_result), 2)
 })
 
-test_that("evaluate_exercise() with errors and no checker includes exercise result error", {
+test_that("evaluate_exercise() returns internal error if setup chunk throws an error", {
   exercise <- mock_exercise(
     user_code = "stop('user')",
     chunks = list(mock_chunk("setup-1", "stop('setup')")),
-    setup_label = "setup-1"
+    setup_label = "setup-1",
+    exercise.error.check.code = NULL
   )
-  exercise_result <- evaluate_exercise(exercise, new.env())
-  expect_equal(exercise_result$error_message, "setup")
-  expect_null(exercise_result$feedback)
+  expect_warning(
+    exercise_result <- evaluate_exercise(exercise, new.env()),
+    "rendering exercise setup"
+  )
+  expect_match(exercise_result$feedback$message, "setting up the exercise")
+  expect_null(exercise_result$error_message)
+})
 
-  exercise        <- mock_exercise(user_code = "stop('user')")
+test_that("evaluate_exercise() returns error in exercise result if no error checker", {
+  exercise <- mock_exercise(
+    user_code = "stop('user')",
+    error_check = NULL,
+    exercise.error.check.code = NULL
+  )
+
   exercise_result <- evaluate_exercise(exercise, new.env())
   expect_equal(exercise_result$error_message, "user")
   expect_null(exercise_result$feedback)
+})
+
+test_that("evaluate_exercise() errors from setup chunks aren't checked by error checker", {
+  exercise <- mock_exercise(
+    user_code = "stop('user')",
+    chunks = list(mock_chunk("setup-1", "stop('setup')")),
+    setup_label = "setup-1",
+    error_check = I("'error_check'"),
+    exercise.error.check.code = I("'default_error_check'")
+  )
+  expect_warning(
+    exercise_result <- evaluate_exercise(exercise, new.env()),
+    "error occurred while rendering"
+  )
+  expect_match(exercise_result$feedback$message, "internal error occurred")
+  # internal error condition is passed around in $feedback$error
+  expect_s3_class(exercise_result$feedback$error, "simpleError")
+  expect_match(conditionMessage(exercise_result$feedback$error), "setup")
+})
+
+test_that("evaluate_exercise() errors from user code are checked by error_checker", {
+  exercise <- mock_exercise(
+    user_code = "stop('user')",
+    error_check = I("'error_check'"),
+    exercise.error.check.code = I("'default_error_check'")
+  )
+
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  # check that error check function was called
+  expect_equal(exercise_result$feedback$checker_result, "error_check")
+  expect_equal(exercise_result$error_message, "user")
+  expect_s3_class(exercise_result$feedback$checker_args$last_value, "simpleError")
+  expect_equal(
+    conditionMessage(exercise_result$feedback$checker_args$last_value),
+    exercise_result$error_message
+  )
+})
+
+test_that("evaluate_exercise() errors from user code are checked by default error checker as a fallback", {
+  exercise <- mock_exercise(
+    user_code = "stop('user')",
+    check = I("stop('test failed')"),
+    error_check = NULL,
+    exercise.error.check.code = I("'default_error_check'")
+  )
+
+  exercise_result <- evaluate_exercise(exercise, new.env())
+  # check that default error check function was called
+  expect_equal(exercise_result$feedback$checker_result, "default_error_check")
+  expect_equal(exercise_result$error_message, "user")
+  expect_s3_class(exercise_result$feedback$checker_args$last_value, "simpleError")
+  expect_equal(
+    conditionMessage(exercise_result$feedback$checker_args$last_value),
+    exercise_result$error_message
+  )
+})
+
+test_that("evaluate_exercise() returns an internal error for global setup chunk evaluation errors", {
+  ex <- mock_exercise(global_setup = "stop('global setup failure')")
+  expect_warning(
+    res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+    "evaluating the global setup"
+  )
+  expect_equal(conditionMessage(res$feedback$error), "global setup failure")
+  expect_match(res$feedback$message, "setting up the tutorial")
+  expect_s3_class(res$feedback$error, "simpleError")
 })
 
 test_that("render_exercise() cleans up exercise_prep files", {
@@ -219,25 +275,25 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   exercise <- mock_exercise(
     user_code = c("writeLines('nope', 'nope.txt')", "dir()"),
     # setup chunk throws an error
-    chunks = list(mock_chunk("ex-setup", c("dir_setup <- dir()", "stop('boom')"))),
+    chunks = list(mock_chunk("ex-setup", c("rlang::abort('setup-error', dir = dir())"))),
     # get file listing after error in setup chunk happens
     error_check = I("dir()")
   )
 
-  files <- expect_message(
-    withr::with_tempdir({
-      before <- dir()
-      e      <- rlang::catch_cnd(
-        render_exercise(exercise, new.env()), "learnr_render_exercise_error"
-      )
-
-      list(
-        before = before,
-        during = get("dir_setup", e$envir_prep),
-        after  = dir()
-      )
-    }),
-    "exercise_prep.Rmd"
+  files <- expect_warning(
+    expect_message(
+      withr::with_tempdir({
+        before <- dir()
+        env <- new.env()
+        res <- render_exercise(exercise, env)
+        list(
+          before = before,
+          during = res$feedback$error$dir,
+          after  = dir()
+        )
+      }),
+      "exercise_prep.Rmd"
+    )
   )
 
   # start with nothing
@@ -340,6 +396,20 @@ test_that("standardize_exercise_result() ensures top-level code is length-1 stri
   expect_equal(ex$check, "")
   expect_equal(ex$code_check, "")
   expect_equal(ex$global_setup, "def return_one():\n\treturn 1")
+})
+
+test_that("evaluate_exercise() handles default vs. explicit error check code", {
+  ex <- mock_exercise(
+    "stop('boom!')",
+    check = I("stop('test failed')"),
+    error_check = NULL,
+    exercise.error.check.code = I("'default_error_check_code'")
+  )
+
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback$checker_result, "default_error_check_code")
+  expect_s3_class(res$feedback$checker_args$last_value, "simpleError")
+  expect_match(conditionMessage(res$feedback$checker_args$last_value), "boom")
 })
 
 # exercise_result() -------------------------------------------------------
@@ -936,6 +1006,35 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
     fixed = TRUE
   )
   expect_match(result$error_message, "unexpected symbol")
+})
+
+test_that("evaluate_exercise() passes parse error to explicit exercise checker function", {
+  ex <- mock_exercise(
+    "_foo",
+    check = "check",
+    error_check = "error_check",
+    exercise.error.check.code = "default_error_check"
+  )
+
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback$checker_args$check_code, "error_check")
+
+  ex$error_check <- NULL
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback, exercise_check_code_is_parsable(ex)$feedback)
+})
+
+test_that("Errors with global setup code result in an internal error", {
+  ex <- mock_exercise(global_setup = "stop('boom')")
+  expect_warning(
+    res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
+    "global setup"
+  )
+
+  expect_null(res$error_message)
+  expect_match(res$feedback$message, "internal error occurred while setting up the tutorial")
+  expect_s3_class(res$feedback$error, "simpleError")
+  expect_match(conditionMessage(res$feedback$error), "boom")
 })
 
 

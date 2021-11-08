@@ -5,7 +5,7 @@ output:
     toc_float: false
 ---
 
-Some examples of tutorials created using the **learnr** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/learnr/tree/master/inst/tutorials/.
+Some examples of tutorials created using the **learnr** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/learnr/tree/main/inst/tutorials/.
 
 <br/>
 

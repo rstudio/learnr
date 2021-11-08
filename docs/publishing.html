@@ -13,7 +13,8 @@
 
 <title>Publishing</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -387,7 +388,7 @@ learnr::run_tutorial(&quot;slidy&quot;, package = &quot;learnr&quot;)</code></pr
 <pre class="r"><code>install.packages(&quot;learnr&quot;)
 learnr::run_tutorial(&quot;introduction&quot;, package = &quot;mypackage&quot;)</code></pre>
 <div id="exercise-checkers" class="section level3 toc-ignore">
-<h3>Exercise Checkers</h3>
+<h3 class="toc-ignore">Exercise Checkers</h3>
 <p>Note that if your tutorial performs <a href="exercises.html#checking-exercises">exercise checking</a> via an external package then you should be sure to add the package you use for checking as an <code>Imports</code> dependency of your package so it’s installed automatically along with your package.</p>
 <p>Note that it’s likely that the <strong>learnr</strong> package will eventually include or depend on another package that provides checking functions. For the time being though explicit installation of external checking packages is a requirement.</p>
 </div>
@@ -537,7 +538,7 @@ R object to be saved
 <li><p><code>inline_evaluator</code> — Evaluate exercises inline within the main Shiny Server process (this is the default on Windows and Mac OS systems).</p></li>
 <li><p><code>forked_evaluator</code> — Evaluate exercises within a forked child process (this is the default on UNIX systems).</p></li>
 </ol>
-<p>You can see the source code for these evaluators here: <a href="https://github.com/rstudio/learnr/blob/master/R/evaluators.R" class="uri">https://github.com/rstudio/learnr/blob/master/R/evaluators.R</a>.</p>
+<p>You can see the source code for these evaluators here: <a href="https://github.com/rstudio/learnr/blob/main/R/evaluators.R" class="uri">https://github.com/rstudio/learnr/blob/main/R/evaluators.R</a>.</p>
 <p>The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.</p>
 <div id="external-evalutor" class="section level5">
 <h5>External Evalutor</h5>

@@ -54,9 +54,12 @@ learnr (development version)
 * Exercise checking is now conducted in the same temporary directory where exercises are evaluated. ([#544](https://github.com/rstudio/learnr/pull/544/))
 * User submissions for R code exercises are now checked for parsing errors prior to any other checks. If the submitted code is unparsable, a friendly error feedback message is returned and no further evaluation or checking is performed. ([#547](https://github.com/rstudio/learnr/pull/547))
 * The native R pipe, introduced in R 4.1, is now recognized as a valid R operator in the interactive exercise editor. (thanks @ijlyttle, [#595](https://github.com/rstudio/learnr/pull/595))
+* Parse errors from user code that fails to parse can now be inspected by the error checker, but errors in exercise setup chunks cannot. Instead, global setup and setup chunk errors are raised as internal errors with a user-facing warning. In general, internal errors are now handled more consistently. ([#596](https://github.com/rstudio/learnr/pull/596))
+* Commented code within an exercise will no longer be auto completed. ([#604](https://github.com/rstudio/learnr/pull/604))
 
 ## Bug fixes
 
+* learnr's knitr hooks are now included by default in the `learnr::tutorial` R Markdown format. They are also registered for any tutorials run by `run_tutorial()`. [thanks @czucca, #599](https://github.com/rstudio/learnr/pull/599)
 * Support the updated Bootstrap 4+ popover `dispose` method name, previously `destroy`. ([#560](https://github.com/rstudio/learnr/pull/560))
 * Properly enforce time limits and measure exercise execution times that exceed 60 seconds ([#366](https://github.com/rstudio/learnr/pull/366), [#368](https://github.com/rstudio/learnr/pull/368))
 * Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value. ([#376](https://github.com/rstudio/learnr/pull/376))

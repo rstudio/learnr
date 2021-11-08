@@ -313,12 +313,11 @@ internal_external_evaluator <- function(
           )
           do.call(exercise_result, result)
         }, error = function(e) {
-          warning(
-            "Unable to convert exercise result from external evaluator ",
-            "into a learnr exercise result.",
-            e$message
+          exercise_result_error_internal(
+            exercise = exercise,
+            error = e,
+            task_internal = "converting result from external evaluator into a learnr exercise result"
           )
-          exercise_result_error("An internal error occurred, please try again or contact the tutorial author.")
         })
       }
     )

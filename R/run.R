@@ -84,6 +84,12 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
       )
     })
 
+  # ensure hooks are available for a tutorial and clean up after run_tutorial()
+  if (!detect_installed_knitr_hooks()) {
+    withr::defer(remove_knitr_hooks())
+  }
+  install_knitr_hooks()
+
   # run within tutorial wd
   withr::with_dir(tutorial_path, {
     if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {

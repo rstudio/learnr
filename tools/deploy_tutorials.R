@@ -4,7 +4,7 @@ if (!requireNamespace("remotes")) install.packages("remotes")
 # install rsconnect
 remotes::install_cran("rsconnect")
 
-# install the latest from master
+# install the latest from github
 # must install for packrat to work as expected
 remotes::install_github("rstudio/learnr", upgrade = "always", force = TRUE)
 
