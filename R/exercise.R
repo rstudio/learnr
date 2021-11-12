@@ -398,6 +398,7 @@ evaluate_exercise <- function(
     return_if_exercise_result(
       try_checker(
         exercise,
+        stage = "code_check",
         check_code = exercise$code_check,
         envir_prep = duplicate_env(envir)
       )
@@ -431,6 +432,7 @@ evaluate_exercise <- function(
         # checking: the exercise could be to throw an error!
         error_feedback <- try_checker(
           exercise,
+          stage = "error_check",
           check_code = error_check_code,
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
@@ -460,6 +462,7 @@ evaluate_exercise <- function(
     if (nzchar(exercise$check)) {
       try_checker(
         exercise,
+        stage = "check",
         check_code = exercise$check,
         envir_result = rmd_results$envir_result,
         evaluate_result = rmd_results$evaluate_result,
@@ -893,6 +896,7 @@ exercise_check_code_is_parsable <- function(exercise) {
   if (nzchar(exercise$error_check %||% "")) {
     error_feedback <- try_checker(
       exercise,
+      stage = "error_check",
       check_code = exercise[["error_check"]],
       envir_result = exercise[["envir"]],
       evaluate_result = error,
