@@ -476,7 +476,8 @@ evaluate_exercise <- function(
 
 
 try_checker <- function(
-  exercise, name = "exercise.checker", check_code = NULL, envir_result = NULL,
+  exercise, stage,
+  name = "exercise.checker", check_code = NULL, envir_result = NULL,
   evaluate_result = NULL, envir_prep, last_value = NULL,
   engine = exercise$engine
 ) {
@@ -501,17 +502,23 @@ try_checker <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
-    engine = engine
+    engine = engine,
+    stage = stage
   )
   # Throw better error messaging if the checker function signature is ill-defined
   missing_args <- setdiff(names(args), checker_args)
   if (length(missing_args) && !"..." %in% checker_args) {
-    msg <- sprintf(
-      "Either add ... or the following arguments to the '%s' function: '%s'",
-      name, paste(missing_args, collapse = "', '")
-    )
-    message(msg)
-    rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
+    # Don't throw an error if the only missing argument is `stage`
+    if (identical(missing_args, "stage")) {
+      args <- args[names(args) != "stage"]
+    } else {
+      msg <- sprintf(
+        "Either add ... or the following arguments to the '%s' function: '%s'",
+        name, paste(missing_args, collapse = "', '")
+      )
+      message(msg)
+      rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
+    }
   }
 
   # Call the check function
