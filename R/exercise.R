@@ -511,8 +511,10 @@ try_checker <- function(
   # Throw better error messaging if the checker function signature is ill-defined
   missing_args <- setdiff(names(args), checker_args)
   if (length(missing_args) && !"..." %in% checker_args) {
-    # Don't throw an error if the only missing argument is `stage`
     if (identical(missing_args, "stage")) {
+      # Don't throw an error if the only missing argument is `stage`.
+      # `stage` was not available in learnr <= 0.10.1 and checker functions can
+      #   still work without it.
       args <- args[names(args) != "stage"]
     } else {
       msg <- sprintf(
