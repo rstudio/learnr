@@ -1,7 +1,7 @@
 ```r
-custom_checker <- function(label, user_code, check_code, envir_result, evaluate_result, last_value, ...) {
+custom_checker <- function(label, user_code, check_code, envir_result, evaluate_result, last_value, stage, ...) {
   # this is a code check
-  if (is.null(envir_result)) {
+  if (stage == "code_check") {
     if (is_bad_code(user_code, check_code)) {
       return(list(message = "I wasn't expecting that code", correct = FALSE))
     }
