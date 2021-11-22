@@ -361,6 +361,12 @@ $(document).ready(function() {
         bootbox.confirm(areyousure, function(result) { result && tutorial.startOver(); });
       });
       topicsFooter.append(resetButton);
+        
+      var printButton = $('<span class="printButton">Print</span>');
+      printButton.on('click', function() {
+        window.print();
+      });
+      topicsFooter.append(printButton);
       topicsList.append(topicsFooter);
 
       return topicsList;

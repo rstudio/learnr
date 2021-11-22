@@ -100,6 +100,17 @@
   opacity: 1;
 }
 
+.topicsFooter .printButton {
+  padding-left: 10px;
+  font-size: .66em;
+  cursor: pointer;
+  opacity: .7;
+}
+
+.topicsFooter .printButton:hover {
+  opacity: 1;
+}
+
 .topicsList .topic {
   line-height: 40px;
   font-size: 15px;
@@ -232,6 +243,33 @@
 
   .paneCloser {
     display: inline-block;
+  }
+}
+
+@media print {
+  .topicsContainer,
+  .topicActions,
+  .exerciseActions .skip {
+    display: none;
+  }
+  .topics .tutorialTitle,
+  .topics .section.level2,
+  .topics .section.level3:not(.hide) {
+    display: block;
+  }
+  .topics {
+    width: 100%;
+  }
+  .tutorial-exercise, .tutorial-question {
+    page-break-inside: avoid;
+  }
+  .section.level3.done h3 {
+    padding-left: 0;
+    background-image: none;
+  }
+  .topics .showSkip .exerciseActions::before {
+    content: "Topic not yet completed...";
+    font-style: italic;
   }
 }
 
