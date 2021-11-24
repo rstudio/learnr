@@ -29,7 +29,7 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="col">
 <div class="card h-100 shadow-sm">
 <a href="https://learnr-examples.shinyapps.io/ex-setup-r/">
-<img src="/articles/images/tutorial-ex-setup-r.png" class="card-img-top" alt="Preview image of Setting Up R"/>
+<img src="articles/images/tutorial-ex-setup-r.png" class="card-img-top" alt="Preview image of Setting Up R"/>
 </a>
 <div class="card-body">
 <h5 class="card-title">
@@ -44,7 +44,7 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="col">
 <div class="card h-100 shadow-sm">
 <a href="https://learnr-examples.shinyapps.io/ex-data-filter/">
-<img src="/articles/images/tutorial-ex-data-filter.png" class="card-img-top" alt="Preview image of Filtering Observations"/>
+<img src="articles/images/tutorial-ex-data-filter.png" class="card-img-top" alt="Preview image of Filtering Observations"/>
 </a>
 <div class="card-body">
 <h5 class="card-title">
@@ -59,7 +59,7 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="col">
 <div class="card h-100 shadow-sm">
 <a href="https://learnr-examples.shinyapps.io/ex-data-summarise">
-<img src="/articles/images/tutorial-ex-data-summarise.png" class="card-img-top" alt="Preview image of Summarizing Data"/>
+<img src="articles/images/tutorial-ex-data-summarise.png" class="card-img-top" alt="Preview image of Summarizing Data"/>
 </a>
 <div class="card-body">
 <h5 class="card-title">
@@ -87,4 +87,4 @@ For example, here’s a very simple tutorial:
 This is what the running tutorial document looks like after the user has
 entered their answer:
 
-<img src="images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>
+<img src="articles/images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>

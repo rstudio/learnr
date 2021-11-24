@@ -16,7 +16,7 @@ Here are some examples of tutorials created with the **learnr** package.
 source("../vignettes/articles/example_cards.R")
 ex <- yaml::read_yaml("../vignettes/articles/examples.yml")
 ex <- lapply(ex, function(x) {
-  x$image <- paste0("/articles/", x$image)
+  x$image <- paste0("articles/", x$image)
   x
 })
 example_cards(ex, "showcase")
@@ -24,5 +24,13 @@ example_cards(ex, "showcase")
 
 ## Hello, Tutorial!
 
-```{r child="../man/rmd-fragments/hello-tutorial.Rmd"}
-```
+To create a tutorial, just use `library(learnr)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
+
+For example, here's a very simple tutorial:
+
+<div id="hellotutor"></div>
+<script type="text/javascript">loadSnippet('hellotutor')</script>
+
+This is what the running tutorial document looks like after the user has entered their answer:
+
+<img src="articles/images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>
