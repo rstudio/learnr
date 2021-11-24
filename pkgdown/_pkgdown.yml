@@ -1,6 +1,6 @@
 destination: reference
 
-# url: https://pkgs.rstudio.com/learnr
+url: https://pkgs.rstudio.com/learnr
 
 template:
   package: tidytemplate
@@ -40,21 +40,29 @@ navbar:
   components:
     examples:
       text: Examples
-      href: articles/articles/examples.html
+      href: articles/examples.html
 
 # https://pkgdown.r-lib.org/dev/reference/build_articles.html#index-and-navbar
 articles:
-- title: Vignettes
-  navbar: ~
+- title: Introducing learnr
   contents:
+  - '`articles/learnr`'
   - '`articles/examples`'
+- title: Learn how to use learnr
+  navbar: Learn learnr
+  contents:
   - '`articles/exercises`'
-  - '`articles/formats`'
-  - '`articles/index`'
-  - '`articles/publishing`'
   - '`articles/questions`'
-  - '`multilang`'
+- title: Publish learnr tutorials
+  navbar: Publish
+  contents:
+  - '`articles/publishing`'
   - '`shinyapps-publishing`'
+- title: Customize learnr tutorials
+  navbar: Customize
+  contents:
+  - '`articles/formats`'
+  - '`multilang`'
 
 # custom footer for rmarkdown ecosystem
 footer:
@@ -100,3 +108,6 @@ reference:
   - '`tutorial_html_dependency`'
   - '`tutorial_options`'
   - '`tutorial_package_dependencies`'
+
+redirect:
+  - ["examples.html", "articles/examples.html"]

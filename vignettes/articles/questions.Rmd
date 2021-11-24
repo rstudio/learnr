@@ -1,5 +1,8 @@
 ---
-title: "Questions"
+title: "Interactive Questions"
+description: >
+  Create multiple choice questions or open-ended text-based questions or quizes 
+  in your learnr tutorials.
 ---
 
 ## Overview

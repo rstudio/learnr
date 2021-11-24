@@ -1,35 +1,42 @@
 ---
-title: "Examples"
+title: "learnr Tutorial Examples"
+description: >
+  A collection of example interactive tutorials that use the learnr package.
+toc: false
 output:
   html_document:
     toc_float: false
-resource_files:
-  - images/tutorial-ex-setup-r.png
-  - images/tutorial-ex-data-filter.png
-  - images/tutorial-ex-data-summarise.png
-  - images/tutorial-quiz_question.png
-  - images/tutorial-slidy.png
-  - images/tutorial-external-sortable.png
+editor_options: 
+  chunk_output_type: console
 ---
 
-Some examples of tutorials created using the **learnr** package are shown below (click the example to try it out). You can find the source code for these and other examples here:  https://github.com/rstudio/learnr/tree/main/inst/tutorials/.
-
-```{r echo=FALSE, results="asis"}
-ex <- yaml::read_yaml("examples.yml")
-res <- lapply(ex, function(x) {
-  if (!grepl("^https?://", x$img)) x$img
-})
-res <- res[vapply(res, Negate(is.null), logical(1))]
-if (length(res)) {
-  cat(
-    "\n---\n", 
-    yaml::as.yaml(list(resource_files = res)),
-    "\n---",
-    sep = ""
-  )
-}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+source("example_cards.R", local = TRUE)
 ```
 
-```{r echo=FALSE}
-quillt::examples("examples.yml")
+```{css echo=FALSE}
+.contents { max-width: 100%; }
+```
+
+## Complete Tutorials
+
+These tutorials were designed to showcase the features of the learnr package —
+and to teach learners how to use R!
+Try working through these tutorials to get a sense of the look and feel of a learnr tutorial.
+Then check out the source code to see how these tutorials were made!
+
+```{r example-cards-showcase}
+example_cards("examples.yml", "showcase")
+```
+
+## Demo Tutorials
+
+There's a lot that learnr can do.
+These tutorials showcase specific learnr features
+or show you some possibilities that build on other packages designed
+to work with R Markdown and learnr.
+
+```{r example-cards-demo}
+example_cards("examples.yml", "demo")
 ```

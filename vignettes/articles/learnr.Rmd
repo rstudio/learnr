@@ -1,49 +1,8 @@
 ---
-title: "Interactive Tutorials for R"
+title: "Get Started with learnr"
+description: >
+  Start building interactive tutorials for R (and other languages!) today.
 ---
-
-```{r setup, eval=FALSE}
-source("utils.R")
-```
-
-
-## Overview
-
-The **learnr** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
-
-1. Narrative, figures, illustrations, and equations.
-
-2. Code exercises (R code chunks that users can edit and execute directly).
-
-3. Quiz questions.
-
-4. Videos (supported services include YouTube and Vimeo).
-
-5. Interactive Shiny components.
-
-Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.
-
-### Examples
-
-Here are some simple examples of tutorials created with the **learnr** package:
-
-```{r, eval=FALSE}
-examples(showcaseOnly = TRUE)
-```
-
-### Hello, Tutorial! 
-
-To create a tutorial, just use `library(learnr)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
-
-For example, here's a very simple tutorial:
-
-<div id="hellotutor"></div>
-<script type="text/javascript">loadSnippet('hellotutor')</script>
-
-This is what the running tutorial document looks like after the user has entered their answer:
-
-<img src="images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>
-
 
 ## Getting Started
 
@@ -121,7 +80,9 @@ The second type of tutorial provides much richer feedback and assessment but of 
 
 The most straightforward path is to start with the first type of tutorial (executable chunks with pre-evaluated output) and then move into more sophisticated assessment and feedback over time.
 
-## Exercises
+## Interactive Components
+
+### Exercises
 
 Exercises are interactive R code chunks that allow readers to directly execute R code and see its results:
 
@@ -130,7 +91,7 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 
 Exercises can include hints or solutions as well as custom checking code to provide feedback on user answers. The [Exercises](exercises.html) page includes a more in depth discussion of exercises and their various available options and behaviors.
 
-## Questions
+### Questions
 
 You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers. 
 
@@ -145,14 +106,14 @@ Here's what the above question would look like within a tutorial:
 
 The [Questions](questions.html) page includes additional information on using questions within tutorials.
 
-## Videos
+### Videos
 
 You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:
 
 <div id="tutorvideos"></div>
 <script type="text/javascript">loadSnippet('tutorvideos', 'markdown')</script>
 
-### Video Size
+#### Video Size
 
 Videos are responsively displayed at 100% of their container's width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.
 
@@ -161,7 +122,7 @@ You can specify an alternate percentage for the video's width or an alternate fi
 <div id="videos-size"></div>
 <script type="text/javascript">loadSnippet('videos-size', 'markdown')</script>
 
-## Shiny Components
+### Shiny Components
 
 The **learnr** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
 

@@ -1,8 +1,12 @@
 ---
-title: "Publishing learnr Tutorials on shinyapps.io"
+title: "Publishing on shinyapps.io"
 author: "Angela Li"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+description: >
+  An in-depth guide to publishing learnr tutorials on
+  [shinyapps.io](https://www.rstudio.com/products/shinyapps/), with advice on
+  sizing your Shiny app instances to meet the demands of students when learnr
+  tutorials are used for workshops or in class rooms.
 vignette: >
   %\VignetteIndexEntry{Publishing learnr Tutorials on shinyapps.io}
   %\VignetteEngine{knitr::rmarkdown}

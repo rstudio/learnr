@@ -1,5 +1,8 @@
 ---
-title: "Exercises"
+title: "Interactive Exercises"
+description: >
+  Learn how to create interactive exercises with code chunks in R Markdown
+  documents.
 ---
 
 ## Overview

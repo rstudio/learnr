@@ -1,5 +1,9 @@
 ---
-title: "Formats"
+title: "Tutorial Formats"
+description: >
+  learnr can be used within a variety of R Markdown formats, not just the
+  default tutorial provided by the package. This article contains helpful advice
+  about using learnr with other formats.
 output:
   html_document:
     toc_depth: 3

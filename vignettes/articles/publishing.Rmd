@@ -1,5 +1,10 @@
 ---
-title: "Publishing"
+title: "Publishing Basics"
+description: >
+  There are many ways to publish your learnr tutorials. This article covers the
+  most common methods: publishing your tutorial as an R package or online on
+  [RStudio Connect](https://www.rstudio.com/products/connect/) or
+  [shinyapps.io](https://www.rstudio.com/products/shinyapps/).
 output:
   html_document:
     toc_depth: 3
