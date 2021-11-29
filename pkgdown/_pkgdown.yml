@@ -139,5 +139,9 @@ reference:
       - '`external_evaluator`'
       - '`tutorial_html_dependency`'
 
-redirect:
+redirects:
   - ["examples.html", "articles/examples.html"]
+  - ["exercises.html", "articles/exercises.html"]
+  - ["questions.html", "articles/questions.html"]
+  - ["publishing.html", "articles/publishing.html"]
+  - ["formats.html", "articles/formats.html"]
