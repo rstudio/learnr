@@ -91,37 +91,53 @@ footer:
         [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
 
 reference:
-- title: All functions
-  contents:
-  - '`available_tutorials`'
-  - '`disable_all_tags`'
-  - '`duplicate_env`'
-  - '`event_register_handler`'
-  - '`external_evaluator`'
-  - '`filesystem_storage`'
-  - '`finalize_question`'
-  - '`format.tutorial_question_answer`'
-  - '`get_tutorial_info`'
-  - '`get_tutorial_state`'
-  - '`initialize_tutorial`'
-  - '`knit_print.tutorial_question`'
-  - '`correct`'
-  - '`one_time`'
-  - '`question_checkbox`'
-  - '`question_ui_initialize`'
-  - '`question_numeric`'
-  - '`question_radio`'
-  - '`question_text`'
-  - '`quiz`'
-  - '`random_phrases_add`'
-  - '`random_praise`'
-  - '`run_tutorial`'
-  - '`safe`'
-  - '`safe_env`'
-  - '`tutorial`'
-  - '`tutorial_html_dependency`'
-  - '`tutorial_options`'
-  - '`tutorial_package_dependencies`'
+  - title: Running and Configuring learnr Tutorials
+    contents:
+      - '`available_tutorials`'
+      - '`run_tutorial`'
+      - '`safe`'
+      - '`tutorial`'
+      - '`tutorial_options`'
+      - '`tutorial_package_dependencies`'
+
+  - title: Interactive Questions
+    contents:
+      - '`question_checkbox`'
+      - '`question_radio`'
+      - '`question_numeric`'
+      - '`question_text`'
+      - '`quiz`'
+
+  - title: Random Praise and Encouragement
+    contents:
+      - '`random_phrases_add`'
+      - '`random_praise`'
+
+  - title: Developer Tools
+  - subtitle: Questions
+    desc: >
+      Functions intended for use by developers creating custom questions
+      for learnr.
+    contents:
+      - '`correct`'
+      - '`disable_all_tags`'
+      - '`finalize_question`'
+      - '`question_ui_initialize`'
+      - '`knit_print.tutorial_question`'
+      - '`format.tutorial_question_answer`'
+  - subtitle: State and Events
+    contents:
+      - '`get_tutorial_info`'
+      - '`get_tutorial_state`'
+      - '`filesystem_storage`'
+      - '`event_register_handler`'
+      - '`one_time`'
+  - subtitle: General Tools
+    contents:
+      - '`duplicate_env`'
+      - '`initialize_tutorial`'
+      - '`external_evaluator`'
+      - '`tutorial_html_dependency`'
 
 redirect:
   - ["examples.html", "articles/examples.html"]

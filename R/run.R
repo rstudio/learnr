@@ -107,6 +107,8 @@ run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
 #' to open a browser window.  This is the default execution environment within
 #' \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 #' behavior within the learnr package and should not be suppressed.
+#'
+#' @keywords internal
 #' @export
 safe_env <- function() {
   envs <- callr::rcmd_safe_env()

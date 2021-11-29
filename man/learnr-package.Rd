@@ -6,6 +6,8 @@
 \alias{learnr-package}
 \title{learnr: Interactive Tutorials for R}
 \description{
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+
 Create interactive tutorials using R Markdown. Use a combination of narrative, figures, videos, exercises, and quizzes to create self-paced tutorials for learning about R and R packages.
 }
 \seealso{
