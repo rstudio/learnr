@@ -82,6 +82,7 @@ see the results right within their browser.
 
 For example, here’s a very simple tutorial:
 
+<div id="hellotutor"></div>
 <script type="text/javascript">loadSnippet('hellotutor')</script>
 
 This is what the running tutorial document looks like after the user has
