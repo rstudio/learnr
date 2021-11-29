@@ -93,12 +93,12 @@ footer:
 reference:
   - title: Running and Configuring learnr Tutorials
     contents:
-      - '`available_tutorials`'
-      - '`run_tutorial`'
-      - '`safe`'
       - '`tutorial`'
       - '`tutorial_options`'
+      - '`run_tutorial`'
+      - '`available_tutorials`'
       - '`tutorial_package_dependencies`'
+      - '`safe`'
 
   - title: Interactive Questions
     contents:
