@@ -27,3 +27,4 @@ rsconnect/
 ^data-raw$
 ^\.github$
 ^vignettes/articles$
+^reference$
