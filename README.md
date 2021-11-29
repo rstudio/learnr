@@ -29,20 +29,3 @@ all of the following:
 
 You can find documentation on using the **learnr** package here:
 <https://rstudio.github.io/learnr/>
-
-## FAQ
-
-#### Error: Deployment Dependencies Not Found
-
-If your tutorial contains broken code within exercises for users to fix, the CRAN version of [`packrat`](https://github.com/rstudio/packrat/) will not find all of your dependencies to install when the tutorial is deployed. To deploy tutorials containing broken exercise code, install the development version of `packrat`. This version of `packrat` is able to find dependencies per R chunk, allowing for *broken* R chunks within the tutorial file.
-
-``` r
-devtools::install_github("rstudio/packrat")
-```
-
-#### IE / Edge Support
-
-`learnr` does not actively support IE11 and Edge.
-
-- [IE11 not receiving major updates](https://support.microsoft.com/en-us/help/17454/lifecycle-faq-internet-explorer), so I am not pursuing support for IE11.
-- [Edge is adopting chromium](https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/). Once updated, Edge *should* work out of the box with many more R packages (including `learnr`) and websites.
