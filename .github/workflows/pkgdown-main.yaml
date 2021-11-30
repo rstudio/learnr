@@ -21,10 +21,9 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@pak1
+      - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           pak-version: devel
-          extra-packages: pkgdown
           needs: |
             website
             connect
