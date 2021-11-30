@@ -284,15 +284,18 @@ To learn more about grading exercises with **gradethis**, see its grading demo (
 
 ### Custom Checking
 
-If you need custom exercise checking logic that isn't already provided grading packages like [**gradethis**](https://github.com/rstudio-education/gradethis), then you may want to write your own `exercise.checker` function. This function is called on exercise submission whenever `*-check` or `*-code-check` chunks exist. When called, this function receives all the information that **learnr** knows about the exercise at the time of the checking, including the `user_code`, `solution_code`, `check_code`, exercise environments, and the `last_value` (if any). Checking can be performed at three different time points, so the values supplied can differ depending on the time point:
+If you need custom exercise checking logic that isn't already provided grading packages like [**gradethis**](https://github.com/rstudio-education/gradethis), then you may want to write your own `exercise.checker` function. This function is called on exercise submission whenever `*-check` or `*-code-check` chunks exist. When called, this function receives all the information that **learnr** knows about the exercise at the time of the checking, including the `user_code`, `solution_code`, `check_code`, exercise environments, the `last_value` (if any), and the `stage` of checking. Checking can be performed at three different time points, so the values supplied can differ depending on the time point:
 
 1. Before exercise evaluation, at this stage:
+    * `stage` is `"code_check"`.
     * `check_code` contains `*-code-check` chunk code.
     * `envir_result`, `evaluate_result`, and `last_value` are all `NULL`.
 2. During evaluation, when an error occurs:
+    * `stage` is `"error_check"`.
     * `check_code` contains `*-error-check` chunk code.
     * `last_value` contains the error condition object.
 3. After exercise evaluation, at this stage:
+    * `stage` is `"check"`.
     * `check_code` contains `*-check` chunk code.
     * `last_value` contains the last printed value.
 
@@ -325,7 +328,7 @@ If, at any one of these stages, feedback should be provided, then `exercise.chec
 </tbody>
 </table>
 
-Below is a rough sketch of how one might implement an `exercise.checker` function. Notice how the presence of `envir_result` may be used to determine which type of check is being done (i.e., code or result check).
+Below is a rough sketch of how one might implement an `exercise.checker` function.
 
 <div id="customchecker"></div>
 <script type="text/javascript">loadSnippet('customchecker')</script>
@@ -377,6 +380,10 @@ See the table below for a full description of all the arguments supplied to `exe
 <td>The <code>engine</code> value of the evaluated chunk.</td>
 </tr>
 <tr class="even">
+<td><code>stage</code></td>
+<td>The current checking <code>stage</code>.</td>
+</tr>
+<tr class="odd">
 <td><code>...</code></td>
 <td>Unused (include for compatibility with parameters to be added in the future)</td>
 </tr>

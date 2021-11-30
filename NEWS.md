@@ -56,6 +56,7 @@ learnr (development version)
 * The native R pipe, introduced in R 4.1, is now recognized as a valid R operator in the interactive exercise editor. (thanks @ijlyttle, [#595](https://github.com/rstudio/learnr/pull/595))
 * Parse errors from user code that fails to parse can now be inspected by the error checker, but errors in exercise setup chunks cannot. Instead, global setup and setup chunk errors are raised as internal errors with a user-facing warning. In general, internal errors are now handled more consistently. ([#596](https://github.com/rstudio/learnr/pull/596))
 * Commented code within an exercise will no longer be auto completed. ([#604](https://github.com/rstudio/learnr/pull/604))
+* Exercises now send an argument `stage` to the checker function with a value of `"code_check"`, `"error_check"`, or `"check"`, to make it easier to determine during which stage of checking the checker function is being called. ([#610](https://github.com/rstudio/learnr/pull/610))
 
 ## Bug fixes
 
