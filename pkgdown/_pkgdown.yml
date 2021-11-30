@@ -91,14 +91,17 @@ footer:
         [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
 
 reference:
-  - title: Running and Configuring learnr Tutorials
+  - title: learnr Tutorials
+  - subtitle: Run a learnr Tutorial
+    contents:
+      - '`run_tutorial`'
+      - '`available_tutorials`'
+      - '`safe`'
+  - subtitle: Write or Configure a learnr Tutorial
     contents:
       - '`tutorial`'
       - '`tutorial_options`'
-      - '`run_tutorial`'
-      - '`available_tutorials`'
       - '`tutorial_package_dependencies`'
-      - '`safe`'
 
   - title: Interactive Questions
     contents:
@@ -110,10 +113,14 @@ reference:
 
   - title: Random Praise and Encouragement
     contents:
-      - '`random_phrases_add`'
       - '`random_praise`'
+      - '`random_phrases_add`'
 
   - title: Developer Tools
+    desc: >
+      These functions were designed for use by developers who want to extend
+      learnr with custom formats or interactive question types, or for those
+      who wish to deploy learnr tutorials in custom environments.
   - subtitle: Questions
     desc: >
       Functions intended for use by developers creating custom questions
