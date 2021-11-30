@@ -1,6 +1,6 @@
 #' Run a tutorial
 #'
-#' Run a tutorial which is contained within an R package.
+#' Run a tutorial provided by an installed R package.
 #'
 #' @param name Tutorial name (subdirectory within \code{tutorials/}
 #'   directory of installed package).
@@ -8,20 +8,18 @@
 #' @param shiny_args Additional arguments to forward to
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
 #'
-#' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
-#'   the tutorial Rmd should have already been rendered as part of the
-#'   development of the package (i.e. the corresponding tutorial .html file for
-#'   the .Rmd file must exist).
-#'
 #' @seealso \code{\link{safe}} and \code{\link{available_tutorials}}
-#' @importFrom utils adist
-#' @export
 #' @examples
 #' # display all "learnr" tutorials
 #' available_tutorials("learnr")
 #'
 #' # run basic example within learnr
-#' \dontrun{run_tutorial("hello", "learnr")}
+#' \dontrun{
+#' run_tutorial("hello", "learnr")
+#' }
+#'
+#' @importFrom utils adist
+#' @export
 run_tutorial <- function(name = NULL, package = NULL, shiny_args = NULL) {
 
   if (is.null(package) && !is.null(name)) {

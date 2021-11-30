@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialize.R
 \name{initialize_tutorial}
 \alias{initialize_tutorial}
-\title{Initialize Tutorial R Markdown Extensions}
+\title{Initialize tutorial R Markdown extensions}
 \usage{
 initialize_tutorial()
 }

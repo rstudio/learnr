@@ -11,7 +11,7 @@
 \alias{question_ui_completed.default}
 \alias{question_is_valid.default}
 \alias{question_is_correct.default}
-\title{Custom question methods.}
+\title{Custom question methods}
 \usage{
 question_ui_initialize(question, value, ...)
 

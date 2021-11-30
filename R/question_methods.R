@@ -1,5 +1,4 @@
-#' Custom question methods.
-#'
+#' Custom question methods
 #'
 #' @description
 #' There are five methods used to define a custom question.  Each S3 method
@@ -25,15 +24,13 @@
 #'
 #'     - Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to `question_ui_initialize`, this should should return a shiny UI object that can be displayed using [shiny::renderUI].
 #'
-#'
-#'
-#'
 #' @param question [question] object used
 #' @param value user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
-#' @export
+#'
 #' @seealso For more information and question type extension examples, please view the `question_type` tutorial: `learnr::run_tutorial("question_type", "learnr")`.
 #'
+#' @export
 #' @rdname question_methods
 question_ui_initialize <- function(question, value, ...) {
   UseMethod("question_ui_initialize", question)
