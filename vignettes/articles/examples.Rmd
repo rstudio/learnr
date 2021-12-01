@@ -12,7 +12,10 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-source("example_cards.R", local = TRUE)
+here <- function(...) {
+  file.path(dirname(knitr::current_input(dir = TRUE)), ...)
+}
+source(here("example_cards.R"), local = TRUE)
 ```
 
 ```{css echo=FALSE}
@@ -27,7 +30,7 @@ Try working through these tutorials to get a sense of the look and feel of a lea
 Then check out the source code to see how these tutorials were made!
 
 ```{r example-cards-showcase}
-example_cards("examples.yml", "showcase")
+example_cards(here("examples.yml"), "showcase")
 ```
 
 ## Demo Tutorials
@@ -38,5 +41,5 @@ or show you some possibilities that build on other packages designed
 to work with R Markdown and learnr.
 
 ```{r example-cards-demo}
-example_cards("examples.yml", "demo")
+example_cards(here("examples.yml"), "demo")
 ```
