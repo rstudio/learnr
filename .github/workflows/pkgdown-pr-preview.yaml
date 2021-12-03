@@ -50,14 +50,4 @@ jobs:
       - name: Deploy pkgdown preview
         env:
           PR_NUMBER: "${{ github.event.pull_request.number }}"
-        run: |
-          dest <- file.path("preview", paste0("pr", Sys.getenv("PR_NUMBER")))
-          url_base <- yaml::read_yaml("pkgdown/_pkgdown.yml")$url
-          pkgdown::deploy_to_branch(
-            new_process = FALSE,
-            override = list(
-              destination = dest,
-              url = file.path(url_base, dest)
-            )
-          )
-        shell: Rscript {0}
+        run: Rscript .github/pkgdown-pr-preview-build.R
