@@ -8,13 +8,13 @@
 
 -   Authors can now provide data files for use with interactive exercises. Any files stored in a `data/` directory adjacent to the tutorial R Markdown document are now automatically made available within exercises. An alternative directory can be specified using the `tutorial.data_dir` global option. (@rossellhayes #539)
 
--   An informative error is now thrown when an exercise chunk's body contains nothing, which lets the tutorial author know that something (e.g., empty line(s)) must be present in the chunk body for it to be rendered as an exercise. (@KatherineCox #172, #410)
+-   An informative error is now thrown when an exercise chunk’s body contains nothing, which lets the tutorial author know that something (e.g., empty line(s)) must be present in the chunk body for it to be rendered as an exercise. (@KatherineCox #172, #410)
 
--   Custom CSS files are now loaded last, after all of learnr's other web dependencies. (#574)
+-   Custom CSS files are now loaded last, after all of learnr’s other web dependencies. (#574)
 
 ## Setup Chunk Chaining
 
--   Exercise chunks can now be "chained together" via chained setup chunks. The setup chunk of one exercise may depend on other chunks, including the setup chunks of other exercises, allowing the author to form a chain of setup code that allows interactive exercises to progressively work through a problem. These chains are defined using the `exercise.setup` chunk option; use `run_tutorial("setup_chunks", "learnr")` to run a demo tutorial. (@nischalshrestha #390)
+-   Exercise chunks can now be “chained together” via chained setup chunks. The setup chunk of one exercise may depend on other chunks, including the setup chunks of other exercises, allowing the author to form a chain of setup code that allows interactive exercises to progressively work through a problem. These chains are defined using the `exercise.setup` chunk option; use `run_tutorial("setup_chunks", "learnr")` to run a demo tutorial. (@nischalshrestha #390)
 
     -   As part of this work, learnr now throws an error at pre-render when an author specifies an non-existent chunk label in the `exercise.setup` of an exercise.
     -   learnr also now forces the chunk option `include = FALSE` for setup chunks when evaluated as part of an exercise to avoid unexpected printing of results.
@@ -46,7 +46,7 @@
 
 ### Exercises
 
--   Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. `____`. The pattern for blanks can be set with the `exercise.blanks` chunk or tutorial option. (@rossellhayes #547)
+-   Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. `____`. The pattern for blanks can be set with the `exercise.blanks` chunk or tutorial option. (@rossellhayes #547)
 
 -   Authors can choose to reveal (default) or hide the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will likely be changed to hide solutions. (#402)
 
@@ -72,7 +72,7 @@
 
 ### Exercise Evaluation
 
--   **Breaking Change:** If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don't provide a `-code-check` chunk). (#403)
+-   **Breaking Change:** If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don’t provide a `-code-check` chunk). (#403)
 
 -   Exercise checking is now conducted in the same temporary directory where exercises are evaluated. (@rossellhayes #544)
 
@@ -96,7 +96,7 @@
 
 -   Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value. (#376)
 
--   When a quiz's question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz's default loading text. (#450)
+-   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text. (#450)
 
 ## Events and State
 
@@ -115,19 +115,19 @@
     -   A new `label` field of the `"exercise_hint"` event identifies the exercise for which the user requested a hint (#377).
     -   Previously, when a question submission was reset, it would be recorded as a `"question_submission"` event with the value `reset = TRUE`. Now it a separate event, `"reset_question_submission"`.
 
--   Tutorial authors can now access the current state of the user's progress in a tutorial with `get_tutorial_state()` or get information about the current tutorial with `get_tutorial_info()` (#562). Tutorial state is now returned by `get_tutorial_state()` in order of appearance in the tutorial. The full list of exercises and questions is included as items in the list returned by `get_tutorial_info()` (thanks @NuoWenLei #570, #571).
+-   Tutorial authors can now access the current state of the user’s progress in a tutorial with `get_tutorial_state()` or get information about the current tutorial with `get_tutorial_info()` (#562). Tutorial state is now returned by `get_tutorial_state()` in order of appearance in the tutorial. The full list of exercises and questions is included as items in the list returned by `get_tutorial_info()` (thanks @NuoWenLei #570, #571).
 
 -   We no longer forward the checker code to browser (in html), but instead cache it. (@nischalshrestha #390)
 
--   Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). (#417)
+-   Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari). (#417)
 
 ## Running Tutorials
 
 -   `run_tutorial()` now renders tutorials in a temp directory if the R user does not have write permissions. (#347)
 
--   learnr's knitr hooks are now set by the `learnr::tutorial` R Markdown format. They are also registered for any tutorials run by `run_tutorial()`. (thanks @czucca #598, #599)
+-   learnr’s knitr hooks are now set by the `learnr::tutorial` R Markdown format. They are also registered for any tutorials run by `run_tutorial()`. (thanks @czucca #598, #599)
 
--   For the "forked" evaluator (the default used on Linux), learnr now limits the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. (#353)
+-   For the “forked” evaluator (the default used on Linux), learnr now limits the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable. (#353)
 
 -   Introduced an experimental function `external_evaluator()` which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document. (#345, #354)
 
@@ -143,17 +143,17 @@
 
 ## Minor new features and improvements
 
--   `learnr` gained the function `learnr::tutorial_package_dependencies()`, used to enumerate a tutorial's R package dependencies. Front-ends can use this to ensure a tutorial's dependencies are satisfied before attempting to run that tutorial. `learnr::available_tutorials()` gained the column `package_dependencies` containing the required packages to run the document. ([#329](https://github.com/rstudio/learnr/pull/329))
+-   `learnr` gained the function `learnr::tutorial_package_dependencies()`, used to enumerate a tutorial’s R package dependencies. Front-ends can use this to ensure a tutorial’s dependencies are satisfied before attempting to run that tutorial. `learnr::available_tutorials()` gained the column `package_dependencies` containing the required packages to run the document. ([#329](https://github.com/rstudio/learnr/pull/329))
 
 -   Include vignette about publishing learnr tutorials on shinyapps.io. ([#322](https://github.com/rstudio/learnr/pull/322))
 
--   `learnr`'s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system. ([#312](https://github.com/rstudio/learnr/issues/312))
+-   `learnr`’s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system. ([#312](https://github.com/rstudio/learnr/issues/312))
 
 -   Add `session_start` and `session_stop` events. ([#311](https://github.com/rstudio/learnr/pull/328))
 
 ## Bug fixes
 
--   Fixed a bug where broken exercise code created non-"length-one character vector". ([#311](https://github.com/rstudio/learnr/pull/311))
+-   Fixed a bug where broken exercise code created non-“length-one character vector”. ([#311](https://github.com/rstudio/learnr/pull/311))
 
 -   Fixed extra parameter documentation bug for CRAN. ([#323](https://github.com/rstudio/learnr/pull/323))
 
@@ -197,7 +197,7 @@
 
 -   Fixed a spurious console warning when running exercises using Pandoc 2.0. ([#154](https://github.com/rstudio/learnr/issues/154))
 
--   Added a fail-safe to try-catch bad student code that would crash the tutorial. ([@adamblake](<https://github.com/adamblake>), [#229](https://github.com/rstudio/learnr/issues/229))
+-   Added a fail-safe to try-catch bad student code that would crash the tutorial. (\[@adamblake\](<https://github.com/adamblake>), [#229](https://github.com/rstudio/learnr/issues/229))
 
 -   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) ([#269](https://github.com/rstudio/learnr/issues/269))
 
@@ -215,39 +215,39 @@
 
 # learnr 0.9.1
 
--   Fixed a compatibility issue, so that existing tutorials don't break when using Pandoc 2.0. ([#130](https://github.com/rstudio/learnr/pull/130))
+-   Fixed a compatibility issue, so that existing tutorials don’t break when using Pandoc 2.0. ([#130](https://github.com/rstudio/learnr/pull/130))
 
 # learnr 0.9.0
 
-\@ commit [#14413cc](https://github.com/rstudio/learnr/commit/14413cc7ea20fa3b5938b29fab2b01282e6f0c1f)
+@ commit [#14413cc](https://github.com/rstudio/learnr/commit/14413cc7ea20fa3b5938b29fab2b01282e6f0c1f)
 
 # learnr 0.8.0
 
-\@ commit [#eeae534](https://github.com/rstudio/learnr/commit/eeae534fa792dcd369075a90b59b042ad26f945f)
+@ commit [#eeae534](https://github.com/rstudio/learnr/commit/eeae534fa792dcd369075a90b59b042ad26f945f)
 
 # learnr 0.7.0
 
-\@ commit [#b71c637](https://github.com/rstudio/learnr/commit/b71c637cb0b1e0cb817e8e0c2fa56a4fcabd58dd)
+@ commit [#b71c637](https://github.com/rstudio/learnr/commit/b71c637cb0b1e0cb817e8e0c2fa56a4fcabd58dd)
 
 # learnr 0.6.0
 
-\@ commit [#55c33cf](https://github.com/rstudio/learnr/commit/55c33cf616d3259c508ae234d301964c599a3039)
+@ commit [#55c33cf](https://github.com/rstudio/learnr/commit/55c33cf616d3259c508ae234d301964c599a3039)
 
 # learnr 0.5.0
 
-\@ commit [#a853163](https://github.com/rstudio/learnr/commit/a8531633f38c13333da6e1c76c6cb6c720e299dd)
+@ commit [#a853163](https://github.com/rstudio/learnr/commit/a8531633f38c13333da6e1c76c6cb6c720e299dd)
 
 # learnr 0.4.0
 
-\@ commit [#3339f8a](https://github.com/rstudio/learnr/commit/3339f8aaa2d0402622b1881aa42fcc78ea87db51)
+@ commit [#3339f8a](https://github.com/rstudio/learnr/commit/3339f8aaa2d0402622b1881aa42fcc78ea87db51)
 
 # learnr 0.3.0
 
-\@ commit [#9cd0082](https://github.com/rstudio/learnr/commit/9cd00828bfa2429d88ad9efdbd51ad8475a6efb2)
+@ commit [#9cd0082](https://github.com/rstudio/learnr/commit/9cd00828bfa2429d88ad9efdbd51ad8475a6efb2)
 
 # learnr 0.2.0
 
-\@ commit [#a81a694](https://github.com/rstudio/learnr/commit/a81a69498823d860f54c153128719e280de3d831)
+@ commit [#a81a694](https://github.com/rstudio/learnr/commit/a81a69498823d860f54c153128719e280de3d831)
 
 # learnr 0.1.0
 
