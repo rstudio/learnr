@@ -34,5 +34,10 @@ local({
 
   msg <- paste("[preview]", pkgdown:::construct_commit_message("."))
   pkgdown:::github_push(dest_dir, msg, "origin", "gh-pages")
+
+  message(
+    "::notice title=pkgdown preview::",
+    file.path(url_base, dest_preview)
+  )
 })
 
