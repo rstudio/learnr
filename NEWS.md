@@ -94,7 +94,7 @@
 
 -   Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value (#376).
 
--   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
+-   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
 
 ## Events and State
 
@@ -141,79 +141,79 @@
 
 ## Minor new features and improvements
 
--   `learnr` gained the function `learnr::tutorial_package_dependencies()`, used to enumerate a tutorial’s R package dependencies. Front-ends can use this to ensure a tutorial’s dependencies are satisfied before attempting to run that tutorial. `learnr::available_tutorials()` gained the column `package_dependencies` containing the required packages to run the document ([#329](https://github.com/rstudio/learnr/pull/329)).
+-   `learnr` gained the function `learnr::tutorial_package_dependencies()`, used to enumerate a tutorial’s R package dependencies. Front-ends can use this to ensure a tutorial’s dependencies are satisfied before attempting to run that tutorial. `learnr::available_tutorials()` gained the column `package_dependencies` containing the required packages to run the document (#329).
 
--   Include vignette about publishing learnr tutorials on shinyapps.io ([#322](https://github.com/rstudio/learnr/pull/322)).
+-   Include vignette about publishing learnr tutorials on shinyapps.io (#322).
 
--   `learnr`’s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system ([#312](https://github.com/rstudio/learnr/issues/312)).
+-   `learnr`’s built-in tutorials now come with a description as part of the YAML header, with the intention of this being used in front-end software that catalogues available `learnr` tutorials on the system (#312).
 
--   Add `session_start` and `session_stop` events ([#311](https://github.com/rstudio/learnr/pull/328)).
+-   Add `session_start` and `session_stop` events (#311).
 
 ## Bug fixes
 
--   Fixed a bug where broken exercise code created non-“length-one character vector” ([#311](https://github.com/rstudio/learnr/pull/311)).
+-   Fixed a bug where broken exercise code created non-“length-one character vector” (#311).
 
--   Fixed extra parameter documentation bug for CRAN ([#323](https://github.com/rstudio/learnr/pull/323)).
+-   Fixed extra parameter documentation bug for CRAN (#323).
 
--   Fixed video initialization error caused by a jQuery version increase in Shiny ([#326](https://github.com/rstudio/learnr/pull/326)).
+-   Fixed video initialization error caused by a jQuery version increase in Shiny (#326).
 
--   Fixed progressive reveal bug where the next section would not be displayed unless refreshed ([#330](https://github.com/rstudio/learnr/pull/330)).
+-   Fixed progressive reveal bug where the next section would not be displayed unless refreshed (#330).
 
--   Fixed a bug where topics would not be loaded if they contained non-ascii characters ([#330](https://github.com/rstudio/learnr/pull/330)).
+-   Fixed a bug where topics would not be loaded if they contained non-ascii characters (#330).
 
 # learnr 0.10.0
 
 ## New features
 
--   Quiz questions are implemented using shiny modules (instead of htmlwidgets) ([#194](https://github.com/rstudio/learnr/pull/194)).
+-   Quiz questions are implemented using shiny modules (instead of htmlwidgets) (#194).
 
--   Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment ([#169](https://github.com/rstudio/learnr/issues/169), [#179](https://github.com/rstudio/learnr/pull/179), and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
+-   Aggressively rerender prerendered tutorials in favor of a cohesive exercise environment (#169, #179, and [rstudio/rmarkdown#1420](https://github.com/rstudio/rmarkdown/pull/1420))
 
--   Added a new function, `safe`, which evaluates code in a new, safe R environment ([#174](https://github.com/rstudio/learnr/pull/174)).
+-   Added a new function, `safe`, which evaluates code in a new, safe R environment (#174).
 
 ## Minor new features and improvements
 
--   Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument ([#228](https://github.com/rstudio/learnr/pull/228)).
+-   Added the last evaluated exercise submission value, `last_value`, as an exercise checker function argument (#228).
 
--   Added tabset support ([#219](https://github.com/rstudio/learnr/pull/219) [#212](https://github.com/rstudio/learnr/issues/212)).
+-   Added tabset support (#219 #212).
 
--   Question width will expand to the container width ([#222](https://github.com/rstudio/learnr/pull/222)).
+-   Question width will expand to the container width (#222).
 
--   Available tutorial names will be displayed when no `name` parameter or an incorrect `name` is provided to `run_tutorial()` ([#234](https://github.com/rstudio/learnr/pull/234)).
+-   Available tutorial names will be displayed when no `name` parameter or an incorrect `name` is provided to `run_tutorial()` (#234).
 
--   The `options` parameter was added to `question` to allow custom questions to pass along custom information. See `sortable::sortable_question` for an example ([#243](https://github.com/rstudio/learnr/pull/243)).
+-   The `options` parameter was added to `question` to allow custom questions to pass along custom information. See `sortable::sortable_question` for an example (#243).
 
--   Missing package dependencies will ask to be installed at tutorial run time (@isteves, [#253](https://github.com/rstudio/learnr/issues/253)).
+-   Missing package dependencies will ask to be installed at tutorial run time (@isteves, #253).
 
--   When questions are tried again, the existing answer will remain, not forcing the user to restart from scratch ([#270](https://github.com/rstudio/learnr/issues/270)).
+-   When questions are tried again, the existing answer will remain, not forcing the user to restart from scratch (#270).
 
--   A version number has been added to `question_submission` events. This will help when using custom storage methods ([#291](https://github.com/rstudio/learnr/pull/291)).
+-   A version number has been added to `question_submission` events. This will help when using custom storage methods (#291).
 
--   Tutorial storage on the browser is now executed directly on `indexedDB` using `idb-keyval` (dropping `localforage`). This change prevents browser tabs from blocking each other when trying to access `indexedDB` data ([#305](https://github.com/rstudio/learnr/pull/305)).
+-   Tutorial storage on the browser is now executed directly on `indexedDB` using `idb-keyval` (dropping `localforage`). This change prevents browser tabs from blocking each other when trying to access `indexedDB` data (#305).
 
 ## Bug fixes
 
--   Fixed a spurious console warning when running exercises using Pandoc 2.0 ([#154](https://github.com/rstudio/learnr/issues/154)).
+-   Fixed a spurious console warning when running exercises using Pandoc 2.0 (#154).
 
--   Added a fail-safe to try-catch bad student code that would crash the tutorial (\[@adamblake\](<https://github.com/adamblake>), [#229](https://github.com/rstudio/learnr/issues/229)).
+-   Added a fail-safe to try-catch bad student code that would crash the tutorial (@adamblake #229).
 
--   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) ([#269](https://github.com/rstudio/learnr/issues/269))
+-   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) (#269)
 
--   Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. [#303](https://github.com/rstudio/learnr/pull/303)
+-   Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. #303
 
 # learnr 0.9.2
 
--   Fixed [#136](https://github.com/rstudio/learnr/issues/136) by displaying full HTML messages (rather than just the text) if provided by the `incorrect` or the `correct` args to `question()` ([#146](https://github.com/rstudio/learnr/pull/146)).
+-   Fixed #136 by displaying full HTML messages (rather than just the text) if provided by the `incorrect` or the `correct` args to `question()` (#146).
 
--   Improved documentation for deploying `learnr` tutorials in Shiny Server ([#142](https://github.com/rstudio/learnr/issues/142)).
+-   Improved documentation for deploying `learnr` tutorials in Shiny Server (#142).
 
--   Fixed a highlight.js issue from rmarkdown 1.8 ([#133](https://github.com/rstudio/learnr/issues/133)).
+-   Fixed a highlight.js issue from rmarkdown 1.8 (#133).
 
--   Fixed an false positive in the diagnostics system ([#141](https://github.com/rstudio/learnr/issues/141)).
+-   Fixed an false positive in the diagnostics system (#141).
 
 # learnr 0.9.1
 
--   Fixed a compatibility issue, so that existing tutorials don’t break when using Pandoc 2.0 ([#130](https://github.com/rstudio/learnr/pull/130)).
+-   Fixed a compatibility issue, so that existing tutorials don’t break when using Pandoc 2.0 (#130).
 
 # learnr 0.9.0
 
