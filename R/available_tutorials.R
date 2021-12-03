@@ -1,17 +1,18 @@
 
-#' Run a tutorial
+#' List available tutorials
 #'
-#' Run a tutorial which is contained within an R package.
+#' List the tutorials that are currently available via installed R packages.
+#' Or list the specific tutorials that are contained within a given R package.
 #'
 #' @param package Name of package
 #'
-#' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
-#'   the tutorial Rmd should have already been rendered as part of the
-#'   development of the package (i.e. the corresponding tutorial .html file for
-#'   the .Rmd file must exist).
+#' @return `available_tutorials()` returns a `data.frame` containing "package",
+#'   "name", "title", "description", "package_dependencies", "private", and
+#'   "yaml_front_matter".
 #'
-#' @return \code{available_tutorials} will return a \code{data.frame} containing "package", "name", "title", "description", "package_dependencies", "private", and "yaml_front_matter".
-#' @rdname available_tutorials
+#' @examples
+#' available_tutorials(package = "learnr")
+#'
 #' @export
 available_tutorials <- function(package = NULL) {
 

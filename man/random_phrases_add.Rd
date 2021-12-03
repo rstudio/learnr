@@ -2,7 +2,7 @@
 % Please edit documentation in R/praise.R
 \name{random_phrases_add}
 \alias{random_phrases_add}
-\title{Add Phrases to the bank of random phrases}
+\title{Add phrases to the bank of random phrases}
 \usage{
 random_phrases_add(language = "en", praise = NULL, encouragement = NULL)
 }

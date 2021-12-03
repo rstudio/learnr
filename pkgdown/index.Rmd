@@ -1,0 +1,38 @@
+---
+title: "learnr"
+output: md_document
+---
+
+# learnr <a href='https://pkgs.rstudio.com/learnr'><img src='man/figures/logo.png' align="right" height="138" /></a>
+
+```{r child="../man/rmd-fragments/learnr-overview.Rmd"}
+```
+
+## Examples
+
+Here are some examples of tutorials created with the **learnr** package.
+
+```{r example-showcase, echo=FALSE}
+source("../vignettes/articles/example_cards.R")
+ex <- yaml::read_yaml("../vignettes/articles/examples.yml")
+ex <- lapply(ex, function(x) {
+  x$image <- paste0("articles/", x$image)
+  x
+})
+example_cards(ex, "showcase")
+```
+
+## Hello, Tutorial!
+
+To create a tutorial, just use `library(learnr)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
+
+For example, here's a very simple tutorial:
+
+```{=html}
+<div id="hellotutor"></div>
+<script type="text/javascript">loadSnippet('hellotutor')</script>
+```
+
+This is what the running tutorial document looks like after the user has entered their answer:
+
+<img src="images/hello.png"  width="810" height="207" style="border: solid 1px #cccccc;"/>

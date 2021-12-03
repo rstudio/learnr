@@ -1,6 +1,11 @@
 ---
 title: "Internationalization"
 output: rmarkdown::html_vignette
+description: >
+  Teach in your own language! learnr provides translations for its interface in
+  a few languages thanks to volunteers who have contributed translations. You
+  can also use the language features of learnr to customize the language used in
+  your tutorials according to your preferences.
 vignette: >
   %\VignetteIndexEntry{multilang}
   %\VignetteEngine{knitr::rmarkdown}

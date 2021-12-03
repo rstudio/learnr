@@ -41,7 +41,7 @@ install_tutorial_dependencies <- function(dir) {
 
 
 
-#' List Tutorial Dependencies
+#' List tutorial dependencies
 #'
 #' List the \R packages required to run a particular tutorial.
 #'
@@ -50,10 +50,12 @@ install_tutorial_dependencies <- function(dir) {
 #' @param package The \R package providing the tutorial. If \code{package} is
 #'   \code{NULL}, then all tutorials will be searched.
 #'
-#' @export
 #' @return A character vector of package names that are required for execution.
+#'
 #' @examples
 #' tutorial_package_dependencies(package = "learnr")
+#'
+#' @export
 tutorial_package_dependencies <- function(name = NULL, package = NULL) {
   if (identical(name, NULL)) {
     info <- available_tutorials(package = package)

@@ -1,0 +1,44 @@
+Here are some simple examples of tutorials created with the **learnr** package:
+
+```{r, eval=FALSE, echo=FALSE}
+## Not included to avoid rcmdcheck warnings about dependency on {quillt}
+# cat(format(quillt::examples("examples.yml", showcaseOnly = TRUE)))
+```
+
+<!--
+<div class="row">
+<div class="col-sm-4">
+<a class="thumbnail" title="Setting Up R" href="https://learnr-examples.shinyapps.io/ex-setup-r/">
+<img src="articles/images/tutorial-ex-setup-r.png"/>
+<div class="caption">
+Setting Up R
+<object>
+<a class="source-repo" href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">(Source)</a>
+</object>
+</div>
+</a>
+</div>
+<div class="col-sm-4">
+<a class="thumbnail" title="Filtering Observations" href="https://learnr-examples.shinyapps.io/ex-data-filter/">
+<img src="articles/images/tutorial-ex-data-filter.png"/>
+<div class="caption">
+Filtering Observations
+<object>
+<a class="source-repo" href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">(Source)</a>
+</object>
+</div>
+</a>
+</div>
+<div class="col-sm-4">
+<a class="thumbnail" title="Summarizing Data" href="https://learnr-examples.shinyapps.io/ex-data-summarise">
+<img src="articles/images/tutorial-ex-data-summarise.png"/>
+<div class="caption">
+Summarizing Data
+<object>
+<a class="source-repo" href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">(Source)</a>
+</object>
+</div>
+</a>
+</div>
+</div>
+-->

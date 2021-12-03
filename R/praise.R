@@ -59,7 +59,7 @@ random_phrases <- function(type, language = NULL) {
   .random_phrases[[type]][[language]]
 }
 
-#' Add Phrases to the bank of random phrases
+#' Add phrases to the bank of random phrases
 #'
 #' Augment the random phrases available in [random_praise()] and
 #' [random_encouragement()] with phrases of your own. Note that these phrases

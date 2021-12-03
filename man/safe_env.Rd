@@ -12,3 +12,4 @@ to open a browser window.  This is the default execution environment within
 \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 behavior within the learnr package and should not be suppressed.
 }
+\keyword{internal}

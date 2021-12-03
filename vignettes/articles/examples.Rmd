@@ -1,0 +1,42 @@
+---
+title: "learnr Tutorial Examples"
+description: >
+  A collection of example interactive tutorials that use the learnr package.
+toc: false
+output:
+  html_document:
+    toc_float: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+source("example_cards.R", local = TRUE)
+```
+
+```{css echo=FALSE}
+.contents { max-width: 100%; }
+```
+
+## Complete Tutorials
+
+These tutorials were designed to showcase the features of the learnr package —
+and to teach learners how to use R!
+Try working through these tutorials to get a sense of the look and feel of a learnr tutorial.
+Then check out the source code to see how these tutorials were made!
+
+```{r example-cards-showcase}
+example_cards("examples.yml", "showcase")
+```
+
+## Demo Tutorials
+
+There's a lot that learnr can do.
+These tutorials showcase specific learnr features
+or show you some possibilities that build on other packages designed
+to work with R Markdown and learnr.
+
+```{r example-cards-demo}
+example_cards("examples.yml", "demo")
+```
