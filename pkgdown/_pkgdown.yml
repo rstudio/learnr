@@ -26,11 +26,11 @@ template:
 
   opengraph:
     image:
-      src: man/figures/logo.png
+      src: https://pkgs.rstudio.com/learnr/learnr-social.png
       alt: "learnr package"
     twitter:
       creator: "@rstudio"
-      card: summary
+      card: summary_large_image
 
 home:
   links:
