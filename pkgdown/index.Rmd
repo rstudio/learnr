@@ -24,7 +24,9 @@ example_cards(ex, "showcase")
 
 ## Hello, Tutorial!
 
-To create a tutorial, just use `library(learnr)` within your Rmd file to activate tutorial mode, then use the `exercise = TRUE` attribute to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
+To create a tutorial, set `runtime: shiny_prerendered` in the YAML fromtmatter of your `.Rmd` file to turn your R Markdown document into an [interactive app](https://rmarkdown.rstudio.com/lesson-14.html). 
+
+Then, call `library(learnr)` within your Rmd file to activate tutorial mode, and use the `exercise = TRUE` chunk option to turn code chunks into exercises. Users can edit and execute the R code and see the results right within their browser.
 
 For example, here's a very simple tutorial:
 
