@@ -21,7 +21,6 @@ template:
       }
       </style>
 
-
   trailing_slash_redirect: true
 
   opengraph:
