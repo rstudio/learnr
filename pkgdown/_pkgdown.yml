@@ -10,6 +10,7 @@ template:
     navbar-background: "#e6f3fc"
   includes:
     in_header: >
+      <meta name="pkgdown-site-root" content="https://pkgs.rstudio.com/learnr">
       <script src="https://pkgs.rstudio.com/learnr/snippets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
       <script src="https://pkgs.rstudio.com/learnr/snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
 
