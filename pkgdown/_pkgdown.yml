@@ -10,8 +10,8 @@ template:
     navbar-background: "#e6f3fc"
   includes:
     in_header: >
-      <script src="/snippets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-      <script src="/snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+      <script src="https://pkgs.rstudio.com/learnr/snippets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+      <script src="https://pkgs.rstudio.com/learnr/snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
 
       <style type="text/css">
       .snippet {
