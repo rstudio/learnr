@@ -16,7 +16,8 @@ function loadSnippet(snippet, mode) {
   editor.session.setMode("ace/mode/" + mode);
   editor.session.getSelection().clearSelection();
 
-  $.get("/snippets/" + snippet + ".md", function(data) {
+  var root = document.querySelector('meta[name="pkgdown-site-root"]').content
+  $.get(root + "/snippets/" + snippet + ".md", function(data) {
     editor.setValue(data, -1);
     editor.setOptions({
       maxLines: editor.session.getLength()
