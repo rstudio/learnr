@@ -134,6 +134,15 @@ praise:
     - 🥇
     - 🎉
     - 💯
+  de:
+    - Fantastisch!
+    - Bravo!
+    - Super!
+    - Gut gemacht!
+    - Weiter so!
+    - Gute Arbeit!
+    - Beeindruckend!
+    - Hervorragend!
 encouragement:
   testing:
     - RANDOM ENCOURAGEMENT.
@@ -184,3 +193,9 @@ encouragement:
     - 💪
     - 🤞
     - 🙌
+  de:
+    - Versuch es noch einmal.
+    - Lass es uns nochmal versuchen.
+    - Macht nichts! Versuch es gleich nochmal.
+    - Versuch es nochmal. Nächstes Mal klappt es bestimmt!
+    - Das war gar nicht so einfach. Probiere es gleich nochmal!
