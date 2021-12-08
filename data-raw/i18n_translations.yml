@@ -61,6 +61,7 @@ button:
     tr: "Çalıştırma Kodu"
     emo: "🏃"
     eu: "Kodea egikaritu"
+    de: "Code ausführen"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
     en: "$t(button.runcode) ({{kbd}})"
@@ -70,6 +71,7 @@ button:
     tr: "$t(button.runcode) ({{kbd}})"
     emo: "$t(button.runcode) ({{kbd}})"
     eu: "$t(button.runcode) ({{kbd}})"
+    de: "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
     fr: "Indication"
@@ -78,6 +80,7 @@ button:
     tr: "Ipucu"
     emo: "💡"
     eu: "Laguntza"
+    de: "Tipp"
   hint_plural:
     en: "Hints"
     fr: "Indications"
@@ -86,6 +89,7 @@ button:
     tr: "İpuçları"
     emo: "$t(button.hint)"
     eu: "Laguntza"
+    de: "Tipps"
   hinttitle:
     en: "$t(button.hint)"
     fr: "$t(button.hint)"
@@ -94,6 +98,7 @@ button:
     tr: "$t(button.hint)"
     emo: "$t(button.hint)"
     eu: "$t(button.hint)"
+    de: "$t(button.hint)"
   hintnext:
     en: "Next Hint"
     fr: "Indication Suivante"
@@ -102,6 +107,7 @@ button:
     tr: "Sonraki İpucu"
     emo: ~
     eu: "Aurreko laguntza"
+    de: "Nächster Tipp"
   hintprev:
     en: "Previous Hint"
     fr: "Indication Précédente"
@@ -110,6 +116,7 @@ button:
     tr: "Önceki İpucu"
     emo: ~
     eu: "Hurrengo laguntza"
+    de: "Vorheriger Tipp"
   solution:
     en: "Solution"
     fr: "Solution"
@@ -118,6 +125,7 @@ button:
     tr: "Çözüm"
     emo: "🎯"
     eu: "Ebazpena"
+    de: "Lösung"
   solutiontitle:
     en: "$t(button.solution)"
     fr: "$t(button.solution)"
@@ -126,6 +134,7 @@ button:
     tr: "$t(button.solution)"
     emo: "$t(button.solution)"
     eu: "$t(button.solution)"
+    de: "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
     fr: "Copier dans le Presse-papier"
@@ -134,6 +143,7 @@ button:
     tr: "Pano'ya Kopyala"
     emo: "📋"
     eu: "Arbelean kopiatu"
+    de: "In die Zwischenablage kopieren"
   startover:
     en: "Start Over"
     fr: "Recommencer"
@@ -142,6 +152,7 @@ button:
     tr: "Baştan Başlamak"
     emo: "⏮"
     eu: "Berrabiarazi"
+    de: "Neustart"
   startovertitle:
     en: "$t(button.startover)"
     fr: "$t(button.startover)"
@@ -150,6 +161,7 @@ button:
     tr: "$t(button.startover)"
     emo: "Start Over"
     eu: "$t(button.startover)"
+    de: "$t(button.startover)"
   continue:
     en: "Continue"
     fr: "Continuer"
@@ -158,6 +170,7 @@ button:
     tr: "Devam et"
     emo: "✅"
     eu: "Jarraitu"
+    de: "Weiter"
   submitanswer:
     en: "Submit Answer"
     fr: "Soumettre"
@@ -166,6 +179,7 @@ button:
     tr: "Cevabı onayla"
     emo: "🆗"
     eu: "Erantzuna bidali"
+    de: "Antwort einreichen"
   submitanswertitle:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -174,6 +188,7 @@ button:
     tr: "$t(button.submitanswer)"
     emo: "Submit Answer"
     eu: "$t(button.submitanswer)"
+    de: "$t(button.submitanswer)"
   previoustopic:
     en: "Previous Topic"
     fr: "Chapitre Précédent"
@@ -182,6 +197,7 @@ button:
     tr: "Önceki Konu"
     emo: "⬅"
     eu: "Aurreko atala"
+    de: "Vorheriges Kapitel"
   nexttopic:
     en: "Next Topic"
     fr: "Chapitre Suivant"
@@ -190,6 +206,7 @@ button:
     tr: "Sonraki Konu"
     emo: "➡"
     eu: "Hurrengo atala"
+    de: "Nächstes Kapitel"
   questionsubmit:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -198,6 +215,7 @@ button:
     tr: "$t(button.submitanswer)"
     emo: "$t(button.submitanswer)"
     eu: "$t(button.submitanswer)"
+    de: "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"
@@ -206,6 +224,7 @@ button:
     tr: "Tekrar Deneyin"
     emo: "🔁"
     eu: "Berriro saiatu"
+    de: "Nochmal versuchen"
 text:
   startover:
     en: "Start Over"
@@ -215,6 +234,7 @@ text:
     tr: "Baştan Başlamak"
     emo: "⏮"
     eu: "Berrabiarazi"
+    de: "Neustart"
   areyousure:
     en: "Are you sure you want to start over? (all exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
@@ -223,6 +243,7 @@ text:
     tr: "Baştan başlamak istediğinizden emin misiniz? (tüm egzersiz ilerlemesi kaybolacak)"
     emo: "🤔"
     eu: "Berriro hasi nahi duzu? (egindako lana galdu egingo da)"
+    de: "Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
@@ -231,6 +252,7 @@ text:
     tr: "Tamamlamalısın"
     emo: "⚠️ 👉 🧑‍💻"
     eu: "Aurrera egin baino lehen atal honetako"
+    de: "Vervollstädinge"
   exercise:
     en: "exercise"
     fr: "l'exercice"
@@ -239,6 +261,7 @@ text:
     tr: "egzersiz"
     emo: ""
     eu: "ariketa egin behar duzu."
+    de: "die Übung"
   exercise_plural:
     en: "exercises"
     fr: "des exercices"
@@ -247,6 +270,7 @@ text:
     tr: "egzersizler"
     emo: ""
     eu: "ariketak egin behar dituzu."
+    de: "die Übungen
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
@@ -255,6 +279,7 @@ text:
     tr: "devam etmeden önce bu bölümde"
     emo: ""
     eu: ""
+    de: "in diesem Kapitel, bevor du fortfährst."
   code:
     en: "Code"
     fr: "Code"
@@ -263,6 +288,7 @@ text:
     tr: "Kod"
     emo: "💻"
     eu: "Kodea"
+    de: "Code"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
@@ -272,6 +298,7 @@ text:
     tr: "$t(text.code) {{engine}}"
     emo: "$t(text.code) {{engine}}"
     eu: "$t(text.code) {{engine}}"
+    de: "$t(text.code) {{engine}}"
   quiz:
     en: "Quiz"
     fr: "Quiz"
@@ -280,6 +307,7 @@ text:
     tr: "Sınav"
     emo: ~
     eu: "Galdetegia"
+    de: "Quiz"
   blank:
     en: "blank"
     fr: ~
@@ -288,6 +316,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: "Lücke"
   blank_plural:
     en: "blanks"
     fr: ~
@@ -296,6 +325,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: "Lücken"
   exercisecontainsblank:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
@@ -305,6 +335,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: ~
   pleasereplaceblank:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
@@ -314,6 +345,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: "Bitte ersetze {{blank}} mit gültigem Code."
   unparsable:
     en: >
       It looks like this might not be valid R code.
@@ -329,6 +361,14 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: >
+      Dies scheint kein gültiger R Code zu sein.
+      R kann deinen Text nicht in einen gültigen Befehl übersetzen.
+      Du hast vielleicht vergessen, die Lücke zu füllen,
+      einen Unterstrich zu entfernen, ein Komma zwischen Argumente zu setzen
+      oder ein eröffnendes <code>&quot;</code>, <code>'</code>, <code>(</code>
+      oder <code>{</code> mit einem zugehörigen <code>&quot;</code>, <code>'</code>,
+      <code>)</code> oder <code>}</code> zu schließen.
   and:
     en: "and"
     fr: "et"
@@ -337,6 +377,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: "und"
   or:
     en: "or"
     fr: "ou"
@@ -345,6 +386,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: "oder"
   listcomma:
     # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
     #   separating list items
@@ -355,6 +397,7 @@ text:
     tr: ~
     emo: ~
     eu: ~
+    de: ", "
   oxfordcomma:
     en: ","
     fr: ""
@@ -363,3 +406,4 @@ text:
     tr: ""
     emo: ""
     eu: ""
+    de: ","
