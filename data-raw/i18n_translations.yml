@@ -243,7 +243,7 @@ text:
     tr: "Baştan başlamak istediğinizden emin misiniz? (tüm egzersiz ilerlemesi kaybolacak)"
     emo: "🤔"
     eu: "Berriro hasi nahi duzu? (egindako lana galdu egingo da)"
-    de: "Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)
+    de: "Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)"
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
@@ -270,7 +270,7 @@ text:
     tr: "egzersizler"
     emo: ""
     eu: "ariketak egin behar dituzu."
-    de: "die Übungen
+    de: "die Übungen"
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
