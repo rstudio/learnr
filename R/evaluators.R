@@ -96,10 +96,6 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
         # got result
         if (!is.null(collect)) {
-
-          # final reaping of process
-          parallel::mccollect(jobs = job, wait = FALSE)
-
           # call cleanup hook
           call_hook("oncleanup", default = default_cleanup)
 
