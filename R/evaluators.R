@@ -47,10 +47,11 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
     # helper to call a hook function
     call_hook <- function(name, default = NULL) {
       hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
-      if (!is.null(hook))
+      if (!is.null(hook)) {
         hook(job$pid)
-      else if (!is.null(default))
+      } else if (!is.null(default)) {
         default(job$pid)
+      }
     }
 
     # default cleanup function
@@ -113,14 +114,15 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           result <<- collect[[1]]
 
           # check if it's an error and convert it to an html error if it is
-          if(inherits(result, "try-error"))
+          if (inherits(result, "try-error")) {
             result <<- exercise_result_error(result, timeout_exceeded = FALSE)
+          }
 
-          TRUE
+          return(TRUE)
         }
 
         # hit timeout
-        else if (difftime(Sys.time(), start_time, units="secs") >= timelimit) {
+        if (difftime(Sys.time(), start_time, units="secs") >= timelimit) {
 
           # call cleanup hook
           call_hook("oncleanup", default = default_cleanup)
@@ -128,15 +130,13 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           # decrement our counter of processes
           running_exercises <<- running_exercises - 1
 
-          # return error result
+          # store error result
           result <<- exercise_result_timeout()
-          TRUE
+          return(TRUE)
         }
 
         # not yet completed
-        else {
-          FALSE
-        }
+        FALSE
       },
 
       result = function() {
