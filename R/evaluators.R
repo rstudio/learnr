@@ -90,6 +90,13 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
       },
 
       completed = function() {
+        if (is.null(start_time)) {
+          return(NA)
+        }
+
+        if (!is.null(result)) {
+          return(TRUE)
+        }
 
         # attempt to collect the result
         collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
