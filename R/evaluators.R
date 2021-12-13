@@ -95,7 +95,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
         }
 
         if ("result" %in% names(self)) {
-          # Collected result has replaced placeholder unresolved result
+          # We know the job is complete because we have a collected result
           return(TRUE)
         }
 
