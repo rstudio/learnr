@@ -182,6 +182,7 @@
 <li><p>Added option for quickly restoring a tutorial without re-evaluating the last stored exercise submission. This feature is enabled by setting the global option <code>tutorial.quick_restore = TRUE</code> or the environment variable <code>TUTORIAL_QUICK_RESTORE=1</code> (thanks <a href="https://github.com/mstackhouse" class="external-link">@mstackhouse</a>, <a href="https://github.com/rstudio/learnr/issues/509" class="external-link">#509</a>).</p></li>
 <li><p><code>exercise_result()</code> no longer combines the code output and feedback; this now happens just before presenting the exercise result to the user (<a href="https://github.com/rstudio/learnr/issues/522" class="external-link">#522</a>).</p></li>
 <li><p>Support the updated Bootstrap 4+ popover dispose method name, previously destroy (<a href="https://github.com/rstudio/learnr/issues/560" class="external-link">#560</a>).</p></li>
+<li><p>Forked evaluator (used by default on Linux and <a href="https://shinyapps.io" class="external-link">shinyapps.io</a>) now only collects the exercise evaluation result once, avoiding a “cannot wait for child” warning (thanks <a href="https://github.com/tombeesley" class="external-link">@tombeesley</a> <a href="https://github.com/rstudio/learnr/issues/449" class="external-link">#449</a>, <a href="https://github.com/rstudio/learnr/issues/631" class="external-link">#631</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">
