@@ -138,6 +138,8 @@
 
 -   Support the updated Bootstrap 4+ popover dispose method name, previously destroy (#560).
 
+-   Forked evaluator (used by default on Linux and [shinyapps.io](https://shinyapps.io)) now only collects the exercise evaluation result once, avoiding a "cannot wait for child" warning (thanks @tombeesley #449, #631).
+
 # learnr 0.10.1
 
 ## New features
