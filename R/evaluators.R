@@ -39,18 +39,17 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
 
   function(expr, timelimit, ...) {
 
-    # closure members
-    job <- NULL
-    start_time <- NULL
-    result <- NULL
+    # closure object to track job, start time and result
+    self <- list()
 
     # helper to call a hook function
     call_hook <- function(name, default = NULL) {
       hook <- getOption(paste0("tutorial.exercise.evaluator.", name))
-      if (!is.null(hook))
-        hook(job$pid)
-      else if (!is.null(default))
-        default(job$pid)
+      if (!is.null(hook)) {
+        hook(self$job$pid)
+      } else if (!is.null(default)) {
+        default(self$job$pid)
+      }
     }
 
     # default cleanup function
@@ -61,7 +60,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
     list(
 
       start = function() {
-        start_time <<- Sys.time()
+        self$start_time <<- Sys.time()
 
         doStart <- function(){
           if (running_exercises >= max_forked_procs) {
@@ -74,7 +73,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           # increment our counter of processes
           running_exercises <<- running_exercises + 1
 
-          job <<- parallel::mcparallel(mc.interactive = FALSE, {
+          self$job <<- parallel::mcparallel(mc.interactive = FALSE, {
 
             # close all connections
             closeAllConnections()
@@ -90,16 +89,21 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
       },
 
       completed = function() {
+        if (!"start_time" %in% names(self)) {
+          # Evaluation hasn't started, can't call mccollect() yet
+          return(NA)
+        }
+
+        if ("result" %in% names(self)) {
+          # We know the job is complete because we have a collected result
+          return(TRUE)
+        }
 
         # attempt to collect the result
-        collect <- parallel::mccollect(jobs = job, wait = FALSE, timeout = 0.01)
+        collect <- parallel::mccollect(jobs = self$job, wait = FALSE, timeout = 0.01)
 
         # got result
         if (!is.null(collect)) {
-
-          # final reaping of process
-          parallel::mccollect(jobs = job, wait = FALSE)
-
           # call cleanup hook
           call_hook("oncleanup", default = default_cleanup)
 
@@ -107,17 +111,18 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           running_exercises <<- running_exercises - 1
 
           # return result
-          result <<- collect[[1]]
+          self$result <<- collect[[1]]
 
           # check if it's an error and convert it to an html error if it is
-          if(inherits(result, "try-error"))
-            result <<- exercise_result_error(result, timeout_exceeded = FALSE)
+          if (inherits(self$result, "try-error")) {
+            self$result <<- exercise_result_error(self$result, timeout_exceeded = FALSE)
+          }
 
-          TRUE
+          return(TRUE)
         }
 
         # hit timeout
-        else if (difftime(Sys.time(), start_time, units="secs") >= timelimit) {
+        if (difftime(Sys.time(), self$start_time, units="secs") >= timelimit) {
 
           # call cleanup hook
           call_hook("oncleanup", default = default_cleanup)
@@ -125,19 +130,17 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
           # decrement our counter of processes
           running_exercises <<- running_exercises - 1
 
-          # return error result
-          result <<- exercise_result_timeout()
-          TRUE
+          # store error result
+          self$result <<- exercise_result_timeout()
+          return(TRUE)
         }
 
         # not yet completed
-        else {
-          FALSE
-        }
+        FALSE
       },
 
       result = function() {
-        result
+        self$result
       }
     )
   }
