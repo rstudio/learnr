@@ -135,15 +135,22 @@ register_default_event_handlers <- function() {
   event_register_handler(
     "exercise_result",
     function(session, event, data) {
+      # Should this even count towards exercise completion?
+      ex <- standardize_exercise_code(get_exercise_cache(data$label))
+      requires_check <- nzchar(ex$check) || nzchar(ex$code_check)
+      # Only set `correct` on the `exercise_submission` event if a check was required
+      correct <- if (requires_check && data$checked) data$feedback$correct
+      # Submission counts for completion when:
+      #   1. Some code is submitted
+      #   2. A check is not required OR the submission was checked
+      # (correctness does not affect completion)
+      completed <- nzchar(trimws(data$code)) && (!requires_check || data$checked)
+
       # notify client side listeners
-      if (data$checked)
-        correct <- data$feedback$correct
-      else
-        correct <- TRUE
       broadcast_progress_event_to_client(
         session = session,
         event = "exercise_submission",
-        data = list(label = data$label, correct = correct)
+        data = list(label = data$label, correct = correct, completed = completed)
       )
 
       # save submission for later replay
