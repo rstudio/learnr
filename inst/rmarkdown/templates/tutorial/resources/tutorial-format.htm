@@ -21,9 +21,13 @@ $endif$
 
 <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
 
+
+<!-- header-includes START -->
 $for(header-includes)$
 $header-includes$
 $endfor$
+<!-- header-includes END -->
+<!-- HEAD_CONTENT -->
 
 <!-- highlightjs -->
 $if(highlightjs)$
@@ -117,8 +121,6 @@ $if(theme)$
 </style>
 $endif$
 $endif$
-
-<!-- HEAD_CONTENT -->
 
 $for(css)$
 <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>

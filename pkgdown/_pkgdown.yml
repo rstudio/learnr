@@ -1,0 +1,142 @@
+destination: reference
+
+url: https://pkgs.rstudio.com/learnr
+
+template:
+  package: tidytemplate
+  bootstrap: 5
+  bslib:
+    primary: "#096B72"
+    navbar-background: "#e6f3fc"
+    pkgdown-nav-height: 90px
+
+  trailing_slash_redirect: true
+
+  opengraph:
+    image:
+      src: https://pkgs.rstudio.com/learnr/learnr-social.png
+      alt: "learnr package"
+    twitter:
+      creator: "@rstudio"
+      card: summary_large_image
+
+home:
+  links:
+  - text: Learn more about R Markdown
+    href: "https://rmarkdown.rstudio.com"
+
+authors:
+  Garrick Aden-Buie:
+    href: https://www.garrickadenbuie.com
+  Nischal Shrestha:
+    href: http://nischalshrestha.me/
+  Barret Schloerke:
+    href: http://schloerke.com/
+  "RStudio, PBC":
+    href: https://www.rstudio.com
+    html: <img src="https://www.tidyverse.org/rstudio-logo.svg" height="24" />
+
+navbar:
+  structure:
+    left:  [intro, examples, articles, reference, news]
+  components:
+    examples:
+      text: Examples
+      href: articles/examples.html
+
+# https://pkgdown.r-lib.org/dev/reference/build_articles.html#index-and-navbar
+articles:
+- title: Introducing learnr
+  contents:
+  - '`articles/learnr`'
+  - '`articles/examples`'
+- title: Learn how to use learnr
+  navbar: Learn learnr
+  contents:
+  - '`articles/exercises`'
+  - '`articles/questions`'
+- title: Publish learnr tutorials
+  navbar: Publish
+  contents:
+  - '`articles/publishing`'
+  - '`shinyapps-publishing`'
+- title: Customize learnr tutorials
+  navbar: Customize
+  contents:
+  - '`articles/formats`'
+  - '`multilang`'
+
+# custom footer for rmarkdown ecosystem
+footer:
+  structure:
+    left: [learnr]
+    right: [developed_by, p, built_with]
+  components:
+      p: "\n\n"
+      learnr: |
+        learnr is a part of the **R Markdown** ecosystem of packages for creating
+        computational documents in R. Learn more at
+        [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
+
+reference:
+  - title: learnr Tutorials
+  - subtitle: Run a learnr Tutorial
+    contents:
+      - '`run_tutorial`'
+      - '`available_tutorials`'
+      - '`safe`'
+  - subtitle: Write or Configure a learnr Tutorial
+    contents:
+      - '`tutorial`'
+      - '`tutorial_options`'
+      - '`tutorial_package_dependencies`'
+
+  - title: Interactive Questions
+    contents:
+      - '`question_checkbox`'
+      - '`question_radio`'
+      - '`question_numeric`'
+      - '`question_text`'
+      - '`quiz`'
+
+  - title: Random Praise and Encouragement
+    contents:
+      - '`random_praise`'
+      - '`random_phrases_add`'
+
+  - title: Developer Tools
+    desc: >
+      These functions were designed for use by developers who want to extend
+      learnr with custom formats or interactive question types, or for those
+      who wish to deploy learnr tutorials in custom environments.
+  - subtitle: Questions
+    desc: >
+      Functions intended for use by developers creating custom questions
+      for learnr.
+    contents:
+      - '`correct`'
+      - '`disable_all_tags`'
+      - '`finalize_question`'
+      - '`question_ui_initialize`'
+      - '`knit_print.tutorial_question`'
+      - '`format.tutorial_question_answer`'
+  - subtitle: State and Events
+    contents:
+      - '`get_tutorial_info`'
+      - '`get_tutorial_state`'
+      - '`filesystem_storage`'
+      - '`event_register_handler`'
+      - '`one_time`'
+  - subtitle: General Tools
+    contents:
+      - '`duplicate_env`'
+      - '`initialize_tutorial`'
+      - '`external_evaluator`'
+      - '`tutorial_html_dependency`'
+
+redirects:
+  - ["examples.html", "articles/examples.html"]
+  - ["exercises.html", "articles/exercises.html"]
+  - ["questions.html", "articles/questions.html"]
+  - ["publishing.html", "articles/publishing.html"]
+  - ["formats.html", "articles/formats.html"]

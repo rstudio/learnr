@@ -398,6 +398,7 @@ evaluate_exercise <- function(
     return_if_exercise_result(
       try_checker(
         exercise,
+        stage = "code_check",
         check_code = exercise$code_check,
         envir_prep = duplicate_env(envir)
       )
@@ -420,7 +421,8 @@ evaluate_exercise <- function(
     error = function(err_render) {
       error_feedback <- NULL
       error_check_code <- exercise$error_check
-      if (!nzchar(error_check_code)) {
+      error_should_check <- nzchar(exercise$check) || nzchar(exercise$code_check)
+      if (error_should_check && !nzchar(error_check_code)) {
         # If there is no locally defined error check code, look for globally defined error check option
         error_check_code <- standardize_code(exercise$options$exercise.error.check.code)
       }
@@ -430,6 +432,7 @@ evaluate_exercise <- function(
         # checking: the exercise could be to throw an error!
         error_feedback <- try_checker(
           exercise,
+          stage = "error_check",
           check_code = error_check_code,
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
@@ -459,6 +462,7 @@ evaluate_exercise <- function(
     if (nzchar(exercise$check)) {
       try_checker(
         exercise,
+        stage = "check",
         check_code = exercise$check,
         envir_result = rmd_results$envir_result,
         evaluate_result = rmd_results$evaluate_result,
@@ -475,7 +479,8 @@ evaluate_exercise <- function(
 
 
 try_checker <- function(
-  exercise, name = "exercise.checker", check_code = NULL, envir_result = NULL,
+  exercise, stage,
+  name = "exercise.checker", check_code = NULL, envir_result = NULL,
   evaluate_result = NULL, envir_prep, last_value = NULL,
   engine = exercise$engine
 ) {
@@ -500,17 +505,25 @@ try_checker <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
-    engine = engine
+    engine = engine,
+    stage = stage
   )
   # Throw better error messaging if the checker function signature is ill-defined
   missing_args <- setdiff(names(args), checker_args)
   if (length(missing_args) && !"..." %in% checker_args) {
-    msg <- sprintf(
-      "Either add ... or the following arguments to the '%s' function: '%s'",
-      name, paste(missing_args, collapse = "', '")
-    )
-    message(msg)
-    rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
+    if (identical(missing_args, "stage")) {
+      # Don't throw an error if the only missing argument is `stage`.
+      # `stage` was not available in learnr <= 0.10.1 and checker functions can
+      #   still work without it.
+      args <- args[names(args) != "stage"]
+    } else {
+      msg <- sprintf(
+        "Either add ... or the following arguments to the '%s' function: '%s'",
+        name, paste(missing_args, collapse = "', '")
+      )
+      message(msg)
+      rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
+    }
   }
 
   # Call the check function
@@ -885,6 +898,7 @@ exercise_check_code_is_parsable <- function(exercise) {
   if (nzchar(exercise$error_check %||% "")) {
     error_feedback <- try_checker(
       exercise,
+      stage = "error_check",
       check_code = exercise[["error_check"]],
       envir_result = exercise[["envir"]],
       evaluate_result = error,

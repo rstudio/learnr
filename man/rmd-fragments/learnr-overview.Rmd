@@ -1,0 +1,13 @@
+The **learnr** package makes it easy to turn any [R Markdown](http://rmarkdown.rstudio.com) document into an interactive tutorial. Tutorials consist of content along with interactive components for checking and reinforcing understanding. Tutorials can include any or all of the following:
+
+1. Narrative, figures, illustrations, and equations.
+
+2. Code exercises (R code chunks that users can edit and execute directly).
+
+3. Quiz questions.
+
+4. Videos (supported services include YouTube and Vimeo).
+
+5. Interactive Shiny components.
+
+Tutorials automatically preserve work done within them, so if a user works on a few exercises or questions and returns to the tutorial later they can pick up right where they left off.

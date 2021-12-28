@@ -223,6 +223,7 @@ test_that("evaluate_exercise() errors from user code are checked by error_checke
 test_that("evaluate_exercise() errors from user code are checked by default error checker as a fallback", {
   exercise <- mock_exercise(
     user_code = "stop('user')",
+    check = I("stop('test failed')"),
     error_check = NULL,
     exercise.error.check.code = I("'default_error_check'")
   )
@@ -400,6 +401,7 @@ test_that("standardize_exercise_result() ensures top-level code is length-1 stri
 test_that("evaluate_exercise() handles default vs. explicit error check code", {
   ex <- mock_exercise(
     "stop('boom!')",
+    check = I("stop('test failed')"),
     error_check = NULL,
     exercise.error.check.code = I("'default_error_check_code'")
   )

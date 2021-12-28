@@ -1,0 +1,60 @@
+- title: "Setting Up R"
+  image: images/tutorial-ex-setup-r.png
+  link: https://learnr-examples.shinyapps.io/ex-setup-r/
+  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">Source</a>
+  group: showcase
+  text: >
+    A tutorial featuring videos and interactive questions to guide a new R user
+    through the installation and set up of everything they'll need to get
+    started with R.
+
+- title: "Filtering Observations"
+  image: images/tutorial-ex-data-filter.png
+  link: https://learnr-examples.shinyapps.io/ex-data-filter/
+  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">Source</a>
+  group: showcase
+  text: >
+    An example tutorial teaching a common `data` transformation: _filtering_
+    rows of a data frame with `dplyr::filter()`.
+
+- title: "Summarizing Data"
+  image: images/tutorial-ex-data-summarise.png
+  link: https://learnr-examples.shinyapps.io/ex-data-summarise
+  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">Source</a>
+  group: showcase
+  text: >
+    An example tutorial where learners are introduced to `dplyr::summarise()`.
+    Along the way, learners also gain practice with the pipe operator, `%>%`,
+    and `dplyr::group_by()`.
+
+- title: "learnr: Quiz Questions"
+  image: images/tutorial-quiz_question.png
+  link: https://learnr-examples.shinyapps.io/quiz_question/
+  footer: >
+    <a href="https://learnr-examples.shinyapps.io/quiz_question/">Run Tutorial</a>
+  group: demo
+  text: >
+    A brief introduction to the types of interactive questions you can use in
+    a learnr tutorial with the `learnr::question()` and `learnr::quiz()`
+    functions.
+
+- title: "learnr: slidy layout"
+  image: images/tutorial-slidy.png
+  link: https://learnr-examples.shinyapps.io/slidy/
+  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/slidy/slidy.Rmd">Source</a>
+  group: demo
+  text: >
+    learnr tutorials can even be used in slides! This example tutorial is a
+    short presentation that showcases an interactive exercise that produces
+    interactive visualizations with [htmlwidgets](http://www.htmlwidgets.org/).
+
+- title: "sortable: Ranking Questions"
+  image: images/tutorial-external-sortable.png
+  link: https://andrie-de-vries.shinyapps.io/sortable_tutorial_question_rank/
+  footer: <a href="https://github.com/rstudio/sortable/tree/master/inst/tutorials/question_rank/question_rank.Rmd">Source</a>
+  group: demo
+  text: >
+    The [sortable](https://rstudio.github.io/sortable/) package allows you to
+    create custom HTML widgets with drag-and-drop capabilities that you can
+    even use in learnr tutorials. This tutorial shows you what's possible with
+    sortable and how to add drag-and-drop questions to your tutorials.

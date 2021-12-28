@@ -1,6 +1,6 @@
 #' Run a tutorial
 #'
-#' Run a tutorial which is contained within an R package.
+#' Run a tutorial provided by an installed R package.
 #'
 #' @param name Tutorial name (subdirectory within \code{tutorials/}
 #'   directory of installed package), or the path to a local directory
@@ -25,20 +25,17 @@
 #' @param ... Unused. Included for future expansion and to ensure named
 #'   arguments are used.
 #'
-#' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
-#'   the tutorial Rmd should have already been rendered as part of the
-#'   development of the package (i.e. the corresponding tutorial .html file for
-#'   the .Rmd file must exist).
-#'
 #' @seealso \code{\link{safe}} and \code{\link{available_tutorials}}
-#' @importFrom utils adist
-#' @export
 #' @examples
 #' # display all "learnr" tutorials
 #' available_tutorials("learnr")
 #'
 #' # run basic example within learnr
-#' \dontrun{run_tutorial("hello", "learnr")}
+#' \dontrun{
+#' run_tutorial("hello", "learnr")
+#' }
+#'
+#' @export
 run_tutorial <- function(
   name = NULL,
   package = NULL,
@@ -255,6 +252,8 @@ run_clean_tutorial_prerendered <- function(path) {
 #' to open a browser window.  This is the default execution environment within
 #' \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 #' behavior within the learnr package and should not be suppressed.
+#'
+#' @keywords internal
 #' @export
 safe_env <- function() {
   envs <- callr::rcmd_safe_env()

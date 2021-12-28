@@ -1,7 +1,7 @@
 
 
 
-#' Initialize Tutorial R Markdown Extensions
+#' Initialize tutorial R Markdown extensions
 #'
 #' One time initialization of R Markdown extensions required by the
 #' \pkg{learnr} package. This function is typically called automatically

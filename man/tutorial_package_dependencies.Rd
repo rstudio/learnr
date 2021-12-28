@@ -2,7 +2,7 @@
 % Please edit documentation in R/tutorial_package_dependencies.R
 \name{tutorial_package_dependencies}
 \alias{tutorial_package_dependencies}
-\title{List Tutorial Dependencies}
+\title{List tutorial dependencies}
 \usage{
 tutorial_package_dependencies(name = NULL, package = NULL)
 }
@@ -21,4 +21,5 @@ List the \R packages required to run a particular tutorial.
 }
 \examples{
 tutorial_package_dependencies(package = "learnr")
+
 }

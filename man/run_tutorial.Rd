@@ -42,20 +42,17 @@ When running as an RStudio job, \code{run_tutorial()} sets or overrides the
 the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
 }
 \description{
-Run a tutorial which is contained within an R package.
-}
-\details{
-Note that when running a tutorial Rmd file with \code{run_tutorial}
-the tutorial Rmd should have already been rendered as part of the
-development of the package (i.e. the corresponding tutorial .html file for
-the .Rmd file must exist).
+Run a tutorial provided by an installed R package.
 }
 \examples{
 # display all "learnr" tutorials
 available_tutorials("learnr")
 
 # run basic example within learnr
-\dontrun{run_tutorial("hello", "learnr")}
+\dontrun{
+run_tutorial("hello", "learnr")
+}
+
 }
 \seealso{
 \code{\link{safe}} and \code{\link{available_tutorials}}
