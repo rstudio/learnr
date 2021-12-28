@@ -167,7 +167,7 @@ run_stop_invalid_name <- function(name = NULL, package = NULL, n_parent = 1) {
   if (!is.null(package)) {
     msg <- paste(msg, sprintf("Use `learnr::run_tutorial(package = \"%s\")` to list available tutorials in this package.", package))
   }
-  stop(errorCondition(message = msg, call = sys.call(which = n_parent)))
+  stop(errorCondition(msg, call = sys.call(which = n_parent)))
 }
 
 run_validate_tutorial_path <- function(path = NULL) {
@@ -222,7 +222,12 @@ run_validate_tutorial_pkg <- function(name, package) {
   )
 
   if (inherits(dir, "error")) {
-    stop(errorCondition(conditionMessage(dir), call = sys.calls()[[1]]))
+    stop(
+      errorCondition(
+        conditionMessage(dir),
+        call = sys.call(min(2, length(sys.calls())))
+      )
+    )
   }
 
   list(valid = TRUE, dir = dir)
