@@ -2,8 +2,9 @@
 #'
 #' Run a tutorial provided by an installed R package.
 #'
-#' @param name Tutorial name (subdirectory within \code{tutorials/}
-#'   directory of installed package), or the path to a local directory
+#' @param name Tutorial name (subdirectory within \code{tutorials/} directory of
+#'   installed `package`). Alternatively, if `package` is not provided, `name`
+#'   may be a path to a local tutorial R Markdown file or a local directory
 #'   containing a learnr tutorial. If `package` is provided, `name` must be the
 #'   tutorial name.
 #' @param package Name of package. If `name` is a path to the local directory
@@ -13,8 +14,8 @@
 #' @param clean When `TRUE`, the shiny prerendered HTML files are removed and
 #'   the tutorial is re-rendered prior to starting the tutorial.
 #' @param as_rstudio_job Runs the tutorial in the background as an RStudio job.
-#'   This is the default behavior when `run_tutorial()` detects that RStudio
-#'   is available and can run jobs. Set to `FALSE` to disable and to run the
+#'   This is the default behavior when `run_tutorial()` detects that RStudio is
+#'   available and can run jobs. Set to `FALSE` to disable and to run the
 #'   tutorial in the current R session.
 #'
 #'   When running as an RStudio job, `run_tutorial()` sets or overrides the
@@ -48,36 +49,29 @@ run_tutorial <- function(
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
 
-  if (is.null(package)) {
-    # is `name` a valid and existing directory for `rmarkdown::run()`?
-    name <- run_validate_tutorial_path_is_dir(name)
-    name_is_tutorial_path <- name$valid
-    name <- name$value
-  } else {
-    name_is_tutorial_path <- FALSE
-  }
-
-  if (!name_is_tutorial_path && !is.null(name) && is.null(package)) {
-    stop.("`package` must be provided if `name` is the name of a packaged tutorial. Otherwise, `name` must be a directory.")
-  }
-
-  # works for package = NULL and if package is provided
-  if (!name_is_tutorial_path && is.null(name)) {
+  if (is.null(name)) {
     tutorials <- available_tutorials(package = package)
     message(format(tutorials))
     return(invisible(tutorials))
   }
 
-  # get path to tutorial directory
-  tutorial_path <-
-    if (name_is_tutorial_path) {
-      normalizePath(name)
+  # The tutorial object must have a boolean `valid` indicating if a valid
+  # tutorial was found, and `dir` the normalized absolute path to the directory
+  # containing the tutorial. Optionally, a `file` item will also be included,
+  # indicating which specific tutorial will be run.
+  tutorial <-
+    if (is.null(package)) {
+      run_validate_tutorial_path(name)
     } else {
-      get_tutorial_path(name, package)
+      run_validate_tutorial_pkg(name, package)
     }
 
+  if (!isTRUE(tutorial$valid)) {
+    run_stop_invalid_name(name = name, package = package)
+  }
+
   # check for necessary tutorial package dependencies
-  install_tutorial_dependencies(tutorial_path)
+  install_tutorial_dependencies(tutorial$dir)
 
   # provide launch_browser if it's not specified in the shiny_args
   if (is.null(shiny_args)) {
@@ -107,7 +101,7 @@ run_tutorial <- function(
     tryCatch({
       local({
         # try to save a file to check for write permissions
-        tmp_save_file <- file.path(tutorial_path, "__leanr_test_file")
+        tmp_save_file <- file.path(tutorial$dir, "__learnr_test_file")
         # make sure it's deleted
         on.exit({
           if (file.exists(tmp_save_file)) {
@@ -121,7 +115,7 @@ run_tutorial <- function(
       })
     }, error = function(e) {
       # Could not write in the tutorial folder
-      message("Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ", tutorial_path)
+      message("Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ", tutorial_dir)
 
       # Set rmarkdown args to render in tmp dir
       # This will cause the tutorial to be re-rendered in each R session
@@ -137,7 +131,7 @@ run_tutorial <- function(
     })
 
   if (isTRUE(clean)) {
-    run_clean_tutorial_prerendered(tutorial_path)
+    run_clean_tutorial_prerendered(tutorial$dir)
   }
 
   # ensure hooks are available for a tutorial and clean up after run_tutorial()
@@ -147,33 +141,96 @@ run_tutorial <- function(
   install_knitr_hooks()
 
   # run within tutorial wd
-  withr::with_dir(tutorial_path, {
+  withr::with_dir(tutorial$dir, {
     if (!identical(Sys.getenv("SHINY_PORT", ""), "")) {
       # is currently running in a server, do not allow for prerender (rmarkdown::render)
       withr::local_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"))
     }
-    rmarkdown::run(file = NULL, dir = tutorial_path, shiny_args = shiny_args, render_args = render_args)
+    rmarkdown::run(file = tutorial$file, dir = tutorial$dir, shiny_args = shiny_args, render_args = render_args)
   })
 }
 
-run_validate_tutorial_path_is_dir <- function(path = NULL) {
-  if (is.null(path)) return(list(valid = FALSE))
+run_stop_invalid_name <- function(name = NULL, package = NULL, n_parent = 1) {
+  msg <- if (is.null(package)) {
+    sprintf(
+      "Could not find a learnr tutorial at '%s'. When `package` is not provided, `name` must be the path to a tutorial `.Rmd` or a directory containing a learnr tutorial.",
+      name
+    )
+  } else if (!is.null(name)) {
+    sprintf("'%s' is not the name of a tutorial in the package '%s'.", name, package)
+  } else {
+    "When `package` is provided, `name` must be the name of a tutorial in the package. Otherwise `name` is the path to a tutorial or the path to a directory containing a tutorial."
+  }
+  if (!is.null(package)) {
+    msg <- paste(msg, sprintf("Use `learnr::run_tutorial(package = \"%s\")` to list available tutorials in this package.", package))
+  }
+  stop(errorCondition(message = msg, call = sys.call(which = n_parent)))
+}
+
+run_validate_tutorial_path <- function(path = NULL) {
+  tutorial_file <- run_validate_tutorial_file(path)
+  if (isTRUE(tutorial_file$valid)) {
+    return(tutorial_file)
+  }
+
+  tutorial_dir <- run_validate_tutorial_dir(path)
+  if (isTRUE(tutorial_dir$valid)) {
+    return(tutorial_dir)
+  }
+
+  list(valid = FALSE, dir = path)
+}
+
+run_validate_tutorial_dir <- function(path = NULL) {
+  if (is.null(path)) return(list(valid = FALSE, dir = NULL))
 
   # remove trailing slash, otherwise file.exists() returns FALSE on Windows
   # even if the directory exits. At this point we want to check that the input
   # does or doesn't exist. If it doesn't we don't need to do any more tests
   path <- sub("/+$", "", path)
   if (!file.exists(path)) {
-    return(list(valid = FALSE, value = path))
-  }
-
-  if (!utils::file_test("-d", path)) {
-    stop.("If `name` is a path to a tutorial, it must be the path to a directory containing a single tutorial.")
+    return(list(valid = FALSE, dir = path))
   }
 
   run_find_tutorial_rmd(path, stop_if_not = TRUE)
 
-  list(valid = TRUE, value = path)
+  list(valid = TRUE, dir = normalizePath(path))
+}
+
+run_validate_tutorial_file <- function(path) {
+  # A tutorial is valid if it's a scalar path to a single existing file that is a shiny rmd
+  is_valid <- checkmate::test_character(path, len = 1, null.ok = FALSE, any.missing = FALSE) &&
+    utils::file_test("-f", path) &&
+    run_check_is_shiny_rmd(path)
+
+  if (!isTRUE(is_valid)) {
+    return(list(valid = FALSE, dir = path))
+  }
+
+  path <- normalizePath(path)
+
+  list(valid = TRUE, file = basename(path), dir = dirname(path))
+}
+
+run_validate_tutorial_pkg <- function(name, package) {
+  dir <- tryCatch(
+    get_tutorial_path(name, package),
+    error = identity
+  )
+
+  if (inherits(dir, "error")) {
+    stop(errorCondition(conditionMessage(dir), call = sys.calls()[[1]]))
+  }
+
+  list(valid = TRUE, dir = dir)
+}
+
+run_check_is_shiny_rmd <- function(rmds) {
+  vapply(rmds, FUN.VALUE = logical(1), function(x) {
+    # this is one shortcut, we need a shiny prerendered or shinyrmd document
+    runtime <- rmarkdown::yaml_front_matter(x)[["runtime"]]
+    identical(runtime, "shinyrmd") || identical(runtime, "shiny_prerendered")
+  })
 }
 
 run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
@@ -181,6 +238,8 @@ run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
   # see https://github.com/rstudio/rmarkdown/blob/0af6b355/R/shiny.R#L69-L113
   # with a couple shortcuts because we know we need a learnr tutorial
   rmds <- list.files(path, pattern = "^[^_].*\\.[Rrq][Mm][Dd]$")
+  names(rmds) <- rmds
+  rmds <- file.path(path, rmds)
 
   if (length(rmds) == 0) {
     if (isTRUE(stop_if_not)) {
@@ -189,13 +248,9 @@ run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
     return(NULL)
   }
 
-  is_shiny_rmd <- vapply(rmds, FUN.VALUE = logical(1), function(x) {
-    # this is one shortcut, we need a shiny prerendered or shinyrmd document
-    runtime <- rmarkdown::yaml_front_matter(file.path(path, x))[["runtime"]]
-    identical(runtime, "shinyrmd") || identical(runtime, "shiny_prerendered")
-  })
+  is_shiny_rmd <- run_check_is_shiny_rmd(rmds)
 
-  rmds <- rmds[is_shiny_rmd]
+  rmds <- basename(rmds[is_shiny_rmd])
 
   if (length(rmds) == 0) {
     if (isTRUE(stop_if_not)) {
@@ -404,14 +459,20 @@ run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean
   tmpfile <- tempfile("run_tutorial", fileext = ".R")
   writeLines(script, tmpfile)
 
-  job_name <- if (file.exists(sub("/+$", "", name))) {
+  # Set the job_name based on the tutorial title or name
+  file <- name
+  if (utils::file_test("-d", name)) {
     rmd <- run_find_tutorial_rmd(name)
     if (!is.null(rmd)) {
-      rmarkdown::yaml_front_matter(file.path(name, rmd))$title
+      file <- file.path(name, rmd)
     }
-  } else {
-    sprintf("%s {%s}", name, package)
   }
+  job_name <-
+    if (file.exists(sub("/+$", "", file))) {
+      paste("Tutorial:", rmarkdown::yaml_front_matter(file)$title)
+    } else {
+      sprintf("Tutorial: %s {%s}", name, package)
+    }
 
   rstudioapi::jobRunScript(
     path = tmpfile,

@@ -14,8 +14,9 @@ run_tutorial(
 )
 }
 \arguments{
-\item{name}{Tutorial name (subdirectory within \code{tutorials/}
-directory of installed package), or the path to a local directory
+\item{name}{Tutorial name (subdirectory within \code{tutorials/} directory of
+installed \code{package}). Alternatively, if \code{package} is not provided, \code{name}
+may be a path to a local tutorial R Markdown file or a local directory
 containing a learnr tutorial. If \code{package} is provided, \code{name} must be the
 tutorial name.}
 
@@ -32,8 +33,8 @@ arguments are used.}
 the tutorial is re-rendered prior to starting the tutorial.}
 
 \item{as_rstudio_job}{Runs the tutorial in the background as an RStudio job.
-This is the default behavior when \code{run_tutorial()} detects that RStudio
-is available and can run jobs. Set to \code{FALSE} to disable and to run the
+This is the default behavior when \code{run_tutorial()} detects that RStudio is
+available and can run jobs. Set to \code{FALSE} to disable and to run the
 tutorial in the current R session.
 
 When running as an RStudio job, \code{run_tutorial()} sets or overrides the
