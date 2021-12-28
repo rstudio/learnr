@@ -115,7 +115,10 @@ run_tutorial <- function(
       })
     }, error = function(e) {
       # Could not write in the tutorial folder
-      message("Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ", tutorial_dir)
+      message(
+        "Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ",
+        tutorial$dir
+      )
 
       # Set rmarkdown args to render in tmp dir
       # This will cause the tutorial to be re-rendered in each R session
