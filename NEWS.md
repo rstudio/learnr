@@ -125,9 +125,9 @@
 ## Running Tutorials
 
 -   Running learnr tutorials with `run_tutorial()` has been improved (#601):
+    - `run_tutorial()` can now run local tutorials in addition to tutorial hosted in a package. To run a local tutorial provide the path to the tutorial or the directory containing the tutorial via the `name` argument without providing the `package` argument.
     -   **Breaking change:** names must be provided for all arguments to `run_tutorial()` other than `name` and `package`.
     -   `run_tutorial()` gains a `clean` argument to completely re-render the tutorial if needed.
-    -   The `name` argument was modified to allow users to specify a local directory containing a learnr tutorial. 
     -   learnr tutorials are now run as background RStudio jobs and open in the viewer pane when `run_tutorial()` is called in RStudio. This default is disabled in non-interactive settings or when  `as_rstudio_job = FALSE`. You can control where the tutorial is opened with the `shiny.launch.browser` global option.
     -   `run_tutorial()` now renders tutorials in a temp directory if the R user does not have write permissions (#347).
 
