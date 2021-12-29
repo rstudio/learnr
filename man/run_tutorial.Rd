@@ -21,7 +21,7 @@ containing a learnr tutorial. If \code{package} is provided, \code{name} must be
 tutorial name.}
 
 \item{package}{Name of package. If \code{name} is a path to the local directory
-containing a learnr tutorials, then \code{package} should not be provided.}
+containing a learnr tutorial, then \code{package} should not be provided.}
 
 \item{...}{Unused. Included for future expansion and to ensure named
 arguments are used.}
@@ -39,7 +39,7 @@ tutorial in the current R session.
 
 When running as an RStudio job, \code{run_tutorial()} sets or overrides the
 \code{launch.browser} option for \code{shiny_args}. You can instead use the
-\code{shiny.launch.browser} global option to in your current R session to set
+\code{shiny.launch.browser} global option in your current R session to set
 the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
 }
 \description{
