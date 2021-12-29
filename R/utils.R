@@ -50,8 +50,15 @@ duplicate_env <- function(envir, parent = parent.env(envir)) {
   )
 }
 
-
-
+# backport errorCondition for R < 3.6.0
+if (getRversion() < package_version("3.6.0")) {
+  errorCondition <- function(msg, ..., class = NULL, call = NULL) {
+    structure(
+      list(message = msg, call = call, ...),
+      class = c(class, "error", "condition")
+    )
+  }
+}
 
 str_trim <- function(x) {
   sub(
