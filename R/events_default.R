@@ -135,7 +135,7 @@ register_default_event_handlers <- function() {
   event_register_handler(
     "exercise_result",
     function(session, event, data) {
-      # Should this even count towards exercise completion?
+      # Should this event count towards exercise completion?
       ex <- standardize_exercise_code(get_exercise_cache(data$label))
       requires_check <- nzchar(ex$check) || nzchar(ex$code_check)
       # Only set `correct` on the `exercise_submission` event if a check was required
