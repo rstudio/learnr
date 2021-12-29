@@ -210,9 +210,7 @@ run_validate_tutorial_file <- function(path) {
     return(list(valid = FALSE, dir = path))
   }
 
-  path <- normalizePath(path)
-
-  list(valid = TRUE, file = basename(path), dir = dirname(path))
+  list(valid = TRUE, file = basename(path), dir = normalizePath(dirname(path)))
 }
 
 run_validate_tutorial_pkg <- function(name, package) {
