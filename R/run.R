@@ -8,7 +8,7 @@
 #'   containing a learnr tutorial. If `package` is provided, `name` must be the
 #'   tutorial name.
 #' @param package Name of package. If `name` is a path to the local directory
-#'   containing a learnr tutorials, then `package` should not be provided.
+#'   containing a learnr tutorial, then `package` should not be provided.
 #' @param shiny_args Additional arguments to forward to
 #'   \code{\link[shiny:runApp]{shiny::runApp}}.
 #' @param clean When `TRUE`, the shiny prerendered HTML files are removed and
@@ -20,7 +20,7 @@
 #'
 #'   When running as an RStudio job, `run_tutorial()` sets or overrides the
 #'   `launch.browser` option for `shiny_args`. You can instead use the
-#'   `shiny.launch.browser` global option to in your current R session to set
+#'   `shiny.launch.browser` global option in your current R session to set
 #'   the default behavior when the tutorial is run. See [the shiny options
 #'   documentation][shiny::getShinyOption()] for more information.
 #' @param ... Unused. Included for future expansion and to ensure named
@@ -89,7 +89,7 @@ run_tutorial <- function(
   }
 
   as_rstudio_job <-
-    (isTRUE(as_rstudio_job) && can_run_rstudio_job(TRUE)) ||
+    (isTRUE(as_rstudio_job) && can_run_rstudio_job(stop_if_not = TRUE)) ||
     (is.null(as_rstudio_job) && can_run_rstudio_job())
 
   if (as_rstudio_job) {
