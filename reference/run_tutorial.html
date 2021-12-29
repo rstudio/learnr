@@ -81,19 +81,45 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_tutorial</span><span class="op">(</span>name <span class="op">=</span> <span class="cn">NULL</span>, package <span class="op">=</span> <span class="cn">NULL</span>, shiny_args <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">run_tutorial</span><span class="op">(</span>
+  name <span class="op">=</span> <span class="cn">NULL</span>,
+  package <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>,
+  shiny_args <span class="op">=</span> <span class="cn">NULL</span>,
+  clean <span class="op">=</span> <span class="cn">FALSE</span>,
+  as_rstudio_job <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>name</dt>
-<dd><p>Tutorial name (subdirectory within <code>tutorials/</code>
-directory of installed package).</p></dd>
+<dd><p>Tutorial name (subdirectory within <code>tutorials/</code> directory of
+installed <code>package</code>). Alternatively, if <code>package</code> is not provided, <code>name</code>
+may be a path to a local tutorial R Markdown file or a local directory
+containing a learnr tutorial. If <code>package</code> is provided, <code>name</code> must be the
+tutorial name.</p></dd>
 <dt>package</dt>
-<dd><p>Name of package</p></dd>
+<dd><p>Name of package. If <code>name</code> is a path to the local directory
+containing a learnr tutorial, then <code>package</code> should not be provided.</p></dd>
+<dt>...</dt>
+<dd><p>Unused. Included for future expansion and to ensure named
+arguments are used.</p></dd>
 <dt>shiny_args</dt>
 <dd><p>Additional arguments to forward to
 <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp</a></code>.</p></dd>
+<dt>clean</dt>
+<dd><p>When <code>TRUE</code>, the shiny prerendered HTML files are removed and
+the tutorial is re-rendered prior to starting the tutorial.</p></dd>
+<dt>as_rstudio_job</dt>
+<dd><p>Runs the tutorial in the background as an RStudio job.
+This is the default behavior when <code>run_tutorial()</code> detects that RStudio is
+available and can run jobs. Set to <code>FALSE</code> to disable and to run the
+tutorial in the current R session.</p>
+<p>When running as an RStudio job, <code>run_tutorial()</code> sets or overrides the
+<code>launch.browser</code> option for <code>shiny_args</code>. You can instead use the
+<code>shiny.launch.browser</code> global option in your current R session to set
+the default behavior when the tutorial is run. See <a href="https://rdrr.io/pkg/shiny/man/shinyOptions.html" class="external-link">the shiny options documentation</a> for more information.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

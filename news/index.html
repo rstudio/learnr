@@ -175,7 +175,18 @@
 </ul></div>
 <div class="section level3">
 <h3 id="running-tutorials-development-version">Running Tutorials<a class="anchor" aria-label="anchor" href="#running-tutorials-development-version"></a></h3>
-<ul><li><p><code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> now renders tutorials in a temp directory if the R user does not have write permissions (<a href="https://github.com/rstudio/learnr/issues/347" class="external-link">#347</a>).</p></li>
+<ul><li>
+<p>Running learnr tutorials with <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> has been improved (<a href="https://github.com/rstudio/learnr/issues/601" class="external-link">#601</a>):</p>
+<ul><li>
+<code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> can now run local tutorials in addition to tutorials hosted in a package. To run a local tutorial provide the path to the tutorial or the directory containing the tutorial via the <code>name</code> argument without providing the <code>package</code> argument.</li>
+<li>
+<strong>Breaking change:</strong> names must be provided for all arguments to <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> other than <code>name</code> and <code>package</code>.</li>
+<li>
+<code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> gains a <code>clean</code> argument to completely re-render the tutorial if needed.</li>
+<li>learnr tutorials are now run as background RStudio jobs and open in the viewer pane when <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> is called in RStudio. This default is disabled in non-interactive settings or when <code>as_rstudio_job = FALSE</code>. You can control where the tutorial is opened with the <code>shiny.launch.browser</code> global option.</li>
+<li>
+<code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> now renders tutorials in a temp directory if the R user does not have write permissions (<a href="https://github.com/rstudio/learnr/issues/347" class="external-link">#347</a>).</li>
+</ul></li>
 <li><p>learnr’s knitr hooks are now set by the <code><a href="../reference/tutorial.html">learnr::tutorial</a></code> R Markdown format. They are also registered for any tutorials run by <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> (thanks <a href="https://github.com/czucca" class="external-link">@czucca</a> <a href="https://github.com/rstudio/learnr/issues/598" class="external-link">#598</a>, <a href="https://github.com/rstudio/learnr/issues/599" class="external-link">#599</a>).</p></li>
 <li><p>For the “forked” evaluator (the default used on Linux), learnr now limits the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the <code>tutorial.max.forked.procs</code> option or the <code>TUTORIAL_MAX_FORKED_PROCS</code> environment variable (<a href="https://github.com/rstudio/learnr/issues/353" class="external-link">#353</a>).</p></li>
 <li><p>Introduced an experimental function <code><a href="../reference/external_evaluator.html">external_evaluator()</a></code> which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document (<a href="https://github.com/rstudio/learnr/issues/345" class="external-link">#345</a>, <a href="https://github.com/rstudio/learnr/issues/354" class="external-link">#354</a>).</p></li>
