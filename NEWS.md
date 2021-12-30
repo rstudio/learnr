@@ -87,6 +87,8 @@
 
 -   The `envir_prep` environment used in exercise checking now accurately captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated (as was described in the documentation). learnr also ensures that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep` (#480).
 
+-   When `allow_skip` is set to `FALSE`, users are now required to run an exercise once with non-empty code in order to move forward. If the exercise has grading code, users are required to submit one (non-empty) answer (thanks @gaelso #616, #633).
+
 ### Questions
 
 -   `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input (thanks @dtkaplan #455, #460).

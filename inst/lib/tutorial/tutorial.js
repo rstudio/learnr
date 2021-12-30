@@ -255,8 +255,10 @@ Tutorial.prototype.$fireProgressEvent = function(event, data) {
     if (element.length > 0) {
       progressEvent.element = element;
       if (event == "exercise_submission") {
-        // any progress event for an exercise is to complete only
-        progressEvent.completed = true;
+        // Exercise completion logic is determined by the default exercise_result
+        // event handler in the Shiny logic that emits an "exercise_submission" event.
+        // If the handler doesn't returned a completed flag, we assume `true`.
+        progressEvent.completed = typeof data.completed !== 'undefined' ? data.completed : true;
       } else {
         // question_submission
         // questions may be reset with "try again", and not in a completed state
