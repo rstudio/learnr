@@ -1,0 +1,36 @@
+on:
+  workflow_run:
+    workflows: ["R-CMD-check"]
+    branches: [main]
+    types:
+      - completed
+
+name: Deploy Tutorials to shinyapps.io
+
+jobs:
+  deploy:
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Deploy packaged tutorials to shinyapps.io
+        uses: rstudio/education-workflows/deploy-learnr-shinyapps-io@v1
+        with:
+          shinyapps-name: ${{ secrets.SHINYAPPS_NAME }}
+          shinyapps-token: ${{ secrets.SHINYAPPS_TOKEN }}
+          shinyapps-secret: ${{ secrets.SHINYAPPS_SECRET }}
+          tutorials: |
+            inst/tutorials
+          extra-packages: |
+            nycflights13
+            tidyverse
+            Lahman
+            DBI
+            RSQLite
+            sortable
+            dygraphs
+            reticulate
