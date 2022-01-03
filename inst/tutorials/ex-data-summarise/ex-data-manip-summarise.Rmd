@@ -36,9 +36,9 @@ The readings in this tutorial follow [_R for Data Science_](http://r4ds.had.co.n
 
 ### Setup
 
-To practice these skills, we will use the `flights` data set from the nycflights13 package, which you met in [Data Basics](../01-data-basics/01-data-basics.html). This data frame comes from the US [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) and contains all `r format(nrow(nycflights13::flights), big.mark = ",")` flights that departed from New York City in 2013. It is documented in `?flights`.
+To practice these skills, we will use the `flights` data set from the nycflights13 package, which you met in [Data Basics](https://learnr-examples.shinyapps.io/ex-data-basics). This data frame comes from the US [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) and contains all `r format(nrow(nycflights13::flights), big.mark = ",")` flights that departed from New York City in 2013. It is documented in `?flights`.
 
-To visualize the data, we will use the ggplot2 package that you met in [Data Visualization Basics](../02-data-vis-basics/02-data-vis-basics.html). 
+To visualize the data, we will use the ggplot2 package that you met in [Data Visualization Basics](https://rstudio.cloud/learn/primers/1.1). 
 
 I've preloaded the packages for this tutorial with 
 
