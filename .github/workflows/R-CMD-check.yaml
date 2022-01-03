@@ -66,12 +66,12 @@ jobs:
         run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
-      - name: Code coverage
-        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'release'
-        shell: Rscript {0}
-        run: |
-          pak::pkg_install("covr")
-          covr::codecov()
+      # - name: Code coverage
+      #   if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'release'
+      #   shell: Rscript {0}
+      #   run: |
+      #     pak::pkg_install("covr")
+      #     covr::codecov()
 
       - name: Upload check results
         if: failure()
