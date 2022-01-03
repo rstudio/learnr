@@ -26,11 +26,11 @@ jobs:
           tutorials: |
             inst/tutorials
           extra-packages: |
-            nycflights13
-            tidyverse
-            Lahman
-            DBI
-            RSQLite
-            sortable
-            dygraphs
-            reticulate
+            any::nycflights13
+            any::tidyverse
+            any::Lahman
+            any::DBI
+            any::RSQLite
+            any::sortable
+            any::dygraphs
+            any::reticulate
