@@ -299,15 +299,4 @@ test_that("i18n_set_language_option() sets up language inheritance", {
   result <- withr::with_tempdir(render_exercise(ex, new.env()))
   expect_equal(result$envir_result$knit_opt, "fr-CA")
   expect_equal(result$envir_result$env_var, "fr_CA:fr")
-
-  ex <- mock_exercise(
-    user_code = c(
-      'i18n_set_language_option("ko")',
-      'knit_opt <- knitr::opts_knit$get("tutorial.language")',
-      'env_var <- Sys.getenv("LANGUAGE")'
-    )
-  )
-  result <- withr::with_tempdir(render_exercise(ex, new.env()))
-  expect_equal(result$envir_result$knit_opt, "ko")
-  expect_equal(result$envir_result$env_var, "ko")
 })
