@@ -82,7 +82,7 @@ jobs:
           path: check
 
   deploy:
-    if: github.event == 'push'
+    if: github.event_name == 'push'
     needs: R-CMD-check
     concurrency:
       group: deploy-shinyapps-${{ github.ref }}
