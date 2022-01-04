@@ -80,3 +80,37 @@ jobs:
         with:
           name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
           path: check
+
+  deploy:
+    if: github.event == 'push'
+    needs: R-CMD-check
+    concurrency:
+      group: deploy-shinyapps-${{ github.ref }}
+      cancel-in-progress: true
+
+    name: Deploy Tutorials to shinyapps.io
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Deploy packaged tutorials to shinyapps.io
+        uses: rstudio/education-workflows/deploy-learnr-shinyapps-io@v1
+        with:
+          shinyapps-name: ${{ secrets.SHINYAPPS_NAME }}
+          shinyapps-token: ${{ secrets.SHINYAPPS_TOKEN }}
+          shinyapps-secret: ${{ secrets.SHINYAPPS_SECRET }}
+          tutorials: |
+            inst/tutorials
+          extra-packages: |
+            any::nycflights13
+            any::tidyverse
+            any::Lahman
+            any::DBI
+            any::RSQLite
+            any::sortable
+            any::dygraphs
+            any::reticulate
