@@ -49,9 +49,22 @@ if (window.hljs) {
 </script>
 $endif$
 
+$if(highlighting-css)$
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+$highlighting-css$
+</style>
+$if(theme)$
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+$endif$
+$endif$
+
 <!-- taken from https://github.com/rstudio/rmarkdown/blob/67b7f5fc779e4cfdfd0f021d3d7745b6b6e17149/inst/rmd/h/default.html#L296-L362 -->
 <!-- tabsets -->
-
 <style type="text/css">
 .tabset-dropdown > .nav-tabs {
   display: inline-table;
@@ -106,20 +119,6 @@ $endif$
 }
 </style>
 <!-- end tabsets -->
-
-$if(highlighting-css)$
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-$highlighting-css$
-</style>
-$if(theme)$
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-$endif$
-$endif$
 
 $for(css)$
 <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
