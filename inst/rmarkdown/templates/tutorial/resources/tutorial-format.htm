@@ -18,9 +18,9 @@ $endif$
 
 <meta name="progressive" content="$progressive$" />
 <meta name="allow-skip" content="$allow-skip$" />
+<meta name="learnr-version-prerender" content="$learnr-version$" />
 
 <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
-
 
 <!-- header-includes START -->
 $for(header-includes)$
@@ -50,16 +50,28 @@ if (window.hljs) {
 </script>
 $endif$
 
-<!-- taken from https://github.com/rstudio/rmarkdown/blob/67b7f5fc779e4cfdfd0f021d3d7745b6b6e17149/inst/rmd/h/default.html#L296-L362 -->
-<!-- tabsets -->
+$if(highlighting-css)$
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+$highlighting-css$
+</style>
+$if(theme)$
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+$endif$
+$endif$
 
+<!-- taken from https://github.com/rstudio/rmarkdown/blob/de8a9c38618903627ca509f5401d50a0876079f7/inst/rmd/h/default.html#L293-L343 -->
+<!-- tabsets -->
 <style type="text/css">
 .tabset-dropdown > .nav-tabs {
   display: inline-table;
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -95,6 +107,7 @@ $endif$
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -107,20 +120,6 @@ $endif$
 }
 </style>
 <!-- end tabsets -->
-
-$if(highlighting-css)$
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-$highlighting-css$
-</style>
-$if(theme)$
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-$endif$
-$endif$
 
 $for(css)$
 <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>

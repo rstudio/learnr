@@ -121,10 +121,14 @@ tutorial <- function(fig_width = 6.5,
     )
   ))
 
-  # additional pandoc variables
+  # additional pandoc variables specific to learnr
   jsbool <- function(value) ifelse(value, "true", "false")
-  args <- c(args, rmarkdown::pandoc_variable_arg("progressive", jsbool(progressive)))
-  args <- c(args, rmarkdown::pandoc_variable_arg("allow-skip", jsbool(allow_skip)))
+  args <- c(
+    args,
+    rmarkdown::pandoc_variable_arg("progressive", jsbool(progressive)),
+    rmarkdown::pandoc_variable_arg("allow-skip", jsbool(allow_skip)),
+    rmarkdown::pandoc_variable_arg("learnr-version", utils::packageVersion("learnr"))
+  )
 
   # knitr and pandoc options
   knitr_options <- rmarkdown::knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
