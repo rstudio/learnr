@@ -143,6 +143,17 @@ praise:
     - Gute Arbeit!
     - Beeindruckend!
     - Hervorragend!
+  ko:
+    - 잘 하셨습니다!
+    - 완벽합니다!
+    - 멋집니다!
+    - 오 정답입니다!
+    - 참 잘하셨습니다!
+    - 훌륭합니다!
+    - 매우 잘하셨습니다!
+    - 성공하셨습니다!
+    - 최고의 답변입니다!
+    - 멋집니다!
 encouragement:
   testing:
     - RANDOM ENCOURAGEMENT.
@@ -199,3 +210,14 @@ encouragement:
     - Macht nichts! Versuch es gleich nochmal.
     - Versuch es nochmal. Nächstes Mal klappt es bestimmt!
     - Das war gar nicht so einfach. Probiere es gleich nochmal!
+  ko:
+    - 다시 시도해주세요.
+    - 한번 더 해보세요.
+    - 다시 시도하십시오.
+    - 다시 도전해서 맞춰보세요.
+    - 다시 도전해 보세요.
+    - 한번 더 시도해 보세요.
+    - 포기하지 말고, 한 번 더 도전해 보세요.
+    - 초조해 할 필요는 없습니다. 다시 시도해 보세요.
+    - 다시 시도하십시오. 이번에는 맞출 수 있습니다.
+    - 다시 시도하십시오. 인내는 성공의 열쇠입니다.
