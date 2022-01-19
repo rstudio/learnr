@@ -1,0 +1,22 @@
+---
+title: "Missing Exercise Checker"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+```
+
+## Topic 1
+
+<!-- https://github.com/rstudio/learnr/issues/448 -->
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+```{r two-plus-two-check}
+# presence of a check chunk implies exercise.checker is required
+```
+

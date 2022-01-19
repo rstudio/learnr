@@ -31,46 +31,52 @@ tutorial_knitr_options <- function() {
   }
 
   # helper to check for an exercise support chunk
-  is_exercise_support_chunk <- function(options, type = c("setup",
-                                                          "hint",
-                                                          "hint-\\d+",
-                                                          "solution",
-                                                          "error-check",
-                                                          "code-check",
-                                                          "check")) {
+  is_exercise_support_chunk <- function(
+    options,
+    type = c(
+      "setup",
+      "hint",
+      "hint-\\d+",
+      "solution",
+      "error-check",
+      "code-check",
+      "check"
+    )
+  ) {
+    # is this a support chunk using chunk labels to match with an exercise?
     support_regex <- paste0("-(", paste(type, collapse = "|"), ")$")
     if (grepl(support_regex, options$label)) {
       exercise_label <- sub(support_regex, "", options$label)
       label_query <- "knitr::all_labels(exercise == TRUE)"
       all_exercise_labels <- eval(parse(text = label_query))
-      exercise_label %in% all_exercise_labels
+      return(exercise_label %in% all_exercise_labels)
     }
-    else if (identical(options$label, "setup-global-exercise")) {
-      TRUE
-    }
-    else if ("setup" %in% type) {
-      # look for another chunk which names this as it's setup chunk or if it has `exercise.setup`
+
+    if ("setup" %in% type) {
+      if (identical(options$label, "setup-global-exercise")) {
+        return(TRUE)
+      }
+
+      # look for another chunk which names this as its setup chunk or if it has `exercise.setup`
       # this second condition is for support chunks that isn't referenced by an exercise yet
       # but is part of a chain and should be stored as a setup chunk
       is_referenced <- length(exercise_chunks_for_setup_chunk(options$label)) > 0
       if (is_referenced) {
         find_parent_setup_chunks(options) # only used to check for cycles; the return value is not useful here
-        TRUE
-      } else {
-        # if this looks like a setup chunk, but no one references it, error
-        if (is.null(options[["exercise"]]) && !is.null(options$exercise.setup)) {
-          stop(
-            "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
-            "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
-               call. = FALSE)
-        }
-        # just a random chunk
-        FALSE
+        return(TRUE)
+      }
+
+      # if this looks like a setup chunk, but no one references it, error
+      if (is.null(options[["exercise"]]) && !is.null(options$exercise.setup)) {
+        stop(
+          "Chunk '", options$label, "' is not being used by any exercise or exercise setup chunk.\n",
+          "Please remove chunk '", options$label, "' or reference '", options$label, "' with `exercise.setup = '", options$label, "'`",
+          call. = FALSE
+        )
       }
     }
-    else {
-      FALSE
-    }
+
+    FALSE
   }
 
   is_exercise_setup_chunk <- function(label) {
@@ -232,6 +238,16 @@ tutorial_knitr_options <- function() {
 
     if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check"))) {
       options$include <- FALSE
+    }
+
+    if (is_exercise_support_chunk(options, type = "check")) {
+      if (is.null(knitr::opts_chunk$get("exercise.checker"))) {
+        stop(
+          "An exercise check chunk exists ('", options$label, "') but an ",
+          "exercise checker function is not configured for this tutorial. ",
+          "Please use `tutorial_options()` to define an `exercise.checker`."
+        )
+      }
     }
 
     if (is_exercise_support_chunk(options, type = "solution")) {
