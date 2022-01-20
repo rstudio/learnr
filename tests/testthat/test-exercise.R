@@ -1082,6 +1082,7 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
 })
 
 test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
+  skip_on_os("windows")
   ex     <- mock_exercise(user_code = 'μεταβλητή <- "What‽"')
   result <- evaluate_exercise(ex, new.env())
   expect_null(result$feedback)
