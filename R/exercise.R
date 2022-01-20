@@ -952,8 +952,8 @@ exercise_check_code_is_parsable <- function(exercise) {
 }
 
 exercise_check_unparsable_unicode <- function(code) {
-  # Early exit if code is made up of all ASCII characters and Unicode letters
-  if (!grepl("[^\\x00-\\x7F\\p{L}]", code, perl = TRUE)) {
+  # Early exit if code is made up of all ASCII characters
+  if (!grepl("[^\\x00-\\x7F]", code, perl = TRUE)) {
     return(NULL)
   }
 
@@ -1006,8 +1006,8 @@ exercise_check_unparsable_unicode <- function(code) {
   }
 
   # Return simpler message for any other non-ASCII characters
-  character <- str_extract(code, "[^\\x00-\\x7F\\p{L}]", perl = TRUE)
-  lint <- exercise_highlight_unparsable_unicode(code, "[^\\x00-\\x7F\\p{L}]")
+  character <- str_extract(code, "[^\\x00-\\x7F]", perl = TRUE)
+  lint <- exercise_highlight_unparsable_unicode(code, "[^\\x00-\\x7F]")
 
   return(
     i18n_span(
