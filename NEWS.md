@@ -50,6 +50,8 @@
 
 -   Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. `____`. The pattern for blanks can be set with the `exercise.blanks` chunk or tutorial option (@rossellhayes #547).
 
+-   Users are now warned if their submission contains unparsable code caused by non-ASCII characters. This can commonly occur when students copy-and-paste code from a source that applies automatic Unicode formatting to text. If the submission contains Unicode formatted quotation marks (e.g. curly quotes) or dashes, the student is given a suggested replacement with ASCII characters. In other cases, the  student is simply prompted to delete the non-ASCII characters and retype them manually. No message is displayed if non-ASCII characters are included in parsable code (e.g. in characters strings or valid variable names) (@rossellhayes #642).
+
 -   Authors can choose to reveal (default) or hide the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will likely be changed to hide solutions (#402).
 
 -   Feedback messages can now be an `htmltools::tag()`, `htmltools::tagList()`, or a character message (#458) (#458)
