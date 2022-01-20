@@ -970,8 +970,8 @@ exercise_check_unparsable_unicode <- function(code) {
 
     return(
       i18n_span(
-        "text.unpasablequotes",
-        HTML(i18n_translations()$en$translation$text$unpasablequotes),
+        "text.unparsablequotes",
+        HTML(i18n_translations()$en$translation$text$unparsablequotes),
         opts = list(
           character = character,
           code = lint,
@@ -993,8 +993,8 @@ exercise_check_unparsable_unicode <- function(code) {
 
     return(
       i18n_span(
-        "text.unpasableunicodesuggestion",
-        HTML(i18n_translations()$en$translation$text$unpasablequotes),
+        "text.unparsableunicodesuggestion",
+        HTML(i18n_translations()$en$translation$text$unparsablequotes),
         opts = list(
           character = character,
           code = lint,
@@ -1011,8 +1011,8 @@ exercise_check_unparsable_unicode <- function(code) {
 
   return(
     i18n_span(
-      "text.unpasableunicode",
-      HTML(i18n_translations()$en$translation$text$unpasablequotes),
+      "text.unparsableunicode",
+      HTML(i18n_translations()$en$translation$text$unparsablequotes),
       opts = list(
         character = character,
         code = lint,

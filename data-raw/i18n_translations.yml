@@ -408,7 +408,7 @@ text:
       또는 <code>&quot;</code>, <code>'</code>, <code>(</code>
       , <code>{</code>로 시작하는 구문을 닫는 <code>&quot;</code>, <code>'</code>,
       <code>)</code>, <code>}</code>을 잊었을 수도 있습니다.
-  unpasablequotes:
+  unparsablequotes:
     en: >
       It looks like your code contains specially formatted quotation marks
       (<code>{{character}}</code>) around character strings,
@@ -428,7 +428,7 @@ text:
     eu: ~
     de: ~
     ko: ~
-  unpasableunicode:
+  unparsableunicode:
     en: >
       It looks like your R code contains an unexpected special character
       (<code>{{character}}</code>) that makes your R code invalid.
@@ -446,7 +446,7 @@ text:
     eu: ~
     de: ~
     ko: ~
-  unpasableunicodesuggestion:
+  unparsableunicodesuggestion:
     en: >
       It looks like your R code contains an unexpected special character
       (<code>{{character}}</code>) that makes your R code invalid.
