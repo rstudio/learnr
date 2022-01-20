@@ -95,6 +95,9 @@ str_replace <- function(x, pattern, replacement) {
 str_remove <- function(x, pattern) {
   str_replace(x, pattern, "")
 }
+str_extract <- function(x, pattern, ...) {
+  unlist(regmatches(x, regexpr(pattern, x, ...)))
+}
 
 is_tags <- function(x) {
   inherits(x, "shiny.tag") ||
