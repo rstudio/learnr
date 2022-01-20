@@ -963,8 +963,8 @@ exercise_check_unparsable_unicode <- function(code) {
     lint <- exercise_highlight_unparsable_unicode(code, "\\p{Pi}|\\p{Pf}")
 
     # Replace curly single quotes with straight single quotes
-    suggestion <- gsub("[‘’]", "'", code, perl = TRUE)
-    # Replace all other Unicode quotes with staright double quotes
+    suggestion <- gsub("[\\x{2018}\\x{2019}]", "'", code, perl = TRUE)
+    # Replace all other Unicode quotes with straight double quotes
     suggestion <- gsub("\\p{Pi}|\\p{Pf}", '"', suggestion, perl = TRUE)
     suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
 
