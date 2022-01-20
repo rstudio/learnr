@@ -1037,6 +1037,55 @@ test_that("Errors with global setup code result in an internal error", {
   expect_match(conditionMessage(res$feedback$error), "boom")
 })
 
+# Unparsable Unicode ------------------------------------------------------
+
+test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
+  ex     <- mock_exercise(user_code = 'str_detect(“test”, “t.+t”)')
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsablequotes")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+
+  ex     <- mock_exercise(user_code = 'str_detect(‘test’, ‘t.+t’)')
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsablequotes")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+
+  ex     <- mock_exercise(user_code = '63 – 21')
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsableunicodesuggestion")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+
+  ex     <- mock_exercise(user_code = '63 ± 21')
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsableunicode")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+})
+
+test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
+  ex     <- mock_exercise(user_code = 'μεταβλητή <- "What‽"')
+  result <- evaluate_exercise(ex, new.env())
+  expect_null(result$feedback)
+})
 
 # Timelimit ---------------------------------------------------------------
 
