@@ -918,6 +918,22 @@ exercise_check_code_is_parsable <- function(exercise) {
     }
   }
 
+  unicode_feedback <- exercise_check_unparsable_unicode(exercise$code)
+  if (!is.null(unicode_feedback)) {
+    return(
+      exercise_result(
+        list(
+          message = HTML(unicode_feedback),
+          correct = FALSE,
+          location = "append",
+          type = "error"
+        ),
+        html_output = error_message_html(error$message),
+        error_message = error$message
+      )
+    )
+  }
+
   exercise_result(
     list(
       message = HTML(
@@ -932,6 +948,90 @@ exercise_check_code_is_parsable <- function(exercise) {
     ),
     html_output = error_message_html(error$message),
     error_message = error$message
+  )
+}
+
+exercise_check_unparsable_unicode <- function(code) {
+  # Early exit if code is made up of all ASCII characters and Unicode letters
+  if (!grepl("[^\\x00-\\x7F\\p{L}]", code, perl = TRUE)) {
+    return(NULL)
+  }
+
+  # Check if code contains Unicode quotation marks
+  if (grepl("\\p{Pi}|\\p{Pf}", code, perl = TRUE)) {
+    character <- str_extract(code, "\\p{Pi}|\\p{Pf}", perl = TRUE)
+    lint <- exercise_highlight_unparsable_unicode(code, "\\p{Pi}|\\p{Pf}")
+
+    # Replace curly single quotes with straight single quotes
+    suggestion <- gsub("[‘’]", "'", code, perl = TRUE)
+    # Replace all other Unicode quotes with staright double quotes
+    suggestion <- gsub("\\p{Pi}|\\p{Pf}", '"', suggestion, perl = TRUE)
+    suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
+
+    return(
+      i18n_span(
+        "text.unpasablequotes",
+        HTML(i18n_translations()$en$translation$text$unpasablequotes),
+        opts = list(
+          character = character,
+          code = lint,
+          suggestion = suggestion,
+          interpolation = list(escapeValue = FALSE)
+        )
+      )
+    )
+  }
+
+  # Check if code contains Unicode dashes
+  if(grepl("[^\\P{Pd}-]", code, perl = TRUE)) {
+    character <- str_extract(code, "[^\\P{Pd}-]", perl = TRUE)
+    lint <- exercise_highlight_unparsable_unicode(code, "[^\\P{Pd}-]")
+
+    # Replace Unicode dashes with ASCII hyphen-minus
+    suggestion <- gsub("[^\\P{Pd}-]", "-", code, perl = TRUE)
+    suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
+
+    return(
+      i18n_span(
+        "text.unpasableunicodesuggestion",
+        HTML(i18n_translations()$en$translation$text$unpasablequotes),
+        opts = list(
+          character = character,
+          code = lint,
+          suggestion = suggestion,
+          interpolation = list(escapeValue = FALSE)
+        )
+      )
+    )
+  }
+
+  # Return simpler message for any other non-ASCII characters
+  character <- str_extract(code, "[^\\x00-\\x7F\\p{L}]", perl = TRUE)
+  lint <- exercise_highlight_unparsable_unicode(code, "[^\\x00-\\x7F\\p{L}]")
+
+  return(
+    i18n_span(
+      "text.unpasableunicode",
+      HTML(i18n_translations()$en$translation$text$unpasablequotes),
+      opts = list(
+        character = character,
+        code = lint,
+        interpolation = list(escapeValue = FALSE)
+      )
+    )
+  )
+}
+
+exercise_highlight_unparsable_unicode <- function(code, pattern) {
+  highlighted_code <- gsub(
+    pattern = paste0("(", pattern, ")"),
+    replacement = "<mark>\\1</mark>",
+    x = code,
+    perl = TRUE
+  )
+
+  as.character(
+    htmltools::pre(htmltools::code(htmltools::HTML(highlighted_code)))
   )
 }
 

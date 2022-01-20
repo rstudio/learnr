@@ -408,6 +408,62 @@ text:
       또는 <code>&quot;</code>, <code>'</code>, <code>(</code>
       , <code>{</code>로 시작하는 구문을 닫는 <code>&quot;</code>, <code>'</code>,
       <code>)</code>, <code>}</code>을 잊었을 수도 있습니다.
+  unpasablequotes:
+    en: >
+      It looks like your code contains specially formatted quotation marks
+      (<code>{{character}}</code>) around character strings,
+      making your code invalid.
+      R requires character values to be contained in straight quotation
+      marks (<code>&quot;</code> or <code>'</code>).
+      {{code}}
+      Don't worry, this is a common source of errors when you copy code from
+      another app that applies its own formatting to text.
+      You can try replacing your input with this code:
+      {{suggestion}}
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+    de: ~
+    ko: ~
+  unpasableunicode:
+    en: >
+      It looks like your R code contains an unexpected special character
+      (<code>{{character}}</code>) that makes your R code invalid.
+      {{code}}
+      Sometimes your code may contain a special character that looks like a
+      regular character, especially if you copy and paste the code from
+      another app.
+      Try deleting the special character from your code and retyping
+      it manually.
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+    de: ~
+    ko: ~
+  unpasableunicodesuggestion:
+    en: >
+      It looks like your R code contains an unexpected special character
+      (<code>{{character}}</code>) that makes your R code invalid.
+      {{code}}
+      Sometimes your code may contain a special character that looks like a
+      regular character, especially if you copy and paste the code from
+      another app.
+      You can try replacing your input with this code:
+      {{suggestion}}
+    fr: ~
+    es: ~
+    pt: ~
+    tr: ~
+    emo: ~
+    eu: ~
+    de: ~
+    ko: ~
   and:
     en: "and"
     fr: "et"
