@@ -38,6 +38,11 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
   running_exercises <- 0
 
   function(expr, timelimit, ...) {
+    if (is_macos()) {
+      rlang::warn("Forked evaluators may not work as expected on MacOS")
+    } else if (is_widows()) {
+      rlang::warn("Forked evaluators may not work as expected on Windows")
+    }
 
     # closure object to track job, start time and result
     self <- list()
