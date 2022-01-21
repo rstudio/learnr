@@ -1073,7 +1073,7 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
   expect_match(result$feedback$message, "text.unparsableunicodesuggestion")
   expect_match(
     result$feedback$message,
-    i18n_translations()$en$translation$text$unparsablequotes,
+    i18n_translations()$en$translation$text$unparsableunicodesuggestion,
     fixed = TRUE
   )
 
@@ -1084,7 +1084,7 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
   expect_match(result$feedback$message, "text.unparsableunicode")
   expect_match(
     result$feedback$message,
-    i18n_translations()$en$translation$text$unparsablequotes,
+    i18n_translations()$en$translation$text$unparsableunicode,
     fixed = TRUE
   )
 })
