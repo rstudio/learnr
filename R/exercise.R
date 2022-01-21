@@ -943,26 +943,18 @@ exercise_check_unparsable_unicode <- function(exercise) {
   }
 
   # Check if code contains Unicode quotation marks -----------------------------
-  single_quote_pattern <-
-    "(*UTF8)([\\x{2018}\\x{2019}\\x{201A}\\x{201B}\\x{275B}\\x{275C}\\x{FF07}])"
-  double_quote_pattern <- paste0(
-    "(*UTF8)([\\x{201C}\\x{201D}\\x{201E}\\x{201F}\\x{275D}\\x{275E}",
-    "\\x{301D}\\x{301E}\\x{301F}\\x{FF02}])"
-  )
-  quote_pattern <- paste0(
-    "(*UTF8)([\\x{2018}\\x{2019}\\x{201A}\\x{201B}\\x{275B}\\x{275C}\\x{FF07}",
-    "\\x{201C}\\x{201D}\\x{201E}\\x{201F}\\x{275D}\\x{275E}",
-    "\\x{301D}\\x{301E}\\x{301F}\\x{FF02}])"
-  )
+  single_quote_pattern <- "[\u2018\u2019\u201A\u201B\u275B\u275C\uFF07]"
+  double_quote_pattern <- "[\u201C-\u201F\u275D\u275E\u301D-\u301F\uFF02]"
+  quote_pattern <- paste(single_quote_pattern, double_quote_pattern, sep = "|")
 
-  if (grepl(quote_pattern, code, perl = TRUE)) {
-    character <- str_extract(code, quote_pattern, perl = TRUE)
+  if (grepl(quote_pattern, code)) {
+    character <- str_extract(code, quote_pattern)
     lint <- exercise_highlight_unparsable_unicode(code, quote_pattern)
 
     # Replace curly single quotes with straight single quotes
-    suggestion <- gsub(single_quote_pattern, "'", code, perl = TRUE)
+    suggestion <- gsub(single_quote_pattern, "'", code)
     # Replace all other Unicode quotes with straight double quotes
-    suggestion <- gsub(double_quote_pattern, '"', suggestion, perl = TRUE)
+    suggestion <- gsub(double_quote_pattern, '"', suggestion)
     suggestion <- html_code_block(suggestion)
 
     return(
@@ -977,14 +969,17 @@ exercise_check_unparsable_unicode <- function(exercise) {
   # Regex searches for all characters in Unicode's general category
   #   "Dash_Punctuation", except for the ASCII hyphen-minus
   #   (https://www.unicode.org/reports/tr44/#General_Category_Values)
-  dash_pattern <- "([^\\P{Pd}-])"
+  dash_pattern <- paste0(
+    "[\u00af\u05be\u06d4\u1400\u1428\u1806\u1b78\u2010-\u2015\u203e\u2043",
+    "\u2212\u23af\u23e4\u2500\u2796\u2e3a\u2e3b\u30fc\ufe58\ufe63\uff0d]"
+  )
 
-  if (grepl(dash_pattern, code, perl = TRUE)) {
-    character <- str_extract(code, dash_pattern, perl = TRUE)
+  if (grepl(dash_pattern, code)) {
+    character <- str_extract(code, dash_pattern)
     lint <- exercise_highlight_unparsable_unicode(code, dash_pattern)
 
     # Replace Unicode dashes with ASCII hyphen-minus
-    suggestion <- gsub(dash_pattern, "-", code, perl = TRUE)
+    suggestion <- gsub(dash_pattern, "-", code)
     suggestion <- html_code_block(suggestion)
 
     return(
@@ -997,8 +992,8 @@ exercise_check_unparsable_unicode <- function(exercise) {
 
   # Check if code contains any other non-ASCII characters ----------------------
   # Regex searches for any codepoints not in the ASCII range (00-7F)
-  non_ascii_pattern <- "([^\\x00-\\x7F])"
-  character <- str_extract(code, non_ascii_pattern, perl = TRUE)
+  non_ascii_pattern <- "[^\u01-\u7f]"
+  character <- str_extract(code, non_ascii_pattern)
   lint <- exercise_highlight_unparsable_unicode(code, non_ascii_pattern)
 
   return(
@@ -1019,10 +1014,9 @@ build_unparsable_i18n_span <- function(key, opts) {
 
 exercise_highlight_unparsable_unicode <- function(code, pattern) {
   highlighted_code <- gsub(
-    pattern = pattern,
+    pattern = paste0("(", pattern, ")"),
     replacement = "<mark>\\1</mark>",
-    x = code,
-    perl = TRUE
+    x = code
   )
 
   html_code_block(highlighted_code, escape = FALSE)
