@@ -962,15 +962,9 @@ exercise_check_unparsable_unicode <- function(exercise) {
     suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
 
     return(
-      i18n_span(
-        "text.unparsablequotes",
-        HTML(i18n_translations()$en$translation$text$unparsablequotes),
-        opts = list(
-          character = character,
-          code = lint,
-          suggestion = suggestion,
-          interpolation = list(escapeValue = FALSE)
-        )
+      build_unparsable_i18n_span(
+        "unparsablequotes",
+        opts = list(character = character, code = lint, suggestion = suggestion)
       )
     )
   }
@@ -990,15 +984,9 @@ exercise_check_unparsable_unicode <- function(exercise) {
     suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
 
     return(
-      i18n_span(
-        "text.unparsableunicodesuggestion",
-        HTML(i18n_translations()$en$translation$text$unparsablequotes),
-        opts = list(
-          character = character,
-          code = lint,
-          suggestion = suggestion,
-          interpolation = list(escapeValue = FALSE)
-        )
+      build_unparsable_i18n_span(
+        "unparsableunicodesuggestion",
+        opts = list(character = character, code = lint, suggestion = suggestion)
       )
     )
   }
@@ -1010,15 +998,18 @@ exercise_check_unparsable_unicode <- function(exercise) {
   lint <- exercise_highlight_unparsable_unicode(code, non_ascii_pattern)
 
   return(
-    i18n_span(
-      "text.unparsableunicode",
-      HTML(i18n_translations()$en$translation$text$unparsablequotes),
-      opts = list(
-        character = character,
-        code = lint,
-        interpolation = list(escapeValue = FALSE)
-      )
+    build_unparsable_i18n_span(
+      "unparsableunicode",
+      opts = list(character = character, code = lint)
     )
+  )
+}
+
+build_unparsable_i18n_span <- function(key, opts) {
+  i18n_span(
+    paste0("text.", key),
+    HTML(i18n_translations()$en$translation$text[[key]]),
+    opts = c(opts, list(interpolation = list(escapeValue = FALSE)))
   )
 }
 
