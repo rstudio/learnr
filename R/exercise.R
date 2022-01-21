@@ -943,9 +943,17 @@ exercise_check_unparsable_unicode <- function(exercise) {
   }
 
   # Check if code contains Unicode quotation marks -----------------------------
-  single_quote_pattern <- "[\\x{2018}\\x{2019}\\x{201A}\\x{201B}]"
-  double_quote_pattern <- "[\\x{201C}\\x{201D}\\x{201E}\\x{201F}]"
-  quote_pattern <- paste(single_quote_pattern, double_quote_pattern, sep = "|")
+  single_quote_pattern <-
+    "(*UTF8)([\\x{2018}\\x{2019}\\x{201A}\\x{201B}\\x{275B}\\x{275C}\\x{FF07}])"
+  double_quote_pattern <- paste0(
+    "(*UTF8)([\\x{201C}\\x{201D}\\x{201E}\\x{201F}\\x{275D}\\x{275E}",
+    "\\x{301D}\\x{301E}\\x{301F}\\x{FF02}])"
+  )
+  quote_pattern <- paste0(
+    "(*UTF8)([\\x{2018}\\x{2019}\\x{201A}\\x{201B}\\x{275B}\\x{275C}\\x{FF07}",
+    "\\x{201C}\\x{201D}\\x{201E}\\x{201F}\\x{275D}\\x{275E}",
+    "\\x{301D}\\x{301E}\\x{301F}\\x{FF02}])"
+  )
 
   if (grepl(quote_pattern, code, perl = TRUE)) {
     character <- str_extract(code, quote_pattern, perl = TRUE)
@@ -969,7 +977,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
   # Regex searches for all characters in Unicode's general category
   #   "Dash_Punctuation", except for the ASCII hyphen-minus
   #   (https://www.unicode.org/reports/tr44/#General_Category_Values)
-  dash_pattern <- "[^\\P{Pd}-]"
+  dash_pattern <- "([^\\P{Pd}-])"
 
   if (grepl(dash_pattern, code, perl = TRUE)) {
     character <- str_extract(code, dash_pattern, perl = TRUE)
@@ -989,7 +997,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
 
   # Check if code contains any other non-ASCII characters ----------------------
   # Regex searches for any codepoints not in the ASCII range (00-7F)
-  non_ascii_pattern <- "[^\\x00-\\x7F]"
+  non_ascii_pattern <- "([^\\x00-\\x7F])"
   character <- str_extract(code, non_ascii_pattern, perl = TRUE)
   lint <- exercise_highlight_unparsable_unicode(code, non_ascii_pattern)
 
@@ -1011,7 +1019,7 @@ build_unparsable_i18n_span <- function(key, opts) {
 
 exercise_highlight_unparsable_unicode <- function(code, pattern) {
   highlighted_code <- gsub(
-    pattern = paste0("(", pattern, ")"),
+    pattern = pattern,
     replacement = "<mark>\\1</mark>",
     x = code,
     perl = TRUE
