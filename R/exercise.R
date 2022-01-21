@@ -943,12 +943,8 @@ exercise_check_unparsable_unicode <- function(exercise) {
   }
 
   # Check if code contains Unicode quotation marks -----------------------------
-  single_quote_pattern <-
-    "[\\x{2018}\\x{2019}\\x{201A}\\x{201B}\\x{275B}\\x{275C}\\x{FF07}]"
-  double_quote_pattern <- paste0(
-    "[\\x{201C}\\x{201D}\\x{201E}\\x{201F}\\x{275D}\\x{275E}",
-    "\\x{301D}\\x{301E}\\x{301F}\\x{FF02}]"
-  )
+  single_quote_pattern <- "[\\x{2018}\\x{2019}\\x{201A}\\x{201B}]"
+  double_quote_pattern <- "[\\x{201C}\\x{201D}\\x{201E}\\x{201F}]"
   quote_pattern <- paste(single_quote_pattern, double_quote_pattern, sep = "|")
 
   if (grepl(quote_pattern, code, perl = TRUE)) {
