@@ -28,3 +28,5 @@ rsconnect/
 ^\.github$
 ^vignettes/articles$
 ^reference$
+^pkgdown$
+^_dev$

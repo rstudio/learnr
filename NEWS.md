@@ -90,6 +90,8 @@
 
 -   When `allow_skip` is set to `FALSE`, users are now required to run an exercise once with non-empty code in order to move forward. If the exercise has grading code, users are required to submit one (non-empty) answer (thanks @gaelso #616, #633).
 
+-   If an exercise includes a `-check` chunk but no `exercise.checker` function has been defined, learnr will now throw an error at render reminding the author to use `tutorial_options()` to define an exercise checker (#640).
+
 ### Questions
 
 -   `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input (thanks @dtkaplan #455, #460).

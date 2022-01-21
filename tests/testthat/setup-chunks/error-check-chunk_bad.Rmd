@@ -9,6 +9,7 @@ description: >
 
 ```{r setup, include = FALSE}
 library(learnr)
+tutorial_options(exercise.checker = identity)
 ```
 
 ```{r ex, exercise = TRUE}
