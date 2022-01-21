@@ -918,7 +918,7 @@ exercise_check_code_is_parsable <- function(exercise) {
     }
   }
 
-  unicode_feedback <- exercise_check_unparsable_unicode(exercise$code)
+  unicode_feedback <- exercise_check_unparsable_unicode(exercise)
   if (!is.null(unicode_feedback)) {
     return(
       exercise_result(
@@ -951,7 +951,9 @@ exercise_check_code_is_parsable <- function(exercise) {
   )
 }
 
-exercise_check_unparsable_unicode <- function(code) {
+exercise_check_unparsable_unicode <- function(exercise) {
+  code <- exercise$code
+
   # Early exit if code is made up of all ASCII characters
   if (!grepl("[^\\x00-\\x7F]", code, perl = TRUE)) {
     return(NULL)
