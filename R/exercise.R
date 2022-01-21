@@ -918,37 +918,20 @@ exercise_check_code_is_parsable <- function(exercise) {
     }
   }
 
-  unicode_feedback <- exercise_check_unparsable_unicode(exercise)
-  if (!is.null(unicode_feedback)) {
-    return(
-      exercise_result(
-        list(
-          message = HTML(unicode_feedback),
-          correct = FALSE,
-          location = "append",
-          type = "error"
-        ),
-        html_output = error_message_html(error$message),
-        error_message = error$message
-      )
-    )
-  }
-
-  exercise_result(
-    list(
-      message = HTML(
-        i18n_span(
-          "text.unparsable",
-          HTML(i18n_translations()$en$translation$text$unparsable)
-        )
-      ),
-      correct = FALSE,
-      location = "append",
-      type = "error"
-    ),
-    html_output = error_message_html(error$message),
-    error_message = error$message
+  default_message <- i18n_span(
+    "text.unparsable",
+    HTML(i18n_translations()$en$translation$text$unparsable)
   )
+  unicode_message <- exercise_check_unparsable_unicode(exercise)
+
+  feedback <- list(
+    message = HTML(unicode_message %||% default_message),
+    correct = FALSE,
+    location = "append",
+    type = "error"
+  )
+
+  exercise_result_error(error$message, feedback)
 }
 
 exercise_check_unparsable_unicode <- function(exercise) {
