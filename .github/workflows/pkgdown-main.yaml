@@ -26,6 +26,7 @@ jobs:
           needs: |
             connect
             website
+          extra-packages: local::.
 
       - name: Deploy package
         run: |

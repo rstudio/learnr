@@ -33,6 +33,7 @@ jobs:
           needs: |
             connect
             website
+          extra-packages: local::.
 
       - name: Configure git
         run: |
