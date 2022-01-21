@@ -121,3 +121,11 @@ is_installed <- function(package, version = NULL) {
 timestamp_utc <- function() {
   strftime(Sys.time(), "%F %H:%M:%OS3 %Z", tz = "UTC")
 }
+
+html_code_block <- function(x, escape = TRUE) {
+  if (escape) {
+    x <- htmltools::htmlEscape(x)
+  }
+
+  sprintf("<pre><code>%s</code></pre>", x)
+}

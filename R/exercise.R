@@ -959,7 +959,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
     suggestion <- gsub(single_quote_pattern, "'", code, perl = TRUE)
     # Replace all other Unicode quotes with straight double quotes
     suggestion <- gsub(double_quote_pattern, '"', suggestion, perl = TRUE)
-    suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
+    suggestion <- html_code_block(suggestion)
 
     return(
       build_unparsable_i18n_span(
@@ -981,7 +981,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
 
     # Replace Unicode dashes with ASCII hyphen-minus
     suggestion <- gsub(dash_pattern, "-", code, perl = TRUE)
-    suggestion <- as.character(htmltools::pre(htmltools::code(suggestion)))
+    suggestion <- html_code_block(suggestion)
 
     return(
       build_unparsable_i18n_span(
@@ -1021,9 +1021,7 @@ exercise_highlight_unparsable_unicode <- function(code, pattern) {
     perl = TRUE
   )
 
-  as.character(
-    htmltools::pre(htmltools::code(htmltools::HTML(highlighted_code)))
-  )
+  html_code_block(highlighted_code, escape = FALSE)
 }
 
 exercise_result_timeout <- function() {
