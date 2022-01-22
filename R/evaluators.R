@@ -40,7 +40,7 @@ setup_forked_evaluator_factory <- function(max_forked_procs){
   function(expr, timelimit, ...) {
     if (is_macos()) {
       rlang::warn("Forked evaluators may not work as expected on MacOS")
-    } else if (is_widows()) {
+    } else if (is_windows()) {
       rlang::warn("Forked evaluators may not work as expected on Windows")
     }
 
