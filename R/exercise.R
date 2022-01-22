@@ -935,7 +935,7 @@ exercise_check_code_is_parsable <- function(exercise) {
 }
 
 exercise_check_unparsable_unicode <- function(exercise) {
-  code <- exercise$code
+  code <- exercise[["code"]]
 
   # Early exit if code is made up of all ASCII characters ----------------------
   if (!grepl("[^\\x00-\\x7F]", code, perl = TRUE)) {
