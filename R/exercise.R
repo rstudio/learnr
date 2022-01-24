@@ -958,9 +958,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
     suggestion <- html_code_block(suggestion)
 
     return(
-      build_unparsable_i18n_span(
-        "unparsablequotes", character, lint, suggestion
-      )
+      build_unparsable_i18n_span("unparsablequotes", character, lint, suggestion)
     )
   }
 
@@ -982,9 +980,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
     suggestion <- html_code_block(suggestion)
 
     return(
-      build_unparsable_i18n_span(
-        "unparsableunicodesuggestion", character, lint, suggestion
-      )
+      build_unparsable_i18n_span("unparsableunicodesuggestion", character, lint, suggestion)
     )
   }
 
@@ -997,9 +993,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
   return(build_unparsable_i18n_span("unparsableunicode", character, lint))
 }
 
-build_unparsable_i18n_span <- function(
-  key, character, lint, suggestion = NULL
-) {
+build_unparsable_i18n_span <- function(key, character, lint, suggestion = NULL) {
   i18n_span(
     paste0("text.", key),
     HTML(i18n_translations()$en$translation$text[[key]]),
