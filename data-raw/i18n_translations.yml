@@ -410,15 +410,15 @@ text:
       <code>)</code>, <code>}</code>을 잊었을 수도 있습니다.
   unparsablequotes:
     en: >
-      It looks like your R code contains specially formatted quotation marks
+      <p>It looks like your R code contains specially formatted quotation marks
       or &quot;curly&quot; quotes (<code>{{character}}</code>)
       around character strings, making your code invalid.
       R requires character values to be contained in straight quotation
-      marks (<code>&quot;</code> or <code>'</code>).
+      marks (<code>&quot;</code> or <code>'</code>).</p>
       {{code}}
-      Don't worry, this is a common source of errors when you copy code from
+      <p>Don't worry, this is a common source of errors when you copy code from
       another app that applies its own formatting to text.
-      You can try replacing your input with this code:
+      You can try replacing your input with this code:</p>
       {{suggestion}}
     fr: ~
     es: ~
@@ -430,14 +430,14 @@ text:
     ko: ~
   unparsableunicode:
     en: >
-      It looks like your R code contains an unexpected special character
-      (<code>{{character}}</code>) that makes your code invalid.
+      <p>It looks like your R code contains an unexpected special character
+      (<code>{{character}}</code>) that makes your code invalid.</p>
       {{code}}
-      Sometimes your code may contain a special character that looks like a
+      <p>Sometimes your code may contain a special character that looks like a
       regular character, especially if you copy and paste the code from
       another app.
       Try deleting the special character from your code and retyping
-      it manually.
+      it manually.</p>
     fr: ~
     es: ~
     pt: ~
@@ -448,13 +448,13 @@ text:
     ko: ~
   unparsableunicodesuggestion:
     en: >
-      It looks like your R code contains an unexpected special character
-      (<code>{{character}}</code>) that makes your code invalid.
+      <p>It looks like your R code contains an unexpected special character
+      (<code>{{character}}</code>) that makes your code invalid.</p>
       {{code}}
-      Sometimes your code may contain a special character that looks like a
+      <p>Sometimes your code may contain a special character that looks like a
       regular character, especially if you copy and paste the code from
       another app.
-      You can try replacing your input with this code:
+      You can try replacing your input with this code:</p>
       {{suggestion}}
     fr: ~
     es: ~

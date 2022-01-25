@@ -994,7 +994,7 @@ unparsable_unicode_message <- function(key, code, pattern, replacement_pattern =
     suggestion <- html_code_block(str_replace_all(code, replacement_pattern))
   }
 
-  i18n_span(
+  i18n_div(
     paste0("text.", key),
     HTML(i18n_translations()$en$translation$text[[key]]),
     opts = list(
