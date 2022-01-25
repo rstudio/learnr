@@ -922,7 +922,7 @@ exercise_check_code_is_parsable <- function(exercise) {
     "text.unparsable",
     HTML(i18n_translations()$en$translation$text$unparsable)
   )
-  unicode_message <- exercise_check_unparsable_unicode(exercise)
+  unicode_message <- exercise_check_unparsable_unicode(exercise, error$message)
 
   feedback <- list(
     message = HTML(unicode_message %||% default_message),
@@ -934,13 +934,16 @@ exercise_check_code_is_parsable <- function(exercise) {
   exercise_result_error(error$message, feedback)
 }
 
-exercise_check_unparsable_unicode <- function(exercise) {
+exercise_check_unparsable_unicode <- function(exercise, error_message) {
   code <- exercise[["code"]]
 
   # Early exit if code is made up of all ASCII characters ----------------------
   if (!grepl("[^\\x00-\\x7F]", code, perl = TRUE)) {
     return(NULL)
   }
+
+  # Determine line with offending character based on error message -------------
+  line <- as.integer(str_replace(error_message, "<text>:(\\d+):.+", "\\1"))
 
   # Check if code contains Unicode quotation marks -----------------------------
   single_quote_pattern <- "[\u2018\u2019\u201A\u201B\u275B\u275C\uFF07]"
@@ -954,7 +957,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
     names(replacement_pattern) <- c(single_quote_pattern, double_quote_pattern)
 
     return(
-      unparsable_unicode_message("unparsablequotes", code, quote_pattern, replacement_pattern)
+      unparsable_unicode_message("unparsablequotes", code, line, quote_pattern, replacement_pattern)
     )
   }
 
@@ -973,7 +976,7 @@ exercise_check_unparsable_unicode <- function(exercise) {
     names(replacement_pattern) <- dash_pattern
 
     return(
-      unparsable_unicode_message("unparsableunicodesuggestion", code, dash_pattern, replacement_pattern)
+      unparsable_unicode_message("unparsableunicodesuggestion", code, line, dash_pattern, replacement_pattern)
     )
   }
 
@@ -981,13 +984,15 @@ exercise_check_unparsable_unicode <- function(exercise) {
   # Regex searches for any codepoints not in the ASCII range (00-7F)
   non_ascii_pattern <- "[^\u01-\u7f]"
   return(
-    unparsable_unicode_message("unparsableunicode", code, non_ascii_pattern)
+    unparsable_unicode_message("unparsableunicode", code, line, non_ascii_pattern)
   )
 }
 
-unparsable_unicode_message <- function(key, code, pattern, replacement_pattern = NULL) {
-  character <- str_extract(code, pattern)
-  highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern)
+unparsable_unicode_message <- function(key, code, line, pattern, replacement_pattern = NULL) {
+  line <- unlist(strsplit(code, "\n"))[[line]]
+
+  character <- str_extract(line, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(line, pattern)
 
   suggestion <- NULL
   if (!is.null(replacement_pattern)) {
