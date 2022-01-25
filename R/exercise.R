@@ -948,17 +948,13 @@ exercise_check_unparsable_unicode <- function(exercise) {
   quote_pattern <- paste(single_quote_pattern, double_quote_pattern, sep = "|")
 
   if (grepl(quote_pattern, code)) {
-    character <- str_extract(code, quote_pattern)
-    lint <- exercise_highlight_unparsable_unicode(code, quote_pattern)
-
-    # Replace curly single quotes with straight single quotes
-    suggestion <- gsub(single_quote_pattern, "'", code)
-    # Replace all other Unicode quotes with straight double quotes
-    suggestion <- gsub(double_quote_pattern, '"', suggestion)
-    suggestion <- html_code_block(suggestion)
+    # Replace curly single quotes with straight single quotes and
+    #   all other Unicode quotes with straight double quotes
+    replacement_pattern <- c("'", '"')
+    names(replacement_pattern) <- c(single_quote_pattern, double_quote_pattern)
 
     return(
-      build_unparsable_i18n_span("unparsablequotes", character, lint, suggestion)
+      unparsable_unicode_message("unparsablequotes", code, quote_pattern, replacement_pattern)
     )
   }
 
@@ -972,34 +968,38 @@ exercise_check_unparsable_unicode <- function(exercise) {
   )
 
   if (grepl(dash_pattern, code)) {
-    character <- str_extract(code, dash_pattern)
-    lint <- exercise_highlight_unparsable_unicode(code, dash_pattern)
-
     # Replace Unicode dashes with ASCII hyphen-minus
-    suggestion <- gsub(dash_pattern, "-", code)
-    suggestion <- html_code_block(suggestion)
+    replacement_pattern <- "-"
+    names(replacement_pattern) <- dash_pattern
 
     return(
-      build_unparsable_i18n_span("unparsableunicodesuggestion", character, lint, suggestion)
+      unparsable_unicode_message("unparsableunicodesuggestion", code, dash_pattern, replacement_pattern)
     )
   }
 
   # Check if code contains any other non-ASCII characters ----------------------
   # Regex searches for any codepoints not in the ASCII range (00-7F)
   non_ascii_pattern <- "[^\u01-\u7f]"
-  character <- str_extract(code, non_ascii_pattern)
-  lint <- exercise_highlight_unparsable_unicode(code, non_ascii_pattern)
-
-  return(build_unparsable_i18n_span("unparsableunicode", character, lint))
+  return(
+    unparsable_unicode_message("unparsableunicode", code, non_ascii_pattern)
+  )
 }
 
-build_unparsable_i18n_span <- function(key, character, lint, suggestion = NULL) {
+unparsable_unicode_message <- function(key, code, pattern, replacement_pattern = NULL) {
+  character <- str_extract(code, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern)
+
+  suggestion <- NULL
+  if (!is.null(replacement_pattern)) {
+    suggestion <- html_code_block(str_replace_all(code, replacement_pattern))
+  }
+
   i18n_span(
     paste0("text.", key),
     HTML(i18n_translations()$en$translation$text[[key]]),
     opts = list(
       character = character,
-      code = lint,
+      code = highlighted_code,
       suggestion = suggestion,
       interpolation = list(escapeValue = FALSE)
     )
