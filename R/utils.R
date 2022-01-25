@@ -92,6 +92,20 @@ str_replace <- function(x, pattern, replacement) {
   if (is.null(x)) return(NULL)
   sub(pattern, replacement, x)
 }
+str_replace_all <- function(x, pattern, replacement) {
+  if (is.null(x)) return(NULL)
+
+  if (!is.null(names(pattern))) {
+    for (i in seq_along(pattern)) {
+      x <- str_replace_all(x, names(pattern)[[i]], pattern[[i]])
+    }
+
+    return(x)
+  }
+
+  gsub(pattern, replacement, x)
+}
+
 str_remove <- function(x, pattern) {
   str_replace(x, pattern, "")
 }
