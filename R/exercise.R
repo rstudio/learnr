@@ -989,10 +989,10 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
 }
 
 unparsable_unicode_message <- function(key, code, line, pattern, replacement_pattern = NULL) {
-  line <- unlist(strsplit(code, "\n"))[[line]]
+  code_line <- unlist(strsplit(code, "\n"))[[line]]
 
-  character <- str_extract(line, pattern)
-  highlighted_code <- exercise_highlight_unparsable_unicode(line, pattern)
+  character <- str_extract(code_line, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(code_line, pattern, line)
 
   suggestion <- NULL
   if (!is.null(replacement_pattern)) {
@@ -1011,14 +1011,14 @@ unparsable_unicode_message <- function(key, code, line, pattern, replacement_pat
   )
 }
 
-exercise_highlight_unparsable_unicode <- function(code, pattern) {
+exercise_highlight_unparsable_unicode <- function(code, pattern, line) {
   highlighted_code <- gsub(
     pattern = paste0("(", pattern, ")"),
     replacement = "<mark>\\1</mark>",
     x = code
   )
 
-  html_code_block(highlighted_code, escape = FALSE)
+  html_code_block(paste0(line, ": ", highlighted_code), escape = FALSE)
 }
 
 exercise_result_timeout <- function() {
