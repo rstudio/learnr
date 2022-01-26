@@ -19,6 +19,8 @@ test_that("store works", {
 
 
 test_that("tutorial_cache_works", {
+  skip_if_not_pandoc("1.14")
+
   info <- prepare_tutorial_cache_from_source(test_path("tutorials", "basic.Rmd"))
   withr::defer(clear_tutorial_cache())
 
@@ -52,6 +54,8 @@ test_that("tutorial_cache_works", {
 
 
 test_that("setup-global-exercise chunk is used for global_setup", {
+  skip_if_not_pandoc("1.14")
+
   prepare_tutorial_cache_from_source(test_path("setup-chunks", "exercise-global-setup.Rmd"))
   withr::defer(clear_tutorial_cache())
 
