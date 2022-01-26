@@ -989,10 +989,10 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
 }
 
 unparsable_unicode_message <- function(key, code, line, pattern, replacement_pattern = NULL) {
-  code_line <- unlist(strsplit(code, "\n"))[[line]]
+  code <- unlist(strsplit(code, "\n"))[[line]]
 
-  character <- str_extract(code_line, pattern)
-  highlighted_code <- exercise_highlight_unparsable_unicode(code_line, pattern, line)
+  character <- str_extract(code, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern, line)
 
   suggestion <- NULL
   if (!is.null(replacement_pattern)) {

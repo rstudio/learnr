@@ -418,7 +418,8 @@ text:
       {{code}}
       <p>Don't worry, this is a common source of errors when you copy code from
       another app that applies its own formatting to text.
-      You can try replacing your input with this code:</p>
+      You can try fixing the code on that line with the following.
+      There may be other places that need to be fixed, too.</p>
       {{suggestion}}
     fr: ~
     es: ~
@@ -454,7 +455,8 @@ text:
       <p>Sometimes your code may contain a special character that looks like a
       regular character, especially if you copy and paste the code from
       another app.
-      You can try replacing your input with this code:</p>
+      You can try fixing the code on that line with the following.
+      There may be other places that need to be fixed, too.</p>
       {{suggestion}}
     fr: ~
     es: ~
