@@ -1,4 +1,6 @@
 test_that("Error thrown: has -check chunk but missing exercise.checker", {
+  skip_if_not_pandoc("1.14")
+
   rmd <- test_path("tutorials", "missing-exercise-checker.Rmd")
 
   withr::with_tempfile("outfile", fileext = ".html", {
@@ -10,7 +12,7 @@ test_that("Error thrown: has -check chunk but missing exercise.checker", {
 })
 
 test_that("*-error-check chunks require *-check chunks", {
-  skip_if_not(rmarkdown::pandoc_available())
+  skip_if_not_pandoc("1.14")
 
   tmpfile <- tempfile(fileext = ".html")
   on.exit(unlink(tmpfile))
@@ -27,7 +29,7 @@ test_that("*-error-check chunks require *-check chunks", {
 })
 
 test_that("Detection of chained setup cycle works", {
-  skip_if_not(rmarkdown::pandoc_available())
+  skip_if_not_pandoc("1.14")
 
   tmpfile <- tempfile(fileext = ".html")
   on.exit(unlink(tmpfile))
