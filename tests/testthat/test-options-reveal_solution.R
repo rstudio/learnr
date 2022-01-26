@@ -1,6 +1,8 @@
 context("Optionally reveal solution")
 
 render_tutorial_with_reveal_solution <- function(opt_string) {
+  skip_if_not_pandoc("1.14")
+
   ex <- readLines(test_path("tutorials", "optional-show-solution.Rmd"))
   ex <- sub("#<<reveal_solution>>", opt_string, ex, fixed = TRUE)
 
