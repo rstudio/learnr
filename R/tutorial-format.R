@@ -49,6 +49,7 @@ tutorial <- function(fig_width = 6.5,
                      md_extensions = NULL,
                      pandoc_args = NULL,
                      language = "en",
+                     lib_dir = NULL,
                      ...) {
 
   if ("anchor_sections" %in% names(list(...))) {
@@ -147,7 +148,6 @@ tutorial <- function(fig_width = 6.5,
   base_format <- rmarkdown::html_document(
     smart = smart,
     theme = theme,
-    lib_dir = NULL,
     mathjax = mathjax,
     pandoc_args = pandoc_args,
     template = "default",
