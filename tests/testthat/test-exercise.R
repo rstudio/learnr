@@ -58,6 +58,8 @@ test_that("exercise_code_chunks_prep() returns character(0) if no chunks", {
 # render_exercise() -------------------------------------------------------
 
 test_that("render_exercise() returns exercise result with invisible value", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "z <- 3",
     chunks = list(
@@ -82,6 +84,8 @@ test_that("render_exercise() returns exercise result with invisible value", {
 })
 
 test_that("render_exercise() returns exercise result with visible value and global setup chunk", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = c("z <- 3", "z"),
     chunks = list(
@@ -111,6 +115,8 @@ test_that("render_exercise() returns exercise result with visible value and glob
 })
 
 test_that("render_exercise() envir_prep and envir_result are distinct", {
+  skip_if_not_pandoc("1.14")
+
   # user overwrites `x`
   exercise <- mock_exercise(
     user_code = c("x <- 2"),
@@ -131,6 +137,8 @@ test_that("render_exercise() envir_prep and envir_result are distinct", {
 })
 
 test_that("render_exercise() returns envir_result up to error", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = c("y <- 2", "stop('boom')", "z <- 3"),
     chunks = list(
@@ -158,6 +166,8 @@ test_that("render_exercise() returns envir_result up to error", {
 })
 
 test_that("evaluate_exercise() returns internal error if setup chunk throws an error", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "stop('user')",
     chunks = list(mock_chunk("setup-1", "stop('setup')")),
@@ -251,6 +261,8 @@ test_that("evaluate_exercise() returns an internal error for global setup chunk 
 })
 
 test_that("render_exercise() cleans up exercise_prep files", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "dir()",
     chunks = list(mock_chunk("ex-setup", "n <- 5"))
@@ -272,6 +284,8 @@ test_that("render_exercise() cleans up exercise_prep files", {
 })
 
 test_that("render_exercise() cleans up exercise_prep files even when setup fails", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = c("writeLines('nope', 'nope.txt')", "dir()"),
     # setup chunk throws an error
@@ -305,6 +319,8 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
 })
 
 test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "readLines('exercise.Rmd')",
     chunks = list(mock_chunk("ex-setup", "writeLines('nope', 'exercise.Rmd')"))
@@ -498,6 +514,8 @@ test_that("exercise_result_as_html() creates html for learnr", {
 # filter_dependencies() ---------------------------------------------------
 
 test_that("filter_dependencies() excludes non-list knit_meta objects", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     user_code =
       "htmltools::tagList(

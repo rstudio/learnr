@@ -204,6 +204,8 @@ test_that("i18n_span() returns an i18n span", {
 })
 
 test_that("i18n_set_language_option() changes message language", {
+  skip_if_not_pandoc("1.14")
+
   withr::defer(i18n_set_language_option("en"))
 
   ex <- mock_exercise(
@@ -231,6 +233,8 @@ test_that("i18n_set_language_option() changes message language", {
 })
 
 test_that("i18n_set_language_option() sets up language inheritance", {
+  skip_if_not_pandoc("1.14")
+
   withr::defer(i18n_set_language_option("en"))
 
   ex <- mock_exercise(
