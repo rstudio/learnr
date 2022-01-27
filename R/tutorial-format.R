@@ -3,30 +3,30 @@
 #' Long-form tutorial which includes narrative, figures, videos, exercises, and
 #' questions.
 #'
-#' @inheritParams rmarkdown::html_document
-#'
-#' @param theme Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
-#'  "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
-#'  "simplex", or "yeti").
-#'
+#' @param theme Visual theme ("rstudio", default", "cerulean", "journal",
+#'   "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper",
+#'   "sandstone", "simplex", or "yeti").
 #' @param progressive Display sub-topics progressively (i.e. wait until previous
 #'   topics are either completed or skipped before displaying subsequent
 #'   topics).
 #' @param allow_skip Allow users to skip sub-topics (especially useful when
 #'   \code{progressive} is \code{TRUE}).
 #' @param highlight Syntax highlighting style. Supported styles include
-#'        "default", "tango", "pygments", "kate", "monochrome",
-#'        "espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
-#'        to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.
+#'   "default", "tango", "pygments", "kate", "monochrome", "espresso",
+#'   "zenburn", "haddock", and "textmate". Pass ‘NULL’ to prevent syntax
+#'   highlighting.  Note, this value only pertains to standard rmarkdown code,
+#'   not the Ace editor highlighting.
 #' @param ace_theme Ace theme supplied to the ace code editor for all exercises.
-#'        See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.
-#' @param smart Produce typographically correct output, converting straight quotes to curly quotes,
-#'        \code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
-#'        Deprecated in \pkg{rmarkdown} v2.2.0.
+#'   See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to
+#'   \code{"textmate"}.
+#' @param smart Produce typographically correct output, converting straight
+#'   quotes to curly quotes, \code{---} to em-dashes, \code{--} to en-dashes,
+#'   and \code{...} to ellipses. Deprecated in \pkg{rmarkdown} v2.2.0.
 #' @param ... Forward parameters to html_document
 #' @param language Language or custom text of the UI elements. See
-#'        `vignette("multilang", package = "learnr")` for more information
-#'        about available options and formatting
+#'   `vignette("multilang", package = "learnr")` for more information about
+#'   available options and formatting
+#' @inheritParams rmarkdown::html_document
 #'
 #' @export
 #' @importFrom utils getFromNamespace
