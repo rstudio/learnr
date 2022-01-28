@@ -24,6 +24,7 @@ tutorial(
   md_extensions = NULL,
   pandoc_args = NULL,
   language = "en",
+  lib_dir = NULL,
   ...
 )
 }
@@ -63,21 +64,23 @@ can disable the \code{df_print} behavior entirely by setting the option
 \href{https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing}{Data
 frame printing section} in bookdown book for examples.}
 
-\item{smart}{Produce typographically correct output, converting straight quotes to curly quotes,
-\code{---} to em-dashes, \code{--} to en-dashes, and \code{...} to ellipses.
-Deprecated in \pkg{rmarkdown} v2.2.0.}
+\item{smart}{Produce typographically correct output, converting straight
+quotes to curly quotes, \code{---} to em-dashes, \code{--} to en-dashes,
+and \code{...} to ellipses. Deprecated in \pkg{rmarkdown} v2.2.0.}
 
-\item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
-"readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
-"simplex", or "yeti").}
+\item{theme}{Visual theme ("rstudio", default", "cerulean", "journal",
+"flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper",
+"sandstone", "simplex", or "yeti").}
 
 \item{highlight}{Syntax highlighting style. Supported styles include
-"default", "tango", "pygments", "kate", "monochrome",
-"espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
-to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.}
+"default", "tango", "pygments", "kate", "monochrome", "espresso",
+"zenburn", "haddock", and "textmate". Pass ‘NULL’ to prevent syntax
+highlighting.  Note, this value only pertains to standard rmarkdown code,
+not the Ace editor highlighting.}
 
 \item{ace_theme}{Ace theme supplied to the ace code editor for all exercises.
-See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.}
+See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to
+\code{"textmate"}.}
 
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is
@@ -102,8 +105,12 @@ additional details.}
 \item{pandoc_args}{Additional command line options to pass to pandoc}
 
 \item{language}{Language or custom text of the UI elements. See
-\code{vignette("multilang", package = "learnr")} for more information
-about available options and formatting}
+\code{vignette("multilang", package = "learnr")} for more information about
+available options and formatting}
+
+\item{lib_dir}{Directory to copy dependent HTML libraries (e.g. jquery,
+bootstrap, etc.) into. By default this will be the name of the document with
+\code{_files} appended to it.}
 
 \item{...}{Forward parameters to html_document}
 }
