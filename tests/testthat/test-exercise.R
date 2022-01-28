@@ -1099,12 +1099,6 @@ test_that("Shiny session is diabled", {
 })
 
 test_that("Sensitive env vars and options are masked", {
-  withr::local_envvar(
-    CONNECT_API_KEY = "T_CONNECT_API_KEY",
-    CONNECT_SERVER = "T_CONNECT_SERVER"
-  )
-  withr::local_options(shiny.sharedSecret = "T_sharedSecret")
-
   ex <- mock_exercise(user_code = paste(
     "list(",
     "  Sys.getenv('CONNECT_API_KEY', 'USER_LOCAL_CONNECT_API_KEY'),",
@@ -1113,7 +1107,19 @@ test_that("Sensitive env vars and options are masked", {
     ")",
     sep = "\n"
   ))
-  res <- evaluate_exercise(ex, new.env())
+
+  env_connect <- list(
+    CONNECT_API_KEY = "T_CONNECT_API_KEY",
+    CONNECT_SERVER = "T_CONNECT_SERVER"
+  )
+  opts_shiny <- list(shiny.sharedSecret = "T_sharedSecret")
+
+  withr::with_envvar(env_connect, {
+    withr::with_options(opts_shiny, {
+      # evaluating the exercise in an env with sentive envvars and options
+      res <- evaluate_exercise(ex, new.env())
+    })
+  })
 
   expect_no_match(res$html_output, "T_CONNECT_API_KEY", fixed = TRUE)
   expect_no_match(res$html_output, "T_CONNECT_SERVER", fixed = TRUE)
