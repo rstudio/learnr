@@ -70,8 +70,10 @@ Exercises are interactive R code chunks that allow readers to directly execute R
 
 Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the `setup` chunk and also sets some local options on the `addition` chunk:
 
-<div id="exerciseoptions"></div>
-<script type="text/javascript">loadSnippet('exerciseoptions')</script>
+```{r snippet-exerciseoptions, echo = FALSE}
+source("snippets.R")
+insert_snippet("exerciseoptions")
+```
 
 There are also some other specialized chunks that can be used with an exercise chunk, including:
 
@@ -88,8 +90,9 @@ By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial 
 
 You can arrange for an exercise to be pre-evaluated (and its output shown) using the `exercise.eval` chunk option. This option can also be set either globally or per-chunk:
 
-<div id="exerciseeval"></div>
-<script type="text/javascript">loadSnippet('exerciseeval')</script>
+```{r snippet-exerciseeval, echo = FALSE}
+insert_snippet("exerciseeval")
+```
 
 ## Exercise Setup
 
@@ -109,38 +112,38 @@ Each of these is described in more detail below. Note that you may also [chain s
 
 Code in the global `setup` chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:
 
-<div id="exercisesetup" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisesetup')</script>
-    
+```{r snippet-exercisesetup, echo = FALSE}
+insert_snippet("exercisesetup")
+```
 #### Create a shared setup chunk {#setup-shared}
 
 If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
 
-<div id="exercisesetupshared" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisesetupshared')</script>
-
+```{r snippet-exercisesetupshared, echo = FALSE}
+insert_snippet("exercisesetupshared")
+```
 #### Create an exercise-specific `-setup` chunk {#setup-exercise-specific}
 
 **learnr** will automatically associate any chunk with a label in the format `<exercise>-setup` as a setup chunk specifically associated with `<exercise>`, where `<exercise>` is replaced with the label of the exercise chunk. For example, the `filter-setup` chunk will be used as the setup chunk for the `filter` exercise:
 
-<div id="exercisesetupsuffix" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
-    
+```{r snippet-exercisesetupsuffix, echo = FALSE}
+insert_snippet("exercisesetupsuffix")
+```
 #### Chained setup chunks {#setup-chained}
 
 If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the `exercise.setup` chunk option. (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) **learnr** will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
 
-<div id="exercisesetupchained" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisesetupchained')</script>
-
+```{r snippet-exercisesetupchained, echo = FALSE}
+insert_snippet("exercisesetupchained")
+```
 You can chain use exercise chunks in the setup chunk chain, but keep in mind that the code as it appears in the R Markdown source is used to serve as the setup code, not the user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
 
-<div id="exercisechained" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisechained')</script>
-    
+```{r snippet-exercisechained, echo = FALSE}
+insert_snippet("exercisechained")
+```
 ### Using Files in Exercises
 
-Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in `.csv` or `.rds` format. **learnr** will look for a folder named `data/` in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial. 
+Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in `.csv` or `.rds` format. **learnr** will look for a folder named `data/` in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial.
 
 To ensure consistency between each evaluation of the user's code, users interact with a temporary copy of the original directory. This way, users cannot overwrite or delete the original files. Additionally, in the exercise, the directory is always called `data/`.
 
@@ -154,9 +157,9 @@ There are three ways authors can include files for use in exercises:
 
 In the example below, the global setup chunk is used to write `data/flights_jan.csv` and users are asked to load this file with `read_csv()`.
 
-<div id="exercisedata" style="width: 95%;"></div>
-<script type="text/javascript">loadSnippet('exercisedata')</script>
-
+```{r snippet-exercisedata, echo = FALSE}
+insert_snippet("exercisedata")
+```
 ## Hints and Solutions
 
 You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. Hints can be based on either R code snippets or on custom markdown/HTML content.
@@ -165,9 +168,9 @@ You can optionally provide a hint or solution for each exercise that can be opti
 
 To create a hint or solution based on R code simply create a new code chunk with "-hint" or "-solution" chunk label suffix. For example:
 
-<div id="exercisesolution"></div>
-<script type="text/javascript">loadSnippet('exercisesolution')</script>
-
+```{r snippet-exercisesolution, echo = FALSE}
+insert_snippet("exercisesolution")
+```
 A "Hint" or "Solution" button is added to the left side of the exercise header region:
 
 <img src="images/solution.png"  width="732" height="183"/>
@@ -176,39 +179,39 @@ A "Hint" or "Solution" button is added to the left side of the exercise header r
 
 To create a hint based on custom markdown content simply add a `<div>` tag with an `id` attribute that marks it as hint for your exercise (e.g. "filter-hint"). For example:
 
-<div id="exercisehintdiv"></div>
-<script type="text/javascript">loadSnippet('exercisehintdiv', 'markdown')</script>
-
+```{r snippet-exercisehintdiv, echo = FALSE}
+insert_snippet("exercisehintdiv")
+```
 The content within the `<div>` will be displayed underneath the R code editor for the exercise whenever the user presses the "Hint" button.
 
 ### Multiple Hints
 
 For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. "-hint-1", "-hint-2, "-hint-3", etc.) for your exercise chunk. For example:
 
-<div id="exercisehints"></div>
-<script type="text/javascript">loadSnippet('exercisehints')</script>
-
+```{r snippet-exercisehints, echo = FALSE}
+insert_snippet("exercisehints")
+```
 ### Hiding Solutions
 
 By default, the exercise solution is made available to the user with the "Solution" or "Hint" button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding `exercise.reveal_solution = FALSE` to the chunk options of either the exercise or its corresponding `*-solution` chunk.
 
-<div id="exercisesolutionhidden"></div>
-<script type="text/javascript">loadSnippet('exercisesolutionhidden')</script>
-
+```{r snippet-exercisesolutionhidden, echo = FALSE}
+insert_snippet("exercisesolutionhidden")
+```
 You can also set this option globally in the global `setup` chunk with `tutorial_options()`. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise. The current default is to reveal exercise solutions, but in a future version of learnr the default behavior will change to hide solutions.
 
 ## Progressive Reveal
 
 You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the `progressive` option then all Level 3 headings (`###`) will be revealed progressively. For example:
 
-<div id="tutorialyaml-progressive"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script>
-
+```{r snippet-tutorialyaml-progressive, echo = FALSE}
+insert_snippet("tutorialyaml-progressive")
+```
 You can also specify this option on a per topic basis using the `data-progressive` attribute. For example, the following code enables progressive rendering for a single topic:
 
-<div id="tutorialyaml-progressive-topic"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script>
-
+```{r snippet-tutorialyaml-progressive-topic, echo = FALSE}
+insert_snippet("tutorialyaml-progressive-topic")
+```
 You can also use `data-progressive=FALSE` to disable progressive rendering for an individual topic if the global `progressive` option is `TRUE`.
 
 Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
@@ -223,14 +226,14 @@ You may want to allow users of your tutorials to skip through exercises that the
 
 If you specify the `allow_skip` option then students will be able to advance through a sub-section without completing the exercises. For example:
 
-<div id="tutorialyaml-allowskip"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script>
-
+```{r snippet-tutorialyaml-allowskip, echo = FALSE}
+insert_snippet("tutorialyaml-allowskip")
+```
 You can also specify this option on a per sub-topic basis using the `data-allow-skip` attribute. For example, the following code enables exercise skipping within a single sub-topic:
 
-<div id="tutorialyaml-allowskip-topic"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script>
-
+```{r snippet-tutorialyaml-allowskip-topic, echo = FALSE}
+insert_snippet("tutorialyaml-allowskip-topic")
+```
 You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering for an individual sub-topic if the global `allow-skip` option is `TRUE`.
 
 ## Exercise Checking
@@ -241,9 +244,9 @@ You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering 
 
 Checking of exercise results may be done through a `*-check` chunk. With a **gradethis** setup, results can be graded with `grade_result()`, like so:
 
-<div id="exercisecheck"></div>
-<script type="text/javascript">loadSnippet('exercisecheck')</script>
-
+```{r snippet-exercisecheck, echo = FALSE}
+insert_snippet("exercisecheck")
+```
 When an exercise `*-check` chunk is provided, **learnr** provides an additional "Submit Answer" button, which allows users to experiment with various answers before formally submitting an answer:
 
 <img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
@@ -252,9 +255,9 @@ When an exercise `*-check` chunk is provided, **learnr** provides an additional 
 
 Checking of exercise *code* may be done through a `*-code-check` chunk. With a **gradethis** setup, if you supply a `*-solution` chunk and call `grade_code()` inside `*-code-check`, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.
 
-<div id="exercisecodecheck"></div>
-<script type="text/javascript">loadSnippet('exercisecodecheck')</script>
-
+```{r snippet-exercisecodecheck, echo = FALSE}
+insert_snippet("exercisecodecheck")
+```
 <img src="images/exercise-code.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
 It's worth noting that, when a `*-code-check` chunk is supplied, the check is done *prior* to evaluation of the exercise submission, meaning that if the `*-code-check` chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.
@@ -263,9 +266,9 @@ It's worth noting that, when a `*-code-check` chunk is supplied, the check is do
 
 Occasionally, you may include blanks in the pre-filled code in your exercise prompts --- sections of the code in the exercise prompt that students should fill in. By default, **learnr** will detect sequences of three or more underscores, e.g. `____` as blanks, regardless of where they appear in the user's submitted code.
 
-<div id="exerciseblanks"></div>
-<script type="text/javascript">loadSnippet('exerciseblanks')</script>
-
+```{r snippet-exerciseblanks, echo = FALSE}
+insert_snippet("exerciseblanks")
+```
 <img src="images/exercise-blanks.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
 You can choose your own blank pattern by setting the `exercise.blanks` chunk option to a regular expression  that identifies your blanks. You may also set `exercise.blanks = TRUE` to use the default **learnr** blank pattern, or `exercise.blanks = FALSE` to skip blank checking altogether. Globally `tutorial_options()` can be used to set the value of this argument for all exercises.
@@ -274,7 +277,7 @@ Submitted code with blanks will still be evaluated, but the other exercise check
 
 ### Checking Errors
 
-In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. If an `*-error-check` chunk is provided, you must also include a `*-check` chunk, typically to provide feedback in case the submission _doesn't_ generate an error. 
+In the event that an exercise submission generates an error, checking of the code (or its result, which is an error condition) may be done through either a `*-error-check` chunk or through the global `exercise.error.check.code` option. If an `*-error-check` chunk is provided, you must also include a `*-check` chunk, typically to provide feedback in case the submission _doesn't_ generate an error.
 
 With a **gradethis** setup, `exercise.error.check.code` is set to `grade_code()`. This means that, by default, users will receive intelligent feedback for a submission that generates an error using the `*-solution` chunk, if one is provided.
 
@@ -330,9 +333,9 @@ If, at any one of these stages, feedback should be provided, then `exercise.chec
 
 Below is a rough sketch of how one might implement an `exercise.checker` function.
 
-<div id="customchecker"></div>
-<script type="text/javascript">loadSnippet('customchecker')</script>
-
+```{r snippet-customchecker, echo = FALSE}
+insert_snippet("customchecker")
+```
 See the table below for a full description of all the arguments supplied to `exercise.checker`.
 
 <table>
@@ -397,9 +400,9 @@ See the table below for a full description of all the arguments supplied to `exe
 
 By default exercises are displayed with caption of "Code". However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connotation (e.g. "Exercise" or "Sandbox"). For example:
 
-<div id="exercisecaption"></div>
-<script type="text/javascript">loadSnippet('exercisecaption')</script>
-
+```{r snippet-exercisecaption, echo = FALSE}
+insert_snippet("exercisecaption")
+```
 ## Code Assistance
 
 By default, code completions are automatically provided as users type within the exercise editor:
@@ -408,9 +411,9 @@ By default, code completions are automatically provided as users type within the
 
 You can optionally disable code completion (either globally or on a per-chunk basis) using the `exercise.completion` option. For example, the following illustrates turning off completions globally then enabling them for an individual chunk:
 
-<div id="exercisecompletion"></div>
-<script type="text/javascript">loadSnippet('exercisecompletion')</script>
-
+```{r snippet-exercisecompletion, echo = FALSE}
+insert_snippet("exercisecompletion")
+```
 Similarily, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the `exercise.diagnostics` option.
 
 ## Editor Size
@@ -419,16 +422,16 @@ By default, the size of the exercise editor provided to users will match the num
 
 You can also specify a number of lines explicitly using the `exercise.lines` chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:
 
-<div id="exerciselines"></div>
-<script type="text/javascript">loadSnippet('exerciselines')</script>
-
+```{r snippet-exerciselines, echo = FALSE}
+insert_snippet("exerciselines")
+```
 ## Time Limits
 
 To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutorial.exercise.timelimit` option.
 
 The following demonstrates setting a 10 second time limit as a global option, document level option, and chunk level option:
 
-<div id="exercisetimelimit"></div>
-<script type="text/javascript">loadSnippet('exercisetimelimit')</script>
-
+```{r snippet-exercisetimelimit, echo = FALSE}
+insert_snippet("exercisetimelimit")
+```
 Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutorial.exercise.timelimit` if not otherwise specified is 30 seconds.

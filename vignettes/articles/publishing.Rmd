@@ -118,9 +118,10 @@ Hosting services will typically want to provide a custom implementation for the 
 
 A custom storage provider is specified by assigning an R list which includes the storage functions to the `tutorial.storage` global option. For example, here is a "no-op" storage provider:
 
-<div id="tutorstorage"></div>
-<script type="text/javascript">loadSnippet('tutorstorage')</script>
-
+```{r snippet-tutorstorage, echo = FALSE}
+source("snippets.R")
+insert_snippet("tutorstorage")
+```
 The parameters passed to the storage provider's functions are as follows (note that the various ID fields can be customized by a hosting provider, see the [Tutorial Identifiers] section below for details):
 
 <table>
@@ -223,9 +224,9 @@ The event system can also be used to cause arbitrary code to run when the events
 
 You can capture events by using a custom event recorder function. This function is specified via the `tutorial.event_recorder` global option. For example, here's how you would define a simple event recorder function that prints to stdout:
 
-<div id="tutorrecorder"></div>
-<script type="text/javascript">loadSnippet('tutorrecorder')</script>
-
+```{r snippet-tutorrecorder, echo = FALSE}
+insert_snippet("tutorrecorder")
+```
 The following parameters are passed to the event recorder function (note that the various ID fields can be customized by a hosting provider, see the [Tutorial Identifiers] section below for details):
 
 <table>
@@ -402,14 +403,14 @@ The default tutorial and user identifiers are determined as follows:
 
 In addition, tutorial authors can use YAML metadata to provide custom tutorial IDs and versions. For example:
 
-<div id="tutoryamlids"></div>
-<script type="text/javascript">loadSnippet('tutoryamlids')</script>
-
+```{r snippet-tutoryamlids, echo = FALSE}
+insert_snippet("tutoryamlids")
+```
 #### Custom Identifiers
 
 Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the `tutorial.http_header_tutorial_id`, `tutorial.http_header_tutorial_version` and `tutorial.http_header_user_id` global options. For example:
 
-<div id="tutorids"></div>
-<script type="text/javascript">loadSnippet('tutorids')</script>
-
+```{r snippet-tutorids, echo = FALSE}
+insert_snippet("tutorids")
+```
 Once configuring these custom header names you'd then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.
