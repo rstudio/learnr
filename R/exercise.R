@@ -988,7 +988,7 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
   )
 }
 
-unparsable_unicode_message <- function(key, code, line, pattern, replacement_pattern = NULL) {
+unparsable_unicode_message <- function(i18n_key, code, line, pattern, replacement_pattern = NULL) {
   code <- unlist(strsplit(code, "\n"))[[line]]
 
   character <- str_extract(code, pattern)
@@ -1000,8 +1000,8 @@ unparsable_unicode_message <- function(key, code, line, pattern, replacement_pat
   }
 
   i18n_div(
-    paste0("text.", key),
-    HTML(i18n_translations()$en$translation$text[[key]]),
+    paste0("text.", i18n_key),
+    HTML(i18n_translations()$en$translation$text[[i18n_key]]),
     opts = list(
       character = character,
       code = highlighted_code,
