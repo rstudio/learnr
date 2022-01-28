@@ -104,6 +104,7 @@ questions.</p>
   md_extensions <span class="op">=</span> <span class="cn">NULL</span>,
   pandoc_args <span class="op">=</span> <span class="cn">NULL</span>,
   language <span class="op">=</span> <span class="st">"en"</span>,
+  lib_dir <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -146,21 +147,23 @@ can disable the <code>df_print</code> behavior entirely by setting the option
 <a href="https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing" class="external-link">Data
 frame printing section</a> in bookdown book for examples.</p></dd>
 <dt>smart</dt>
-<dd><p>Produce typographically correct output, converting straight quotes to curly quotes,
-<code>---</code> to em-dashes, <code>--</code> to en-dashes, and <code>...</code> to ellipses.
-Deprecated in <span class="pkg">rmarkdown</span> v2.2.0.</p></dd>
+<dd><p>Produce typographically correct output, converting straight
+quotes to curly quotes, <code>---</code> to em-dashes, <code>--</code> to en-dashes,
+and <code>...</code> to ellipses. Deprecated in <span class="pkg">rmarkdown</span> v2.2.0.</p></dd>
 <dt>theme</dt>
-<dd><p>Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
-"readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
-"simplex", or "yeti").</p></dd>
+<dd><p>Visual theme ("rstudio", default", "cerulean", "journal",
+"flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper",
+"sandstone", "simplex", or "yeti").</p></dd>
 <dt>highlight</dt>
 <dd><p>Syntax highlighting style. Supported styles include
-"default", "tango", "pygments", "kate", "monochrome",
-"espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
-to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.</p></dd>
+"default", "tango", "pygments", "kate", "monochrome", "espresso",
+"zenburn", "haddock", and "textmate". Pass ‘NULL’ to prevent syntax
+highlighting.  Note, this value only pertains to standard rmarkdown code,
+not the Ace editor highlighting.</p></dd>
 <dt>ace_theme</dt>
 <dd><p>Ace theme supplied to the ace code editor for all exercises.
-See <code>learnr:::ACE_THEMES</code> for a list of possible values.  Defaults to <code>"textmate"</code>.</p></dd>
+See <code>learnr:::ACE_THEMES</code> for a list of possible values.  Defaults to
+<code>"textmate"</code>.</p></dd>
 <dt>mathjax</dt>
 <dd><p>Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is
@@ -185,8 +188,12 @@ additional details.</p></dd>
 <dd><p>Additional command line options to pass to pandoc</p></dd>
 <dt>language</dt>
 <dd><p>Language or custom text of the UI elements. See
-<code><a href="../articles/multilang.html">vignette("multilang", package = "learnr")</a></code> for more information
-about available options and formatting</p></dd>
+<code><a href="../articles/multilang.html">vignette("multilang", package = "learnr")</a></code> for more information about
+available options and formatting</p></dd>
+<dt>lib_dir</dt>
+<dd><p>Directory to copy dependent HTML libraries (e.g. jquery,
+bootstrap, etc.) into. By default this will be the name of the document with
+<code>_files</code> appended to it.</p></dd>
 <dt>...</dt>
 <dd><p>Forward parameters to html_document</p></dd>
 </dl></div>
