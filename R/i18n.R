@@ -119,13 +119,21 @@ i18n_validate_customization <- function(lng) {
   lng
 }
 
-i18n_span <- function(key, ..., opts = NULL) {
+i18n_tag <- function(key, ..., opts = NULL, tag = htmltools::span) {
   if (!is.null(opts)) {
     opts <- jsonlite::toJSON(opts, auto_unbox = TRUE, pretty = FALSE)
   }
-  x <- htmltools::span(..., `data-i18n` = key, `data-i18n-opts` = opts)
+  x <- tag(..., `data-i18n` = key, `data-i18n-opts` = opts)
   # return an html character object instead of a shiny.tag
   htmltools::HTML(format(x))
+}
+
+i18n_span <- function(key, ..., opts = NULL) {
+  i18n_tag(key, ..., opts = opts, tag = htmltools::span)
+}
+
+i18n_div <- function(key, ..., opts = NULL) {
+  i18n_tag(key, ..., opts = opts, tag = htmltools::div)
 }
 
 i18n_combine_words <- function(

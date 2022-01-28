@@ -92,8 +92,25 @@ str_replace <- function(x, pattern, replacement) {
   if (is.null(x)) return(NULL)
   sub(pattern, replacement, x)
 }
+str_replace_all <- function(x, pattern, replacement) {
+  if (is.null(x)) return(NULL)
+
+  if (!is.null(names(pattern))) {
+    for (i in seq_along(pattern)) {
+      x <- str_replace_all(x, names(pattern)[[i]], pattern[[i]])
+    }
+
+    return(x)
+  }
+
+  gsub(pattern, replacement, x)
+}
+
 str_remove <- function(x, pattern) {
   str_replace(x, pattern, "")
+}
+str_extract <- function(x, pattern, ...) {
+  unlist(regmatches(x, regexpr(pattern, x, ...)))
 }
 
 is_tags <- function(x) {
@@ -117,4 +134,12 @@ is_installed <- function(package, version = NULL) {
 
 timestamp_utc <- function() {
   strftime(Sys.time(), "%F %H:%M:%OS3 %Z", tz = "UTC")
+}
+
+html_code_block <- function(x, escape = TRUE) {
+  if (escape) {
+    x <- htmltools::htmlEscape(x)
+  }
+
+  sprintf("<pre><code>%s</code></pre>", x)
 }

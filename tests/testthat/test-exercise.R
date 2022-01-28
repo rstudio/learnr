@@ -1055,6 +1055,68 @@ test_that("Errors with global setup code result in an internal error", {
   expect_match(conditionMessage(res$feedback$error), "boom")
 })
 
+# Unparsable Unicode ------------------------------------------------------
+
+test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
+  # Curly double quotes
+  ex <- mock_exercise(
+    user_code = "str_detect(\u201ctest\u201d, \u201ct.+t\u201d)"
+  )
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsablequotes")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+
+  # Curly single quotes
+  ex <- mock_exercise(
+    user_code = "str_detect(\u2018test\u2019, \u2018t.+t\u2019)"
+  )
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsablequotes")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsablequotes,
+    fixed = TRUE
+  )
+
+  # En dash
+  ex     <- mock_exercise(user_code = "63 \u2013 21")
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsableunicodesuggestion")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsableunicodesuggestion,
+    fixed = TRUE
+  )
+
+  # Plus-minus sign
+  ex     <- mock_exercise(user_code = "63 \u00b1 21")
+  result <- evaluate_exercise(ex, new.env())
+  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
+  expect_match(result$feedback$message, "text.unparsableunicode")
+  expect_match(
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsableunicode,
+    fixed = TRUE
+  )
+})
+
+test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
+  skip_on_os("windows")
+  # Greek variable name and interrobang in character string
+  ex <- mock_exercise(
+    user_code =
+      '\u03bc\u03b5\u03c4\u03b1\u03b2\u03bb\u03b7\u03c4\u03ae <- "What\u203d"'
+  )
+  result <- evaluate_exercise(ex, new.env())
+  expect_null(result$feedback)
+})
 
 # Timelimit ---------------------------------------------------------------
 

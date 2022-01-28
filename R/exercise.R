@@ -918,21 +918,107 @@ exercise_check_code_is_parsable <- function(exercise) {
     }
   }
 
-  exercise_result(
-    list(
-      message = HTML(
-        i18n_span(
-          "text.unparsable",
-          HTML(i18n_translations()$en$translation$text$unparsable)
-        )
-      ),
-      correct = FALSE,
-      location = "append",
-      type = "error"
-    ),
-    html_output = error_message_html(error$message),
-    error_message = error$message
+  default_message <- i18n_span(
+    "text.unparsable",
+    HTML(i18n_translations()$en$translation$text$unparsable)
   )
+  unicode_message <- exercise_check_unparsable_unicode(exercise, error$message)
+
+  feedback <- list(
+    message = HTML(unicode_message %||% default_message),
+    correct = FALSE,
+    location = "append",
+    type = "error"
+  )
+
+  exercise_result_error(error$message, feedback)
+}
+
+exercise_check_unparsable_unicode <- function(exercise, error_message) {
+  code <- exercise[["code"]]
+
+  # Early exit if code is made up of all ASCII characters ----------------------
+  if (!grepl("[^\\x00-\\x7F]", code, perl = TRUE)) {
+    return(NULL)
+  }
+
+  # Determine line with offending character based on error message -------------
+  line <- as.integer(str_replace(error_message, "<text>:(\\d+):.+", "\\1"))
+
+  # Check if code contains Unicode quotation marks -----------------------------
+  single_quote_pattern <- "[\u2018\u2019\u201A\u201B\u275B\u275C\uFF07]"
+  double_quote_pattern <- "[\u201C-\u201F\u275D\u275E\u301D-\u301F\uFF02]"
+  quote_pattern <- paste(single_quote_pattern, double_quote_pattern, sep = "|")
+
+  if (grepl(quote_pattern, code)) {
+    # Replace curly single quotes with straight single quotes and
+    #   all other Unicode quotes with straight double quotes
+    replacement_pattern <- c("'", '"')
+    names(replacement_pattern) <- c(single_quote_pattern, double_quote_pattern)
+
+    return(
+      unparsable_unicode_message("unparsablequotes", code, line, quote_pattern, replacement_pattern)
+    )
+  }
+
+  # Check if code contains Unicode dashes --------------------------------------
+  # Regex searches for all characters in Unicode's general category
+  #   "Dash_Punctuation", except for the ASCII hyphen-minus
+  #   (https://www.unicode.org/reports/tr44/#General_Category_Values)
+  dash_pattern <- paste0(
+    "[\u00af\u05be\u06d4\u1400\u1428\u1806\u1b78\u2010-\u2015\u203e\u2043",
+    "\u2212\u23af\u23e4\u2500\u2796\u2e3a\u2e3b\u30fc\ufe58\ufe63\uff0d]"
+  )
+
+  if (grepl(dash_pattern, code)) {
+    # Replace Unicode dashes with ASCII hyphen-minus
+    replacement_pattern <- "-"
+    names(replacement_pattern) <- dash_pattern
+
+    return(
+      unparsable_unicode_message("unparsableunicodesuggestion", code, line, dash_pattern, replacement_pattern)
+    )
+  }
+
+  # Check if code contains any other non-ASCII characters ----------------------
+  # Regex searches for any codepoints not in the ASCII range (00-7F)
+  non_ascii_pattern <- "[^\u01-\u7f]"
+  return(
+    unparsable_unicode_message("unparsableunicode", code, line, non_ascii_pattern)
+  )
+}
+
+unparsable_unicode_message <- function(i18n_key, code, line, pattern, replacement_pattern = NULL) {
+  code <- unlist(strsplit(code, "\n"))[[line]]
+
+  character <- str_extract(code, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern, line)
+
+  suggestion <- NULL
+  if (!is.null(replacement_pattern)) {
+    suggestion <- html_code_block(str_replace_all(code, replacement_pattern))
+  }
+
+  i18n_div(
+    paste0("text.", i18n_key),
+    HTML(i18n_translations()$en$translation$text[[i18n_key]]),
+    opts = list(
+      character = character,
+      code = highlighted_code,
+      suggestion = suggestion,
+      interpolation = list(escapeValue = FALSE)
+    )
+  )
+}
+
+exercise_highlight_unparsable_unicode <- function(code, pattern, line) {
+  highlighted_code <- gsub(
+    pattern = paste0("(", pattern, ")"),
+    replacement = "<mark>\\1</mark>",
+    x = code
+  )
+
+  html_code_block(paste0(line, ": ", highlighted_code), escape = FALSE)
 }
 
 exercise_result_timeout <- function() {
