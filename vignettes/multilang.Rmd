@@ -63,13 +63,11 @@ bb_langs_code <- paste0("`", names(languages), "`")
 
 ## Choosing a Tutorial's Language
 
-To change the language of the UI element, you can use the following parameter in your YAML: 
+To change the language of the UI element, you can use the following parameter in your YAML:
 
-```
-output: 
-  learnr::tutorial:
-    language: fr
-```
+    output: 
+      learnr::tutorial:
+        language: fr
 
 Currently, `r length(learnr_langs)` language translations are supported:
 
@@ -83,9 +81,8 @@ for (lng in learnr_langs) {
 
 ## Customizable UI elements:
 
-There are many elements whose language can be translated or customized, each identified by a _key_. 
-Note that you do not need to customize _all_ of the keys,
-the UI will fall back to the default tutorial language for keys that are not specifically customized.
+There are many elements whose language can be translated or customized, each identified by a *key*.
+Note that you do not need to customize *all* of the keys, the UI will fall back to the default tutorial language for keys that are not specifically customized.
 
 The keys are organized into 2 groups: button and text.
 
@@ -93,7 +90,7 @@ The keys are organized into 2 groups: button and text.
 
 The following keys are available for translating button text:
 
-```yaml
+``` yaml
 `r i18n_custom_language_defaults("button")`
 ```
 
@@ -101,27 +98,23 @@ The following keys are available for translating button text:
 
 The following keys are available for translating text elements:
 
-```yaml
+``` yaml
 `r i18n_custom_language_defaults("text")`
-
 ```
 
 ## Format of `language` Option in YAML Header:
 
-There are several ways that you can use the `language` option
-to choose a language translation or to customize the phrasing used in a particular language.
+There are several ways that you can use the `language` option to choose a language translation or to customize the phrasing used in a particular language.
 
 ### Default Language
 
-Chose the default language for the tutorial. 
-learnr currently provides complete translations for
-`r learnr_supported_languages`.
-A translation does not need to be available for you to use as the default language,
-in particular if you are providing a custom translation for a language without an available complete translation.
+Chose the default language for the tutorial.
+learnr currently provides complete translations for `r learnr_supported_languages`.
+A translation does not need to be available for you to use as the default language, in particular if you are providing a custom translation for a language without an available complete translation.
 
 If you only want to change the default language, use:
 
-```yaml
+``` yaml
 language: "fr"
 ```
 
@@ -130,10 +123,9 @@ If you are also providing language customizations, the first language in the lis
 ### Customizing a Single Language
 
 To customize the displayed text for a single language, use the following format.
-In this format the customization will be applied to the English translation,
-which will also be the default language of the tutorial.
+In this format the customization will be applied to the English translation, which will also be the default language of the tutorial.
 
-```yaml
+``` yaml
 language:
   en:
     button:
@@ -144,11 +136,10 @@ language:
 
 ### Customizing Multiple Languages
 
-To provide custom display text for multiple languages, 
-provide a list containing `button` and/or `text` custom labels.
+To provide custom display text for multiple languages, provide a list containing `button` and/or `text` custom labels.
 In the example below, the default tutorial language will be Spanish (`es`).
 
-```yaml
+``` yaml
 language:
   es:
     button:
@@ -165,10 +156,8 @@ In the future, we may extend the multi-language features of learnr to accommodat
 
 ### Store Customizations in a JSON File
 
-If you intend to reuse the same custom language repeatedly, 
-it may be helpful to store the custom language parameters in a JSON file and simply import the file.
-In this case, you can set the language code item to the path to a single JSON file,
-written with the same structure as the YAML.
+If you intend to reuse the same custom language repeatedly, it may be helpful to store the custom language parameters in a JSON file and simply import the file.
+In this case, you can set the language code item to the path to a single JSON file, written with the same structure as the YAML.
 
 For example, you could write Spanish language customizations to `tutorial_es.json` with the following R code:
 
@@ -185,13 +174,12 @@ jsonlite::write_json(
 
 You could then load customizations from this file by referencing it in the YAML header.
 
-```yaml
+``` yaml
 language:
   es: tutorial_es.json
 ```
 
-Similarly, you can store the entire `language` list in a JSON file and 
-provide the path to the JSON file to the `language` key.
+Similarly, you can store the entire `language` list in a JSON file and provide the path to the JSON file to the `language` key.
 
 ```{r eval=FALSE}
 jsonlite::write_json(
@@ -210,25 +198,18 @@ jsonlite::write_json(
 )
 ```
 
-The R code above writes the custom text for `en` and `es` languages into `custom_language.json`,
-which we then reference in the YAML header:
+The R code above writes the custom text for `en` and `es` languages into `custom_language.json`, which we then reference in the YAML header:
 
-```yaml
+``` yaml
 language: custom_language.json
 ```
 
 ## Complete Translations
 
 Complete translations are provided by the internal function `i18n_translations()`.
-To contribute a complete translation for a language not currently provided by learnr,
-please submit a pull request to
-[github.com/rstudio/learnr](https://github.com/rstudio/learnr) 
-updating the list in `data-raw/i18n_translations.yml`,
-following the format described in that file.
+To contribute a complete translation for a language not currently provided by learnr, please submit a pull request to [github.com/rstudio/learnr](https://github.com/rstudio/learnr) updating the list in `data-raw/i18n_translations.yml`, following the format described in that file.
 
-Note that for the language to be available inside the alert boxes of learnr,
-you'll need to set the language to one of the
-[language codes used by bootbox](http://bootboxjs.com/documentation.html#bb-locales)[^1].
+Note that for the language to be available inside the alert boxes of learnr, you'll need to set the language to one of the [language codes used by bootbox](http://bootboxjs.com/documentation.html#bb-locales)[^1].
 If your language is not available for `bootbox`, then the buttons will default to English.
 
 [^1]: `r knitr::combine_words(bb_langs_code, and = " or ")`

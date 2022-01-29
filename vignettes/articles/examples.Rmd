@@ -21,8 +21,7 @@ source("example_cards.R", local = TRUE)
 
 ## Complete Tutorials
 
-These tutorials were designed to showcase the features of the learnr package —
-and to teach learners how to use R!
+These tutorials were designed to showcase the features of the learnr package --- and to teach learners how to use R!
 Try working through these tutorials to get a sense of the look and feel of a learnr tutorial.
 Then check out the source code to see how these tutorials were made!
 
@@ -33,9 +32,7 @@ example_cards("examples.yml", "showcase")
 ## Demo Tutorials
 
 There's a lot that learnr can do.
-These tutorials showcase specific learnr features
-or show you some possibilities that build on other packages designed
-to work with R Markdown and learnr.
+These tutorials showcase specific learnr features or show you some possibilities that build on other packages designed to work with R Markdown and learnr.
 
 ```{r example-cards-demo}
 example_cards("examples.yml", "demo")
