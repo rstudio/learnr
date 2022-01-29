@@ -91,7 +91,7 @@ Here are some examples of tutorials created with the **learnr** package.
 ## Hello, Tutorial!
 
 To create a tutorial, set `runtime: shiny_prerendered` in the YAML
-fromtmatter of your `.Rmd` file to turn your R Markdown document into an
+frontmatter of your `.Rmd` file to turn your R Markdown document into an
 [interactive app](https://rmarkdown.rstudio.com/lesson-14.html).
 
 Then, call `library(learnr)` within your Rmd file to activate tutorial
@@ -101,8 +101,26 @@ results right within their browser.
 
 For example, here’s a very simple tutorial:
 
-<div id="hellotutor"></div>
-<script type="text/javascript">loadSnippet('hellotutor')</script>
+<div id="hello-learnr" class="sourceCode">
+<pre class="markdown">
+<code>---
+title: "Hello, Tutorial!"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+&#96;&#96;&#96;{r setup, include=FALSE}
+library(learnr)
+&#96;&#96;&#96;
+
+This code computes the answer to one plus one, change it so it computes two plus two:
+
+&#96;&#96;&#96;{r addition, exercise=TRUE}
+1 + 1
+&#96;&#96;&#96;</code>
+</pre>
+</div>
+<script type="text/javascript">loadSnippet('hello-learnr')</script>
 
 This is what the running tutorial document looks like after the user has
 entered their answer:

@@ -176,8 +176,9 @@ Using this method you can apply time limits, resource limits, and filesystem lim
 
 3. Define `onstart` and `oncleaup` hooks by setting the `tutorial.exercise.evaluator.onstart` and `tutorial.exercise.evaluator.oncleanup` global options. For example:
 
-    <div id="exerciseevaluator"></div>
-    <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
+    ```{r snippet-exerciseevaluator, echo = FALSE}
+    insert_snippet("exerciseevaluator")
+    ```
 
 You'd likely set these options within `Rprofile.site` or another R source file that is evaluated prior to running the tutorial with `rmarkdown::run`.
 
