@@ -152,7 +152,7 @@
 <p>You can create a new <code><a href="../reference/tutorial.html">learnr::tutorial</a></code> document from a template via the <strong>New R Markdown</strong> dialog in RStudio:</p>
 <p><img src="images/create-new-tutorial.png" width="565" height="461"></p>
 <p>This is what the YAML metadata looks like for an Rmd file that uses the tutorial format:</p>
-<div id="tutorialyaml">
+<div id="tutorialyaml" class="sourceCode">
 <pre class="markdown">
 <code>---
 title: "Hello, Tutorial!"
@@ -168,7 +168,7 @@ description: "Welcome to learnr tutorials!"
 <h4 id="chunk-labels">Chunk Labels<a class="anchor" aria-label="anchor" href="#chunk-labels"></a>
 </h4>
 <p>There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled <code>addition</code>:</p>
-<div id="addition">
+<div id="addition" class="sourceCode">
 <pre class="markdown">
 <code>```{r addition, exercise=TRUE}
 1 + 1
@@ -216,7 +216,7 @@ description: "Welcome to learnr tutorials!"
 </h3>
 <p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
 <p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
-<div id="question">
+<div id="question" class="sourceCode">
 <pre class="markdown">
 <code>```{r letter-a, echo=FALSE}
 question("What number is the letter A in the English alphabet?",
@@ -236,7 +236,7 @@ question("What number is the letter A in the English alphabet?",
 <h3 id="videos">Videos<a class="anchor" aria-label="anchor" href="#videos"></a>
 </h3>
 <p>You can include videos published on either <a href="https://www.youtube.com" class="external-link">YouTube</a> or <a href="https://vimeo.com" class="external-link">Vimeo</a> within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:</p>
-<div id="tutorvideos">
+<div id="tutorvideos" class="sourceCode">
 <pre class="markdown">
 <code>![](https://youtu.be/zNzZ1PfUDNk)
 ![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
@@ -250,7 +250,7 @@ question("What number is the letter A in the English alphabet?",
 </h4>
 <p>Videos are responsively displayed at 100% of their container’s width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.</p>
 <p>You can specify an alternate percentage for the video’s width or an alternate fixed width and height. For example:</p>
-<div id="videos-size">
+<div id="videos-size" class="sourceCode">
 <pre class="markdown">
 <code>![](https://youtu.be/zNzZ1PfUDNk){width="90%"}
 
@@ -265,7 +265,7 @@ question("What number is the letter A in the English alphabet?",
 </h3>
 <p>The <strong>learnr</strong> package uses <code>runtime: shiny_prerendered</code> to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it’s also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).</p>
 <p>The basic technique is to add a <code>context="server"</code> attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:</p>
-<div id="shiny">
+<div id="shiny" class="sourceCode">
 <pre class="markdown">
 <code>```{r, echo=FALSE}
 sliderInput("bins", "Number of bins:", min = 1, max = 50, value = 30)
@@ -342,7 +342,7 @@ Any other files (e.g. downloadable datasets)
 <h4 id="tutorial-identifiers">Tutorial Identifiers<a class="anchor" aria-label="anchor" href="#tutorial-identifiers"></a>
 </h4>
 <p>You can also invalidate stored work by changing the ID or version of your tutorial. If you publish tutorials within R packages then the version is automatically derived from the version of the package. You can also explicitly set the ID and version of a tutorial using YAML metadata, for example:</p>
-<div id="tutoryamlids">
+<div id="tutoryamlids" class="sourceCode">
 <pre class="markdown">
 <code>---
 title: "Hello, Tutorial!"

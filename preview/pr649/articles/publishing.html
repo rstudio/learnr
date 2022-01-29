@@ -206,7 +206,7 @@
 </h4>
 <p>Hosting services will typically want to provide a custom implementation for the storage of tutorial state which is tied to their tutorial provisioning and user identity system.</p>
 <p>A custom storage provider is specified by assigning an R list which includes the storage functions to the <code>tutorial.storage</code> global option. For example, here is a “no-op” storage provider:</p>
-<div id="tutorstorage">
+<div id="tutorstorage" class="sourceCode">
 <pre class="markdown">
 <code>options(tutorial.storage = list(
 
@@ -356,9 +356,10 @@ R object to be saved
 <h3 id="recording-events">Recording Events<a class="anchor" aria-label="anchor" href="#recording-events"></a>
 </h3>
 <p>You can capture events by using a custom event recorder function. This function is specified via the <code>tutorial.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
-<div id="tutorrecorder">
+<div id="tutorrecorder" class="sourceCode">
 <pre class="markdown">
-<code><span class="va">tutorial_event_recorder</span></code></pre>
+<code>tutorial_event_recorder 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script><p>The following parameters are passed to the event recorder function (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
 <table class="table">
@@ -586,7 +587,7 @@ Account name of server user executing the tutorial
 </tbody>
 </table>
 <p>In addition, tutorial authors can use YAML metadata to provide custom tutorial IDs and versions. For example:</p>
-<div id="tutoryamlids">
+<div id="tutoryamlids" class="sourceCode">
 <pre class="markdown">
 <code>---
 title: "Hello, Tutorial!"
@@ -604,7 +605,7 @@ runtime: shiny_prerendered
 <h4 id="custom-identifiers">Custom Identifiers<a class="anchor" aria-label="anchor" href="#custom-identifiers"></a>
 </h4>
 <p>Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the <code>tutorial.http_header_tutorial_id</code>, <code>tutorial.http_header_tutorial_version</code> and <code>tutorial.http_header_user_id</code> global options. For example:</p>
-<div id="tutorids">
+<div id="tutorids" class="sourceCode">
 <pre class="markdown">
 <code>options(
   tutorial.http_header_tutorial_id = "X-Tutorial-ID",

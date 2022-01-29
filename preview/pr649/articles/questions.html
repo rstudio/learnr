@@ -124,7 +124,7 @@
 </h2>
 <p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
 <p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
-<div id="question">
+<div id="question" class="sourceCode">
 <pre class="markdown">
 <code>```{r letter-a, echo=FALSE}
 question("What number is the letter A in the English alphabet?",
@@ -137,7 +137,7 @@ question("What number is the letter A in the English alphabet?",
 </pre>
 </div>
 <script type="text/javascript">loadSnippet('question')</script><p>The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:</p>
-<div id="questionmultiple">
+<div id="questionmultiple" class="sourceCode">
 <pre class="markdown">
 <code>```{r where-am-i, echo=FALSE}
 question("Where are you right now? (select ALL that apply)",
@@ -158,7 +158,7 @@ question("Where are you right now? (select ALL that apply)",
 <h2 id="custom-messages">Custom Messages<a class="anchor" aria-label="anchor" href="#custom-messages"></a>
 </h2>
 <p>You can add answer-specific correct/incorrect messages using the <code>message</code> option. For example:</p>
-<div id="questionmessages">
+<div id="questionmessages" class="sourceCode">
 <pre class="markdown">
 <code>```{r letter-a, echo=FALSE}
 question("What number is the letter A in the *English* alphabet?",
@@ -176,7 +176,7 @@ question("What number is the letter A in the *English* alphabet?",
 <h2 id="formatting-and-math">Formatting and Math<a class="anchor" aria-label="anchor" href="#formatting-and-math"></a>
 </h2>
 <p>You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the <code>$</code> delimiter. For example:</p>
-<div id="questionmath">
+<div id="questionmath" class="sourceCode">
 <pre class="markdown">
 <code>```{r math, echo=FALSE}
 x 
@@ -189,7 +189,7 @@ x
 <h2 id="retrying-questions">Retrying Questions<a class="anchor" aria-label="anchor" href="#retrying-questions"></a>
 </h2>
 <p>By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the <code>allow_retry</code> option, for example:</p>
-<div id="questionretry">
+<div id="questionretry" class="sourceCode">
 <pre class="markdown">
 <code>```{r letter-a, echo=FALSE}
 question("What number is the letter A in the English alphabet?",
@@ -208,7 +208,7 @@ question("What number is the letter A in the English alphabet?",
 <h2 id="random-answer-order">Random Answer Order<a class="anchor" aria-label="anchor" href="#random-answer-order"></a>
 </h2>
 <p>If you want the answers to questions to be randomly arranged, you can add the <code>random_answer_order</code> option. For example:</p>
-<div id="questionrandom">
+<div id="questionrandom" class="sourceCode">
 <pre class="markdown">
 <code>```{r letter-a, echo=FALSE}
 question("What number is the letter A in the English alphabet?",
@@ -227,7 +227,7 @@ question("What number is the letter A in the English alphabet?",
 <h2 id="groups-of-questions">Groups of Questions<a class="anchor" aria-label="anchor" href="#groups-of-questions"></a>
 </h2>
 <p>You can present a group of related questions as a quiz by wrapping your questions within the <code>quiz</code> function. For example:</p>
-<div id="questionquiz">
+<div id="questionquiz" class="sourceCode">
 <pre class="markdown">
 <code>```{r quiz1, echo=FALSE}
 quiz(caption = "Quiz 1",
