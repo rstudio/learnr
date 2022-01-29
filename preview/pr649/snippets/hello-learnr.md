@@ -8,7 +8,8 @@ runtime: shiny_prerendered
 library(learnr)
 ```
 
-This code computes the answer to one plus one, change it so it computes two plus two:
+This code computes the answer to one plus one,
+change it so it computes two plus two:
 
 ```{r addition, exercise=TRUE}
 1 + 1
