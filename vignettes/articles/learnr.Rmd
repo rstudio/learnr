@@ -37,9 +37,10 @@ You can create a new `learnr::tutorial` document from a template via the **New R
 
 This is what the YAML metadata looks like for an Rmd file that uses the tutorial format:
 
-<div id="tutorialyaml"></div>
-<script type="text/javascript">loadSnippet('tutorialyaml', 'markdown')</script>
-
+```{r snippet-tutorialyaml, echo = FALSE}
+source("snippets.R")
+insert_snippet("tutorialyaml")
+```
 
 Note that tutorials aren't just the Rmd source file, rather they are directories that contain the Rmd source file as well as other supporting files (e.g. figures and other images). As a result the default behavior is to create new tutorials within their own directory.
 
@@ -47,9 +48,9 @@ Note that tutorials aren't just the Rmd source file, rather they are directories
 
 There is one other requirement related to R code chunks that contain exercises or quiz questions: they must have a unique chunk label. For example, this chunk is labeled `addition`:
 
-<div id="addition"></div>
-<script type="text/javascript">loadSnippet('addition')</script>
-
+```{r snippet-addition, echo = FALSE}
+insert_snippet("addition")
+```
 This requirement exists to ensure that a stable identifier is associated with each interactive component. This in turn makes it possible to save and restore user work as well as facilitates aggregation and reporting on responses.
 
 ### Running Tutorials
@@ -93,13 +94,13 @@ Exercises can include hints or solutions as well as custom checking code to prov
 
 ### Questions
 
-You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers. 
+You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.
 
 Include a question by calling the `question` function within an R code chunk:
 
-<div id="question"></div>
-<script type="text/javascript">loadSnippet('question')</script>
-
+```{r snippet-question, echo = FALSE}
+insert_snippet("question")
+```
 Here's what the above question would look like within a tutorial:
 
 <img src="images/question.png" width=729 height=227>
@@ -110,27 +111,27 @@ The [Questions](questions.html) page includes additional information on using qu
 
 You can include videos published on either [YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within a tutorial using the standard markdown image syntax. Note that any valid YouTube or Vimeo URL will work. For example, the following are all valid examples of video embedding:
 
-<div id="tutorvideos"></div>
-<script type="text/javascript">loadSnippet('tutorvideos', 'markdown')</script>
-
+```{r snippet-tutorvideos, echo = FALSE}
+insert_snippet("tutorvideos")
+```
 #### Video Size
 
 Videos are responsively displayed at 100% of their container's width (with height automatically determined based on a 16x9 aspect ratio). You can change this behavior by adding attributes to the markdown where you reference the video.
 
 You can specify an alternate percentage for the video's width or an alternate fixed width and height. For example:
 
-<div id="videos-size"></div>
-<script type="text/javascript">loadSnippet('videos-size', 'markdown')</script>
-
+```{r snippet-videos-size, echo = FALSE}
+insert_snippet("videos-size")
+```
 ### Shiny Components
 
-The **learnr** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively). 
+The **learnr** package uses `runtime: shiny_prerendered` to turn regular R Markdown documents into live tutorials. Since tutorials are Shiny applications at their core, it's also possible to add other forms of interactivity using Shiny (e.g. for teaching a statistical concept interactively).
 
 The basic technique is to add a `context="server"` attribute to code chunks that are part of the Shiny server as opposed to UI definition. For example:
 
-<div id="shiny"></div>
-<script type="text/javascript">loadSnippet('shiny')</script>
-
+```{r snippet-shiny, echo = FALSE}
+insert_snippet("shiny")
+```
 You can learn more by reading the [Prerendered Shiny Documents](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.html) article on the R Markdown website.
 
 
@@ -175,22 +176,22 @@ Tutorials store the various pieces of work done within them (exercise input and 
 
 One thing to keep in mind about preserved work is that if your tutorial changes significantly then the work restored may no longer match up well with the contents of your tutorial! (e.g. the nature and content of exercises and/or questions may have changed).
 
-Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label. 
+Tutorial work is restored using the R chunk label of a given exercise or question, so if a chunk changes significantly you can invalidate the stored work by changing the chunk label.
 
 #### Tutorial Identifiers
 
 You can also invalidate stored work by changing the ID or version of your tutorial. If you publish tutorials within R packages then the version is automatically derived from the version of the package. You can also explicitly set the ID and version of a tutorial using YAML metadata, for example:
 
-<div id="tutoryamlids"></div>
-<script type="text/javascript">loadSnippet('tutoryamlids', 'markdown')</script>
-
+```{r snippet-tutoryamlids, echo = FALSE}
+insert_snippet("tutoryamlids")
+```
 Note that we use a reversed domain name for the tutorial id (`com.example.tutorials.my-first-tutorial`). This is to ensure that it is globally unique when deployed on a server with other tutorials. You could also choose to use a Universally Unique Identifier (UUID) created using the [**uuid**](https://cran.rstudio.com/web/packages/uuid/index.html) package.
 
 When you change the ID or version of a tutorial all stored work associated with the tutorial is invalidated and users of the tutorial will start fresh when accessing it again. It's therefore good practice to change the version whenever you make significant modifications to the exercises and questions within a tutorial (again, this occurs automatically for tutorials within R packages so long as the version of the R package is changed).
 
 ## Publishing
 
-Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io. 
+Tutorials can be published all of the same ways that Shiny applications can, including running locally on an end-user's machine or running on a Shiny Server or hosting service like shinyapps.io.
 
 The most straightforward way to deploy a tutorial is to include it within an [R package](publishing.html#r-package) and have users run it directly via the `learnr::run_tutorial` function.
 

@@ -2,8 +2,8 @@
 
 function loadSnippet(snippet, mode) {
   mode = mode || "r";
-  $("#" + snippet).addClass("snippet");
-  var editor = ace.edit(snippet);
+  $("#" + snippet).addClass("snippet").removeClass('sourceCode');
+  const editor = ace.edit(snippet);
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);
   editor.setReadOnly(true);
@@ -16,11 +16,17 @@ function loadSnippet(snippet, mode) {
   editor.session.setMode("ace/mode/" + mode);
   editor.session.getSelection().clearSelection();
 
-  var root = document.querySelector('meta[name="pkgdown-site-root"]').content
+  const root = document.querySelector('meta[name="pkgdown-site-root"]').content;
   $.get(root + "snippets/" + snippet + ".md", function(data) {
+    // Write the snippet into the editor
     editor.setValue(data, -1);
     editor.setOptions({
       maxLines: editor.session.getLength()
     });
+
+    // and write the snippet into an element for screen readers
+    const pre = $('<pre class="markdown sr-only"></pre>')
+      .append($('<code></code>').text(data));
+    $(editor.container).prepend(pre);
   });
 }
