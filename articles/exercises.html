@@ -232,8 +232,17 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </tbody>
 </table>
 <p>Note that these options can all be specified either globally or per-chunk. For example, the following code sets global default options using the <code>setup</code> chunk and also sets some local options on the <code>addition</code> chunk:</p>
-<div id="exerciseoptions">
+<div id="exerciseoptions" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(exercise.timelimit = 60)
+```
 
+```{r addition, exercise=TRUE, exercise.timelimit = 60}
+1 + 1
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciseoptions')</script><p>There are also some other specialized chunks that can be used with an exercise chunk, including:</p>
 <ol style="list-style-type: decimal">
@@ -247,8 +256,18 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 </h2>
 <p>By default, exercise code chunks are NOT pre-evaluated (i.e there is no initial output displayed for them). However, in some cases you may want to show initial exercise output (especially for exercises like the ones above where the user is asked to modify code rather than write new code from scratch).</p>
 <p>You can arrange for an exercise to be pre-evaluated (and its output shown) using the <code>exercise.eval</code> chunk option. This option can also be set either globally or per-chunk:</p>
-<div id="exerciseeval">
+<div id="exerciseeval" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(exercise.eval = TRUE)
+```
 
+```{r filter, exercise=TRUE, exercise.eval=FALSE}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciseeval')</script>
 </div>
@@ -273,8 +292,11 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h4 id="setup-global">Add code to the global <code>setup</code> chunk<a class="anchor" aria-label="anchor" href="#setup-global"></a>
 </h4>
 <p>Code in the global <code>setup</code> chunk is run once at the startup of the tutorial and is shared by all exercises within the tutorial. For example:</p>
-<div id="exercisesetup" style="width: 95%;">
-
+<div id="exercisesetup" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetup')</script>
 </div>
@@ -282,8 +304,11 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h4 id="setup-shared">Create a shared setup chunk<a class="anchor" aria-label="anchor" href="#setup-shared"></a>
 </h4>
 <p>If you don’t want to rely on global setup but would rather create setup code that’s used by only a handful of exercises you can use the <code>exercise.setup</code> chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we’ll re-write the previous example to use a shared setup chunk named <code>prepare-flights</code>:</p>
-<div id="exercisesetupshared" style="width: 95%;">
-
+<div id="exercisesetupshared" class="sourceCode">
+<pre class="markdown">
+<code>```{r prepare-flights}
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 </div>
@@ -291,8 +316,11 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h4 id="setup-exercise-specific">Create an exercise-specific <code>-setup</code> chunk<a class="anchor" aria-label="anchor" href="#setup-exercise-specific"></a>
 </h4>
 <p><strong>learnr</strong> will automatically associate any chunk with a label in the format <code>&lt;exercise&gt;-setup</code> as a setup chunk specifically associated with <code>&lt;exercise&gt;</code>, where <code>&lt;exercise&gt;</code> is replaced with the label of the exercise chunk. For example, the <code>filter-setup</code> chunk will be used as the setup chunk for the <code>filter</code> exercise:</p>
-<div id="exercisesetupsuffix" style="width: 95%;">
-
+<div id="exercisesetupsuffix" class="sourceCode">
+<pre class="markdown">
+<code>```{r filter-setup}
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
 </div>
@@ -300,12 +328,18 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h4 id="setup-chained">Chained setup chunks<a class="anchor" aria-label="anchor" href="#setup-chained"></a>
 </h4>
 <p>If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the <code>exercise.setup</code> chunk option. (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <strong>learnr</strong> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
-<div id="exercisesetupchained" style="width: 95%;">
-
+<div id="exercisesetupchained" class="sourceCode">
+<pre class="markdown">
+<code>```{r prepare-flights}
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupchained')</script><p>You can chain use exercise chunks in the setup chunk chain, but keep in mind that the code as it appears in the R Markdown source is used to serve as the setup code, not the user input. For example, if you turned <code>filtered-flights</code> back to an exercise, the pre-filled code is used as setup for the <code>arrange</code> exercise that use it as its setup:</p>
-<div id="exercisechained" style="width: 95%;">
-
+<div id="exercisechained" class="sourceCode">
+<pre class="markdown">
+<code>```{r prepare-flights}
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisechained')</script>
 </div>
@@ -322,8 +356,22 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <li><p>Use the <code>tutorial.data_dir</code> global option or the <code>TUTORIAL_DATA_DIR</code> environment variables to specify a path to a data directory.</p></li>
 </ol>
 <p>In the example below, the global setup chunk is used to write <code>data/flights_jan.csv</code> and users are asked to load this file with <code>read_csv()</code>.</p>
-<div id="exercisedata" style="width: 95%;">
+<div id="exercisedata" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup}
+library(tidyverse)
 
+flights_jan % 
+  filter(month == 2)
+  
+dir.create("data",  showWarnings = FALSE)
+write_csv(flights_jan, "data/flights_jan.csv")
+```
+
+```{r read-flights, exercise=TRUE}
+read_csv("data/flights_jan.csv")
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisedata')</script>
 </div>
@@ -336,8 +384,12 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="r-code-hints">R Code Hints<a class="anchor" aria-label="anchor" href="#r-code-hints"></a>
 </h3>
 <p>To create a hint or solution based on R code simply create a new code chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
-<div id="exercisesolution">
-
+<div id="exercisesolution" class="sourceCode">
+<pre class="markdown">
+<code>```{r filter, exercise=TRUE}
+# Change the filter to select February rather than January
+nycflights 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesolution')</script><p>A “Hint” or “Solution” button is added to the left side of the exercise header region:</p>
 <p><img src="images/solution.png" width="732" height="183"></p>
@@ -346,17 +398,43 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="markdown-hints">Markdown Hints<a class="anchor" aria-label="anchor" href="#markdown-hints"></a>
 </h3>
 <p>To create a hint based on custom markdown content simply add a <code>&lt;div&gt;</code> tag with an <code>id</code> attribute that marks it as hint for your exercise (e.g. “filter-hint”). For example:</p>
-<div id="exercisehintdiv">
+<div id="exercisehintdiv" class="sourceCode">
+<pre class="markdown">
+<code>```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
 
+<div id="filter-hint">
+**Hint:** You may want to use the dplyr `filter` function.
+</div></code>
+</pre>
 </div>
-<script type="text/javascript">loadSnippet('exercisehintdiv', 'markdown')</script><p>The content within the <code>&lt;div&gt;</code> will be displayed underneath the R code editor for the exercise whenever the user presses the “Hint” button.</p>
+<script type="text/javascript">loadSnippet('exercisehintdiv')</script><p>The content within the <code>&lt;div&gt;</code> will be displayed underneath the R code editor for the exercise whenever the user presses the “Hint” button.</p>
 </div>
 <div class="section level3">
 <h3 id="multiple-hints">Multiple Hints<a class="anchor" aria-label="anchor" href="#multiple-hints"></a>
 </h3>
 <p>For R code hints you can provide a sequence of hints that reveal progressively more of the solution as desired by the user. To do this create a sequence of indexed hint chunks (e.g. “-hint-1”, “-hint-2,”-hint-3”, etc.) for your exercise chunk. For example:</p>
-<div id="exercisehints">
+<div id="exercisehints" class="sourceCode">
+<pre class="markdown">
+<code>```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
 
+```{r filter-hint-1}
+filter(flights, ...)
+```
+
+```{r filter-hint-2}
+filter(flights, UniqueCarrier=="AA")
+```
+
+```{r filter-hint-3}
+filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisehints')</script>
 </div>
@@ -364,8 +442,25 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="hiding-solutions">Hiding Solutions<a class="anchor" aria-label="anchor" href="#hiding-solutions"></a>
 </h3>
 <p>By default, the exercise solution is made available to the user with the “Solution” or “Hint” button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding <code>exercise.reveal_solution = FALSE</code> to the chunk options of either the exercise or its corresponding <code>*-solution</code> chunk.</p>
-<div id="exercisesolutionhidden">
+<div id="exercisesolutionhidden" class="sourceCode">
+<pre class="markdown">
+<code>```{r filter, exercise=TRUE}
+# filter the flights table to include only United and American flights
+flights
+```
 
+```{r filter-hint-1}
+filter(flights, ...)
+```
+
+```{r filter-hint-2}
+filter(flights, UniqueCarrier=="AA")
+```
+
+```{r filter-solution, exercise.reveal_solution = FALSE}
+filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesolutionhidden')</script><p>You can also set this option globally in the global <code>setup</code> chunk with <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code>. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise. The current default is to reveal exercise solutions, but in a future version of learnr the default behavior will change to hide solutions.</p>
 </div>
@@ -374,14 +469,25 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h2 id="progressive-reveal">Progressive Reveal<a class="anchor" aria-label="anchor" href="#progressive-reveal"></a>
 </h2>
 <p>You might want users of your tutorials to see only one sub-topic at a time as they work through the material (this can be helpful to reduce distractions and maintain focus on the current task). If you specify the <code>progressive</code> option then all Level 3 headings (<code>###</code>) will be revealed progressively. For example:</p>
-<div id="tutorialyaml-progressive">
-
+<div id="tutorialyaml-progressive" class="sourceCode">
+<pre class="markdown">
+<code>---
+title: "Hello, Tutorial!"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---</code>
+</pre>
 </div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive', 'markdown')</script><p>You can also specify this option on a per topic basis using the <code>data-progressive</code> attribute. For example, the following code enables progressive rendering for a single topic:</p>
-<div id="tutorialyaml-progressive-topic">
-
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive')</script><p>You can also specify this option on a per topic basis using the <code>data-progressive</code> attribute. For example, the following code enables progressive rendering for a single topic:</p>
+<div id="tutorialyaml-progressive-topic" class="sourceCode">
+<pre class="markdown">
+<code>
+## Topic 1  {data-progressive=TRUE}</code>
+</pre>
 </div>
-<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic', 'markdown')</script><p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
+<script type="text/javascript">loadSnippet('tutorialyaml-progressive-topic')</script><p>You can also use <code>data-progressive=FALSE</code> to disable progressive rendering for an individual topic if the global <code>progressive</code> option is <code>TRUE</code>.</p>
 <p>Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (<code>###</code>). This can be useful when a second exercises builds on the first, giving away the answer to the first.</p>
 <p>Note that this feature is only available if you are using the <a href="formats.html#tutorial-format"><code>learnr::tutorial</code></a> R Markdown format (other custom formats may have their own internal mechanisms for progressive reveal).</p>
 <div class="section level3">
@@ -390,14 +496,26 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <p>When the <code>progressive</code> option is set to true, the tutorial will require students to complete any exercises in a sub-section before advancing to the next sub-section.</p>
 <p>You may want to allow users of your tutorials to skip through exercises that they can’t quite figure out. This might especially be true if you want users to be able to optionally see the next exercise even if they haven’t completed the prior one.</p>
 <p>If you specify the <code>allow_skip</code> option then students will be able to advance through a sub-section without completing the exercises. For example:</p>
-<div id="tutorialyaml-allowskip">
-
+<div id="tutorialyaml-allowskip" class="sourceCode">
+<pre class="markdown">
+<code>---
+title: "Hello, Tutorial!"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---</code>
+</pre>
 </div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip', 'markdown')</script><p>You can also specify this option on a per sub-topic basis using the <code>data-allow-skip</code> attribute. For example, the following code enables exercise skipping within a single sub-topic:</p>
-<div id="tutorialyaml-allowskip-topic">
-
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip')</script><p>You can also specify this option on a per sub-topic basis using the <code>data-allow-skip</code> attribute. For example, the following code enables exercise skipping within a single sub-topic:</p>
+<div id="tutorialyaml-allowskip-topic" class="sourceCode">
+<pre class="markdown">
+<code>
+### Exercise 2 {data-allow-skip=TRUE}</code>
+</pre>
 </div>
-<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic', 'markdown')</script><p>You can also use <code>data-allow-skip=FALSE</code> to disable exercise skipping rendering for an individual sub-topic if the global <code>allow-skip</code> option is <code>TRUE</code>.</p>
+<script type="text/javascript">loadSnippet('tutorialyaml-allowskip-topic')</script><p>You can also use <code>data-allow-skip=FALSE</code> to disable exercise skipping rendering for an individual sub-topic if the global <code>allow-skip</code> option is <code>TRUE</code>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -408,8 +526,25 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="checking-results">Checking Results<a class="anchor" aria-label="anchor" href="#checking-results"></a>
 </h3>
 <p>Checking of exercise results may be done through a <code>*-check</code> chunk. With a <strong>gradethis</strong> setup, results can be graded with <code>grade_result()</code>, like so:</p>
-<div id="exercisecheck">
+<div id="exercisecheck" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+gradethis::gradethis_setup()
+```
 
+* Submit `1+1` to receive a correct grade.
+
+```{r exercise1, exercise = TRUE}
+
+```
+ 
+```{r exercise1-check}
+grade_result(
+  pass_if(~identical(.result, 2))
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisecheck')</script><p>When an exercise <code>*-check</code> chunk is provided, <strong>learnr</strong> provides an additional “Submit Answer” button, which allows users to experiment with various answers before formally submitting an answer:</p>
 <p><img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"></p>
@@ -418,8 +553,27 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="checking-code">Checking Code<a class="anchor" aria-label="anchor" href="#checking-code"></a>
 </h3>
 <p>Checking of exercise <em>code</em> may be done through a <code>*-code-check</code> chunk. With a <strong>gradethis</strong> setup, if you supply a <code>*-solution</code> chunk and call <code>grade_code()</code> inside <code>*-code-check</code>, then you get detection of differences in the R syntax between the submitted exercise code and the solution code.</p>
-<div id="exercisecodecheck">
+<div id="exercisecodecheck" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+gradethis::gradethis_setup()
+```
 
+* Submit `1+1` to receive a correct grade.
+
+```{r exercise1, exercise = TRUE}
+
+```
+
+```{r exercise1-solution}
+1+1
+```
+ 
+```{r exercise1-code-check}
+grade_code()
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisecodecheck')</script><p><img src="images/exercise-code.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"></p>
 <p>It’s worth noting that, when a <code>*-code-check</code> chunk is supplied, the check is done <em>prior</em> to evaluation of the exercise submission, meaning that if the <code>*-code-check</code> chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.</p>
@@ -428,8 +582,18 @@ Whether or not the solution should be revealed to the user (defaults to <code>TR
 <h3 id="checking-blanks">Checking Blanks<a class="anchor" aria-label="anchor" href="#checking-blanks"></a>
 </h3>
 <p>Occasionally, you may include blanks in the pre-filled code in your exercise prompts — sections of the code in the exercise prompt that students should fill in. By default, <strong>learnr</strong> will detect sequences of three or more underscores, e.g. <code>____</code> as blanks, regardless of where they appear in the user’s submitted code.</p>
-<div id="exerciseblanks">
+<div id="exerciseblanks" class="sourceCode">
+<pre class="markdown">
+<code>Fill in the blank to create an expression that adds up to **4**.
 
+```{r blank, exercise = TRUE, exercise.blanks = "___+"}
+1 + ____
+```
+
+```{r blank-solution}
+1 + 3
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciseblanks')</script><p><img src="images/exercise-blanks.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"></p>
 <p>You can choose your own blank pattern by setting the <code>exercise.blanks</code> chunk option to a regular expression that identifies your blanks. You may also set <code>exercise.blanks = TRUE</code> to use the default <strong>learnr</strong> blank pattern, or <code>exercise.blanks = FALSE</code> to skip blank checking altogether. Globally <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code> can be used to set the value of this argument for all exercises.</p>
@@ -525,8 +689,11 @@ Location for feedback (“append”, “prepend”, or “replace”).
 </tbody>
 </table>
 <p>Below is a rough sketch of how one might implement an <code>exercise.checker</code> function.</p>
-<div id="customchecker">
-
+<div id="customchecker" class="sourceCode">
+<pre class="markdown">
+<code>```r
+custom_checker 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('customchecker')</script><p>See the table below for a full description of all the arguments supplied to <code>exercise.checker</code>.</p>
 <table class="table">
@@ -635,8 +802,13 @@ Unused (include for compatibility with parameters to be added in the future)
 <h2 id="exercise-caption">Exercise Caption<a class="anchor" aria-label="anchor" href="#exercise-caption"></a>
 </h2>
 <p>By default exercises are displayed with caption of “Code”. However, in some cases you may want either a custom per-chunk caption or a generic caption with a different connotation (e.g. “Exercise” or “Sandbox”). For example:</p>
-<div id="exercisecaption">
-
+<div id="exercisecaption" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(exercise.cap = "Sandbox")
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisecaption')</script>
 </div>
@@ -646,8 +818,17 @@ Unused (include for compatibility with parameters to be added in the future)
 <p>By default, code completions are automatically provided as users type within the exercise editor:</p>
 <p><img src="images/exercise-completion.png" width="749" height="213"></p>
 <p>You can optionally disable code completion (either globally or on a per-chunk basis) using the <code>exercise.completion</code> option. For example, the following illustrates turning off completions globally then enabling them for an individual chunk:</p>
-<div id="exercisecompletion">
+<div id="exercisecompletion" class="sourceCode">
+<pre class="markdown">
+<code>```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(exercise.completion = FALSE)
+```
 
+```{r histogram-plot, exercise=TRUE, exercise.completion=TRUE}
+
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisecompletion')</script><p>Similarily, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the <code>exercise.diagnostics</code> option.</p>
 </div>
@@ -656,8 +837,12 @@ Unused (include for compatibility with parameters to be added in the future)
 </h2>
 <p>By default, the size of the exercise editor provided to users will match the number of lines in your code chunk (with a minimum of 2 lines). If the user adds additional lines in the course of editing the editor will grow vertically up to 15 lines, after which it will display a scrollbar.</p>
 <p>You can also specify a number of lines explicitly using the <code>exercise.lines</code> chunk option (this can be done on a per-chunk or global basis). For example, the following chunk specifies that the exercise code editor should be 15 lines high:</p>
-<div id="exerciselines">
-
+<div id="exerciselines" class="sourceCode">
+<pre class="markdown">
+<code>```{r add-function, exercise=TRUE, exercise.lines=15}
+# Write a function to add two numbers together
+add_numbers 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciselines')</script>
 </div>
@@ -666,8 +851,17 @@ Unused (include for compatibility with parameters to be added in the future)
 </h2>
 <p>To mediate the problem of code which takes longer than expected to run you can specify the <code>exercise.timelimit</code> chunk option or alternatively the global <code>tutorial.exercise.timelimit</code> option.</p>
 <p>The following demonstrates setting a 10 second time limit as a global option, document level option, and chunk level option:</p>
-<div id="exercisetimelimit">
+<div id="exercisetimelimit" class="sourceCode">
+<pre class="markdown">
+<code>options(tutorial.exercise.timelimit = 10)
 
+```{r setup, include=FALSE}
+tutorial_options(exercise.timelimit = 10)
+```
+
+```{r exercise1, exercise=TRUE, exercise.timelimit=10}
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisetimelimit')</script><p>Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for <code>tutorial.exercise.timelimit</code> if not otherwise specified is 30 seconds.</p>
 </div>

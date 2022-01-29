@@ -206,8 +206,32 @@
 </h4>
 <p>Hosting services will typically want to provide a custom implementation for the storage of tutorial state which is tied to their tutorial provisioning and user identity system.</p>
 <p>A custom storage provider is specified by assigning an R list which includes the storage functions to the <code>tutorial.storage</code> global option. For example, here is a “no-op” storage provider:</p>
-<div id="tutorstorage">
+<div id="tutorstorage" class="sourceCode">
+<pre class="markdown">
+<code>options(tutorial.storage = list(
 
+  # save an arbitrary R object "data" to storage
+  save_object = function(tutorial_id, tutorial_version, user_id, object_id, data) {
+  
+  },
+  
+  # retreive a single R object from storage
+  get_object = function(tutorial_id, tutorial_version, user_id, object_id) { 
+    NULL 
+  },
+  
+  # retreive a list of all R objects stored
+  get_objects = function(tutorial_id, tutorial_version, user_id) { 
+    list() 
+  },
+  
+  # remove all stored R objects
+  remove_all_objects = function(tutorial_id, tutorial_version, user_id) {
+  
+  }
+)
+</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('tutorstorage')</script><p>The parameters passed to the storage provider’s functions are as follows (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
 <table class="table">
@@ -281,8 +305,39 @@ R object to be saved
 </li>
 <li>
 <p>Define <code>onstart</code> and <code>oncleaup</code> hooks by setting the <code>tutorial.exercise.evaluator.onstart</code> and <code>tutorial.exercise.evaluator.oncleanup</code> global options. For example:</p>
-<div id="exerciseevaluator">
+<div id="exerciseevaluator" class="sourceCode">
+<pre class="markdown">
+<code>options(tutorial.exercise.evaluator.onstart = function(pid) {
 
+  # import RAppArmor
+  require(RAppArmor, quietly = TRUE)
+
+  # set process group to pid (allows kill of entire subtree in cleanup)
+  setpgid();
+
+  # set nice priority
+  setpriority(10)
+
+  # set rlimits as appropriate
+  rlimit_nproc(1000)
+  rlimit_as(1024*1024*1024)
+
+  # change to r-user profile (see note above on required edit to r-user)
+  aa_change_profile("r-user")
+})
+
+options(tutorial.exercise.evaluator.oncleanup = function(pid) {
+
+  # import RAppArmor
+  require(RAppArmor, quietly = TRUE)
+
+  # kill entire process subtree. note that the second call works
+  # because the call to setpgid above sets our pgid (process group id)
+  # to our pid (process id)
+  kill(pid, tools::SIGKILL)
+  kill(-1 * pid, tools::SIGKILL)
+})</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciseevaluator')</script>
 </li>
@@ -332,8 +387,10 @@ R object to be saved
 <h3 id="recording-events">Recording Events<a class="anchor" aria-label="anchor" href="#recording-events"></a>
 </h3>
 <p>You can capture events by using a custom event recorder function. This function is specified via the <code>tutorial.event_recorder</code> global option. For example, here’s how you would define a simple event recorder function that prints to stdout:</p>
-<div id="tutorrecorder">
-
+<div id="tutorrecorder" class="sourceCode">
+<pre class="markdown">
+<code>tutorial_event_recorder 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('tutorrecorder')</script><p>The following parameters are passed to the event recorder function (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
 <table class="table">
@@ -561,8 +618,17 @@ Account name of server user executing the tutorial
 </tbody>
 </table>
 <p>In addition, tutorial authors can use YAML metadata to provide custom tutorial IDs and versions. For example:</p>
-<div id="tutoryamlids">
-
+<div id="tutoryamlids" class="sourceCode">
+<pre class="markdown">
+<code>---
+title: "Hello, Tutorial!"
+tutorial:
+  id: "com.example.tutorials.my-first-tutorial"
+  version: 2.1
+output: learnr::tutorial
+runtime: shiny_prerendered
+---</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('tutoryamlids')</script>
 </div>
@@ -570,8 +636,14 @@ Account name of server user executing the tutorial
 <h4 id="custom-identifiers">Custom Identifiers<a class="anchor" aria-label="anchor" href="#custom-identifiers"></a>
 </h4>
 <p>Tutorial hosting services will very often need to provide custom external definitions for tutorial IDs/versions and user IDs. This can be accomplished by adding HTTP headers to the requests that route to the tutorial. The names of the headers are configurable, and should be specified using the <code>tutorial.http_header_tutorial_id</code>, <code>tutorial.http_header_tutorial_version</code> and <code>tutorial.http_header_user_id</code> global options. For example:</p>
-<div id="tutorids">
-
+<div id="tutorids" class="sourceCode">
+<pre class="markdown">
+<code>options(
+  tutorial.http_header_tutorial_id = "X-Tutorial-ID",
+  tutorial.http_header_tutorial_version = "X-Tutorial-Version",
+  tutorial.http_header_user_id = "X-Tutorial-UserID"
+})</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('tutorids')</script><p>Once configuring these custom header names you’d then need to ensure that the HTTP proxy layer mediating traffic to tutorials set them to the appropriate values.</p>
 </div>

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Create multiple choice questions or open-ended text-based questions or quizes  in your learnr tutorials.">
+<meta name="description" content="Create multiple choice questions or open-ended text-based questions or quizes in your learnr tutorials.">
 <title>Interactive Questions • learnr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Interactive Questions">
-<meta property="og:description" content="Create multiple choice questions or open-ended text-based questions or quizes  in your learnr tutorials.">
+<meta property="og:description" content="Create multiple choice questions or open-ended text-based questions or quizes in your learnr tutorials.">
 <meta property="og:image" content="https://pkgs.rstudio.com/learnr/learnr-social.png">
 <meta property="og:image:alt" content="learnr package">
 <meta name="twitter:card" content="summary_large_image">
@@ -124,12 +124,31 @@
 </h2>
 <p>You can include one or more multiple-choice quiz questions within a tutorial to help verify that readers understand the concepts presented. Questions can either have a single or multiple correct answers.</p>
 <p>Include a question by calling the <code>question</code> function within an R code chunk:</p>
-<div id="question">
-
+<div id="question" class="sourceCode">
+<pre class="markdown">
+<code>```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('question')</script><p>The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:</p>
-<div id="questionmultiple">
-
+<div id="questionmultiple" class="sourceCode">
+<pre class="markdown">
+<code>```{r where-am-i, echo=FALSE}
+question("Where are you right now? (select ALL that apply)",
+  answer("Planet Earth", correct = TRUE),
+  answer("Pluto"),
+  answer("At a computing device", correct = TRUE),
+  answer("In the Milky Way", correct = TRUE),
+  incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer.")
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('questionmultiple')</script><p>Note that for the examples above we specify the <code>echo = FALSE</code> option on the R code chunks that produce the questions. This is required to ensure that the R source code for the questions is not printed within the document.</p>
 <p>This is what the above example quiz questions would look like within a tutorial:</p>
@@ -139,8 +158,17 @@
 <h2 id="custom-messages">Custom Messages<a class="anchor" aria-label="anchor" href="#custom-messages"></a>
 </h2>
 <p>You can add answer-specific correct/incorrect messages using the <code>message</code> option. For example:</p>
-<div id="questionmessages">
-
+<div id="questionmessages" class="sourceCode">
+<pre class="markdown">
+<code>```{r letter-a, echo=FALSE}
+question("What number is the letter A in the *English* alphabet?",
+  answer("8"),
+  answer("1", correct = TRUE),
+  answer("2", message = "2 is close but it's the letter B rather than A."),
+  answer("26")
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('questionmessages')</script><p><img src="images/questions-message.png" width="730" height="254"></p>
 </div>
@@ -148,8 +176,11 @@
 <h2 id="formatting-and-math">Formatting and Math<a class="anchor" aria-label="anchor" href="#formatting-and-math"></a>
 </h2>
 <p>You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the <code>$</code> delimiter. For example:</p>
-<div id="questionmath">
-
+<div id="questionmath" class="sourceCode">
+<pre class="markdown">
+<code>```{r math, echo=FALSE}
+x 
+</code></pre>
 </div>
 <script type="text/javascript">loadSnippet('questionmath')</script><p>Note the use of a double-backslash (<code>\\</code>) as the prefix for LaTeX macros. This is necessary to “escape” the single-backslash so that R doesn’t interpret it as a special character. Here’s what this example would look like within a tutorial:</p>
 <p><img src="images/question-math.png" width="732" height="262"></p>
@@ -158,8 +189,18 @@
 <h2 id="retrying-questions">Retrying Questions<a class="anchor" aria-label="anchor" href="#retrying-questions"></a>
 </h2>
 <p>By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the <code>allow_retry</code> option, for example:</p>
-<div id="questionretry">
-
+<div id="questionretry" class="sourceCode">
+<pre class="markdown">
+<code>```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  allow_retry = TRUE
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('questionretry')</script>
 </div>
@@ -167,8 +208,18 @@
 <h2 id="random-answer-order">Random Answer Order<a class="anchor" aria-label="anchor" href="#random-answer-order"></a>
 </h2>
 <p>If you want the answers to questions to be randomly arranged, you can add the <code>random_answer_order</code> option. For example:</p>
-<div id="questionrandom">
-
+<div id="questionrandom" class="sourceCode">
+<pre class="markdown">
+<code>```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23"),
+  random_answer_order = TRUE
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('questionrandom')</script>
 </div>
@@ -176,8 +227,26 @@
 <h2 id="groups-of-questions">Groups of Questions<a class="anchor" aria-label="anchor" href="#groups-of-questions"></a>
 </h2>
 <p>You can present a group of related questions as a quiz by wrapping your questions within the <code>quiz</code> function. For example:</p>
-<div id="questionquiz">
-
+<div id="questionquiz" class="sourceCode">
+<pre class="markdown">
+<code>```{r quiz1, echo=FALSE}
+quiz(caption = "Quiz 1",
+  question("What number is the letter A in the *English* alphabet?",
+    answer("8"),
+    answer("14"),
+    answer("1", correct = TRUE),
+    answer("23")
+  ),
+  question("Where are you right now? (select ALL that apply)",
+    answer("Planet Earth", correct = TRUE),
+    answer("Pluto"),
+    answer("At a computing device", correct = TRUE),
+    answer("In the Milky Way", correct = TRUE),
+    incorrect = "Incorrect. You're on Earth, in the Milky Way, at a computer."
+  )
+)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('questionquiz')</script>
 </div>
