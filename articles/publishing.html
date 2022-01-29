@@ -236,53 +236,29 @@
 <script type="text/javascript">loadSnippet('tutorstorage')</script><p>The parameters passed to the storage provider’s functions are as follows (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
 <table class="table">
 <thead><tr class="header">
-<th>
-ID
-</th>
-<th>
-Default
-</th>
+<th>ID</th>
+<th>Default</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-tutorial_id
-</td>
-<td>
-Unique identfier for tutorial.
-</td>
+<td>tutorial_id</td>
+<td>Unique identifier for tutorial.</td>
 </tr>
 <tr class="even">
-<td>
-tutorial_version
-</td>
-<td>
-Tutorial version.
-</td>
+<td>tutorial_version</td>
+<td>Tutorial version.</td>
 </tr>
 <tr class="odd">
-<td>
-user_id
-</td>
-<td>
-Unique identfier for user.
-</td>
+<td>user_id</td>
+<td>Unique identifier for user.</td>
 </tr>
 <tr class="even">
-<td>
-object_id
-</td>
-<td>
-Unique identifier for R object.
-</td>
+<td>object_id</td>
+<td>Unique identifier for R object.</td>
 </tr>
 <tr class="odd">
-<td>
-data
-</td>
-<td>
-R object to be saved
-</td>
+<td>data</td>
+<td>R object to be saved</td>
 </tr>
 </tbody>
 </table>
@@ -361,9 +337,9 @@ options(tutorial.exercise.evaluator.oncleanup = function(pid) {
 <li><p><code>forked_evaluator</code> — Evaluate exercises within a forked child process (this is the default on UNIX systems).</p></li>
 </ol>
 <p>You can see the source code for these evaluators here: <a href="https://github.com/rstudio/learnr/blob/main/R/evaluators.R" class="external-link uri">https://github.com/rstudio/learnr/blob/main/R/evaluators.R</a>.</p>
-<p>The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.</p>
+<p>The parameters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.</p>
 <div class="section level5">
-<h5 id="external-evalutor">External Evalutor<a class="anchor" aria-label="anchor" href="#external-evalutor"></a>
+<h5 id="external-evaluator">External Evaluator<a class="anchor" aria-label="anchor" href="#external-evaluator"></a>
 </h5>
 <p>In versions of learnr later than 0.10.1, there is also support for a <code>external_evaluator</code>. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a <code>tutorial.external.host</code> option or setting a <code>TUTORIAL_EXTERNAL_EVALUATOR_HOST</code> environment variable. If set, learnr will submit exercises over HTTP to the specified host.</p>
 <p>The given host is expected to fulfill <a href="openapi/openapi.yaml">this OpenAPI specification</a>. In other words, it has two HTTP endpoints:</p>
@@ -395,138 +371,78 @@ options(tutorial.exercise.evaluator.oncleanup = function(pid) {
 <script type="text/javascript">loadSnippet('tutorrecorder')</script><p>The following parameters are passed to the event recorder function (note that the various ID fields can be customized by a hosting provider, see the <a href="#tutorial-identifiers">Tutorial Identifiers</a> section below for details):</p>
 <table class="table">
 <thead><tr class="header">
-<th>
-ID
-</th>
-<th>
-Default
-</th>
+<th>ID</th>
+<th>Default</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-tutorial_id
-</td>
-<td>
-Unique identfier for tutorial.
-</td>
+<td>tutorial_id</td>
+<td>Unique identfier for tutorial.</td>
 </tr>
 <tr class="even">
-<td>
-tutorial_version
-</td>
-<td>
-Tutorial version.
-</td>
+<td>tutorial_version</td>
+<td>Tutorial version.</td>
 </tr>
 <tr class="odd">
-<td>
-user_id
-</td>
-<td>
-Unique identfier for user.
-</td>
+<td>user_id</td>
+<td>Unique identfier for user.</td>
 </tr>
 <tr class="even">
-<td>
-event
-</td>
-<td>
-Event name (see below for various valid values).
-</td>
+<td>event</td>
+<td>Event name (see below for various valid values).</td>
 </tr>
 <tr class="odd">
-<td>
-data
-</td>
-<td>
-Custom event data.
-</td>
+<td>data</td>
+<td>Custom event data.</td>
 </tr>
 </tbody>
 </table>
 <p>The <code>event</code> parameter is one of the following values:</p>
 <table class="table">
+<colgroup>
+<col width="26%">
+<col width="73%">
+</colgroup>
 <thead><tr class="header">
-<th>
-Event
-</th>
-<th>
-Description
-</th>
+<th>Event</th>
+<th>Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-exercise_hint
-</td>
-<td>
-User requested a hint or solution for an exercise.
-</td>
+<td>exercise_hint</td>
+<td>User requested a hint or solution for an exercise.</td>
 </tr>
 <tr class="even">
-<td>
-exercise_submitted
-</td>
-<td>
-User submitted an answer for an exercise.
-</td>
+<td>exercise_submitted</td>
+<td>User submitted an answer for an exercise.</td>
 </tr>
 <tr class="odd">
-<td>
-exercise_result
-</td>
-<td>
-The evaluation of an exercise has completed.
-</td>
+<td>exercise_result</td>
+<td>The evaluation of an exercise has completed.</td>
 </tr>
 <tr class="even">
-<td>
-question_submission
-</td>
-<td>
-User submitted an answer for a multiple-choice question.
-</td>
+<td>question_submission</td>
+<td>User submitted an answer for a multiple-choice question.</td>
 </tr>
 <tr class="odd">
-<td>
-video_progress
-</td>
-<td>
-User watched a segment of a video.
-</td>
+<td>video_progress</td>
+<td>User watched a segment of a video.</td>
 </tr>
 <tr class="even">
-<td>
-section_skipped
-</td>
-<td>
-A section of the tutorial was skipped.
-</td>
+<td>section_skipped</td>
+<td>A section of the tutorial was skipped.</td>
 </tr>
 <tr class="odd">
-<td>
-section_viewed
-</td>
-<td>
-A section of the tutorial became visible.
-</td>
+<td>section_viewed</td>
+<td>A section of the tutorial became visible.</td>
 </tr>
 <tr class="even">
-<td>
-session_start
-</td>
-<td>
-A new session has been initiated
-</td>
+<td>session_start</td>
+<td>A new session has been initiated</td>
 </tr>
 <tr class="odd">
-<td>
-session_stop
-</td>
-<td>
-A session has been terminated
-</td>
+<td>session_stop</td>
+<td>A session has been terminated</td>
 </tr>
 </tbody>
 </table>
@@ -583,37 +499,21 @@ event_register_handler("section_viewed",
 <p>The default tutorial and user identifiers are determined as follows:</p>
 <table class="table">
 <thead><tr class="header">
-<th>
-ID
-</th>
-<th>
-Default
-</th>
+<th>ID</th>
+<th>Default</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-tutorial_id
-</td>
-<td>
-Network origin and path of tutorial.
-</td>
+<td>tutorial_id</td>
+<td>Network origin and path of tutorial.</td>
 </tr>
 <tr class="even">
-<td>
-tutorial_version
-</td>
-<td>
-1.0
-</td>
+<td>tutorial_version</td>
+<td>1.0</td>
 </tr>
 <tr class="odd">
-<td>
-user_id
-</td>
-<td>
-Account name of server user executing the tutorial
-</td>
+<td>user_id</td>
+<td>Account name of server user executing the tutorial</td>
 </tr>
 </tbody>
 </table>

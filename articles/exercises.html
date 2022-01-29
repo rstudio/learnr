@@ -124,110 +124,62 @@
 </h2>
 <p>Exercises are interactive R code chunks that allow readers to directly execute R code and see its results. There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
 <table class="table">
+<colgroup>
+<col width="18%">
+<col width="81%">
+</colgroup>
 <thead><tr class="header">
-<th>
-Option
-</th>
-<th>
-Description
-</th>
+<th>Option</th>
+<th>Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-<code>exercise.cap</code>
-</td>
-<td>
-Caption for exercise chunk (defaults to “Code”)
-</td>
+<td><code>exercise.cap</code></td>
+<td>Caption for exercise chunk (defaults to “Code”)</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.eval</code>
-</td>
-<td>
-Whether to pre-evaluate the exercise so the reader can see some default output (defaults to <code>FALSE</code>).
-</td>
+<td><code>exercise.eval</code></td>
+<td>Whether to pre-evaluate the exercise so the reader can see some default output (defaults to <code>FALSE</code>).</td>
 </tr>
 <tr class="odd">
-<td>
-<code>exercise.lines</code>
-</td>
-<td>
-Lines of code for exercise editor (default to size of code chunk).
-</td>
+<td><code>exercise.lines</code></td>
+<td>Lines of code for exercise editor (default to size of code chunk).</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.timelimit</code>
-</td>
-<td>
-Number of seconds to limit execution time to (defaults to 30).
-</td>
+<td><code>exercise.timelimit</code></td>
+<td>Number of seconds to limit execution time to (defaults to 30).</td>
 </tr>
 <tr class="odd">
-<td>
-<code>exercise.checker</code>
-</td>
-<td>
-Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).
-</td>
+<td><code>exercise.checker</code></td>
+<td>Function used to check exercise answers (e.g., <code>gradethis::grade_learnr()</code>).</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.blanks</code>
-</td>
-<td>
-Regular expression to find blanks requiring replacement in the exercise code. See <a href="#checking-blanks">Checking Blanks</a> below.
-</td>
+<td><code>exercise.blanks</code></td>
+<td>Regular expression to find blanks requiring replacement in the exercise code. See <a href="#checking-blanks">Checking Blanks</a> below.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>exercise.error.check.code</code>
-</td>
-<td>
-A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>“gradethis::grade_code()”</code>).
-</td>
+<td><code>exercise.error.check.code</code></td>
+<td>A string containing R code to use for checking code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.completion</code>
-</td>
-<td>
-Whether to enable code completion in the exercise editor.
-</td>
+<td><code>exercise.completion</code></td>
+<td>Whether to enable code completion in the exercise editor.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>exercise.diagnostics</code>
-</td>
-<td>
-Whether to enable code diagnostics in the exercise editor.
-</td>
+<td><code>exercise.diagnostics</code></td>
+<td>Whether to enable code diagnostics in the exercise editor.</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.startover</code>
-</td>
-<td>
-Whether to include a “Start Over” button for the exercise.
-</td>
+<td><code>exercise.startover</code></td>
+<td>Whether to include a “Start Over” button for the exercise.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>exercise.warn_invisible</code>
-</td>
-<td>
-Whether to display an invisible result warning if the last value returned is invisible.
-</td>
+<td><code>exercise.warn_invisible</code></td>
+<td>Whether to display an invisible result warning if the last value returned is invisible.</td>
 </tr>
 <tr class="even">
-<td>
-<code>exercise.reveal_solution</code>
-</td>
-<td>
-Whether or not the solution should be revealed to the user (defaults to <code>TRUE</code>). See <a href="#hiding-solutions">Hiding Solutions</a> below.
-</td>
+<td><code>exercise.reveal_solution</code></td>
+<td>Whether or not the solution should be revealed to the user (defaults to `TRUE`). See <a href="#hiding-solutions">Hiding Solutions</a> below.</td>
 </tr>
 </tbody>
 </table>
@@ -327,7 +279,7 @@ nycflights
 <div class="section level4">
 <h4 id="setup-chained">Chained setup chunks<a class="anchor" aria-label="anchor" href="#setup-chained"></a>
 </h4>
-<p>If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the <code>exercise.setup</code> chunk option. (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labelling scheme.) <strong>learnr</strong> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
+<p>If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the <code>exercise.setup</code> chunk option. (<strong>Note</strong>: You must use <code>exercise.setup</code> for chaining. You cannot rely on the <code>-setup</code> suffix labeling scheme.) <strong>learnr</strong> will keep following the trail of <code>exercise.setup</code> chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called <code>filtered-flights</code> with its <code>exercise.setup=prepare-flights</code>. This will now filter the data and store it and can be referenced inside the <code>arrange</code> exercise:</p>
 <div id="exercisesetupchained" class="sourceCode">
 <pre class="markdown">
 <code>```{r prepare-flights}
@@ -645,46 +597,30 @@ grade_code()
 </ol>
 <p>If, at any one of these stages, feedback should be provided, then <code>exercise.checker</code> should return an R list with, at the very least, a <code>correct</code> flag and feedback <code>message</code>:</p>
 <table class="table">
+<colgroup>
+<col width="5%">
+<col width="94%">
+</colgroup>
 <thead><tr class="header">
-<th>
-Field
-</th>
-<th>
-Description
-</th>
+<th>Field</th>
+<th>Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-<code>message</code>
-</td>
-<td>
-Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html" class="external-link">htmltools</a> package.
-</td>
+<td><code>message</code></td>
+<td>Feedback message. Can be a plain character vector or can HTML produced via the <a href="https://cran.r-project.org/web/packages/htmltools/index.html" class="external-link">htmltools</a> package.</td>
 </tr>
 <tr class="even">
-<td>
-<code>correct</code>
-</td>
-<td>
-TRUE/FALSE logical value indicating whether the submitted answer was correct.
-</td>
+<td><code>correct</code></td>
+<td>TRUE/FALSE logical value indicating whether the submitted answer was correct.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>type</code>
-</td>
-<td>
-Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.
-</td>
+<td><code>type</code></td>
+<td>Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.</td>
 </tr>
 <tr class="even">
-<td>
-<code>location</code>
-</td>
-<td>
-Location for feedback (“append”, “prepend”, or “replace”).
-</td>
+<td><code>location</code></td>
+<td>Location for feedback (“append”, “prepend”, or “replace”).</td>
 </tr>
 </tbody>
 </table>
@@ -697,102 +633,58 @@ custom_checker
 </div>
 <script type="text/javascript">loadSnippet('customchecker')</script><p>See the table below for a full description of all the arguments supplied to <code>exercise.checker</code>.</p>
 <table class="table">
+<colgroup>
+<col width="13%">
+<col width="86%">
+</colgroup>
 <thead><tr class="header">
-<th>
-Argument
-</th>
-<th>
-Description
-</th>
+<th>Argument</th>
+<th>Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-<code>label</code>
-</td>
-<td>
-Label for exercise chunk.
-</td>
+<td><code>label</code></td>
+<td>Label for exercise chunk.</td>
 </tr>
 <tr class="even">
-<td>
-<code>user_code</code>
-</td>
-<td>
-R code submitted by the user.
-</td>
+<td><code>user_code</code></td>
+<td>R code submitted by the user.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>solution_code</code>
-</td>
-<td>
-Code provided within the “-solution” chunk for the exercise.
-</td>
+<td><code>solution_code</code></td>
+<td>Code provided within the “-solution” chunk for the exercise.</td>
 </tr>
 <tr class="even">
-<td>
-<code>check_code</code>
-</td>
-<td>
-Code provided within the “-check” chunk for the exercise.
-</td>
+<td><code>check_code</code></td>
+<td>Code provided within the “-check” chunk for the exercise.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>envir_result</code>
-</td>
-<td>
-The R environment <b>after</b> the execution of the chunk.
-</td>
+<td><code>envir_result</code></td>
+<td>The R environment <strong>after</strong> the execution of the chunk.</td>
 </tr>
 <tr class="even">
-<td>
-<code>evaluate_result</code>
-</td>
-<td>
-The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate" class="external-link"><code>evaluate::evaluate</code></a> function.
-</td>
+<td><code>evaluate_result</code></td>
+<td>The return value from the <a href="https://www.rdocumentation.org/packages/evaluate/topics/evaluate" class="external-link"><code>evaluate::evaluate</code></a> function.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>envir_prep</code>
-</td>
-<td>
-A copy of the R environment <b>before</b> the execution of the chunk.
-</td>
+<td><code>envir_prep</code></td>
+<td>A copy of the R environment <strong>before</strong> the execution of the chunk.</td>
 </tr>
 <tr class="even">
-<td>
-<code>last_value</code>
-</td>
-<td>
-The last value of the evaluated chunk.
-</td>
+<td><code>last_value</code></td>
+<td>The last value of the evaluated chunk.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>engine</code>
-</td>
-<td>
-The <code>engine</code> value of the evaluated chunk.
-</td>
+<td><code>engine</code></td>
+<td>The <code>engine</code> value of the evaluated chunk.</td>
 </tr>
 <tr class="even">
-<td>
-<code>stage</code>
-</td>
-<td>
-The current checking <code>stage</code>.
-</td>
+<td><code>stage</code></td>
+<td>The current checking <code>stage</code>.</td>
 </tr>
 <tr class="odd">
-<td>
-<code>…</code>
-</td>
-<td>
-Unused (include for compatibility with parameters to be added in the future)
-</td>
+<td><code>...</code></td>
+<td>Unused (include for compatibility with parameters to be added in the future)</td>
 </tr>
 </tbody>
 </table>
@@ -830,7 +722,7 @@ tutorial_options(exercise.completion = FALSE)
 ```</code>
 </pre>
 </div>
-<script type="text/javascript">loadSnippet('exercisecompletion')</script><p>Similarily, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the <code>exercise.diagnostics</code> option.</p>
+<script type="text/javascript">loadSnippet('exercisecompletion')</script><p>Similarly, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the <code>exercise.diagnostics</code> option.</p>
 </div>
 <div class="section level2">
 <h2 id="editor-size">Editor Size<a class="anchor" aria-label="anchor" href="#editor-size"></a>
