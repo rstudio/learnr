@@ -2,6 +2,7 @@
 
 function loadSnippet(snippet, mode) {
   mode = mode || "r";
+  $("#" + snippet).addClass("snippet").removeClass('sourceCode');
   const editor = ace.edit(snippet);
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);

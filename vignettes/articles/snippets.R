@@ -10,6 +10,7 @@ insert_snippet <- function(key) {
     htmltools::tagList(
       div(
         id = key,
+        class = "sourceCode",
         pre(class = "markdown", code(snippet)),
       ),
       script(type = "text/javascript", htmltools::HTML(sprintf("loadSnippet('%s')", key)))
