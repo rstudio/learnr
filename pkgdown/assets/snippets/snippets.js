@@ -2,8 +2,7 @@
 
 function loadSnippet(snippet, mode) {
   mode = mode || "r";
-  $("#" + snippet).addClass("snippet");
-  var editor = ace.edit(snippet);
+  const editor = ace.edit(snippet);
   editor.setHighlightActiveLine(false);
   editor.setShowPrintMargin(false);
   editor.setReadOnly(true);
@@ -16,13 +15,7 @@ function loadSnippet(snippet, mode) {
   editor.session.setMode("ace/mode/" + mode);
   editor.session.getSelection().clearSelection();
 
-  // create element to hold the snippet for screen readers
-  const pre = document.createElement('pre')
-  pre.classList = 'markdown sr-only'
-  const code = document.createElement('code')
-  pre.appendChild(code)
-
-  var root = document.querySelector('meta[name="pkgdown-site-root"]').content
+  const root = document.querySelector('meta[name="pkgdown-site-root"]').content;
   $.get(root + "snippets/" + snippet + ".md", function(data) {
     // Write the snippet into the editor
     editor.setValue(data, -1);
@@ -30,8 +23,9 @@ function loadSnippet(snippet, mode) {
       maxLines: editor.session.getLength()
     });
 
-    // and write the snippet into the screen reader element
-    code.innerHTML = data;
-    editor.container.insertBefore(pre, editor.container.firstChild);
+    // and write the snippet into an element for screen readers
+    const pre = $('<pre class="markdown sr-only"></pre>')
+      .append($('<code></code>').text(data));
+    $(editor.container).prepend(pre);
   });
 }
