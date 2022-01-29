@@ -151,3 +151,11 @@
   width: 20px;
   margin-right: -9px; /* net 6px */
 }
+
+/* Add outline indicator when tab key can change focus
+   to the next or previous element. `.ace_indent_off` is
+   a class added by learnr when the tab key is disabled.
+*/
+.ace_indent_off.ace_focus {
+  outline: 1px solid currentColor;
+}

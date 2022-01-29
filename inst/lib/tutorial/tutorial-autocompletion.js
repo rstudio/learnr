@@ -199,9 +199,13 @@ function TutorialCompleter(tutorial) {
     // cancel any pending live autocompletion
     clearTimeout(editor.$autocompletionTimerId);
 
-    // manually handle event
-    event.stopPropagation();
-    event.preventDefault();
+    const keys = new KeyCombination(event);
+
+    if (!(keys.keyCode === KEYCODE_TAB && editor.container.matches('.ace_indent_off'))) {
+      // manually handle event, except when tabbing away from editor
+      event.stopPropagation();
+      event.preventDefault();
+    }
     editor.execCommand("startAutocomplete");
   };
 

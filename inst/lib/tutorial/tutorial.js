@@ -978,7 +978,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     var engine = chunk_options["engine"]
 
     if (engine.toLowerCase() != "r") {
-      // disable ace editor diagnostics if a non-r langauge engine is set
+      // disable ace editor diagnostics if a non-r language engine is set
       diagnostics = null;
       // disable auto-completion if a non-r language engine is set
       completion = null;
@@ -1035,7 +1035,32 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       editor.focus();
     });
 
-    // mange ace height as the document changes
+    // Allow users to escape the editor and move to next focusable element
+    const tabCommandKeys = {
+      indent: editor.commands.byName['indent'].bindKey,
+      outdent: editor.commands.byName['outdent'].bindKey
+    }
+
+    function toggleTabCommands(enable) {
+      ['indent', 'outdent'].forEach(function(name) {
+        const command = editor.commands.byName[name];
+        // turn off tab commands or restore original bindKey
+        command.bindKey = enable ? tabCommandKeys[name] : null;
+        editor.commands.addCommand(command);
+      });
+      // update class on editor to reflect tab command state
+      $(editor.container).toggleClass('ace_indent_off', !enable);
+    }
+
+    editor.on('focus', function() { toggleTabCommands(true); });
+
+    editor.commands.addCommand({
+      name: "escape",
+      bindKey: {win: "Esc", mac: "Esc"},
+      exec: function() { toggleTabCommands(false); }
+    });
+
+    // manage ace height as the document changes
     var updateAceHeight = function()  {
       var lines = exercise.attr('data-lines');
       if (lines && (lines > 0)) {
@@ -1313,7 +1338,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
 // remove a solution for an exercise
 Tutorial.prototype.$removeSolution = function(exercise) {
-  // destory clipboardjs object if we've got one
+  // destroy clipboardjs object if we've got one
   var solutionButton = exercise.find('.btn-tutorial-copy-solution');
   if (solutionButton.length > 0)
     solutionButton.data('clipboard').destroy();
