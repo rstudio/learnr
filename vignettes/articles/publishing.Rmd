@@ -201,9 +201,9 @@ The two default evaluators (used for Windows/MacOS and UNIX systems, respectivel
 
 You can see the source code for these evaluators here: <https://github.com/rstudio/learnr/blob/main/R/evaluators.R>.
 
-The pararmeters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
+The parameters provided to the evaluator may be expanded in the future, so custom evaluators should permit additional arguments that have not yet been defined.
 
-##### External Evalutor
+##### External Evaluator
 
 In versions of learnr later than 0.10.1, there is also support for a `external_evaluator`. This evaluator allows exercises to be executed on a remote host rather than on the host running the Shiny process. You can use this evaluator by specifying a `tutorial.external.host` option or setting a `TUTORIAL_EXTERNAL_EVALUATOR_HOST` environment variable. If set, learnr will submit exercises over HTTP to the specified host.
 

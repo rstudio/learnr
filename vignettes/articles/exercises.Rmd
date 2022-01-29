@@ -115,6 +115,7 @@ Code in the global `setup` chunk is run once at the startup of the tutorial and 
 ```{r snippet-exercisesetup, echo = FALSE}
 insert_snippet("exercisesetup")
 ```
+
 #### Create a shared setup chunk {#setup-shared}
 
 If you don't want to rely on global setup but would rather create setup code that's used by only a handful of exercises you can use the `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. To illustrate, we'll re-write the previous example to use a shared setup chunk named `prepare-flights`:
@@ -122,6 +123,7 @@ If you don't want to rely on global setup but would rather create setup code tha
 ```{r snippet-exercisesetupshared, echo = FALSE}
 insert_snippet("exercisesetupshared")
 ```
+
 #### Create an exercise-specific `-setup` chunk {#setup-exercise-specific}
 
 **learnr** will automatically associate any chunk with a label in the format `<exercise>-setup` as a setup chunk specifically associated with `<exercise>`, where `<exercise>` is replaced with the label of the exercise chunk. For example, the `filter-setup` chunk will be used as the setup chunk for the `filter` exercise:
@@ -129,18 +131,21 @@ insert_snippet("exercisesetupshared")
 ```{r snippet-exercisesetupsuffix, echo = FALSE}
 insert_snippet("exercisesetupsuffix")
 ```
+
 #### Chained setup chunks {#setup-chained}
 
-If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the `exercise.setup` chunk option. (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labelling scheme.) **learnr** will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
+If may also chain setup chunks where each setup chunk inherits its parent setup chunk using the `exercise.setup` chunk option. (**Note**: You must use `exercise.setup` for chaining. You cannot rely on the `-setup` suffix labeling scheme.) **learnr** will keep following the trail of `exercise.setup` chunks until there are no more chunks to be found. To demonstrate, we can convert the first exercise in the above examples to be another setup chunk called `filtered-flights` with its `exercise.setup=prepare-flights`. This will now filter the data and store it and can be referenced inside the `arrange` exercise:
 
 ```{r snippet-exercisesetupchained, echo = FALSE}
 insert_snippet("exercisesetupchained")
 ```
+
 You can chain use exercise chunks in the setup chunk chain, but keep in mind that the code as it appears in the R Markdown source is used to serve as the setup code, not the user input. For example, if you turned `filtered-flights` back to an exercise, the pre-filled code is used as setup for the `arrange` exercise that use it as its setup:
 
 ```{r snippet-exercisechained, echo = FALSE}
 insert_snippet("exercisechained")
 ```
+
 ### Using Files in Exercises
 
 Occasionally, you may write an exercise that requires users to interact with files on disk, such as data files in `.csv` or `.rds` format. **learnr** will look for a folder named `data/` in the same directory as the tutorial source and, if present, will make this directory available to users in all exercises in the tutorial.
@@ -160,6 +165,7 @@ In the example below, the global setup chunk is used to write `data/flights_jan.
 ```{r snippet-exercisedata, echo = FALSE}
 insert_snippet("exercisedata")
 ```
+
 ## Hints and Solutions
 
 You can optionally provide a hint or solution for each exercise that can be optionally displayed by users. Hints can be based on either R code snippets or on custom markdown/HTML content.
@@ -171,6 +177,7 @@ To create a hint or solution based on R code simply create a new code chunk with
 ```{r snippet-exercisesolution, echo = FALSE}
 insert_snippet("exercisesolution")
 ```
+
 A "Hint" or "Solution" button is added to the left side of the exercise header region:
 
 <img src="images/solution.png"  width="732" height="183"/>
@@ -182,6 +189,7 @@ To create a hint based on custom markdown content simply add a `<div>` tag with 
 ```{r snippet-exercisehintdiv, echo = FALSE}
 insert_snippet("exercisehintdiv")
 ```
+
 The content within the `<div>` will be displayed underneath the R code editor for the exercise whenever the user presses the "Hint" button.
 
 ### Multiple Hints
@@ -191,6 +199,7 @@ For R code hints you can provide a sequence of hints that reveal progressively m
 ```{r snippet-exercisehints, echo = FALSE}
 insert_snippet("exercisehints")
 ```
+
 ### Hiding Solutions
 
 By default, the exercise solution is made available to the user with the "Solution" or "Hint" button (if there are hints those will appear first). If you would prefer not to reveal the solution to an exercise, you can disable revealing the solution by adding `exercise.reveal_solution = FALSE` to the chunk options of either the exercise or its corresponding `*-solution` chunk.
@@ -198,6 +207,7 @@ By default, the exercise solution is made available to the user with the "Soluti
 ```{r snippet-exercisesolutionhidden, echo = FALSE}
 insert_snippet("exercisesolutionhidden")
 ```
+
 You can also set this option globally in the global `setup` chunk with `tutorial_options()`. When set this way, the chunk-level option will take precedence over the global option so that you can choose to always reveal or hide the solution to a particular exercise. The current default is to reveal exercise solutions, but in a future version of learnr the default behavior will change to hide solutions.
 
 ## Progressive Reveal
@@ -207,11 +217,13 @@ You might want users of your tutorials to see only one sub-topic at a time as th
 ```{r snippet-tutorialyaml-progressive, echo = FALSE}
 insert_snippet("tutorialyaml-progressive")
 ```
+
 You can also specify this option on a per topic basis using the `data-progressive` attribute. For example, the following code enables progressive rendering for a single topic:
 
 ```{r snippet-tutorialyaml-progressive-topic, echo = FALSE}
 insert_snippet("tutorialyaml-progressive-topic")
 ```
+
 You can also use `data-progressive=FALSE` to disable progressive rendering for an individual topic if the global `progressive` option is `TRUE`.
 
 Progressive reveal provides an easy way to cue exercises one at a time: place each exercise under its own Level 3 header (`###`). This can be useful when a second exercises builds on the first, giving away the answer to the first.
@@ -229,11 +241,13 @@ If you specify the `allow_skip` option then students will be able to advance thr
 ```{r snippet-tutorialyaml-allowskip, echo = FALSE}
 insert_snippet("tutorialyaml-allowskip")
 ```
+
 You can also specify this option on a per sub-topic basis using the `data-allow-skip` attribute. For example, the following code enables exercise skipping within a single sub-topic:
 
 ```{r snippet-tutorialyaml-allowskip-topic, echo = FALSE}
 insert_snippet("tutorialyaml-allowskip-topic")
 ```
+
 You can also use `data-allow-skip=FALSE` to disable exercise skipping rendering for an individual sub-topic if the global `allow-skip` option is `TRUE`.
 
 ## Exercise Checking
@@ -247,6 +261,7 @@ Checking of exercise results may be done through a `*-check` chunk. With a **gra
 ```{r snippet-exercisecheck, echo = FALSE}
 insert_snippet("exercisecheck")
 ```
+
 When an exercise `*-check` chunk is provided, **learnr** provides an additional "Submit Answer" button, which allows users to experiment with various answers before formally submitting an answer:
 
 <img src="images/exercise-result.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
@@ -258,6 +273,7 @@ Checking of exercise *code* may be done through a `*-code-check` chunk. With a *
 ```{r snippet-exercisecodecheck, echo = FALSE}
 insert_snippet("exercisecodecheck")
 ```
+
 <img src="images/exercise-code.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
 It's worth noting that, when a `*-code-check` chunk is supplied, the check is done *prior* to evaluation of the exercise submission, meaning that if the `*-code-check` chunk returns feedback, then that feedback is displayed, no exercise code is evaluated, and no result check is performed.
@@ -269,6 +285,7 @@ Occasionally, you may include blanks in the pre-filled code in your exercise pro
 ```{r snippet-exerciseblanks, echo = FALSE}
 insert_snippet("exerciseblanks")
 ```
+
 <img src="images/exercise-blanks.png" width="100%" style="border: 1px solid #ddd; box-shadow:5px 5px 5px #eee;"/>
 
 You can choose your own blank pattern by setting the `exercise.blanks` chunk option to a regular expression  that identifies your blanks. You may also set `exercise.blanks = TRUE` to use the default **learnr** blank pattern, or `exercise.blanks = FALSE` to skip blank checking altogether. Globally `tutorial_options()` can be used to set the value of this argument for all exercises.
@@ -336,6 +353,7 @@ Below is a rough sketch of how one might implement an `exercise.checker` functio
 ```{r snippet-customchecker, echo = FALSE}
 insert_snippet("customchecker")
 ```
+
 See the table below for a full description of all the arguments supplied to `exercise.checker`.
 
 <table>
@@ -403,6 +421,7 @@ By default exercises are displayed with caption of "Code". However, in some case
 ```{r snippet-exercisecaption, echo = FALSE}
 insert_snippet("exercisecaption")
 ```
+
 ## Code Assistance
 
 By default, code completions are automatically provided as users type within the exercise editor:
@@ -414,7 +433,8 @@ You can optionally disable code completion (either globally or on a per-chunk ba
 ```{r snippet-exercisecompletion, echo = FALSE}
 insert_snippet("exercisecompletion")
 ```
-Similarily, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the `exercise.diagnostics` option.
+
+Similarly, simple code diagnostics can also be provided, to inform users of errors in the R code written in exercise editors. Diagnostics can be controlled (either globally or on a per-chunk basis) using the `exercise.diagnostics` option.
 
 ## Editor Size
 
@@ -425,6 +445,7 @@ You can also specify a number of lines explicitly using the `exercise.lines` chu
 ```{r snippet-exerciselines, echo = FALSE}
 insert_snippet("exerciselines")
 ```
+
 ## Time Limits
 
 To mediate the problem of code which takes longer than expected to run you can specify the `exercise.timelimit` chunk option or alternatively the global `tutorial.exercise.timelimit` option.
@@ -434,4 +455,5 @@ The following demonstrates setting a 10 second time limit as a global option, do
 ```{r snippet-exercisetimelimit, echo = FALSE}
 insert_snippet("exercisetimelimit")
 ```
+
 Since tutorials are a highly interactive format you should in general be designing exercises that take no longer than 5 or 10 seconds to execute. Correspondingly, the default value for `tutorial.exercise.timelimit` if not otherwise specified is 30 seconds.
