@@ -6,10 +6,14 @@ $(document).ready(function () {
   const tutorial = new Tutorial()
 
   // register autocompletion if available
-  if (typeof TutorialCompleter !== 'undefined') { tutorial.$completer = new TutorialCompleter(tutorial) }
+  if (typeof TutorialCompleter !== 'undefined') {
+    tutorial.$completer = new TutorialCompleter(tutorial)
+  }
 
   // register diagnostics if available
-  if (typeof TutorialDiagnostics !== 'undefined') { tutorial.$diagnostics = new TutorialDiagnostics(tutorial) }
+  if (typeof TutorialDiagnostics !== 'undefined') {
+    tutorial.$diagnostics = new TutorialDiagnostics(tutorial)
+  }
 
   window.tutorial = tutorial
 })
@@ -38,7 +42,9 @@ function Tutorial () {
   this.startOver = function () {
     thiz.$removeState(function () {
       thiz.$serverRequest('remove_state', null, function () {
-        window.location.replace(window.location.origin + window.location.pathname)
+        window.location.replace(
+          window.location.origin + window.location.pathname
+        )
       })
     })
   }
@@ -83,14 +89,18 @@ Tutorial.prototype.$initTimingLog = function () {
 
 Tutorial.prototype.$logTiming = function (name) {
   try {
-    if (performance.mark !== undefined &&
-        performance.measure !== undefined &&
-        performance.getEntriesByName !== undefined &&
-        this.queryVar('log-timings') === '1') {
+    if (
+      performance.mark !== undefined &&
+      performance.measure !== undefined &&
+      performance.getEntriesByName !== undefined &&
+      this.queryVar('log-timings') === '1'
+    ) {
       performance.mark(name + '-mark')
       performance.measure(name, 'tutorial-start-mark', name + '-mark')
       const entries = performance.getEntriesByName(name)
-      console.log('(Timing) ' + name + ': ' + Math.round(entries[0].duration) + 'ms')
+      console.log(
+        '(Timing) ' + name + ': ' + Math.round(entries[0].duration) + 'ms'
+      )
     }
   } catch (e) {
     console.log('Error logging timing: ' + e.message)
@@ -98,11 +108,17 @@ Tutorial.prototype.$logTiming = function (name) {
 }
 
 Tutorial.prototype.queryVar = function (name) {
-  return decodeURI(window.location.search.replace(
-    new RegExp('^(?:.*[&\\?]' +
-               encodeURI(name).replace(/[.+*]/g, '\\$&') +
-               '(?:\\=([^&]*))?)?.*$', 'i'),
-    '$1'))
+  return decodeURI(
+    window.location.search.replace(
+      new RegExp(
+        '^(?:.*[&\\?]' +
+          encodeURI(name).replace(/[.+*]/g, '\\$&') +
+          '(?:\\=([^&]*))?)?.*$',
+        'i'
+      ),
+      '$1'
+    )
+  )
 }
 
 Tutorial.prototype.$idSelector = function (id) {
@@ -142,7 +158,9 @@ Tutorial.prototype.$hasCompletedProgressEvent = function (element) {
   for (let e = 0; e < thiz.$progressEvents.length; e++) {
     const event = thiz.$progressEvents[e]
     if ($(event.element).is($(element))) {
-      if (event.completed) { return true }
+      if (event.completed) {
+        return true
+      }
     }
   }
   return false
@@ -174,11 +192,17 @@ Tutorial.prototype.$fireSectionCompleted = function (element) {
   }
 
   // find closest containing section (bail if there is none)
-  const section = $(element).parent().closest('.section')
-  if (section.length === 0) { return }
+  const section = $(element)
+    .parent()
+    .closest('.section')
+  if (section.length === 0) {
+    return
+  }
 
   // get all interactive components in the section
-  const components = section.find('.tutorial-exercise, .tutorial-question, .tutorial-video')
+  const components = section.find(
+    '.tutorial-exercise, .tutorial-question, .tutorial-video'
+  )
 
   // are they all completed?
   let allCompleted = true
@@ -199,12 +223,16 @@ Tutorial.prototype.$fireSectionCompleted = function (element) {
     const previousSections = section.prevAll('.section')
     previousSections.each(function () {
       const components = $(this).find('.tutorial-exercise, .tutorial-question')
-      if (components.length === 0) { fireCompleted(this) }
+      if (components.length === 0) {
+        fireCompleted(this)
+      }
     })
 
     // if there is another section above us then process it
     const parentSection = section.parent().closest('.section')
-    if (parentSection.length > 0) { this.$fireSectionCompleted(section) }
+    if (parentSection.length > 0) {
+      this.$fireSectionCompleted(section)
+    }
   }
 }
 
@@ -217,8 +245,8 @@ Tutorial.prototype.$removeConflictingProgressEvents = function (progressEvent) {
     event = thiz.$progressEvents[i]
     if (event.event === 'question_submission') {
       if (
-        event.data.label === progressEvent.data.label &
-        progressEvent.data.label !== undefined
+        (event.data.label === progressEvent.data.label) &
+        (progressEvent.data.label !== undefined)
       ) {
         // remove the item from existing progress events
         thiz.$progressEvents.splice(i, 1)
@@ -237,19 +265,21 @@ Tutorial.prototype.$fireProgressEvent = function (event, data) {
 
   // determine element and completed status
   if (event === 'exercise_submission' || event === 'question_submission') {
-    const element = $('.tutorial-exercise[data-label="' + data.label + '"]').add(
-      '.tutorial-question[data-label="' + data.label + '"]')
+    const element = $(
+      '.tutorial-exercise[data-label="' + data.label + '"]'
+    ).add('.tutorial-question[data-label="' + data.label + '"]')
     if (element.length > 0) {
       progressEvent.element = element
       if (event === 'exercise_submission') {
         // Exercise completion logic is determined by the default exercise_result
         // event handler in the Shiny logic that emits an "exercise_submission" event.
         // If the handler doesn't returned a completed flag, we assume `true`.
-        progressEvent.completed = typeof data.completed !== 'undefined' ? data.completed : true
+        progressEvent.completed =
+          typeof data.completed !== 'undefined' ? data.completed : true
       } else {
         // question_submission
         // questions may be reset with "try again", and not in a completed state
-        progressEvent.completed = (data.answer !== null)
+        progressEvent.completed = data.answer !== null
       }
     }
   } else if (event === 'section_skipped') {
@@ -260,7 +290,7 @@ Tutorial.prototype.$fireProgressEvent = function (event, data) {
     const videoElement = $('iframe[src="' + data.video_url + '"]')
     if (videoElement.length > 0) {
       progressEvent.element = videoElement
-      progressEvent.completed = (2 * data.time) > data.total_time
+      progressEvent.completed = 2 * data.time > data.total_time
     }
   }
 
@@ -315,10 +345,10 @@ Tutorial.prototype.$initializeProgress = function (progressEvents) {
 /* Shared utility functions */
 
 Tutorial.prototype.$serverRequest = function (type, data, success, error) {
+  const { sessionId, workerId } = Shiny.shinyapp.config
   return $.ajax({
     type: 'POST',
-    url: 'session/' + Shiny.shinyapp.config.sessionId +
-           '/dataobj/' + type + '?w=' + Shiny.shinyapp.config.workerId,
+    url: `session/${sessionId}/dataobj/${type}?w=${workerId}`,
     contentType: 'application/json',
     data: JSON.stringify(data),
     dataType: 'json',
@@ -352,7 +382,8 @@ Tutorial.prototype.$injectScript = function (src, onload) {
 Tutorial.prototype.$debounce = function (func, wait, immediate) {
   let timeout
   return function () {
-    const context = this; const args = arguments
+    const context = this
+    const args = arguments
     const later = function () {
       timeout = null
       if (!immediate) func.apply(context, args)
@@ -386,11 +417,15 @@ Tutorial.prototype.$initializeVideos = function () {
   function normalizeVideoSrc (src) {
     // youtube
     const youtubeMatch = src.match(youtubeRegex)
-    if (youtubeMatch) { return 'https://www.youtube.com/embed/' + youtubeMatch[2] + '?enablejsapi=1' }
+    if (youtubeMatch) {
+      return `https://www.youtube.com/embed/${youtubeMatch[2]}?enablejsapi=1`
+    }
 
     // vimeo
     const vimeoMatch = src.match(vimeoRegex)
-    if (vimeoMatch) { return 'https://player.vimeo.com/video/' + vimeoMatch[1] }
+    if (vimeoMatch) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}`
+    }
 
     // default to reflecting src back
     return src
@@ -403,22 +438,28 @@ Tutorial.prototype.$initializeVideos = function () {
     const aspectRatio = 9 / 16
 
     // default width to 100% if not specified
-    if (!width) { width = '100%' }
+    if (!width) {
+      width = '100%'
+    }
 
     // percentage based width
     if (width.slice(-1) === '%') {
       container.css('width', width)
       if (!height) {
         height = 0
-        const paddingBottom = (parseFloat(width) * aspectRatio) + '%'
+        const paddingBottom = parseFloat(width) * aspectRatio + '%'
         container.css('padding-bottom', paddingBottom)
       }
       container.css('height', height)
     } else {
       // or another width unit, adding 'px' if necessary
-      if ($.isNumeric(width)) { width = width + 'px' }
+      if ($.isNumeric(width)) {
+        width = width + 'px'
+      }
       container.css('width', width)
-      if (!height) { height = (parseFloat(width) * aspectRatio) + 'px' }
+      if (!height) {
+        height = parseFloat(width) * aspectRatio + 'px'
+      }
       container.css('height', height)
     }
   }
@@ -427,7 +468,9 @@ Tutorial.prototype.$initializeVideos = function () {
   $('img').each(function () {
     // skip if this isn't a video
     const videoSrc = $(this).attr('src')
-    if (!isVideo(videoSrc)) { return }
+    if (!isVideo(videoSrc)) {
+      return
+    }
 
     // hide while we process
     $(this).css('display', 'none')
@@ -435,7 +478,9 @@ Tutorial.prototype.$initializeVideos = function () {
     // collect various attributes
     let width = $(this).get(0).style.width
     let height = $(this).get(0).style.height
-    $(this).css('width', '').css('height', '')
+    $(this)
+      .css('width', '')
+      .css('height', '')
     const attrs = {}
     $.each(this.attributes, function (idex, attr) {
       switch (attr.nodeName) {
@@ -461,7 +506,11 @@ Tutorial.prototype.$initializeVideos = function () {
     $(this).replaceWith(function () {
       const iframe = $('<iframe/>', attrs)
       iframe.addClass('tutorial-video')
-      if (isYouTubeVideo(videoSrc)) { iframe.addClass('tutorial-video-youtube') } else if (isVimeoVideo(videoSrc)) { iframe.addClass('tutorial-video-vimeo') }
+      if (isYouTubeVideo(videoSrc)) {
+        iframe.addClass('tutorial-video-youtube')
+      } else if (isVimeoVideo(videoSrc)) {
+        iframe.addClass('tutorial-video-vimeo')
+      }
       iframe.attr('allowfullscreen', '')
       iframe.css('display', '')
       const container = $('<div class="tutorial-video-container"></div>')
@@ -477,7 +526,9 @@ Tutorial.prototype.$initializeVideos = function () {
 
 Tutorial.prototype.$initializeVideoPlayers = function (videoProgress) {
   // don't interact with video player APIs in Qt
-  if (/\bQt\//.test(window.navigator.userAgent)) { return }
+  if (/\bQt\//.test(window.navigator.userAgent)) {
+    return
+  }
 
   this.$initializeYouTubePlayers(videoProgress)
   this.$initializeVimeoPlayers(videoProgress)
@@ -492,7 +543,9 @@ Tutorial.prototype.$videoPlayerRestoreTime = function (src, videoProgress) {
       const totalTime = videoProgress[v].data.total_time
       // don't return a restore time if we are within 10 seconds of the beginning
       // or the end of the video.
-      if (time > 10 && ((totalTime - time) > 10)) { return time }
+      if (time > 10 && totalTime - time > 10) {
+        return time
+      }
     }
   }
 
@@ -521,15 +574,20 @@ Tutorial.prototype.$initializeYouTubePlayers = function (videoProgress) {
 
           // helper to report progress to the server
           function reportProgress () {
-            thiz.$reportVideoProgress(videoUrl,
+            thiz.$reportVideoProgress(
+              videoUrl,
               player.getCurrentTime(),
-              player.getDuration())
+              player.getDuration()
+            )
           }
 
           // helper to restore video time. attempt to restore to 10 seconds prior
           // to the last save point (to recapture frame of reference)
           function restoreTime () {
-            const restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, videoProgress)
+            const restoreTime = thiz.$videoPlayerRestoreTime(
+              videoUrl,
+              videoProgress
+            )
             if (restoreTime > 0) {
               player.mute()
               player.playVideo()
@@ -601,7 +659,10 @@ Tutorial.prototype.$initializeVimeoPlayers = function (videoProgress) {
 
         // restore time if we can
         player.ready().then(function () {
-          const restoreTime = thiz.$videoPlayerRestoreTime(videoUrl, videoProgress)
+          const restoreTime = thiz.$videoPlayerRestoreTime(
+            videoUrl,
+            videoProgress
+          )
           if (restoreTime > 0) {
             player.getVolume().then(function (volume) {
               player.setCurrentTime(restoreTime).then(function () {
@@ -616,12 +677,17 @@ Tutorial.prototype.$initializeVimeoPlayers = function (videoProgress) {
         // helper function to report progress
         function reportProgress (data, throttle) {
           // default throttle to false
-          if (throttle === undefined) { throttle = false }
+          if (throttle === undefined) {
+            throttle = false
+          }
 
           // if we are throttling then don't report if the last
           // reported time is within 5 seconds
-          if (throttle && (lastReportedTime != null) &&
-              ((data.seconds - lastReportedTime) < 5)) {
+          if (
+            throttle &&
+            lastReportedTime != null &&
+            data.seconds - lastReportedTime < 5
+          ) {
             return
           }
 
@@ -673,8 +739,14 @@ Tutorial.prototype.$forEachExercise = function (operation) {
 
 Tutorial.prototype.$exerciseSupportCode = function (label) {
   const selector = '.tutorial-exercise-support[data-label="' + label + '"]'
-  const code = $(selector).children('pre').children('code')
-  if (code.length > 0) { return code.text() } else { return null }
+  const code = $(selector)
+    .children('pre')
+    .children('code')
+  if (code.length > 0) {
+    return code.text()
+  } else {
+    return null
+  }
 }
 
 Tutorial.prototype.$exerciseSolutionCode = function (label) {
@@ -687,13 +759,19 @@ Tutorial.prototype.$exerciseHintDiv = function (label) {
   const hintDiv = $('div#' + id)
 
   // ensure it isn't a section then return
-  if (hintDiv.length > 0 && !hintDiv.hasClass('section')) { return hintDiv } else { return null }
+  if (hintDiv.length > 0 && !hintDiv.hasClass('section')) {
+    return hintDiv
+  } else {
+    return null
+  }
 }
 
 Tutorial.prototype.$exerciseHintsCode = function (label) {
   // look for a single hint
   let hint = this.$exerciseSupportCode(label + '-hint')
-  if (hint !== null) { return [hint] }
+  if (hint !== null) {
+    return [hint]
+  }
 
   // look for a sequence of hints
   const hints = []
@@ -701,11 +779,19 @@ Tutorial.prototype.$exerciseHintsCode = function (label) {
   while (true) {
     const hintLabel = label + '-hint-' + index++
     hint = this.$exerciseSupportCode(hintLabel)
-    if (hint !== null) { hints.push(hint) } else { break }
+    if (hint !== null) {
+      hints.push(hint)
+    } else {
+      break
+    }
   }
 
   // return what we have (null if empty)
-  if (hints.length > 0) { return hints } else { return null }
+  if (hints.length > 0) {
+    return hints
+  } else {
+    return null
+  }
 }
 
 // get the exercise container of an element
@@ -721,7 +807,9 @@ Tutorial.prototype.$showExerciseProgress = function (label, button, show) {
   const runButtons = exercise.find('.btn-tutorial-run')
 
   // if the button is "run" then use the run button
-  if (button === 'run') { button = exercise.find('.btn-tutorial-run').last() }
+  if (button === 'run') {
+    button = exercise.find('.btn-tutorial-run').last()
+  }
 
   // show/hide progress UI
   const spinner = 'fa-spinner fa-spin fa-fw'
@@ -778,7 +866,8 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     // get the knitr options script block and detach it (will move to input div)
     const optsScript = exercise.children('script[data-ui-opts="1"]').detach()
 
-    const optsChunk = optsScript.length === 1 ? JSON.parse(optsScript.text()) : {}
+    const optsChunk =
+      optsScript.length === 1 ? JSON.parse(optsScript.text()) : {}
 
     // capture label and caption
     const label = exercise.attr('data-label')
@@ -792,7 +881,9 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     // when we receive focus hide solutions in other exercises
     exercise.on('focusin', function () {
       $('.btn-tutorial-solution').each(function () {
-        if (exercise.has($(this)).length === 0) { thiz.$removeSolution(thiz.$exerciseContainer($(this))) }
+        if (exercise.has($(this)).length === 0) {
+          thiz.$removeSolution(thiz.$exerciseContainer($(this)))
+        }
       })
     })
 
@@ -801,26 +892,40 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     const codeBlocks = exercise.children('pre.text, pre.lang-text')
     codeBlocks.each(function () {
       const codeElement = $(this).children('code')
-      if (codeElement.length > 0) { code = code + codeElement.text() } else { code = code + $(this).text() }
+      if (codeElement.length > 0) {
+        code = code + codeElement.text()
+      } else {
+        code = code + $(this).text()
+      }
     })
     codeBlocks.remove()
     // ensure a minimum of 3 lines
     const lines = code.split(/\r\n|\r|\n/).length
-    for (let i = lines; i < thiz.kMinLines; i++) { code = code + '\n' }
+    for (let i = lines; i < thiz.kMinLines; i++) {
+      code = code + '\n'
+    }
 
     // wrap the remaining elements in an output frame div
     exercise.wrapInner('<div class="tutorial-exercise-output-frame"></div>')
     const outputFrame = exercise.children('.tutorial-exercise-output-frame')
 
     // create input div
-    const inputDiv = $('<div class="tutorial-exercise-input panel panel-default"></div>')
+    const inputDiv = $(
+      '<div class="tutorial-exercise-input panel panel-default"></div>'
+    )
     inputDiv.attr('id', createId('input'))
 
     // creating heading
-    const panelHeading = $('<div class="panel-heading tutorial-panel-heading"></div>')
+    const panelHeading = $(
+      '<div class="panel-heading tutorial-panel-heading"></div>'
+    )
     inputDiv.append(panelHeading)
-    const panelHeadingLeft = $('<div class="tutorial-panel-heading-left"></div>')
-    const panelHeadingRight = $('<div class="tutorial-panel-heading-right"></div>')
+    const panelHeadingLeft = $(
+      '<div class="tutorial-panel-heading-left"></div>'
+    )
+    const panelHeadingRight = $(
+      '<div class="tutorial-panel-heading-right"></div>'
+    )
     panelHeading.append(panelHeadingLeft)
     panelHeading.append(panelHeadingRight)
 
@@ -832,9 +937,13 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
 
     // function to add a submit button
     function addSubmitButton (icon, style, text, check, datai18n) {
-      const button = $('<button class="btn ' + style + ' btn-xs btn-tutorial-run"></button>')
+      const button = $(
+        '<button class="btn ' + style + ' btn-xs btn-tutorial-run"></button>'
+      )
       button.append($('<i class="fa ' + icon + '"></i>'))
-      button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>')
+      button.append(
+        ' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>'
+      )
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
       let title = text
       const kbdText = (isMac ? 'Cmd' : 'Ctrl') + '+Shift+Enter'
@@ -845,7 +954,9 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
       button.attr('title', title)
       button.attr('data-i18n', '')
       button.attr('data-i18n-attr-title', 'button.' + datai18n + 'title')
-      if (check) { button.attr('data-check', '1') }
+      if (check) {
+        button.attr('data-check', '1')
+      }
       button.attr('data-icon', icon)
       button.on('click', function () {
         thiz.$removeSolution(exercise)
@@ -856,10 +967,24 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     }
 
     // create run button
-    const runButton = addSubmitButton('fa-play', 'btn-success', 'Run Code', false, 'runcode')
+    const runButton = addSubmitButton(
+      'fa-play',
+      'btn-success',
+      'Run Code',
+      false,
+      'runcode'
+    )
 
     // create submit answer button if checks are enabled
-    if (optsChunk.has_checker) { addSubmitButton('fa-check-square-o', 'btn-primary', 'Submit Answer', true, 'submitanswer') }
+    if (optsChunk.has_checker) {
+      addSubmitButton(
+        'fa-check-square-o',
+        'btn-primary',
+        'Submit Answer',
+        true,
+        'submitanswer'
+      )
+    }
 
     // create code div and add it to the input div
     const codeDiv = $('<div class="tutorial-exercise-code-editor"></div>')
@@ -885,7 +1010,7 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     const setupCode = null
 
     // use code completion
-    let completion = exercise.attr('data-completion') === '1'
+    const completion = exercise.attr('data-completion') === '1'
     let diagnostics = exercise.attr('data-diagnostics') === '1'
 
     // support startover
@@ -894,7 +1019,7 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     // get the engine
     const engine = optsChunk.engine
 
-    if (engine.toLowerCase() != 'r') {
+    if (engine.toLowerCase() !== 'r') {
       // disable ace editor diagnostics if a non-r language engine is set
       diagnostics = null
     }
@@ -951,34 +1076,38 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     })
 
     // Allow users to escape the editor and move to next focusable element
-    function toggleTabCommands(enable) {
+    function toggleTabCommands (enable) {
       const tabCommandKeys = {
-        indent:  {win: 'Tab',       mac: 'Tab'},
-        outdent: {win: 'Shift+Tab', mac: 'Shift+Tab'}
-      };
+        indent: { win: 'Tab', mac: 'Tab' },
+        outdent: { win: 'Shift+Tab', mac: 'Shift+Tab' }
+      }
 
-      ['indent', 'outdent'].forEach(function(name) {
-        const command = editor.commands.byName[name];
+      ;['indent', 'outdent'].forEach(function (name) {
+        const command = editor.commands.byName[name]
         // turn off tab commands or restore original bindKey
-        command.bindKey = enable ? tabCommandKeys[name] : null;
-        editor.commands.addCommand(command);
-      });
+        command.bindKey = enable ? tabCommandKeys[name] : null
+        editor.commands.addCommand(command)
+      })
       // update class on editor to reflect tab command state
-      $(editor.container).toggleClass('ace_indent_off', !enable);
+      $(editor.container).toggleClass('ace_indent_off', !enable)
     }
 
-    editor.on('focus', function() { toggleTabCommands(true); });
+    editor.on('focus', function () {
+      toggleTabCommands(true)
+    })
 
     editor.commands.addCommand({
-      name: "escape",
-      bindKey: {win: "Esc", mac: "Esc"},
-      exec: function() { toggleTabCommands(false); }
-    });
+      name: 'escape',
+      bindKey: { win: 'Esc', mac: 'Esc' },
+      exec: function () {
+        toggleTabCommands(false)
+      }
+    })
 
     // manage ace height as the document changes
-    const updateAceHeight = function()  {
-      const lines = exercise.attr('data-lines');
-      if (lines && (lines > 0)) {
+    const updateAceHeight = function () {
+      const lines = exercise.attr('data-lines')
+      if (lines && lines > 0) {
         editor.setOptions({
           minLines: lines,
           maxLines: lines
@@ -986,8 +1115,10 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
       } else {
         editor.setOptions({
           minLines: thiz.kMinLines,
-          maxLines: Math.max(Math.min(editor.session.getLength(), 15),
-            thiz.kMinLines)
+          maxLines: Math.max(
+            Math.min(editor.session.getLength(), 15),
+            thiz.kMinLines
+          )
         })
       }
     }
@@ -1036,12 +1167,14 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
   const hintDiv = thiz.$exerciseHintDiv(label)
 
   // function to add a helper button
-  function addHelperButton(icon, caption, classBtn, datai18n) {
-    var button = $('<button class="btn btn-light btn-xs btn-tutorial-solution"></button>');
-    button.attr('title', caption);
-    button.attr('data-i18n', '');
-    button.addClass(classBtn);
-    button.append($('<i class="fa ' + icon + '"></i>'));
+  function addHelperButton (icon, caption, classBtn, datai18n) {
+    var button = $(
+      '<button class="btn btn-light btn-xs btn-tutorial-solution"></button>'
+    )
+    button.attr('title', caption)
+    button.attr('data-i18n', '')
+    button.addClass(classBtn)
+    button.append($('<i class="fa ' + icon + '"></i>'))
     if (datai18n) {
       if (typeof datai18n === 'string') {
         datai18n = { key: datai18n }
@@ -1067,7 +1200,12 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
   // function to add a hint button
   function addHintButton (caption, datai18n) {
     datai18n = datai18n || 'button.hint'
-    return addHelperButton('fa-lightbulb-o', caption, 'btn-tutorial-hint', datai18n)
+    return addHelperButton(
+      'fa-lightbulb-o',
+      caption,
+      'btn-tutorial-hint',
+      datai18n
+    )
   }
 
   // helper function to record solution/hint requests
@@ -1080,7 +1218,12 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
 
   // add a startover button
   if (editor.tutorial.startover_code !== null) {
-    const startOverButton = addHelperButton('fa-refresh', 'Start Over', 'btn-tutorial-start-over', 'button.startover')
+    const startOverButton = addHelperButton(
+      'fa-refresh',
+      'Start Over',
+      'btn-tutorial-start-over',
+      'button.startover'
+    )
     startOverButton.on('click', function () {
       editor.setValue(editor.tutorial.startover_code, -1)
       thiz.$clearExerciseOutput(exercise)
@@ -1104,9 +1247,14 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
       // prepend it to the output frame (if a hint isn't already in there)
       const outputFrame = exercise.children('.tutorial-exercise-output-frame')
       if (outputFrame.find('.tutorial-hint').length === 0) {
-        const panel = $('<div class="panel panel-default tutorial-hint-panel"></div>')
+        const panel = $(
+          '<div class="panel panel-default tutorial-hint-panel"></div>'
+        )
         const panelBody = $('<div class="panel-body"></div>')
-        const hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit')
+        const hintDivClone = hintDiv
+          .clone()
+          .attr('id', '')
+          .css('display', 'inherit')
         panelBody.append(hintDivClone)
         panel.append(panelBody)
         outputFrame.prepend(panel)
@@ -1120,8 +1268,12 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
 
     // determine editor lines
     let editorLines = thiz.kMinLines
-    if (solution) { editorLines = Math.max(thiz.$countLines(solution), editorLines) } else {
-      for (let i = 0; i < hints.length; i++) { editorLines = Math.max(thiz.$countLines(hints[i]), editorLines) }
+    if (solution) {
+      editorLines = Math.max(thiz.$countLines(solution), editorLines)
+    } else {
+      for (let i = 0; i < hints.length; i++) {
+        editorLines = Math.max(thiz.$countLines(hints[i]), editorLines)
+      }
     }
 
     // track hint index
@@ -1129,7 +1281,7 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
 
     // create solution button
     const button = addHintButton(
-      isSolution ? 'Solution' : (hints.length > 1 ? 'Hints' : 'Hint'),
+      isSolution ? 'Solution' : hints.length > 1 ? 'Hints' : 'Hint',
       isSolution
         ? { key: 'button.solution', count: 1 }
         : { key: 'button.hint', opts: { count: hints.length } }
@@ -1147,11 +1299,12 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
       if (!visible) {
         const popover = button.popover({
           placement: 'top',
-          template: '<div class="popover tutorial-solution-popover" role="tooltip">' +
-                    '<div class="arrow"></div>' +
-                    '<div class="popover-title tutorial-panel-heading"></div>' +
-                    '<div class="popover-content"></div>' +
-                    '</div>',
+          template:
+            '<div class="popover tutorial-solution-popover" role="tooltip">' +
+            '<div class="arrow"></div>' +
+            '<div class="popover-title tutorial-panel-heading"></div>' +
+            '<div class="popover-content"></div>' +
+            '</div>',
           content: solutionText,
           trigger: 'manual'
         })
@@ -1162,7 +1315,10 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
           const content = popoverTip.find('.popover-content')
 
           // adjust editor and container height
-          const solutionEditor = thiz.$attachAceEditor(content.get(0), solutionText)
+          const solutionEditor = thiz.$attachAceEditor(
+            content.get(0),
+            solutionText
+          )
           solutionEditor.setReadOnly(true)
           solutionEditor.setOptions({
             minLines: editorLines
@@ -1175,28 +1331,38 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
 
           // add next hint button if we have > 1 hint
           if (solution === null && hints.length > 1) {
-            const nextHintButton = $('<button class="btn btn-light btn-xs btn-tutorial-next-hint"></button>')
-            nextHintButton.append($('<span data-i18n="button.hintnext">Next Hint</span>'))
+            const nextHintButton = $(
+              '<button class="btn btn-light btn-xs btn-tutorial-next-hint"></button>'
+            )
+            nextHintButton.append(
+              $('<span data-i18n="button.hintnext">Next Hint</span>')
+            )
             nextHintButton.append(' ')
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'))
             nextHintButton.on('click', function () {
               hintIndex = hintIndex + 1
               solutionEditor.setValue(hints[hintIndex], -1)
-              if (hintIndex === (hints.length - 1)) {
+              if (hintIndex === hints.length - 1) {
                 nextHintButton.addClass('disabled')
               }
               recordHintRequest(hintIndex)
             })
-            if (hintIndex === (hints.length - 1)) { nextHintButton.addClass('disabled') }
+            if (hintIndex === hints.length - 1) {
+              nextHintButton.addClass('disabled')
+            }
             popoverTitle.append(nextHintButton)
           }
 
           // add copy button
-          const copyButton = $('<button class="btn btn-info btn-xs ' +
-                             'btn-tutorial-copy-solution pull-right"></button>')
+          const copyButton = $(
+            '<button class="btn btn-info btn-xs ' +
+              'btn-tutorial-copy-solution pull-right"></button>'
+          )
           copyButton.append($('<i class="fa fa-copy"></i>'))
           copyButton.append(' ')
-          copyButton.append($('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>'))
+          copyButton.append(
+            $('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>')
+          )
           popoverTitle.append(copyButton)
           const clipboard = new Clipboard(copyButton[0], {
             text: function (trigger) {
@@ -1215,7 +1381,10 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
         const popoverElement = exercise.find('.tutorial-solution-popover')
         popoverElement.css('left', '0')
         const popoverArrow = popoverElement.find('.arrow')
-        popoverArrow.css('left', button.position().left + (button.outerWidth() / 2) + 'px')
+        popoverArrow.css(
+          'left',
+          button.position().left + button.outerWidth() / 2 + 'px'
+        )
 
         // scroll into view if necessary
         thiz.scrollIntoView(popoverElement)
@@ -1236,11 +1405,15 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
 Tutorial.prototype.$removeSolution = function (exercise) {
   // destroy clipboardjs object if we've got one
   const solutionButton = exercise.find('.btn-tutorial-copy-solution')
-  if (solutionButton.length > 0) { solutionButton.data('clipboard').destroy() }
+  if (solutionButton.length > 0) {
+    solutionButton.data('clipboard').destroy()
+  }
 
   // destroy popover
   // If window.bootstrap is found (>= bs4), use `'dispose'` method name. Otherwise, use `'destroy'` (bs3)
-  exercise.find('.btn-tutorial-solution').popover(window.bootstrap ? 'dispose' : 'destroy')
+  exercise
+    .find('.btn-tutorial-solution')
+    .popover(window.bootstrap ? 'dispose' : 'destroy')
 }
 
 /* Exercise evaluation */
@@ -1266,14 +1439,15 @@ Tutorial.prototype.$initializeExerciseEvaluation = function () {
   // register a shiny input binding for code editors
   const exerciseInputBinding = new Shiny.InputBinding()
   $.extend(exerciseInputBinding, {
-
     find: function (scope) {
       return $(scope).find('.tutorial-exercise-code-editor')
     },
 
     getValue: function (el) {
       // return null if we haven't been clicked and this isn't a restore
-      if (!this.clicked && !this.restore) { return null }
+      if (!this.clicked && !this.restore) {
+        return null
+      }
 
       // value object to return
       const value = {}
@@ -1308,7 +1482,9 @@ Tutorial.prototype.$initializeExerciseEvaluation = function () {
       if (window.shinytest) {
         // remove focus from editor when updating the value in shinyTest
         // to avoid false differences due to the blinking cursor
-        setTimeout(function () { editor.blur() }, 0)
+        setTimeout(function () {
+          editor.blur()
+        }, 0)
       }
     },
 
@@ -1350,7 +1526,6 @@ Tutorial.prototype.$initializeExerciseEvaluation = function () {
   // register an output binding for exercise output
   const exerciseOutputBinding = new Shiny.OutputBinding()
   $.extend(exerciseOutputBinding, {
-
     find: function find (scope) {
       return $(scope).find('.tutorial-exercise-output')
     },
@@ -1365,16 +1540,23 @@ Tutorial.prototype.$initializeExerciseEvaluation = function () {
       thiz.$showExerciseProgress(exerciseLabel(el), null, false)
 
       // remove default content (if any)
-      this.outputFrame(el).children().not($(el)).remove()
+      this.outputFrame(el)
+        .children()
+        .not($(el))
+        .remove()
 
       // render the content
       Shiny.renderContent(el, data)
 
       // bind bootstrap tables if necessary
-      if (window.bootstrapStylePandocTables) { window.bootstrapStylePandocTables() }
+      if (window.bootstrapStylePandocTables) {
+        window.bootstrapStylePandocTables()
+      }
 
       // bind paged tables if necessary
-      if (window.PagedTableDoc) { window.PagedTableDoc.initAll() }
+      if (window.PagedTableDoc) {
+        window.PagedTableDoc.initAll()
+      }
 
       // scroll exercise fully into view if we aren't restoring
       const restoring = thiz.$exerciseContainer(el).data('restoring')
@@ -1405,13 +1587,19 @@ Tutorial.prototype.$initializeExerciseEvaluation = function () {
       return $(el).closest('.tutorial-exercise-output-frame')
     }
   })
-  Shiny.outputBindings.register(exerciseOutputBinding, 'tutorial.exerciseOutput')
+  Shiny.outputBindings.register(
+    exerciseOutputBinding,
+    'tutorial.exerciseOutput'
+  )
 }
 
 Tutorial.prototype.$clearExerciseOutput = function (exercise) {
   const outputFrame = $(exercise).find('.tutorial-exercise-output-frame')
   const outputDiv = $(outputFrame).children('.tutorial-exercise-output')
-  outputFrame.children().not(outputDiv).remove()
+  outputFrame
+    .children()
+    .not(outputDiv)
+    .remove()
   outputDiv.empty()
 }
 
@@ -1420,7 +1608,12 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
   // alias this
   const thiz = this
 
-  if (!(typeof window.Promise !== 'undefined' && typeof window.indexedDB !== 'undefined')) {
+  if (
+    !(
+      typeof window.Promise !== 'undefined' &&
+      typeof window.indexedDB !== 'undefined'
+    )
+  ) {
     // can not do db stuff.
     // return early and do not create hooks
     success({})
@@ -1433,7 +1626,9 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
   // state we had stored)
   const dbName = 'LearnrTutorialProgress'
   // var storeName = "Store_" + btoa(Math.random()).slice(0, 4);
-  const storeName = 'Store_' + window.btoa(identifiers.tutorial_id + identifiers.tutorial_version)
+  const storeName =
+    'Store_' +
+    window.btoa(identifiers.tutorial_id + identifiers.tutorial_version)
 
   const closeStore = function (store) {
     store._dbp.then(function (db) {
@@ -1447,10 +1642,7 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
   // fast in such scenarios.
   let storeCreated
   try {
-    const testStore = new window.idbKeyval.Store(
-      dbName,
-      storeName
-    )
+    const testStore = new window.idbKeyval.Store(dbName, storeName)
     closeStore(testStore)
     storeCreated = true
   } catch (error) {
@@ -1489,10 +1681,7 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
 
   // custom message handler to update store
   Shiny.addCustomMessageHandler('tutorial.store_object', function (message) {
-    const idbStoreSet = new window.idbKeyval.Store(
-      dbName,
-      storeName
-    )
+    const idbStoreSet = new window.idbKeyval.Store(dbName, storeName)
 
     window.idbKeyval
       .set(message.id, message.data, idbStoreSet)
@@ -1506,12 +1695,10 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
 
   // mask prototype to clear out all key/vals
   thiz.$removeState = function (completed) {
-    const idbStoreClear = new window.idbKeyval.Store(
-      dbName,
-      storeName
-    )
+    const idbStoreClear = new window.idbKeyval.Store(dbName, storeName)
 
-    window.idbKeyval.clear(idbStoreClear)
+    window.idbKeyval
+      .clear(idbStoreClear)
       .then(completed)
       .catch(function (err) {
         console.error(err)
@@ -1523,24 +1710,21 @@ Tutorial.prototype.$initializeStorage = function (identifiers, success) {
   }
 
   // retreive the currently stored objects then pass them down to restore_state
-  const idbStoreGet = new window.idbKeyval.Store(
-    dbName,
-    storeName
-  )
+  const idbStoreGet = new window.idbKeyval.Store(dbName, storeName)
   window.idbKeyval
     .keys(idbStoreGet)
     .then(function (keys) {
       const getPromises = keys.map(function (key) {
         return window.idbKeyval.get(key, idbStoreGet)
       })
-      return Promise.all(getPromises)
-        .then(function (vals) {
-          const ret = {}; let i
-          for (i = 0; i < keys.length; i++) {
-            ret[keys[i]] = vals[i]
-          }
-          return ret
-        })
+      return Promise.all(getPromises).then(function (vals) {
+        const ret = {}
+        let i
+        for (i = 0; i < keys.length; i++) {
+          ret[keys[i]] = vals[i]
+        }
+        return ret
+      })
     })
     .then(function (objs) {
       success(objs)
@@ -1606,7 +1790,9 @@ Tutorial.prototype.$restoreSubmissions = function (submissions) {
         const editor = ace.edit(editorContainer.attr('id'))
         editor.setValue(code, -1)
         if (window.shinytest) {
-          setTimeout(function () { editor.blur() }, 0)
+          setTimeout(function () {
+            editor.blur()
+          }, 0)
         }
 
         // fire restore event on the container (also set
@@ -1647,7 +1833,7 @@ Tutorial.prototype.$initializeClientState = function (clientState) {
 
     // if it changed then persist it and update last
     if (
-      (clientStateCurrent.scroll_position !== clientStateLast.scroll_position) ||
+      clientStateCurrent.scroll_position !== clientStateLast.scroll_position ||
       clientStateCurrent.hash !== clientStateLast.hash
     ) {
       thiz.$serverRequest('set_client_state', clientStateCurrent, null)
@@ -1695,7 +1881,9 @@ Tutorial.prototype.$initializeServer = function () {
     // wait for shiny config to be available (required for $serverRequest)
     if (TUTORIAL_IS_SERVER_AVAILABLE) {
       thiz.$logTiming('server-available')
-      thiz.$serverRequest('initialize', { location: window.location },
+      thiz.$serverRequest(
+        'initialize',
+        { location: window.location },
         function (response) {
           thiz.$logTiming('server-initialized')
           // initialize storage then restore state

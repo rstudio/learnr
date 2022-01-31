@@ -35,15 +35,19 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
     // this is a kludge so that 'in' is treated as though it were an
     // operator by the diagnostics system
     const value = token.value || ''
-    if (value === 'in') { return false }
+    if (value === 'in') {
+      return false
+    }
 
     const type = token.type || ''
-    return type === 'string' ||
-           type === 'constant.numeric' ||
-           type === 'constant.language.boolean' ||
-           type === 'identifier' ||
-           type === 'keyword' ||
-           type === 'variable.language'
+    return (
+      type === 'string' ||
+      type === 'constant.numeric' ||
+      type === 'constant.language.boolean' ||
+      type === 'identifier' ||
+      type === 'keyword' ||
+      type === 'variable.language'
+    )
   }
 
   const isOperator = function (token) {
@@ -53,11 +57,13 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
 
   const isUnaryOperator = function (token) {
     const value = token.value || ''
-    return value === '+' ||
-           value === '-' ||
-           value === '~' ||
-           value === '!' ||
-           value === '?'
+    return (
+      value === '+' ||
+      value === '-' ||
+      value === '~' ||
+      value === '!' ||
+      value === '?'
+    )
   }
 
   const diagnose = function () {
@@ -67,7 +73,8 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
     // create tokenizer -- we do this manually as we do not
     // want Ace to merge brackets sitting together
     const Tokenizer = ace.require('ace/tokenizer').Tokenizer
-    const RHighlightRules = ace.require('ace/mode/r_highlight_rules').RHighlightRules
+    const RHighlightRules = ace.require('ace/mode/r_highlight_rules')
+      .RHighlightRules
     const rules = new RHighlightRules().getRules()
     for (const key in rules) {
       const rule = rules[key]
@@ -93,7 +100,8 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
 
     rules.start.unshift({
       token: 'keyword.operator',
-      regex: ':::|::|:=|%%|>=|<=|==|!=|\\|>|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?',
+      regex:
+        ':::|::|:=|%%|>=|<=|==|!=|\\|>|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?',
       merge: false,
       next: 'start'
     })
@@ -116,7 +124,9 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
     let state = 'start'
     for (let i = 0; i < lines.length; i++) {
       const tokenized = tokenizer.getLineTokens(lines[i], state)
-      for (let j = 0; j < tokenized.tokens.length; j++) { tokens.push(tokenized.tokens[j]) }
+      for (let j = 0; j < tokenized.tokens.length; j++) {
+        tokens.push(tokenized.tokens[j])
+      }
       tokens.push({ type: 'text', value: '\n' })
       state = tokenized.state
     }
@@ -180,13 +190,22 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
         const bracket = bracketStack[bracketStack.length - 1] || {}
 
         // if we have two symbols in a row with no binary operator in between, syntax error
-        if (lhs.position.row === rhs.position.row && isSymbol(lhs) && isSymbol(rhs)) {
+        if (
+          lhs.position.row === rhs.position.row &&
+          isSymbol(lhs) &&
+          isSymbol(rhs)
+        ) {
           diagnostics.push(unexpected('symbol', rhs))
           continue
         }
 
         // if we have an operator followed by a binary-only operator, syntax error
-        if (lhs.position.row === rhs.position.row && isOperator(lhs) && isOperator(rhs) && !isUnaryOperator(rhs)) {
+        if (
+          lhs.position.row === rhs.position.row &&
+          isOperator(lhs) &&
+          isOperator(rhs) &&
+          !isUnaryOperator(rhs)
+        ) {
           diagnostics.push(unexpected('operator', rhs))
           continue
         }
@@ -198,7 +217,10 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
         }
 
         // if we have a comma preceding a closing bracket, warn
-        if (lhs.value === ',' && (rhs.value === '}' || rhs.value === ')' || rhs.value === ']')) {
+        if (
+          lhs.value === ',' &&
+          (rhs.value === '}' || rhs.value === ')' || rhs.value === ']')
+        ) {
           diagnostics.push(unexpected('comma', lhs, 'warning'))
           continue
         }
@@ -217,25 +239,35 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
   const findActiveAceInstance = function () {
     let el = document.activeElement
     while (el != null) {
-      if (el.env && el.env.editor) { return el.env.editor }
+      if (el.env && el.env.editor) {
+        return el.env.editor
+      }
       el = el.parentElement
     }
     return null
   }
 
   const ensureInitialized = function (editor) {
-    if (editor.$diagnosticsInitialized) { return }
+    if (editor.$diagnosticsInitialized) {
+      return
+    }
 
-    if (!editor.tutorial.diagnostics) { return }
+    if (!editor.tutorial.diagnostics) {
+      return
+    }
 
     // register handlers
     const handlers = {}
     handlers.change = self.$onChange.bind(editor)
     handlers.destroy = function (event) {
-      for (const key in handlers) { this.off(key, handlers[key]) }
+      for (const key in handlers) {
+        this.off(key, handlers[key])
+      }
     }.bind(editor)
 
-    for (const key in handlers) { editor.on(key, handlers[key]) }
+    for (const key in handlers) {
+      editor.on(key, handlers[key])
+    }
 
     editor.$liveDiagnostics = diagnose.bind(editor)
 
@@ -243,7 +275,9 @@ const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unus
   }
 
   this.$onChange = function (data) {
-    if (!this.tutorial.diagnostics) { return }
+    if (!this.tutorial.diagnostics) {
+      return
+    }
 
     clearTimeout(this.$diagnosticsTimerId)
     this.session.clearAnnotations()

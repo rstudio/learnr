@@ -180,27 +180,27 @@ function TutorialCompleter (tutorial) { // eslint-disable-line no-unused-vars
     // cancel any pending live autocompletion
     clearTimeout(editor.$autocompletionTimerId)
 
-    const keys = new KeyCombination(event);
+    const keys = new KeyCombination(event)
 
     if (keys.keyCode === KEYCODE_TAB) {
       // don't autocomplete when tabbing away from editor
       if (editor.container.matches('.ace_indent_off')) {
-        return;
+        return
       }
 
       // check that we're not at the start of the line
-      const pos = editor.getCursorPosition();
-      const line = editor.session.getLine(pos.row);
-      const isCursorAtStart = line.substr(0, pos.column).trim() === "";
+      const pos = editor.getCursorPosition()
+      const line = editor.session.getLine(pos.row)
+      const isCursorAtStart = line.substr(0, pos.column).trim() === ''
       if (isCursorAtStart) {
-       return;
+        return
       }
     }
 
-    event.stopPropagation();
-    event.preventDefault();
-    editor.execCommand('startAutocomplete');
-  };
+    event.stopPropagation()
+    event.preventDefault()
+    editor.execCommand('startAutocomplete')
+  }
 
   document.addEventListener('keydown', function (event) {
     // TODO: find more appropriate place for one-time initialization
@@ -214,7 +214,6 @@ function TutorialCompleter (tutorial) { // eslint-disable-line no-unused-vars
     if (keys.keyCode === KEYCODE_TAB && keys.modifier === MODIFIER_NONE) {
       if (editor && editor.completer && editor.completer.activated) {
         // it is already activated. Accept the top choice. To do this, do nothing and it will be resolved by the autocompleter
-        /// / do nothing. let autocompleter handle it
         return
       }
       // autocompleter is not active. enable it
