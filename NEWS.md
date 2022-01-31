@@ -56,13 +56,17 @@
 
 -   Feedback messages can now be an `htmltools::tag()`, `htmltools::tagList()`, or a character message (#458) (#458)
 
--   Interactive exercises now know the RStudio shortcuts for the pipe (`%>%`) (Command/Control + Shift + M) and assignment (`<-`) (Alt + -) operators in exercise code boxes (#472).
+-   Keyboard navigation and keyboard shortcuts for the interactive exercise code editor have been improved:
 
--   Clicking **Run Code** or using the keyboard shortcut (Cmd/Ctrl + Enter) now runs the selected code only, if any code is selected (thanks @petzi53 #512, #514).
+    -   To avoid trapping keyboard focus and to allow users to navigate through a tutorial with the keyboard, pressing <kbd>Esc</kbd> in an interactive exercise code editor now temporarily disables the use of <kbd>Tab</kbd> for indenting, making it possible for users to move to the next or previous element in the tutorial (#652).
 
--   Commented code within an exercise is no longer be auto completed (#604).
+    -   Interactive exercises now know the RStudio shortcuts for the pipe (`%>%`) (Command/Control + Shift + M) and assignment (`<-`) (Alt + -) operators in exercise code boxes (#472).
 
--   Hitting the TAB key in an exercise has always opened the auto-completion drop down. Now, hitting the TAB key will also complete the currently selected code completion (#428).
+    -   Clicking **Run Code** or using the keyboard shortcut (Cmd/Ctrl + Enter) now runs the selected code only, if any code is selected (thanks @petzi53 #512, #514).
+
+    -   Commented code within an exercise is no longer be auto completed (#604).
+
+    -   Hitting the TAB key in an exercise has always opened the auto-completion drop down. Now, hitting the TAB key will also complete the currently selected code completion (#428).
 
 -   The native R pipe, introduced in R 4.1, is now recognized as a valid R operator in the interactive exercise editor (thanks @ijlyttle, #595).
 
