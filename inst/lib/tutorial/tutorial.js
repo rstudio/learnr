@@ -1036,12 +1036,12 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     });
 
     // Allow users to escape the editor and move to next focusable element
-    const tabCommandKeys = {
-      indent: editor.commands.byName['indent'].bindKey,
-      outdent: editor.commands.byName['outdent'].bindKey
-    }
-
     function toggleTabCommands(enable) {
+      const tabCommandKeys = {
+        indent:  {win: 'Tab',       mac: 'Tab'},
+        outdent: {win: 'Shift+Tab', mac: 'Shift+Tab'}
+      };
+
       ['indent', 'outdent'].forEach(function(name) {
         const command = editor.commands.byName[name];
         // turn off tab commands or restore original bindKey
