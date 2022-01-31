@@ -913,9 +913,8 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
 
     // function to add a submit button
     function add_submit_button(icon, style, text, check, datai18n) {
-      var button = $('<a class="btn ' + style + ' btn-xs btn-tutorial-run"></a>');
+      var button = $('<button class="btn ' + style + ' btn-xs btn-tutorial-run"></button>');
       button.append($('<i class="fa ' + icon + '"></i>'));
-      button.attr('type', 'button');
       button.append(' ' + '<span data-i18n="button.' + datai18n + '">' + text + '</span>')
       var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       var title = text;
@@ -979,7 +978,7 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     var engine = chunk_options["engine"]
 
     if (engine.toLowerCase() != "r") {
-      // disable ace editor diagnostics if a non-r langauge engine is set
+      // disable ace editor diagnostics if a non-r language engine is set
       diagnostics = null;
       // disable auto-completion if a non-r language engine is set
       completion = null;
@@ -1036,7 +1035,32 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
       editor.focus();
     });
 
-    // mange ace height as the document changes
+    // Allow users to escape the editor and move to next focusable element
+    function toggleTabCommands(enable) {
+      const tabCommandKeys = {
+        indent:  {win: 'Tab',       mac: 'Tab'},
+        outdent: {win: 'Shift+Tab', mac: 'Shift+Tab'}
+      };
+
+      ['indent', 'outdent'].forEach(function(name) {
+        const command = editor.commands.byName[name];
+        // turn off tab commands or restore original bindKey
+        command.bindKey = enable ? tabCommandKeys[name] : null;
+        editor.commands.addCommand(command);
+      });
+      // update class on editor to reflect tab command state
+      $(editor.container).toggleClass('ace_indent_off', !enable);
+    }
+
+    editor.on('focus', function() { toggleTabCommands(true); });
+
+    editor.commands.addCommand({
+      name: "escape",
+      bindKey: {win: "Esc", mac: "Esc"},
+      exec: function() { toggleTabCommands(false); }
+    });
+
+    // manage ace height as the document changes
     var updateAceHeight = function()  {
       var lines = exercise.attr('data-lines');
       if (lines && (lines > 0)) {
@@ -1105,8 +1129,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
   // function to add a helper button
   function addHelperButton(icon, caption, ele_class, datai18n) {
-    var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
-    button.attr('role', 'button');
+    var button = $('<button class="btn btn-light btn-xs btn-tutorial-solution"></button>');
     button.attr('title', caption);
     button.attr('data-i18n', '');
     button.addClass(ele_class);
@@ -1252,7 +1275,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
           // add next hint button if we have > 1 hint
           if (solution === null && hints.length > 1) {
-            var nextHintButton = $('<a class="btn btn-light btn-xs btn-tutorial-next-hint"></a>');
+            var nextHintButton = $('<button class="btn btn-light btn-xs btn-tutorial-next-hint"></button>');
             nextHintButton.append($('<span data-i18n="button.hintnext">Next Hint</span>'));
             nextHintButton.append(' ');
             nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'));
@@ -1269,8 +1292,8 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
           }
 
           // add copy button
-          var copyButton = $('<a class="btn btn-info btn-xs ' +
-                             'btn-tutorial-copy-solution pull-right"></a>');
+          var copyButton = $('<button class="btn btn-info btn-xs ' +
+                             'btn-tutorial-copy-solution pull-right"></button>');
           copyButton.append($('<i class="fa fa-copy"></i>'));
           copyButton.append(' ')
           copyButton.append($('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>'));
@@ -1315,7 +1338,7 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
 
 // remove a solution for an exercise
 Tutorial.prototype.$removeSolution = function(exercise) {
-  // destory clipboardjs object if we've got one
+  // destroy clipboardjs object if we've got one
   var solutionButton = exercise.find('.btn-tutorial-copy-solution');
   if (solutionButton.length > 0)
     solutionButton.data('clipboard').destroy();
