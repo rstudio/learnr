@@ -201,11 +201,23 @@ function TutorialCompleter(tutorial) {
 
     const keys = new KeyCombination(event);
 
-    if (!(keys.keyCode === KEYCODE_TAB && editor.container.matches('.ace_indent_off'))) {
-      // manually handle event, except when tabbing away from editor
-      event.stopPropagation();
-      event.preventDefault();
+    if (keys.keyCode === KEYCODE_TAB) {
+      // don't autocomplete when tabbing away from editor
+      if (editor.container.matches('.ace_indent_off')) {
+        return;
+      }
+
+      // check that we're not at the start of the line
+      const pos = editor.getCursorPosition();
+      const line = editor.session.getLine(pos.row);
+      const isCursorAtStart = line.substr(0, pos.column).trim() === "";
+      if (isCursorAtStart) {
+       return;
+      }
     }
+
+    event.stopPropagation();
+    event.preventDefault();
     editor.execCommand("startAutocomplete");
   };
 
