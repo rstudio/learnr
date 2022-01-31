@@ -22,7 +22,7 @@ tutorial_options(
   exercise.timelimit = 60,
   # A simple checker function that just returns the message in the check chunk
   exercise.checker = function(check_code, ...) {
-    learnr::feedback(
+    list(
       message = eval(parse(text = check_code)),
       correct = logical(0),
       type = "info",
