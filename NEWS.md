@@ -54,8 +54,6 @@
 
 -   Authors can choose to reveal (default) or hide the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will likely be changed to hide solutions (#402).
 
--   Feedback messages can now be an `htmltools::tag()`, `htmltools::tagList()`, or a character message (#458) (#458)
-
 -   Keyboard navigation and keyboard shortcuts for the interactive exercise code editor have been improved:
 
     -   To avoid trapping keyboard focus and to allow users to navigate through a tutorial with the keyboard, pressing <kbd>Esc</kbd> in an interactive exercise code editor now temporarily disables the use of <kbd>Tab</kbd> for indenting, making it possible for users to move to the next or previous element in the tutorial (#652).
@@ -69,6 +67,8 @@
     -   Hitting the TAB key in an exercise has always opened the auto-completion drop down. Now, hitting the TAB key will also complete the currently selected code completion (#428).
 
 -   The native R pipe, introduced in R 4.1, is now recognized as a valid R operator in the interactive exercise editor (thanks @ijlyttle, #595).
+
+-   Feedback messages can now be an `htmltools::tag()`, `htmltools::tagList()`, or a character message (#458).
 
 -   We no longer display an invisible exercise result warning automatically. Instead, authors must set the exercise chunk option exercise.warn_invisible = TRUE to display an invisible result warning message (@nischalshrestha #373).
 
