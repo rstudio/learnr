@@ -30,3 +30,4 @@ rsconnect/
 ^reference$
 ^pkgdown$
 ^_dev$
+^src-js$
