@@ -445,9 +445,9 @@ $(document).ready(function () {
       // as the `value`, set `n_clicks` to be the same.
       $(el).data('n_clicks', value)
     },
-    subscribe: function (el, callback) {
+    subscribe: function (el, callBack) {
       $(el).on('click.continueButtonInputBinding', function (event) {
-        callback(false)
+        callBack(false)
       })
     },
     unsubscribe: function (el) {

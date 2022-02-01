@@ -1,296 +1,273 @@
+"use strict";
+
 /* global ace */
+var TutorialDiagnostics = function TutorialDiagnostics(tutorial) {
+  // eslint-disable-line no-unused-vars
+  this.$tutorial = tutorial;
+  var self = this;
 
-const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unused-vars
-  this.$tutorial = tutorial
-  const self = this
-
-  const unmatchedClosingBracket = function (token) {
+  var unmatchedClosingBracket = function unmatchedClosingBracket(token) {
     return {
       row: token.position.row,
       column: token.position.column,
       type: 'error',
       text: "unmatched closing bracket '" + token.value + "'"
-    }
-  }
+    };
+  };
 
-  const unmatchedOpeningBracket = function (token) {
+  var unmatchedOpeningBracket = function unmatchedOpeningBracket(token) {
     return {
       row: token.position.row,
       column: token.position.column,
       type: 'error',
       text: "unmatched opening bracket '" + token.value + "'"
-    }
-  }
+    };
+  };
 
-  const unexpected = function (symbol, token, type) {
+  var unexpected = function unexpected(symbol, token, type) {
     return {
       row: token.position.row,
       column: token.position.column,
       type: type || 'error',
       text: 'unexpected ' + symbol + " '" + token.value + "'"
-    }
-  }
+    };
+  };
 
-  const isSymbol = function (token) {
+  var isSymbol = function isSymbol(token) {
     // this is a kludge so that 'in' is treated as though it were an
     // operator by the diagnostics system
-    const value = token.value || ''
+    var value = token.value || '';
+
     if (value === 'in') {
-      return false
+      return false;
     }
 
-    const type = token.type || ''
-    return (
-      type === 'string' ||
-      type === 'constant.numeric' ||
-      type === 'constant.language.boolean' ||
-      type === 'identifier' ||
-      type === 'keyword' ||
-      type === 'variable.language'
-    )
-  }
+    var type = token.type || '';
+    return type === 'string' || type === 'constant.numeric' || type === 'constant.language.boolean' || type === 'identifier' || type === 'keyword' || type === 'variable.language';
+  };
 
-  const isOperator = function (token) {
-    const type = token.type || ''
-    return type === 'keyword.operator'
-  }
+  var isOperator = function isOperator(token) {
+    var type = token.type || '';
+    return type === 'keyword.operator';
+  };
 
-  const isUnaryOperator = function (token) {
-    const value = token.value || ''
-    return (
-      value === '+' ||
-      value === '-' ||
-      value === '~' ||
-      value === '!' ||
-      value === '?'
-    )
-  }
+  var isUnaryOperator = function isUnaryOperator(token) {
+    var value = token.value || '';
+    return value === '+' || value === '-' || value === '~' || value === '!' || value === '?';
+  };
 
-  const diagnose = function () {
+  var diagnose = function diagnose() {
     // alias editor
-    const editor = this
-
-    // create tokenizer -- we do this manually as we do not
+    var editor = this; // create tokenizer -- we do this manually as we do not
     // want Ace to merge brackets sitting together
-    const Tokenizer = ace.require('ace/tokenizer').Tokenizer
-    const RHighlightRules = ace.require('ace/mode/r_highlight_rules')
-      .RHighlightRules
-    const rules = new RHighlightRules().getRules()
-    for (const key in rules) {
-      const rule = rules[key]
-      for (let i = 0; i < rule.length; i++) {
-        rule[i].merge = false
-      }
-    }
 
-    // fix up rules
+    var Tokenizer = ace.require('ace/tokenizer').Tokenizer;
+
+    var RHighlightRules = ace.require('ace/mode/r_highlight_rules').RHighlightRules;
+
+    var rules = new RHighlightRules().getRules();
+
+    for (var key in rules) {
+      var rule = rules[key];
+
+      for (var i = 0; i < rule.length; i++) {
+        rule[i].merge = false;
+      }
+    } // fix up rules
+
+
     rules.start.unshift({
       token: 'string',
       regex: '"(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
       merge: false,
       next: 'start'
-    })
-
+    });
     rules.start.unshift({
       token: 'string',
       regex: "'(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
       merge: false,
       next: 'start'
-    })
-
+    });
     rules.start.unshift({
       token: 'keyword.operator',
-      regex:
-        ':::|::|:=|%%|>=|<=|==|!=|\\|>|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?',
+      regex: ':::|::|:=|%%|>=|<=|==|!=|\\|>|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?',
       merge: false,
       next: 'start'
-    })
-
+    });
     rules.start.unshift({
       token: 'punctuation',
       regex: '[;,]',
       merge: false,
       next: 'start'
-    })
+    });
+    var tokenizer = new Tokenizer(rules); // clear old diagnostics
 
-    const tokenizer = new Tokenizer(rules)
+    editor.session.clearAnnotations(); // retrieve contents and tokenize
 
-    // clear old diagnostics
-    editor.session.clearAnnotations()
+    var lines = editor.session.doc.$lines;
+    var tokens = [];
+    var state = 'start';
 
-    // retrieve contents and tokenize
-    const lines = editor.session.doc.$lines
-    let tokens = []
-    let state = 'start'
-    for (let i = 0; i < lines.length; i++) {
-      const tokenized = tokenizer.getLineTokens(lines[i], state)
-      for (let j = 0; j < tokenized.tokens.length; j++) {
-        tokens.push(tokenized.tokens[j])
+    for (var _i = 0; _i < lines.length; _i++) {
+      var tokenized = tokenizer.getLineTokens(lines[_i], state);
+
+      for (var j = 0; j < tokenized.tokens.length; j++) {
+        tokens.push(tokenized.tokens[j]);
       }
-      tokens.push({ type: 'text', value: '\n' })
-      state = tokenized.state
-    }
 
-    // add row, column to each token
-    const doc = editor.session.doc
-    let docIndex = 0
-    for (let i = 0; i < tokens.length; i++) {
-      tokens[i].position = doc.indexToPosition(docIndex)
-      docIndex += tokens[i].value.length
-    }
+      tokens.push({
+        type: 'text',
+        value: '\n'
+      });
+      state = tokenized.state;
+    } // add row, column to each token
 
-    // remove whitespace, comments (not relevant for syntax diagnostics)
+
+    var doc = editor.session.doc;
+    var docIndex = 0;
+
+    for (var _i2 = 0; _i2 < tokens.length; _i2++) {
+      tokens[_i2].position = doc.indexToPosition(docIndex);
+      docIndex += tokens[_i2].value.length;
+    } // remove whitespace, comments (not relevant for syntax diagnostics)
+
+
     tokens = tokens.filter(function (token) {
-      return token.type !== 'comment' && !/^\s+$/.test(token.value)
-    })
+      return token.type !== 'comment' && !/^\s+$/.test(token.value);
+    }); // state related to our simple diagnostics engine
 
-    // state related to our simple diagnostics engine
-    const diagnostics = []
-    const bracketStack = []
+    var diagnostics = [];
+    var bracketStack = []; // iterate through tokens and look for invalid sequences
 
-    // iterate through tokens and look for invalid sequences
-    for (let i = 0; i < tokens.length; i++) {
+    for (var _i3 = 0; _i3 < tokens.length; _i3++) {
       // update local state
-      const token = tokens[i]
-      const type = token.type // eslint-disable-line no-unused-vars
-      const value = token.value
+      var token = tokens[_i3];
+      var type = token.type; // eslint-disable-line no-unused-vars
 
-      // handle left brackets
+      var value = token.value; // handle left brackets
+
       if (value === '(' || value === '{' || value === '[') {
-        bracketStack.push(token)
-        continue
-      }
+        bracketStack.push(token);
+        continue;
+      } // handle right brackets
 
-      // handle right brackets
+
       if (value === ')' || value === '}' || value === ']') {
         // empty bracket stack: signal unmatched
         if (bracketStack.length === 0) {
-          diagnostics.push(unmatchedClosingBracket(token))
-          continue
-        }
+          diagnostics.push(unmatchedClosingBracket(token));
+          continue;
+        } // pop off from bracket stack and verify
 
-        // pop off from bracket stack and verify
-        const openBracket = bracketStack.pop()
 
-        const ok =
-          (value === ')' && openBracket.value === '(') ||
-          (value === ']' && openBracket.value === '[') ||
-          (value === '}' && openBracket.value === '{')
+        var openBracket = bracketStack.pop();
+        var ok = value === ')' && openBracket.value === '(' || value === ']' && openBracket.value === '[' || value === '}' && openBracket.value === '{';
 
         if (!ok) {
-          diagnostics.push(unmatchedClosingBracket(token))
-          diagnostics.push(unmatchedOpeningBracket(openBracket))
-          continue
+          diagnostics.push(unmatchedClosingBracket(token));
+          diagnostics.push(unmatchedOpeningBracket(openBracket));
+          continue;
         }
       }
 
-      if (i > 0) {
-        const lhs = tokens[i - 1]
-        const rhs = tokens[i]
-        const bracket = bracketStack[bracketStack.length - 1] || {}
+      if (_i3 > 0) {
+        var lhs = tokens[_i3 - 1];
+        var rhs = tokens[_i3];
+        var bracket = bracketStack[bracketStack.length - 1] || {}; // if we have two symbols in a row with no binary operator in between, syntax error
 
-        // if we have two symbols in a row with no binary operator in between, syntax error
-        if (
-          lhs.position.row === rhs.position.row &&
-          isSymbol(lhs) &&
-          isSymbol(rhs)
-        ) {
-          diagnostics.push(unexpected('symbol', rhs))
-          continue
-        }
+        if (lhs.position.row === rhs.position.row && isSymbol(lhs) && isSymbol(rhs)) {
+          diagnostics.push(unexpected('symbol', rhs));
+          continue;
+        } // if we have an operator followed by a binary-only operator, syntax error
 
-        // if we have an operator followed by a binary-only operator, syntax error
-        if (
-          lhs.position.row === rhs.position.row &&
-          isOperator(lhs) &&
-          isOperator(rhs) &&
-          !isUnaryOperator(rhs)
-        ) {
-          diagnostics.push(unexpected('operator', rhs))
-          continue
-        }
 
-        // if we have multiple commas in a row within a parenthetical context, warn
+        if (lhs.position.row === rhs.position.row && isOperator(lhs) && isOperator(rhs) && !isUnaryOperator(rhs)) {
+          diagnostics.push(unexpected('operator', rhs));
+          continue;
+        } // if we have multiple commas in a row within a parenthetical context, warn
+
+
         if (lhs.value === ',' && rhs.value === ',' && bracket.value === '(') {
-          diagnostics.push(unexpected('comma', rhs, 'warning'))
-          continue
-        }
+          diagnostics.push(unexpected('comma', rhs, 'warning'));
+          continue;
+        } // if we have a comma preceding a closing bracket, warn
 
-        // if we have a comma preceding a closing bracket, warn
-        if (
-          lhs.value === ',' &&
-          (rhs.value === '}' || rhs.value === ')' || rhs.value === ']')
-        ) {
-          diagnostics.push(unexpected('comma', lhs, 'warning'))
-          continue
+
+        if (lhs.value === ',' && (rhs.value === '}' || rhs.value === ')' || rhs.value === ']')) {
+          diagnostics.push(unexpected('comma', lhs, 'warning'));
+          continue;
         }
       }
-    }
+    } // if we still have things on the bracket stack, they're unmatched
 
-    // if we still have things on the bracket stack, they're unmatched
-    for (let i = 0; i < bracketStack.length; i++) {
-      diagnostics.push(unmatchedOpeningBracket(bracketStack[i]))
-    }
 
-    // signal diagnostics to Ace
-    editor.session.setAnnotations(diagnostics)
-  }
+    for (var _i4 = 0; _i4 < bracketStack.length; _i4++) {
+      diagnostics.push(unmatchedOpeningBracket(bracketStack[_i4]));
+    } // signal diagnostics to Ace
 
-  const findActiveAceInstance = function () {
-    let el = document.activeElement
+
+    editor.session.setAnnotations(diagnostics);
+  };
+
+  var findActiveAceInstance = function findActiveAceInstance() {
+    var el = document.activeElement;
+
     while (el != null) {
       if (el.env && el.env.editor) {
-        return el.env.editor
+        return el.env.editor;
       }
-      el = el.parentElement
-    }
-    return null
-  }
 
-  const ensureInitialized = function (editor) {
+      el = el.parentElement;
+    }
+
+    return null;
+  };
+
+  var ensureInitialized = function ensureInitialized(editor) {
     if (editor.$diagnosticsInitialized) {
-      return
+      return;
     }
 
     if (!editor.tutorial.diagnostics) {
-      return
-    }
+      return;
+    } // register handlers
 
-    // register handlers
-    const handlers = {}
-    handlers.change = self.$onChange.bind(editor)
+
+    var handlers = {};
+    handlers.change = self.$onChange.bind(editor);
+
     handlers.destroy = function (event) {
-      for (const key in handlers) {
-        this.off(key, handlers[key])
+      for (var key in handlers) {
+        this.off(key, handlers[key]);
       }
-    }.bind(editor)
+    }.bind(editor);
 
-    for (const key in handlers) {
-      editor.on(key, handlers[key])
+    for (var key in handlers) {
+      editor.on(key, handlers[key]);
     }
 
-    editor.$liveDiagnostics = diagnose.bind(editor)
-
-    editor.$diagnosticsInitialized = 1
-  }
+    editor.$liveDiagnostics = diagnose.bind(editor);
+    editor.$diagnosticsInitialized = 1;
+  };
 
   this.$onChange = function (data) {
     if (!this.tutorial.diagnostics) {
-      return
+      return;
     }
 
-    clearTimeout(this.$diagnosticsTimerId)
-    this.session.clearAnnotations()
-    this.$diagnosticsTimerId = setTimeout(this.$liveDiagnostics, 1000)
-  }
+    clearTimeout(this.$diagnosticsTimerId);
+    this.session.clearAnnotations();
+    this.$diagnosticsTimerId = setTimeout(this.$liveDiagnostics, 1000);
+  };
 
   this.$onKeyDown = function (event) {
-    const editor = findActiveAceInstance()
-    if (editor != null) {
-      ensureInitialized(editor)
-      document.removeEventListener('keydown', this.$onKeyDown)
-    }
-  }
+    var editor = findActiveAceInstance();
 
-  document.addEventListener('keydown', this.$onKeyDown)
-}
+    if (editor != null) {
+      ensureInitialized(editor);
+      document.removeEventListener('keydown', this.$onKeyDown);
+    }
+  };
+
+  document.addEventListener('keydown', this.$onKeyDown);
+};

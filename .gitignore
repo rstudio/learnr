@@ -6,6 +6,7 @@
 .vscode
 Untitled
 issues
+node_modules
 
 # atom config folder
 .atom/

@@ -1,0 +1,31 @@
+{
+  "name": "learnr",
+  "version": "0.10.0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rstudio/learnr/issues"
+  },
+  "homepage": "https://pkgs.rstudio.com/learnr",
+  "main": "",
+  "engines": {
+    "node": ">= 14"
+  },
+  "scripts": {
+    "build": "npm run build:tutorial-js && npm run build:tutorial-i18n && npm run build:tutorial-format",
+    "build:tutorial-js": "babel src-js/tutorial -d inst/lib/tutorial",
+    "build:tutorial-i18n": "babel src-js/i18n -d inst/lib/i18n",
+    "build:tutorial-format": "babel src-js/format -d inst/rmarkdown/templates/tutorial/resources",
+    "lint": "standard --fix src-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rstudio/learnr.git"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "browserslist": "^4.19.1",
+    "standard": "^16.0.4"
+  }
+}
