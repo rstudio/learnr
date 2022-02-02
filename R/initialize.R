@@ -20,9 +20,7 @@ initialize_tutorial <- function() {
       rmarkdown::html_dependency_font_awesome(),
       bootbox_html_dependency(),
       idb_html_dependency(),
-      tutorial_html_dependency(),
-      tutorial_autocompletion_html_dependency(),
-      tutorial_diagnostics_html_dependency()
+      tutorial_html_dependency()
     ))
 
     # session initialization (forward tutorial metadata)

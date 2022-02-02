@@ -3,7 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "modules": false,
+        "modules": "auto",
         "spec": true,
         "useBuiltIns": "usage",
         "forceAllTransforms": true,

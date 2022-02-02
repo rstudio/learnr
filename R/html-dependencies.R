@@ -12,28 +12,10 @@ tutorial_html_dependency <- function() {
     version = utils::packageVersion("learnr"),
     src = html_dependency_src("lib", "tutorial"),
     script = "tutorial.js",
-    stylesheet = "tutorial.css"
+    stylesheet = "tutorial.css",
+    all_files = TRUE
   )
 }
-
-tutorial_autocompletion_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "tutorial-autocompletion",
-    version = utils::packageVersion("learnr"),
-    src = html_dependency_src("lib", "tutorial"),
-    script = "tutorial-autocompletion.js"
-  )
-}
-
-tutorial_diagnostics_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "tutorial-diagnostics",
-    version = utils::packageVersion("learnr"),
-    src = html_dependency_src("lib", "tutorial"),
-    script = "tutorial-diagnostics.js"
-  )
-}
-
 
 html_dependency_src <- function(...) {
   if (nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {

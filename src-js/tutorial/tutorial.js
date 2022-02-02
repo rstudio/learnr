@@ -1,6 +1,8 @@
 /* global $,Shiny,TutorialCompleter,TutorialDiagnostics,ace,MathJax,Clipboard,YT,Vimeo,performance */
 
 /* Tutorial construction and initialization */
+import { TutorialDiagnostics } from './tutorial-diagnostics.mjs'
+import { TutorialCompleter } from './tutorial-autocompletion.mjs'
 
 $(document).ready(function () {
   const tutorial = new Tutorial()

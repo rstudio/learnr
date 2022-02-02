@@ -1,4 +1,4 @@
-function TutorialCompleter (tutorial) { // eslint-disable-line no-unused-vars
+export function TutorialCompleter (tutorial) { // eslint-disable-line no-unused-vars
   this.$tutorial = tutorial
   const self = this
 

@@ -1,6 +1,7 @@
 /* global ace */
 
-const TutorialDiagnostics = function (tutorial) { // eslint-disable-line no-unused-vars
+export function TutorialDiagnostics (tutorial) {
+  // eslint-disable-line no-unused-vars
   this.$tutorial = tutorial
   const self = this
 
