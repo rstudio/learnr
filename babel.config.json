@@ -3,13 +3,17 @@
     [
       "@babel/preset-env",
       {
+        "modules": false,
+        "spec": true,
         "useBuiltIns": "usage",
-        "corejs": "3.21"
+        "forceAllTransforms": true,
+        "corejs": {
+          "version": "3.21",
+          "proposals": false
+        }
       }
     ]
   ],
-  "sourceMaps": "inline",
-  "minified": true,
   "comments": false
 }
 
