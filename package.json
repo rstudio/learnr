@@ -16,7 +16,7 @@
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
     "browserslist": "^4.19.1",
-    "corejs": "3.21.0",
+    "core-js": "^3.21.0",
     "standard": "^16.0.4"
   }
 }
