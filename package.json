@@ -5,10 +5,7 @@
     "node": ">= 14"
   },
   "scripts": {
-    "build": "npm run build:tutorial-js && npm run build:tutorial-i18n && npm run build:tutorial-format && npm run build:esbuild",
-    "build:tutorial-js": "babel learnr-js/tutorial -d inst/lib/tutorial",
-    "build:tutorial-i18n": "babel learnr-js/i18n -d inst/lib/i18n",
-    "build:tutorial-format": "babel learnr-js/format -d inst/rmarkdown/templates/tutorial/resources",
+    "build": "npm run lint && npm run build:esbuild",
     "build:esbuild": "node learnr-js/build.js",
     "lint": "standard --fix learnr-js"
   },

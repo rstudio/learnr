@@ -1,4 +1,4 @@
-/* global $,Shiny,TutorialCompleter,TutorialDiagnostics,ace,MathJax,Clipboard,YT,Vimeo,performance */
+/* global $,Shiny,ace,MathJax,Clipboard,YT,Vimeo,performance */
 
 /* Tutorial construction and initialization */
 import { TutorialDiagnostics } from './tutorial-diagnostics.mjs'
@@ -1903,3 +1903,5 @@ Tutorial.prototype.$initializeServer = function () {
   // call initialize function
   initializeServer()
 }
+
+window.Tutorial = Tutorial

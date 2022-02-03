@@ -28,6 +28,7 @@ const buildConfig = {
   minify: true,
   allowOverwrite: true,
   logLevel: 'info',
+  target: ['es5'],
   plugins: [excludeNodeModules, babelPlugin()]
 }
 
