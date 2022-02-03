@@ -30,3 +30,12 @@ rsconnect/
 ^reference$
 ^pkgdown$
 ^_dev$
+^learnr-js$
+^node_modules$
+^package\.json$
+^package-lock\.json$
+^\.browserslistrc$
+^babel\.config\.json$
+^\.eslintignore$
+^\.vscode$
+^inst/tutorials/*/*_files$
