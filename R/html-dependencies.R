@@ -69,7 +69,7 @@ ace_html_dependency <- function() {
 tutorial_i18n_html_dependency <- function(language = NULL) {
   htmltools::htmlDependency(
     name = "i18n",
-    version = "1.2.0",
+    version = "21.6.10",
     src = system.file("lib/i18n", package = "learnr"),
     script = c("i18next.min.js", "tutorial-i18n-init.js"),
     head = format(htmltools::tags$script(
