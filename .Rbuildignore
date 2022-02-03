@@ -30,7 +30,7 @@ rsconnect/
 ^reference$
 ^pkgdown$
 ^_dev$
-^src-js$
+^learnr-js$
 ^node_modules$
 ^package\.json$
 ^package-lock\.json$

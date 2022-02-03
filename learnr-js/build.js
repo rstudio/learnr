@@ -32,19 +32,19 @@ const buildConfig = {
 }
 
 const buildTutorial = {
-  entryPoints: ['src-js/tutorial/tutorial.js'],
+  entryPoints: ['learnr-js/tutorial/tutorial.js'],
   outfile: 'inst/lib/tutorial/tutorial.js',
   ...buildConfig
 }
 
 const buildTutorialFormat = {
-  entryPoints: ['src-js/format/tutorial-format.js'],
+  entryPoints: ['learnr-js/format/tutorial-format.js'],
   outfile: 'inst/rmarkdown/templates/tutorial/resources/tutorial-format.js',
   ...buildConfig
 }
 
 const buildI18N = {
-  entryPoints: ['src-js/i18n/tutorial-i18n-init.js'],
+  entryPoints: ['learnr-js/i18n/tutorial-i18n-init.js'],
   outfile: 'inst/lib/i18n/tutorial-i18n-init.js',
   ...buildConfig
 }
