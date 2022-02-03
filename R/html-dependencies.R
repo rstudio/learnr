@@ -50,7 +50,7 @@ bootbox_html_dependency <- function() {
 clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
-    version = "1.5.15",
+    version = "2.0.10",
     src = system.file("lib/clipboardjs", package = "learnr"),
     script = "clipboard.min.js"
   )
