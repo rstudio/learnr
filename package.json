@@ -8,13 +8,15 @@
     "build": "npm run lint && npm run build:esbuild",
     "build:esbuild": "node learnr-js/build.js",
     "lint": "standard --fix learnr-js",
-    "copy": "npm run copy:clipboard",
-    "copy:clipboard": "cpy 'node_modules/clipboard/dist/clipboard.min.js' inst/lib/clipboardjs"
+    "copy": "npm run copy:clipboard && npm run copy:bootbox",
+    "copy:clipboard": "cpy 'node_modules/clipboard/dist/clipboard.min.js' inst/lib/clipboardjs",
+    "copy:bootbox": "cpy 'node_modules/bootbox/dist/bootbox.min.js' inst/lib/bootbox"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.12",
     "@babel/preset-env": "^7.16.11",
+    "bootbox": "^5.5.2",
     "browserslist": "^4.19.1",
     "clipboard": "^2.0.10",
     "core-js": "^3.21.0",

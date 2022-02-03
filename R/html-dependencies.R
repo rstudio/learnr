@@ -41,7 +41,7 @@ idb_html_dependency <- function() {
 bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
-    version = "4.4.0",
+    version = "5.5.2",
     src = system.file("lib/bootbox", package = "learnr"),
     script = "bootbox.min.js"
   )
