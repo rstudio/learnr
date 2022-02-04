@@ -138,10 +138,11 @@ question <- function(
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  # total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
-  # if (total_correct == 0) {
-  #   stop("At least one correct answer must be supplied")
-  # }
+  answers_split <- answers_split_type(answers)
+  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
+  if (is.null(answers_split[["function"]]) && total_correct == 0) {
+    stop("At least one correct answer must be supplied")
+  }
 
   ## no partial matching for s3 methods
   if (missing(type)) { # can not use match.arg(type) because of comment above

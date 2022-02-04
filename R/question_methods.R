@@ -146,6 +146,10 @@ answer_type_is_function <- function(answers) {
   vapply(answers, is_fn_answer, logical(1))
 }
 
+answers_split_type <- function(answers) {
+  split(answers, vapply(answers, `[[`, character(1), "type"))
+}
+
 answer_labels <- function(question, exclude_answer_fn = FALSE) {
   answers <- question$answers
   if (isTRUE(exclude_answer_fn)) {

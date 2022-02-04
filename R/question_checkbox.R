@@ -78,11 +78,10 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
     }
   }
 
-  q_answers_fn <- question$answers[answer_type_is_function(question$answers)]
-  q_answers_literal <- question$answers[!answer_type_is_function(question$answers)]
+  q_answers <- answers_split_type(question$answers)
 
   # Check function answers first
-  for (q_answer in q_answers_fn) {
+  for (q_answer in q_answers[["function"]]) {
     answer_checker <- eval(parse(text = q_answer$value), envir = rlang::caller_env())
     ret <- answer_checker(value)
     if (inherits(ret, "learnr_mark_as")) {
@@ -92,7 +91,7 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   # Follow up with literal answers
   value_is_correct <- TRUE
-  for (q_answer in q_answers_literal) {
+  for (q_answer in q_answers[["literal"]]) {
     ans_is_checked <- q_answer$option %in% value
     if (ans_is_checked && q_answer$correct) {
       # answer is checked and is correct
@@ -111,14 +110,14 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   if (value_is_correct) {
     # selected all correct answers. get all good messages as all correct answers were selected
-    for (q_answer in q_answers_literal) {
+    for (q_answer in q_answers[["literal"]]) {
       if (q_answer$correct) {
         ret_messages <- append_message(ret_messages, q_answer)
       }
     }
   } else {
     # not all correct answers selected. get all selected "wrong" messages
-    for (q_answer in q_answers_literal) {
+    for (q_answer in q_answers[["literal"]]) {
       # get "wrong" answers
       if (!q_answer$correct) {
         # get selected answer
@@ -138,7 +137,7 @@ question_ui_completed.learnr_checkbox <- function(question, value, ...) {
 
   choice_values <- answer_values(question, exclude_answer_fn = TRUE)
 
-  answers <- question$answers[!answer_type_is_function(question$answers)]
+  answers <- answers_split_type(question$answers)[["literal"]]
 
   correct_answers <- Reduce(answers, init = c(), f = function(acc, answer) {
     if (!isTRUE(answer$correct)) return(acc)
