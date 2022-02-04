@@ -71,10 +71,12 @@
 #'   )
 #' )
 #'
+#' @seealso [random_praise()], [random_encouragement()]
+#'
+#' @family Interactive Questions
 #' @name quiz
-#' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
-#' @export
 #' @rdname quiz
+#' @export
 quiz <- function(..., caption = rlang::missing_arg()) {
 
   # create table rows from questions
@@ -106,22 +108,22 @@ quiz <- function(..., caption = rlang::missing_arg()) {
 #' @rdname quiz
 #' @import shiny
 #' @export
-question <- function(text,
-                     ...,
-                     type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
-                     correct = "Correct!",
-                     incorrect = "Incorrect",
-                     try_again = incorrect,
-                     message = NULL,
-                     post_message = NULL,
-                     loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
-                     submit_button = rlang::missing_arg(),
-                     try_again_button = rlang::missing_arg(),
-                     allow_retry = FALSE,
-                     random_answer_order = FALSE,
-                     options = list()
-                   ) {
-
+question <- function(
+    text,
+    ...,
+    type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
+    correct = "Correct!",
+    incorrect = "Incorrect",
+    try_again = incorrect,
+    message = NULL,
+    post_message = NULL,
+    loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
+    submit_button = rlang::missing_arg(),
+    try_again_button = rlang::missing_arg(),
+    allow_retry = FALSE,
+    random_answer_order = FALSE,
+    options = list()
+) {
 
   # one time tutor initialization
   initialize_tutorial()
@@ -136,10 +138,10 @@ question <- function(text,
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
-  if (total_correct == 0) {
-    stop("At least one correct answer must be supplied")
-  }
+  # total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
+  # if (total_correct == 0) {
+  #   stop("At least one correct answer must be supplied")
+  # }
 
   ## no partial matching for s3 methods
   if (missing(type)) { # can not use match.arg(type) because of comment above
@@ -220,16 +222,66 @@ answer <- function(text, correct = FALSE, message = NULL) {
     checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
   }
 
+  answer_new(
+    value = text,
+    correct = isTRUE(correct),
+    message = message,
+    type = "literal"
+  )
+}
+
+
+
+#' @rdname quiz
+#' @export
+answer_fn <- function(fn, label = NULL) {
+  checkmate::assert_function(fn, nargs = 1)
+  fn_text <- rlang::expr_text(fn)
+
+  # `correct` and `message` will be provided by the function
+  answer_new(
+    value = fn_text,
+    label = label,
+    type = "function"
+  )
+}
+
+#' @noRd
+#' @param value The literal value to be directly compared with the user's
+#'   submission, if a literal comparison is required.
+#' @param label The text shown to the user for this answer in the UI
+#' @param option A character value of the answer, paired with the label in the
+#'   UI. When used (checkbox/radio), this is the value that comes back to the
+#'   Shiny app as the user's submission.
+#' @param correct This answer is correct, or not. Can only be `NULL` when
+#'   `type = "function"`.
+#' @param message A message to be presented to the user when they select this
+#'   answer, if their entire submission state matches the answer correctness.
+#' @param type Is this a literal answer (directly compare with `option` or `value`)
+#'   or is this a function to evaluate the submission.
+answer_new <- function(
+  value,
+  label = value,
+  option = as.character(value),
+  correct = NULL,
+  message = NULL,
+  type = "literal"
+) {
+  if (!is.character(option)) {
+    option <- as.character(option)
+  }
+
   ret <- list(
     id = random_answer_id(),
-    option = as.character(text), # character representation
-    value = text, # actual value
-    label = quiz_text(text), # md presentation
-    correct = isTRUE(correct),
-    message = quiz_text(message)
+    option = option,
+    value = value,
+    label = quiz_text(label), # md -> html
+    correct = correct,
+    message = quiz_text(message),
+    type = type
   )
   class(ret) <- c(
-    "tutorial_question_answer", # new an improved name
+    "tutorial_question_answer", # new and improved name
     "tutorial_quiz_answer" # legacy. Want to remove
   )
   ret

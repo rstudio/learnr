@@ -68,6 +68,7 @@ Imports:
     markdown,
     parallel,
     promises,
+    lifecycle,
     rappdirs,
     renv (>= 0.8.0),
     rlang,

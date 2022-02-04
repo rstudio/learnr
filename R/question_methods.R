@@ -141,15 +141,27 @@ mark_as <- function(correct, messages = NULL) {
   ret
 }
 
-
-
-answer_labels <- function(question) {
-  lapply(question$answers, `[[`, "label")
+answer_type_is_function <- function(answers) {
+  is_fn_answer <- function(x) identical(x$type, "function")
+  vapply(answers, is_fn_answer, logical(1))
 }
-answer_values <- function(question) {
+
+answer_labels <- function(question, exclude_answer_fn = FALSE) {
+  answers <- question$answers
+  if (isTRUE(exclude_answer_fn)) {
+    answers <- answers[!answer_type_is_function(answers)]
+  }
+  lapply(answers, `[[`, "label")
+}
+
+answer_values <- function(question, exclude_answer_fn = FALSE) {
+  answers <- question$answers
+  if (isTRUE(exclude_answer_fn)) {
+    answers <- answers[!answer_type_is_function(answers)]
+  }
   ret <- lapply(
     # return the character string input.  This _should_ be unique
-    lapply(question$answers, `[[`, "option"),
+    lapply(answers, `[[`, "option"),
     as.character
   )
   if (length(unlist(unique(ret))) != length(ret)) {

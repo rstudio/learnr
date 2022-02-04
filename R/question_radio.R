@@ -5,11 +5,6 @@
 #'
 #' Note: Multiple correct answers are allowed.
 #'
-#'
-#' @inheritParams question
-#' @param ... answers and extra parameters passed onto \code{\link{question}}.
-#' @seealso \code{\link{question_checkbox}}, \code{\link{question_text}}, \code{\link{question_numeric}}
-#' @export
 #' @examples
 #' question_radio(
 #'   "Pick the letter B",
@@ -20,34 +15,49 @@
 #'   allow_retry = TRUE,
 #'   random_answer_order = TRUE
 #' )
+#'
+#' @inheritParams question
+#' @param ... Answers created with [answer()] or extra
+#'   parameters passed onto [question()]. Function answers are not allowed for
+#'   radio questions because the user is required to select a single answer.
+#'
+#' @family Interactive Questions
+#' @export
 question_radio <- function(
-  text,
-  ...,
-  correct = "Correct!",
-  incorrect = "Incorrect",
-  try_again = incorrect,
-  allow_retry = FALSE,
-  random_answer_order = FALSE
-) {
-  learnr::question(
-    text = text,
+    text,
     ...,
-    type = "learnr_radio",
-    correct = correct,
-    incorrect = incorrect,
-    allow_retry = allow_retry,
-    random_answer_order = random_answer_order
-  )
+    correct = "Correct!",
+    incorrect = "Incorrect",
+    try_again = incorrect,
+    allow_retry = FALSE,
+    random_answer_order = FALSE
+) {
+  question <-
+    learnr::question(
+      text = text,
+      ...,
+      type = "learnr_radio",
+      correct = correct,
+      incorrect = incorrect,
+      allow_retry = allow_retry,
+      random_answer_order = random_answer_order
+    )
+
+  if (any(answer_type_is_function(question$answer))) {
+    rlang::abort(paste(
+      "`question_radio()` does not support `answer_fn()` type answers",
+      "because the user may only select a single answer."
+    ))
+  }
+
+  question
 }
-
-
-
-
 
 #' @export
 question_ui_initialize.learnr_radio <- function(question, value, ...) {
-  choice_names <- answer_labels(question)
-  choice_values <- answer_values(question)
+
+  choice_names <- answer_labels(question, exclude_answer_fn = TRUE)
+  choice_values <- answer_values(question, exclude_answer_fn = TRUE)
 
   radioButtons(
     question$ids$answer,
@@ -57,10 +67,6 @@ question_ui_initialize.learnr_radio <- function(question, value, ...) {
     selected = value %||% character(0) # avoid selecting the first item when value is NULL
   )
 }
-
-
-# question_is_valid.radio <- question_is_valid.default
-
 
 #' @export
 question_is_correct.learnr_radio <- function(question, value, ...) {

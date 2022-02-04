@@ -4,6 +4,7 @@
 \alias{quiz}
 \alias{question}
 \alias{answer}
+\alias{answer_fn}
 \title{Tutorial quiz questions}
 \usage{
 quiz(..., caption = rlang::missing_arg())
@@ -27,6 +28,8 @@ question(
 )
 
 answer(text, correct = FALSE, message = NULL)
+
+answer_fn(fn, label = NULL)
 }
 \arguments{
 \item{...}{One or more questions or answers}
@@ -110,5 +113,12 @@ quiz(
 \seealso{
 For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
 
-\code{\link{random_praise}}, \code{\link{random_encouragement}}
+\code{\link[=random_praise]{random_praise()}}, \code{\link[=random_encouragement]{random_encouragement()}}
+
+Other Interactive Questions: 
+\code{\link{question_checkbox}()},
+\code{\link{question_numeric}()},
+\code{\link{question_radio}()},
+\code{\link{question_text}()}
 }
+\concept{Interactive Questions}

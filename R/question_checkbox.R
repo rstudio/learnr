@@ -1,13 +1,8 @@
 #' Checkbox question
 #'
-#' Creates a checkbox group tutorial quiz question.  The student may select one or more
-#' checkboxes before submitting their answer.
+#' Creates a checkbox group tutorial quiz question.  The student may select one
+#' or more checkboxes before submitting their answer.
 #'
-#'
-#' @inheritParams question
-#' @param ... answers and extra parameters passed onto \code{\link{question}}.
-#' @seealso \code{\link{question_radio}}, \code{\link{question_text}}, \code{\link{question_numeric}}
-#' @export
 #' @examples
 #' question_checkbox(
 #'   "Select all the toppings that belong on a Margherita Pizza:",
@@ -23,6 +18,14 @@
 #'   allow_retry = TRUE,
 #'   try_again = "Be sure to select all four toppings!"
 #' )
+#'
+#' @inheritParams question
+#' @param ... Answers created with [answer()] or [answer_fn()], or extra
+#'   parameters passed onto [question()]. Function answers do not
+#'   appear in the checklist, but are checked first.
+#'
+#' @family Interactive Questions
+#' @export
 question_checkbox <- function(
   text,
   ...,
@@ -45,8 +48,8 @@ question_checkbox <- function(
 
 #' @export
 question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
-  choice_names <- answer_labels(question)
-  choice_values <- answer_values(question)
+  choice_names <- answer_labels(question, exclude_answer_fn = TRUE)
+  choice_values <- answer_values(question, exclude_answer_fn = TRUE)
 
   checkboxGroupInput(
     question$ids$answer,
@@ -75,13 +78,26 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
     }
   }
 
+  q_answers_fn <- question$answers[answer_type_is_function(question$answers)]
+  q_answers_literal <- question$answers[!answer_type_is_function(question$answers)]
+
+  # Check function answers first
+  for (q_answer in q_answers_fn) {
+    answer_checker <- eval(parse(text = q_answer$value), envir = rlang::caller_env())
+    ret <- answer_checker(value)
+    if (inherits(ret, "learnr_mark_as")) {
+      return(ret)
+    }
+  }
+
+  # Follow up with literal answers
   value_is_correct <- TRUE
-  for (ans in question$answers) {
-    ans_is_checked <- ans$option %in% value
-    if (ans_is_checked && ans$correct) {
+  for (q_answer in q_answers_literal) {
+    ans_is_checked <- q_answer$option %in% value
+    if (ans_is_checked && q_answer$correct) {
       # answer is checked and is correct
       # do nothing
-    } else if ((!ans_is_checked) && (!ans$correct)) {
+    } else if ((!ans_is_checked) && (!q_answer$correct)) {
       # (answer is not checked) and (answer is not correct)
       # do nothing
     } else {
@@ -95,45 +111,58 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   if (value_is_correct) {
     # selected all correct answers. get all good messages as all correct answers were selected
-    for (ans in question$answers) {
-      if (ans$correct) {
-        ret_messages <- append_message(ret_messages, ans)
+    for (q_answer in q_answers_literal) {
+      if (q_answer$correct) {
+        ret_messages <- append_message(ret_messages, q_answer)
       }
     }
-
   } else {
     # not all correct answers selected. get all selected "wrong" messages
-    for (ans in question$answers) {
+    for (q_answer in q_answers_literal) {
       # get "wrong" answers
-      if (!ans$correct) {
+      if (!q_answer$correct) {
         # get selected answer
-        ans_is_checked <- ans$option %in% value
+        ans_is_checked <- q_answer$option %in% value
         if (ans_is_checked) {
-          ret_messages <- append_message(ret_messages, ans)
+          ret_messages <- append_message(ret_messages, q_answer)
         }
       }
     }
   }
 
-  return(mark_as(
-    value_is_correct,
-    ret_messages
-  ))
+  mark_as(value_is_correct, ret_messages)
 }
 
 #' @export
 question_ui_completed.learnr_checkbox <- function(question, value, ...) {
 
-  choice_values <- answer_values(question)
+  choice_values <- answer_values(question, exclude_answer_fn = TRUE)
+
+  answers <- question$answers[!answer_type_is_function(question$answers)]
+
+  correct_answers <- Reduce(answers, init = c(), f = function(acc, answer) {
+    if (!isTRUE(answer$correct)) return(acc)
+    c(acc, answer$option)
+  })
+
+  is_value_all_correct <- identical(sort(correct_answers), sort(value))
 
   # update select answers to have X or √
-  choice_names_final <- lapply(question$answers, function(ans) {
-    if (ans$correct) {
-      tagClass <- "correct"
-    } else {
-      tagClass <- "incorrect"
-    }
-    tags$span(ans$label, class = tagClass)
+  choice_names_final <- lapply(answers, function(q_answer) {
+    is_q_answer_correct <- isTRUE(q_answer$correct)
+    is_answer_picked <- q_answer$option %in% value
+
+    tagClass <-
+      if (is_q_answer_correct) {
+        if (is_answer_picked) {
+          "correct"
+        }
+      } else if (is_value_all_correct || is_answer_picked) {
+        # only reveal complete solution when all right answers were picked
+        "incorrect"
+      }
+
+    tags$span(q_answer$label, class = tagClass)
   })
 
   finalize_question(

@@ -23,9 +23,10 @@
 #' )
 #' cat(format(ex_question), "\n")
 format.tutorial_question_answer <- function(x, ..., spacing = "") {
+  correct_label <- if (is.null(x$correct)) "?" else ifelse(x$correct, "\u2714", "X")
   paste0(
     spacing,
-    ifelse(x$correct, "\u2714", "X"),
+    correct_label,
     ": ",
     "\"", x$label, "\"",
     if (!is.null(x$message)) paste0("; \"", x$message, "\"")

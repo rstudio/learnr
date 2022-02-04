@@ -17,7 +17,9 @@ question_radio(
 \arguments{
 \item{text}{Question or option text}
 
-\item{...}{answers and extra parameters passed onto \code{\link{question}}.}
+\item{...}{Answers created with \code{\link[=answer]{answer()}} or extra
+parameters passed onto \code{\link[=question]{question()}}. Function answers are not allowed for
+radio questions because the user is required to select a single answer.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
@@ -50,7 +52,13 @@ question_radio(
   allow_retry = TRUE,
   random_answer_order = TRUE
 )
+
 }
 \seealso{
-\code{\link{question_checkbox}}, \code{\link{question_text}}, \code{\link{question_numeric}}
+Other Interactive Questions: 
+\code{\link{question_checkbox}()},
+\code{\link{question_numeric}()},
+\code{\link{question_text}()},
+\code{\link{quiz}()}
 }
+\concept{Interactive Questions}

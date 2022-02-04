@@ -17,7 +17,9 @@ question_checkbox(
 \arguments{
 \item{text}{Question or option text}
 
-\item{...}{answers and extra parameters passed onto \code{\link{question}}.}
+\item{...}{Answers created with \code{\link[=answer]{answer()}} or \code{\link[=answer_fn]{answer_fn()}}, or extra
+parameters passed onto \code{\link[=question]{question()}}. Function answers do not
+appear in the checklist, but are checked first.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
@@ -34,8 +36,8 @@ when \code{allow_retry} is \code{TRUE}.}
 \item{random_answer_order}{Display answers in a random order.}
 }
 \description{
-Creates a checkbox group tutorial quiz question.  The student may select one or more
-checkboxes before submitting their answer.
+Creates a checkbox group tutorial quiz question.  The student may select one
+or more checkboxes before submitting their answer.
 }
 \examples{
 question_checkbox(
@@ -52,7 +54,13 @@ question_checkbox(
   allow_retry = TRUE,
   try_again = "Be sure to select all four toppings!"
 )
+
 }
 \seealso{
-\code{\link{question_radio}}, \code{\link{question_text}}, \code{\link{question_numeric}}
+Other Interactive Questions: 
+\code{\link{question_numeric}()},
+\code{\link{question_radio}()},
+\code{\link{question_text}()},
+\code{\link{quiz}()}
 }
+\concept{Interactive Questions}
