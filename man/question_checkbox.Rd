@@ -35,6 +35,9 @@ when \code{allow_retry} is \code{TRUE}.}
 
 \item{random_answer_order}{Display answers in a random order.}
 }
+\value{
+Returns a learnr question of type \code{"learnr_checkbox"}.
+}
 \description{
 Creates a checkbox group tutorial quiz question.  The student may select one
 or more checkboxes before submitting their answer.
@@ -58,9 +61,9 @@ question_checkbox(
 }
 \seealso{
 Other Interactive Questions: 
+\code{\link{answer_fn}()},
 \code{\link{question_numeric}()},
 \code{\link{question_radio}()},
-\code{\link{question_text}()},
-\code{\link{quiz}()}
+\code{\link{question_text}()}
 }
 \concept{Interactive Questions}

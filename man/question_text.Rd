@@ -57,13 +57,16 @@ for the text input, otherwise the default input element is a single-line
 
 \item{options}{Extra options to be stored in the question object.}
 }
+\value{
+Returns a learnr question of type \code{"learnr_text"}.
+}
 \description{
 Creates a tutorial question asking the student to enter text. The default
 text input is appropriate for short or single-line text entry. For longer
 text input, set the \code{rows} and/or \code{cols} argument to create a larger text
 area.
 
-When used with \code{\link[=answer]{answer()}}, the studen't submission must match the answer
+When used with \code{\link[=answer]{answer()}}, the student's submission must match the answer
 exactly, minus whitespace trimming if enabled with \code{trim = TRUE}. For more
 complicated submission evaluation, use \code{\link[=answer_fn]{answer_fn()}} to provide a function
 that checks the student's submission. For example, you could provide a
@@ -85,9 +88,9 @@ question_text(
 }
 \seealso{
 Other Interactive Questions: 
+\code{\link{answer_fn}()},
 \code{\link{question_checkbox}()},
 \code{\link{question_numeric}()},
-\code{\link{question_radio}()},
-\code{\link{quiz}()}
+\code{\link{question_radio}()}
 }
 \concept{Interactive Questions}

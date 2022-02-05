@@ -216,78 +216,6 @@ question <- function(
   ret
 }
 
-#' @rdname quiz
-#' @export
-answer <- function(text, correct = FALSE, message = NULL) {
-  if (!is_tags(message)) {
-    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
-  }
-
-  answer_new(
-    value = text,
-    correct = isTRUE(correct),
-    message = message,
-    type = "literal"
-  )
-}
-
-
-
-#' @rdname quiz
-#' @export
-answer_fn <- function(fn, label = NULL) {
-  checkmate::assert_function(fn, nargs = 1)
-  fn_text <- rlang::expr_text(fn)
-
-  # `correct` and `message` will be provided by the function
-  answer_new(
-    value = fn_text,
-    label = label,
-    type = "function"
-  )
-}
-
-#' @noRd
-#' @param value The literal value to be directly compared with the user's
-#'   submission, if a literal comparison is required.
-#' @param label The text shown to the user for this answer in the UI
-#' @param option A character value of the answer, paired with the label in the
-#'   UI. When used (checkbox/radio), this is the value that comes back to the
-#'   Shiny app as the user's submission.
-#' @param correct This answer is correct, or not. Can only be `NULL` when
-#'   `type = "function"`.
-#' @param message A message to be presented to the user when they select this
-#'   answer, if their entire submission state matches the answer correctness.
-#' @param type Is this a literal answer (directly compare with `option` or `value`)
-#'   or is this a function to evaluate the submission.
-answer_new <- function(
-  value,
-  label = value,
-  option = as.character(value),
-  correct = NULL,
-  message = NULL,
-  type = "literal"
-) {
-  if (!is.character(option)) {
-    option <- as.character(option)
-  }
-
-  ret <- list(
-    id = random_answer_id(),
-    option = option,
-    value = value,
-    label = quiz_text(label), # md -> html
-    correct = correct,
-    message = quiz_text(message),
-    type = type
-  )
-  class(ret) <- c(
-    "tutorial_question_answer", # new and improved name
-    "tutorial_quiz_answer" # legacy. Want to remove
-  )
-  ret
-}
-
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
   if (inherits(text, "html")) {
@@ -318,17 +246,12 @@ quiz_text <- function(text) {
   }
 }
 
-
+random_id <- function(txt) {
+  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
 
 random_question_id <- function() {
   random_id("lnr_ques")
-}
-random_answer_id <- function() {
-  random_id("lnr_ans")
-}
-#' @importFrom stats runif
-random_id <- function(txt) {
-  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
 }
 
 random_seed <- function() {
@@ -338,7 +261,6 @@ random_seed <- function() {
 shuffle <- function(x) {
   sample(x, length(x))
 }
-
 
 #' Knitr quiz print methods
 #'

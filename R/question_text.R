@@ -6,7 +6,7 @@
 #' text input, set the `rows` and/or `cols` argument to create a larger text
 #' area.
 #'
-#' When used with [answer()], the studen't submission must match the answer
+#' When used with [answer()], the student's submission must match the answer
 #' exactly, minus whitespace trimming if enabled with `trim = TRUE`. For more
 #' complicated submission evaluation, use [answer_fn()] to provide a function
 #' that checks the student's submission. For example, you could provide a
@@ -40,6 +40,8 @@
 #' @inheritParams shiny::textInput
 #' @param ... Answers created with [answer()] or [answer_fn()], or extra
 #'   parameters passed onto [question()]. Answers with custom function checking
+#'
+#' @return Returns a learnr question of type `"learnr_text"`.
 #'
 #' @family Interactive Questions
 #' @export

@@ -24,6 +24,8 @@
 #'   parameters passed onto [question()]. Function answers do not
 #'   appear in the checklist, but are checked first.
 #'
+#' @return Returns a learnr question of type `"learnr_checkbox"`.
+#'
 #' @family Interactive Questions
 #' @export
 question_checkbox <- function(

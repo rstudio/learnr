@@ -1,9 +1,8 @@
 #' Radio question
 #'
-#' Creates a radio button tutorial quiz question.  The student can select only
-#' one radio button before submitting their answer.
-#'
-#' Note: Multiple correct answers are allowed.
+#' Creates a radio button tutorial quiz question. The student can select only
+#' one radio button before submitting their answer. Note: Multiple correct
+#' answers are allowed.
 #'
 #' @examples
 #' question_radio(
@@ -20,6 +19,8 @@
 #' @param ... Answers created with [answer()] or extra
 #'   parameters passed onto [question()]. Function answers are not allowed for
 #'   radio questions because the user is required to select a single answer.
+#'
+#' @return Returns a learnr question of type `"learnr_radio"`.
 #'
 #' @family Interactive Questions
 #' @export

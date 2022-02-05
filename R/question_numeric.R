@@ -24,6 +24,8 @@
 #' @inheritParams question
 #' @inheritParams shiny::numericInput
 #'
+#' @return Returns a learnr question of type `"learnr_numeric"`.
+#'
 #' @family Interactive Questions
 #' @export
 question_numeric <- function(
@@ -37,6 +39,7 @@ question_numeric <- function(
   min = NA,
   max = NA,
   step = NA,
+  options = list(),
   tolerance = 1.5e-8
 ) {
   min  <- min  %||% NA_real_

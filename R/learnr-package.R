@@ -30,6 +30,7 @@
 #' @importFrom shiny reactive
 #' @importFrom shiny reactiveValues
 #' @importFrom shiny req
+#' @importFrom stats runif
 #' @importFrom withr with_envvar
 ## usethis namespace: end
 NULL

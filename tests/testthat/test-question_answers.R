@@ -1,8 +1,3 @@
-question_messages
-
-
-context("question_messages")
-
 test_that("no message-correct", {
 
   q <- question(

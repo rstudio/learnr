@@ -15,6 +15,7 @@ question_numeric(
   min = NA,
   max = NA,
   step = NA,
+  options = list(),
   tolerance = 1.5e-08
 )
 }
@@ -44,10 +45,15 @@ when \code{allow_retry} is \code{TRUE}.}
 
 \item{step}{Interval to use when stepping between min and max}
 
+\item{options}{Extra options to be stored in the question object.}
+
 \item{tolerance}{Submitted values within an absolute difference smaller than
 \code{tolerance} will be considered equal to the answer value. Note that this
 tolerance is for all \code{\link[=answer]{answer()}} values. For more specific answer value
 grading, use \code{\link[=answer_fn]{answer_fn()}} to provide your own evaluation code.}
+}
+\value{
+Returns a learnr question of type \code{"learnr_numeric"}.
 }
 \description{
 Creates a tutorial question asking the student to submit a number.
@@ -68,9 +74,9 @@ question_numeric(
 }
 \seealso{
 Other Interactive Questions: 
+\code{\link{answer_fn}()},
 \code{\link{question_checkbox}()},
 \code{\link{question_radio}()},
-\code{\link{question_text}()},
-\code{\link{quiz}()}
+\code{\link{question_text}()}
 }
 \concept{Interactive Questions}

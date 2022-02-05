@@ -35,12 +35,13 @@ when \code{allow_retry} is \code{TRUE}.}
 
 \item{random_answer_order}{Display answers in a random order.}
 }
-\description{
-Creates a radio button tutorial quiz question.  The student can select only
-one radio button before submitting their answer.
+\value{
+Returns a learnr question of type \code{"learnr_radio"}.
 }
-\details{
-Note: Multiple correct answers are allowed.
+\description{
+Creates a radio button tutorial quiz question. The student can select only
+one radio button before submitting their answer. Note: Multiple correct
+answers are allowed.
 }
 \examples{
 question_radio(
@@ -56,9 +57,9 @@ question_radio(
 }
 \seealso{
 Other Interactive Questions: 
+\code{\link{answer_fn}()},
 \code{\link{question_checkbox}()},
 \code{\link{question_numeric}()},
-\code{\link{question_text}()},
-\code{\link{quiz}()}
+\code{\link{question_text}()}
 }
 \concept{Interactive Questions}
