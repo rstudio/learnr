@@ -61,9 +61,9 @@ question_checkbox(
 }
 \seealso{
 Other Interactive Questions: 
-\code{\link{answer_fn}()},
 \code{\link{question_numeric}()},
 \code{\link{question_radio}()},
-\code{\link{question_text}()}
+\code{\link{question_text}()},
+\code{\link{quiz}()}
 }
 \concept{Interactive Questions}

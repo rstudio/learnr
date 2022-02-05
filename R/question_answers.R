@@ -32,6 +32,7 @@
 #'
 #' @return Returns a list with the `"tutorial_question_answer"` class.
 #'
+#' @describeIn answer Create an answer option
 #' @export
 answer <- function(text, correct = FALSE, message = NULL, label = text) {
   if (!is_tags(message)) {
@@ -47,7 +48,8 @@ answer <- function(text, correct = FALSE, message = NULL, label = text) {
   )
 }
 
-#' @rdname quiz
+#' @describeIn answer Evaluate the student's submission to determine correctness
+#'   and to return feedback.
 #' @export
 answer_fn <- function(fn, label = NULL) {
   checkmate::assert_function(fn)

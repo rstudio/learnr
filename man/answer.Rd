@@ -2,9 +2,12 @@
 % Please edit documentation in R/question_answers.R
 \name{answer}
 \alias{answer}
+\alias{answer_fn}
 \title{Question answer options}
 \usage{
 answer(text, correct = FALSE, message = NULL, label = text)
+
+answer_fn(fn, label = NULL)
 }
 \arguments{
 \item{text}{The answer text or value; for selection-type questions this value
@@ -45,3 +48,11 @@ submitted the correct answer. For flexible feedback from checkbox, text, and
 numeric questions, \code{answer_fn()} can be used to provide a function that
 evaluates the student's submission and returns a custom result.
 }
+\section{Functions}{
+\itemize{
+\item \code{answer}: Create an answer option
+
+\item \code{answer_fn}: Evaluate the student's submission to determine correctness
+and to return feedback.
+}}
+
