@@ -78,7 +78,7 @@ question_text <- function(
     incorrect = incorrect,
     allow_retry = allow_retry,
     random_answer_order = FALSE,
-    options = modifyList(
+    options = utils::modifyList(
       options,
       list(
         placeholder = placeholder,
