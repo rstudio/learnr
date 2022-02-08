@@ -13,7 +13,8 @@
 #' @param fn A function used to evaluate the submitted answer. The function is
 #'   called with the student's submitted value as the first argument, so the
 #'   function should take at least one argument where the user's value will be
-#'   passed to the first argument.
+#'   passed to the first argument. Inline \pkg{purrr}-style lambda functions
+#'   are allowed, see [rlang::as_function()] for complete details on the syntax.
 #'
 #'   In the body of the function, you can perform arbitrary calculations to
 #'   decide if the submitted answer is or is not correct and to compose the
@@ -52,6 +53,7 @@ answer <- function(text, correct = FALSE, message = NULL, label = text) {
 #'   and to return feedback.
 #' @export
 answer_fn <- function(fn, label = NULL) {
+  fn <- rlang::as_function(fn, env = parent.frame())
   checkmate::assert_function(fn)
   if (!rlang::has_length(rlang::fn_fmls(fn))) {
     rlang::abort("`answer_fn()` requires a function with at least 1 argument.")

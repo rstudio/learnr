@@ -27,7 +27,8 @@ option and the question is \emph{correct}.}
 \item{fn}{A function used to evaluate the submitted answer. The function is
 called with the student's submitted value as the first argument, so the
 function should take at least one argument where the user's value will be
-passed to the first argument.
+passed to the first argument. Inline \pkg{purrr}-style lambda functions
+are allowed, see \code{\link[rlang:as_function]{rlang::as_function()}} for complete details on the syntax.
 
 In the body of the function, you can perform arbitrary calculations to
 decide if the submitted answer is or is not correct and to compose the

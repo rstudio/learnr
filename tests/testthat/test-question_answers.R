@@ -113,3 +113,35 @@ test_that("custom message", {
   expect_true(is.null(out$children[[3]]))
 
 })
+
+test_that("answer functions", {
+  # Test various ways of specifying the answer function
+  answer <- answer_fn(identity, label = "test `answer_fn()`")
+  expect_true(eval(parse(text = answer$value))(TRUE))
+
+  # test properties on this first answer object
+  expect_equal(answer$type, "function")
+  expect_equal(answer$label, quiz_text("test `answer_fn()`"))
+  expect_null(answer$correct)
+  expect_null(answer$message)
+
+  answer <- answer_fn(function(x) identity(x))
+  expect_true(eval(parse(text = answer$value))(TRUE))
+
+  answer <- answer_fn(~ identity(.x))
+  expect_true(eval(parse(text = answer$value))(TRUE))
+
+  answer <- answer_fn("identity")
+  expect_true(eval(parse(text = answer$value))(TRUE))
+
+  expect_error(answer_fn(function() "FAIL"))
+  expect_error(answer_fn("FAIL"))
+
+  answer <-
+    local({
+      # PASS won't be defined when we evaluate the re-parsed fn body
+      PASS <- function(x) TRUE
+      answer_fn("PASS")
+    })
+  expect_true(eval(parse(text = answer$value))())
+})
