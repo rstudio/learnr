@@ -124,7 +124,8 @@ option and the question is <em>correct</em>.</p></dd>
 <dd><p>A function used to evaluate the submitted answer. The function is
 called with the student's submitted value as the first argument, so the
 function should take at least one argument where the user's value will be
-passed to the first argument.</p>
+passed to the first argument. Inline <span class="pkg">purrr</span>-style lambda functions
+are allowed, see <code><a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">rlang::as_function()</a></code> for complete details on the syntax.</p>
 <p>In the body of the function, you can perform arbitrary calculations to
 decide if the submitted answer is or is not correct and to compose the
 message presented to the user. To signal a final answer, call <code><a href="mark_as_correct_incorrect.html">mark_as()</a></code>
