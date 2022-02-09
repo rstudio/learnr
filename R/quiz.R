@@ -450,7 +450,9 @@ question_module_server_impl <- function(
 
   init_question <- function(restoreValue = NULL) {
     if (question$random_answer_order) {
-      question$answers <<- shuffle(question$answers)
+      # Shuffle visible answer options (i.e. static, non-function answers)
+      is_visible_option <- !answer_type_is_function(question$answers)
+      question$answers[is_visible_option] <<- shuffle(question$answers[is_visible_option])
     }
     submitted_answer(restoreValue)
   }

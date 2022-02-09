@@ -19,7 +19,8 @@ question_checkbox(
 
 \item{...}{Answers created with \code{\link[=answer]{answer()}} or \code{\link[=answer_fn]{answer_fn()}}, or extra
 parameters passed onto \code{\link[=question]{question()}}. Function answers do not
-appear in the checklist, but are checked first.}
+appear in the checklist, but are checked first in the order they are
+specified.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is

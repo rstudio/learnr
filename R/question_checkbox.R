@@ -22,7 +22,8 @@
 #' @inheritParams question
 #' @param ... Answers created with [answer()] or [answer_fn()], or extra
 #'   parameters passed onto [question()]. Function answers do not
-#'   appear in the checklist, but are checked first.
+#'   appear in the checklist, but are checked first in the order they are
+#'   specified.
 #'
 #' @return Returns a learnr question of type `"learnr_checkbox"`.
 #'
