@@ -39,3 +39,4 @@ rsconnect/
 ^\.eslintignore$
 ^\.vscode$
 ^inst/tutorials/*/*_files$
+^tests/manual$

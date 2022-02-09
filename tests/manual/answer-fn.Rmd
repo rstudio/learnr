@@ -1,0 +1,118 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Answers
+
+### Text
+
+```{r text-question, echo=FALSE}
+good_value <- function(value) {
+  if (!grepl("na", value, ignore.case = TRUE)) {
+    mark_as(correct = TRUE, "Nice!")
+  } else {
+    mark_as(correct = FALSE, "nanananana hey hey good bye")
+  }
+}
+
+question_text(
+  "Write something that doesn't say 'na'.",
+  answer("na", correct = FALSE, message = "But why?"),
+  answer("banana", FALSE, "Are you for real?"),
+  answer_fn(good_value),
+  allow_retry = TRUE,
+  random_answer_order = FALSE
+)
+```
+
+### Numeric
+
+1. Pick within 2 of `10` or `52` to get custom incorrect message
+1. Pick anything below 50 (except 10, 42, 52) to get "think bigger"
+1. Pick anything less than 75 (except 10, 42, 52)  to get "Biggish"
+1. Pick 42 to get "meaning of life" correct
+1. Pick anything above 75 to get "reasonably large!"
+
+```{r numeric-question, echo=FALSE}
+question_numeric(
+  "What's a reasonably large number?",
+  answer("10", message = "Order of magnitude off"),
+  answer("52", message = "Off by about a dozen"),
+  answer_fn(~ {
+    if (.x == 42) {
+      mark_as(TRUE, "That's perfect, it's the meaning of life!")
+    } else if (.x < 50) {
+      mark_as(FALSE, "Think bigger...")
+    } else if (.x < 75) {
+      mark_as(FALSE, "Biggish, but think bigger...")
+    } else {
+      mark_as(TRUE, "Hey, that's reasonably large!")
+    }
+  }),
+  allow_retry = TRUE,
+  options = list(tolerance = 2)
+)
+```
+
+### Checkbox
+
+1. Verify that the options shuffle when restarting the tutorial.
+1. Including "spinach" always returns just *yuck, spinach!* no matter what options are selected.
+1. Answer `tomato`, `mozarrella`, `basil` to get "Close enough..."
+1. Add `bacon` to the above to get "We'll allow bacon."
+1. Try a wrong combination not including the above to get incorrect messages.
+1. Include `pepperoni` to get "Great topping!"
+1. Choose `tomato`, `mozarrella`, `basil`, `EVOO` to get fully correct (no custom message)
+
+```{r checkbox-question, echo=FALSE}
+question_checkbox(
+  "Select all the toppings that belong on a Margherita Pizza:",
+  answer("tomato", correct = TRUE),
+  answer("mozzarella", correct = TRUE),
+  answer("basil", correct = TRUE),
+  answer("extra virgin olive oil", correct = TRUE),
+  answer("pepperoni", message = "Great topping! ... just not on a Margherita Pizza"),
+  answer("onions"),
+  answer("bacon"),
+  answer("spinach"),
+  answer_fn(~ if ("spinach" %in% .x) incorrect("yuck, spinach!")),
+  answer_fn(function(value) {
+    value <- sort(value)
+    almost <- c("tomato", "mozzarella", "basil")
+    if (identical(sort(almost), value)) {
+      mark_as(TRUE, "Close enough, but a little EVOO would make it even better.")
+    }
+    if (identical(sort(c("bacon", almost)), value)) {
+      mark_as(TRUE, "You know what? We'll allow bacon")
+    }
+  }),
+  random_answer_order = TRUE,
+  allow_retry = TRUE,
+  try_again = "Be sure to select all four toppings!"
+)
+```
+
+### Radio
+
+Not supported!
+
+```{r radio-question, echo=FALSE, eval=TRUE}
+question_radio(
+  "Pick the letter B",
+  answer("A"),
+  answer("B", correct = TRUE),
+  answer("C", correct = TRUE),
+  answer("D"),
+  # answer_fn(function(value) value %in% c("C", "D")),
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+)
+```
