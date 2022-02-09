@@ -44,7 +44,7 @@ question_radio <- function(
       random_answer_order = random_answer_order
     )
 
-  if (any(answer_type_is_function(question$answer))) {
+  if (any(answer_type_is_function(question$answers))) {
     rlang::abort(paste(
       "`question_radio()` does not support `answer_fn()` type answers",
       "because the user may only select a single answer."
