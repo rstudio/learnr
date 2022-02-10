@@ -13,8 +13,10 @@ incorrect(messages = NULL)
 mark_as(correct, messages = NULL)
 }
 \arguments{
-\item{messages}{a vector of messages to be displayed.  The type of message
-will be determined by the \code{correct} value.}
+\item{messages}{A vector of messages to be displayed.  The type of message
+will be determined by the \code{correct} value. Note that markdown messages are
+not rendered into HTML, but you may provide HTML using \code{\link[htmltools:HTML]{htmltools::HTML()}}
+or \link[htmltools:builder]{htmltools::tags}.}
 
 \item{correct}{Logical: is the question answer is correct}
 }

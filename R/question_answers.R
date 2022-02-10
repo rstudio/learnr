@@ -134,8 +134,10 @@ random_answer_id <- function() {
 #' }
 #'
 #' @param correct Logical: is the question answer is correct
-#' @param messages a vector of messages to be displayed.  The type of message
-#'   will be determined by the `correct` value.
+#' @param messages A vector of messages to be displayed.  The type of message
+#'   will be determined by the `correct` value. Note that markdown messages are
+#'   not rendered into HTML, but you may provide HTML using [htmltools::HTML()]
+#'   or [htmltools::tags].
 #'
 #' @return Returns a list with class `learnr_mark_as` to be returned from the
 #'   [question_is_correct()] method for the learnr question type.
