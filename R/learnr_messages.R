@@ -28,8 +28,14 @@
   )
 })
 
-learnr_render_message <- function(...) {
-  cnd <- rlang::catch_cnd(rlang::inform(paste0(..., "\n"), "learnr_render_message"))
+learnr_render_message <- function(..., level = c("inform", "warn", "abort")) {
+  create_cnd <- switch(
+    tolower(level),
+    inform = rlang::inform,
+    warn = rlang::warn,
+    abort = rlang::abort
+  )
+  cnd <- rlang::catch_cnd(create_cnd(paste0(..., "\n"), "learnr_render_message"))
 
   if (isTRUE(getOption('knitr.in.progress'))) {
     .learnr_messages$add(cnd)

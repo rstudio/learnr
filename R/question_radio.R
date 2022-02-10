@@ -47,8 +47,9 @@ question_radio <- function(
   answer_is_fn <- answer_type_is_function(question$answers)
   if (any(answer_is_fn)) {
     learnr_render_message(
-      "Warning: `question_radio()` does not support `answer_fn()` type answers ",
-      "because the user may only select a single answer."
+      "`question_radio()` does not support `answer_fn()` type answers ",
+      "because the user may only select a single answer.",
+      level = "warn"
     )
 
     # question() already checked that we have one correct non-fn answer
