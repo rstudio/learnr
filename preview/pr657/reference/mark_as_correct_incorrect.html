@@ -103,8 +103,10 @@ determine the result and message provided to the user.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>messages</dt>
-<dd><p>a vector of messages to be displayed.  The type of message
-will be determined by the <code>correct</code> value.</p></dd>
+<dd><p>A vector of messages to be displayed.  The type of message
+will be determined by the <code>correct</code> value. Note that markdown messages are
+not rendered into HTML, but you may provide HTML using <code><a href="https://rdrr.io/pkg/htmltools/man/HTML.html" class="external-link">htmltools::HTML()</a></code>
+or <a href="https://rdrr.io/pkg/htmltools/man/builder.html" class="external-link">htmltools::tags</a>.</p></dd>
 <dt>correct</dt>
 <dd><p>Logical: is the question answer is correct</p></dd>
 </dl></div>
