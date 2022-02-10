@@ -46,10 +46,10 @@ question_radio <- function(
 
   answer_is_fn <- answer_type_is_function(question$answers)
   if (any(answer_is_fn)) {
-    rlang::warn(paste(
-      "`question_radio()` does not support `answer_fn()` type answers",
+    learnr_render_message(
+      "Warning: `question_radio()` does not support `answer_fn()` type answers ",
       "because the user may only select a single answer."
-    ))
+    )
 
     # question() already checked that we have one correct non-fn answer
     question$answers <- question$answers[!answer_is_fn]

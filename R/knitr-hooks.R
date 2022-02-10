@@ -300,6 +300,11 @@ tutorial_knitr_options <- function() {
 
   # hook to amend output for exercise related chunks
   tutorial_knit_hook <- function(before, options, envir) {
+    if (!before) {
+      # Signal any messages added during the chunk evaluation. This exists so
+      # that we can direct messages to the console even if created inside a chunk
+      .learnr_messages$flush()
+    }
 
     # helper to produce an exercise wrapper div w/ the specified class
     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
@@ -499,7 +504,9 @@ install_knitr_hooks <- function() {
 remove_knitr_hooks <- function() {
   knitr::opts_chunk$delete("tutorial")
   knitr::opts_hooks$delete("tutorial")
-  knitr::knit_hooks$delete("tutorial")
+  if (!is.null(knitr::knit_hooks$get("tutorial", default = TRUE))) {
+    knitr::knit_hooks$restore("tutorial")
+  }
 }
 
 exercise_server_chunk <- function(label) {

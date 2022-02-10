@@ -9,7 +9,6 @@ library(learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-
 ## Answers
 
 ### Text
@@ -102,7 +101,7 @@ question_checkbox(
 
 ### Radio
 
-Not supported!
+Not supported, emits a warning during render and answer function answers are dropped.
 
 ```{r radio-question, echo=FALSE, eval=TRUE}
 question_radio(
@@ -111,7 +110,7 @@ question_radio(
   answer("B", correct = TRUE),
   answer("C", correct = TRUE),
   answer("D"),
-  # answer_fn(function(value) value %in% c("C", "D")),
+  answer_fn(function(value) value %in% c("C", "D")),
   allow_retry = TRUE,
   random_answer_order = TRUE
 )
