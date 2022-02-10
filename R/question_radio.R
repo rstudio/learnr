@@ -16,9 +16,9 @@
 #' )
 #'
 #' @inheritParams question
-#' @param ... Answers created with [answer()] or extra
-#'   parameters passed onto [question()]. Function answers are not allowed for
-#'   radio questions because the user is required to select a single answer.
+#' @param ... Answers created with [answer()] or extra parameters passed onto
+#'   [question()]. Function answers are ignored for radio questions because the
+#'   user is required to select a single answer.
 #'
 #' @return Returns a learnr question of type `"learnr_radio"`.
 #'
@@ -44,11 +44,15 @@ question_radio <- function(
       random_answer_order = random_answer_order
     )
 
-  if (any(answer_type_is_function(question$answers))) {
-    rlang::abort(paste(
+  answer_is_fn <- answer_type_is_function(question$answers)
+  if (any(answer_is_fn)) {
+    rlang::warn(paste(
       "`question_radio()` does not support `answer_fn()` type answers",
       "because the user may only select a single answer."
     ))
+
+    # question() already checked that we have one correct non-fn answer
+    question$answers <- question$answers[!answer_is_fn]
   }
 
   question

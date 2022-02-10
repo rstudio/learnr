@@ -17,9 +17,9 @@ question_radio(
 \arguments{
 \item{text}{Question or option text}
 
-\item{...}{Answers created with \code{\link[=answer]{answer()}} or extra
-parameters passed onto \code{\link[=question]{question()}}. Function answers are not allowed for
-radio questions because the user is required to select a single answer.}
+\item{...}{Answers created with \code{\link[=answer]{answer()}} or extra parameters passed onto
+\code{\link[=question]{question()}}. Function answers are ignored for radio questions because the
+user is required to select a single answer.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
