@@ -1,7 +1,4 @@
 
-
-context("question-checkbox")
-
 test_that("correct messages are not included", {
 
   q <- question(
