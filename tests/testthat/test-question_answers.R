@@ -114,6 +114,15 @@ test_that("custom message", {
 
 })
 
+test_that("answer options must have unique values (option)", {
+  expect_error(
+    answer_values(list(answers = list(
+      answer("same"),
+      answer("same")
+    )))
+  )
+})
+
 test_that("answer functions", {
   # Test various ways of specifying the answer function
   answer <- answer_fn(identity, label = "test `answer_fn()`")
@@ -144,4 +153,58 @@ test_that("answer functions", {
       answer_fn("PASS")
     })
   expect_true(eval(parse(text = answer$value))())
+})
+
+test_that("answer functions: filtering and splitting", {
+  q <- question_text(
+    "test question",
+    answer("apple", TRUE, "correct"),
+    answer_fn(function(x) "F1", "f1"),
+    answer("banana", FALSE, "incorrect"),
+    answer_fn(~ "F2", "f2"),
+    answer("mango", FALSE, "also incorrect")
+  )
+
+  expect_equal(
+    answer_type_is_function(q$answers),
+    c(FALSE, TRUE, FALSE, TRUE, FALSE)
+  )
+
+  expect_equal(length(answers_split_type(q$answers)[["literal"]]), 3L)
+  expect_equal(length(answers_split_type(q$answers)[["function"]]), 2L)
+
+  expect_equal(
+    unlist(answer_labels(q)),
+    c("apple", "f1", "banana", "f2", "mango")
+  )
+
+  expect_equal(
+    unlist(answer_labels(q, exclude_answer_fn = TRUE)),
+    c("apple", "banana", "mango")
+  )
+
+  expect_equal(
+    unlist(answer_values(q, exclude_answer_fn = TRUE)),
+    c("apple", "banana", "mango")
+  )
+
+  q_labels <- unlist(answer_values(q))
+  expect_match(q_labels[2], "function.+F1")
+  expect_match(q_labels[4], "function.+F2")
+})
+
+test_that("mark_as(), correct(), incorrect()", {
+  expect_equal(
+    mark_as(TRUE, "correct message"),
+    correct("correct message")
+  )
+
+  expect_equal(
+    mark_as(FALSE, "incorrect message"),
+    incorrect("incorrect message")
+  )
+
+  expect_s3_class(mark_as(TRUE, "correct"), "learnr_mark_as")
+  expect_s3_class(correct("correct"), "learnr_mark_as")
+  expect_s3_class(incorrect("incorrect"), "learnr_mark_as")
 })
