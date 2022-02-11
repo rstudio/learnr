@@ -260,6 +260,20 @@ test_that("evaluate_exercise() returns an internal error for global setup chunk 
   expect_s3_class(res$feedback$error, "simpleError")
 })
 
+test_that("evaluate_exercise() returns an internal error when `render_exercise()` fails", {
+  local_edition(2)
+  with_mock(
+    "learnr:::render_exercise" = function(...) stop("render error"),
+    expect_warning(
+      res <- evaluate_exercise(mock_exercise(), new.env())
+    )
+  )
+
+  expect_match(res$feedback$message, "evaluating your exercise")
+  expect_s3_class(res$feedback$error, "simpleError")
+  expect_equal(conditionMessage(res$feedback$error), "render error")
+})
+
 test_that("render_exercise() cleans up exercise_prep files", {
   skip_if_not_pandoc("1.14")
 
