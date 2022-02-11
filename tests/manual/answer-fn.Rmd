@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = FALSE)
 ### Text
 
 ```{r text-question, echo=FALSE}
+# CHECK: Will emit lifecycle message during render
+
 good_value <- function(value) {
   if (!grepl("na", value, ignore.case = TRUE)) {
     mark_as(correct = TRUE, "Nice!")
@@ -28,7 +30,7 @@ question_text(
   answer("banana", FALSE, "Are you for real?"),
   answer_fn(good_value),
   allow_retry = TRUE,
-  random_answer_order = FALSE
+  random_answer_order = TRUE
 )
 ```
 
