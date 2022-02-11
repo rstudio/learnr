@@ -207,6 +207,31 @@ for the text input, otherwise the default input element is a single-line
 <span class="r-out co"><span class="r-pr">#&gt;</span>     placeholder: "Enter answer here..."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     trim: FALSE </span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co"># This question uses an answer_fn() to give a hint when we think the</span></span>
+<span class="r-in"><span class="co"># student is on the right track but hasn't found the value yet.</span></span>
+<span class="r-in"><span class="fu">question_text</span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"What's the most popular programming interview question?"</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"fizz buzz"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span>, <span class="st">"That's right!"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer_fn</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"(fi|bu)zz"</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">      <span class="fu"><a href="mark_as_correct_incorrect.html">incorrect</a></span><span class="op">(</span><span class="st">"You're on the right track!"</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">}</span></span>
+<span class="r-in">  <span class="op">}</span>, label <span class="op">=</span> <span class="st">"fizz or buzz"</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Question: "What&amp;#39;s the most popular programming interview question?"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   type: "learnr_text"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   allow_retry: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   random_answer_order: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   answers:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ✔: "fizz buzz"; "That&amp;#39;s right!"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ?: "fizz or buzz"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   messages:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     correct: "Correct!"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     incorrect: "Incorrect"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Options:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     placeholder: "Enter answer here..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     trim: TRUE </span>
+<span class="r-in"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

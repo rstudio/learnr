@@ -166,6 +166,45 @@ when <code>allow_retry</code> is <code>TRUE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     incorrect: "Incorrect"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     try_again: "Incorrect" </span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co"># Set up a question where there's no wrong answer. The answer options are</span></span>
+<span class="r-in"><span class="co"># always shuffled, but the answer_fn() answer is always evaluated first.</span></span>
+<span class="r-in"><span class="fu">question_checkbox</span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"Which of the tidyverse packages is your favorite?"</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"tidyr"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"tibble"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"purrr"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"stringr"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"forcats"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"readr"</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="answer.html">answer_fn</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">      <span class="fu"><a href="mark_as_correct_incorrect.html">correct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">value</span>, <span class="st">"is my favorite tidyverse package, too!"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span class="r-in">      <span class="fu"><a href="mark_as_correct_incorrect.html">correct</a></span><span class="op">(</span><span class="st">"Yeah, I can't pick just one favorite package either."</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">}</span></span>
+<span class="r-in">  <span class="op">}</span><span class="op">)</span>,</span>
+<span class="r-in">  random_answer_order <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Question: "Which of the tidyverse packages is your favorite?"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   type: "learnr_checkbox"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   allow_retry: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   random_answer_order: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   answers:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "dplyr"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "tidyr"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "ggplot2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "tibble"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "purrr"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "stringr"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "forcats"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "readr"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ?: ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   messages:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     correct: "Correct!"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     incorrect: "Incorrect" </span>
+<span class="r-in"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
