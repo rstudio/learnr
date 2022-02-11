@@ -47,10 +47,10 @@ when \code{allow_retry} is \code{TRUE}.}
 
 \item{options}{Extra options to be stored in the question object.}
 
-\item{tolerance}{Submitted values within an absolute difference smaller than
-\code{tolerance} will be considered equal to the answer value. Note that this
-tolerance is for all \code{\link[=answer]{answer()}} values. For more specific answer value
-grading, use \code{\link[=answer_fn]{answer_fn()}} to provide your own evaluation code.}
+\item{tolerance}{Submitted values within an absolute difference less than or
+equal to \code{tolerance} will be considered equal to the answer value. Note
+that this tolerance is for all \code{\link[=answer]{answer()}} values. For more specific answer
+value grading, use \code{\link[=answer_fn]{answer_fn()}} to provide your own evaluation code.}
 }
 \value{
 Returns a learnr question of type \code{"learnr_numeric"}.

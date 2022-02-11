@@ -15,10 +15,10 @@
 #'   step = 0.01
 #' )
 #'
-#' @param tolerance Submitted values within an absolute difference smaller than
-#'   `tolerance` will be considered equal to the answer value. Note that this
-#'   tolerance is for all [answer()] values. For more specific answer value
-#'   grading, use [answer_fn()] to provide your own evaluation code.
+#' @param tolerance Submitted values within an absolute difference less than or
+#'   equal to `tolerance` will be considered equal to the answer value. Note
+#'   that this tolerance is for all [answer()] values. For more specific answer
+#'   value grading, use [answer_fn()] to provide your own evaluation code.
 #' @param ... Answers created with [answer()] or [answer_fn()], or extra
 #'   parameters passed onto [question()].
 #' @inheritParams question
@@ -100,15 +100,19 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
   value <- suppressWarnings(as.numeric(value))
 
   if (length(value) == 0 || is.na(value)) {
-    showNotification("Please enter a number before submitting", type = "error")
-    req(value)
+    if (!is.null(shiny::getDefaultReactiveDomain())) {
+      showNotification("Please enter a number before submitting", type = "error")
+      req(value)
+    } else {
+      rlang::abort("`learnr_numeric` questions require numeric input values")
+    }
   }
 
   tolerance <- question$options$tolerance %||% 1e-10
 
   compare_answer <- function(answer) {
     answer_value <- as.numeric(answer$value)
-    if (isTRUE(abs(diff(c(answer_value, value))) < tolerance)) {
+    if (isTRUE(abs(diff(c(answer_value, value))) <= tolerance)) {
       mark_as(answer$correct, answer$message)
     }
   }
