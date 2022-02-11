@@ -43,3 +43,22 @@ learnr_render_message <- function(..., level = c("inform", "warn", "abort")) {
     rlang::cnd_signal(cnd)
   }
 }
+
+learnr_render_catch <- function(expr, env = rlang::caller_env()) {
+  cnd <- tryCatch(
+    rlang::eval_bare(expr, env),
+    error = identity,
+    warning = identity,
+    message = identity
+  )
+
+  if (!inherits(cnd, "condition")) {
+    return(invisible())
+  }
+
+  if (isTRUE(getOption('knitr.in.progress'))) {
+    .learnr_messages$add(cnd)
+  } else {
+    rlang::cnd_signal(cnd)
+  }
+}
