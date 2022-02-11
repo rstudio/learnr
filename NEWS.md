@@ -90,6 +90,8 @@
 
 -   Parse errors from user code that fails to parse can now be inspected by the error checker, but errors in exercise setup chunks cannot. Instead, global setup and setup chunk errors are raised as internal errors with a user-facing warning. In general, internal errors are now handled more consistently (#596).
 
+    -   The parsing error object now has a `"parse_error"` class so that you can use `inherits(last_value, "parse_error")` in learnr error checking code or `inherits(.result, "parse_error")` in gradethis error checking to differentiate the parse error from other error types (#658).
+
 -   learnr now properly enforces the time limit set by the `exercise.timelimit` chunk option (#366, #368, #494).
 
 -   The `envir_prep` environment used in exercise checking now accurately captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated (as was described in the documentation). learnr also ensures that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep` (#480).
