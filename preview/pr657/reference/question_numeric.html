@@ -127,10 +127,10 @@ when <code>allow_retry</code> is <code>TRUE</code>.</p></dd>
 <dt>options</dt>
 <dd><p>Extra options to be stored in the question object.</p></dd>
 <dt>tolerance</dt>
-<dd><p>Submitted values within an absolute difference smaller than
-<code>tolerance</code> will be considered equal to the answer value. Note that this
-tolerance is for all <code><a href="answer.html">answer()</a></code> values. For more specific answer value
-grading, use <code><a href="answer.html">answer_fn()</a></code> to provide your own evaluation code.</p></dd>
+<dd><p>Submitted values within an absolute difference less than or
+equal to <code>tolerance</code> will be considered equal to the answer value. Note
+that this tolerance is for all <code><a href="answer.html">answer()</a></code> values. For more specific answer
+value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide your own evaluation code.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
