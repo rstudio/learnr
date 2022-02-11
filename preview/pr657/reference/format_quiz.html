@@ -133,9 +133,20 @@ Due to the shiny runtime of questions, a text representation of quizzes, questio
 <span class="r-in">  incorrect <span class="op">=</span> <span class="st">"See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again."</span>,</span>
 <span class="r-in">  allow_retry <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in question("What number is the letter A in the alphabet?", answer("8"),     answer("14"), answer("1", correct = TRUE), answer("23"),     incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",     allow_retry = TRUE):</span> object 'total_correct' not found</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">ex_question</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in format(ex_question):</span> object 'ex_question' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Question: "What number is the letter A in the alphabet?"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   type: "learnr_radio"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   allow_retry: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   random_answer_order: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   answers:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "8"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "14"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ✔: "1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X: "23"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   messages:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     correct: "Correct!"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     incorrect: "See &lt;a href="https://en.wikipedia.org/wiki/English_alphabet"&gt;here&lt;/a&gt; and try again."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     try_again: "See &lt;a href="https://en.wikipedia.org/wiki/English_alphabet"&gt;here&lt;/a&gt; and try again." </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
