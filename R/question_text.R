@@ -63,10 +63,12 @@ question_text <- function(
   checkmate::assert_logical(trim, len = 1, null.ok = FALSE, any.missing = FALSE)
 
   if (!identical(random_answer_order, FALSE)) {
-    lifecycle::deprecate_warn(
-      when = "0.11.0",
-      what = "foo::question_text(random_answer_order)",
-      details = c(i = "Random answer order is automatically disabled for text questions.")
+    learnr_render_catch(
+      lifecycle::deprecate_warn(
+        when = "0.11.0",
+        what = "question_text(random_answer_order)",
+        details = c(i = "Random answer order is automatically disabled for text questions.")
+      )
     )
   }
 
