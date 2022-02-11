@@ -138,11 +138,16 @@ question <- function(
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  ## no partial matching for s3 methods
-  if (missing(type)) { # can not use match.arg(type) because of comment above
+  # count total correct answers to decide between radio/checkbox
+  answers_split <- answers_split_type(answers)
+  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
+
+  # determine or resolve question type
+  if (missing(type)) {
+    # no partial matching for s3 methods means we can't use match.arg()
     type <- "auto"
   }
-  if (isTRUE(all.equal(type, "auto"))) {
+  if (identical(type, "auto")) {
     if (total_correct > 1) {
       type <- "learnr_checkbox"
     } else {
@@ -160,9 +165,8 @@ question <- function(
     )
   }
 
-  answers_split <- answers_split_type(answers)
-  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
-  must_have_correct <- identical(type, "learnr_radio")|| is.null(answers_split[["function"]])
+  # ensure we have at least one correct answer, if required
+  must_have_correct <- identical(type, "learnr_radio") || is.null(answers_split[["function"]])
   if (must_have_correct && total_correct == 0) {
     stop("At least one correct answer must be supplied")
   }
