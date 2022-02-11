@@ -100,6 +100,10 @@
 
 ### Questions
 
+-   Authors can now provide function-answers with `answer_fn()`. Authors can provide a function that takes a single argument that will be passed the student's question submission. This function decides if the question is correct and provides feedback by returning `correct()` or `incorrect()` with a feedback message (#657).
+
+-   A new `question_numeric()` question type allows authors to ask users to provide a number (#461).
+
 -   `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input (thanks @dtkaplan #455, #460).
 
 -   Correct/incorrect question markers are now configurable via CSS. You can change or style these markers using the `.tutorial-question .question-final .correct::before` and `.tutorial-question .question-final .incorrect::before` selectors. A new helper function, `finalize_question()`, can be used to apply the `.question-final` class to custom learnr questions (#531).
@@ -108,7 +112,7 @@
 
 -   Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value (#376).
 
--   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
+-   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
 
 ## Events and State
 
