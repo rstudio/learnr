@@ -17,7 +17,21 @@
     },
     flush = function() {
       while(length(queue)) {
-        rlang::cnd_signal(queue[[1]])
+        cnd <- queue[[1]]
+        if (inherits(cnd, "error")) {
+          # throw errors, they're immediate
+          rlang::cnd_signal(cnd)
+        } else {
+          # otherwise report condition as a message, but re-signal warnings
+          msg <- rlang::cnd_message(cnd)
+
+          if (inherits(cnd, "warning")) {
+            mgs <- paste0("Warning: ", msg)
+            rlang::cnd_signal(cnd)
+          }
+
+          rlang::inform(msg, class = "learnr_render_message")
+        }
         queue[[1]] <<- NULL
       }
     },
