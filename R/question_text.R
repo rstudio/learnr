@@ -25,6 +25,18 @@
 #'   trim = FALSE
 #' )
 #'
+#' # This question uses an answer_fn() to give a hint when we think the
+#' # student is on the right track but hasn't found the value yet.
+#' question_text(
+#'   "What's the most popular programming interview question?",
+#'   answer("fizz buzz", correct = TRUE, "That's right!"),
+#'   answer_fn(function(value) {
+#'     if (grepl("(fi|bu)zz", value)) {
+#'       incorrect("You're on the right track!")
+#'     }
+#'   }, label = "fizz or buzz")
+#' )
+#'
 #' @param rows,cols Defines the size of the text input area in terms of the
 #'   number of rows or character columns visible to the user. If either `rows`
 #'   or `cols` are provided, the quiz input will use [shiny::textAreaInput()]

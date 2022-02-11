@@ -15,6 +15,18 @@
 #'   step = 0.01
 #' )
 #'
+#' question_numeric(
+#'   "Can you think of an even number?",
+#'   answer_fn(function(value) {
+#'     if (value %% 2 == 0) {
+#'       correct("even")
+#'     } else if (value %% 2 == 1) {
+#'       incorrect("odd")
+#'     }
+#'   }, label = "Is the number even?"),
+#'   step = 1
+#' )
+#'
 #' @param tolerance Submitted values within an absolute difference less than or
 #'   equal to `tolerance` will be considered equal to the answer value. Note
 #'   that this tolerance is for all [answer()] values. For more specific answer

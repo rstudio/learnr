@@ -71,6 +71,18 @@ question_numeric(
   step = 0.01
 )
 
+question_numeric(
+  "Can you think of an even number?",
+  answer_fn(function(value) {
+    if (value \%\% 2 == 0) {
+      correct("even")
+    } else if (value \%\% 2 == 1) {
+      incorrect("odd")
+    }
+  }, label = "Is the number even?"),
+  step = 1
+)
+
 }
 \seealso{
 Other Interactive Questions: 

@@ -19,6 +19,28 @@
 #'   try_again = "Be sure to select all four toppings!"
 #' )
 #'
+#' # Set up a question where there's no wrong answer. The answer options are
+#' # always shuffled, but the answer_fn() answer is always evaluated first.
+#' question_checkbox(
+#'   "Which of the tidyverse packages is your favorite?",
+#'   answer("dplyr"),
+#'   answer("tidyr"),
+#'   answer("ggplot2"),
+#'   answer("tibble"),
+#'   answer("purrr"),
+#'   answer("stringr"),
+#'   answer("forcats"),
+#'   answer("readr"),
+#'   answer_fn(function(value) {
+#'     if (length(value) == 1) {
+#'       correct(paste(value, "is my favorite tidyverse package, too!"))
+#'     } else {
+#'       correct("Yeah, I can't pick just one favorite package either.")
+#'     }
+#'   }),
+#'   random_answer_order = TRUE
+#' )
+#'
 #' @inheritParams question
 #' @param ... Answers created with [answer()] or [answer_fn()], or extra
 #'   parameters passed onto [question()]. Function answers do not
