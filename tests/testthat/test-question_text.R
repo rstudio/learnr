@@ -98,7 +98,7 @@ test_that("question_text() evaluates answers in order specified", {
 test_that("question_text() requires some text input", {
   shiny::withReactiveDomain(NULL, {
     q <- question_text(text = "test", answer("R", TRUE))
-    expect_error(question_is_correct(q, ""), "[Nn]o text")
+    expect_error(question_is_correct(q, ""), "text")
   })
 })
 

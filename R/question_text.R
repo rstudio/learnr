@@ -131,10 +131,8 @@ question_is_correct.learnr_text <- function(question, value, ...) {
   if (nchar(value) == 0) {
     if (!is.null(shiny::getDefaultReactiveDomain())) {
       showNotification("Please enter some text before submitting", type = "error")
-      req(value)
-    } else {
-      rlang::abort("No text provided for `learnr_text` question")
     }
+    shiny::validate("Please enter some text")
   }
 
   if (isTRUE(question$options$trim)) {

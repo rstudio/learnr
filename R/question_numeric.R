@@ -102,10 +102,8 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
   if (length(value) == 0 || is.na(value)) {
     if (!is.null(shiny::getDefaultReactiveDomain())) {
       showNotification("Please enter a number before submitting", type = "error")
-      req(value)
-    } else {
-      rlang::abort("`learnr_numeric` questions require numeric input values")
     }
+    shiny::validate("Please enter a number")
   }
 
   tolerance <- question$options$tolerance %||% 1e-10

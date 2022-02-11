@@ -53,7 +53,7 @@ test_that("question_numeric() with tolerance", {
     tolerance = 2
   )
 
-  expect_error(question_is_correct(q, "boom"), "numeric")
+  expect_error(question_is_correct(q, "boom"), "number")
 
   expect_marked_as(question_is_correct(q, 3), TRUE, quiz_text("was 5"))
 
