@@ -9,6 +9,7 @@ mock_exercise <- function(
   code_check = NULL,  # code_check_chunk
   error_check = NULL, # error_check_chunk
   check = NULL,       # check_chunk
+  test_cases = NULL,  # test-cases
   exercise.checker = dput_to_string(debug_exercise_checker),
   exercise.error.check.code = dput_to_string(debug_exercise_checker),
   exercise.df_print = "default",
@@ -74,6 +75,7 @@ mock_exercise <- function(
     code_check = code_check,
     error_check = error_check,
     check = check,
+    test_cases = split_code_headers(test_cases, "test_case_"),
     options = utils::modifyList(default_options, list(...)),
     engine = engine,
     version = version

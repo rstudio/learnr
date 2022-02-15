@@ -40,7 +40,8 @@ tutorial_knitr_options <- function() {
       "solution",
       "error-check",
       "code-check",
-      "check"
+      "check",
+      "test-cases"
     )
   ) {
     # is this a support chunk using chunk labels to match with an exercise?
@@ -236,7 +237,8 @@ tutorial_knitr_options <- function() {
       options$highlight <- FALSE
     }
 
-    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check"))) {
+    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check", "test-cases"))) {
+      # completely suppress behind-the-scenes support chunks
       options$include <- FALSE
     }
 
@@ -361,6 +363,7 @@ tutorial_knitr_options <- function() {
         error_check_chunk <- get_knitr_chunk(paste0(options$label, "-error-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+        test_cases <- get_knitr_chunk(paste0(options$label, "-test-cases"))
 
         # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
         class(options) <- NULL
@@ -384,6 +387,7 @@ tutorial_knitr_options <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
+            test_cases = split_code_headers(test_cases, "test_case_"),
             options = options[setdiff(names(options), "tutorial")],
             engine = options$engine
           ),
@@ -542,4 +546,46 @@ verify_tutorial_chunk_label <- function() {
       call. = FALSE
     )
   }
+}
+
+split_code_headers <- function(code, prefix = "test_case_") {
+  if (is.null(code)) {
+    return(NULL)
+  }
+
+  code <- paste(code, collapse = "\n")
+  code <- trimws(code)
+  code <- strsplit(code, "\n")[[1]]
+
+  rgx_header <- "^\\s*#+[ -]*(.+?)\\s*----+$"
+  headers <- regmatches(code, regexec(rgx_header, code))
+  lines_headers <- which(vapply(headers, length, integer(1)) > 0)
+
+  if (length(lines_headers) > 0 && max(lines_headers) == length(code)) {
+    # nothing after last heading
+    lines_headers <- lines_headers[-length(lines_headers)]
+  }
+
+  if (!length(lines_headers)) {
+    return(list(paste(code, collapse = "\n")))
+  }
+
+  header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
+  header_names <- trimws(header_names)
+  if (any(!nzchar(header_names))) {
+    header_names[!nzchar(header_names)] <- sprintf(
+      paste0(prefix, "%02d"),
+      which(!nzchar(header_names))
+    )
+  }
+
+  rgx_header_line <- gsub("[$^]", "(^|\n|$)", rgx_header)
+  sections <- strsplit(paste(code, collapse = "\n"), rgx_header_line, perl = TRUE)[[1]]
+  if (length(sections) > length(header_names)) {
+    header_names <- c(paste0(prefix, "00"), header_names)
+  }
+
+  names(sections) <- header_names
+  sections <- trimws(sections)
+  as.list(sections[nzchar(sections)])
 }
