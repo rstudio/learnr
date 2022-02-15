@@ -18,6 +18,7 @@
 #' @importFrom knitr opts_hooks
 #' @importFrom knitr opts_knit
 #' @importFrom knitr spin
+#' @importFrom lifecycle deprecated
 #' @importFrom markdown markdownExtensions
 #' @importFrom markdown markdownToHTML
 #' @importFrom rprojroot find_root
@@ -29,6 +30,7 @@
 #' @importFrom shiny reactive
 #' @importFrom shiny reactiveValues
 #' @importFrom shiny req
+#' @importFrom stats runif
 #' @importFrom withr with_envvar
 ## usethis namespace: end
 NULL

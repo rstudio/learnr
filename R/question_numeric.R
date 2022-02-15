@@ -1,13 +1,7 @@
 #' Number question
 #'
-#' Creates a tutorial quiz question requesting a number.
+#' Creates a tutorial question asking the student to submit a number.
 #'
-#' @inheritParams question
-#' @inheritParams shiny::numericInput
-#' @param ... answers and extra parameters passed onto \code{\link{question}}.
-#' @seealso \code{\link{question_radio}}, \code{\link{question_checkbox}}, \code{\link{question_text}}
-#' @importFrom utils modifyList
-#' @export
 #' @examples
 #' question_numeric(
 #'   "What is pi rounded to 2 digits?",
@@ -20,6 +14,32 @@
 #'   max = 4,
 #'   step = 0.01
 #' )
+#'
+#' question_numeric(
+#'   "Can you think of an even number?",
+#'   answer_fn(function(value) {
+#'     if (value %% 2 == 0) {
+#'       correct("even")
+#'     } else if (value %% 2 == 1) {
+#'       incorrect("odd")
+#'     }
+#'   }, label = "Is the number even?"),
+#'   step = 1
+#' )
+#'
+#' @param tolerance Submitted values within an absolute difference less than or
+#'   equal to `tolerance` will be considered equal to the answer value. Note
+#'   that this tolerance is for all [answer()] values. For more specific answer
+#'   value grading, use [answer_fn()] to provide your own evaluation code.
+#' @param ... Answers created with [answer()] or [answer_fn()], or extra
+#'   parameters passed onto [question()].
+#' @inheritParams question
+#' @inheritParams shiny::numericInput
+#'
+#' @return Returns a learnr question of type `"learnr_numeric"`.
+#'
+#' @family Interactive Questions
+#' @export
 question_numeric <- function(
   text,
   ...,
@@ -31,7 +51,8 @@ question_numeric <- function(
   min = NA,
   max = NA,
   step = NA,
-  options = list()
+  options = list(),
+  tolerance = 1.5e-8
 ) {
   min  <- min  %||% NA_real_
   max  <- max  %||% NA_real_
@@ -50,13 +71,14 @@ question_numeric <- function(
     incorrect = incorrect,
     allow_retry = allow_retry,
     random_answer_order = FALSE,
-    options = modifyList(
+    options = utils::modifyList(
       options,
       list(
         value = value,
         min = min,
         max = max,
-        step = step
+        step = step,
+        tolerance = tolerance
       )
     )
   )
@@ -90,17 +112,34 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
   value <- suppressWarnings(as.numeric(value))
 
   if (length(value) == 0 || is.na(value)) {
-    showNotification("Please enter a number before submitting", type = "error")
-    req(value)
+    if (!is.null(shiny::getDefaultReactiveDomain())) {
+      showNotification("Please enter a number before submitting", type = "error")
+    }
+    shiny::validate("Please enter a number")
   }
 
-  for (ans in question$answers) {
-    ans_val <- ans$value
-    if (isTRUE(all.equal(ans_val, value, tolerance = 1e-10))) {
-      return(mark_as(
-        ans$correct,
-        ans$message
-      ))
+  tolerance <- question$options$tolerance %||% 1e-10
+
+  compare_answer <- function(answer) {
+    answer_value <- as.numeric(answer$value)
+    if (isTRUE(abs(diff(c(answer_value, value))) <= tolerance)) {
+      mark_as(answer$correct, answer$message)
+    }
+  }
+
+  check_answer <- function(answer) {
+    answer_checker <- eval(parse(text = answer$value), envir = rlang::caller_env(2))
+    answer_checker(value)
+  }
+
+  for (answer in question$answers) {
+    ret <- switch(
+      answer$type,
+      "function" = check_answer(answer),
+      compare_answer(answer)
+    )
+    if (inherits(ret, "learnr_mark_as")) {
+      return(ret)
     }
   }
 

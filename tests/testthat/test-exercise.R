@@ -1143,6 +1143,7 @@ test_that("evaluate_exercise() does not return a message for parsable non-ASCII 
 test_that("Exercise timelimit error is returned when exercise takes too long", {
   skip_on_cran()
   skip_on_os("windows")
+  skip_on_os("mac")
 
   ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
 
