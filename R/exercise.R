@@ -419,6 +419,12 @@ evaluate_exercise <- function(
   rmd_results <- tryCatch(
     render_exercise(exercise, envir),
     error = function(err_render) {
+      if (!inherits(err_render, "learnr_render_exercise_error")) {
+        # render exercise errors are expected, but something really went wrong
+        return(
+          exercise_result_error_internal(exercise, err_render, "evaluating your exercise", "inside render_exercise()")
+        )
+      }
       error_feedback <- NULL
       error_check_code <- exercise$error_check
       error_should_check <- nzchar(exercise$check) || nzchar(exercise$code_check)
