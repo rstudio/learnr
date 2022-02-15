@@ -896,9 +896,12 @@ exercise_check_code_for_blanks <- function(exercise) {
 
 exercise_check_code_is_parsable <- function(exercise) {
   error <- rlang::catch_cnd(parse(text = exercise$code), "error")
-  if (is.null(error)) {
+  if (!inherits(error, "error")) {
     return(NULL)
   }
+
+  # Make "parse_error"s identifiable in the error checker
+  class(error) <- c("parse_error", class(error))
 
   # apply the error checker (if explicitly provided) to the parse error
   if (nzchar(exercise$error_check %||% "")) {

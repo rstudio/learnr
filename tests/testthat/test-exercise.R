@@ -1009,7 +1009,7 @@ test_that("default message if exercise.blanks is FALSE", {
 # Unparsable Code ---------------------------------------------------------
 
 test_that("evaluate_exercise() returns a message if code is unparsable", {
-  ex     <- mock_exercise(user_code = 'print("test"')
+  ex <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1019,7 +1019,7 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   )
   expect_match(result$error_message, "unexpected end of input")
 
-  ex     <- mock_exercise(user_code = 'print("test)')
+  ex <- mock_exercise(user_code = 'print("test)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1029,7 +1029,7 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   )
   expect_match(result$error_message, "unexpected INCOMPLETE_STRING")
 
-  ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
+  ex <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1054,6 +1054,12 @@ test_that("evaluate_exercise() passes parse error to explicit exercise checker f
   ex$error_check <- NULL
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback, exercise_check_code_is_parsable(ex)$feedback)
+})
+
+test_that("exericse_check_code_is_parsable() gives error checker a 'parse_error' condition", {
+  ex <- mock_exercise(user_code = 'print("test"', error_check = I("last_value"))
+  result <- evaluate_exercise(ex, new.env())
+  expect_s3_class(result$feedback$checker_result, class = c("parse_error", "condition"))
 })
 
 test_that("Errors with global setup code result in an internal error", {
