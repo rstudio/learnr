@@ -10,7 +10,7 @@ articles:
   questions: questions.html
   multilang: multilang.html
   shinyapps-publishing: shinyapps-publishing.html
-last_built: 2022-02-11T21:52Z
+last_built: 2022-02-15T12:30Z
 urls:
   reference: https://pkgs.rstudio.com/learnr/reference
   article: https://pkgs.rstudio.com/learnr/articles
