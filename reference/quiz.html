@@ -147,9 +147,7 @@ There are four default types of quiz questions:</p><dl><dt><code>learnr_radio</c
   allow_retry <span class="op">=</span> <span class="cn">FALSE</span>,
   random_answer_order <span class="op">=</span> <span class="cn">FALSE</span>,
   options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">answer</span><span class="op">(</span><span class="va">text</span>, correct <span class="op">=</span> <span class="cn">FALSE</span>, message <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -204,26 +202,31 @@ message alongside the <code>message</code> message value.</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>For more information and question type extension examples, please see the help documentation for <code>question_methods</code> and view the <code>question_type</code> tutorial: <code>learnr::run_tutorial("question_type", "learnr")</code>.</p>
-<p><code><a href="random_praise.html">random_praise</a></code>, <code><a href="random_praise.html">random_encouragement</a></code></p></div>
+<p><code><a href="random_praise.html">random_praise()</a></code>, <code><a href="random_praise.html">random_encouragement()</a></code></p>
+<p>Other Interactive Questions: 
+<code><a href="question_checkbox.html">question_checkbox</a>()</code>,
+<code><a href="question_numeric.html">question_numeric</a>()</code>,
+<code><a href="question_radio.html">question_radio</a>()</code>,
+<code><a href="question_text.html">question_text</a>()</code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">quiz</span><span class="op">(</span></span>
 <span class="r-in">  <span class="fu">question</span><span class="op">(</span><span class="st">"What number is the letter A in the alphabet?"</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"8"</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"14"</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"1"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"23"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"8"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"14"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"1"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"23"</span><span class="op">)</span>,</span>
 <span class="r-in">    incorrect <span class="op">=</span> <span class="st">"See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again."</span>,</span>
 <span class="r-in">    allow_retry <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span class="r-in">  <span class="op">)</span>,</span>
 <span class="r-in"></span>
 <span class="r-in">  <span class="fu">question</span><span class="op">(</span><span class="st">"Where are you right now? (select ALL that apply)"</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"Planet Earth"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"Pluto"</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"At a computing device"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">answer</span><span class="op">(</span><span class="st">"In the Milky Way"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"Planet Earth"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"Pluto"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"At a computing device"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="st">"In the Milky Way"</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span class="r-in">    incorrect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Incorrect. You're on Earth, "</span>,</span>
 <span class="r-in">                       <span class="st">"in the Milky Way, at a computer."</span><span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
