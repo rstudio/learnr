@@ -28,7 +28,7 @@ test_that("Tutorial names are retrieved", {
   - polyglot          : \"Multi-language exercises\"
   - quiz_question     : \"Tutorial Quiz Questions in `learnr`\"
   - setup-chunks      : \"Chained setup chunks\"
-  - slidy             : \"Slidly demo\""
+  - slidy             : \"Slidy demo\""
   )
 
 })
