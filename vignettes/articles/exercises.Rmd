@@ -8,6 +8,9 @@ description: >
 ## Overview
 
 Exercises are interactive R code chunks that allow readers to directly execute R code and see its results.
+
+### Exercise Options
+
 There are many options associated with tutorial exercises (all of which are described in more detail below):
 
 +-----------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
@@ -46,11 +49,20 @@ source("snippets.R")
 insert_snippet("exerciseoptions")
 ```
 
-There are also some other specialized chunks that can be used with an exercise chunk, including:
+### Exercise Support Chunks
 
-1.  Exercise [setup chunks](#exercise-setup), which enable you to execute code to setup the environment immediately prior to executing submitted code.
+There are also some other specialized chunks that can be used with an exercise chunk.
+These chunks a linked together
 
-2.  Exercise [solution chunks](#exercise-solutions) which enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.
+1.  Exercise [`-setup` chunks](#exercise-setup) enable you to execute code to setup the environment immediately prior to executing submitted code.
+
+1.  Exercise [`-solution` chunks](#hints-and-solutions) enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.
+
+1.  Exercise [`-hint` chunks](#r-code-hints) are used to provide a series of hints to help the user progress through the exercise.
+
+1.  Exercise [`-check`, `-code-check`, and `-error-check` chunks](#exercise-checking) are used to provide logic for checking the user's attempt to solve the exercise.
+
+1. Finally, exercise [`-tests` chunks](#test-code-or-cases) can store test cases or testing code related to the exercise.
 
 The use of these special chunks is also described in detail below.
 
@@ -380,6 +392,20 @@ See the table below for a full description of all the arguments supplied to `exe
 +-------------------+------------------------------------------------------------------------------------------------------------------------------+
 | `...`             | Unused (include for compatibility with parameters to be added in the future)                                                 |
 +-------------------+------------------------------------------------------------------------------------------------------------------------------+
+
+### Test Code or Cases
+
+In some cases, you may want to record test cases —
+examples of alternative solutions, common mistakes made by students, edge cases that are missed by your checking code, etc.
+
+You can place this test code in a `*-tests` chunk.
+It will be preserved in the tutorial's R Markdown source and stored in learnr's internal data for the exercise, but it won't appear in the tutorial text.
+learnr doesn't currently provide a mechanism for testing exercises,
+but support for exercise testing is on the roadmap for future development.
+
+```{r snippet-exercise-tests, echo = FALSE}
+insert_snippet("exercise-tests")
+```
 
 ## Exercise Caption
 

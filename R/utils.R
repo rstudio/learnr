@@ -1,13 +1,13 @@
-"%||%" <- function(x, y) if (is.null(x)) y else x
+# @staticimports inst/staticexports/
+#   split_code_headers
+#   str_trim
+#   is_AsIs
+#   is_html_tag is_html_chr is_html_any
 
-is_windows <- function() {
-  .Platform$OS.type == 'windows'
-}
-
-is_macos <- function() {
-  Sys.info()[["sysname"]] == "Darwin"
-}
-
+# @staticimports pkg:staticimports
+#   os_name
+#   %||%
+#   is_installed
 
 is_localhost <- function(location) {
   if (is.null(location))
@@ -60,16 +60,6 @@ if (getRversion() < package_version("3.6.0")) {
   }
 }
 
-str_trim <- function(x) {
-  sub(
-    "\\s+$", "",
-    sub(
-      "^\\s+", "",
-      as.character(x)
-    )
-  )
-}
-
 if_no_match_return_null <- function(x) {
   if (length(x) == 0) {
     NULL
@@ -113,23 +103,8 @@ str_extract <- function(x, pattern, ...) {
   unlist(regmatches(x, regexpr(pattern, x, ...)))
 }
 
-is_tags <- function(x) {
-  inherits(x, "shiny.tag") ||
-    inherits(x, "shiny.tag.list")
-}
-
 knitr_engine <- function(engine) {
   tolower(engine %||% "r")
-}
-
-is_installed <- function(package, version = NULL) {
-  if (system.file(package = package) == "") {
-    return(FALSE)
-  }
-  if (!is.null(version) && utils::packageVersion(package) < version) {
-    return(FALSE)
-  }
-  TRUE
 }
 
 timestamp_utc <- function() {

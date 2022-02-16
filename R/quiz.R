@@ -223,10 +223,7 @@ question <- function(
 
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
-  if (inherits(text, "html")) {
-    return(text)
-  }
-  if (is_tags(text)) {
+  if (is_html_chr(text) || is_html_tag(text)) {
     return(text)
   }
   if (!is.null(text)) {

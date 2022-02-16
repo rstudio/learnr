@@ -40,7 +40,8 @@ tutorial_knitr_options <- function() {
       "solution",
       "error-check",
       "code-check",
-      "check"
+      "check",
+      "tests"
     )
   ) {
     # is this a support chunk using chunk labels to match with an exercise?
@@ -236,7 +237,8 @@ tutorial_knitr_options <- function() {
       options$highlight <- FALSE
     }
 
-    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check"))) {
+    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check", "tests"))) {
+      # completely suppress behind-the-scenes support chunks
       options$include <- FALSE
     }
 
@@ -361,6 +363,7 @@ tutorial_knitr_options <- function() {
         error_check_chunk <- get_knitr_chunk(paste0(options$label, "-error-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+        test_cases <- get_knitr_chunk(paste0(options$label, "-tests"))
 
         # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
         class(options) <- NULL
@@ -384,6 +387,7 @@ tutorial_knitr_options <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
+            test_cases = split_code_headers(test_cases, "test"),
             options = options[setdiff(names(options), "tutorial")],
             engine = options$engine
           ),

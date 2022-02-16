@@ -69,7 +69,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
       remote_host <- getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA))
       if (!is.na(remote_host)){
         evaluator_factory <- external_evaluator(remote_host)
-      } else if (!is_windows() && !is_macos())
+      } else if (!is_windows() && !is_mac())
         evaluator_factory <- forked_evaluator_factory
       else
         evaluator_factory <- inline_evaluator
@@ -290,7 +290,7 @@ validate_exercise <- function(exercise, require_items = NULL) {
 }
 
 standardize_code <- function(code) {
-  if (inherits(code, "AsIs")) {
+  if (is_AsIs(code)) {
     return(code)
   }
   if (is.null(code) || !length(code)) {
@@ -1089,7 +1089,7 @@ exercise_result <- function(
 
   if (is.character(feedback$html) && any(nzchar(feedback$html))) {
     feedback$html <- htmltools::HTML(feedback$html)
-  } else if (!inherits(feedback$html, c("shiny.tag", "shiny.tag.list", "html"))) {
+  } else if (!is_html_any(feedback$html)) {
     feedback$html <- feedback_as_html(feedback)
   }
 
@@ -1261,7 +1261,7 @@ debug_exercise_checker <- function(
   ...
 ) {
   # Use I() around check_code to indicate that we want to evaluate the check code
-  checker_result <- if (inherits(check_code, "AsIs")) {
+  checker_result <- if (is_AsIs(check_code)) {
     local(eval(parse(text = check_code)))
   }
 
