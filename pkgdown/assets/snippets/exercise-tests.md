@@ -6,10 +6,6 @@
 1 + 1
 ```
 
-```{r addition-check}
-check_this_exercise(user_code, solution_code)
-```
-
 ```{r addition-tests}
 1 + 1
 
