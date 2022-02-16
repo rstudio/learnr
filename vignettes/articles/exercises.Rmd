@@ -56,7 +56,7 @@ These chunks a linked together
 
 1.  Exercise [`-setup` chunks](#exercise-setup) enable you to execute code to setup the environment immediately prior to executing submitted code.
 
-1.  Exercise [`-solution` chunks](#exercise-solutions) enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.
+1.  Exercise [`-solution` chunks](#hints-and-solutions) enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.
 
 1.  Exercise [`-hint` chunks](#r-code-hints) are used to provide a series of hints to help the user progress through the exercise.
 
