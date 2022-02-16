@@ -554,7 +554,7 @@ split_code_headers <- function(code, prefix = "test_case_") {
   }
 
   code <- paste(code, collapse = "\n")
-  code <- trimws(code)
+  code <- trimws(code, whitespace = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
   rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
@@ -586,6 +586,6 @@ split_code_headers <- function(code, prefix = "test_case_") {
   }
 
   names(sections) <- header_names
-  sections <- trimws(sections)
+  sections <- trimws(sections, whitespace = "[\r\n]")
   as.list(sections[nzchar(sections)])
 }

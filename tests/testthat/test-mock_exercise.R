@@ -25,16 +25,16 @@ test_that("exercise mocks: mock_prep_setup()", {
   expect_error(mock_prep_setup(chunks[c(1, 1)], "setup-1"), "Duplicated")
 })
 
-test_that("mock exercise test cases", {
+test_that("mock_exercise() test cases with splits", {
   code <- '1 + 1
 
 # one plus two ----
 1 + 2
 
-# one plus three ----
+## one plus three ----
 1 + 3
 
-# one equals three ----
+#### one equals three ----
 1 = 3
 
 # 2 minus one ----
@@ -51,7 +51,14 @@ test_that("mock exercise test cases", {
       "2 minus one" = "2 - 1"
     )
   )
+})
 
+test_that("mock_exercise() test cases, no splits", {
   expect_null(mock_exercise("1 + 1")$test_cases)
   expect_equal(mock_exercise("1 + 1", test_cases = "1 + 1")$test_cases, list("1 + 1"))
+})
+
+test_that("mock_exercise() test cases, bad split", {
+  code <- '   ## one\npi'
+  expect_equal(mock_exercise("1 + 1", test_cases = code)$test_cases, list(code))
 })
