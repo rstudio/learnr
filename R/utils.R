@@ -1,6 +1,8 @@
 # @staticimports inst/staticexports/
 #   split_code_headers
 #   str_trim
+#   is_AsIs
+#   is_html_tag is_html_chr is_html_any
 
 # @staticimports pkg:staticimports
 #   os_name
@@ -99,11 +101,6 @@ str_remove <- function(x, pattern) {
 }
 str_extract <- function(x, pattern, ...) {
   unlist(regmatches(x, regexpr(pattern, x, ...)))
-}
-
-is_tags <- function(x) {
-  inherits(x, "shiny.tag") ||
-    inherits(x, "shiny.tag.list")
 }
 
 knitr_engine <- function(engine) {

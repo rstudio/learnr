@@ -3,6 +3,22 @@
 # Imported from inst/staticexports/
 # ======================================================================
 
+is_AsIs <- function(x) {
+  inherits(x, "AsIs")
+}
+
+is_html_any <- function(x) {
+  is_html_tag(x) || is_html_chr(x)
+}
+
+is_html_chr <- function(x) {
+  is.character(x) && inherits(x, "html")
+}
+
+is_html_tag <- function(x) {
+  inherits(x, c("shiny.tag", "shiny.tag.list"))
+}
+
 split_code_headers <- function(code, prefix = "section") {
   if (is.null(code)) {
     return(NULL)

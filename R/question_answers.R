@@ -36,7 +36,7 @@
 #' @describeIn answer Create an answer option
 #' @export
 answer <- function(text, correct = FALSE, message = NULL, label = text) {
-  if (!is_tags(message)) {
+  if (!is_html_tag(message)) {
     checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
   }
 
