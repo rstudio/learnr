@@ -25,7 +25,7 @@ test_that("exercise mocks: mock_prep_setup()", {
   expect_error(mock_prep_setup(chunks[c(1, 1)], "setup-1"), "Duplicated")
 })
 
-test_that("mock_exercise() test cases with splits", {
+test_that("mock_exercise() creates tests with splits", {
   code <- '1 + 1
 
 # one plus two ----
@@ -40,11 +40,11 @@ test_that("mock_exercise() test cases with splits", {
 # 2 minus one ----
 2 - 1'
 
-  ex <- mock_exercise("1 + 1", test_cases = code)
+  ex <- mock_exercise("1 + 1", tests = code)
   expect_equal(
-    ex$test_cases,
+    ex$tests,
     list(
-      test_case_00 = "1 + 1",
+      test00 = "1 + 1",
       "one plus two" = "1 + 2",
       "one plus three" = "1 + 3",
       "one equals three" = "1 = 3",
@@ -53,12 +53,12 @@ test_that("mock_exercise() test cases with splits", {
   )
 })
 
-test_that("mock_exercise() test cases, no splits", {
-  expect_null(mock_exercise("1 + 1")$test_cases)
-  expect_equal(mock_exercise("1 + 1", test_cases = "1 + 1")$test_cases, list("1 + 1"))
+test_that("mock_exercise() tests, no splits", {
+  expect_null(mock_exercise("1 + 1")$tests)
+  expect_equal(mock_exercise("1 + 1", tests = "1 + 1")$tests, list("1 + 1"))
 })
 
-test_that("mock_exercise() test cases, bad split", {
+test_that("mock_exercise() tests, bad split", {
   code <- '   ## one\npi'
-  expect_equal(mock_exercise("1 + 1", test_cases = code)$test_cases, list(code))
+  expect_equal(mock_exercise("1 + 1", tests = code)$tests, list(code))
 })

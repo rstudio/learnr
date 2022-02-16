@@ -6,10 +6,10 @@ mock_exercise <- function(
   global_setup = NULL,
   setup_label = NULL,
   solution_code = NULL,
-  code_check = NULL,  # code_check_chunk
-  error_check = NULL, # error_check_chunk
-  check = NULL,       # check_chunk
-  test_cases = NULL,  # test-cases
+  code_check = NULL,  # code_check chunk
+  error_check = NULL, # error_check chunk
+  check = NULL,       # check chunk
+  tests = NULL,       # tests chunk
   exercise.checker = dput_to_string(debug_exercise_checker),
   exercise.error.check.code = dput_to_string(debug_exercise_checker),
   exercise.df_print = "default",
@@ -75,7 +75,7 @@ mock_exercise <- function(
     code_check = code_check,
     error_check = error_check,
     check = check,
-    test_cases = split_code_headers(test_cases, "test_case_"),
+    tests = split_code_headers(tests, "test"),
     options = utils::modifyList(default_options, list(...)),
     engine = engine,
     version = version
