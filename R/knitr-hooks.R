@@ -554,7 +554,7 @@ split_code_headers <- function(code, prefix = "test_case_") {
   }
 
   code <- paste(code, collapse = "\n")
-  code <- trimws(code, whitespace = "[\r\n]")
+  code <- str_trim(code, character = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
   rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
@@ -571,7 +571,7 @@ split_code_headers <- function(code, prefix = "test_case_") {
   }
 
   header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
-  header_names <- trimws(header_names)
+  header_names <- str_trim(header_names)
   if (any(!nzchar(header_names))) {
     header_names[!nzchar(header_names)] <- sprintf(
       paste0(prefix, "%02d"),
@@ -584,8 +584,12 @@ split_code_headers <- function(code, prefix = "test_case_") {
   if (length(sections) > length(header_names)) {
     header_names <- c(paste0(prefix, "00"), header_names)
   }
-
   names(sections) <- header_names
-  sections <- trimws(sections, whitespace = "[\r\n]")
-  as.list(sections[nzchar(sections)])
+
+  # trim leading/trailing new lines from code section
+  sections <- str_trim(sections, character = "[\r\n]")
+  # drop any sections that don't have anything in them
+  sections <- sections[nzchar(str_trim(sections))]
+
+  as.list(sections)
 }
