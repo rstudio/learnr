@@ -557,7 +557,7 @@ split_code_headers <- function(code, prefix = "test_case_") {
   code <- trimws(code)
   code <- strsplit(code, "\n")[[1]]
 
-  rgx_header <- "^\\s*#+[ -]*(.+?)\\s*----+$"
+  rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
   headers <- regmatches(code, regexec(rgx_header, code))
   lines_headers <- which(vapply(headers, length, integer(1)) > 0)
 
