@@ -122,7 +122,11 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see its results. There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
+<p>Exercises are interactive R code chunks that allow readers to directly execute R code and see its results.</p>
+<div class="section level3">
+<h3 id="exercise-options">Exercise Options<a class="anchor" aria-label="anchor" href="#exercise-options"></a>
+</h3>
+<p>There are many options associated with tutorial exercises (all of which are described in more detail below):</p>
 <table class="table">
 <colgroup>
 <col width="18%">
@@ -196,12 +200,21 @@ tutorial_options(exercise.timelimit = 60)
 ```</code>
 </pre>
 </div>
-<script type="text/javascript">loadSnippet('exerciseoptions')</script><p>There are also some other specialized chunks that can be used with an exercise chunk, including:</p>
+<script type="text/javascript">loadSnippet('exerciseoptions')</script>
+</div>
+<div class="section level3">
+<h3 id="exercise-support-chunks">Exercise Support Chunks<a class="anchor" aria-label="anchor" href="#exercise-support-chunks"></a>
+</h3>
+<p>There are also some other specialized chunks that can be used with an exercise chunk. These chunks a linked together</p>
 <ol style="list-style-type: decimal">
-<li><p>Exercise <a href="#exercise-setup">setup chunks</a>, which enable you to execute code to setup the environment immediately prior to executing submitted code.</p></li>
-<li><p>Exercise <a href="#exercise-solutions">solution chunks</a> which enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.</p></li>
+<li><p>Exercise <a href="#exercise-setup"><code>-setup</code> chunks</a> enable you to execute code to setup the environment immediately prior to executing submitted code.</p></li>
+<li><p>Exercise <a href="#hints-and-solutions"><code>-solution</code> chunks</a> enable you to provide a solution to the exercise that can be optionally viewed by users of the tutorial.</p></li>
+<li><p>Exercise <a href="#r-code-hints"><code>-hint</code> chunks</a> are used to provide a series of hints to help the user progress through the exercise.</p></li>
+<li><p>Exercise <a href="#exercise-checking"><code>-check</code>, <code>-code-check</code>, and <code>-error-check</code> chunks</a> are used to provide logic for checking the user’s attempt to solve the exercise.</p></li>
+<li><p>Finally, exercise <a href="#test-code-or-cases"><code>-tests</code> chunks</a> can store test cases or testing code related to the exercise.</p></li>
 </ol>
 <p>The use of these special chunks is also described in detail below.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="exercise-evaluation">Exercise Evaluation<a class="anchor" aria-label="anchor" href="#exercise-evaluation"></a>
@@ -688,6 +701,40 @@ custom_checker
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 id="test-code-or-cases">Test Code or Cases<a class="anchor" aria-label="anchor" href="#test-code-or-cases"></a>
+</h3>
+<p>In some cases, you may want to record test cases — examples of alternative solutions, common mistakes made by students, edge cases that are missed by your checking code, etc.</p>
+<p>You can place this test code in a <code>*-tests</code> chunk. It will be preserved in the tutorial’s R Markdown source and stored in learnr’s internal data for the exercise, but it won’t appear in the tutorial text. learnr doesn’t currently provide a mechanism for testing exercises, but support for exercise testing is on the roadmap for future development.</p>
+<div id="exercise-tests" class="sourceCode">
+<pre class="markdown">
+<code>```{r addition, exercise = TRUE}
+
+```
+
+```{r addition-solution}
+1 + 1
+```
+
+```{r addition-tests}
+1 + 1
+
+# one plus two ----
+1 + 2
+
+# one plus three ----
+1 + 3
+
+# one equals three ----
+1 = 3
+
+# 2 minus one ----
+2 - 1
+```</code>
+</pre>
+</div>
+<script type="text/javascript">loadSnippet('exercise-tests')</script>
 </div>
 </div>
 <div class="section level2">
