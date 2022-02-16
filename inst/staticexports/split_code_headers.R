@@ -7,8 +7,8 @@ split_code_headers <- function(code, prefix = "section") {
   code <- str_trim(code, character = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
-  rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
-  headers <- regmatches(code, regexec(rgx_header, code))
+  rgx_header <- "^(#+)([ -]*)(.+?)?\\s*----+$"
+  headers <- regmatches(code, regexec(rgx_header, code, perl = TRUE))
   lines_headers <- which(vapply(headers, length, integer(1)) > 0)
 
   if (length(lines_headers) > 0 && max(lines_headers) == length(code)) {
@@ -20,7 +20,8 @@ split_code_headers <- function(code, prefix = "section") {
     return(list(paste(code, collapse = "\n")))
   }
 
-  header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
+  # header names are 3rd group, so 4th place in match since 1st is the whole match
+  header_names <- vapply(headers[lines_headers], `[[`, character(1), 4)
   header_names <- str_trim(header_names)
   if (any(!nzchar(header_names))) {
     header_names[!nzchar(header_names)] <- sprintf(
