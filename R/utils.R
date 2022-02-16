@@ -2,16 +2,10 @@
 #   split_code_headers
 #   str_trim
 
-"%||%" <- function(x, y) if (is.null(x)) y else x
-
-is_windows <- function() {
-  .Platform$OS.type == 'windows'
-}
-
-is_macos <- function() {
-  Sys.info()[["sysname"]] == "Darwin"
-}
-
+# @staticimports pkg:staticimports
+#   os_name
+#   %||%
+#   is_installed
 
 is_localhost <- function(location) {
   if (is.null(location))
@@ -114,16 +108,6 @@ is_tags <- function(x) {
 
 knitr_engine <- function(engine) {
   tolower(engine %||% "r")
-}
-
-is_installed <- function(package, version = NULL) {
-  if (system.file(package = package) == "") {
-    return(FALSE)
-  }
-  if (!is.null(version) && utils::packageVersion(package) < version) {
-    return(FALSE)
-  }
-  TRUE
 }
 
 timestamp_utc <- function() {
