@@ -328,6 +328,18 @@ test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
   expect_equal(res$during, res$after)
 })
 
+test_that("render_exercise() exercise chunk options are used when rendering user code", {
+  ex <- mock_exercise(
+    user_code = "knitr::opts_current$get('a_custom_user_chunk_opt')",
+    a_custom_user_chunk_opt = "PASS"
+  )
+
+  res <- withr::with_tempdir(render_exercise(ex, new.env()))
+
+  expect_equal(ex$options$a_custom_user_chunk_opt, "PASS")
+  expect_equal(res$last_value, "PASS")
+})
+
 # evaluate_exercise() -----------------------------------------------------
 
 test_that("serialized exercises produce equivalent evaluate_exercise() results", {
