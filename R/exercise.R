@@ -586,10 +586,7 @@ render_exercise <- function(exercise, envir) {
   # Put the exercise in a minimal HTML doc
   output_format_exercise <- function(user = FALSE) {
     # start constructing knitr_options for the output format
-    knitr_options <- exercise$options
-    # Recreate the logic of `rmarkdown::knitr_options_html()` by setting these options
-    knitr_options$opts_chunk$dev <- "png"
-    knitr_options$opts_chunk$dpi <- 96
+    knitr_options <- exercise["opts_chunk"]
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
@@ -633,10 +630,7 @@ render_exercise <- function(exercise, envir) {
 
   # Prepare code chunks containing exercise prep (setup) and user code
   rmd_src_prep <- exercise_code_chunks_prep(exercise)
-  rmd_src_user <- c(
-    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
-    "", exercise_code_chunks_user(exercise)
-  )
+  rmd_src_user <- exercise_code_chunks_user_rmd(exercise)
 
   envir_prep <- duplicate_env(envir)
   # placeholder envir_result in case an error occurs with setup chunks
@@ -751,6 +745,20 @@ render_exercise <- function(exercise, envir) {
     )
   }
 
+  if (is_exercise_engine(exercise, "sql")) {
+    # make sql result available as the last value from the exercise
+    if (exists("___sql_result", envir_result)) {
+      assign("last_value", get("___sql_result", envir_result), envir_result)
+      rm("___sql_result", envir = envir_result)
+    }
+    # make the connection object available in envir_prep (used by gradethis)
+    con_name <- exercise[["opts_chunk"]][["connection"]]
+    con <- get0(con_name, envir = envir, ifnotfound = NULL)
+    if (!is.null(con) && isS4(con) && is(con, "DBIConnection")) {
+      assign(con_name, con, envir = envir_prep)
+    }
+  }
+
   list(
     evaluate_result = evaluate_result,
     last_value = last_value,
@@ -803,10 +811,7 @@ exercise_code_chunks_prep <- function(exercise) {
 }
 
 exercise_code_chunks_user <- function(exercise) {
-  # chunk options on the user chunk just duplicate the exercise$options
-  # which are set globally for the exercise
   user_chunk <- exercise_get_chunks(exercise, "user")
-  user_chunk[[1]]$opts <- NULL
   exercise_code_chunks(user_chunk)
 }
 
@@ -823,6 +828,28 @@ exercise_code_chunks <- function(chunks) {
     )
   }, character(1))
 }
+
+
+exercise_code_chunks_user_rmd <- function(exercise) {
+  rmd_src_user <- c(
+    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
+    "",
+    exercise_code_chunks_user(exercise)
+  )
+
+  if (is_exercise_engine(exercise, "sql")) {
+    rmd_src_user <- c(
+      rmd_src_user,
+      "",
+      '```{r eval=exists("___sql_result")}',
+      'get("___sql_result")',
+      "```"
+    )
+  }
+
+  rmd_src_user
+}
+
 
 exercise_get_blanks_pattern <- function(exercise) {
   exercise_blanks_opt <-
@@ -1112,6 +1139,10 @@ is_error_result <- function(x) {
   is_exercise_result(x) && length(x$error_message)
 }
 
+is_exercise_engine <- function(exercise, engine) {
+  identical(knitr_engine(exercise$engine), tolower(engine))
+}
+
 exercise_result_as_html <- function(x) {
   if (!is_exercise_result(x)) {
     return(NULL)
@@ -1150,50 +1181,104 @@ filter_dependencies <- function(dependencies) {
 
 
 prepare_exercise <- function(exercise) {
-  exercise$chunks <- lapply(exercise$chunks, function(chunk) {
-    isExercise <- identical(chunk$label, exercise$label)
-    chunk$opts <- merge_options(
-      preserved_opts = chunk$opts,
-      # don't include the exercise options in setup chunks
-      inherited_opts = if (isExercise) exercise$options else list(),
-      static_opts = if (isExercise) {
-        list(
-          eval = TRUE, echo = FALSE, tutorial = NULL,
-          cache = FALSE, child = NULL
-        )
-      } else {
-        # don't include results in setup chunks
-        list(include = FALSE)
-      }
-    )
-    # Move over user submission code to the pre-rendered chunk object
-    if (isExercise) {
-      chunk$code <- exercise$code
+  forced_opts_exercise <- list(
+    tutorial = NULL,
+    engine = NULL,
+    eval = TRUE,
+    echo = FALSE,
+    cache = FALSE,
+    child = NULL,
+    dev = "png",
+    dpi = 92
+  )
+
+  exercise <- prepare_exercise_if_sql(exercise)
+
+  exercise[["opts_chunk"]] <- merge_chunk_options(
+    inherited = exercise[["options"]],
+    forced = forced_opts_exercise
+  )
+
+  exercise$chunks <- lapply(exercise[["chunks"]], function(chunk) {
+    if (identical(chunk[["label"]], exercise[["label"]])) {
+      # Exercise Chunk ----
+      chunk[["opts"]] <- merge_chunk_options(
+        chunk = chunk[["opts"]],
+        inherited = I(exercise[["opts_chunk"]])
+      )
+      # keep only unique options that we over-rode when prepping specific ex type (e.g. sql)
+      different_ex_opt <- function(opt, name) !identical(opt, exercise[["opts_chunk"]][[name]])
+      chunk[["opts"]] <- chunk[["opts"]][imap_lgl(chunk[["opts"]], different_ex_opt)]
+      # move user submission code into the exercise chunk
+      chunk[["code"]] <- exercise[["code"]]
+    } else {
+      # Setup Chunk ----
+      chunk[["opts"]] <- merge_chunk_options(
+        chunk = chunk[["opts"]],
+        forced = list(include = FALSE, tutorial = NULL)
+      )
     }
     chunk
   })
+
+  # Restore opts_chunk to R list since merge_chunk_options() dputs the values
+  # These chunk options will be used as global knitr chunk options
+  exercise[["opts_chunk"]] <- lapply(
+    exercise[["opts_chunk"]],
+    function(opt) eval(parse(text = opt))
+  )
+  exercise[["opts_chunk"]] <- compact(exercise[["opts_chunk"]])
+
   exercise
 }
 
-# `preserved_opts` are options that user supplied in Rmd
-# `inherited_opts` are exercise options
-# `static_opts` are list of manually set options, e.g. list(include=FALSE) for setup chunks.
-merge_options <- function(preserved_opts, inherited_opts, static_opts = list()) {
+prepare_exercise_if_sql <- function(exercise) {
+  if (!is_exercise_engine(exercise, "sql")) {
+    return(exercise)
+  }
+
+  # Disable invisible warning (that's how sql chunks work)
+  exercise[["options"]][["exercise.warn_invisible"]] <- FALSE
+
+  # Set `output.var` so we can find it later, overwriting user name
+  exercise[["chunks"]] <- lapply(exercise[["chunks"]], function(chunk) {
+    if (!identical(chunk[["label"]], exercise[["label"]])) {
+      return(chunk)
+    }
+    chunk[["opts"]][["output.var"]] <- "\"___sql_result\""
+    chunk
+  })
+
+  exercise
+}
+
+# `chunk` are options that user supplied in Rmd (assumed to be strings)
+# `inherited` are exercise options
+# `forced` are list of manually set options, e.g. list(include=FALSE) for setup chunks.
+merge_chunk_options <- function(
+  chunk = list(),
+  inherited = list(),
+  forced = list()
+) {
   # note: we quote each option's value if its type is a character, else return as is
   # to prevent rmd render problems (for e.g. fig.keep="high" instead of fig.keep=high)
-  static_opts <- lapply(static_opts, dput_to_string)
-  inherited_opts <- lapply(inherited_opts, dput_to_string)
+  if (!is_AsIs(forced)) {
+    forced <- lapply(forced, dput_to_string)
+  }
+  if (!is_AsIs(inherited)) {
+    inherited <- lapply(inherited, dput_to_string)
+  }
   # get all the unique names of the options
-  option_names <- unique(c(names(preserved_opts), names(inherited_opts), names(static_opts)))
+  option_names <- unique(c(names(chunk), names(inherited), names(forced)))
   opts <- lapply(option_names, function(option_name) {
     # first we want manually set options, then user's, then exercise
-    static_opts[[option_name]]  %||%
-      preserved_opts[[option_name]] %||%
-      inherited_opts[[option_name]]
+    forced[[option_name]]  %||%
+      chunk[[option_name]] %||%
+      inherited[[option_name]]
   })
   # since we manually grab the names, set the names to opts
   names(opts) <- option_names
-  # filter out options we don't need for the exercise.Rmd
+  # filter out options that already appear in the chunk item
   opts <- opts[!(names(opts) %in% c("label", "engine", "code"))]
   opts[!grepl("^exercise", names(opts))]
 }

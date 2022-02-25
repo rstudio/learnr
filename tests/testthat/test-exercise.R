@@ -36,7 +36,8 @@ test_that("render_exercise() returns exercise result with invisible value", {
       mock_chunk("setup-1", "x <- 1"),
       mock_chunk("setup-2", "y <- 2", exercise.setup = "setup-1")
     ),
-    setup_label = "setup-2"
+    setup_label = "setup-2",
+    exercise.warn_invisible = TRUE
   )
 
   base_envir <- new.env()

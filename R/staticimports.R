@@ -19,6 +19,38 @@ is_html_tag <- function(x) {
   inherits(x, c("shiny.tag", "shiny.tag.list"))
 }
 
+knitr_engine_caption <- function(engine) {
+  switch(
+    tolower(engine),
+    "bash" = "Bash",
+    "c" = "C",
+    "coffee" = "CoffeeScript",
+    "cc" = "C++",
+    "css" = "CSS",
+    "go" = "Go",
+    "groovy" = "Groovy",
+    "haskell" = "Haskell",
+    "js" = "JavaScript",
+    "mysql" = "MySQL",
+    "node" = "Node.js",
+    "octave" = "Octave",
+    "psql" = "PostgreSQL",
+    "python" = "Python",
+    "r" = "R",
+    "rcpp" = "Rcpp",
+    "cpp11" = "cpp11",
+    "rscript" = "Rscript",
+    "ruby" = "Ruby",
+    "perl" = "Perl",
+    "sass" = "Sass",
+    "scala" = "Scala",
+    "scss" = "SCSS",
+    "sql" = "SQL",
+    # else, return as the user provided
+    engine
+  )
+}
+
 split_code_headers <- function(code, prefix = "section") {
   if (is.null(code)) {
     return(NULL)
@@ -86,6 +118,10 @@ str_trim <- function(x, side = "both", character = "\\s") {
   if (is.null(a)) b else a
 }
 
+compact <- function(.x) {
+  .x[as.logical(vapply(.x, length, NA_integer_))]
+}
+
 get_package_version <- function(pkg) {
   # `utils::packageVersion()` can be slow, so first try the fast path of
   # checking if the package is already loaded.
@@ -95,6 +131,10 @@ get_package_version <- function(pkg) {
   } else {
     as.package_version(ns$.__NAMESPACE__.$spec[["version"]])
   }
+}
+
+imap_lgl <- function(.x, .f, ...) {
+  map2_lgl(.x, vec_index(.x), .f, ...)
 }
 
 is_installed <- function(pkg, version = NULL) {
@@ -110,6 +150,21 @@ is_linux   <- function() Sys.info()[['sysname']] == 'Linux'
 is_mac     <- function() Sys.info()[['sysname']] == 'Darwin'
 
 is_windows <- function() .Platform$OS.type == "windows"
+
+map2 <- function(.x, .y, .f, ...) {
+  res <- vector("list", length(.x))
+  for (i in seq_along(.x)) {
+    res[[i]] <- .f(.x[[i]], .y[[i]], ...)
+  }
+  names(res) <- names(.x)
+  res
+}
+
+map2_lgl <- function(.x, .y, .f, ...) {
+  res <- as.logical(map2(.x, .y, .f, ...))
+  names(res) <- names(.x)
+  res
+}
 
 os_name <- function() {
   if (is_windows()) {
@@ -149,3 +204,7 @@ system_file_cached <- local({
     file.path(pkg_dir, ...)
   }
 })
+
+vec_index <- function(x) {
+  names(x) %||% seq_along(x)
+}
