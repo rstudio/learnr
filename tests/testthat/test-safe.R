@@ -2,7 +2,7 @@
 context("safe r call")
 
 test_that("safe() executes code expression directly and programmatically", {
-
+  skip_on_covr()
   skip_if_not_installed("rlang")
 
   library(rlang)
