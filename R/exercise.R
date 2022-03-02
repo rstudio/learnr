@@ -747,10 +747,14 @@ render_exercise <- function(exercise, envir) {
 
   if (is_exercise_engine(exercise, "sql")) {
     # make sql result available as the last value from the exercise
-    if (exists("___sql_result", envir_result)) {
-      assign("last_value", get("___sql_result", envir_result), envir_result)
+    if (exists("___sql_result", envir = envir_result)) {
+      if (!is.null(exercise[["options"]][["output.var"]])) {
+        # the author expected the sql results in a specific variable
+        assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
+      }
       rm("___sql_result", envir = envir_result)
     }
+
     # make the connection object available in envir_prep (used by gradethis)
     con_name <- exercise[["opts_chunk"]][["connection"]]
     con <- get0(con_name, envir = envir, ifnotfound = NULL)
@@ -1240,7 +1244,10 @@ prepare_exercise_if_sql <- function(exercise) {
   # Disable invisible warning (that's how sql chunks work)
   exercise[["options"]][["exercise.warn_invisible"]] <- FALSE
 
-  # Set `output.var` so we can find it later, overwriting user name
+  # Set `output.var` so we can find it later, overwriting user name.
+  # After rendering, we'll remove the object or reassign it to the `output.var`
+  # the author was expecting. (This is much easier than dealing with knitr
+  # chunk options in various stages of evaluations/escaping.)
   exercise[["chunks"]] <- lapply(exercise[["chunks"]], function(chunk) {
     if (!identical(chunk[["label"]], exercise[["label"]])) {
       return(chunk)

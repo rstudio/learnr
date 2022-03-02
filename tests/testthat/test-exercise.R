@@ -1214,7 +1214,7 @@ test_that("Sensitive env vars and options are masked", {
 
 # Exercises in Other Languages --------------------------------------------
 
-test_that("SQL exercises", {
+test_that("SQL exercises - without explicit `output.var`", {
   skip_if_not_installed("DBI")
   skip_if_not_installed("RSQLite")
   local_edition(3)
@@ -1238,15 +1238,15 @@ test_that("SQL exercises", {
       )
     ),
     engine = "sql",
-    check = I("list(last_value = last_value, envir_prep = envir_prep, envir_result = envir_result)")
+    check = I(" ")
   )
 
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql_engine)))
-
   res_sql_engine <- evaluate_exercise(ex_sql_engine, new.env())
-  expect_snapshot(writeLines(res_sql_engine$html_output))
+  res <- res_sql_engine$feedback$checker_args
 
-  res <- res_sql_engine$feedback$checker_result
+  # snapshots
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(res_sql_engine$html_output))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1254,6 +1254,62 @@ test_that("SQL exercises", {
   expect_true(DBI::dbIsValid(con))
   # we cleaned up the __sql_result object from envir_result
   expect_false(exists("__sql_result", res$envir_result, inherits = FALSE))
+
+  mtcars <- mtcars
+  rownames(mtcars) <- NULL
+  expect_equal(res$last_value, mtcars)
+
+  DBI::dbDisconnect(con)
+})
+
+test_that("SQL exercises - with explicit `output.var`", {
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("RSQLite")
+  local_edition(3)
+
+  # example from https://dbi.r-dbi.org/#example
+  ex_sql_engine <- mock_exercise(
+    user_code = "SELECT * FROM mtcars",
+    label = "db",
+    chunks = list(
+      mock_chunk(
+        "db",
+        exercise = TRUE,
+        engine = "sql",
+        code = "SELECT * FROM mtcars",
+        connection = "db_con",
+        output.var = "my_result"
+      ),
+      mock_chunk(
+        "db-setup",
+        code = paste(
+          c(
+            "options(max.print = 25)",
+            'db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")',
+            'DBI::dbWriteTable(db_con, "mtcars", mtcars)'
+          ),
+          collapse = "\n"
+        )
+      )
+    ),
+    engine = "sql",
+    check = I(" ")
+  )
+
+  res_sql_engine <- evaluate_exercise(ex_sql_engine, new.env())
+  res <- res_sql_engine$feedback$checker_args
+
+  # snapshots
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(format(res_sql_engine$html_output)))
+
+  # connection exists in envir_prep
+  expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
+  con <- get("db_con", res$envir_prep, inherits = FALSE)
+  expect_true(DBI::dbIsValid(con))
+  # we left the sql result in `envir_result`
+  expect_true(exists("my_result", res[["envir_result"]], inherits = FALSE))
+  expect_equal(res[["last_value"]], res[["envir_result"]][["my_result"]])
 
   mtcars <- mtcars
   rownames(mtcars) <- NULL
