@@ -73,10 +73,7 @@ mock_exercise <- function(
     ex_chunk <- chunks[[idx_exercise_chunk]]
 
     # overwrite "global" options that would be pulled from exercise chunk
-    default_options <- utils::modifyList(
-      default_options,
-      chunks[[idx_exercise_chunk]][["opts"]]
-    )
+    default_options <- utils::modifyList(default_options, ex_chunk[["opts"]])
 
     warn_overwrite <- function(item, old) {
       if (item == "code") {
