@@ -341,6 +341,26 @@ test_that("render_exercise() exercise chunk options are used when rendering user
   expect_equal(res$last_value, "PASS")
 })
 
+test_that("render_exercise() user code exercise.Rmd snapshot", {
+  local_edition(3)
+
+  ex <- mock_exercise(
+    user_code = 'USER_CODE <- "PASS"',
+    solution_code = "SOLUTION_CODE",
+    chunks = list(
+      mock_chunk("ex-setup", "SETUP_CODE")
+    )
+  )
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex)))
+
+  ex_sql <- mock_exercise(
+    user_code = 'SELECT * FROM USER',
+    solution_code = "SELECT * FROM SOLUTION",
+    engine = "sql"
+  )
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql)))
+})
+
 # evaluate_exercise() -----------------------------------------------------
 
 test_that("serialized exercises produce equivalent evaluate_exercise() results", {
@@ -1190,4 +1210,54 @@ test_that("Sensitive env vars and options are masked", {
   expect_no_match(res$html_output, "T_CONNECT_API_KEY", fixed = TRUE)
   expect_no_match(res$html_output, "T_CONNECT_SERVER", fixed = TRUE)
   expect_no_match(res$html_output, "T_sharedSecret", fixed = TRUE)
+})
+
+# Exercises in Other Languages --------------------------------------------
+
+test_that("SQL exercises", {
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("RSQLite")
+  local_edition(3)
+
+  # example from https://dbi.r-dbi.org/#example
+  ex_sql_engine <- mock_exercise(
+    user_code = "SELECT * FROM mtcars",
+    label = "db",
+    chunks = list(
+      mock_chunk("db", exercise = TRUE, engine = "sql", code = "SELECT * FROM mtcars", connection = "db_con"),
+      mock_chunk(
+        "db-setup",
+        code = paste(
+          c(
+            "options(max.print = 25)",
+            'db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")',
+            'DBI::dbWriteTable(db_con, "mtcars", mtcars)'
+          ),
+          collapse = "\n"
+        )
+      )
+    ),
+    engine = "sql",
+    check = I("list(last_value = last_value, envir_prep = envir_prep, envir_result = envir_result)")
+  )
+
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql_engine)))
+
+  res_sql_engine <- evaluate_exercise(ex_sql_engine, new.env())
+  expect_snapshot(writeLines(res_sql_engine$html_output))
+
+  res <- res_sql_engine$feedback$checker_result
+
+  # connection exists in envir_prep
+  expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
+  con <- get("db_con", res$envir_prep, inherits = FALSE)
+  expect_true(DBI::dbIsValid(con))
+  # we cleaned up the __sql_result object from envir_result
+  expect_false(exists("__sql_result", res$envir_result, inherits = FALSE))
+
+  mtcars <- mtcars
+  rownames(mtcars) <- NULL
+  expect_equal(res$last_value, mtcars)
+
+  DBI::dbDisconnect(con)
 })

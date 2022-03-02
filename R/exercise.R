@@ -754,7 +754,7 @@ render_exercise <- function(exercise, envir) {
     # make the connection object available in envir_prep (used by gradethis)
     con_name <- exercise[["opts_chunk"]][["connection"]]
     con <- get0(con_name, envir = envir, ifnotfound = NULL)
-    if (!is.null(con) && isS4(con) && is(con, "DBIConnection")) {
+    if (!is.null(con) && isS4(con) && methods::is(con, "DBIConnection")) {
       assign(con_name, con, envir = envir_prep)
     }
   }
