@@ -1,0 +1,66 @@
+---
+title: "SQL Demo"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(gradethis)
+
+# Create an ephemeral in-memory RSQLite database
+# Using the example in <https://dbi.r-dbi.org/#example>
+mtcars$name <- rownames(mtcars)
+mtcars <- mtcars[union("name", names(mtcars))]
+
+db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")
+DBI::dbWriteTable(db_con, "mtcars", mtcars)
+```
+
+
+## Topic 1
+
+### Exercise
+
+Select 4-cylinder cars from the `mtcars` table.
+Only include the columns `name`, `mpg`, and `cyl`.
+
+```{sql db, exercise = TRUE, connection = "db_con", output.var="my_result"}
+SELECT name, mpg, cyl FROM mtcars WHERE cyl = 4
+```
+
+```{sql db-solution}
+SELECT name, mpg, cyl FROM mtcars WHERE cyl = 4
+```
+
+```{r db-check}
+grade_this({
+  .solution <- DBI::dbGetQuery(db_con, .solution_code)
+  
+  if (!exists("my_result", .envir_result, inherits = FALSE)) {
+    fail("I expected the SQL query results to be stored in `my_result` in `.envir_result`.")
+  }
+  
+  cols_expected <- c("name", "mpg", "cyl")
+  
+  pass_if_equal(x = .result[cols_expected])
+  
+  for (column in cols_expected) {
+    if (!column %in% names(.result)) {
+      fail("Did you forget to include `{column}`?")
+    }
+  }
+  
+  extra_cols <- setdiff(names(.result), cols_expected)
+  if (length(extra_cols)) {
+    extra_cols <- knitr::combine_words(extra_cols, and = " or ", before = "`")
+    fail("You don't need the columns {extra_cols}.")
+  }
+  
+  fail()
+})
+```
+
+```{r teardown, context="render", include=FALSE}
+starwars_disconnect(db_con)
+```
