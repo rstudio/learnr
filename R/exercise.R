@@ -309,7 +309,6 @@ standardize_exercise_code <- function(exercise) {
   exercise
 }
 
-
 # Evaluate Exercise -------------------------------------------------------
 
 # evaluate an exercise and return a list containing output and dependencies
@@ -574,7 +573,6 @@ get_checker_func <- function(exercise, name, envir) {
   function(...) NULL
 }
 
-
 # Render Exercise ---------------------------------------------------------
 
 render_exercise <- function(exercise, envir) {
@@ -782,28 +780,6 @@ render_exercise <- function(exercise, envir) {
   )
 }
 
-with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
-  # Always disable connect api keys and connect server info
-  env_vars$CONNECT_API_KEY <- ""
-  env_vars$CONNECT_SERVER <- ""
-  env_vars$LEARNR_EXERCISE_USER_CODE <- "TRUE"
-  # Hide shiny server sharedSecret
-  opts$shiny.sharedSecret <- ""
-
-  # Mask tutorial cache for user code evaluation
-  cache_current <- tutorial_cache_env$objects
-  tutorial_cache_env$objects <- NULL
-  withr::defer(tutorial_cache_env$objects <- cache_current)
-
-  # Disable shiny domain
-  shiny::withReactiveDomain(NULL, {
-    withr::with_envvar(env_vars, {
-      withr::with_options(opts, code)
-    })
-  })
-}
-
-
 # Exercise Chunk Helpers --------------------------------------------------
 
 exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
@@ -881,7 +857,6 @@ exercise_get_blanks_pattern <- function(exercise) {
 
   exercise_blanks_opt
 }
-
 
 # Exercise Check Helpers --------------------------------------------------
 
@@ -1317,6 +1292,26 @@ local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
 
 # Exercise Eval Environment Helpers ---------------------------------------
 
+with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
+  # Always disable connect api keys and connect server info
+  env_vars$CONNECT_API_KEY <- ""
+  env_vars$CONNECT_SERVER <- ""
+  env_vars$LEARNR_EXERCISE_USER_CODE <- "TRUE"
+  # Hide shiny server sharedSecret
+  opts$shiny.sharedSecret <- ""
+
+  # Mask tutorial cache for user code evaluation
+  cache_current <- tutorial_cache_env$objects
+  tutorial_cache_env$objects <- NULL
+  withr::defer(tutorial_cache_env$objects <- cache_current)
+
+  # Disable shiny domain
+  shiny::withReactiveDomain(NULL, {
+    withr::with_envvar(env_vars, {
+      withr::with_options(opts, code)
+    })
+  })
+}
 
 local_restore_options <- function(.local_envir = parent.frame()) {
   opts <- options()
@@ -1341,7 +1336,6 @@ restore_envvars <- function(old) {
   Sys.unsetenv(nulls)
   do.call(Sys.setenv, as.list(old))
 }
-
 
 # Print Methods -----------------------------------------------------------
 
