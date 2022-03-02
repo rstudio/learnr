@@ -1,5 +1,7 @@
 current_exercise_version <- "3"
 
+# Shiny Exercise Handling -------------------------------------------------
+
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
 
@@ -189,6 +191,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
   })
 }
 
+# Validation and Standardization ------------------------------------------
+
 # This function exists to synchronize versions of the exercise objects in case
 # an exercise created with an older version of {learnr} is evaluated by a
 # newer version of {learnr}. This may be the case when there is a version
@@ -304,6 +308,9 @@ standardize_exercise_code <- function(exercise) {
   exercise[ex_code_items] <- lapply(exercise[ex_code_items], standardize_code)
   exercise
 }
+
+
+# Evaluate Exercise -------------------------------------------------------
 
 # evaluate an exercise and return a list containing output and dependencies
 # @param evaluate_global_setup - If `FALSE`, will not evaluate the global setup
@@ -567,6 +574,9 @@ get_checker_func <- function(exercise, name, envir) {
   function(...) NULL
 }
 
+
+# Render Exercise ---------------------------------------------------------
+
 render_exercise <- function(exercise, envir) {
   # Protect global options and environment vars from modification by student
   local_restore_options_and_envvars()
@@ -793,6 +803,9 @@ with_masked_env_vars <- function(code, env_vars = list(), opts = list()) {
   })
 }
 
+
+# Exercise Chunk Helpers --------------------------------------------------
+
 exercise_get_chunks <- function(exercise, type = c("all", "prep", "user")) {
   type <- match.arg(type)
   if (type == "all") {
@@ -868,6 +881,9 @@ exercise_get_blanks_pattern <- function(exercise) {
 
   exercise_blanks_opt
 }
+
+
+# Exercise Check Helpers --------------------------------------------------
 
 exercise_check_code_for_blanks <- function(exercise) {
   blank_regex <- exercise_get_blanks_pattern(exercise)
@@ -1061,6 +1077,8 @@ exercise_highlight_unparsable_unicode <- function(code, pattern, line) {
   html_code_block(paste0(line, ": ", highlighted_code), escape = FALSE)
 }
 
+# Exercise Result Helpers -------------------------------------------------
+
 exercise_result_timeout <- function() {
   exercise_result_error(
     "Error: Your code ran longer than the permitted timelimit for this exercise.",
@@ -1142,6 +1160,8 @@ is_exercise_result <- function(x) {
 is_error_result <- function(x) {
   is_exercise_result(x) && length(x$error_message)
 }
+
+# Exercise Prep -----------------------------------------------------------
 
 is_exercise_engine <- function(exercise, engine) {
   identical(knitr_engine(exercise$engine), tolower(engine))
@@ -1295,6 +1315,9 @@ local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
   local_restore_envvars(.local_envir)
 }
 
+# Exercise Eval Environment Helpers ---------------------------------------
+
+
 local_restore_options <- function(.local_envir = parent.frame()) {
   opts <- options()
   withr::defer(restore_options(opts), envir = .local_envir)
@@ -1318,6 +1341,8 @@ restore_envvars <- function(old) {
   Sys.unsetenv(nulls)
   do.call(Sys.setenv, as.list(old))
 }
+
+# Debug Checker -----------------------------------------------------------
 
 #' An Exercise Checker for Debugging
 #'
