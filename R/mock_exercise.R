@@ -52,6 +52,7 @@ mock_exercise <- function(
   )
 
   if (!has_exercise_chunk) {
+    # create non-existent exercise chunk from global options
     chunks <- c(chunks, list(
       mock_chunk(
         label,
@@ -61,6 +62,43 @@ mock_exercise <- function(
         exercise.setup = setup_label
       )
     ))
+  } else {
+    # move opts from exercise chunk to global options
+    idx_exercise_chunk <- which(has_exercise_chunk)
+
+    if (length(idx_exercise_chunk) > 1) {
+      rlang::abort("Exercises may have only one exercise chunk")
+    }
+
+    ex_chunk <- chunks[[idx_exercise_chunk]]
+
+    # overwrite "global" options that would be pulled from exercise chunk
+    default_options <- utils::modifyList(
+      default_options,
+      chunks[[idx_exercise_chunk]][["opts"]]
+    )
+
+    warn_overwrite <- function(item, old) {
+      if (item == "code") {
+        rlang::warn("Overwriting mock exercise `user_code` using exercise chunk code")
+      }
+      msg <- sprintf("Overwriting mock exercise `%s` from '%s' to '%s'", item, old, ex_chunk[[item]])
+      rlang::warn(msg)
+    }
+
+    if (!missing(label) && !identical(label, ex_chunk[["label"]])) {
+      warn_overwrite("label", label)
+    }
+    if (!missing(engine) && !identical(engine, ex_chunk[["engine"]])) {
+      warn_overwrite("engine", label)
+    }
+    if (!missing(user_code) && !identical(user_code, ex_chunk[["code"]])) {
+      warn_overwrite("code", user_code)
+    }
+
+    label <- ex_chunk[["label"]]
+    engine <- ex_chunk[["engine"]]
+    user_code <- paste(ex_chunk[["code"]], collapse = "\n")
   }
 
   ex <- list(
