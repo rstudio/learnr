@@ -1214,6 +1214,39 @@ test_that("Sensitive env vars and options are masked", {
 
 # Exercises in Other Languages --------------------------------------------
 
+test_that("is_exercise_engine()", {
+  expect_true(
+    is_exercise_engine(list(), "R")
+  )
+  expect_true(
+    is_exercise_engine(list(), "r")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "R"), "R")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "sql"), "SQL")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "JS"), "js")
+  )
+  expect_false(
+    is_exercise_engine(list(), "sql")
+  )
+  expect_false(
+    is_exercise_engine(list(engine = "js"), "sql")
+  )
+  expect_error(
+    is_exercise_engine(NULL)
+  )
+  expect_error(
+    is_exercise_engine()
+  )
+  expect_error(
+    is_exercise_engine(list())
+  )
+})
+
 test_that("SQL exercises - without explicit `output.var`", {
   skip_if_not_installed("DBI")
   skip_if_not_installed("RSQLite")

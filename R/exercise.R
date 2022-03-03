@@ -390,7 +390,7 @@ evaluate_exercise <- function(
   }
 
   # Check that user R code is parsable -------------------------------------
-  if (identical(tolower(exercise$engine), "r")) {
+  if (is_exercise_engine(exercise, "r")) {
     return_if_exercise_result(
       exercise_check_code_is_parsable(exercise)
     )
@@ -1139,7 +1139,7 @@ is_error_result <- function(x) {
 # Exercise Prep -----------------------------------------------------------
 
 is_exercise_engine <- function(exercise, engine) {
-  identical(knitr_engine(exercise$engine), tolower(engine))
+  identical(knitr_engine(exercise$engine), knitr_engine(engine))
 }
 
 exercise_result_as_html <- function(x) {
