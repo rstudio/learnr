@@ -42,7 +42,6 @@ Imports:
     knitr (>= 1.31),
     lifecycle,
     markdown,
-    methods,
     parallel,
     promises,
     rappdirs,
