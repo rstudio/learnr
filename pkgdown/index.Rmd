@@ -25,6 +25,11 @@ ex <- lapply(ex, function(x) {
 example_cards(ex, "showcase")
 ```
 
+## Installation
+
+```{r child="../man/rmd-fragments/learnr-install.Rmd"}
+```
+
 ## Hello, Tutorial!
 
 ```{r child="../man/rmd-fragments/hello-tutorial.Rmd"}
