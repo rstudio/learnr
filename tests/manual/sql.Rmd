@@ -43,8 +43,6 @@ grade_this({
   
   cols_expected <- c("name", "mpg", "cyl")
   
-  pass_if_equal(x = .result[cols_expected])
-  
   for (column in cols_expected) {
     if (!column %in% names(.result)) {
       fail("Did you forget to include `{column}`?")
@@ -57,10 +55,7 @@ grade_this({
     fail("You don't need the columns {extra_cols}.")
   }
   
+  pass_if_equal(x = .result[cols_expected])
   fail()
 })
-```
-
-```{r teardown, context="render", include=FALSE}
-starwars_disconnect(db_con)
 ```
