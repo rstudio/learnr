@@ -95,7 +95,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Deploy packaged tutorials to shinyapps.io
         uses: rstudio/education-workflows/deploy-learnr-shinyapps-io@v1
