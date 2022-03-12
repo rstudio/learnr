@@ -25,7 +25,7 @@ name: pkgdown
 jobs:
   pkgdown-build:
     runs-on: ubuntu-latest
-    if: ${{ !(github.event_name == "pull_request" && github.event.action == "closed")}}
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -37,7 +37,7 @@ jobs:
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - uses: r-lib/actions/pr-fetch@v2
-        if: ${{ github.event_name }} == "pull_request"
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           repo-token: ${{ github.token }}
 
@@ -54,17 +54,17 @@ jobs:
             website
           extra-packages: |
             local::.
-            any::r-lib/pkgdown
+            any::pkgdown
 
       # If events is a PR, set subdir to 'preview/pr<pr_number>'
       - name: "[PR] Set documentation subdirectory"
-        if: github.event_name == "pull_request"
+        if: github.event_name == 'pull_request'
         run: |
-          echo "subdir=preview/pr${{{ github.event.number }}}" >> $GITHUB_ENV
+          echo "subdir=preview/pr${{ github.event.number }}" >> $GITHUB_ENV
 
       # If event is a tag, set subdir to '<tag_name>'
       - name: "[tag] Set documentation subdirectory"
-        if: github.event_name == "push" && startsWith(github.ref, "refs/tags/v")
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         run: |
           echo "subdir=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
@@ -72,10 +72,10 @@ jobs:
         shell: Rscript {0}
         run: |
           subdir <- "${{ env.subdir }}"
-          pkgdown::deploy_to_github(subdir = if (nzchar(subdir)) subdir, clean = nzchar(subdir))
+          pkgdown::deploy_to_branch(subdir = if (nzchar(subdir)) subdir, clean = nzchar(subdir))
 
   pkgdown-clean:
-    if: ${{ github.event_name == "pull_request" && github.event.action == "closed"}}
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
