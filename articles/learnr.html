@@ -125,14 +125,14 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<ol style="list-style-type: decimal">
-<li>
-<p>Install the <strong>learnr</strong> package from CRAN as follows:</p>
+<p>Install the latest version of learnr from GitHub with the <a href="https://remotes.r-lib.org" class="external-link">remotes package</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/learnr"</span><span class="op">)</span></code></pre></div>
+<p>Or you can install the <strong>learnr</strong> package from CRAN:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"learnr"</span><span class="op">)</span></code></pre></div>
-</li>
-<li><p>Install the <a href="https://www.rstudio.com/products/rstudio/download/" class="external-link">latest release of RStudio</a> (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.</p></li>
-</ol>
+<p>learnr works best with a recent <a href="https://www.rstudio.com/products/rstudio/download/" class="external-link">version of RStudio</a> (v1.0.136 or later) which include tools for easily running and previewing tutorials.</p>
 </div>
 <div class="section level3">
 <h3 id="creating-a-tutorial">Creating a Tutorial<a class="anchor" aria-label="anchor" href="#creating-a-tutorial"></a>
@@ -182,10 +182,10 @@ description: "Welcome to learnr tutorials!"
 <h3 id="running-tutorials">Running Tutorials<a class="anchor" aria-label="anchor" href="#running-tutorials"></a>
 </h3>
 <p>Tutorials are Shiny applications that are run using the <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/run.html" class="external-link">rmarkdown::run</a></code> function rather than the <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp</a></code> function. For example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/run.html" class="external-link">run</a></span><span class="op">(</span><span class="st">"tutorial.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>If your tutorial is included within an R package you can also run it via the <code><a href="../reference/run_tutorial.html">learnr::run_tutorial</a></code> function. For example, you can run a live version of the “Hello, Tutor” example provided above with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"hello"</span>, package <span class="op">=</span> <span class="st">"learnr"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>

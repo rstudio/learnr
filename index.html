@@ -192,6 +192,16 @@ An example tutorial where learners are introduced to <code>dplyr::summarise()</c
 </div>
 </div>
 <div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Install the latest version of learnr from GitHub with the <a href="https://remotes.r-lib.org" class="external-link">remotes package</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"rstudio/learnr"</span>)</span></code></pre></div>
+<p>Or you can install the <strong>learnr</strong> package from CRAN:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"learnr"</span>)</span></code></pre></div>
+<p>learnr works best with a recent <a href="https://www.rstudio.com/products/rstudio/download/" class="external-link">version of RStudio</a> (v1.0.136 or later) which include tools for easily running and previewing tutorials.</p>
+</div>
+<div class="section level2">
 <h2 id="hello-tutorial">Hello, Tutorial!<a class="anchor" aria-label="anchor" href="#hello-tutorial"></a>
 </h2>
 <p>To create a tutorial, set <code>runtime: shiny_prerendered</code> in the YAML frontmatter of your <code>.Rmd</code> file to turn your R Markdown document into an <a href="https://rmarkdown.rstudio.com/lesson-14.html" class="external-link">interactive app</a>.</p>
@@ -209,7 +219,8 @@ runtime: shiny_prerendered
 library(learnr)
 ```
 
-This code computes the answer to one plus one, change it so it computes two plus two:
+This code computes the answer to one plus one,
+change it so it computes two plus two:
 
 ```{r addition, exercise=TRUE}
 1 + 1
