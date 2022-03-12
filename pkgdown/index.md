@@ -88,6 +88,23 @@ Here are some examples of tutorials created with the **learnr** package.
 </div>
 </div>
 
+## Installation
+
+Install the latest version of learnr from GitHub with the [remotes
+package](https://remotes.r-lib.org):
+
+    # install.packages("remotes")
+    remotes::install_github("rstudio/learnr")
+
+Or you can install the **learnr** package from CRAN:
+
+    install.packages("learnr")
+
+learnr works best with a recent [version of
+RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
+or later) which include tools for easily running and previewing
+tutorials.
+
 ## Hello, Tutorial!
 
 To create a tutorial, set `runtime: shiny_prerendered` in the YAML
@@ -113,7 +130,8 @@ runtime: shiny_prerendered
 library(learnr)
 &#96;&#96;&#96;
 
-This code computes the answer to one plus one, change it so it computes two plus two:
+This code computes the answer to one plus one,
+change it so it computes two plus two:
 
 &#96;&#96;&#96;{r addition, exercise=TRUE}
 1 + 1

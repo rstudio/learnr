@@ -12,3 +12,8 @@ output: md_document
 ```
 
 Learn more about the **learnr** package and try example tutorials online at <https://pkgs.rstudio.com/learnr>.
+
+## Installation
+
+```{r child="man/rmd-fragments/learnr-install.Rmd"}
+```

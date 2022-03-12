@@ -8,13 +8,20 @@ description: >
 
 ### Installation
 
-1.  Install the **learnr** package from CRAN as follows:
+Install the latest version of learnr from GitHub with the [remotes package](https://remotes.r-lib.org):
 
-    ``` r
-    install.packages("learnr")
-    ```
+``` r
+# install.packages("remotes")
+remotes::install_github("rstudio/learnr")
+```
 
-2.  Install the [latest release of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) as it includes tools for easily running and previewing tutorials.
+Or you can install the **learnr** package from CRAN:
+
+``` r
+install.packages("learnr")
+```
+
+learnr works best with a recent [version of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) which include tools for easily running and previewing tutorials.
 
 ### Creating a Tutorial
 
