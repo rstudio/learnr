@@ -2,7 +2,7 @@ Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
 Version: 0.10.1.9019
-Authors@R:c(
+Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@rstudio.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
     person("Barret", "Schloerke", , "barret@rstudio.com", role = "aut",
@@ -55,8 +55,10 @@ Imports:
     withr
 Suggests:
     callr,
+    DBI (>= 0.4-1),
     httpuv,
     later,
+    RSQLite,
     rstudioapi (>= 0.11),
     shinytest (>= 1.5.0),
     testthat (>= 2.1.0)

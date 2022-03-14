@@ -34,3 +34,7 @@
 #' @importFrom withr with_envvar
 ## usethis namespace: end
 NULL
+
+# @staticimports pkg:staticimports
+#   compact
+#   imap_lgl

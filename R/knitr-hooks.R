@@ -1,3 +1,6 @@
+# @staticimports inst/staticexports/
+#   knitr_engine_caption
+
 detect_installed_knitr_hooks <- function() {
   tutorial_chunk_opt <- knitr::opts_chunk$get("tutorial")
   if (!(isTRUE(tutorial_chunk_opt) || identical(tutorial_chunk_opt, "TRUE"))) {
@@ -418,35 +421,7 @@ tutorial_knitr_options <- function() {
                 htmltools::HTML(readLines(cap_engine_file))
               ))
             } else {
-              cap_engine_val <-
-                switch(cap_engine,
-                  "bash" = "Bash",
-                  "c" = "C",
-                  "coffee" = "CoffeeScript",
-                  "cc" = "C++",
-                  "css" = "CSS",
-                  "go" = "Go",
-                  "groovy" = "Groovy",
-                  "haskell" = "Haskell",
-                  "js" = "JavaScript",
-                  "mysql" = "MySQL",
-                  "node" = "Node.js",
-                  "octave" = "Octave",
-                  "psql" = "PostgreSQL",
-                  "python" = "Python",
-                  "r" = "R",
-                  "rcpp" = "Rcpp",
-                  "cpp11" = "cpp11",
-                  "rscript" = "Rscript",
-                  "ruby" = "Ruby",
-                  "perl" = "Perl",
-                  "sass" = "Sass",
-                  "scala" = "Scala",
-                  "scss" = "SCSS",
-                  "sql" = "SQL",
-                  # else, return as the user provided
-                  options$engine
-                )
+              cap_engine_val <- knitr_engine_caption(options[["engine"]])
               i18n_span(
                 "text.enginecap",
                 paste(cap_engine_val, "Code"),

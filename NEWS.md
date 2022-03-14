@@ -102,6 +102,8 @@
 
 -   If an exercise includes a `-check` chunk but no `exercise.checker` function has been defined, learnr will now throw an error at render reminding the author to use `tutorial_options()` to define an exercise checker (#640).
 
+-   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
+
 ### Questions
 
 -   Authors can now provide function-answers with `answer_fn()`. Authors can provide a function that takes a single argument that will be passed the student's question submission. This function decides if the question is correct and provides feedback by returning `correct()` or `incorrect()` with a feedback message (#657).

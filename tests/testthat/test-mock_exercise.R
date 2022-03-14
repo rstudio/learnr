@@ -62,3 +62,67 @@ test_that("mock_exercise() tests, bad split", {
   code <- '   ## one\npi'
   expect_equal(mock_exercise("1 + 1", tests = code)$tests, list(code))
 })
+
+test_that("mock_exercise() moves exercise chunk options to default options", {
+  ex <- mock_exercise(
+    chunks = list(
+      mock_chunk(
+        label = "chunk-name",
+        code = "PASS",
+        exercise = TRUE,
+        engine = "javascript",
+        test_option = "PASS"
+      )
+    )
+  )
+
+  expect_equal(ex$label, "chunk-name")
+  expect_equal(ex$code, "PASS")
+  expect_equal(ex$engine, "javascript")
+  expect_equal(ex$options$test_option, "PASS")
+
+  expect_warning(
+    mock_exercise(
+      label = "ex",
+      chunks = list(
+        mock_chunk(
+          label = "chunk-name",
+          code = "PASS",
+          exercise = TRUE,
+          engine = "javascript",
+          test_option = "PASS"
+        )
+      )
+    )
+  )
+
+  expect_warning(
+    mock_exercise(
+      user_code = "FAIL",
+      chunks = list(
+        mock_chunk(
+          label = "chunk-name",
+          code = "PASS",
+          exercise = TRUE,
+          engine = "javascript",
+          test_option = "PASS"
+        )
+      )
+    )
+  )
+
+  expect_warning(
+    mock_exercise(
+      engine = "fail",
+      chunks = list(
+        mock_chunk(
+          label = "chunk-name",
+          code = "PASS",
+          exercise = TRUE,
+          engine = "javascript",
+          test_option = "PASS"
+        )
+      )
+    )
+  )
+})
