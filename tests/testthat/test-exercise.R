@@ -1333,7 +1333,6 @@ test_that("SQL exercises - with explicit `output.var`", {
 
   # snapshots
   expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
-  expect_snapshot(writeLines(format(res_sql_engine$html_output)))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
