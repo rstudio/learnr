@@ -449,10 +449,13 @@ evaluate_exercise <- function(
           envir_result = err_render$envir_result,
           evaluate_result = err_render$evaluate_result,
           envir_prep = err_render$envir_prep,
-          last_value = err_render$last_value
+          last_value = err_render$parent
         )
       }
-      exercise_result_error(err_render$error_message, error_feedback$feedback)
+      exercise_result_error(
+        error_message = conditionMessage(err_render$parent),
+        feedback = error_feedback$feedback
+      )
     }
   )
 
@@ -720,8 +723,7 @@ render_exercise <- function(exercise, envir) {
       envir_result = envir_result,
       evaluate_result = evaluate_result,
       envir_prep = envir_prep,
-      last_value = e,
-      error_message = msg
+      parent = e
     )
   })
 
