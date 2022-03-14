@@ -49,7 +49,7 @@
     interactive visualizations with [htmlwidgets](http://www.htmlwidgets.org/).
 
 - title: "learnr: SQL Exercises"
-  image: images/tutorial-slidy.png
+  image: images/tutorial-sql.png
   link: https://learnr-examples.shinyapps.io/sql/
   footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/sql/sql.Rmd">Source</a>
   group: demo
