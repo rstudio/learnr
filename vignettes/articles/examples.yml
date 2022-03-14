@@ -1,7 +1,7 @@
 - title: "Setting Up R"
   image: images/tutorial-ex-setup-r.png
   link: https://learnr-examples.shinyapps.io/ex-setup-r/
-  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">Source</a>
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">Source</a>
   group: showcase
   text: >
     A tutorial featuring videos and interactive questions to guide a new R user
@@ -11,7 +11,7 @@
 - title: "Filtering Observations"
   image: images/tutorial-ex-data-filter.png
   link: https://learnr-examples.shinyapps.io/ex-data-filter/
-  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">Source</a>
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">Source</a>
   group: showcase
   text: >
     An example tutorial teaching a common `data` transformation: _filtering_
@@ -20,7 +20,7 @@
 - title: "Summarizing Data"
   image: images/tutorial-ex-data-summarise.png
   link: https://learnr-examples.shinyapps.io/ex-data-summarise
-  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">Source</a>
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">Source</a>
   group: showcase
   text: >
     An example tutorial where learners are introduced to `dplyr::summarise()`.
@@ -41,17 +41,27 @@
 - title: "learnr: slidy layout"
   image: images/tutorial-slidy.png
   link: https://learnr-examples.shinyapps.io/slidy/
-  footer: <a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/slidy/slidy.Rmd">Source</a>
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/slidy/slidy.Rmd">Source</a>
   group: demo
   text: >
     learnr tutorials can even be used in slides! This example tutorial is a
     short presentation that showcases an interactive exercise that produces
     interactive visualizations with [htmlwidgets](http://www.htmlwidgets.org/).
 
+- title: "learnr: SQL Exercises"
+  image: images/tutorial-slidy.png
+  link: https://learnr-examples.shinyapps.io/sql/
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/sql/sql.Rmd">Source</a>
+  group: demo
+  text: >
+    You can use learnr to teach students how to work with databases using
+    interactive SQL exercises. In this example, we describe how to create your
+    own SQL exercises using the gradethis package to check the student's query.
+
 - title: "sortable: Ranking Questions"
   image: images/tutorial-external-sortable.png
   link: https://andrie-de-vries.shinyapps.io/sortable_tutorial_question_rank/
-  footer: <a href="https://github.com/rstudio/sortable/tree/master/inst/tutorials/question_rank/question_rank.Rmd">Source</a>
+  footer: <a href="https://github.com/rstudio/sortable/tree/main/inst/tutorials/question_rank/question_rank.Rmd">Source</a>
   group: demo
   text: >
     The [sortable](https://rstudio.github.io/sortable/) package allows you to
