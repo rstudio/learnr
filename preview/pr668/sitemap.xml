@@ -1,150 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/404.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/404.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/CONTRIBUTING.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/LICENSE.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/PULL_REQUEST_TEMPLATE.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/PULL_REQUEST_TEMPLATE.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/examples.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/examples.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/exercises.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/exercises.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/formats.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/formats.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/index.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/learnr.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/learnr.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/multilang.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/multilang.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/publishing.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/publishing.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/questions.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/questions.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/articles/shinyapps-publishing.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/articles/shinyapps-publishing.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/authors.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/authors.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/index.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/index.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/news/index.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/news/index.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/answer.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/answer.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/available_tutorials.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/available_tutorials.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/debug_exercise_checker.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/debug_exercise_checker.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/disable_all_tags.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/disable_all_tags.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/duplicate_env.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/duplicate_env.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/event_register_handler.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/event_register_handler.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/external_evaluator.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/external_evaluator.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/filesystem_storage.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/filesystem_storage.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/finalize_question.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/finalize_question.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/format_quiz.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/format_quiz.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/get_tutorial_info.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/get_tutorial_info.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/get_tutorial_state.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/get_tutorial_state.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/index.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/initialize_tutorial.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/initialize_tutorial.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/knit_print.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/knit_print.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/learnr-package.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/learnr-package.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/mark_as_correct_incorrect.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/mark_as_correct_incorrect.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/one_time.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/one_time.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/question_checkbox.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/question_checkbox.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/question_methods.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/question_methods.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/question_numeric.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/question_numeric.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/question_radio.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/question_radio.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/question_text.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/question_text.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/quiz.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/quiz.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/random_phrases_add.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/random_phrases_add.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/random_praise.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/random_praise.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/run_tutorial.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/run_tutorial.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/safe.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/safe.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/safe_env.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/safe_env.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/tutorial.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/tutorial.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/tutorial_html_dependency.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/tutorial_html_dependency.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/tutorial_options.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/tutorial_options.html</loc>
   </url>
   <url>
-    <loc>https://pkgs.rstudio.com/learnr/reference/tutorial_package_dependencies.html</loc>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr668/reference/tutorial_package_dependencies.html</loc>
   </url>
 </urlset>
