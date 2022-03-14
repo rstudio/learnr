@@ -1,0 +1,157 @@
+---
+title: "Interactive SQL Exercises"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Learn how to write tutorials with interactive SQL exercises. In this example,
+  we also use the gradethis package to check the student's query.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+# requires gradethis (>= 0.2.6.9000)
+library(gradethis)
+
+# Create an ephemeral in-memory RSQLite database
+# Using the example in <https://dbi.r-dbi.org/#example>
+mtcars$name <- rownames(mtcars)
+mtcars <- mtcars[union("name", names(mtcars))]
+
+db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")
+DBI::dbWriteTable(db_con, "mtcars", mtcars)
+```
+
+## Creating SQL Exercises
+
+### Create a SQL exercise
+
+To create an interactive exercise where the student is expected to write SQL code, you need to first create a database connection in your global setup chunk.
+In this tutorial, I've created an in-memory database using the [DBI] and [RSQLite] packages with the `mtcars` dataset saved in a table of the same name.
+
+````markdown
+```{r setup, include = FALSE}`r ''`
+library(learnr)
+library(gradethis)
+
+# Create an ephemeral in-memory RSQLite database
+# Using the example in <https://dbi.r-dbi.org/#example>
+mtcars$name <- rownames(mtcars)
+mtcars <- mtcars[union("name", names(mtcars))]
+
+db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")
+DBI::dbWriteTable(db_con, "mtcars", mtcars)
+```
+````
+
+We've assigned the connection object associated with this database to `db_con`.
+To create a SQL exercise, create a SQL chunk with two chunk options:
+
+1. `exercise = TRUE` declares that this chunk is an interactive exercise
+1. `connection = "db_con"` tells learnr to use the connection assigned to `db_con`.
+
+You don't need to name your connection `db_con` — it can be anything you want — but you do need to provide its name as a character string to the `connection` chunk option.
+
+Here's the chunk I used for the example exercise below.
+
+````markdown
+```{sql db, exercise = TRUE, connection = "db_con"}`r ''`
+SELECT * FROM mtcars WHERE cyl = 4
+```
+````
+
+### Solutions and hints
+
+Just like with typical R exercises, the code in the exercise box is the initial code provided to the student.
+You can also provide hints and the solution in the same way, using the `sql` chunk engine for those supporting chunks.
+
+````markdown
+```{sql db-solution}`r ''`
+SELECT name, mpg, cyl FROM mtcars WHERE cyl = 4
+```
+````
+
+### Checking student queries
+
+Finally, you can check the student's submission using [gradethis] or your own custom checking code.
+learnr will automatically provide the results of the student's query as the `.result` (in [gradethis](https://pkgs.rstudio.com/gradethis/articles/gradethis.html#writing-custom-logic)) or the `last_value` (for [custom checking functions](https://rstudio.github.io/learnr/articles/exercises.html#checking-results)).
+
+Note, however, that gradethis won't be able to automatically provide the results of the solution query as [`.solution`](https://pkgs.rstudio.com/gradethis/reference/grade_this-objects.html).
+Instead, you'll need to create the `.solution` object yourself.
+But learnr will ensure that the connection object is available to the checking code.
+(In custom checking code, it's available in `envir_prep`.)
+
+Here is the custom result checking code I wrote for this example.
+It creates the `.solution` result by running the query from the solution.
+Then it checks that the student included the columns we requested and gives informative feedback if they have forgotten a column or added additional columns.
+If the student's result is the same as the solution result (ignoring column order),
+we tell them they did great!
+
+````markdown
+```{r db-check}`r ''`
+grade_this({
+  .solution <- DBI::dbGetQuery(db_con, .solution_code)
+
+  cols_expected <- c("name", "mpg", "cyl")
+  
+  for (column in cols_expected) {
+    if (!column %in% names(.result)) {
+      fail("Did you forget to include `{column}`?")
+    }
+  }
+  
+  extra_cols <- setdiff(names(.result), cols_expected)
+  if (length(extra_cols)) {
+    extra_cols <- knitr::combine_words(extra_cols, and = " or ", before = "`")
+    fail("You don't need the columns {extra_cols}.")
+  }
+  
+  pass_if_equal(x = .result[cols_expected])
+  fail()
+})
+```
+````
+
+## Example Exercise
+
+### Select three columns from `mtcars`
+
+Select 4-cylinder cars from the `mtcars` table.
+Only include the columns `name`, `mpg`, and `cyl`.
+
+```{sql db, exercise = TRUE, connection = "db_con", output.var="my_result"}
+SELECT * FROM mtcars WHERE cyl = 4
+```
+
+```{sql db-solution}
+SELECT name, mpg, cyl FROM mtcars WHERE cyl = 4
+```
+
+```{r db-check}
+grade_this({
+  .solution <- DBI::dbGetQuery(db_con, .solution_code)
+
+  cols_expected <- c("name", "mpg", "cyl")
+  
+  for (column in cols_expected) {
+    if (!column %in% names(.result)) {
+      fail("Did you forget to include `{column}`?")
+    }
+  }
+  
+  extra_cols <- setdiff(names(.result), cols_expected)
+  if (length(extra_cols)) {
+    extra_cols <- knitr::combine_words(extra_cols, and = " or ", before = "`")
+    fail("You don't need the columns {extra_cols}.")
+  }
+  
+  pass_if_equal(x = .result[cols_expected])
+  fail()
+})
+```
+
+[DBI]: https://dbi.r-dbi.org/
+[RSQLite]: https://rsqlite.r-dbi.org/
+[gradethis]: https://pkgs.rstudio.com/gradethis/

@@ -114,3 +114,4 @@ jobs:
             any::sortable
             any::dygraphs
             any::reticulate
+            github::rstudio/gradethis
