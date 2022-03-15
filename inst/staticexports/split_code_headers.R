@@ -7,7 +7,7 @@ split_code_headers <- function(code, prefix = "section") {
   code <- str_trim(code, character = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
-  rgx_header <- "^(#+)([ -]*)(.+?)?\\s*----+$"
+  rgx_header <- "^\\s*(#+)([ -]*)(.+?)?\\s*----+\\s*$"
   headers <- regmatches(code, regexec(rgx_header, code, perl = TRUE))
   lines_headers <- which(vapply(headers, length, integer(1)) > 0)
 
