@@ -50,7 +50,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: ${{ runner.os != 'Windows' || matrix.config.r != '3.6' }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v2
 
