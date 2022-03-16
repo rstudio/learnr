@@ -50,8 +50,8 @@
 
 - title: "learnr: SQL Exercises"
   image: images/tutorial-sql.png
-  link: https://learnr-examples.shinyapps.io/sql/
-  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/sql/sql.Rmd">Source</a>
+  link: https://learnr-examples.shinyapps.io/sql-exercise/
+  footer: <a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/sql-exercise/sql-exercise.Rmd">Source</a>
   group: demo
   text: >
     You can use learnr to teach students how to work with databases using
