@@ -34,15 +34,4 @@ test_that("split_code_headers()", {
     ),
   target
 )
-
-  # Indented
-  expect_equal(
-    split_code_headers(
-      "# one ----
-      1
-      # two ----
-      2"
-    ),
-    list(one = "      1", two = "      2")
-  )
 })
