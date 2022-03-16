@@ -60,6 +60,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          pak-version: rc
           cache-version: 1
           extra-packages: any::rcmdcheck
 
