@@ -44,6 +44,8 @@
 
 -   The `exercise.cap` exercise/chunk option now accepts HTML input. If no `exercise.cap` is provided, the `exercise.cap` will default to the combination of the exercise engine and `" code"` (#397, #429).
 
+-   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
+
 ## Interactive Exercises and Questions
 
 ### Exercises
@@ -101,8 +103,6 @@
 -   When `allow_skip` is set to `FALSE`, users are now required to run an exercise once with non-empty code in order to move forward. If the exercise has grading code, users are required to submit one (non-empty) answer (thanks @gaelso #616, #633).
 
 -   If an exercise includes a `-check` chunk but no `exercise.checker` function has been defined, learnr will now throw an error at render reminding the author to use `tutorial_options()` to define an exercise checker (#640).
-
--   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
 
 ### Questions
 
