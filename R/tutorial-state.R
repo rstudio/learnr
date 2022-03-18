@@ -319,6 +319,14 @@ prepare_tutorial_cache_from_source <- function(path_rmd, render_args = NULL) {
     do.call(rmarkdown::render, render_args)
   })
 
+  prepare_tutorial_cache_from_html(path_html, path_rmd)
+}
+
+prepare_tutorial_cache_from_html <- function(path_html, path_rmd = NULL) {
+  if (!utils::file_test("-f", path_html)) {
+    rlang::abort(sprintf(gettext("'%s' is not an existing file"), path_html))
+  }
+
   prerendered_extract_context <-
     getFromNamespace("shiny_prerendered_extract_context", ns = "rmarkdown")
 
@@ -352,4 +360,3 @@ prepare_tutorial_cache_from_source <- function(path_rmd, render_args = NULL) {
 
   get_tutorial_info(NULL, tutorial_path = path_rmd)
 }
-
