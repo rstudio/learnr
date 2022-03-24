@@ -63,6 +63,7 @@ button:
     eu: "Kodea egikaritu"
     de: "Code ausführen"
     ko: "코드 실행"
+    zh: "运行代码"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
     en: "$t(button.runcode) ({{kbd}})"
@@ -74,6 +75,7 @@ button:
     eu: "$t(button.runcode) ({{kbd}})"
     de: "$t(button.runcode) ({{kbd}})"
     ko: "$t(button.runcode) ({{kbd}})"
+    zh: "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
     fr: "Indication"
@@ -84,6 +86,7 @@ button:
     eu: "Laguntza"
     de: "Tipp"
     ko: "힌트"
+    zh: "提示"
   hint_plural:
     en: "Hints"
     fr: "Indications"
@@ -94,6 +97,7 @@ button:
     eu: "Laguntza"
     de: "Tipps"
     ko: "힌트들"
+    zh: "提示"
   hinttitle:
     en: "$t(button.hint)"
     fr: "$t(button.hint)"
@@ -104,6 +108,7 @@ button:
     eu: "$t(button.hint)"
     de: "$t(button.hint)"
     ko: "$t(button.hint)"
+    zh: "$t(button.hint)"
   hintnext:
     en: "Next Hint"
     fr: "Indication Suivante"
@@ -114,6 +119,7 @@ button:
     eu: "Aurreko laguntza"
     de: "Nächster Tipp"
     ko: "다음 힌트"
+    zh: "下一个提示"
   hintprev:
     en: "Previous Hint"
     fr: "Indication Précédente"
@@ -124,6 +130,7 @@ button:
     eu: "Hurrengo laguntza"
     de: "Vorheriger Tipp"
     ko: "이전 힌트"
+    zh: "上一个提示"
   solution:
     en: "Solution"
     fr: "Solution"
@@ -134,6 +141,7 @@ button:
     eu: "Ebazpena"
     de: "Lösung"
     ko: "솔루션"
+    zh: "答案"
   solutiontitle:
     en: "$t(button.solution)"
     fr: "$t(button.solution)"
@@ -144,6 +152,7 @@ button:
     eu: "$t(button.solution)"
     de: "$t(button.solution)"
     ko: "$t(button.solution)"
+    zh: "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
     fr: "Copier dans le Presse-papier"
@@ -154,6 +163,7 @@ button:
     eu: "Arbelean kopiatu"
     de: "In die Zwischenablage kopieren"
     ko: "클립보드에 복사"
+    zh: "复制到剪切板"
   startover:
     en: "Start Over"
     fr: "Recommencer"
@@ -164,6 +174,7 @@ button:
     eu: "Berrabiarazi"
     de: "Neustart"
     ko: "재학습"
+    zh: "重新开始"
   startovertitle:
     en: "$t(button.startover)"
     fr: "$t(button.startover)"
@@ -174,6 +185,7 @@ button:
     eu: "$t(button.startover)"
     de: "$t(button.startover)"
     ko: "$t(button.startover)"
+    zh: "$t(button.startover)"
   continue:
     en: "Continue"
     fr: "Continuer"
@@ -184,6 +196,7 @@ button:
     eu: "Jarraitu"
     de: "Weiter"
     ko: "다음 학습으로"
+    zh: "继续"
   submitanswer:
     en: "Submit Answer"
     fr: "Soumettre"
@@ -194,6 +207,7 @@ button:
     eu: "Erantzuna bidali"
     de: "Antwort einreichen"
     ko: "정답 제출"
+    zh: "提交答案"
   submitanswertitle:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -204,6 +218,7 @@ button:
     eu: "$t(button.submitanswer)"
     de: "$t(button.submitanswer)"
     ko: "$t(button.submitanswer)"
+    zh: "$t(button.submitanswer)"
   previoustopic:
     en: "Previous Topic"
     fr: "Chapitre Précédent"
@@ -214,6 +229,7 @@ button:
     eu: "Aurreko atala"
     de: "Vorheriges Kapitel"
     ko: "이전 토픽"
+    zh: "上一专题"
   nexttopic:
     en: "Next Topic"
     fr: "Chapitre Suivant"
@@ -224,6 +240,7 @@ button:
     eu: "Hurrengo atala"
     de: "Nächstes Kapitel"
     ko: "다음 토픽"
+    zh: "下一专题"
   questionsubmit:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -234,6 +251,7 @@ button:
     eu: "$t(button.submitanswer)"
     de: "$t(button.submitanswer)"
     ko: "$t(button.submitanswer)"
+    zh: "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"
@@ -244,6 +262,7 @@ button:
     eu: "Berriro saiatu"
     de: "Nochmal versuchen"
     ko: "재시도"
+    zh: "再试一次"
 text:
   startover:
     en: "Start Over"
@@ -255,6 +274,7 @@ text:
     eu: "Berrabiarazi"
     de: "Neustart"
     ko: "재학습"
+    zh: "重置"
   areyousure:
     en: "Are you sure you want to start over? (all exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
@@ -265,6 +285,7 @@ text:
     eu: "Berriro hasi nahi duzu? (egindako lana galdu egingo da)"
     de: "Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)"
     ko: "다시 시작 하시겠습니까? (모든 예제의 진행 정보가 재설정됩니다)"
+    zh: "你确定要重新开始吗? (所有当前进度将被重置)"
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
@@ -275,6 +296,7 @@ text:
     eu: "Aurrera egin baino lehen atal honetako"
     de: "Vervollstädinge"
     ko: "당신은 완료해야 합니다"
+    zh: "你必须完成"
   exercise:
     en: "exercise"
     fr: "l'exercice"
@@ -285,6 +307,7 @@ text:
     eu: "ariketa egin behar duzu."
     de: "die Übung"
     ko: "연습문제"
+    zh: "练习"
   exercise_plural:
     en: "exercises"
     fr: "des exercices"
@@ -295,6 +318,7 @@ text:
     eu: "ariketak egin behar dituzu."
     de: "die Übungen"
     ko: "연습문제들"
+    zh: "练习"
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
@@ -305,6 +329,7 @@ text:
     eu: ""
     de: "in diesem Kapitel, bevor du fortfährst."
     ko: "이 섹션을 실행하기 전에"
+    zh: "在进行本节之前"
   code:
     en: "Code"
     fr: "Code"
@@ -315,6 +340,7 @@ text:
     eu: "Kodea"
     de: "Code"
     ko: "코드"
+    zh: "代码"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
@@ -326,6 +352,7 @@ text:
     eu: "$t(text.code) {{engine}}"
     de: "$t(text.code) {{engine}}"
     ko: "$t(text.code) {{engine}}"
+    zh: "$t(text.code) {{engine}}"
   quiz:
     en: "Quiz"
     fr: "Quiz"
@@ -336,6 +363,7 @@ text:
     eu: "Galdetegia"
     de: "Quiz"
     ko: "퀴즈"
+    zh: "测试"
   blank:
     en: "blank"
     fr: ~
@@ -346,6 +374,7 @@ text:
     eu: ~
     de: "Lücke"
     ko: "공백"
+    zh: "空"
   blank_plural:
     en: "blanks"
     fr: ~
@@ -356,6 +385,7 @@ text:
     eu: ~
     de: "Lücken"
     ko: "공백들"
+    zh: "空"
   exercisecontainsblank:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
@@ -367,6 +397,7 @@ text:
     eu: ~
     de: ~
     ko: "이 연습문제에는 {{count}}개의 $t(text.blank)이 포함되어 있습니다."
+    zh: "本练习包含{{count}}个$t(text.blank)"
   pleasereplaceblank:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
@@ -378,6 +409,7 @@ text:
     eu: ~
     de: "Bitte ersetze {{blank}} mit gültigem Code."
     ko: "{{blank}}를 유효한 코드로 바꾸십시오."
+    zh: "请在{{blank}}内填写恰当的代码"
   unparsable:
     en: >
       It looks like this might not be valid R code.
@@ -429,6 +461,7 @@ text:
     eu: ~
     de: ~
     ko: ~
+    zh: ~
   unparsableunicode:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -447,6 +480,7 @@ text:
     eu: ~
     de: ~
     ko: ~
+    zh: ~
   unparsableunicodesuggestion:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -466,6 +500,7 @@ text:
     eu: ~
     de: ~
     ko: ~
+    zh: ~
   and:
     en: "and"
     fr: "et"
@@ -476,6 +511,7 @@ text:
     eu: ~
     de: "und"
     ko: "그리고"
+    zh: "且"
   or:
     en: "or"
     fr: "ou"
@@ -486,6 +522,7 @@ text:
     eu: ~
     de: "oder"
     ko: "혹은"
+    zh: "或"
   listcomma:
     # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
     #   separating list items
@@ -498,6 +535,7 @@ text:
     eu: ~
     de: ", "
     ko: ", "
+    zh: ","
   oxfordcomma:
     en: ","
     fr: ""
@@ -508,3 +546,4 @@ text:
     eu: ""
     de: ","
     ko: ""
+    zh: ","
