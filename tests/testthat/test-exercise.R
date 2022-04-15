@@ -125,8 +125,8 @@ test_that("render_exercise() returns envir_result up to error", {
     )
   )
 
-  expect_s3_class(exercise_result$last_value, "simpleError")
-  expect_equal(conditionMessage(exercise_result$last_value), "boom")
+  expect_s3_class(exercise_result$parent, "simpleError")
+  expect_equal(conditionMessage(exercise_result$parent), "boom")
 
   expect_false(
     identical(exercise_result$envir_prep, exercise_result$envir_result)

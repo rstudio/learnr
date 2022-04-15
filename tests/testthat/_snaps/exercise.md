@@ -60,19 +60,6 @@
       get("___sql_result")
       ```
 
----
-
-    Code
-      writeLines(res_sql_engine$html_output)
-    Output
-      
-      
-      
-      <pre><code>  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-      1  21   6  160 110  3.9 2.620 16.46  0  1    4    4
-      2  21   6  160 110  3.9 2.875 17.02  0  1    4    4
-       [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 30 rows ]</code></pre>
-
 # SQL exercises - with explicit `output.var`
 
     Code
@@ -94,17 +81,4 @@
       ```{r eval=exists("___sql_result")}
       get("___sql_result")
       ```
-
----
-
-    Code
-      writeLines(format(res_sql_engine$html_output))
-    Output
-      
-      
-      
-      <pre><code>  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-      1  21   6  160 110  3.9 2.620 16.46  0  1    4    4
-      2  21   6  160 110  3.9 2.875 17.02  0  1    4    4
-       [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 30 rows ]</code></pre>
 
