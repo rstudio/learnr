@@ -152,6 +152,12 @@
     -   learnr tutorials are now run as background RStudio jobs and open in the viewer pane when `run_tutorial()` is called in RStudio. This default is disabled in non-interactive settings or when `as_rstudio_job = FALSE`. You can control where the tutorial is opened with the `shiny.launch.browser` global option.
     -   `run_tutorial()` now renders tutorials in a temp directory if the R user does not have write permissions (#347).
 
+-   Many of the HTML dependencies used by learnr have been updated to more recent versions (#655). learnr now uses:
+    -   [Ace](https://ace.c9.io/) version [1.4.14](https://github.com/ajaxorg/ace/blob/HEAD/ChangeLog.txt)
+    -   [clipboard.js](https://clipboardjs.com/) version [2.0.10](https://github.com/zenorocha/clipboard.js/releases)
+    -   [Bootbox](http://bootboxjs.com/) version [5.5.2](https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md)
+    -   [i18next](https://www.i18next.com/) version [21.6.10](https://github.com/i18next/i18next/blob/master/CHANGELOG.md)
+
 -   learnr’s knitr hooks are now set by the `learnr::tutorial` R Markdown format. They are also registered for any tutorials run by `run_tutorial()` (thanks @czucca #598, #599).
 
 -   For the “forked” evaluator (the default used on Linux), learnr now limits the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the `tutorial.max.forked.procs` option or the `TUTORIAL_MAX_FORKED_PROCS` environment variable (#353).
