@@ -5,7 +5,7 @@ on.exit({setwd(owd)})
 
 
 ROOT <- rprojroot::find_package_root_file()
-ACE_VERSION <- "1.2.6"
+ACE_VERSION <- "1.4.14"
 ACE_FILES <- c(
   "ace.js",
   "ext-language_tools.js",
@@ -41,7 +41,7 @@ setwd(sprintf("ace-builds-%s", ACE_VERSION))
 
 
 source <- c(
-  file.path("src", ACE_FILES),
+  file.path("src-min", ACE_FILES),
   dir("src-min", pattern = ACE_THEME_PREFIX, full.names = TRUE)
 )
 contents <- paste(lapply(source, function(file) {

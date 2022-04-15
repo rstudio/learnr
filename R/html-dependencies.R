@@ -41,7 +41,7 @@ idb_html_dependency <- function() {
 bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
-    version = "4.4.0",
+    version = "5.5.2",
     src = system.file("lib/bootbox", package = "learnr"),
     script = "bootbox.min.js"
   )
@@ -50,7 +50,7 @@ bootbox_html_dependency <- function() {
 clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
-    version = "1.5.15",
+    version = "2.0.10",
     src = system.file("lib/clipboardjs", package = "learnr"),
     script = "clipboard.min.js"
   )
@@ -69,7 +69,7 @@ ace_html_dependency <- function() {
 tutorial_i18n_html_dependency <- function(language = NULL) {
   htmltools::htmlDependency(
     name = "i18n",
-    version = "1.2.0",
+    version = "21.6.10",
     src = system.file("lib/i18n", package = "learnr"),
     script = c("i18next.min.js", "tutorial-i18n-init.js"),
     head = format(htmltools::tags$script(

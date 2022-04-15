@@ -22,7 +22,9 @@ Authors@R: c(
     person("Nick", "Payne", role = c("ctb", "cph"),
            comment = "Bootbox library"),
     person("Jake", "Archibald", role = c("ctb", "cph"),
-           comment = "idb-keyval library")
+           comment = "idb-keyval library"),
+    person("i18next authors", role = c("ctb", "cph"),
+           comment = "i18next library")
   )
 Description: Create interactive tutorials using R Markdown. Use a
     combination of narrative, figures, videos, exercises, and quizzes to

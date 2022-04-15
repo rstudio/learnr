@@ -1,4 +1,4 @@
-/* global $,Shiny,ace,MathJax,Clipboard,YT,Vimeo,performance */
+/* global $,Shiny,ace,MathJax,ClipboardJS,YT,Vimeo,performance */
 
 /* Tutorial construction and initialization */
 import { TutorialDiagnostics } from './tutorial-diagnostics.mjs'
@@ -1366,7 +1366,7 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
             $('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>')
           )
           popoverTitle.append(copyButton)
-          const clipboard = new Clipboard(copyButton[0], {
+          const clipboard = new ClipboardJS(copyButton[0], {
             text: function (trigger) {
               return solutionEditor.getValue()
             }
