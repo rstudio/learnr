@@ -202,6 +202,21 @@
 <li>
 <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> now renders tutorials in a temp directory if the R user does not have write permissions (<a href="https://github.com/rstudio/learnr/issues/347" class="external-link">#347</a>).</li>
 </ul></li>
+<li>
+<p>Many of the HTML dependencies used by learnr have been updated to more recent versions (<a href="https://github.com/rstudio/learnr/issues/655" class="external-link">#655</a>). learnr now uses:</p>
+<ul><li>
+<a href="https://ace.c9.io/" class="external-link">Ace</a> version <a href="https://github.com/ajaxorg/ace/blob/HEAD/ChangeLog.txt" class="external-link">1.4.14</a>
+</li>
+<li>
+<a href="https://clipboardjs.com/" class="external-link">clipboard.js</a> version <a href="https://github.com/zenorocha/clipboard.js/releases" class="external-link">2.0.10</a>
+</li>
+<li>
+<a href="http://bootboxjs.com/" class="external-link">Bootbox</a> version <a href="https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md" class="external-link">5.5.2</a>
+</li>
+<li>
+<a href="https://www.i18next.com/" class="external-link">i18next</a> version <a href="https://github.com/i18next/i18next/blob/master/CHANGELOG.md" class="external-link">21.6.10</a>
+</li>
+</ul></li>
 <li><p>learnr’s knitr hooks are now set by the <code><a href="../reference/tutorial.html">learnr::tutorial</a></code> R Markdown format. They are also registered for any tutorials run by <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> (thanks <a href="https://github.com/czucca" class="external-link">@czucca</a> <a href="https://github.com/rstudio/learnr/issues/598" class="external-link">#598</a>, <a href="https://github.com/rstudio/learnr/issues/599" class="external-link">#599</a>).</p></li>
 <li><p>For the “forked” evaluator (the default used on Linux), learnr now limits the number of forked exercises that learnr will execute in parallel. Previously, this was uncapped, which could cause a learnr process to run out of memory when an influx of traffic arrived. The default limit is 3, but it can be configured using the <code>tutorial.max.forked.procs</code> option or the <code>TUTORIAL_MAX_FORKED_PROCS</code> environment variable (<a href="https://github.com/rstudio/learnr/issues/353" class="external-link">#353</a>).</p></li>
 <li><p>Introduced an experimental function <code><a href="../reference/external_evaluator.html">external_evaluator()</a></code> which can be used to define an exercise evaluator that runs on a remote server and is invoked via HTTP. This allows all exercise execution to be performed outside of the Shiny process hosting the learnr document (<a href="https://github.com/rstudio/learnr/issues/345" class="external-link">#345</a>, <a href="https://github.com/rstudio/learnr/issues/354" class="external-link">#354</a>).</p></li>
