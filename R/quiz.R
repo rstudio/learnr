@@ -71,10 +71,12 @@
 #'   )
 #' )
 #'
+#' @seealso [random_praise()], [random_encouragement()]
+#'
+#' @family Interactive Questions
 #' @name quiz
-#' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
-#' @export
 #' @rdname quiz
+#' @export
 quiz <- function(..., caption = rlang::missing_arg()) {
 
   # create table rows from questions
@@ -106,22 +108,22 @@ quiz <- function(..., caption = rlang::missing_arg()) {
 #' @rdname quiz
 #' @import shiny
 #' @export
-question <- function(text,
-                     ...,
-                     type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
-                     correct = "Correct!",
-                     incorrect = "Incorrect",
-                     try_again = incorrect,
-                     message = NULL,
-                     post_message = NULL,
-                     loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
-                     submit_button = rlang::missing_arg(),
-                     try_again_button = rlang::missing_arg(),
-                     allow_retry = FALSE,
-                     random_answer_order = FALSE,
-                     options = list()
-                   ) {
-
+question <- function(
+    text,
+    ...,
+    type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
+    correct = "Correct!",
+    incorrect = "Incorrect",
+    try_again = incorrect,
+    message = NULL,
+    post_message = NULL,
+    loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
+    submit_button = rlang::missing_arg(),
+    try_again_button = rlang::missing_arg(),
+    allow_retry = FALSE,
+    random_answer_order = FALSE,
+    options = list()
+) {
 
   # one time tutor initialization
   initialize_tutorial()
@@ -136,16 +138,16 @@ question <- function(text,
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
-  if (total_correct == 0) {
-    stop("At least one correct answer must be supplied")
-  }
+  # count total correct answers to decide between radio/checkbox
+  answers_split <- answers_split_type(answers)
+  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
 
-  ## no partial matching for s3 methods
-  if (missing(type)) { # can not use match.arg(type) because of comment above
+  # determine or resolve question type
+  if (missing(type)) {
+    # no partial matching for s3 methods means we can't use match.arg()
     type <- "auto"
   }
-  if (isTRUE(all.equal(type, "auto"))) {
+  if (identical(type, "auto")) {
     if (total_correct > 1) {
       type <- "learnr_checkbox"
     } else {
@@ -161,6 +163,12 @@ question <- function(text,
       # allows for s3 methods
       type
     )
+  }
+
+  # ensure we have at least one correct answer, if required
+  must_have_correct <- identical(type, "learnr_radio") || is.null(answers_split[["function"]])
+  if (must_have_correct && total_correct == 0) {
+    stop("At least one correct answer must be supplied")
   }
 
   # can not guarantee that `label` exists
@@ -213,34 +221,9 @@ question <- function(text,
   ret
 }
 
-#' @rdname quiz
-#' @export
-answer <- function(text, correct = FALSE, message = NULL) {
-  if (!is_tags(message)) {
-    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
-  }
-
-  ret <- list(
-    id = random_answer_id(),
-    option = as.character(text), # character representation
-    value = text, # actual value
-    label = quiz_text(text), # md presentation
-    correct = isTRUE(correct),
-    message = quiz_text(message)
-  )
-  class(ret) <- c(
-    "tutorial_question_answer", # new an improved name
-    "tutorial_quiz_answer" # legacy. Want to remove
-  )
-  ret
-}
-
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
-  if (inherits(text, "html")) {
-    return(text)
-  }
-  if (is_tags(text)) {
+  if (is_html_chr(text) || is_html_tag(text)) {
     return(text)
   }
   if (!is.null(text)) {
@@ -265,17 +248,12 @@ quiz_text <- function(text) {
   }
 }
 
-
+random_id <- function(txt) {
+  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
 
 random_question_id <- function() {
   random_id("lnr_ques")
-}
-random_answer_id <- function() {
-  random_id("lnr_ans")
-}
-#' @importFrom stats runif
-random_id <- function(txt) {
-  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
 }
 
 random_seed <- function() {
@@ -285,7 +263,6 @@ random_seed <- function() {
 shuffle <- function(x) {
   sample(x, length(x))
 }
-
 
 #' Knitr quiz print methods
 #'
@@ -475,7 +452,9 @@ question_module_server_impl <- function(
 
   init_question <- function(restoreValue = NULL) {
     if (question$random_answer_order) {
-      question$answers <<- shuffle(question$answers)
+      # Shuffle visible answer options (i.e. static, non-function answers)
+      is_visible_option <- !answer_type_is_function(question$answers)
+      question$answers[is_visible_option] <<- shuffle(question$answers[is_visible_option])
     }
     submitted_answer(restoreValue)
   }

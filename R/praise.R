@@ -41,13 +41,15 @@ random_phrases <- function(type, language = NULL) {
   }
 
   warn_unsupported_language <- function(language, default = "en") {
+    # warns if requested language isn't supported,
+    # otherwise recurses to fall back to default
     if (is.null(language)) {
       return(warn_unsupported_language(default))
     }
     if (!language %in% names(.random_phrases[[type]])) {
-      warning(
+      learnr_render_message(
         "learnr doesn't know how to provide ", type, " in the language '", language, "'",
-        call. = FALSE
+        level = "warn"
       )
       return(warn_unsupported_language(default))
     }

@@ -16,7 +16,7 @@ source("example_cards.R", local = TRUE)
 ```
 
 ```{css echo=FALSE}
-.contents { max-width: 100%; }
+.row > main { max-width: 100%; }
 ```
 
 ## Complete Tutorials

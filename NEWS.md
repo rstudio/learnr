@@ -44,6 +44,8 @@
 
 -   The `exercise.cap` exercise/chunk option now accepts HTML input. If no `exercise.cap` is provided, the `exercise.cap` will default to the combination of the exercise engine and `" code"` (#397, #429).
 
+-   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
+
 ## Interactive Exercises and Questions
 
 ### Exercises
@@ -53,6 +55,8 @@
 -   Users who submit unparsable code containing non-ASCII characters are now presented with more informative feedback. Non-ASCII characters are a common source of code problems and often appear in code when students copy and paste text from a source that applies automatic Unicode formatting. If the submission contains Unicode-formatted quotation marks (e.g. curly quotes) or dashes, the student is given a suggested replacement with ASCII characters. In other cases, the student is simply prompted to delete the non-ASCII characters and retype them manually (@rossellhayes #642).
 
 -   Authors can choose to reveal (default) or hide the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will likely be changed to hide solutions (#402).
+
+-   Exercises may now include `-tests` chunks. These chunks don't appear in the tutorial text but the code in them is stored in the internal exercise data. In the future, these chunks will be used to provide automated exercise testing (#664).
 
 -   Keyboard navigation and keyboard shortcuts for the interactive exercise code editor have been improved:
 
@@ -90,6 +94,8 @@
 
 -   Parse errors from user code that fails to parse can now be inspected by the error checker, but errors in exercise setup chunks cannot. Instead, global setup and setup chunk errors are raised as internal errors with a user-facing warning. In general, internal errors are now handled more consistently (#596).
 
+    -   The parsing error object now has a `"parse_error"` class so that you can use `inherits(last_value, "parse_error")` in learnr error checking code or `inherits(.result, "parse_error")` in gradethis error checking to differentiate the parse error from other error types (#658).
+
 -   learnr now properly enforces the time limit set by the `exercise.timelimit` chunk option (#366, #368, #494).
 
 -   The `envir_prep` environment used in exercise checking now accurately captures the result of both global and exercise-specific setup code, representing the environment in which the user code will be evaluated (as was described in the documentation). learnr also ensures that `envir_result` (the environment containing the result of evaluating global, setup and user code) is a sibling of `envir_prep` (#480).
@@ -100,6 +106,10 @@
 
 ### Questions
 
+-   Authors can now provide function-answers with `answer_fn()`. Authors can provide a function that takes a single argument that will be passed the student's question submission. This function decides if the question is correct and provides feedback by returning `correct()` or `incorrect()` with a feedback message (#657).
+
+-   A new `question_numeric()` question type allows authors to ask users to provide a number (#461).
+
 -   `question_text()` gains `rows` and `cols` parameters. If either is provided, a multi-line `textAreaInput()` is used for the text input (thanks @dtkaplan #455, #460).
 
 -   Correct/incorrect question markers are now configurable via CSS. You can change or style these markers using the `.tutorial-question .question-final .correct::before` and `.tutorial-question .question-final .incorrect::before` selectors. A new helper function, `finalize_question()`, can be used to apply the `.question-final` class to custom learnr questions (#531).
@@ -108,7 +118,7 @@
 
 -   Fixed unexpected behavior for `question_is_correct.learnr_text()` where `trim = FALSE`. Comparisons will now happen with the original input value, not the `HTML()` formatted answer value (#376).
 
--   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
+-   When a quiz’s question or answer text are not characters, e.g. HTML, `{htmltools}` tags, numeric, etc., they are now cast to characters for the displayed answer text and the quiz’s default loading text (#450).
 
 ## Events and State
 

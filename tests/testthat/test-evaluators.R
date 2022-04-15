@@ -391,7 +391,7 @@ test_that("bad statuses or invalid json are handled sanely", {
 test_that("forked_evaluator works as expected", {
   skip_on_cran()
   skip_if(is_windows(), message = "Skipping forked evaluator testing on Windows")
-  skip_if(is_macos(), message = "Skipping forked evaluator testing on macOS")
+  skip_if(is_mac(), message = "Skipping forked evaluator testing on macOS")
 
   ex <- mock_exercise("Sys.sleep(1)\n1:100", check = I("last_value"))
   forked_eval_ex <- forked_evaluator_factory(evaluate_exercise(ex, new.env()), 2)

@@ -22,3 +22,20 @@ skip_if_pandoc <- function(ver = NULL) {
     skip(msg)
   }
 }
+
+expect_marked_as <- function(object, correct, messages = NULL) {
+  if (is.null(messages)) {
+    expect_equal(object, mark_as(correct))
+    return()
+  }
+
+  if (length(messages) > 1) {
+    messages_orig <- messages
+    messages <- quiz_text(messages_orig[[1]])
+    for (i in seq_along(messages_orig)[-1]) {
+      messages <- htmltools::tagList(messages, messages_orig[[i]])
+    }
+  }
+
+  expect_equal(object, mark_as(correct, messages))
+}

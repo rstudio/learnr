@@ -1,0 +1,99 @@
+# Deploys pkgdown for Pull Requests, tags, and pushes to main branch
+# PRs are deployed to /preview/pr<number>/
+# Tags are deployed to /<tag>/
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+    paths:
+      - 'man/**'
+      - 'pkgdown/**'
+      - 'vignettes/**'
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+
+name: pkgdown
+
+jobs:
+  pkgdown-build:
+    runs-on: ubuntu-latest
+    if: ${{ !(github.event_name == 'pull_request' && github.event.action == 'closed') }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure git
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - uses: r-lib/actions/pr-fetch@v2
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          repo-token: ${{ github.token }}
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          needs: |
+            connect
+            website
+          extra-packages: |
+            local::.
+            any::pkgdown
+
+      # If events is a PR, set subdir to 'preview/pr<pr_number>'
+      - name: "[PR] Set documentation subdirectory"
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "subdir=preview/pr${{ github.event.number }}" >> $GITHUB_ENV
+
+      # If event is a tag, set subdir to '<tag_name>'
+      - name: "[tag] Set documentation subdirectory"
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        run: |
+          echo "subdir=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Deploy pkgdown site
+        shell: Rscript {0}
+        run: |
+          subdir <- "${{ env.subdir }}"
+          pkgdown::deploy_to_branch(subdir = if (nzchar(subdir)) subdir, clean = nzchar(subdir))
+
+  pkgdown-clean:
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: "gh-pages"
+
+      - name: Clean up PR Preview
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+          preview_dir="preview/pr${{ github.event.pull_request.number }}"
+          if [ -d "$preview_dir" ]; then
+            git rm -r $preview_dir
+            git commit -m "Remove $preview_dir (GitHub Actions)" || echo 'No preview to remove'
+            git push origin || echo 'No preview to remove'
+          else
+            echo 'No preview to remove'
+          fi

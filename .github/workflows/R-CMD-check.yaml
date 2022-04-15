@@ -39,6 +39,9 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
 
+    outputs:
+      requested-shinyapps-deploy: ${{ steps.request-shinyapps-deploy.outputs.requested }}
+
     steps:
       - uses: actions/checkout@v2
 
@@ -57,6 +60,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          pak-version: rc
           cache-version: 1
           extra-packages: any::rcmdcheck
 
@@ -67,13 +71,6 @@ jobs:
         run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
-      # - name: Code coverage
-      #   if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'release'
-      #   shell: Rscript {0}
-      #   run: |
-      #     pak::pkg_install("covr")
-      #     covr::codecov()
-
       - name: Upload check results
         if: failure()
         uses: actions/upload-artifact@main
@@ -81,8 +78,24 @@ jobs:
           name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
           path: check
 
+      - name: Schedule shinyapps.io deploy
+        id: request-shinyapps-deploy
+        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'release'
+        run: |
+          echo "::set-output name=requested::true"
+
+      - name: Code coverage
+        if: matrix.config.os == 'macOS-latest' && matrix.config.r == 'release'
+        shell: Rscript {0}
+        run: |
+          pak::pkg_install("covr")
+          covr::codecov()
+
   deploy:
-    if: github.event_name == 'push'
+    if: >
+      always() &&
+      github.event_name == 'push' &&
+      needs.R-CMD-check.outputs.requested-shinyapps-deploy == 'true'
     needs: R-CMD-check
     concurrency:
       group: deploy-shinyapps-${{ github.ref }}
@@ -95,7 +108,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Deploy packaged tutorials to shinyapps.io
         uses: rstudio/education-workflows/deploy-learnr-shinyapps-io@v1
@@ -114,3 +127,4 @@ jobs:
             any::sortable
             any::dygraphs
             any::reticulate
+            github::rstudio/gradethis

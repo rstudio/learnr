@@ -15,13 +15,15 @@ question_numeric(
   min = NA,
   max = NA,
   step = NA,
-  options = list()
+  options = list(),
+  tolerance = 1.5e-08
 )
 }
 \arguments{
 \item{text}{Question or option text}
 
-\item{...}{answers and extra parameters passed onto \code{\link{question}}.}
+\item{...}{Answers created with \code{\link[=answer]{answer()}} or \code{\link[=answer_fn]{answer_fn()}}, or extra
+parameters passed onto \code{\link[=question]{question()}}.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
@@ -44,9 +46,17 @@ when \code{allow_retry} is \code{TRUE}.}
 \item{step}{Interval to use when stepping between min and max}
 
 \item{options}{Extra options to be stored in the question object.}
+
+\item{tolerance}{Submitted values within an absolute difference less than or
+equal to \code{tolerance} will be considered equal to the answer value. Note
+that this tolerance is for all \code{\link[=answer]{answer()}} values. For more specific answer
+value grading, use \code{\link[=answer_fn]{answer_fn()}} to provide your own evaluation code.}
+}
+\value{
+Returns a learnr question of type \code{"learnr_numeric"}.
 }
 \description{
-Creates a tutorial quiz question requesting a number.
+Creates a tutorial question asking the student to submit a number.
 }
 \examples{
 question_numeric(
@@ -60,7 +70,25 @@ question_numeric(
   max = 4,
   step = 0.01
 )
+
+question_numeric(
+  "Can you think of an even number?",
+  answer_fn(function(value) {
+    if (value \%\% 2 == 0) {
+      correct("even")
+    } else if (value \%\% 2 == 1) {
+      incorrect("odd")
+    }
+  }, label = "Is the number even?"),
+  step = 1
+)
+
 }
 \seealso{
-\code{\link{question_radio}}, \code{\link{question_checkbox}}, \code{\link{question_text}}
+Other Interactive Questions: 
+\code{\link{question_checkbox}()},
+\code{\link{question_radio}()},
+\code{\link{question_text}()},
+\code{\link{quiz}()}
 }
+\concept{Interactive Questions}

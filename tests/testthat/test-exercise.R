@@ -1,34 +1,4 @@
 
-# Test Exercise Mocking ---------------------------------------------------
-
-test_that("exercise mocks: mock_prep_setup()", {
-  chunks <- list(
-    mock_chunk("setup-1", "x <- 1"),
-    mock_chunk("setup-2", "y <- 2", exercise.setup = "setup-1"),
-    mock_chunk("setup-3", "z <- 3", exercise.setup = "setup-2")
-  )
-  expect_equal(mock_prep_setup(chunks, "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks, "setup-2"), "x <- 1\ny <- 2")
-  expect_equal(mock_prep_setup(chunks, "setup-1"), "x <- 1")
-
-  # random order
-  expect_equal(mock_prep_setup(chunks[3:1], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(1, 3, 2)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(2, 3, 1)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(2, 1, 3)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-
-  # checks that setup chunk is in chunks
-  expect_error(mock_prep_setup(chunks, "setup-Z"), "setup-Z")
-
-  # cycles
-  chunks[[1]]$opts$exercise.setup = "setup-3"
-  expect_error(mock_prep_setup(chunks, "setup-3"), "-> setup-3$")
-
-  # duplicate labels
-  expect_error(mock_prep_setup(chunks[c(1, 1)], "setup-1"), "Duplicated")
-})
-
-
 # exercise_code_chunks() --------------------------------------------------
 
 test_that("exercise_code_chunks_prep() returns setup/user chunks", {
@@ -66,7 +36,8 @@ test_that("render_exercise() returns exercise result with invisible value", {
       mock_chunk("setup-1", "x <- 1"),
       mock_chunk("setup-2", "y <- 2", exercise.setup = "setup-1")
     ),
-    setup_label = "setup-2"
+    setup_label = "setup-2",
+    exercise.warn_invisible = TRUE
   )
 
   base_envir <- new.env()
@@ -154,8 +125,8 @@ test_that("render_exercise() returns envir_result up to error", {
     )
   )
 
-  expect_s3_class(exercise_result$last_value, "simpleError")
-  expect_equal(conditionMessage(exercise_result$last_value), "boom")
+  expect_s3_class(exercise_result$parent, "simpleError")
+  expect_equal(conditionMessage(exercise_result$parent), "boom")
 
   expect_false(
     identical(exercise_result$envir_prep, exercise_result$envir_result)
@@ -260,6 +231,20 @@ test_that("evaluate_exercise() returns an internal error for global setup chunk 
   expect_s3_class(res$feedback$error, "simpleError")
 })
 
+test_that("evaluate_exercise() returns an internal error when `render_exercise()` fails", {
+  local_edition(2)
+  with_mock(
+    "learnr:::render_exercise" = function(...) stop("render error"),
+    expect_warning(
+      res <- evaluate_exercise(mock_exercise(), new.env())
+    )
+  )
+
+  expect_match(res$feedback$message, "evaluating your exercise")
+  expect_s3_class(res$feedback$error, "simpleError")
+  expect_equal(conditionMessage(res$feedback$error), "render error")
+})
+
 test_that("render_exercise() cleans up exercise_prep files", {
   skip_if_not_pandoc("1.14")
 
@@ -342,6 +327,38 @@ test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
   expect_equal(res$before, character(0))
   expect_false(identical('nope', res$during))
   expect_equal(res$during, res$after)
+})
+
+test_that("render_exercise() exercise chunk options are used when rendering user code", {
+  ex <- mock_exercise(
+    user_code = "knitr::opts_current$get('a_custom_user_chunk_opt')",
+    a_custom_user_chunk_opt = "PASS"
+  )
+
+  res <- withr::with_tempdir(render_exercise(ex, new.env()))
+
+  expect_equal(ex$options$a_custom_user_chunk_opt, "PASS")
+  expect_equal(res$last_value, "PASS")
+})
+
+test_that("render_exercise() user code exercise.Rmd snapshot", {
+  local_edition(3)
+
+  ex <- mock_exercise(
+    user_code = 'USER_CODE <- "PASS"',
+    solution_code = "SOLUTION_CODE",
+    chunks = list(
+      mock_chunk("ex-setup", "SETUP_CODE")
+    )
+  )
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex)))
+
+  ex_sql <- mock_exercise(
+    user_code = 'SELECT * FROM USER',
+    solution_code = "SELECT * FROM SOLUTION",
+    engine = "sql"
+  )
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql)))
 })
 
 # evaluate_exercise() -----------------------------------------------------
@@ -995,7 +1012,7 @@ test_that("default message if exercise.blanks is FALSE", {
 # Unparsable Code ---------------------------------------------------------
 
 test_that("evaluate_exercise() returns a message if code is unparsable", {
-  ex     <- mock_exercise(user_code = 'print("test"')
+  ex <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1005,7 +1022,7 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   )
   expect_match(result$error_message, "unexpected end of input")
 
-  ex     <- mock_exercise(user_code = 'print("test)')
+  ex <- mock_exercise(user_code = 'print("test)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1015,7 +1032,7 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   )
   expect_match(result$error_message, "unexpected INCOMPLETE_STRING")
 
-  ex     <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
+  ex <- mock_exercise(user_code = 'mean(1:10 na.rm = TRUE)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
@@ -1040,6 +1057,12 @@ test_that("evaluate_exercise() passes parse error to explicit exercise checker f
   ex$error_check <- NULL
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback, exercise_check_code_is_parsable(ex)$feedback)
+})
+
+test_that("exericse_check_code_is_parsable() gives error checker a 'parse_error' condition", {
+  ex <- mock_exercise(user_code = 'print("test"', error_check = I("last_value"))
+  result <- evaluate_exercise(ex, new.env())
+  expect_s3_class(result$feedback$checker_result, class = c("parse_error", "condition"))
 })
 
 test_that("Errors with global setup code result in an internal error", {
@@ -1123,6 +1146,7 @@ test_that("evaluate_exercise() does not return a message for parsable non-ASCII 
 test_that("Exercise timelimit error is returned when exercise takes too long", {
   skip_on_cran()
   skip_on_os("windows")
+  skip_on_os("mac")
 
   ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
 
@@ -1186,4 +1210,141 @@ test_that("Sensitive env vars and options are masked", {
   expect_no_match(res$html_output, "T_CONNECT_API_KEY", fixed = TRUE)
   expect_no_match(res$html_output, "T_CONNECT_SERVER", fixed = TRUE)
   expect_no_match(res$html_output, "T_sharedSecret", fixed = TRUE)
+})
+
+# Exercises in Other Languages --------------------------------------------
+
+test_that("is_exercise_engine()", {
+  expect_true(
+    is_exercise_engine(list(), "R")
+  )
+  expect_true(
+    is_exercise_engine(list(), "r")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "R"), "R")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "sql"), "SQL")
+  )
+  expect_true(
+    is_exercise_engine(list(engine = "JS"), "js")
+  )
+  expect_false(
+    is_exercise_engine(list(), "sql")
+  )
+  expect_false(
+    is_exercise_engine(list(engine = "js"), "sql")
+  )
+  expect_error(
+    is_exercise_engine(NULL)
+  )
+  expect_error(
+    is_exercise_engine()
+  )
+  expect_error(
+    is_exercise_engine(list())
+  )
+})
+
+test_that("SQL exercises - without explicit `output.var`", {
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("RSQLite")
+  local_edition(3)
+
+  # example from https://dbi.r-dbi.org/#example
+  ex_sql_engine <- mock_exercise(
+    user_code = "SELECT * FROM mtcars",
+    label = "db",
+    chunks = list(
+      mock_chunk("db", exercise = TRUE, engine = "sql", code = "SELECT * FROM mtcars", connection = "db_con"),
+      mock_chunk(
+        "db-setup",
+        code = paste(
+          c(
+            "options(max.print = 25)",
+            'db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")',
+            'DBI::dbWriteTable(db_con, "mtcars", mtcars)'
+          ),
+          collapse = "\n"
+        )
+      )
+    ),
+    engine = "sql",
+    check = I(" ")
+  )
+
+  res_sql_engine <- evaluate_exercise(ex_sql_engine, new.env())
+  res <- res_sql_engine$feedback$checker_args
+
+  # snapshots
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+
+  # connection exists in envir_prep
+  expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
+  con <- get("db_con", res$envir_prep, inherits = FALSE)
+  expect_true(DBI::dbIsValid(con))
+  # we cleaned up the __sql_result object from envir_result
+  expect_false(exists("__sql_result", res$envir_result, inherits = FALSE))
+
+  mtcars <- mtcars
+  rownames(mtcars) <- NULL
+  expect_equal(res$last_value, mtcars)
+
+  DBI::dbDisconnect(con)
+})
+
+test_that("SQL exercises - with explicit `output.var`", {
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("RSQLite")
+  local_edition(3)
+
+  # example from https://dbi.r-dbi.org/#example
+  ex_sql_engine <- mock_exercise(
+    user_code = "SELECT * FROM mtcars",
+    label = "db",
+    chunks = list(
+      mock_chunk(
+        "db",
+        exercise = TRUE,
+        engine = "sql",
+        code = "SELECT * FROM mtcars",
+        connection = "db_con",
+        output.var = "my_result"
+      ),
+      mock_chunk(
+        "db-setup",
+        code = paste(
+          c(
+            "options(max.print = 25)",
+            'db_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")',
+            'DBI::dbWriteTable(db_con, "mtcars", mtcars)'
+          ),
+          collapse = "\n"
+        )
+      )
+    ),
+    engine = "sql",
+    check = I(" ")
+  )
+
+  res_sql_engine <- evaluate_exercise(ex_sql_engine, new.env())
+  res <- res_sql_engine$feedback$checker_args
+
+  # snapshots
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+
+  # connection exists in envir_prep
+  expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
+  con <- get("db_con", res$envir_prep, inherits = FALSE)
+  expect_true(DBI::dbIsValid(con))
+  # we left the sql result in `envir_result`
+  expect_true(exists("my_result", res[["envir_result"]], inherits = FALSE))
+  expect_equal(res[["last_value"]], res[["envir_result"]][["my_result"]])
+
+  mtcars <- mtcars
+  rownames(mtcars) <- NULL
+  expect_equal(res$last_value, mtcars)
+
+  DBI::dbDisconnect(con)
 })

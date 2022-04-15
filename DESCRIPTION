@@ -1,8 +1,8 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.10.1.9019
-Authors@R:c(
+Version: 0.10.1.9020
+Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@rstudio.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
     person("Barret", "Schloerke", , "barret@rstudio.com", role = "aut",
@@ -42,6 +42,7 @@ Imports:
     htmlwidgets,
     jsonlite,
     knitr (>= 1.31),
+    lifecycle,
     markdown,
     parallel,
     promises,
@@ -51,15 +52,18 @@ Imports:
     rmarkdown (>= 1.12.0),
     rprojroot,
     shiny (>= 1.0),
+    stats,
     utils,
     withr
 Suggests:
     callr,
+    DBI (>= 0.4-1),
     httpuv,
     later,
+    RSQLite,
     rstudioapi (>= 0.11),
     shinytest (>= 1.5.0),
-    testthat (>= 2.1.0)
+    testthat (>= 3.0.3)
 VignetteBuilder:
     knitr
 Config/Needs/connect: rsconnect

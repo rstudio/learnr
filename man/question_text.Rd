@@ -22,7 +22,8 @@ question_text(
 \arguments{
 \item{text}{Question or option text}
 
-\item{...}{answers and extra parameters passed onto \code{\link{question}}.}
+\item{...}{Answers created with \code{\link[=answer]{answer()}} or \code{\link[=answer_fn]{answer_fn()}}, or extra
+parameters passed onto \code{\link[=question]{question()}}. Answers with custom function checking}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
@@ -36,13 +37,17 @@ when \code{allow_retry} is \code{TRUE}.}
 
 \item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 
-\item{random_answer_order}{Display answers in a random order.}
+\item{random_answer_order}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Random answer
+order for text questions is automatically disabled to ensure that the
+submission is checked against each answer in the order they were provided
+by the author.}
 
 \item{placeholder}{A character string giving the user a hint as to what can
 be entered into the control. Internet Explorer 8 and 9 do not support this
 option.}
 
-\item{trim}{Logical to determine if whitespace before and after the answer should be removed.  Defaults to \code{TRUE}.}
+\item{trim}{Logical to determine if whitespace before and after the answer
+should be removed.  Defaults to \code{TRUE}.}
 
 \item{rows, cols}{Defines the size of the text input area in terms of the
 number of rows or character columns visible to the user. If either \code{rows}
@@ -52,8 +57,21 @@ for the text input, otherwise the default input element is a single-line
 
 \item{options}{Extra options to be stored in the question object.}
 }
+\value{
+Returns a learnr question of type \code{"learnr_text"}.
+}
 \description{
-Creates a text box group tutorial quiz question.
+Creates a tutorial question asking the student to enter text. The default
+text input is appropriate for short or single-line text entry. For longer
+text input, set the \code{rows} and/or \code{cols} argument to create a larger text
+area.
+
+When used with \code{\link[=answer]{answer()}}, the student's submission must match the answer
+exactly, minus whitespace trimming if enabled with \code{trim = TRUE}. For more
+complicated submission evaluation, use \code{\link[=answer_fn]{answer_fn()}} to provide a function
+that checks the student's submission. For example, you could provide a
+function that evaluates the user's submission using
+\link[base:regex]{regular expressions}.
 }
 \examples{
 question_text(
@@ -66,7 +84,25 @@ question_text(
   allow_retry = TRUE,
   trim = FALSE
 )
+
+# This question uses an answer_fn() to give a hint when we think the
+# student is on the right track but hasn't found the value yet.
+question_text(
+  "What's the most popular programming interview question?",
+  answer("fizz buzz", correct = TRUE, "That's right!"),
+  answer_fn(function(value) {
+    if (grepl("(fi|bu)zz", value)) {
+      incorrect("You're on the right track!")
+    }
+  }, label = "fizz or buzz")
+)
+
 }
 \seealso{
-\code{\link{question_radio}}, \code{\link{question_checkbox}}
+Other Interactive Questions: 
+\code{\link{question_checkbox}()},
+\code{\link{question_numeric}()},
+\code{\link{question_radio}()},
+\code{\link{quiz}()}
 }
+\concept{Interactive Questions}

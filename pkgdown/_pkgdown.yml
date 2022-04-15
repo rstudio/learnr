@@ -93,11 +93,13 @@ reference:
 
   - title: Interactive Questions
     contents:
+      - '`quiz`'
       - '`question_checkbox`'
       - '`question_radio`'
       - '`question_numeric`'
       - '`question_text`'
-      - '`quiz`'
+      - '`answer`'
+      - '`correct`'
 
   - title: Random Praise and Encouragement
     contents:
@@ -114,7 +116,6 @@ reference:
       Functions intended for use by developers creating custom questions
       for learnr.
     contents:
-      - '`correct`'
       - '`disable_all_tags`'
       - '`finalize_question`'
       - '`question_ui_initialize`'

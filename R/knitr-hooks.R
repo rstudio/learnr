@@ -1,3 +1,6 @@
+# @staticimports inst/staticexports/
+#   knitr_engine_caption
+
 detect_installed_knitr_hooks <- function() {
   tutorial_chunk_opt <- knitr::opts_chunk$get("tutorial")
   if (!(isTRUE(tutorial_chunk_opt) || identical(tutorial_chunk_opt, "TRUE"))) {
@@ -40,7 +43,8 @@ tutorial_knitr_options <- function() {
       "solution",
       "error-check",
       "code-check",
-      "check"
+      "check",
+      "tests"
     )
   ) {
     # is this a support chunk using chunk labels to match with an exercise?
@@ -236,7 +240,8 @@ tutorial_knitr_options <- function() {
       options$highlight <- FALSE
     }
 
-    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check"))) {
+    if (is_exercise_support_chunk(options, type = c("code-check", "error-check", "check", "tests"))) {
+      # completely suppress behind-the-scenes support chunks
       options$include <- FALSE
     }
 
@@ -300,6 +305,11 @@ tutorial_knitr_options <- function() {
 
   # hook to amend output for exercise related chunks
   tutorial_knit_hook <- function(before, options, envir) {
+    if (!before) {
+      # Signal any messages added during the chunk evaluation. This exists so
+      # that we can direct messages to the console even if created inside a chunk
+      .learnr_messages$flush()
+    }
 
     # helper to produce an exercise wrapper div w/ the specified class
     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
@@ -356,6 +366,7 @@ tutorial_knitr_options <- function() {
         error_check_chunk <- get_knitr_chunk(paste0(options$label, "-error-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
+        test_cases <- get_knitr_chunk(paste0(options$label, "-tests"))
 
         # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
         class(options) <- NULL
@@ -379,6 +390,7 @@ tutorial_knitr_options <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
+            test_cases = split_code_headers(test_cases, "test"),
             options = options[setdiff(names(options), "tutorial")],
             engine = options$engine
           ),
@@ -409,35 +421,7 @@ tutorial_knitr_options <- function() {
                 htmltools::HTML(readLines(cap_engine_file))
               ))
             } else {
-              cap_engine_val <-
-                switch(cap_engine,
-                  "bash" = "Bash",
-                  "c" = "C",
-                  "coffee" = "CoffeeScript",
-                  "cc" = "C++",
-                  "css" = "CSS",
-                  "go" = "Go",
-                  "groovy" = "Groovy",
-                  "haskell" = "Haskell",
-                  "js" = "JavaScript",
-                  "mysql" = "MySQL",
-                  "node" = "Node.js",
-                  "octave" = "Octave",
-                  "psql" = "PostgreSQL",
-                  "python" = "Python",
-                  "r" = "R",
-                  "rcpp" = "Rcpp",
-                  "cpp11" = "cpp11",
-                  "rscript" = "Rscript",
-                  "ruby" = "Ruby",
-                  "perl" = "Perl",
-                  "sass" = "Sass",
-                  "scala" = "Scala",
-                  "scss" = "SCSS",
-                  "sql" = "SQL",
-                  # else, return as the user provided
-                  options$engine
-                )
+              cap_engine_val <- knitr_engine_caption(options[["engine"]])
               i18n_span(
                 "text.enginecap",
                 paste(cap_engine_val, "Code"),
@@ -499,7 +483,9 @@ install_knitr_hooks <- function() {
 remove_knitr_hooks <- function() {
   knitr::opts_chunk$delete("tutorial")
   knitr::opts_hooks$delete("tutorial")
-  knitr::knit_hooks$delete("tutorial")
+  if (!is.null(knitr::knit_hooks$get("tutorial", default = TRUE))) {
+    knitr::knit_hooks$restore("tutorial")
+  }
 }
 
 exercise_server_chunk <- function(label) {
