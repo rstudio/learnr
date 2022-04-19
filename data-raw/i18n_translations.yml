@@ -440,6 +440,12 @@ text:
       또는 <code>&quot;</code>, <code>'</code>, <code>(</code>
       , <code>{</code>로 시작하는 구문을 닫는 <code>&quot;</code>, <code>'</code>,
       <code>)</code>, <code>}</code>을 잊었을 수도 있습니다.
+    zh: >
+      这似乎不是有效的R代码。  
+      R不知道如何将您的文本转换为完整的命令。  
+      您是否忘了填空，忘了删除下划线，忘了在参数之间包含逗号，或者是忘了用<code>&quot;</code>, <code>'</code>,
+      <code>)</code>,<code>}</code>来封闭<code>&quot;</code>, <code>'</code>, <code>(</code>。
+      or <code>{</code>。
   unparsablequotes:
     en: >
       <p>It looks like your R code contains specially formatted quotation marks
@@ -461,7 +467,14 @@ text:
     eu: ~
     de: ~
     ko: ~
-    zh: ~
+    zh: >
+      <p>您的R代码中似乎含有特殊格式的引号，或者弯引号(<code>{{character}}</code>)
+      在字符串前后，在R中字符串应该被直引号(<code>&quot;</code> 或者 <code>'</code>)包裹。</p>
+      {{code}}
+      <p>别担心，该错误经常在复制粘贴包含格式的代码时遇到，
+      您可以尝试将该行中的代码替换为以下代码，也许还有其他地方需要修改。</p>
+      {{suggestion}}
+
   unparsableunicode:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -480,7 +493,11 @@ text:
     eu: ~
     de: ~
     ko: ~
-    zh: ~
+    zh: >
+      <p>您的代码中似乎包含有异常字符(<code>{{character}}</code>),导致代码无效。</p>
+      {{code}}
+      <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
+      请试着删除这些特殊字符,重新输入</p>
   unparsableunicodesuggestion:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -500,7 +517,11 @@ text:
     eu: ~
     de: ~
     ko: ~
-    zh: ~
+    zh: >
+      <p>您的代码中似乎包含有异常字符(<code>{{character}}</code>),导致代码无效。</p>
+      {{code}}
+      <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
+      请试着删除这些特殊字符,重新输入</p>
   and:
     en: "and"
     fr: "et"
