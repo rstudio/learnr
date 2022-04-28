@@ -64,6 +64,7 @@ button:
     de: "Code ausführen"
     ko: "코드 실행"
     zh: "运行代码"
+    pl: "Uruchom kod"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
     en: "$t(button.runcode) ({{kbd}})"
@@ -76,6 +77,7 @@ button:
     de: "$t(button.runcode) ({{kbd}})"
     ko: "$t(button.runcode) ({{kbd}})"
     zh: "$t(button.runcode) ({{kbd}})"
+    pl: "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
     fr: "Indication"
@@ -87,6 +89,7 @@ button:
     de: "Tipp"
     ko: "힌트"
     zh: "提示"
+    pl: "Podpowiedź"
   hint_plural:
     en: "Hints"
     fr: "Indications"
@@ -98,6 +101,7 @@ button:
     de: "Tipps"
     ko: "힌트들"
     zh: "提示"
+    pl: "Podpowiedzi"
   hinttitle:
     en: "$t(button.hint)"
     fr: "$t(button.hint)"
@@ -109,6 +113,7 @@ button:
     de: "$t(button.hint)"
     ko: "$t(button.hint)"
     zh: "$t(button.hint)"
+    pl: "$t(button.hint)"
   hintnext:
     en: "Next Hint"
     fr: "Indication Suivante"
@@ -120,6 +125,7 @@ button:
     de: "Nächster Tipp"
     ko: "다음 힌트"
     zh: "下一个提示"
+    pl: "Następna podpowiedź"
   hintprev:
     en: "Previous Hint"
     fr: "Indication Précédente"
@@ -131,6 +137,7 @@ button:
     de: "Vorheriger Tipp"
     ko: "이전 힌트"
     zh: "上一个提示"
+    pl: "Poprzednia podpowiedź"
   solution:
     en: "Solution"
     fr: "Solution"
@@ -142,6 +149,7 @@ button:
     de: "Lösung"
     ko: "솔루션"
     zh: "答案"
+    pl: "Rozwiązanie"
   solutiontitle:
     en: "$t(button.solution)"
     fr: "$t(button.solution)"
@@ -153,6 +161,7 @@ button:
     de: "$t(button.solution)"
     ko: "$t(button.solution)"
     zh: "$t(button.solution)"
+    pl: "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
     fr: "Copier dans le Presse-papier"
@@ -164,6 +173,7 @@ button:
     de: "In die Zwischenablage kopieren"
     ko: "클립보드에 복사"
     zh: "复制到剪切板"
+    pl: "Kopiuj do schowka"
   startover:
     en: "Start Over"
     fr: "Recommencer"
@@ -175,6 +185,7 @@ button:
     de: "Neustart"
     ko: "재학습"
     zh: "重新开始"
+    pl: "Zacznij od początku"
   startovertitle:
     en: "$t(button.startover)"
     fr: "$t(button.startover)"
@@ -186,6 +197,7 @@ button:
     de: "$t(button.startover)"
     ko: "$t(button.startover)"
     zh: "$t(button.startover)"
+    pl: "$t(button.startover)"
   continue:
     en: "Continue"
     fr: "Continuer"
@@ -197,6 +209,7 @@ button:
     de: "Weiter"
     ko: "다음 학습으로"
     zh: "继续"
+    pl: "Kontynuuj"
   submitanswer:
     en: "Submit Answer"
     fr: "Soumettre"
@@ -208,6 +221,7 @@ button:
     de: "Antwort einreichen"
     ko: "정답 제출"
     zh: "提交答案"
+    pl: "Wyślij"
   submitanswertitle:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -219,6 +233,7 @@ button:
     de: "$t(button.submitanswer)"
     ko: "$t(button.submitanswer)"
     zh: "$t(button.submitanswer)"
+    pl: "$t(button.submitanswer)"
   previoustopic:
     en: "Previous Topic"
     fr: "Chapitre Précédent"
@@ -230,6 +245,7 @@ button:
     de: "Vorheriges Kapitel"
     ko: "이전 토픽"
     zh: "上一专题"
+    pl: "Poprzednia sekcja"
   nexttopic:
     en: "Next Topic"
     fr: "Chapitre Suivant"
@@ -241,6 +257,7 @@ button:
     de: "Nächstes Kapitel"
     ko: "다음 토픽"
     zh: "下一专题"
+    pl: "Następna sekcja"
   questionsubmit:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -252,6 +269,7 @@ button:
     de: "$t(button.submitanswer)"
     ko: "$t(button.submitanswer)"
     zh: "$t(button.submitanswer)"
+    pl: "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"
@@ -263,6 +281,7 @@ button:
     de: "Nochmal versuchen"
     ko: "재시도"
     zh: "再试一次"
+    pl: "Spróbuj ponownie"
 text:
   startover:
     en: "Start Over"
@@ -275,6 +294,7 @@ text:
     de: "Neustart"
     ko: "재학습"
     zh: "重置"
+    pl: "Zacznij od początku"
   areyousure:
     en: "Are you sure you want to start over? (all exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
@@ -286,6 +306,7 @@ text:
     de: "Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)"
     ko: "다시 시작 하시겠습니까? (모든 예제의 진행 정보가 재설정됩니다)"
     zh: "你确定要重新开始吗? (所有当前进度将被重置)"
+    pl: "Czy na pewno chcesz zacząć od początku? (cały postęp w zadaniu zostanie utracony)"
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
@@ -297,6 +318,7 @@ text:
     de: "Vervollstädinge"
     ko: "당신은 완료해야 합니다"
     zh: "你必须完成"
+    pl: "Musisz ukończyć"
   exercise:
     en: "exercise"
     fr: "l'exercice"
@@ -308,6 +330,7 @@ text:
     de: "die Übung"
     ko: "연습문제"
     zh: "练习"
+    pl: "ćwiczenie"
   exercise_plural:
     en: "exercises"
     fr: "des exercices"
@@ -319,6 +342,7 @@ text:
     de: "die Übungen"
     ko: "연습문제들"
     zh: "练习"
+    pl: "ćwiczenia"
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
@@ -330,6 +354,7 @@ text:
     de: "in diesem Kapitel, bevor du fortfährst."
     ko: "이 섹션을 실행하기 전에"
     zh: "在进行本节之前"
+    pl: "w tej sekcji przed kontynuowaniem"
   code:
     en: "Code"
     fr: "Code"
@@ -341,6 +366,7 @@ text:
     de: "Code"
     ko: "코드"
     zh: "代码"
+    pl: "Kod"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
@@ -353,6 +379,7 @@ text:
     de: "$t(text.code) {{engine}}"
     ko: "$t(text.code) {{engine}}"
     zh: "$t(text.code) {{engine}}"
+    pl: "$t(text.code) {{engine}}"
   quiz:
     en: "Quiz"
     fr: "Quiz"
@@ -364,6 +391,7 @@ text:
     de: "Quiz"
     ko: "퀴즈"
     zh: "测试"
+    pl: "Quiz"
   blank:
     en: "blank"
     fr: ~
@@ -375,6 +403,7 @@ text:
     de: "Lücke"
     ko: "공백"
     zh: "空"
+    pl: "luka"
   blank_plural:
     en: "blanks"
     fr: ~
@@ -386,6 +415,7 @@ text:
     de: "Lücken"
     ko: "공백들"
     zh: "空"
+    pl: "luk(i)"
   exercisecontainsblank:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
@@ -398,6 +428,7 @@ text:
     de: ~
     ko: "이 연습문제에는 {{count}}개의 $t(text.blank)이 포함되어 있습니다."
     zh: "本练习包含{{count}}个$t(text.blank)"
+    pl: "To ćwiczenie zawiera {{count}} $t(text.blank)."
   pleasereplaceblank:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
@@ -410,6 +441,7 @@ text:
     de: "Bitte ersetze {{blank}} mit gültigem Code."
     ko: "{{blank}}를 유효한 코드로 바꾸십시오."
     zh: "请在{{blank}}内填写恰当的代码"
+    pl: "Proszę uzupełnić {{blank}} prawidłowym kodem."
   unparsable:
     en: >
       It looks like this might not be valid R code.
@@ -441,11 +473,19 @@ text:
       , <code>{</code>로 시작하는 구문을 닫는 <code>&quot;</code>, <code>'</code>,
       <code>)</code>, <code>}</code>을 잊었을 수도 있습니다.
     zh: >
-      这似乎不是有效的R代码。  
-      R不知道如何将您的文本转换为完整的命令。  
+      这似乎不是有效的R代码。
+      R不知道如何将您的文本转换为完整的命令。
       您是否忘了填空，忘了删除下划线，忘了在参数之间包含逗号，或者是忘了用<code>&quot;</code>, <code>'</code>,
       <code>)</code>,<code>}</code>来封闭<code>&quot;</code>, <code>'</code>, <code>(</code>。
       or <code>{</code>。
+    pl: >
+      Wygląda na to, że może to nie być prawidłowy kod R.
+      R nie jest w stanie przetworzyć Twojego tekstu na polecenie.
+      Mogłeś(-aś) zapomnieć wypełnić luki,
+      usunąć podkreślnik, umieścić przecinka między argumentami,
+      lub zamknąć znak <code>&quot;</code>, <code>'</code>, <code>(</code>
+      lub <code>{</code> odpowiadającym <code>&quot;</code>, <code>'</code>,
+      <code>)</code> lub <code>}</code>.
   unparsablequotes:
     en: >
       <p>It looks like your R code contains specially formatted quotation marks
@@ -474,6 +514,7 @@ text:
       <p>别担心，该错误经常在复制粘贴包含格式的代码时遇到，
       您可以尝试将该行中的代码替换为以下代码，也许还有其他地方需要修改。</p>
       {{suggestion}}
+    pl: ~
 
   unparsableunicode:
     en: >
@@ -498,6 +539,7 @@ text:
       {{code}}
       <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
       请试着删除这些特殊字符,重新输入</p>
+    pl: ~
   unparsableunicodesuggestion:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -522,6 +564,7 @@ text:
       {{code}}
       <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
       请试着删除这些特殊字符,重新输入</p>
+    pl: ~
   and:
     en: "and"
     fr: "et"
@@ -533,6 +576,7 @@ text:
     de: "und"
     ko: "그리고"
     zh: "且"
+    pl: "i"
   or:
     en: "or"
     fr: "ou"
@@ -544,6 +588,7 @@ text:
     de: "oder"
     ko: "혹은"
     zh: "或"
+    pl: "lub"
   listcomma:
     # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
     #   separating list items
@@ -557,6 +602,7 @@ text:
     de: ", "
     ko: ", "
     zh: ","
+    pl: ", "
   oxfordcomma:
     en: ","
     fr: ""
@@ -568,3 +614,4 @@ text:
     de: ","
     ko: ""
     zh: ","
+    pl: ""
