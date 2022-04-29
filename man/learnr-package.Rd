@@ -38,6 +38,7 @@ Other contributors:
   \item Zeno Rocha (clipboard.js library) [contributor, copyright holder]
   \item Nick Payne (Bootbox library) [contributor, copyright holder]
   \item Jake Archibald (idb-keyval library) [contributor, copyright holder]
+  \item i18next authors (i18next library) [contributor, copyright holder]
 }
 
 }
