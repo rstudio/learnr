@@ -514,7 +514,17 @@ text:
       <p>别担心，该错误经常在复制粘贴包含格式的代码时遇到，
       您可以尝试将该行中的代码替换为以下代码，也许还有其他地方需要修改。</p>
       {{suggestion}}
-    pl: ~
+    pl: >
+      <p>Wygląda na to, że Twój kod zawiera szczególnie sformatowane cudzysłowy
+      lub cudzysłowy typograficzne (<code>{{character}}</code>)
+      przy ciągach znaków, co sprawia, że kod jest niepoprawny.
+      R wymaga cudzysłowów prostych (<code>&quot;</code> albo <code>'</code>).</p>
+      {{code}}
+      <p>Nie martw się, to powszechne źródło błędów, gdy kopiuje się kod
+      z innego programu, który sam formatuje teskt.
+      Możesz spróbować zastąpić swój kod następującym kodem.
+      Mogą być też inne miejsca, które wymagają poprawienia.</p>
+      {{suggestion}}
 
   unparsableunicode:
     en: >
@@ -539,7 +549,13 @@ text:
       {{code}}
       <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
       请试着删除这些特殊字符,重新输入</p>
-    pl: ~
+    pl: >
+      <p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny
+      (<code>{{character}}</code>), co sprawia, że kod jest niepoprawny.</p>
+      {{code}}
+      <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak
+      zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu.
+      Spróbuj usunąć znak specjalny i wpisać do ponownie ręcznie.</p>
   unparsableunicodesuggestion:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -564,7 +580,15 @@ text:
       {{code}}
       <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。
       请试着删除这些特殊字符,重新输入</p>
-    pl: ~
+    pl: >
+      <p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny
+      (<code>{{character}}</code>), co sprawia, że kod jest niepoprawny.</p>
+      {{code}}
+      <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak
+      zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu.
+      Możesz spróbować zastąpić swój kod następującym kodem.
+      Mogą być też inne miejsca, które wymagają poprawienia.</p>
+      {{suggestion}}
   and:
     en: "and"
     fr: "et"
