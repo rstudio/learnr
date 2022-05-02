@@ -276,6 +276,20 @@ describe_tutorial_items <- function() {
     data = I(unname(tutorial_cache_env$objects))
   )
 
+  for (i in seq_along(items[["data"]])) {
+    if (items[["type"]][[i]] != "exercise") next
+
+    label <- items[["label"]][[i]]
+    code_chunks <- Filter(
+      x = items[["data"]][[i]][["chunks"]],
+      function(chunks) {
+        identical(chunks[["label"]], label)
+      }
+    )
+    items[["data"]][[i]][["code"]] <- standardize_code(code_chunks[[1]]$code)
+    items[["data"]][[i]][["version"]] <- current_exercise_version
+  }
+
   items <- as.data.frame(items, stringsAsFactors = FALSE)
   class(items$data) <- "list"
   items$order <- seq_len(nrow(items))

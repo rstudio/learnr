@@ -383,6 +383,7 @@ tutorial_knitr_options <- function() {
 
         exercise_cache <- structure(
           list(
+            label = options[["label"]],
             global_setup = get_setup_global_exercise(),
             setup = all_setup_code,
             chunks = all_chunks,
