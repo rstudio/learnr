@@ -1,5 +1,5 @@
 pandoc: 2.14.2
-pkgdown: 2.0.2
+pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   examples: examples.html
@@ -10,7 +10,7 @@ articles:
   questions: questions.html
   multilang: multilang.html
   shinyapps-publishing: shinyapps-publishing.html
-last_built: 2022-04-21T21:19Z
+last_built: 2022-05-02T14:21Z
 urls:
   reference: https://pkgs.rstudio.com/learnr/reference
   article: https://pkgs.rstudio.com/learnr/articles
