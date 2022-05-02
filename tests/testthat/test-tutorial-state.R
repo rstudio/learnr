@@ -31,7 +31,17 @@ test_that("tutorial_cache_works", {
   expect_named(info$items, c("order", "label", "type", "data"))
 
   all <- get_tutorial_cache()
-  expect_equal(info$items$data, unname(all))
+  for (i in seq_along(info$items$data)) {
+    item <- info$items$data[[i]]
+    label <- info$items$label[[i]]
+
+    if (inherits(item, "tutorial_exercise")) {
+      # these items are added by app or by `get_tutorial_info()`
+      item <- item[setdiff(names(item), c("code", "version"))]
+      class(item) <- "tutorial_exercise"
+    }
+    expect_equal(item, all[[label]])
+  }
 
   # tutorial cache lists items in order of appearance
   exercises <- c("two-plus-two", "add-function", "print-limit")
