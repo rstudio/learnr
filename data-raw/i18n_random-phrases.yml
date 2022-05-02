@@ -154,6 +154,20 @@ praise:
     - 성공하셨습니다!
     - 최고의 답변입니다!
     - 멋집니다!
+  pl:
+    - Świetnie!
+    - Doskonale!
+    - Dobra robota!
+    - Dajesz radę!
+    - Dobrze Ci idzie!
+    - Tak trzymaj!
+    - Oby tak dalej!
+    - Cudownie!
+    - Pierwsza klasa!
+    - Bardzo dobrze!
+    - Jeśli to zadanie jest skocznią, to Ty jesteś Małyszem!
+    - Gratulacje!
+
 encouragement:
   testing:
     - RANDOM ENCOURAGEMENT.
@@ -231,3 +245,12 @@ encouragement:
     - 不要放弃，加油。  
     - 靡不有初,鲜克有终。  
     - 没事儿，再来。 
+  pl:
+    - Nie udało się, ale spróbuj jeszcze raz.
+    - Na błędach najlepiej się uczymy.
+    - Nic straconego!
+    - To co? Może jeszcze jedna próba?
+    - Nie poddawaj się!
+    - Wytrwałość to klucz do sukcesu, spróbujmy jeszcze raz.
+    - Do skutku! Tak możemy się uczyć.
+    - Nikodemowi Dyzmie też na początku nie było łatwo!

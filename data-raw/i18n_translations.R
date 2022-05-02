@@ -8,11 +8,14 @@ library(yaml)
 library(purrr)
 library(stringi)
 
+# We currently use stri_enc_toutf8() instead of the function below.
+# We noticed problems with the Polish translation and switch to the function
+# from {stringi}. I've kept this function in the source in case we need to
+# switch back to our previous method.
 reencode_utf8 <- function(x) {
 
   # Ensure that we encode non-UTF-8 strings to UTF-8 in a
-  # two-step process: (1) to native encoding, and then
-  # (2) to UTF-8
+  # two-step process: (1) to native encoding, and then (2) to UTF-8
   if (Encoding(x) != 'UTF-8') {
     x <- enc2utf8(x)
   }
@@ -79,9 +82,7 @@ translations_list <-
   # Drop null keys
   map_depth(2, compact) %>%
   # Re-encode to UTF-8
-  map_depth(3, reencode_utf8) %>%
-  # Unescape unicode
-  map_depth(3, stri_unescape_unicode) %>%
+  map_depth(3, stri_enc_toutf8, validate = TRUE) %>%
   # Massage into i18next format
   # button$runcode$en -> en$translation$button$runcode
   map_depth(1, transpose) %>%
@@ -95,7 +96,6 @@ saveRDS(translations_list, file = here("inst", "internals", "i18n_translations.r
 i18n_random_phrases <-
   here("data-raw", "i18n_random-phrases.yml") %>%
   yaml::read_yaml() %>%
-  map_depth(3, reencode_utf8) %>%
-  map_depth(2, map_chr, stri_unescape_unicode)
+  map_depth(2, map_chr, stri_enc_toutf8, validate = TRUE)
 
 saveRDS(i18n_random_phrases, file = here("inst", "internals", "i18n_random_phrases.rds"), version = 2)
