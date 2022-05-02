@@ -96,6 +96,6 @@ saveRDS(translations_list, file = here("inst", "internals", "i18n_translations.r
 i18n_random_phrases <-
   here("data-raw", "i18n_random-phrases.yml") %>%
   yaml::read_yaml() %>%
-  map_depth(3, stri_enc_toutf8, validate = TRUE)
+  map_depth(2, map_chr, stri_enc_toutf8, validate = TRUE)
 
 saveRDS(i18n_random_phrases, file = here("inst", "internals", "i18n_random_phrases.rds"), version = 2)
