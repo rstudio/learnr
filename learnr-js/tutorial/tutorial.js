@@ -1322,11 +1322,14 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
             solutionText
           )
           solutionEditor.setReadOnly(true)
-          solutionEditor.setOptions({
-            minLines: editorLines
+          solutionEditor.setOption('minLines', Math.min(editorLines, 10))
+          solutionEditor.setOption('maxLines', 10)
+          setTimeout(() => {
+            // Re-position the popover in the next tick when we know the height.
+            // We used to be able to do this by knowing the editor line height
+            // but in Ace >= 1.3 that value is populated asyncronously.
+            content.parent().css('top', `-${content.parent().height()}px`)
           })
-          const height = editorLines * solutionEditor.renderer.lineHeight
-          content.css('height', height + 'px')
 
           // get title panel
           const popoverTitle = popoverTip.find('.popover-title')
