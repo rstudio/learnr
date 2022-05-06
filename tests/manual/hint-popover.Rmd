@@ -1,0 +1,80 @@
+---
+title: "Hint and Solution Popovers"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+## Test Cases
+
+### Hint Only
+
+The hint in this exercise should have three lines.
+
+```{r ex1, exercise = TRUE}
+1+1
+```
+
+```{r ex1-hint}
+line1
+line2
+line3
+```
+
+### Solution Only
+
+The hint in this exercise should have six lines.
+
+```{r ex2, exercise = TRUE}
+1+1
+```
+
+```{r ex2-solution}
+line1
+line2
+line3
+line4
+line5
+line6
+```
+
+### Solution and Hints
+
+1. Hint with 5 lines
+2. Hint with 15 lines
+3. Solution with 3 lines
+
+```{r ex3, exercise = TRUE}
+1+1
+```
+
+```{r ex3-hint-1}
+line1
+line2
+line3
+line4
+line5
+```
+
+```{r ex3-hint-2}
+line1
+line2
+line3
+line4
+line5
+line6
+line7
+line8
+line9
+line10
+line11
+line12
+line13
+line14
+line15
+```
+
+```{r ex3-solution}
+line1
+line2
+line3
+```
