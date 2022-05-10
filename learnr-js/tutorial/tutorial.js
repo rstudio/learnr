@@ -854,6 +854,9 @@ Tutorial.prototype.$attachAceEditor = function (target, code, options) {
   editor.session.setMode(`ace/mode/${options.engine}`)
   editor.session.getSelection().clearSelection()
   editor.setValue(code, -1)
+  editor.setOptions({
+    enableBasicAutocompletion: true
+  })
   return editor
 }
 
