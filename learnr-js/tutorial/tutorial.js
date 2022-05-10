@@ -840,8 +840,12 @@ Tutorial.prototype.kMinLines = 3
 
 // edit code within an ace editor
 Tutorial.prototype.$attachAceEditor = function (target, code, options) {
+  const engineModes = {
+    js: 'javascript'
+  }
   const optsDefaults = { engine: 'r' }
   options = Object.assign({}, optsDefaults, options)
+  options.engine = engineModes[options.engine] || options.engine
 
   const editor = ace.edit(target)
   editor.setHighlightActiveLine(false)
