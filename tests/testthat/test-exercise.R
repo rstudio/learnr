@@ -445,6 +445,12 @@ test_that("evaluate_exercise() handles default vs. explicit error check code", {
   expect_match(conditionMessage(res$feedback$checker_args$last_value), "boom")
 })
 
+test_that("evaluate_exercise() works even with CRLF", {
+  ex <- mock_exercise(user_code = "1 +\r\n1 +\r\n1", check = I("last_value"))
+  expect_silent(res <- evaluate_exercise(ex, new.env()))
+  expect_equal(res$feedback$checker_result, 3)
+})
+
 # exercise_result() -------------------------------------------------------
 
 test_that("exercise_result() doesn't concatenate feedback and code output", {

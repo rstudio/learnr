@@ -300,6 +300,8 @@ standardize_code <- function(code) {
   if (is.null(code) || !length(code)) {
     return("")
   }
+  # convert CRLF to POSIX line endings
+  code <- gsub("\r", "", code, fixed = TRUE)
   str_trim(paste0(code, collapse = "\n"))
 }
 
