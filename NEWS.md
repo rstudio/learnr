@@ -48,6 +48,8 @@
 
 -   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
 
+-   Exercise editors now use syntax highlighting and basic autocompletion for exercises in languages other than R with syntax highlighting support for JavaScript, Julia, Python and SQL (#693).
+
 ## Interactive Exercises and Questions
 
 ### Exercises
