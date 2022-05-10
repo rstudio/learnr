@@ -850,6 +850,7 @@ Tutorial.prototype.$attachAceEditor = function (target, code) {
   editor.$blockScrolling = Infinity
   editor.session.setMode('ace/mode/r')
   editor.session.getSelection().clearSelection()
+  editor.session.setNewLineMode('unix')
   editor.setValue(code, -1)
   return editor
 }
