@@ -839,7 +839,14 @@ Tutorial.prototype.$showExerciseProgress = function (label, button, show) {
 Tutorial.prototype.kMinLines = 3
 
 // edit code within an ace editor
-Tutorial.prototype.$attachAceEditor = function (target, code) {
+Tutorial.prototype.$attachAceEditor = function (target, code, options) {
+  const engineModes = {
+    js: 'javascript'
+  }
+  const optsDefaults = { engine: 'r' }
+  options = Object.assign({}, optsDefaults, options)
+  options.engine = engineModes[options.engine] || options.engine
+
   const editor = ace.edit(target)
   editor.setHighlightActiveLine(false)
   editor.setShowPrintMargin(false)
@@ -848,10 +855,13 @@ Tutorial.prototype.$attachAceEditor = function (target, code) {
   editor.renderer.setDisplayIndentGuides(false)
   editor.setTheme('ace/theme/textmate')
   editor.$blockScrolling = Infinity
-  editor.session.setMode('ace/mode/r')
+  editor.session.setMode(`ace/mode/${options.engine}`)
   editor.session.getSelection().clearSelection()
   editor.session.setNewLineMode('unix')
   editor.setValue(code, -1)
+  editor.setOptions({
+    enableBasicAutocompletion: true
+  })
   return editor
 }
 
@@ -1007,7 +1017,7 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
     outputFrame.append(outputDiv)
 
     // activate the ace editor
-    const editor = thiz.$attachAceEditor(codeDivId, code)
+    const editor = thiz.$attachAceEditor(codeDivId, code, optsChunk)
 
     // get setup_code (if any)
     const setupCode = null
@@ -1320,7 +1330,7 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
           // adjust editor and container height
           const solutionEditor = thiz.$attachAceEditor(
             content.get(0),
-            solutionText
+            solutionText // FIXME get exercise engine
           )
           solutionEditor.setReadOnly(true)
           solutionEditor.setOption('minLines', Math.min(editorLines, 10))
