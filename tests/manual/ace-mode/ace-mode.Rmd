@@ -1,0 +1,69 @@
+---
+title: "Ace Language Mode"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+```
+
+## Test Cases
+
+These exercises don't have checks.
+
+### R
+
+An exercise using R.
+
+```{r ex1, exercise = TRUE}
+stem(log(rivers))
+```
+
+```{r ex1-hint}
+stem(rivers)
+```
+
+### Python
+
+```{python ex-python, exercise = TRUE}
+[x for x in [3, 4, 5, 6, 7] if x > 5]
+```
+
+```{python ex-python-hint}
+[x for x in [3, 4, 5, 6, 7] if x > 2]
+```
+
+### JavaScript
+
+*Note: syntax highlighting works but no output will be shown unless you run the code in an IIFE and use `console.log()` or `window.alert()`.*
+
+```{js ex-js, exercise = TRUE, results = "asis"}
+(function() {
+  const value = Math.min.apply(Math, [42, 6, 27])
+  window.alert(`The value is ${value}`)
+})()
+```
+
+```{js ex-js-hint}
+console.log(Math.min(42, 6, 27))
+```
+
+### Julia
+
+```{julia ex-julia, exercise = TRUE}
+# While loops loop while a condition is true
+let x = 0
+    while x < 4
+        println(x)
+        x += 1  # Shorthand for in place increment: x = x + 1
+    end
+end
+```
+
+```{julia ex-julia-hint}
+for pair in Dict("dog" => "mammal", "cat" => "mammal", "mouse" => "mammal")
+    from, to = pair
+    println("$from is a $to")
+end
+```

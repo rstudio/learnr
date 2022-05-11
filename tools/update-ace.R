@@ -12,10 +12,13 @@ ACE_FILES <- c(
   "mode-css.js",
   "mode-html.js",
   "mode-javascript.js",
+  "mode-julia.js",
   "mode-plain_text.js",
+  "mode-python.js",
   "mode-r.js",
   "mode-rdoc.js",
   "mode-rhtml.js",
+  "mode-sql.js",
   "mode-text.js",
   "mode-xml.js"
 )
