@@ -857,6 +857,7 @@ Tutorial.prototype.$attachAceEditor = function (target, code, options) {
   editor.$blockScrolling = Infinity
   editor.session.setMode(`ace/mode/${options.engine}`)
   editor.session.getSelection().clearSelection()
+  editor.session.setNewLineMode('unix')
   editor.setValue(code, -1)
   editor.setOptions({
     enableBasicAutocompletion: true
