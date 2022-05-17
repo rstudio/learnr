@@ -1,3 +1,4 @@
+skip_on_cran()
 library(shinytest2)
 
 check_popover_exists <- function(selector) {
