@@ -43,5 +43,8 @@ get_editor_value <- function(selector) {
 }
 
 if (!"succeed" %in% names(AppDriver$public_methods)) {
-  AppDriver$set("public", "succeed", function(...) testthat::succeed(...))
+  AppDriver$set("public", "succeed", function(...) {
+    testthat::succeed(...)
+    invisible(self)
+  })
 }
