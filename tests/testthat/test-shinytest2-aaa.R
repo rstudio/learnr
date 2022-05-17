@@ -3,7 +3,8 @@ skip_on_cran() # Uses chromote
 
 # Try to warm up chromote. IDK why it fails on older versions of R.
 test_that("Chromote loads", {
-  skip_if(!on_ci(), "Not on CI")
+  on_ci <- isTRUE(as.logical(Sys.getenv("CI")))
+  skip_if(!on_ci, "Not on CI")
 
   # Wrap in a `try()` as the test doesn't matter
   # Only the action of trying to open chromote matters
