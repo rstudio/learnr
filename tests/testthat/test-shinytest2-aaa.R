@@ -8,7 +8,8 @@ test_that("Chromote loads", {
   # Wrap in a `try()` as the test doesn't matter
   # Only the action of trying to open chromote matters
   try({
-    chromote::default_chromote_object()$new_session()
+    chromote <- utils::getFromNamespace("default_chromote_object", "chromote")()
+    chromote$new_session()
   })
 
   expect_true(TRUE)
