@@ -22,11 +22,11 @@
   })
 
 
-  if ("shinytest" %in% loadedNamespaces()) {
+  if ("shinytest2" %in% loadedNamespaces()) {
     register_shinytest_inputprocessor()
   }
   setHook(
-    packageEvent("shinytest", "onLoad"),
+    packageEvent("shinytest2", "onLoad"),
     function(...) register_shinytest_inputprocessor()
   )
 }
