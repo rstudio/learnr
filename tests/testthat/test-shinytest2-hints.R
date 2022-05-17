@@ -95,7 +95,10 @@ describe("sequential hints", {
       )
 
       expect_true("disabled" %in% two_next_hint_btn_classes)
-      expect_true(app$get_js(selector_attributes(two_next_hint_button))$disabled)
+      expect_true(
+        app$get_js(selector_attributes(two_next_hint_button))$disabled %in%
+        c("true", "disabled", "")
+      )
     })
 
     it("doesn't do anything when disabled hint button is clicked", {
@@ -168,7 +171,10 @@ describe("sequential hints", {
       button_classes <- unlist(button_classes)
 
       expect_true("disabled" %in% button_classes)
-      expect_true(app$get_js(selector_attributes(three_next_hint_button))$disabled)
+      expect_true(
+        app$get_js(selector_attributes(three_next_hint_button))$disabled %in%
+        c("true", "disabled", "")
+      )
     })
 
     it("doesn't do anything when disabled hint button is clicked", {
