@@ -338,7 +338,10 @@ describe("copy button", {
 
   describe("copy solutions", {
     id <- "ex2"
-     solution_text_expected <- 'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
+     solution_text_expected <- c(
+       'c(\r\n  "apple",\r\n  "banana",\r\n  "coconut"\r\n)',
+       'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
+     )
 
     it("clicks hint button to open hint popover", {
       app$
@@ -361,7 +364,7 @@ describe("copy button", {
 
     it("hint text in editor matches expectations", {
       solution_text <- app$get_js(get_popover_editor_value(id))
-      expect_equal(solution_text, solution_text_expected)
+      expect_true(solution_text %in% solution_text_expected)
     })
 
     it("clicks copy solution button to copy hint and close popover", {
@@ -386,9 +389,8 @@ describe("copy button", {
 
       app$wait_for_js(check_popover_closed(id))
 
-      expect_equal(
-        app$get_js('navigator.clipboard.readText()'),
-        solution_text_expected
+      expect_true(
+        app$get_js('navigator.clipboard.readText()') %in% solution_text_expected
       )
     })
 
@@ -405,9 +407,9 @@ describe("copy button", {
 
       # app$expect_screenshot(selector = exercise_selector(id))
 
-      expect_equal(
-        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))),
-        trimws(solution_text_expected)
+      expect_true(
+        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
+        solution_text_expected
       )
     })
 
