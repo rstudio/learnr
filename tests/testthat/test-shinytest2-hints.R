@@ -244,8 +244,9 @@ describe("copy button", {
 
   describe("copy hints", {
     id <- "ex1"
+    hint_text_expected <- "c(\n  1,\n  2,\n  3\n)"
 
-    it("clipboard button in hints popover copies editor text", {
+    it("clicks hint button to open hint popover", {
       app$
         wait_for_js(check_popover_closed(id), timeout = 5000)$
         click(selector = exercise_selector_hint_btn(id))$
@@ -262,10 +263,14 @@ describe("copy button", {
           selector_exists(exercise_selector_hint_popover(id), ".ace_editor")
         )$
         succeed("popover has editor with hint")
+    })
 
+    it("hint text in editor matches expectations", {
       hint_text <- app$get_js(get_popover_editor_value(id))
-      expect_equal(hint_text, "c(\n  1,\n  2,\n  3\n)")
+      expect_equal(hint_text, hint_text_expected)
+    })
 
+    it("clicks copy solution button to copy hint and close popover", {
       copy_btn_coords <- app$get_js(
         selector_coordinates_center(
           exercise_selector_hint_popover(id),
@@ -289,9 +294,11 @@ describe("copy button", {
 
       expect_equal(
         app$get_js('navigator.clipboard.readText()'),
-        hint_text
+        hint_text_expected
       )
+    })
 
+    it("pastes the copied text into the editor", {
       app$wait_for_js(
         sprintf(
           "navigator.clipboard.readText()
@@ -306,7 +313,7 @@ describe("copy button", {
 
       expect_equal(
         trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))),
-        trimws(hint_text)
+        trimws(hint_text_expected)
       )
     })
 
@@ -331,9 +338,9 @@ describe("copy button", {
 
   describe("copy solutions", {
     id <- "ex2"
-    expected_solution <- 'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
+     solution_text_expected <- 'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
 
-    it("clipboard button in solution popover copies editor text", {
+    it("clicks hint button to open hint popover", {
       app$
         wait_for_js(check_popover_closed(id), timeout = 5000)$
         click(selector = exercise_selector_hint_btn(id))$
@@ -350,10 +357,14 @@ describe("copy button", {
           selector_exists(exercise_selector_hint_popover(id), ".ace_editor")
         )$
         succeed("popover has editor with hint")
+    })
 
+    it("hint text in editor matches expectations", {
       solution_text <- app$get_js(get_popover_editor_value(id))
-      expect_equal(solution_text, expected_solution)
+      expect_equal(solution_text, solution_text_expected)
+    })
 
+    it("clicks copy solution button to copy hint and close popover", {
       copy_btn_coords <- app$get_js(
         selector_coordinates_center(
           exercise_selector_hint_popover(id),
@@ -377,9 +388,11 @@ describe("copy button", {
 
       expect_equal(
         app$get_js('navigator.clipboard.readText()'),
-        solution_text
+        solution_text_expected
       )
+    })
 
+    it("pastes the copied text into the editor", {
       app$wait_for_js(
         sprintf(
           "navigator.clipboard.readText()
@@ -394,7 +407,7 @@ describe("copy button", {
 
       expect_equal(
         trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))),
-        trimws(solution_text)
+        trimws(solution_text_expected)
       )
     })
 
