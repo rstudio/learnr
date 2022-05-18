@@ -145,7 +145,7 @@ app_real_click <- function(app, selector, ...) {
       y = dims$top  + dims$height / 2,
       clickCount = 1,
       pointerType = "mouse",
-      button = "left", # left button
+      button = "left",
       buttons = 1
     )
   }
