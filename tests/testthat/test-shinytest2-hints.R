@@ -244,7 +244,10 @@ describe("copy button", {
 
   describe("copy hints", {
     id <- "ex1"
-    hint_text_expected <- "c(\n  1,\n  2,\n  3\n)"
+    hint_text_expected <- c(
+      "c(\n  1,\n  2,\n  3\n)",
+      "c(\r\n  1,\r\n  2,\r\n  3\r\n)"
+    )
 
     it("clicks hint button to open hint popover", {
       app$
@@ -267,34 +270,20 @@ describe("copy button", {
 
     it("hint text in editor matches expectations", {
       hint_text <- app$get_js(get_popover_editor_value(id))
-      expect_equal(hint_text, hint_text_expected)
+      expect_true(hint_text %in% hint_text_expected)
     })
 
     it("clicks copy solution button to copy hint and close popover", {
-      copy_btn_coords <- app$get_js(
-        selector_coordinates_center(
-          exercise_selector_hint_popover(id),
-          ".btn-tutorial-copy-solution"
-        )
+      copy_btn <- paste(
+        exercise_selector_hint_popover(id),
+        ".btn-tutorial-copy-solution"
       )
 
-      for (event in c("mousePressed", "mouseReleased")) {
-        chrome$Input$dispatchMouseEvent(
-          type = event,
-          x = copy_btn_coords$x,
-          y = copy_btn_coords$y,
-          clickCount = 1,
-          pointerType = "mouse",
-          button = "left", # left button
-          buttons = 1
-        )
-      }
+      app_real_click(app, copy_btn)$
+        wait_for_js(check_popover_closed(id))
 
-      app$wait_for_js(check_popover_closed(id))
-
-      expect_equal(
-        app$get_js('navigator.clipboard.readText()'),
-        hint_text_expected
+      expect_true(
+        app$get_js('navigator.clipboard.readText()') %in% hint_text_expected
       )
     })
 
@@ -311,9 +300,9 @@ describe("copy button", {
 
       # app$expect_screenshot(selector = exercise_selector(id))
 
-      expect_equal(
-        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))),
-        trimws(hint_text_expected)
+      expect_true(
+        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
+        hint_text_expected
       )
     })
 
@@ -368,24 +357,13 @@ describe("copy button", {
     })
 
     it("clicks copy solution button to copy hint and close popover", {
-      copy_btn_coords <- app$get_js(
-        selector_coordinates_center(
-          exercise_selector_hint_popover(id),
-          ".btn-tutorial-copy-solution"
-        )
+      copy_btn <- paste(
+        exercise_selector_hint_popover(id),
+        ".btn-tutorial-copy-solution"
       )
 
-      for (event in c("mousePressed", "mouseReleased")) {
-        chrome$Input$dispatchMouseEvent(
-          type = event,
-          x = copy_btn_coords$x,
-          y = copy_btn_coords$y,
-          clickCount = 1,
-          pointerType = "mouse",
-          button = "left", # left button
-          buttons = 1
-        )
-      }
+      app_real_click(app, copy_btn)$
+        wait_for_js(check_popover_closed(id))
 
       app$wait_for_js(check_popover_closed(id))
 

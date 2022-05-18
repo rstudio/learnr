@@ -47,22 +47,19 @@ const el = document.querySelector('%s')
   )
 }
 
-selector_coordinates_center <- function(selector, ...) {
+selector_coordinates <- function(selector, ...) {
   if (length(c(...))) {
     selector <- paste(selector, paste(c(...), collapse = " "))
   }
   sprintf(
     "(function() {
-const el = document.querySelector('%s')
-if (!el) {
-  return undefined
-}
-const dims = el.getBoundingClientRect();
-return {
-  x: dims.left + dims.width / 2,
-  y: dims.top + dims.height / 2
-}
-})()",
+      const el = document.querySelector('%s')
+      if (!el) {
+        return undefined
+      }
+      const {top, right, bottom, left, width, height, x, y} = el.getBoundingClientRect()
+      return {top, right, bottom, left, width, height, x, y}
+    })()",
     selector
   )
 }
@@ -134,6 +131,26 @@ exercise_has_output <- function(id) {
     "document.querySelector('%s').children.length > 0 ? true : false",
     exercise_selector_output(id)
   )
+}
+
+app_real_click <- function(app, selector, ...) {
+  chrome <- app$get_chromote_session()
+
+  dims <- app$get_js(selector_coordinates(selector, ...))
+
+  for (event in c("mousePressed", "mouseReleased")) {
+    chrome$Input$dispatchMouseEvent(
+      type = event,
+      x = dims$left + dims$width / 2,
+      y = dims$top  + dims$height / 2,
+      clickCount = 1,
+      pointerType = "mouse",
+      button = "left", # left button
+      buttons = 1
+    )
+  }
+
+  invisible(app)
 }
 
 if (!"succeed" %in% names(AppDriver$public_methods)) {
