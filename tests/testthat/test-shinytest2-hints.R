@@ -234,7 +234,7 @@ describe("copy button", {
     click(selector = ".bootbox .bootbox-accept")
 
   # Wait for page reload to complete
-  chrome$Page$domContentEventFired()
+  chrome$Page$loadEventFired()
 
   # enable clipboard support
   # chrome$parent$debug_messages(TRUE)
