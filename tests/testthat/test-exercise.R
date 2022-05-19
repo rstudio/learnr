@@ -1354,3 +1354,25 @@ test_that("SQL exercises - with explicit `output.var`", {
 
   DBI::dbDisconnect(con)
 })
+
+
+# prepare_exercise() ------------------------------------------------------
+
+test_that("prepare_exercise() removes forced default chunk options from exercise chunk", {
+  ex <- mock_exercise(
+    label = "ex",
+    chunks = list(
+      mock_chunk("ex", "1 + 1", exercise = TRUE, eval = FALSE)
+    ),
+    check = TRUE
+  )
+
+  # `eval = FALSE` is set on the exercise chunk option
+  expect_false(ex$chunks[[1]]$opts$eval)
+
+  # but `prepare_exercise()` removes that option
+  expect_null(prepare_exercise(ex)$chunks[[1]]$opts$eval)
+
+  res <- evaluate_exercise(ex, new.env())
+  expect_equal(res$feedback$checker_args$last_value, 2)
+})

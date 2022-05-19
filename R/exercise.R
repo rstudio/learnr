@@ -1202,9 +1202,16 @@ prepare_exercise <- function(exercise) {
     forced = forced_opts_exercise
   )
 
+  discard_forced_opts <- function(opts) {
+    opts[setdiff(names(opts), names(forced_opts_exercise))]
+  }
+
   exercise$chunks <- lapply(exercise[["chunks"]], function(chunk) {
+
     if (identical(chunk[["label"]], exercise[["label"]])) {
       # Exercise Chunk ----
+      chunk[["opts"]] <- discard_forced_opts(chunk[["opts"]])
+
       chunk[["opts"]] <- merge_chunk_options(
         chunk = chunk[["opts"]],
         inherited = I(exercise[["opts_chunk"]])
