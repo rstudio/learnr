@@ -153,9 +153,48 @@ app_real_click <- function(app, selector, ...) {
   invisible(app)
 }
 
-if (!"succeed" %in% names(shinytest2::AppDriver$public_methods)) {
-  shinytest2::AppDriver$set("public", "succeed", function(...) {
-    testthat::succeed(...)
+if (!"expect" %in% names(shinytest2::AppDriver$public_methods)) {
+  # shinytest2::AppDriver$set("public", "with", function(expr) {
+  #   expr <- rlang::enexpr(expr)
+  #   rlang::eval_tidy(expr, data = rlang::new_data_mask(self))
+  #   invisible(self)
+  # })
+
+  shinytest2::AppDriver$set("public", "expect", function(name, object, expected, ...) {
+    stopifnot(length(name) == 1)
+    name <- tolower(name)
+    if (identical(name, "succeed")) {
+      testthat::succeed(...)
+      return(invisible(self))
+    }
+
+    allowed_expectactions <- c(
+      "null", "true", "equal", "match", "false", "length", "no_match", "setequal"
+    )
+
+    if (!name %in% allowed_expectactions) {
+      rlang::abort(sprintf(
+        "'%s' is not one of the supported expectations: %s",
+        name,
+        paste(allowed_expectactions, collapse = ", ")
+      ))
+    }
+
+    dots <- list(...)
+    self_mask <- rlang::new_data_mask(self)
+
+    if (!missing(object)) {
+      object <- rlang::enquo(object)
+      dots$object <- rlang::eval_tidy(object, self_mask)
+    }
+    if (!missing(expected)) {
+      expected <- rlang::enquo(expected)
+      dots$expected <- rlang::eval_tidy(expected, self_mask)
+    }
+
+    call <- rlang::call2(.fn = paste0("expect_", name), !!!dots, .ns = "testthat")
+    rlang::eval_bare(call)
+
     invisible(self)
   })
 }

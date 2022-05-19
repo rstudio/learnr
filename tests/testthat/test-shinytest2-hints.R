@@ -34,7 +34,7 @@ describe("sequential hints", {
         wait_for_js(selector_exists(exercise_selector_hint_btn(id)))$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_exists(id))$
-        succeed()
+        expect("succeed")
     })
 
     it("doesn't have a next hint button", {
@@ -45,14 +45,16 @@ describe("sequential hints", {
             ".btn-tutorial-hint"
           )
         )$
-        succeed()
+        expect("succeed")
     })
 
     it("shows the correct hint in the editor", {
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# one hint"
-      )
+      app$
+        expect("equal", get_js(get_popover_editor_value(id)), "# one hint")
+
+
+      hint_text <- app$get_js(get_popover_editor_value(id))
+      expect_equal(hint_text, "# one hint")
     })
 
     it("hides the popover when clicking on the hint button again", {
@@ -60,7 +62,7 @@ describe("sequential hints", {
         wait_for_js(check_popover_exists(id))$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_closed(id))$
-        succeed()
+        expect("succeed")
     })
   })
 
@@ -72,7 +74,7 @@ describe("sequential hints", {
         wait_for_js(selector_exists(exercise_selector_hint_btn(id)))$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_exists(id))$
-        succeed()
+        expect("succeed")
     })
 
     next_hint_button <- paste(
@@ -83,49 +85,44 @@ describe("sequential hints", {
     it("has a next hint button", {
       app$
         wait_for_js(selector_exists(next_hint_button))$
-        succeed()
+        expect("succeed")
     })
 
     it("shows the first hint in the editor", {
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# first hint"
-      )
+      app$expect("equal", get_js(get_popover_editor_value(id)), "# first hint")
     })
 
     it("shows the next hint when clicking on the next hint button", {
-      app$click(selector = next_hint_button)
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# second hint"
-      )
+      app$
+        click(selector = next_hint_button)$
+        expect("equal", get_js(get_popover_editor_value(id)), "# second hint")
     })
 
     it("disables the next hint button when the last hint is shown", {
-      next_hint_btn_classes <- unlist(
-        app$get_js(selector_classlist(next_hint_button))
-      )
-
-      expect_true("disabled" %in% next_hint_btn_classes)
-      expect_true(
-        app$get_js(selector_attributes(next_hint_button))$disabled %in%
-        c("true", "disabled", "")
-      )
+      app$
+        expect(
+          "true",
+          "disabled" %in% unlist(get_js(selector_classlist(next_hint_button)))
+        )$
+        expect(
+          "true",
+          get_js(selector_attributes(next_hint_button))$disabled %in%
+          c("true", "disabled", "")
+        )
     })
 
     it("doesn't do anything when disabled hint button is clicked", {
-      app$click(selector = next_hint_button)
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# second hint"
-      )
+      app$
+        click(selector = next_hint_button)$
+        expect("equal", get_js(get_popover_editor_value(id)), "# second hint")
     })
 
     it("hides the hints when clicking on the hint button again", {
       app$
         wait_for_js(check_popover_exists(id))$
         click(selector = exercise_selector_hint_btn(id))$
-        wait_for_js(check_popover_closed(id))
+        wait_for_js(check_popover_closed(id))$
+        expect("succeed")
     })
   })
 
@@ -137,7 +134,7 @@ describe("sequential hints", {
         wait_for_js(selector_exists(exercise_selector_hint_btn(id)))$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_exists(id))$
-        succeed()
+        expect("succeed")
     })
 
     next_hint_button <- paste(
@@ -148,61 +145,47 @@ describe("sequential hints", {
     it("has a next hint button", {
       app$
         wait_for_js(selector_exists(next_hint_button))$
-        succeed()
+        expect("succeed")
     })
 
     it("shows the first hint in the editor", {
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# 3 - first hint"
-      )
+      app$expect("equal", get_js(get_popover_editor_value(id)), "# 3 - first hint")
     })
 
     it("shows the next hint when clicking on the next hint button", {
       app$
         click(selector = next_hint_button)$
         wait_for_js(check_popover_exists(id))$
-        succeed()
-
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "# 3 - second hint"
-      )
+        expect("succeed")$
+        expect("equal", get_js(get_popover_editor_value(id)), "# 3 - second hint")
     })
 
     it("shows the solution after the last hint", {
       app$
         click(selector = next_hint_button)$
         wait_for_js(check_popover_exists(id))$
-        succeed()
-
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "2 + 2"
-      )
+        expect("succeed")$
+        expect("equal", get_js(get_popover_editor_value(id)), "2 + 2")
     })
 
-    it("disables the next hint button when the solution is shown", {
-      button_classes <- app$get_js(selector_classlist(next_hint_button))
-      button_classes <- unlist(button_classes)
-
-      expect_true("disabled" %in% button_classes)
-      expect_true(
-        app$get_js(selector_attributes(next_hint_button))$disabled %in%
-        c("true", "disabled", "")
-      )
+    it("adds disabled class and attribute when the next hint button is shown", {
+      app$
+        expect(
+          "true",
+          "disabled" %in% unlist(get_js(selector_classlist(next_hint_button)))
+        )$
+        expect(
+          "true",
+          get_js(selector_attributes(next_hint_button))$disabled %in% c("true", "disabled", "")
+        )
     })
 
     it("doesn't do anything when disabled hint button is clicked", {
       app$
         click(selector = next_hint_button)$
         wait_for_js(check_popover_exists(id))$
-        succeed()
-
-      expect_equal(
-        app$get_js(get_popover_editor_value(id)),
-        "2 + 2"
-      )
+        expect("succeed")$
+        expect("equal", get_js(get_popover_editor_value(id)), "2 + 2")
     })
 
     it("hides the hints when clicking on the hint button again", {
@@ -210,7 +193,7 @@ describe("sequential hints", {
         wait_for_js(check_popover_exists(id))$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_closed(id))$
-        succeed()
+        expect("succeed")
     })
   })
 })
@@ -254,23 +237,22 @@ describe("copy button", {
         wait_for_js(check_popover_closed(id), timeout = 5000)$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_exists(id))$
-        succeed("hint popover exists")$
+        expect("succeed", "hint popover exists")$
         wait_for_js(
           selector_exists(
             exercise_selector_hint_popover(id),
             ".btn-tutorial-copy-solution"
           )
         )$
-        succeed("hint popover has copy solution button")$
+        expect("succeed", "hint popover has copy solution button")$
         wait_for_js(
           selector_exists(exercise_selector_hint_popover(id), ".ace_editor")
         )$
-        succeed("popover has editor with hint")
+        expect("succeed", "popover has editor with hint")
     })
 
     it("hint text in editor matches expectations", {
-      hint_text <- app$get_js(get_popover_editor_value(id))
-      expect_true(hint_text %in% hint_text_expected)
+      app$expect("true", get_js(get_popover_editor_value(id)) %in% hint_text_expected)
     })
 
     it("clicks copy solution button to copy hint and close popover", {
@@ -280,11 +262,8 @@ describe("copy button", {
       )
 
       app_real_click(app, copy_btn)$
-        wait_for_js(check_popover_closed(id))
-
-      expect_true(
-        app$get_js('navigator.clipboard.readText()') %in% hint_text_expected
-      )
+        wait_for_js(check_popover_closed(id))$
+        expect("true", get_js('navigator.clipboard.readText()') %in% hint_text_expected)
     })
 
     it("pastes the copied text into the editor", {
@@ -296,64 +275,60 @@ describe("copy button", {
           ",
           exercise_selector_editor(id)
         )
-      )
-
-      # app$expect_screenshot(selector = exercise_selector(id))
-
-      expect_true(
-        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
-        hint_text_expected
-      )
+      )$
+        expect(
+          "true",
+          trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
+            hint_text_expected
+        )
     })
 
     it("evaluates the pasted hint text correctly", {
       app$
         click(selector = exercise_selector_run_btn(id))$
-        wait_for_js(exercise_has_output(id))
-
-      output <- app$get_html(
-        selector = paste(exercise_selector_output(id), "pre code"),
-        outer_html = FALSE
-      )
-
-      expected_output <- app$get_html(
-        selector = "#section-ex1-expected-output pre code",
-        outer_html = FALSE
-      )
-
-      expect_equal(output, expected_output)
+        wait_for_js(exercise_has_output(id))$
+        expect(
+          "equal",
+          get_html(
+            selector = paste(exercise_selector_output(id), "pre code"),
+            outer_html = FALSE
+          ),
+          get_html(
+            selector = "#section-ex1-expected-output pre code",
+            outer_html = FALSE
+          )
+        )
     })
   })
 
   describe("copy solutions", {
     id <- "ex2"
-     solution_text_expected <- c(
-       'c(\r\n  "apple",\r\n  "banana",\r\n  "coconut"\r\n)',
-       'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
-     )
+    solution_text_expected <- c(
+      'c(\r\n  "apple",\r\n  "banana",\r\n  "coconut"\r\n)',
+      'c(\n  "apple",\n  "banana",\n  "coconut"\n)'
+    )
 
     it("clicks hint button to open hint popover", {
       app$
         wait_for_js(check_popover_closed(id), timeout = 5000)$
         click(selector = exercise_selector_hint_btn(id))$
         wait_for_js(check_popover_exists(id))$
-        succeed("hint popover exists")$
+        expect("succeed", "hint popover exists")$
         wait_for_js(
           selector_exists(
             exercise_selector_hint_popover(id),
             ".btn-tutorial-copy-solution"
           )
         )$
-        succeed("solution popover has copy solution button")$
+        expect("succeed", "hint popover has copy solution button")$
         wait_for_js(
           selector_exists(exercise_selector_hint_popover(id), ".ace_editor")
         )$
-        succeed("popover has editor with hint")
+        expect("succeed", "popover has editor with hint")
     })
 
     it("hint text in editor matches expectations", {
-      solution_text <- app$get_js(get_popover_editor_value(id))
-      expect_true(solution_text %in% solution_text_expected)
+      app$expect("true", get_js(get_popover_editor_value(id)) %in% solution_text_expected)
     })
 
     it("clicks copy solution button to copy hint and close popover", {
@@ -363,13 +338,8 @@ describe("copy button", {
       )
 
       app_real_click(app, copy_btn)$
-        wait_for_js(check_popover_closed(id))
-
-      app$wait_for_js(check_popover_closed(id))
-
-      expect_true(
-        app$get_js('navigator.clipboard.readText()') %in% solution_text_expected
-      )
+        wait_for_js(check_popover_closed(id))$
+        expect("true", get_js('navigator.clipboard.readText()') %in% solution_text_expected)
     })
 
     it("pastes the copied text into the editor", {
@@ -381,32 +351,29 @@ describe("copy button", {
           ",
           exercise_selector_editor(id)
         )
-      )
-
-      # app$expect_screenshot(selector = exercise_selector(id))
-
-      expect_true(
-        trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
-        solution_text_expected
-      )
+      )$
+        expect(
+          "true",
+          trimws(app$get_js(get_editor_value(exercise_selector_editor(id)))) %in%
+            solution_text_expected
+        )
     })
 
     it("evaluates the pasted hint text correctly", {
       app$
         click(selector = exercise_selector_run_btn(id))$
-        wait_for_js(exercise_has_output(id))
-
-      output <- app$get_html(
-        selector = paste(exercise_selector_output(id), "pre code"),
-        outer_html = FALSE
-      )
-
-      expected_output <- app$get_html(
-        selector = "#section-ex2-expected-output pre code",
-        outer_html = FALSE
-      )
-
-      expect_equal(output, expected_output)
+        wait_for_js(exercise_has_output(id))$
+        expect(
+          "equal",
+          get_html(
+            selector = paste(exercise_selector_output(id), "pre code"),
+            outer_html = FALSE
+          ),
+          get_html(
+            selector = "#section-ex2-expected-output pre code",
+            outer_html = FALSE
+          )
+        )
     })
   })
 })
