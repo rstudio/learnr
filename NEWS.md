@@ -178,6 +178,8 @@
 
 -   `learnr::tutorial()` now allows authors to adjust the value of `lib_dir` (#648).
 
+-   learnr now uses and suggests [shinytest2](https://rstudio.github.io/shinytest2) for automated testing of tutorials in the browser. If you were previously using [shinytest](https://rstudio.github.io/shinytest) to test your tutorials, you may find the [Migrating from shinytest](https://rstudio.github.io/shinytest2/articles/z-migration.html) article to be helpful (#694).
+
 # learnr 0.10.1
 
 ## New features

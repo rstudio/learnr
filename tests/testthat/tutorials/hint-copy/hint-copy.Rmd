@@ -1,0 +1,64 @@
+---
+title: "Hint and Solution Copy and Paste"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "")
+report_code_event <- function(tutorial_id, tutorial_version, user_id, event, data) {
+  if (is.null(data$code)) return()
+  rlang::inform(sprintf("---- %s ----\n%s", event, capture.output(dput(data$code))))
+}
+options(tutorial.event_recorder = report_code_event)
+```
+
+## Test Cases
+
+<https://github.com/rstudio/learnr/issues/691>
+
+### Hint
+
+Reveal the hint, copy and paste into the exercise, and run.
+
+```{r ex1, exercise = TRUE}
+
+```
+
+```{r ex1-hint}
+c(
+  1,
+  2,
+  3
+)
+```
+
+Expected output:
+
+::: {#ex1-expected-output}
+```{r ref.label="ex1-hint", echo=FALSE}
+```
+:::
+
+### Solution
+
+Reveal the solution, copy and paste into the exercise, and run.
+
+```{r ex2, exercise = TRUE}
+
+```
+
+```{r ex2-solution}
+c(
+  "apple",
+  "banana",
+  "coconut"
+)
+```
+
+Expected output:
+
+::: {#ex2-expected-output}
+```{r ref.label="ex2-solution", echo=FALSE}
+```
+:::

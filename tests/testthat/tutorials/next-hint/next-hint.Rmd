@@ -1,0 +1,49 @@
+---
+title: "Next hint tests"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+## Tests
+
+### One hint
+
+```{r one, exercise = TRUE}
+1+1
+```
+
+```{r one-hint}
+# one hint
+```
+
+### Two hints
+
+```{r two, exercise = TRUE}
+1+1
+```
+
+```{r two-hint-1}
+# first hint
+```
+
+```{r two-hint-2}
+# second hint
+```
+
+### Two hints plus solution
+
+```{r three, exercise = TRUE}
+1+1
+```
+
+```{r three-hint-1}
+# 3 - first hint
+```
+
+```{r three-hint-2}
+# 3 - second hint
+```
+
+```{r three-solution}
+2 + 2
+```

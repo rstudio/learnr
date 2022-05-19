@@ -1360,11 +1360,13 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
               solutionEditor.setValue(hints[hintIndex], -1)
               if (hintIndex === hints.length - 1) {
                 nextHintButton.addClass('disabled')
+                nextHintButton.prop('disabled', true)
               }
               recordHintRequest(hintIndex)
             })
             if (hintIndex === hints.length - 1) {
               nextHintButton.addClass('disabled')
+              nextHintButton.prop('disabled', true)
             }
             popoverTitle.append(nextHintButton)
           }
