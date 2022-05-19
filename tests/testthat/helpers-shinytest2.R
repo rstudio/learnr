@@ -153,8 +153,8 @@ app_real_click <- function(app, selector, ...) {
   invisible(app)
 }
 
-if (!"succeed" %in% names(AppDriver$public_methods)) {
-  AppDriver$set("public", "succeed", function(...) {
+if (!"succeed" %in% names(shinytest2::AppDriver$public_methods)) {
+  shinytest2::AppDriver$set("public", "succeed", function(...) {
     testthat::succeed(...)
     invisible(self)
   })
