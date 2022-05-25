@@ -110,26 +110,11 @@ rendered chunk.</p>
 
 
 <p>To add random phrases in a learnr tutorial, you can either include one or
-more calls to <code>random_phrases_add()</code> in your global setup chunk:</p><div class="sourceCode"><pre><code>```{r setup, include = FALSE}`r ''`
-library(learnr)
-random_phrases_add(
-  language = "en",
-  praise = "Great work!",
-  encouragement = "I believe in you."
-)
-```
-</code></pre></div>
-
+more calls to <code>random_phrases_add()</code> in your global setup chunk:</p>
+<p></p><div class="sourceCode"><pre><code></code></pre><p></p></div>
 <p>Alternatively, you can call <code>random_phrases_add()</code> in a separate, standard
-R chunk (with <code>echo = FALSE</code>):</p><div class="sourceCode"><pre><code>```{r setup-phrases, echo = FALSE}`r ''`
-random_phrases_add(
-  language = "en",
-  praise = c("Great work!", "You're awesome!"),
-  encouragement = c("I believe in you.", "Yes we can!")
-)
-```
-</code></pre></div>
-
+R chunk (with <code>echo = FALSE</code>):</p>
+<p></p><div class="sourceCode"><pre><code></code></pre><p></p></div>
     </div>
 
     <div class="section level2">

@@ -67,6 +67,9 @@
     <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/event_register_handler.html</loc>
   </url>
   <url>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/expect_feedback.html</loc>
+  </url>
+  <url>
     <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/external_evaluator.html</loc>
   </url>
   <url>
@@ -137,6 +140,12 @@
   </url>
   <url>
     <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/safe_env.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/test_that_exercise.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/test_tutorial.html</loc>
   </url>
   <url>
     <loc>https://pkgs.rstudio.com/learnr/preview/pr698/reference/tutorial.html</loc>
