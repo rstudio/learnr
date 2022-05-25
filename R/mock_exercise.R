@@ -110,7 +110,7 @@ mock_exercise <- function(
     code_check = code_check,
     error_check = error_check,
     check = check,
-    tests = split_code_headers(tests, "test"),
+    tests = tests,
     options = utils::modifyList(default_options, list(...)),
     engine = engine,
     version = version
