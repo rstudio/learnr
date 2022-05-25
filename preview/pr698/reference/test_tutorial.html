@@ -249,10 +249,9 @@ environment and should only be used when iterating with a single tutorial.</p></
 <span class="r-in">  <span class="st">"internals"</span>, <span class="st">"example-tutorial-test.Rmd"</span>, package <span class="op">=</span> <span class="st">"learnr"</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="fu">test_tutorial</span><span class="op">(</span><span class="va">tutorial_path</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> example-tutorial-test.Rmd - letters: <span style="color: #00BB00;">....................</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ══ DONE ══════════════════════════════════════════════════════════════════</span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"testthat"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">  <span class="fu">test_tutorial</span><span class="op">(</span><span class="va">tutorial_path</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
