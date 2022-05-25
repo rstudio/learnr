@@ -234,6 +234,11 @@ test the tutorial in an isolated (safe) background process using <code><a href="
 If <code>FALSE</code>, <code>test_tutorial()</code> will render and test the tutorial in the
 current R process, which may attach packages or modify the global
 environment and should only be used when iterating with a single tutorial.</p></dd>
+<dt>reporter</dt>
+<dd><p>Reporter to use to summarise output. Can be supplied
+as a string (e.g. "summary") or as an R6 object
+(e.g. <code>SummaryReporter$new()</code>).</p>
+<p>See <a href="https://testthat.r-lib.org/reference/Reporter.html" class="external-link">Reporter</a> for more details and a list of built-in reporters.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
