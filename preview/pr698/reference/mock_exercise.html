@@ -171,7 +171,9 @@ exercise chunk.</p></dd>
 <span class="r-in">  solution_code <span class="op">=</span> <span class="st">"2 + 2"</span>,</span>
 <span class="r-in">  label <span class="op">=</span> <span class="st">"two-plus-two"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mock_exercise(user_code = "1 + 1", solution_code = "2 + 2", label = "two-plus-two"):</span> could not find function "mock_exercise"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "two-plus-two", exercise=TRUE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 + 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Global Setup</span></span>
 <span class="r-in"><span class="fu">mock_exercise</span><span class="op">(</span></span>
@@ -180,7 +182,9 @@ exercise chunk.</p></dd>
 <span class="r-in">  global_setup <span class="op">=</span> <span class="st">'library(learnr)\nlibrary(dplyr)'</span>,</span>
 <span class="r-in">  label <span class="op">=</span> <span class="st">"filter-storms"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mock_exercise(user_code = "storms %&gt;% filter(name = \"Roxanne\")",     solution_code = "storms %&gt;% filter(name == \"Roxanne\")",     global_setup = "library(learnr)\nlibrary(dplyr)", label = "filter-storms"):</span> could not find function "mock_exercise"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "filter-storms", exercise=TRUE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> storms %&gt;% filter(name = "Roxanne")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Chained setup chunks</span></span>
 <span class="r-in"><span class="fu">mock_exercise</span><span class="op">(</span></span>
@@ -197,7 +201,13 @@ exercise chunk.</p></dd>
 <span class="r-in">  setup_label <span class="op">=</span> <span class="st">"prep-roxanne"</span>,</span>
 <span class="r-in">  global_setup <span class="op">=</span> <span class="st">"library(learnr)\nlibrary(dplyr)"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mock_exercise(user_code = "roxanne", solution_code = "roxanne %&gt;%\n  group_by(year, month, day) %&gt;%\n  summarize(wind = mean(wind))",     chunks = list(mock_chunk(label = "prep-roxanne", code = "roxanne &lt;- storms %&gt;% filter(name == \"Roxanne\")")),     setup_label = "prep-roxanne", global_setup = "library(learnr)\nlibrary(dplyr)"):</span> could not find function "mock_exercise"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "prep-roxanne"}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> roxanne &lt;- storms %&gt;% filter(name == "Roxanne")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "ex", exercise.setup="prep-roxanne", exercise=TRUE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> roxanne</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
