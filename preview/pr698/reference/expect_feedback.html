@@ -197,6 +197,7 @@ being tested:</p>
   message <span class="op">=</span> <span class="cn">NULL</span>,
   type <span class="op">=</span> <span class="cn">NULL</span>,
   location <span class="op">=</span> <span class="cn">NULL</span>,
+  error <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>,
   perl <span class="op">=</span> <span class="cn">FALSE</span>,
   fixed <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -230,6 +231,15 @@ the feedback type is not checked.</p></dd>
 <dd><p><code>[character(1)]</code><br> The expected feedback location. Should be
 one of <code>"append"</code>, <code>"prepend"</code>, or <code>"replace"</code>. If <a href="https://rdrr.io/r/base/NULL.html" class="external-link">NULL</a>, the feedback
 location is not checked.</p></dd>
+<dt>error</dt>
+<dd><p><code>[logical(1)]</code> or <code>[list()]</code><br> Is the <code>user_code</code> expected to
+result in an internal error? When <code>FALSE</code>, the default, <code>expect_feedback()</code>
+will check that an error is not attached to the feedback, i.e. that
+<code>$feedback$error</code> is <code>NULL</code> in the resulting feedback.</p>
+<p>When an error is expected, set <code>error = TRUE</code> (like the <span class="pkg">knitr</span> chunk
+option) or provide a list that describes the expected error. If a list is
+provided, <code>expect_feedback()</code> will test only the items of <code>feedback$error</code>
+that overlap with the list given to <code>error</code>.</p></dd>
 <dt>...</dt>
 <dd><p>Additional named properties of the feedback to be compared with
 items of the same name in the returned feedback object.</p></dd>
