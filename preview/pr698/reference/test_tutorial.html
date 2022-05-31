@@ -59,6 +59,13 @@ test cases:
      correct = TRUE,
      message = &quot;Great!&quot;
    )
+   
+   .exercise$code &amp;lt;- &quot;letters[1:4]&quot;
+   expect_feedback(
+     correct = TRUE,
+     message = &quot;Great!&quot;,
+     .exercise = .exercise
+   )
  })
  
  test_that(&quot;Vectors of the wrong size are marked as incorrect&quot;, {
@@ -157,6 +164,13 @@ test cases:
      letters[1:4],
      correct = TRUE,
      message = &quot;Great!&quot;
+   )
+   
+   .exercise$code &amp;lt;- &quot;letters[1:4]&quot;
+   expect_feedback(
+     correct = TRUE,
+     message = &quot;Great!&quot;,
+     .exercise = .exercise
    )
  })
  
@@ -434,7 +448,7 @@ as a string (e.g. "summary") or as an R6 object
 <span class="r-in"><span class="co"># e.g. tests/testthat/test-tutorials.R</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">tutorial_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"internals"</span>, <span class="st">"example-tutorial-test.Rmd"</span>, package <span class="op">=</span> <span class="st">"learnr"</span></span>
+<span class="r-in">  <span class="st">"examples"</span>, <span class="st">"test-tutorials.Rmd"</span>, package <span class="op">=</span> <span class="st">"learnr"</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"testthat"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>

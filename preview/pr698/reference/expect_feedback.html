@@ -214,7 +214,11 @@ being tested:</p>
     <dl><dt>user_code</dt>
 <dd><p>The code a user might have submitted to the exercise. This
 code should be a single unquoted expression. If the user code requires
-multiple expressions, it should be wrapped in curly braces (<code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{}</a></code>).</p></dd>
+multiple expressions, it should be wrapped in curly braces (<code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{}</a></code>).</p>
+<p><code>user_code</code> does not support
+<a href="https://rlang.r-lib.org/reference/topic-inject.html" class="external-link">rlang injection operators</a>. To provide <code>user_code</code>
+as text, provide the code as <code>.exercise$code</code> and provide nothing for
+<code>user_code</code>.</p></dd>
 <dt>correct</dt>
 <dd><p><code>[logical(1)]</code><br> Whether the user code is expected to be
 <code>correct</code>. If <a href="https://rdrr.io/r/base/NULL.html" class="external-link">NULL</a>, the correctness of the user code is not checked.</p></dd>
