@@ -60,7 +60,7 @@
 
 -   Authors can choose to reveal (default) or hide the solution to an exercise. Set `exercise.reveal_solution` in the chunk options of a `*-solution` chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with `tutorial_options()`. In a future version of learnr, the default will likely be changed to hide solutions (#402).
 
--   Exercises may now include `-tests` chunks. These chunks don't appear in the tutorial text but the code in them is stored in the internal exercise data. In the future, these chunks will be used to provide automated exercise testing (#664).
+-   Exercises may now include `-tests` chunks. These chunks don't appear in the tutorial text but the code in them is stored in the internal exercise data. In the future, these chunks will be used to provide automated exercise testing (#664, #700).
 
 -   Keyboard navigation and keyboard shortcuts for the interactive exercise code editor have been improved:
 
