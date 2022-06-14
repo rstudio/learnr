@@ -163,7 +163,10 @@ mock_exercise <- function(
 }
 
 assert_unique_exercise_chunk_labels <- function(chunks, label) {
-  is_exercise_chunk <- vapply(chunks, `[[`, logical(1), c("opts", "exercise"))
+  is_exercise_chunk <- vapply(chunks, FUN.VALUE = logical(1), function(x) {
+    exercise <- x[[c("opts", "exercise")]]
+    isTRUE(exercise)
+  })
   if (!any(is_exercise_chunk)) {
     return()
   }
