@@ -27,6 +27,7 @@
 #'   `vignette("multilang", package = "learnr")` for more information about
 #'   available options and formatting
 #' @inheritParams rmarkdown::html_document
+#' @inheritParams rmarkdown::html_document_base
 #'
 #' @export
 #' @importFrom utils getFromNamespace
