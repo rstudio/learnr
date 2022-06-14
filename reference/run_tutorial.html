@@ -99,18 +99,28 @@ installed <code>package</code>). Alternatively, if <code>package</code> is not p
 may be a path to a local tutorial R Markdown file or a local directory
 containing a learnr tutorial. If <code>package</code> is provided, <code>name</code> must be the
 tutorial name.</p></dd>
+
+
 <dt>package</dt>
 <dd><p>Name of package. If <code>name</code> is a path to the local directory
 containing a learnr tutorial, then <code>package</code> should not be provided.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Unused. Included for future expansion and to ensure named
 arguments are used.</p></dd>
+
+
 <dt>shiny_args</dt>
 <dd><p>Additional arguments to forward to
 <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp</a></code>.</p></dd>
+
+
 <dt>clean</dt>
 <dd><p>When <code>TRUE</code>, the shiny prerendered HTML files are removed and
 the tutorial is re-rendered prior to starting the tutorial.</p></dd>
+
+
 <dt>as_rstudio_job</dt>
 <dd><p>Runs the tutorial in the background as an RStudio job.
 This is the default behavior when <code>run_tutorial()</code> detects that RStudio is
@@ -120,6 +130,7 @@ tutorial in the current R session.</p>
 <code>launch.browser</code> option for <code>shiny_args</code>. You can instead use the
 <code>shiny.launch.browser</code> global option in your current R session to set
 the default behavior when the tutorial is run. See <a href="https://rdrr.io/pkg/shiny/man/shinyOptions.html" class="external-link">the shiny options documentation</a> for more information.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -163,7 +174,7 @@ the default behavior when the tutorial is run. See <a href="https://rdrr.io/pkg/
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

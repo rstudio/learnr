@@ -101,40 +101,65 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>text</dt>
 <dd><p>Question or option text</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Answers created with <code><a href="answer.html">answer()</a></code> or <code><a href="answer.html">answer_fn()</a></code>, or extra
 parameters passed onto <code><a href="quiz.html">question()</a></code>.</p></dd>
+
+
 <dt>correct</dt>
 <dd><p>For <code>question</code>, text to print for a correct answer (defaults
 to "Correct!"). For <code>answer</code>, a boolean indicating whether this answer is
 correct.</p></dd>
+
+
 <dt>incorrect</dt>
 <dd><p>Text to print for an incorrect answer (defaults to "Incorrect")
 when <code>allow_retry</code> is <code>FALSE</code>.</p></dd>
+
+
 <dt>try_again</dt>
 <dd><p>Text to print for an incorrect answer (defaults to "Incorrect")
 when <code>allow_retry</code> is <code>TRUE</code>.</p></dd>
+
+
 <dt>allow_retry</dt>
 <dd><p>Allow retry for incorrect answers. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>Initial value.</p></dd>
+
+
 <dt>min</dt>
 <dd><p>Minimum allowed value</p></dd>
+
+
 <dt>max</dt>
 <dd><p>Maximum allowed value</p></dd>
+
+
 <dt>step</dt>
 <dd><p>Interval to use when stepping between min and max</p></dd>
+
+
 <dt>options</dt>
 <dd><p>Extra options to be stored in the question object.</p></dd>
+
+
 <dt>tolerance</dt>
 <dd><p>Submitted values within an absolute difference less than or
 equal to <code>tolerance</code> will be considered equal to the answer value. Note
 that this tolerance is for all <code><a href="answer.html">answer()</a></code> values. For more specific answer
 value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide your own evaluation code.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a learnr question of type <code>"learnr_numeric"</code>.</p>
+    
+
+<p>Returns a learnr question of type <code>"learnr_numeric"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -217,7 +242,7 @@ value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

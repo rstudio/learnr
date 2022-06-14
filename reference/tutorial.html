@@ -113,25 +113,39 @@ questions.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>fig_width</dt>
 <dd><p>Default width (in inches) for figures</p></dd>
+
+
 <dt>fig_height</dt>
 <dd><p>Default height (in inches) for figures</p></dd>
+
+
 <dt>fig_retina</dt>
 <dd><p>Scaling to perform for retina displays (defaults to 2, which
 currently works for all widely used retina displays). Set to <code>NULL</code> to
 prevent retina scaling. Note that this will always be <code>NULL</code> when
 <code>keep_md</code> is specified (this is because <code>fig_retina</code> relies on
 outputting HTML directly into the markdown document).</p></dd>
+
+
 <dt>fig_caption</dt>
 <dd><p><code>TRUE</code> to render figures with captions</p></dd>
+
+
 <dt>progressive</dt>
 <dd><p>Display sub-topics progressively (i.e. wait until previous
 topics are either completed or skipped before displaying subsequent
 topics).</p></dd>
+
+
 <dt>allow_skip</dt>
 <dd><p>Allow users to skip sub-topics (especially useful when
 <code>progressive</code> is <code>TRUE</code>).</p></dd>
+
+
 <dt>dev</dt>
 <dd><p>Graphics device to use for figure output (defaults to png)</p></dd>
+
+
 <dt>df_print</dt>
 <dd><p>Method to be used for printing data frames. Valid values
 include "default", "kable", "tibble", and "paged". The "default" method
@@ -146,56 +160,83 @@ can disable the <code>df_print</code> behavior entirely by setting the option
 <code>rmarkdown.df_print</code> to <code>FALSE</code>. See
 <a href="https://bookdown.org/yihui/rmarkdown/html-document.html#data-frame-printing" class="external-link">Data
 frame printing section</a> in bookdown book for examples.</p></dd>
+
+
 <dt>smart</dt>
 <dd><p>Produce typographically correct output, converting straight
 quotes to curly quotes, <code>---</code> to em-dashes, <code>--</code> to en-dashes,
 and <code>...</code> to ellipses. Deprecated in <span class="pkg">rmarkdown</span> v2.2.0.</p></dd>
+
+
 <dt>theme</dt>
 <dd><p>Visual theme ("rstudio", default", "cerulean", "journal",
 "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper",
 "sandstone", "simplex", or "yeti").</p></dd>
+
+
 <dt>highlight</dt>
 <dd><p>Syntax highlighting style. Supported styles include
 "default", "tango", "pygments", "kate", "monochrome", "espresso",
 "zenburn", "haddock", and "textmate". Pass ‘NULL’ to prevent syntax
 highlighting.  Note, this value only pertains to standard rmarkdown code,
 not the Ace editor highlighting.</p></dd>
+
+
 <dt>ace_theme</dt>
 <dd><p>Ace theme supplied to the ace code editor for all exercises.
 See <code>learnr:::ACE_THEMES</code> for a list of possible values.  Defaults to
 <code>"textmate"</code>.</p></dd>
+
+
 <dt>mathjax</dt>
 <dd><p>Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is
 copied into the output directory). You can pass an alternate URL or pass
 <code>NULL</code> to exclude MathJax entirely.</p></dd>
+
+
 <dt>extra_dependencies</dt>
 <dd><p>Additional function arguments to pass to the
 base R Markdown HTML output formatter <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/html_document_base.html" class="external-link">html_document_base</a></code></p></dd>
+
+
 <dt>css</dt>
 <dd><p>CSS and/or Sass files to include. Files with an extension of .sass
 or .scss are compiled to CSS via <code><a href="https://rstudio.github.io/sass/reference/sass.html" class="external-link">sass::sass()</a></code>. Also, if <code>theme</code> is a
 <code><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bslib::bs_theme()</a></code> object, Sass code may reference the relevant Bootstrap
 Sass variables, functions, mixins, etc.</p></dd>
+
+
 <dt>includes</dt>
 <dd><p>Named list of additional content to include within the
 document (typically created using the <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/includes.html" class="external-link">includes</a></code> function).</p></dd>
+
+
 <dt>md_extensions</dt>
 <dd><p>Markdown extensions to be added or removed from the
 default definition of R Markdown. See the <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/rmarkdown_format.html" class="external-link">rmarkdown_format</a></code> for
 additional details.</p></dd>
+
+
 <dt>pandoc_args</dt>
 <dd><p>Additional command line options to pass to pandoc</p></dd>
+
+
 <dt>language</dt>
 <dd><p>Language or custom text of the UI elements. See
 <code><a href="../articles/multilang.html">vignette("multilang", package = "learnr")</a></code> for more information about
 available options and formatting</p></dd>
+
+
 <dt>lib_dir</dt>
 <dd><p>Directory to copy dependent HTML libraries (e.g. jquery,
 bootstrap, etc.) into. By default this will be the name of the document with
 <code>_files</code> appended to it.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Forward parameters to html_document</p></dd>
+
 </dl></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -210,7 +251,7 @@ bootstrap, etc.) into. By default this will be the name of the document with
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

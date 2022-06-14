@@ -94,18 +94,25 @@ will be executed; after that, the expression will not be evaluated again.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>session</dt>
 <dd><p>A Shiny session object.</p></dd>
+
+
 <dt>cond</dt>
 <dd><p>A condition that is used as a filter. The first time the
 condition evaluates to true, <code>expr</code> will be evaluated; after that, <code>expr</code>
 will not be evaluated again.</p></dd>
+
+
 <dt>expr</dt>
 <dd><p>An expression that will be evaluated once, the first time that
 <code>cond</code> is true.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>A unique identifier. This is used as an ID for the condition and
 expression; if two calls to <code>one_time()</code> uses the same label, there will be
 an ID collision and only one of them will execute. By default, <code>cond</code> is
 deparsed and used as the label.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -151,7 +158,7 @@ viewed for the first time.</p>
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

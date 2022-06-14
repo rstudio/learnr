@@ -109,17 +109,25 @@ evaluates the student's submission and returns a custom result.</p>
     <dl><dt>text</dt>
 <dd><p>The answer text or value; for selection-type questions this value
 is shown to the user.</p></dd>
+
+
 <dt>correct</dt>
 <dd><p>Logical value indicating whether the <code>answer()</code> corresponds to
 a correct or incorrect option.</p></dd>
+
+
 <dt>message</dt>
 <dd><p>A custom message shown when this answer is selected and when
 the overall question result matches the state of this answer. For example,
 the <code>message</code> of a correct solution is not shown when the entire submission
 is incorrect, but <em>will</em> be shown when the user both picks this answer
 option and the question is <em>correct</em>.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>The label shown when the option is presented to the user.</p></dd>
+
+
 <dt>fn</dt>
 <dd><p>A function used to evaluate the submitted answer. The function is
 called with the student's submitted value as the first argument, so the
@@ -132,10 +140,13 @@ message presented to the user. To signal a final answer, call <code><a href="mar
 or its helper functions <code><a href="mark_as_correct_incorrect.html">correct()</a></code> or <code><a href="mark_as_correct_incorrect.html">incorrect()</a></code>. All other return
 values are ignored; e.g. by returning <code>NULL</code> you may yield the submission
 evaluation to other <code>answer()</code> or <code>answer_fn()</code> options for the question.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a list with the <code>"tutorial_question_answer"</code> class.</p>
+    
+
+<p>Returns a list with the <code>"tutorial_question_answer"</code> class.</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
@@ -157,7 +168,7 @@ and to return feedback.</p></li>
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

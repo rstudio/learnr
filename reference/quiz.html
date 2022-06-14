@@ -154,46 +154,75 @@ There are four default types of quiz questions:</p><dl><dt><code>learnr_radio</c
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>...</dt>
 <dd><p>One or more questions or answers</p></dd>
+
+
 <dt>caption</dt>
 <dd><p>Optional quiz caption (defaults to "Quiz")</p></dd>
+
+
 <dt>text</dt>
 <dd><p>Question or option text</p></dd>
+
+
 <dt>type</dt>
 <dd><p>Type of quiz question. Typically this can be automatically determined
 based on the provided answers. Pass <code>"radio"</code> to indicate that even though
 multiple correct answers are specified that inputs which include only one correct
 answer are still correct. Pass <code>"checkbox"</code> to force the use of checkboxes
 (as opposed to radio buttons) even though only once correct answer was provided.</p></dd>
+
+
 <dt>correct</dt>
 <dd><p>For <code>question</code>, text to print for a correct answer (defaults
 to "Correct!"). For <code>answer</code>, a boolean indicating whether this answer is
 correct.</p></dd>
+
+
 <dt>incorrect</dt>
 <dd><p>Text to print for an incorrect answer (defaults to "Incorrect")
 when <code>allow_retry</code> is <code>FALSE</code>.</p></dd>
+
+
 <dt>try_again</dt>
 <dd><p>Text to print for an incorrect answer (defaults to "Incorrect")
 when <code>allow_retry</code> is <code>TRUE</code>.</p></dd>
+
+
 <dt>message</dt>
 <dd><p>Additional message to display along with correct/incorrect feedback.
 This message is always displayed after a question submission.</p></dd>
+
+
 <dt>post_message</dt>
 <dd><p>Additional message to display along with correct/incorrect feedback.
 If <code>allow_retry</code> is <code>TRUE</code>, this message will only be displayed after the
 correct submission.  If <code>allow_retry</code> is <code>FALSE</code>, it will produce a second
 message alongside the <code>message</code> message value.</p></dd>
+
+
 <dt>loading</dt>
 <dd><p>Loading text to display as a placeholder while the question is loaded</p></dd>
+
+
 <dt>submit_button</dt>
 <dd><p>Label for the submit button. Defaults to <code>"Submit Answer"</code></p></dd>
+
+
 <dt>try_again_button</dt>
 <dd><p>Label for the try again button. Defaults to <code>"Submit Answer"</code></p></dd>
+
+
 <dt>allow_retry</dt>
 <dd><p>Allow retry for incorrect answers. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>random_answer_order</dt>
 <dd><p>Display answers in a random order.</p></dd>
+
+
 <dt>options</dt>
 <dd><p>Extra options to be stored in the question object.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -274,7 +303,7 @@ message alongside the <code>message</code> message value.</p></dd>
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>

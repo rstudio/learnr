@@ -125,7 +125,7 @@
 <ul><li><p>Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. <code>____</code>. The pattern for blanks can be set with the <code>exercise.blanks</code> chunk or tutorial option (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/547" class="external-link">#547</a>).</p></li>
 <li><p>Users who submit unparsable code containing non-ASCII characters are now presented with more informative feedback. Non-ASCII characters are a common source of code problems and often appear in code when students copy and paste text from a source that applies automatic Unicode formatting. If the submission contains Unicode-formatted quotation marks (e.g. curly quotes) or dashes, the student is given a suggested replacement with ASCII characters. In other cases, the student is simply prompted to delete the non-ASCII characters and retype them manually (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/642" class="external-link">#642</a>).</p></li>
 <li><p>Authors can choose to reveal (default) or hide the solution to an exercise. Set <code>exercise.reveal_solution</code> in the chunk options of a <code>*-solution</code> chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code>. In a future version of learnr, the default will likely be changed to hide solutions (<a href="https://github.com/rstudio/learnr/issues/402" class="external-link">#402</a>).</p></li>
-<li><p>Exercises may now include <code>-tests</code> chunks. These chunks don’t appear in the tutorial text but the code in them is stored in the internal exercise data. In the future, these chunks will be used to provide automated exercise testing (<a href="https://github.com/rstudio/learnr/issues/664" class="external-link">#664</a>).</p></li>
+<li><p>Exercises may now include <code>-tests</code> chunks. These chunks don’t appear in the tutorial text but the code in them is stored in the internal exercise data. In the future, these chunks will be used to provide automated exercise testing (<a href="https://github.com/rstudio/learnr/issues/664" class="external-link">#664</a>, <a href="https://github.com/rstudio/learnr/issues/700" class="external-link">#700</a>).</p></li>
 <li>
 <p>Keyboard navigation and keyboard shortcuts for the interactive exercise code editor have been improved:</p>
 <ul><li><p>To avoid trapping keyboard focus and to allow users to navigate through a tutorial with the keyboard, pressing <kbd>Esc</kbd> in an interactive exercise code editor now temporarily disables the use of <kbd>Tab</kbd> for indenting, making it possible for users to move to the next or previous element in the tutorial (<a href="https://github.com/rstudio/learnr/issues/652" class="external-link">#652</a>).</p></li>
@@ -288,7 +288,7 @@
 <ul><li>Fixed a compatibility issue, so that existing tutorials don’t break when using Pandoc 2.0 (<a href="https://github.com/rstudio/learnr/issues/130" class="external-link">#130</a>).</li></ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.0" id="learnr-090">learnr 0.9.0<a class="anchor" aria-label="anchor" href="#learnr-090"></a></h2>
-<p>@ commit <a href="https://github.com/rstudio/learnr/commit/14413cc7ea20fa3b5938b29fab2b01282e6f0c1f" class="external-link">#14413cc</a></p>
+<p>@ commit <a href="https://github.com/rstudio/learnr/commit/14413cc7ea20fa3b5938b29fab2b01282e6f0c1f" class="external-link"></a><a href="https://github.com/rstudio/learnr/issues/14413" class="external-link">#14413</a>cc</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="learnr-080">learnr 0.8.0<a class="anchor" aria-label="anchor" href="#learnr-080"></a></h2>
@@ -300,7 +300,7 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="learnr-060">learnr 0.6.0<a class="anchor" aria-label="anchor" href="#learnr-060"></a></h2>
-<p>@ commit <a href="https://github.com/rstudio/learnr/commit/55c33cf616d3259c508ae234d301964c599a3039" class="external-link">#55c33cf</a></p>
+<p>@ commit <a href="https://github.com/rstudio/learnr/commit/55c33cf616d3259c508ae234d301964c599a3039" class="external-link"></a><a href="https://github.com/rstudio/learnr/issues/55" class="external-link">#55</a>c33cf</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="learnr-050">learnr 0.5.0<a class="anchor" aria-label="anchor" href="#learnr-050"></a></h2>
@@ -308,11 +308,11 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="learnr-040">learnr 0.4.0<a class="anchor" aria-label="anchor" href="#learnr-040"></a></h2>
-<p>@ commit <a href="https://github.com/rstudio/learnr/commit/3339f8aaa2d0402622b1881aa42fcc78ea87db51" class="external-link">#3339f8a</a></p>
+<p>@ commit <a href="https://github.com/rstudio/learnr/commit/3339f8aaa2d0402622b1881aa42fcc78ea87db51" class="external-link"></a><a href="https://github.com/rstudio/learnr/issues/3339" class="external-link">#3339</a>f8a</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="learnr-030">learnr 0.3.0<a class="anchor" aria-label="anchor" href="#learnr-030"></a></h2>
-<p>@ commit <a href="https://github.com/rstudio/learnr/commit/9cd00828bfa2429d88ad9efdbd51ad8475a6efb2" class="external-link">#9cd0082</a></p>
+<p>@ commit <a href="https://github.com/rstudio/learnr/commit/9cd00828bfa2429d88ad9efdbd51ad8475a6efb2" class="external-link"></a><a href="https://github.com/rstudio/learnr/issues/9" class="external-link">#9</a>cd0082</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="learnr-020">learnr 0.2.0<a class="anchor" aria-label="anchor" href="#learnr-020"></a></h2>
@@ -334,7 +334,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>
