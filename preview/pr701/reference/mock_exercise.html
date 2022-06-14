@@ -231,8 +231,19 @@ exercise chunk.</p></dd>
 <span class="r-in">  setup_label <span class="op">=</span> <span class="st">"prep-roxanne"</span>,</span>
 <span class="r-in">  global_setup <span class="op">=</span> <span class="st">"library(learnr)\nlibrary(dplyr)"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in vapply(chunks, `[[`, logical(1), c("opts", "exercise")):</span> values must be length 1,</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>  but FUN(X[[1]]) result is length 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "prep-roxanne"}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> roxanne &lt;- storms %&gt;% filter(name == "Roxanne")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "ex", exercise.setup="prep-roxanne", exercise=TRUE}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> roxanne</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```{r "ex-solution"}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> roxanne %&gt;%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   group_by(year, month, day) %&gt;%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   summarize(wind = mean(wind))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ```</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
