@@ -112,95 +112,21 @@ mock_exercise <- function(
     exercise.error.check.code = exercise.error.check.code %||% dput_to_string(debug_exercise_checker)
   )
 
-  has_exercise_chunk <- vapply(chunks, `[[`, logical(1), c("opts", "exercise"))
+  assert_unique_exercise_chunk_labels(chunks, label)
 
-  if (!any(has_exercise_chunk)) {
-    # create non-existent exercise chunk from global options
-    chunks <- c(chunks, list(
-      mock_chunk(
-        label,
-        user_code,
-        exercise = TRUE,
-        engine = engine,
-        exercise.setup = setup_label
-      )
-    ))
-  } else {
-    # move opts from exercise chunk to global options
-    idx_exercise_chunk <- which(has_exercise_chunk)
-    ex_labels <- vapply(chunks[idx_exercise_chunk], `[[`, character(1), "label")
+  # create non-existent exercise chunk from global options
+  chunks <- c(chunks, list(
+    mock_chunk(
+      label,
+      user_code,
+      exercise = TRUE,
+      engine = engine,
+      exercise.setup = setup_label,
+      ...
+    )
+  ))
 
-    if (length(idx_exercise_chunk) > 1) {
-      ex_chunks <- Filter(x = chunks[idx_exercise_chunk], function(chunk) {
-        identical(chunk$label, label)
-      })
-
-      if (length(ex_chunks) == 0) {
-        if (missing(label)) {
-          rlang::abort(c(
-            "Multiple exercise chunks found. Please set `label` to choose between one of the following chunks:",
-            i = paste(ex_labels, collapse = ", ")
-          ))
-        }
-
-        rlang::abort(c(
-          "Multiple exercise chunks found, but none matches the `label` argument. Please set `label` to choose between one of the following chunks:",
-          x = sprintf("`label` was \"%s\"", label),
-          i = sprintf("exercise labels were: %s", paste(ex_labels, collapse = ", "))
-        ))
-      } else if (length(ex_chunks) > 1) {
-        ex_labels <- vapply(ex_chunks, `[[`, character(1), "label")
-
-        rlang::abort(c(
-          "Multiple exercise chunks found, but more than one matches the `label` argument. Please adjust the exercise chunk labels.",
-          x = sprintf(
-            "`label = \"%s\"` matched %s exercise chunk%s",
-            label,
-            length(ex_labels),
-            if (length(ex_labels) > 1) "s" else ""
-          )
-        ))
-      }
-
-      ex_chunk <- ex_chunks[[1]]
-    } else {
-      ex_chunk <- chunks[[idx_exercise_chunk]]
-    }
-
-    # overwrite "global" options that would be pulled from exercise chunk
-    default_options <- utils::modifyList(default_options, ex_chunk[["opts"]])
-
-    warn_changes <- c()
-    warn_overwrite <- function(item, old, new) {
-      where <- if (item == "code") "`mock_exercise(user_code = )`" else "exercise chunk"
-      msg <- sprintf("Using `%s` from %s: '%s' instead of '%s'", item, where, new, old)
-      warn_changes <<- c(warn_changes, msg)
-    }
-
-    if (!missing(label) && !identical(label, ex_chunk[["label"]])) {
-      warn_overwrite("label", label, ex_chunk[["label"]])
-    }
-    if (!missing(engine) && !identical(engine, ex_chunk[["engine"]])) {
-      warn_overwrite("engine", engine, ex_chunk[["engine"]])
-    }
-    if (!missing(user_code) && !identical(user_code, ex_chunk[["code"]])) {
-      warn_overwrite("code", ex_chunk[["code"]], user_code)
-    }
-
-    if (length(warn_changes) > 0) {
-      prefix <- "The exercise chunk in `chunks` conflicts with arguments to `mock_exercise()`."
-      names(warn_changes) <- rep("i", length(warn_changes))
-      rlang::warn(c(prefix, warn_changes))
-    }
-
-    label <- ex_chunk[["label"]]
-    engine <- ex_chunk[["engine"]]
-    if (missing(user_code)) {
-      user_code <- paste(ex_chunk[["code"]], collapse = "\n")
-    } else {
-      ex_chunk[["code"]] <- user_code
-    }
-  }
+  assert_unique_chunk_labels(chunks)
 
   ex <- list(
     label = label,
@@ -234,6 +160,44 @@ mock_exercise <- function(
   }
 
   structure(ex, class = c("mock_exercise", "tutorial_exercise"))
+}
+
+assert_unique_exercise_chunk_labels <- function(chunks, label) {
+  is_exercise_chunk <- vapply(chunks, `[[`, logical(1), c("opts", "exercise"))
+  if (!any(is_exercise_chunk)) {
+    return()
+  }
+  exercise_chunk_labels <- vapply(chunks[is_exercise_chunk], `[[`, character(1), "label")
+  n_ex_label_chunks <- sum(exercise_chunk_labels == label)
+  if (n_ex_label_chunks == 0) {
+    return()
+  }
+
+  rlang::abort(c(
+    "The exercise `label` must be unique",
+    x = sprintf(
+      "%s chunk%s the same label as the exercise chunk: '%s'",
+      n_ex_label_chunks,
+      if (n_ex_label_chunks > 1) "s have" else " has",
+      label
+    )
+  ))
+}
+
+assert_unique_chunk_labels <- function(chunks) {
+  chunk_labels <- vapply(chunks, `[[`, character(1), "label")
+  dups <- chunk_labels[duplicated(chunk_labels)]
+  if (length(dups) == 0) {
+    return()
+  }
+  rlang::abort(c(
+    "Chunk labels must be unique",
+    x = sprintf(
+      "Duplicated label%s: '%s'",
+      if (length(dups) != 1) "s" else "",
+      paste(dups, collapse = "', '")
+    )
+  ))
 }
 
 mock_prep_setup <- function(chunks, setup_label) {
