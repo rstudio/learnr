@@ -25,44 +25,6 @@ test_that("exercise mocks: mock_prep_setup()", {
   expect_error(mock_prep_setup(chunks[c(1, 1)], "setup-1"), "Duplicated")
 })
 
-test_that("mock_exercise() creates tests with splits", {
-  code <- '1 + 1
-
-# one plus two ----
-1 + 2
-
-## one plus three ----
-1 + 3
-
-#### one equals three ----
-1 = 3
-
-# 2 minus one ----
-2 - 1'
-
-  ex <- mock_exercise("1 + 1", tests = code)
-  expect_equal(
-    ex$tests,
-    list(
-      test00 = "1 + 1",
-      "one plus two" = "1 + 2",
-      "one plus three" = "1 + 3",
-      "one equals three" = "1 = 3",
-      "2 minus one" = "2 - 1"
-    )
-  )
-})
-
-test_that("mock_exercise() tests, no splits", {
-  expect_null(mock_exercise("1 + 1")$tests)
-  expect_equal(mock_exercise("1 + 1", tests = "1 + 1")$tests, list("1 + 1"))
-})
-
-test_that("mock_exercise() tests, bad split", {
-  code <- '   ## one\npi'
-  expect_equal(mock_exercise("1 + 1", tests = code)$tests, list(code))
-})
-
 test_that("mock_exercise() moves exercise chunk options to default options", {
   ex <- mock_exercise(
     chunks = list(

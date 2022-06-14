@@ -366,7 +366,7 @@ tutorial_knitr_options <- function() {
         error_check_chunk <- get_knitr_chunk(paste0(options$label, "-error-check"))
         check_chunk <- get_knitr_chunk(paste0(options$label, "-check"))
         solution <- get_knitr_chunk(paste0(options$label, "-solution"))
-        test_cases <- get_knitr_chunk(paste0(options$label, "-tests"))
+        tests <- get_knitr_chunk(paste0(options$label, "-tests"))
 
         # remove class of "knitr_strict_list" so (de)serializing works properly for external evaluators
         class(options) <- NULL
@@ -381,7 +381,7 @@ tutorial_knitr_options <- function() {
           )
         }
 
-        exercise_cache <- structure(
+        this_exercise <- structure(
           list(
             label = options[["label"]],
             global_setup = get_setup_global_exercise(),
@@ -391,9 +391,11 @@ tutorial_knitr_options <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
-            test_cases = split_code_headers(test_cases, "test"),
+            tests = tests,
             options = options[setdiff(names(options), "tutorial")],
-            engine = options$engine
+            engine = options$engine,
+            label = options$label,
+            version = current_exercise_version
           ),
           class = "tutorial_exercise"
         )
@@ -403,7 +405,7 @@ tutorial_knitr_options <- function() {
           'server',
           sprintf(
             'learnr:::store_exercise_cache(%s)',
-            dput_to_string(exercise_cache)
+            dput_to_string(this_exercise)
           )
         )
 
