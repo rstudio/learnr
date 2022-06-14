@@ -391,7 +391,7 @@ tutorial_knitr_options <- function() {
             error_check = error_check_chunk,
             check = check_chunk,
             solution  = solution,
-            tests = split_code_headers(tests, "test"),
+            tests = tests,
             options = options[setdiff(names(options), "tutorial")],
             engine = options$engine,
             label = options$label,
