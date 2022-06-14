@@ -37,8 +37,7 @@ test_that("tutorial_cache_works", {
 
     if (inherits(item, "tutorial_exercise")) {
       # these items are added by app or by `get_tutorial_info()`
-      item <- item[setdiff(names(item), c("code", "version"))]
-      class(item) <- "tutorial_exercise"
+      item[["code"]] <- NULL
     }
     expect_equal(item, all[[label]])
   }
