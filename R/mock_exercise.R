@@ -1,3 +1,68 @@
+#' Mock a learnr interactive exercise
+#'
+#' Creates an interactive exercise object that can be used in tests without
+#' having to create a learnr tutorial.
+#'
+#' @examples
+#' mock_exercise(
+#'   user_code = "1 + 1",
+#'   solution_code = "2 + 2",
+#'   label = "two-plus-two"
+#' )
+#'
+#' # Global Setup
+#' mock_exercise(
+#'   user_code = 'storms %>% filter(name = "Roxanne")',
+#'   solution_code = 'storms %>% filter(name == "Roxanne")',
+#'   global_setup = 'library(learnr)\nlibrary(dplyr)',
+#'   label = "filter-storms"
+#' )
+#'
+#' # Chained setup chunks
+#' mock_exercise(
+#'   user_code = "roxanne",
+#'   solution_code = "roxanne %>%
+#'   group_by(year, month, day) %>%
+#'   summarize(wind = mean(wind))",
+#'   chunks = list(
+#'     mock_chunk(
+#'       label = "prep-roxanne",
+#'       code = 'roxanne <- storms %>% filter(name == "Roxanne")'
+#'     )
+#'   ),
+#'   setup_label = "prep-roxanne",
+#'   global_setup = "library(learnr)\nlibrary(dplyr)"
+#' )
+#'
+#' @param user_code,solution_code,global_setup The user, solution, and global setup code, as strings.
+#' @param label The label of the exercise.
+#' @param engine The knitr language engine used by the exercise, equivalent to
+#'   the engine used for the chunk with `exercise = TRUE` in a tutorial.
+#' @param chunks A list of chunks to use for the exercise. Use `mock_chunk()`
+#'   to create chunks.
+#' @param setup_label The label of the chunk that contains the setup code. The
+#'   chunk itself should be among the list of chunks provided to the `chunks`
+#'   argument and the label of the setup chunk needs to match the label provided
+#'   to `setup_label`.
+#' @param check,code_check,error_check The checking code, as a string, that
+#'   would typically be provided in the `-check`, `-code-check` and
+#'  `-error-check` chunks in a learnr tutorial.
+#' @param exercise.checker The exercise checker function, as a string. By
+#'   default, a debug exercise checker is set but will only be used if any of
+#'   `check`, `code_check` or `error_check` are provided.
+#' @param exercise.error.check.code The default code used for `error_check` and
+#'   applied only when `check` or `code_check` are provided and the user's code
+#'   throws an error.
+#' @param exercise.df_print,exercise.warn_invisible,exercise.timelimit,fig.height,fig.width,fig.retina
+#'   Common exercise chunk options.
+#' @param version The exercise version to emulate, by default `mock_exercise()`
+#'   will return an exercise that matches the current exercise version.
+#' @param ... Additional chunk options as if there were included in the
+#'   exercise chunk.
+#'
+#' @describeIn mock_exercise Create a learnr exercise object
+#' @keywords internal
+#' @export
 mock_exercise <- function(
   user_code = "1 + 1",
   label = "ex",
@@ -10,8 +75,8 @@ mock_exercise <- function(
   error_check = NULL, # error_check chunk
   check = NULL,       # check chunk
   tests = NULL,       # tests chunk
-  exercise.checker = dput_to_string(debug_exercise_checker),
-  exercise.error.check.code = dput_to_string(debug_exercise_checker),
+  exercise.checker = NULL,
+  exercise.error.check.code = NULL,
   exercise.df_print = "default",
   exercise.warn_invisible = TRUE,
   exercise.timelimit = 10,
@@ -35,7 +100,7 @@ mock_exercise <- function(
     fig.retina = fig.retina,
     engine = engine,
     max.print = 1000,
-    exercise.checker = exercise.checker,
+    exercise.checker = exercise.checker %||% dput_to_string(debug_exercise_checker),
     label = label,
     exercise = TRUE,
     exercise.setup = setup_label,
@@ -44,14 +109,12 @@ mock_exercise <- function(
     exercise.df_print = exercise.df_print,
     exercise.warn_invisible = exercise.warn_invisible,
     exercise.timelimit = exercise.timelimit,
-    exercise.error.check.code = exercise.error.check.code
+    exercise.error.check.code = exercise.error.check.code %||% dput_to_string(debug_exercise_checker)
   )
 
-  has_exercise_chunk <- any(
-    vapply(chunks, `[[`, logical(1), c("opts", "exercise"))
-  )
+  has_exercise_chunk <- vapply(chunks, `[[`, logical(1), c("opts", "exercise"))
 
-  if (!has_exercise_chunk) {
+  if (!any(has_exercise_chunk)) {
     # create non-existent exercise chunk from global options
     chunks <- c(chunks, list(
       mock_chunk(
@@ -65,37 +128,78 @@ mock_exercise <- function(
   } else {
     # move opts from exercise chunk to global options
     idx_exercise_chunk <- which(has_exercise_chunk)
+    ex_labels <- vapply(chunks[idx_exercise_chunk], `[[`, character(1), "label")
 
     if (length(idx_exercise_chunk) > 1) {
-      rlang::abort("Exercises may have only one exercise chunk")
-    }
+      ex_chunks <- Filter(x = chunks[idx_exercise_chunk], function(chunk) {
+        identical(chunk$label, label)
+      })
 
-    ex_chunk <- chunks[[idx_exercise_chunk]]
+      if (length(ex_chunks) == 0) {
+        if (missing(label)) {
+          rlang::abort(c(
+            "Multiple exercise chunks found. Please set `label` to choose between one of the following chunks:",
+            i = paste(ex_labels, collapse = ", ")
+          ))
+        }
+
+        rlang::abort(c(
+          "Multiple exercise chunks found, but none matches the `label` argument. Please set `label` to choose between one of the following chunks:",
+          x = sprintf("`label` was \"%s\"", label),
+          i = sprintf("exercise labels were: %s", paste(ex_labels, collapse = ", "))
+        ))
+      } else if (length(ex_chunks) > 1) {
+        ex_labels <- vapply(ex_chunks, `[[`, character(1), "label")
+
+        rlang::abort(c(
+          "Multiple exercise chunks found, but more than one matches the `label` argument. Please adjust the exercise chunk labels.",
+          x = sprintf(
+            "`label = \"%s\"` matched %s exercise chunk%s",
+            label,
+            length(ex_labels),
+            if (length(ex_labels) > 1) "s" else ""
+          )
+        ))
+      }
+
+      ex_chunk <- ex_chunks[[1]]
+    } else {
+      ex_chunk <- chunks[[idx_exercise_chunk]]
+    }
 
     # overwrite "global" options that would be pulled from exercise chunk
     default_options <- utils::modifyList(default_options, ex_chunk[["opts"]])
 
-    warn_overwrite <- function(item, old) {
-      if (item == "code") {
-        rlang::warn("Overwriting mock exercise `user_code` using exercise chunk code")
-      }
-      msg <- sprintf("Overwriting mock exercise `%s` from '%s' to '%s'", item, old, ex_chunk[[item]])
-      rlang::warn(msg)
+    warn_changes <- c()
+    warn_overwrite <- function(item, old, new) {
+      where <- if (item == "code") "`mock_exercise(user_code = )`" else "exercise chunk"
+      msg <- sprintf("Using `%s` from %s: '%s' instead of '%s'", item, where, new, old)
+      warn_changes <<- c(warn_changes, msg)
     }
 
     if (!missing(label) && !identical(label, ex_chunk[["label"]])) {
-      warn_overwrite("label", label)
+      warn_overwrite("label", label, ex_chunk[["label"]])
     }
     if (!missing(engine) && !identical(engine, ex_chunk[["engine"]])) {
-      warn_overwrite("engine", label)
+      warn_overwrite("engine", engine, ex_chunk[["engine"]])
     }
     if (!missing(user_code) && !identical(user_code, ex_chunk[["code"]])) {
-      warn_overwrite("code", user_code)
+      warn_overwrite("code", ex_chunk[["code"]], user_code)
+    }
+
+    if (length(warn_changes) > 0) {
+      prefix <- "The exercise chunk in `chunks` conflicts with arguments to `mock_exercise()`."
+      names(warn_changes) <- rep("i", length(warn_changes))
+      rlang::warn(c(prefix, warn_changes))
     }
 
     label <- ex_chunk[["label"]]
     engine <- ex_chunk[["engine"]]
-    user_code <- paste(ex_chunk[["code"]], collapse = "\n")
+    if (missing(user_code)) {
+      user_code <- paste(ex_chunk[["code"]], collapse = "\n")
+    } else {
+      ex_chunk[["code"]] <- user_code
+    }
   }
 
   ex <- list(
@@ -167,6 +271,14 @@ mock_prep_setup <- function(chunks, setup_label) {
   paste(setup, collapse = "\n")
 }
 
+#' @describeIn mock_exercise Create a mock exercise-supporting chunk
+#'
+#' @param code In `mock_chunk()`, the code in the mocked chunk.
+#' @param exercise In `mock_chunk()`, is this chunk the exercise chunk? If so,
+#'   `mock_exercise()` will not create the exercise chunk for you.
+#'
+#' @keywords internal
+#' @export
 mock_chunk <- function(label, code, exercise = FALSE, engine = "r", ...) {
   opts <- list(...)
   opts$label <- label

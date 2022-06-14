@@ -88,3 +88,100 @@ test_that("mock_exercise() moves exercise chunk options to default options", {
     )
   )
 })
+
+test_that("mock_exercise() warns if conflicts between arguments and exercise chunk", {
+  expect_warning(
+    mock_exercise(
+      user_code = "1 + 1",
+      chunks = list(
+        mock_chunk("ex", "2 + 2", exercise = TRUE)
+      )
+    ),
+    "Using `code` from `mock_exercise"
+  )
+
+  expect_warning(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex", "2 + 2", exercise = TRUE)
+      ),
+      engine = "python"
+    ),
+    "Using `engine` from exercise chunk"
+  )
+
+  expect_warning(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex", "2 + 2", exercise = TRUE)
+      ),
+      label = "floofy"
+    ),
+    "Using `label` from exercise chunk"
+  )
+})
+
+test_that("mock_exercise() resolves multiple exercise chunks", {
+  # two exercise chunks, can't resolve which one to use
+  expect_error(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex", "1 + 1", exercise = TRUE),
+        mock_chunk("ex", "2 + 2", exercise = TRUE)
+      ),
+      label = "ex"
+    )
+  )
+
+  expect_error(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex1", "1 + 1", exercise = TRUE),
+        mock_chunk("ex1", "2 + 2", exercise = TRUE)
+      ),
+      label = "ex"
+    )
+  )
+
+  # This should probably be a different error, but :shrug:
+  expect_error(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex1", "1 + 1", exercise = TRUE),
+        mock_chunk("ex1", "2 + 2", exercise = TRUE)
+      )
+    )
+  )
+
+  # two exercise chunks, neither matches the provided `label`
+  expect_error(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex-other", "1 + 1", exercise = TRUE),
+        mock_chunk("ex-one", "2 + 2", exercise = TRUE)
+      ),
+      label = "ex-parent"
+    )
+  )
+
+  expect_silent(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex-other", "1 + 1", exercise = TRUE),
+        mock_chunk("ex-parent", "2 + 2", exercise = TRUE)
+      ),
+      label = "ex-parent"
+    )
+  )
+
+  # one exercise chunk == that chunk overwrites some arguments
+  expect_warning(
+    mock_exercise(
+      chunks = list(
+        mock_chunk("ex", "1 + 1", exercise = TRUE),
+        mock_chunk("ex-setup", "2 + 2")
+      ),
+      label = "ex-parent"
+    )
+  )
+})

@@ -87,9 +87,6 @@ MathJax CDN. The "local" option uses a local version of MathJax (which is
 copied into the output directory). You can pass an alternate URL or pass
 \code{NULL} to exclude MathJax entirely.}
 
-\item{extra_dependencies}{Additional function arguments to pass to the
-base R Markdown HTML output formatter \code{\link[rmarkdown]{html_document_base}}}
-
 \item{css}{CSS and/or Sass files to include. Files with an extension of .sass
 or .scss are compiled to CSS via \code{sass::sass()}. Also, if \code{theme} is a
 \code{\link[bslib:bs_theme]{bslib::bs_theme()}} object, Sass code may reference the relevant Bootstrap
