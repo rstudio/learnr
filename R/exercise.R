@@ -1351,7 +1351,18 @@ restore_envvars <- function(old) {
 # Print Methods -----------------------------------------------------------
 
 #' @export
-format.tutorial_exercise <- function (x, ...) {
+format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
+  label <- x$label
+  if (!isTRUE(setup_chunk_only)) {
+    for (chunk in c("solution", "code_check", "check", "error_check", "tests")) {
+      if (is.null(x[[chunk]]) || !nzchar(x[[chunk]])) next
+      support_chunk <- mock_chunk(
+        label = paste0(label, "-", sub("_", "-", chunk)),
+        code = x[[chunk]]
+      )
+      x$chunks <- c(x$chunks, list(support_chunk))
+    }
+  }
   chunks <- exercise_code_chunks(x$chunks)
   paste(chunks, collapse = "\n\n")
 }
