@@ -246,7 +246,9 @@ mock_prep_setup <- function(chunks, setup_label) {
 mock_chunk <- function(label, code, exercise = FALSE, engine = "r", ...) {
   opts <- list(...)
   opts$label <- label
-  opts$exercise <- exercise
+  if (isTRUE(exercise)) {
+    opts$exercise <- TRUE
+  }
 
   if (is.null(opts[["exercise.setup"]])) {
     opts[["exercise.setup"]] <- NULL
