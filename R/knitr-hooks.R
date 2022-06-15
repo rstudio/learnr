@@ -394,7 +394,6 @@ tutorial_knitr_options <- function() {
             tests = tests,
             options = options[setdiff(names(options), "tutorial")],
             engine = options$engine,
-            label = options$label,
             version = current_exercise_version
           ),
           class = "tutorial_exercise"

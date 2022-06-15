@@ -25,66 +25,14 @@ test_that("exercise mocks: mock_prep_setup()", {
   expect_error(mock_prep_setup(chunks[c(1, 1)], "setup-1"), "Duplicated")
 })
 
-test_that("mock_exercise() moves exercise chunk options to default options", {
-  ex <- mock_exercise(
-    chunks = list(
-      mock_chunk(
-        label = "chunk-name",
-        code = "PASS",
-        exercise = TRUE,
-        engine = "javascript",
-        test_option = "PASS"
-      )
-    )
-  )
-
-  expect_equal(ex$label, "chunk-name")
-  expect_equal(ex$code, "PASS")
-  expect_equal(ex$engine, "javascript")
-  expect_equal(ex$options$test_option, "PASS")
-
-  expect_warning(
+test_that("mock_exercise() errors for duplicated chunks", {
+  expect_error(
     mock_exercise(
-      label = "ex",
       chunks = list(
-        mock_chunk(
-          label = "chunk-name",
-          code = "PASS",
-          exercise = TRUE,
-          engine = "javascript",
-          test_option = "PASS"
-        )
-      )
-    )
-  )
-
-  expect_warning(
-    mock_exercise(
-      user_code = "FAIL",
-      chunks = list(
-        mock_chunk(
-          label = "chunk-name",
-          code = "PASS",
-          exercise = TRUE,
-          engine = "javascript",
-          test_option = "PASS"
-        )
-      )
-    )
-  )
-
-  expect_warning(
-    mock_exercise(
-      engine = "fail",
-      chunks = list(
-        mock_chunk(
-          label = "chunk-name",
-          code = "PASS",
-          exercise = TRUE,
-          engine = "javascript",
-          test_option = "PASS"
-        )
-      )
+        mock_chunk("ex1", "1 + 1", exercise = TRUE),
+        mock_chunk("ex1", "2 + 2", exercise = TRUE)
+      ),
+      label = "ex"
     )
   )
 })

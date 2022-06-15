@@ -332,12 +332,12 @@ test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
 test_that("render_exercise() exercise chunk options are used when rendering user code", {
   ex <- mock_exercise(
     user_code = "knitr::opts_current$get('a_custom_user_chunk_opt')",
-    a_custom_user_chunk_opt = "PASS"
+    a_custom_user_chunk_opt = "'PASS'"
   )
 
   res <- withr::with_tempdir(render_exercise(ex, new.env()))
 
-  expect_equal(ex$options$a_custom_user_chunk_opt, "PASS")
+  expect_equal(ex$options$a_custom_user_chunk_opt, "'PASS'")
   expect_equal(res$last_value, "PASS")
 })
 
@@ -1263,7 +1263,6 @@ test_that("SQL exercises - without explicit `output.var`", {
     user_code = "SELECT * FROM mtcars",
     label = "db",
     chunks = list(
-      mock_chunk("db", exercise = TRUE, engine = "sql", code = "SELECT * FROM mtcars", connection = "db_con"),
       mock_chunk(
         "db-setup",
         code = paste(
@@ -1277,6 +1276,7 @@ test_that("SQL exercises - without explicit `output.var`", {
       )
     ),
     engine = "sql",
+    connection = "db_con",
     check = I(" ")
   )
 
@@ -1311,14 +1311,6 @@ test_that("SQL exercises - with explicit `output.var`", {
     label = "db",
     chunks = list(
       mock_chunk(
-        "db",
-        exercise = TRUE,
-        engine = "sql",
-        code = "SELECT * FROM mtcars",
-        connection = "db_con",
-        output.var = "my_result"
-      ),
-      mock_chunk(
         "db-setup",
         code = paste(
           c(
@@ -1331,6 +1323,8 @@ test_that("SQL exercises - with explicit `output.var`", {
       )
     ),
     engine = "sql",
+    connection = "db_con",
+    output.var = "my_result",
     check = I(" ")
   )
 
@@ -1361,10 +1355,8 @@ test_that("SQL exercises - with explicit `output.var`", {
 test_that("prepare_exercise() removes forced default chunk options from exercise chunk", {
   ex <- mock_exercise(
     label = "ex",
-    chunks = list(
-      mock_chunk("ex", "1 + 1", exercise = TRUE, eval = FALSE)
-    ),
-    check = TRUE
+    check = TRUE,
+    eval = FALSE
   )
 
   # `eval = FALSE` is set on the exercise chunk option
