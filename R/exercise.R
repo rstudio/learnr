@@ -812,18 +812,44 @@ exercise_code_chunks_user <- function(exercise) {
   exercise_code_chunks(user_chunk)
 }
 
-exercise_code_chunks <- function(chunks) {
-  vapply(chunks, function(x) {
+exercise_code_chunks <- function(chunks, color = FALSE) {
+  vapply(chunks, function(x, color) {
     opts <- x$opts[setdiff(names(x$opts), "label")]
     opts <- paste(names(opts), unname(opts), sep = "=")
+
+    # we quote the label to ensure that it is treated as a label and not a symbol for instance
+    header <- sprintf("```{%s %s}", x$engine, paste0(c(dput_to_string(x$label), opts), collapse = ", "))
+
+    if (isTRUE(color)) {
+      code_theme_default <- utils::getFromNamespace("code_theme_default", "cli")
+      comment_color <- if (!is.null(code_theme_default()[["comment"]])) {
+        cli::make_ansi_style(code_theme_default()[["comment"]])
+      } else {
+        cli::style_no_color()
+      }
+
+      code <- paste0(
+        cli::code_highlight(unlist(strsplit(x$code, split = "\n"))),
+        collapse = "\n"
+      )
+
+      return(
+        paste(
+          sep = "\n",
+          comment_color(header),
+          code,
+          comment_color("```")
+        )
+      )
+    }
+
     paste(
       sep = "\n",
-      # we quote the label to ensure that it is treated as a label and not a symbol for instance
-      sprintf("```{%s %s}", x$engine, paste0(c(dput_to_string(x$label), opts), collapse = ", ")),
+      header,
       paste0(x$code, collapse = "\n"),
       "```"
     )
-  }, character(1))
+  }, character(1), color = color)
 }
 
 
@@ -1351,7 +1377,9 @@ restore_envvars <- function(old) {
 # Print Methods -----------------------------------------------------------
 
 #' @export
-format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
+format.tutorial_exercise <- function (
+  x, ..., setup_chunk_only = FALSE, color = FALSE
+) {
   label <- x$label
   if (!isTRUE(setup_chunk_only)) {
     for (chunk in c("solution", "code_check", "check", "error_check", "tests")) {
@@ -1363,7 +1391,7 @@ format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
       x$chunks <- c(x$chunks, list(support_chunk))
     }
   }
-  chunks <- exercise_code_chunks(x$chunks)
+  chunks <- exercise_code_chunks(x$chunks, color = color)
   paste(chunks, collapse = "\n\n")
 }
 
