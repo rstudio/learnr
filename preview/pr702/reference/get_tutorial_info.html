@@ -236,7 +236,27 @@ user or as specified in the <code>language</code> item of the YAML front matter.
 <span class="r-in">  <span class="st">"tutorials"</span>, <span class="st">"hello"</span>, <span class="st">"hello.Rmd"</span>, package <span class="op">=</span> <span class="st">"learnr"</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu">get_tutorial_info</span><span class="op">(</span><span class="va">tutorial_rmd</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in session$registerDataObj("initialize", NULL, function(data, req) {    location &lt;- json_rpc_input(req)$location    identifiers &lt;- initialize_session_state(session, metadata,         location, req)    data &lt;- list(identifiers = identifiers)    event_trigger(session, "session_start")    session$userData$learnr_state("initialized")    list(status = 200L, headers = list(`Content-Type` = "application/json"),         body = json_rpc_result(data))}):</span> attempt to apply non-function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $tutorial_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "package:learnr-/tutorials/hello"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $tutorial_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $items</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   order label    type     data      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1 addition exercise <span style="color: #949494;">&lt;ttrl_xrc&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $user_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "runner"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $learnr_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.10.2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $language</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "en"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
