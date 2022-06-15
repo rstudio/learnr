@@ -143,6 +143,8 @@
 
 -   Tutorial authors can now access the current state of the user’s progress in a tutorial with `get_tutorial_state()` or get information about the current tutorial with `get_tutorial_info()` (#562). Tutorial state is now returned by `get_tutorial_state()` in order of appearance in the tutorial. The full list of exercises and questions is included as items in the list returned by `get_tutorial_info()` (thanks @NuoWenLei #570, #571).
 
+- `get_tutorial_info()` can now provide complete tutorial info for an `.Rmd` or pre-rendered `.html` tutorial file outside of a Shiny app (#688, #702).
+
 -   We no longer forward the checker code to browser (in html), but instead cache it (@nischalshrestha #390).
 
 -   Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari) (#417).
