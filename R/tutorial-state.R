@@ -407,11 +407,13 @@ prepare_tutorial_cache_from_html <- function(path_html, path_rmd = NULL) {
   )
 
   is_metadata_chunk <- imap_lgl(prerendered_chunks, function(x, ...) {
-    as.character(x[[1]])[3] == "register_http_handlers"
+    identical(as.character(x[[1]])[3], "register_http_handlers") &&
+      "metadata" %in% names(x)
   })
+  idx_metadata_chunk <- which(is_metadata_chunk)[[1]]
 
   env <- rlang::env(session = NULL)
-  metadata <- eval(prerendered_chunks[is_metadata_chunk][[1]], envir = env)
+  metadata <- eval(prerendered_chunks[idx_metadata_chunk][["metadata"]], envir = env)
 
   assign("metadata", metadata, envir = tutorial_cache_env)
 
