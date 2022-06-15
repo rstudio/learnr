@@ -18,10 +18,10 @@ test_that("store works", {
 })
 
 
-test_that("tutorial_cache_works", {
+test_that("get_tutorial_info() returns structured tutorial cache", {
   skip_if_not_pandoc("1.14")
 
-  info <- prepare_tutorial_cache_from_source(test_path("tutorials", "basic.Rmd"))
+  info <- get_tutorial_info(test_path("tutorials", "basic.Rmd"))
   withr::defer(clear_tutorial_cache())
 
   # prepare_tutorial_cache() returns get_tutorial_info()

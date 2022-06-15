@@ -175,9 +175,16 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #' `get_tutorial_info()` will return default values that will most likely
 #' correspond to the current tutorial.
 #'
+#' @examples
+#' tutorial_rmd <- system.file(
+#'   "tutorials", "hello", "hello.Rmd", package = "learnr"
+#' )
+#' get_tutorial_info(tutorial_rmd)
+#'
 #' @inheritParams get_tutorial_state
 #' @param tutorial_path Path to a tutorial `.Rmd` source file
-#' @inheritDotParams rmarkdown::yaml_front_matter
+#' @inheritDotParams rmarkdown::render -encoding -input -output_file
+#' @inheritParams rmarkdown::yaml_front_matter
 #'
 #' @return Returns an ordinary list with the following elements:
 #'
@@ -195,9 +202,13 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #'     user or as specified in the `language` item of the YAML front matter.
 #'
 #' @seealso [get_tutorial_state()]
-#'
 #' @export
-get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_path = NULL, ...) {
+get_tutorial_info <- function(
+  tutorial_path = NULL,
+  session = getDefaultReactiveDomain(),
+  ...,
+  encoding = "UTF-8"
+) {
   if (identical(Sys.getenv("LEARNR_EXERCISE_USER_CODE", ""), "TRUE")) {
     return()
   }
@@ -210,13 +221,27 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_pat
     tutorial_path <- NULL
   }
 
+  if (!is.null(tutorial_path)) {
+    is_html <- grepl("html?$", tolower(tutorial_path))
+    if (is_html) {
+      prepare_tutorial_cache_from_html(tutorial_path)
+    } else {
+      render_args <- list(..., encoding = encoding)
+      prepare_tutorial_cache_from_source(tutorial_path, render_args)
+    }
+  }
+
   rmd_meta <- rmarkdown::metadata
+  cache_meta <- rlang::env_get(tutorial_cache_env, "metadata", NULL)
+
   metadata <-
-    if (!is.null(rmd_meta) && length(rmd_meta)) {
+    if (!is.null(cache_meta)) {
+      list(tutorial = cache_meta)
+    } else if (!is.null(rmd_meta) && length(rmd_meta)) {
       rmd_meta
     } else if (!is.null(tutorial_path)) {
       tryCatch(
-        rmarkdown::yaml_front_matter(tutorial_path, ...),
+        rmarkdown::yaml_front_matter(tutorial_path, encoding = encoding),
         error = function(e) NULL
       )
     }
@@ -232,7 +257,8 @@ get_tutorial_info <- function(session = getDefaultReactiveDomain(), tutorial_pat
     if (is.null(session)) {
       value <- switch(
         key,
-        "tutorial.tutorial_id" = metadata$tutorial$id %||% default_tutorial_id(),
+        "tutorial.tutorial_id" = metadata$tutorial$id %||%
+          withr::with_dir(dirname(tutorial_path), default_tutorial_id()),
         "tutorial.tutorial_version" = metadata$tutorial$version %||% default_tutorial_version(),
         "tutorial.user_id" = default_user_id(),
         "tutorial.language" = tutorial_language %||% default_language(),
@@ -316,13 +342,13 @@ prepare_tutorial_cache_from_source <- function(path_rmd, render_args = NULL) {
 
   default_render_args <- list(
     envir = new.env(parent = globalenv()),
-    input = basename(path_rmd),
-    output_file = basename(path_html),
     quiet = TRUE,
     clean = TRUE
   )
 
   render_args <- utils::modifyList(render_args %||% list(), default_render_args)
+  render_args$input <- basename(path_rmd)
+  render_args$output_file <- basename(path_html)
 
   withr::with_dir(dirname(path_rmd), {
     if (!detect_installed_knitr_hooks()) {
@@ -372,5 +398,16 @@ prepare_tutorial_cache_from_html <- function(path_html, path_rmd = NULL) {
     }
   )
 
-  get_tutorial_info(NULL, tutorial_path = path_rmd)
+  is_metadata_chunk <- imap_lgl(prerendered_chunks, function(x, ...) {
+    as.character(x[[1]])[3] == "register_http_handlers"
+  })
+
+  env <- rlang::env(session = NULL)
+  metadata <- eval(prerendered_chunks[is_metadata_chunk][[1]], envir = env)
+
+  assign("metadata", metadata, envir = tutorial_cache_env)
+
+  ret <- rlang::env_get_list(tutorial_cache_env, c("objects", "metadata"), NULL)
+  names(ret) <- c("items", "metadata")
+  invisible(ret)
 }
