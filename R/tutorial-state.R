@@ -279,6 +279,14 @@ get_tutorial_info <- function(
   )
 }
 
+get_tutorial_exercises <- function(tutorial_path, session = getDefaultReactiveDomain(), ...) {
+  info <- get_tutorial_info(tutorial_path = tutorial_path, session = session, ...)
+  items_exercises <- info$items[info$items$type == "exercise", ]
+  ex <- items_exercises$data
+  names(ex) <- items_exercises$label
+  ex
+}
+
 describe_tutorial_items <- function() {
   if (!length(tutorial_cache_env$objects)) {
     return()
