@@ -238,9 +238,11 @@ quiz_text <- function(text) {
       fragment.only = TRUE,
       encoding = "UTF-8"
     )
-    # remove leading and trailing paragraph
-    md <- sub("^<p>", "", md)
-    md <- sub("</p>\n?$", "", md)
+    if (length(str_match_all(md, "</p>", fixed = TRUE)) == 1) {
+      # remove leading and trailing paragraph
+      md <- sub("^<p>", "", md)
+      md <- sub("</p>\n?$", "", md)
+    }
     HTML(md)
   }
   else {
