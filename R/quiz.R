@@ -701,7 +701,7 @@ question_messages <- function(question, messages, is_correct, is_done) {
   )) {
     NULL
   } else {
-    tags$div(message_alert, always_message_alert, post_alert)
+    htmltools::tagList(message_alert, always_message_alert, post_alert)
   }
 }
 
