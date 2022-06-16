@@ -41,33 +41,91 @@
   width: 100%;
 }
 
+.tutorial-question-container {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
 .tutorial-question {
   padding-top: 10px;
   padding-bottom: 15px;
+}
+
+.tutorial-question .control-label {
+  margin-bottom: 1em;
+}
+
+.tutorial-question .control-label > :last-child {
+  margin-bottom: 0;
+}
+
+.tutorial-question .radio-inline,
+.tutorial-question .checkbox-inline {
+  display: block;
+  line-height: 1.5;
+}
+
+.tutorial-question .radio-inline + .radio-inline,
+.tutorial-question .checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+  margin-top: 10px;
+}
+
+.panel .tutorial-question .checkbox-inline,
+.panel .tutorial-question .radio-inline {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.panel .tutorial-question .checkbox-inline input,
+.panel .tutorial-question .radio-inline input {
+  position: absolute;
+  width: 1.25em;
+  top: 0px;
+}
+
+.tutorial-question .question-final .checkbox-inline,
+.tutorial-question .question-final .radio-inline {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.tutorial-question .question-final .checkbox-inline input,
+.tutorial-question .question-final .radio-inline input {
+  position: absolute;
+  width: 1.25em;
+  top: 0px;
 }
 
 .tutorial-question .question-final .correct::before {
   content: '\2713';
   position: absolute;
   left: 2px;
-  top: 1px;
+  top: 0;
 }
 
 .tutorial-question .question-final .incorrect::before {
   content: '\2717';
   position: absolute;
   left: 2px;
-  top: 1px;
+  top: 0;
 }
 
-.tutorial-question .question-final .radio label,
-.tutorial-question .question-final .checkbox label {
+.tutorial-question .question-final .radio-inline label,
+.tutorial-question .question-final .checkbox-inline label {
   position: relative;
+  padding-left: 1.25em;
 }
 
-.tutorial-question .question-final .radio input.disabled,
-.tutorial-question .question-final .checkbox input.disabled {
+.tutorial-question .question-final .radio-inline input.disabled,
+.tutorial-question .question-final .checkbox-inline input.disabled {
   display: none;
+}
+
+.tutorial-question [id$="message_container"] > div:last-of-type {
+  margin-bottom: 0;
 }
 
 .tutorial-exercise-input .btn-xs {
