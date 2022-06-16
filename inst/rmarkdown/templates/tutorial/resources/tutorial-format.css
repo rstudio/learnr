@@ -30,7 +30,7 @@
 .topics {
   width: 75%;
   overflow-x: auto;
-  padding-bottom: 600px;
+  padding: 0 0.5em 600px;
 }
 
 .topics .tutorialTitle {

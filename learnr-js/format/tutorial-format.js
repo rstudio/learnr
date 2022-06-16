@@ -487,6 +487,42 @@ $(document).ready(function () {
     window.addEventListener('resize', handleResize)
   }
 
+  function isBS3 () {
+    // from https://github.com/rstudio/shiny/blob/474f14/srcts/src/utils/index.ts#L373-L376
+    return !window.bootstrap
+  }
+
+  function preTransformDOMMigrateFromBS3 () {
+    if (isBS3()) return
+
+    const panelMigration = {
+      panel: 'card',
+      'panel-default': '',
+      'panel-heading': 'card-header',
+      'panel-title': 'card-title',
+      'panel-body': 'card-body',
+      'panel-footer': 'card-footer'
+    }
+
+    const tutorialMigratePanels = document.querySelectorAll('.tutorial-question-container')
+    if (tutorialMigratePanels.length === 0) return
+
+    tutorialMigratePanels.forEach(elPanel => {
+      Object.keys(panelMigration).forEach(classOrig => {
+        const els = [elPanel, ...elPanel.querySelectorAll(`.${classOrig}`)]
+        if (!els.length) return
+        const classNew = panelMigration[classOrig]
+        els.forEach(el => {
+          if (!el.classList.contains(classOrig)) return
+          el.classList.remove(classOrig)
+          if (classNew !== '') {
+            el.classList.add(classNew)
+          }
+        })
+      })
+    })
+  }
+
   // support bookmarking of topics
   function handleLocationHash () {
     function findTopicIndexFromHash () {
@@ -650,6 +686,7 @@ $(document).ready(function () {
     updateVisibilityOfTopicElements(topicIndex)
   }
 
+  preTransformDOMMigrateFromBS3()
   transformDOM()
   handleLocationHash()
 
