@@ -53,6 +53,48 @@ duplicate_env <- function(envir, parent = parent.env(envir)) {
   )
 }
 
+#' Create a duplicate of a Python environment
+#'
+#' @param module the `py` module accessed via `reticulate`
+#'
+#' @return a Python `Dict` or dictionary that is not converted to an R data type
+#' @export
+#'
+#' @examples
+#' reticulate::py_run_string("x = 3")
+#' new_py_envir <- duplicate_py_env(py)
+#' new_py_envir$items()
+duplicate_py_env <- function(module) {
+  # extract all objects within this module
+  new_objs <- reticulate::py_get_attr(module, "__dict__")
+  # then create copy of the dictionary with all objects
+  copy <- reticulate::import("copy", convert = FALSE)
+  copy$copy(new_objs)
+}
+
+#' This clears the Python environment `py`.
+#'
+#' It will keep important starting objects so `py` such as `r`and builtins.
+#'
+#' @param module the `py` module accessed via reticulate
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' reticulate::py_run_string("x = 3")
+#' # this removes the `x`
+#' clear_py_env(py)
+clear_py_env <- function(module) {
+  Map(function(obj_name) {
+    # prevent the "base" python objects from being removed
+    if (!obj_name %in% c("r", "sys", "builtins")) {
+      reticulate::py_run_string(paste0("del ", obj_name))
+    }
+  }, names(py))
+  return(invisible())
+}
+
 # backport errorCondition for R < 3.6.0
 if (getRversion() < package_version("3.6.0")) {
   errorCondition <- function(msg, ..., class = NULL, call = NULL) {

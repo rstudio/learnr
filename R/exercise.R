@@ -673,6 +673,14 @@ render_exercise <- function(exercise, envir) {
       }
     })
 
+    # For Python, store the current global `py` environment into envir_prep
+    if (is_exercise_engine(exercise, "python")) {
+      # Note: `envir_prep` is a copy of the R global environment
+      # used to extract the checker function later, so we duplicate `py` and
+      # store it for the Python exercise checker
+      envir_prep$py <- duplicate_py_env(py)
+    }
+
     # Create exercise.Rmd after running setup so it isn't accidentally overwritten
     if (file.exists("exercise.Rmd")) {
       warning(
@@ -778,6 +786,13 @@ render_exercise <- function(exercise, envir) {
     }
   }
 
+  if (is_exercise_engine(exercise, "python")) {
+    # make a copy of the Python environment module after executing exercise code
+    envir_result <- duplicate_py_env(py)
+    # we're currently not using `evaluate_result`
+    evaluate_result <- NULL
+  }
+
   list(
     evaluate_result = evaluate_result,
     last_value = last_value,
@@ -843,6 +858,18 @@ exercise_code_chunks_user_rmd <- function(exercise) {
       "",
       '```{r eval=exists("___sql_result")}',
       'get("___sql_result")',
+      "```"
+    )
+  }
+
+  if (is_exercise_engine(exercise, "python")) {
+    # return the last value using Python's `_` to set `last_value`
+    rmd_src_user <- c(
+      rmd_src_user,
+      "",
+      '```{r results="hide"}',
+      'reticulate::py_run_string("import builtins")',
+      'reticulate::py_eval("builtins._")',
       "```"
     )
   }
@@ -1206,6 +1233,7 @@ prepare_exercise <- function(exercise) {
   )
 
   exercise <- prepare_exercise_if_sql(exercise)
+  exercise <- prepare_exercise_if_python(exercise)
 
   exercise[["opts_chunk"]] <- merge_chunk_options(
     inherited = exercise[["options"]],
@@ -1271,6 +1299,17 @@ prepare_exercise_if_sql <- function(exercise) {
     chunk[["opts"]][["output.var"]] <- "\"___sql_result\""
     chunk
   })
+
+  exercise
+}
+
+prepare_exercise_if_python <- function(exercise) {
+  if (!is_exercise_engine(exercise, "python")) {
+    return(exercise)
+  }
+
+  rlang::check_installed("reticulate", "for Python exercises")
+  require("reticulate", character.only = TRUE)
 
   exercise
 }
