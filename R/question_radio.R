@@ -68,6 +68,7 @@ question_ui_initialize.learnr_radio <- function(question, value, ...) {
   radioButtons(
     question$ids$answer,
     label = question$question,
+    inline = TRUE,
     choiceNames = choice_names,
     choiceValues = choice_values,
     selected = value %||% character(0) # avoid selecting the first item when value is NULL
@@ -106,6 +107,7 @@ question_ui_completed.learnr_radio <- function(question, value, ...) {
     radioButtons(
       question$ids$answer,
       label = question$question,
+      inline = TRUE,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
       selected = value
