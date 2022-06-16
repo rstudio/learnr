@@ -354,7 +354,7 @@ question_prerendered_chunk <- function(question, ..., session = getDefaultReacti
 question_module_ui <- function(id) {
   ns <- NS(id)
   div(
-    class = "panel panel-default",
+    class = "panel panel-default tutorial-question-container",
     div(
       "data-label" = as.character(id),
       class = "tutorial-question panel-body",
