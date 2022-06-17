@@ -1193,7 +1193,9 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
         datai18n = { key: datai18n }
       }
       button.attr('data-i18n-attr-title', datai18n.key + 'title')
-      const buttonText = $('<span>' + caption + '</span>')
+      const buttonText = $(
+        `<span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">${caption}</span>`
+      )
       buttonText.attr('data-i18n', datai18n.key)
       if (datai18n.opts) {
         buttonText.attr('data-i18n-opts', JSON.stringify(datai18n.opts))
