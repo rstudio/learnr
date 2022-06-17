@@ -501,6 +501,8 @@ $(document).ready(function () {
     })
 
     document.querySelectorAll('.sr-only').forEach(el => {
+      // .visually-hidden and .visually-hidden-focusable are mutually exclusive
+      if (el.classList.contains('visually-hidden-focusable')) return
       el.classList.add('visually-hidden')
     })
 
