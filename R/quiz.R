@@ -117,7 +117,7 @@ question <- function(
     try_again = incorrect,
     message = NULL,
     post_message = NULL,
-    loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
+    loading = NULL,
     submit_button = rlang::missing_arg(),
     try_again_button = rlang::missing_arg(),
     allow_retry = FALSE,
@@ -210,7 +210,7 @@ question <- function(
       answer = NS(q_id)("answer"),
       question = q_id
     ),
-    loading = quiz_text(loading),
+    loading = if (!is.null(loading)) quiz_text(loading),
     random_answer_order = random_answer_order,
     allow_retry = allow_retry,
     # Set a seed for local testing, even though it is overwritten for each shiny session
@@ -371,7 +371,16 @@ question_module_server <- function(
   question
 ) {
 
-  output$answer_container <- renderUI({ div(class="loading", question$loading) })
+  output$answer_container <- renderUI({
+    if (is.null(question$loading)) {
+      question_ui_loading(question)
+    } else {
+      div(
+        class="loading",
+        question$loading
+      )
+    }
+  })
 
   # Setup reactive here that will be updated by the question modules
   question_state <- reactiveVal()
@@ -705,7 +714,40 @@ question_messages <- function(question, messages, is_correct, is_done) {
   }
 }
 
+question_ui_loading <- function(question) {
+  n_paragraphs <- max(length(str_match_all(question$question, "</p>")), 1)
+  paras <- lapply(seq_len(n_paragraphs), function(...) {
+    spans <- lapply(seq_len(sample(2:8, 1)), function(...) {
+      htmltools::span(class = sprintf("placeholder col-%s", sample(2:7, 1)))
+    })
+    htmltools::p(spans)
+  })
 
+  q_opts <- NULL
+  if (question$type %in% c("learnr_radio", "learnr_checkbox")) {
+    q_opts <- htmltools::tags$ul(
+      lapply(seq_along(question$answers), function(...) {
+        htmltools::tags$li(
+          htmltools::span(class = "placeholder col-3")
+        )
+      })
+    )
+  }
+
+  button <- htmltools::tags$a(
+    href = "#",
+    tabindex = "-1",
+    class = "btn btn-primary disabled placeholder col-3",
+    `aria-hidden` = "true"
+  )
+
+  htmltools::div(
+    class = "loading placeholder-glow",
+    paras,
+    q_opts,
+    button
+  )
+}
 
 
 

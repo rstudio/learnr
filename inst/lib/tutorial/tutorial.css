@@ -42,6 +42,24 @@
   width: 100%;
 }
 
+.tutorial-is-bs3 .tutorial-question .loading .placeholder {
+  display: none;
+}
+
+.tutorial-is-bs3 .tutorial-question .loading::before {
+  content: "Loading...";
+}
+
+.tutorial-question .loading ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tutorial-question .loading ul li {
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
 .tutorial-question-container {
   margin-top: 2em;
   margin-bottom: 2em;
