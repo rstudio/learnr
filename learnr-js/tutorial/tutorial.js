@@ -1460,9 +1460,9 @@ Tutorial.prototype.$removeSolution = function (exercise) {
   // destroy popover
   // If window.bootstrap is found (>= bs4), use `'dispose'` method name. Otherwise, use `'destroy'` (bs3)
   if (window.bootstrap) {
-    window.bootstrap.Popover.getInstance(
-      exercise.find('.tutorial-solution-popover')[0]
-    ).dispose()
+    const popover = exercise.find('.tutorial-solution-popover')
+    if (!popover.length) return
+    window.bootstrap.Popover.getInstance(popover.get(0)).dispose()
   } else {
     exercise.find('.tutorial-solution-popover').popover('destroy')
   }
