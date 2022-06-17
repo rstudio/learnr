@@ -500,6 +500,10 @@ $(document).ready(function () {
       el.classList.add('btn-sm')
     })
 
+    document.querySelectorAll('.sr-only').forEach(el => {
+      el.classList.add('visually-hidden')
+    })
+
     const panelMigration = {
       panel: 'card',
       'panel-default': '',
@@ -510,7 +514,11 @@ $(document).ready(function () {
     }
 
     const tutorialMigratePanels = document.querySelectorAll('.tutorial-exercise-input, .tutorial-question-container')
-    if (tutorialMigratePanels.length === 0) return
+
+    if (tutorialMigratePanels.length === 0) {
+      // no panels to migrate, all done with migrations!
+      return
+    }
 
     tutorialMigratePanels.forEach(elPanel => {
       Object.keys(panelMigration).forEach(classOrig => {
