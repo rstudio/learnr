@@ -32,6 +32,9 @@ function Tutorial () {
 
   // Are we using BS3?
   this.isBS3 = !window.bootstrap
+  if (this.isBS3) {
+    document.body.classList.add('tutorial-is-bs3')
+  }
 
   // API: provide init event
   this.onInit = function (handler) {
