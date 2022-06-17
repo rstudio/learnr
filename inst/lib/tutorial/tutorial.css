@@ -147,6 +147,10 @@
   margin-bottom: 0;
 }
 
+.tutorial-question [id$="button_container"] {
+  margin-top: 1em;
+}
+
 .tutorial-exercise .tutorial-exercise-input {
   margin-bottom: 1em;
 }
