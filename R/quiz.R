@@ -5,45 +5,66 @@
 
 #' Tutorial quiz questions
 #'
-#' Add interactive quiz questions to a tutorial.
-#' Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
-#' There are four default types of quiz questions:
+#' @description
+#' Add interactive quiz questions to a tutorial. Each quiz question is executed
+#' within a shiny runtime to provide more flexibility in the types of questions
+#' offered. There are four default types of quiz questions:
+#'
 #' \describe{
-#'   \item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
-#'   \item{\code{learnr_numeric}}{Numeric question.  This question type will allow for a number to be submitted by the user.  At least one number must be added for the user to submit their answer.}
+#' \item{\code{learnr_radio}}{Radio button question.  This question type will
+#' only allow for a single answer submission by the user.  An answer must be
+#' marked for the user to submit their answer.}
+#' \item{\code{learnr_checkbox}}{Check box question.  This question type will
+#' allow for one or more answers to be submitted by the user.  At least one
+#' answer must be marked for the user to submit their answer.}
+#' \item{\code{learnr_text}}{Text box question.  This question type will allow
+#' for free form text to be submitted by the user.  At least one non-whitespace
+#' character must be added for the user to submit their answer.}
+#' \item{\code{learnr_numeric}}{Numeric question.  This question type will allow
+#' for a number to be submitted by the user.  At least one number must be added
+#' for the user to submit their answer.}
 #' }
 #'
-#' Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
+#' Note, the print behavior has changed as the runtime is now Shiny based.  If
+#' \code{question}s and \code{quiz}es are printed in the console, the S3
+#' structure and information will be displayed.
 #'
 #'
-#' @seealso For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+#' @seealso For more information and question type extension examples, please
+#'   see the help documentation for [question_methods] and
+#'   view the \code{question_type} tutorial:
+#'   `learnr::run_tutorial("question_type", "learnr")`.
 #' @param text Question or option text
 #' @param ... One or more questions or answers
 #' @param caption Optional quiz caption (defaults to "Quiz")
-#' @param type Type of quiz question. Typically this can be automatically determined
-#'   based on the provided answers. Pass \code{"radio"} to indicate that even though
-#'   multiple correct answers are specified that inputs which include only one correct
-#'   answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
-#'   (as opposed to radio buttons) even though only once correct answer was provided.
-#' @param correct For \code{question}, text to print for a correct answer (defaults
-#'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
+#' @param type Type of quiz question. Typically this can be automatically
+#'   determined based on the provided answers. Pass `"radio"` to indicate that
+#'   even though multiple correct answers are specified that inputs which
+#'   include only one correct answer are still correct. Pass `"checkbox"` to
+#'   force the use of checkboxes (as opposed to radio buttons) even though only
+#'   once correct answer was provided.
+#' @param correct For `question`, text to print for a correct answer (defaults
+#'   to "Correct!"). For `answer`, a boolean indicating whether this answer is
 #'   correct.
-#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{FALSE}.
-#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{TRUE}.
-#' @param message Additional message to display along with correct/incorrect feedback.
-#'   This message is always displayed after a question submission.
-#' @param post_message Additional message to display along with correct/incorrect feedback.
-#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
-#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
-#'   message alongside the \code{message} message value.
-#' @param loading Loading text to display as a placeholder while the question is loaded
-#' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
-#' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
-#' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
+#' @param incorrect Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `FALSE`.
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
+#' @param message Additional message to display along with correct/incorrect
+#'   feedback. This message is always displayed after a question submission.
+#' @param post_message Additional message to display along with
+#'   correct/incorrect feedback. If `allow_retry` is `TRUE`, this
+#'   message will only be displayed after the correct submission.  If
+#'   `allow_retry` is `FALSE`, it will produce a second message
+#'   alongside the `message` message value.
+#' @param loading Loading text to display as a placeholder while the question is
+#'   loaded. If not provided, generic "Loading..." or placeholder elements will
+#'   be displayed.
+#' @param submit_button Label for the submit button. Defaults to `"Submit
+#'   Answer"`
+#' @param try_again_button Label for the try again button. Defaults to `"Submit
+#'   Answer"`
+#' @param allow_retry Allow retry for incorrect answers. Defaults to `FALSE`.
 #' @param random_answer_order Display answers in a random order.
 #' @param options Extra options to be stored in the question object.
 # TODO-barret link to sortable_question when sortable is added

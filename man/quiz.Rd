@@ -17,7 +17,7 @@ question(
   try_again = incorrect,
   message = NULL,
   post_message = NULL,
-  loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
+  loading = NULL,
   submit_button = rlang::missing_arg(),
   try_again_button = rlang::missing_arg(),
   allow_retry = FALSE,
@@ -32,31 +32,35 @@ question(
 
 \item{text}{Question or option text}
 
-\item{type}{Type of quiz question. Typically this can be automatically determined
-based on the provided answers. Pass \code{"radio"} to indicate that even though
-multiple correct answers are specified that inputs which include only one correct
-answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
-(as opposed to radio buttons) even though only once correct answer was provided.}
+\item{type}{Type of quiz question. Typically this can be automatically
+determined based on the provided answers. Pass \code{"radio"} to indicate that
+even though multiple correct answers are specified that inputs which
+include only one correct answer are still correct. Pass \code{"checkbox"} to
+force the use of checkboxes (as opposed to radio buttons) even though only
+once correct answer was provided.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
-\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{FALSE}.}
+\item{incorrect}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{TRUE}.}
+\item{try_again}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{TRUE}.}
 
-\item{message}{Additional message to display along with correct/incorrect feedback.
-This message is always displayed after a question submission.}
+\item{message}{Additional message to display along with correct/incorrect
+feedback. This message is always displayed after a question submission.}
 
-\item{post_message}{Additional message to display along with correct/incorrect feedback.
-If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
-correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
-message alongside the \code{message} message value.}
+\item{post_message}{Additional message to display along with
+correct/incorrect feedback. If \code{allow_retry} is \code{TRUE}, this
+message will only be displayed after the correct submission.  If
+\code{allow_retry} is \code{FALSE}, it will produce a second message
+alongside the \code{message} message value.}
 
-\item{loading}{Loading text to display as a placeholder while the question is loaded}
+\item{loading}{Loading text to display as a placeholder while the question is
+loaded. If not provided, generic "Loading..." or placeholder elements will
+be displayed.}
 
 \item{submit_button}{Label for the submit button. Defaults to \code{"Submit Answer"}}
 
@@ -69,18 +73,28 @@ message alongside the \code{message} message value.}
 \item{options}{Extra options to be stored in the question object.}
 }
 \description{
-Add interactive quiz questions to a tutorial.
-Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
-There are four default types of quiz questions:
+Add interactive quiz questions to a tutorial. Each quiz question is executed
+within a shiny runtime to provide more flexibility in the types of questions
+offered. There are four default types of quiz questions:
+
 \describe{
-\item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
-\item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
-\item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
-\item{\code{learnr_numeric}}{Numeric question.  This question type will allow for a number to be submitted by the user.  At least one number must be added for the user to submit their answer.}
+\item{\code{learnr_radio}}{Radio button question.  This question type will
+only allow for a single answer submission by the user.  An answer must be
+marked for the user to submit their answer.}
+\item{\code{learnr_checkbox}}{Check box question.  This question type will
+allow for one or more answers to be submitted by the user.  At least one
+answer must be marked for the user to submit their answer.}
+\item{\code{learnr_text}}{Text box question.  This question type will allow
+for free form text to be submitted by the user.  At least one non-whitespace
+character must be added for the user to submit their answer.}
+\item{\code{learnr_numeric}}{Numeric question.  This question type will allow
+for a number to be submitted by the user.  At least one number must be added
+for the user to submit their answer.}
 }
-}
-\details{
-Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
+
+Note, the print behavior has changed as the runtime is now Shiny based.  If
+\code{question}s and \code{quiz}es are printed in the console, the S3
+structure and information will be displayed.
 }
 \examples{
 quiz(
@@ -105,7 +119,10 @@ quiz(
 
 }
 \seealso{
-For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+For more information and question type extension examples, please
+see the help documentation for \link{question_methods} and
+view the \code{question_type} tutorial:
+\code{learnr::run_tutorial("question_type", "learnr")}.
 
 \code{\link[=random_praise]{random_praise()}}, \code{\link[=random_encouragement]{random_encouragement()}}
 

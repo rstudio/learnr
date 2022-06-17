@@ -26,9 +26,7 @@ are added to the existing phrases, rather than overwriting them.
 
 
 To add random phrases in a learnr tutorial, you can either include one or
-more calls to \code{random_phrases_add()} in your global setup chunk:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup, include = FALSE\}`r ''`
+more calls to \code{random_phrases_add()} in your global setup chunk:\preformatted{```\{r setup, include = FALSE\}`r ''`
 library(learnr)
 random_phrases_add(
   language = "en",
@@ -36,19 +34,17 @@ random_phrases_add(
   encouragement = "I believe in you."
 )
 ```
-}\if{html}{\out{</div>}}
+}
 
 Alternatively, you can call \code{random_phrases_add()} in a separate, standard
-R chunk (with \code{echo = FALSE}):
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup-phrases, echo = FALSE\}`r ''`
+R chunk (with \code{echo = FALSE}):\preformatted{```\{r setup-phrases, echo = FALSE\}`r ''`
 random_phrases_add(
   language = "en",
   praise = c("Great work!", "You're awesome!"),
   encouragement = c("I believe in you.", "Yes we can!")
 )
 ```
-}\if{html}{\out{</div>}}
+}
 }
 
 \examples{
