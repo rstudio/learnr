@@ -495,6 +495,11 @@ $(document).ready(function () {
   function preTransformDOMMigrateFromBS3 () {
     if (isBS3()) return
 
+    document.querySelectorAll('.btn-xs').forEach(el => {
+      el.classList.remove('btn-xs')
+      el.classList.add('btn-sm')
+    })
+
     const panelMigration = {
       panel: 'card',
       'panel-default': '',
@@ -504,7 +509,7 @@ $(document).ready(function () {
       'panel-footer': 'card-footer'
     }
 
-    const tutorialMigratePanels = document.querySelectorAll('.tutorial-question-container')
+    const tutorialMigratePanels = document.querySelectorAll('.tutorial-exercise-input, .tutorial-question-container')
     if (tutorialMigratePanels.length === 0) return
 
     tutorialMigratePanels.forEach(elPanel => {

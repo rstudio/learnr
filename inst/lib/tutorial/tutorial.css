@@ -19,7 +19,7 @@
   padding-bottom: 6px;
   padding-left: 8px;
   padding-right: 8px;
-  font-size: 13px;
+  font-size: 0.8em;
   font-weight: 500;
   width: 100%;
   display: flex;
@@ -29,6 +29,7 @@
 .tutorial-panel-heading-left,
 .tutorial-panel-heading-right {
   display: flex;
+  align-items: center;
 }
 
 .tutorial-quiz-title {
@@ -128,7 +129,16 @@
   margin-bottom: 0;
 }
 
-.tutorial-exercise-input .btn-xs {
+.tutorial-exercise .tutorial-exercise-input {
+  margin-bottom: 1em;
+}
+
+.tutorial-exercise .card-body {
+  padding: 0;
+}
+
+.tutorial-exercise-input .btn-xs,
+.tutorial-exercise-input .btn-sm {
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
@@ -152,13 +162,18 @@
   padding-right: 4px;
 }
 
-.tutorial-exercise-input .btn-xs i {
+.tutorial-exercise-input .btn-xs i
+.tutorial-exercise-input .btn-sm i{
   width: 10px;
   margin-right: 1px;
 }
 
 .tutorial-exercise-input .panel-body {
   padding: 0;
+}
+
+.tutorial-exercise-output .alert > :last-child {
+  margin-bottom: 0;
 }
 
 .tutorial-exercise-code-editor {
