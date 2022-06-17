@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$>
+<html xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$else$ lang="en" xml:lang="en"$endif$>
 
 <head>
 
@@ -152,9 +152,9 @@ $body$
 <!-- begin doc-metadata -->
 <div id="doc-metadata">
 $if(title)$
-<h2 class="title toc-ignore" style="display:none;">$title$</h2>
+<h1 class="title toc-ignore" style="display:none;">$title$</h1>
 $if(subtitle)$
-<h3 class="subtitle"><em>$subtitle$</em></h3>
+<h2 class="subtitle"><em>$subtitle$</em></h2>
 $endif$
 $for(author)$
 $if(author.name)$
