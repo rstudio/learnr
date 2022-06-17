@@ -226,7 +226,7 @@ $(document).ready(function () {
     )
 
     const topicsHeader = $('<div class="topicsHeader"></div>')
-    topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'))
+    topicsHeader.append($('<h1 class="tutorialTitle">' + titleText + '</h1>'))
     const topicsCloser = $('<div class="paneCloser"></div>')
     topicsCloser.on('click', hideFloatingTopics)
     topicsHeader.append(topicsCloser)
@@ -470,7 +470,7 @@ $(document).ready(function () {
     const allowSkipAttr = $('meta[name=allow-skip]').attr('content')
     docAllowSkip = allowSkipAttr === 'true' || allowSkipAttr === 'TRUE'
 
-    const tutorialTitle = $(`<h2 class="tutorialTitle">${titleText}</h2>`)
+    const tutorialTitle = $(`<h1 class="tutorialTitle">${titleText}</h1>`)
     tutorialTitle.on('click', showFloatingTopics)
     $('.topics').prepend(tutorialTitle)
 
