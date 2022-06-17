@@ -231,6 +231,10 @@ $(document).ready(function () {
     topicsCloser.on('click', hideFloatingTopics)
     topicsHeader.append(topicsCloser)
     topicsList.append(topicsHeader)
+    const topicsNav = isBS3()
+      ? $('<ul class="nav nav-pills nav-stacked"></ul>')
+      : $('<ul class="nav flex-column"></ul>')
+    topicsList.append($('<nav>').append(topicsNav))
 
     $('#doc-metadata').appendTo(topicsList)
 
@@ -259,15 +263,13 @@ $(document).ready(function () {
       }
 
       const jqTopic = $(
-        '<div class="topic" index="' +
-          topicIndex +
-          '">' +
-          topic.titleText +
-          '</div>'
+        `<li class="topic${isBS3() ? '' : ' nav-item'}" index="${topicIndex}">` +
+        `<a href="#${topic.id}" class = "nav-link">${topic.titleText}</a>` +
+        '</li>'
       )
       jqTopic.on('click', handleTopicClick)
       topic.jqListElement = jqTopic
-      $(topicsList).append(jqTopic)
+      $(topicsNav).append(jqTopic)
 
       const topicActions = $('<div class="topicActions"></div>')
       if (topicIndex > 0) {

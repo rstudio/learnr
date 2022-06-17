@@ -90,7 +90,6 @@
 }
 
 .topicsFooter .resetButton {
-  padding-left: 10px;
   font-size: .66em;
   cursor: pointer;
   opacity: .7;
@@ -101,16 +100,19 @@
 }
 
 .topicsList .topic {
-  line-height: 40px;
+  line-height: 2.5;
+	color: var(--bs-body-color, inherit);
+	background-color: var(--bs-body-bg, #f8f8f8);
+
+  /* original animated progress indicator...
   font-size: 15px;
   padding-left: 10px;
   cursor: pointer;
-
   background-repeat: no-repeat;
   background-size: 2px 80px;
   background-position: left 100%;
   background-image: url(images/topicProgress.png);
-  border-bottom: 1px solid #f8f8f8;
+  */
 
   -webkit-transition-property: background-position;
   transition-property: background-position;
@@ -118,13 +120,19 @@
   transition-duration: 0.25s;
 }
 
-.topicsList .topic:hover {
-  background-color: #fcfcfc;
+.topicsList .topic.current {
+  font-weight: bold;
 }
 
-.topicsList .topic.current {
-  background-color: #f8f8f8;
+.topicsList .nav-link {
+  padding-left: 0;
 }
+
+.tutorial-is-bs3 .topicsList .topic .nav-link,
+.tutorial-is-bs3 .topicsList .resetButton {
+  padding-left: 20px;
+}
+
 
 .section.level3 {
   margin-bottom: 40px;
