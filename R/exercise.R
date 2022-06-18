@@ -106,6 +106,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # create a new environment parented by the global environment
     # transfer all of the objects in the server_envir (i.e. setup and data chunks)
     envir <- duplicate_env(server_envir, parent = globalenv())
+    rm(".server_context", envir = envir)
 
     # create exercise evaluator
     evaluator <- evaluator_factory(evaluate_exercise(exercise, envir),
