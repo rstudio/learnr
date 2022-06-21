@@ -46,7 +46,7 @@ test_that("quiz questions can be created", {
   expect_type(q$ids$answer, "character")
   expect_type(q$ids$question, "character")
 
-  expect_s3_class(q$loading, "html")
+  expect_null(q$loading)
 
   expect_type(q$random_answer_order, "logical")
 
