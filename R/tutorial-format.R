@@ -93,11 +93,6 @@ tutorial <- function(fig_width = 6.5,
     args <- c(args, "--variable", paste0("ace-theme=", ace_theme))
   }
 
-
-  # additional css
-  for (css_file in css)
-    args <- c(args, "--css", rmarkdown::pandoc_path_arg(css_file))
-
   # resolve theme (ammend base stylesheet for "rstudio" theme
   stylesheets <- "tutorial-format.css"
   if (identical(theme, "rstudio")) {
@@ -153,6 +148,7 @@ tutorial <- function(fig_width = 6.5,
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
     anchor_sections = FALSE,
+    css = css,
     ...
   )
 
