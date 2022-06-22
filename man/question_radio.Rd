@@ -25,11 +25,11 @@ user is required to select a single answer.}
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
-\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{FALSE}.}
+\item{incorrect}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{TRUE}.}
+\item{try_again}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{TRUE}.}
 
 \item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 

@@ -63,6 +63,9 @@ tutorial <- function(fig_width = 6.5,
   # use section divs
   args <- c(args, "--section-divs")
 
+  # footnotes are scoped to the block
+  args <- c(args, "--reference-location=section")
+
   # template
   args <- c(args, "--template", rmarkdown::pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",
@@ -92,11 +95,6 @@ tutorial <- function(fig_width = 6.5,
     ace_theme <- match.arg(ace_theme, ACE_THEMES)
     args <- c(args, "--variable", paste0("ace-theme=", ace_theme))
   }
-
-
-  # additional css
-  for (css_file in css)
-    args <- c(args, "--css", rmarkdown::pandoc_path_arg(css_file))
 
   # resolve theme (ammend base stylesheet for "rstudio" theme
   stylesheets <- "tutorial-format.css"
@@ -153,6 +151,7 @@ tutorial <- function(fig_width = 6.5,
     extra_dependencies = extra_dependencies,
     bootstrap_compatible = TRUE,
     anchor_sections = FALSE,
+    css = css,
     ...
   )
 

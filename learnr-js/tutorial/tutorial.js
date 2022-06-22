@@ -30,6 +30,12 @@ function Tutorial () {
   // Init timing log
   this.$initTimingLog()
 
+  // Are we using BS3?
+  this.isBS3 = !window.bootstrap
+  if (this.isBS3) {
+    document.body.classList.add('tutorial-is-bs3')
+  }
+
   // API: provide init event
   this.onInit = function (handler) {
     this.$initCallbacks.add(handler)
@@ -1193,7 +1199,9 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
         datai18n = { key: datai18n }
       }
       button.attr('data-i18n-attr-title', datai18n.key + 'title')
-      const buttonText = $('<span>' + caption + '</span>')
+      const buttonText = $(
+        `<span class="d-none d-sm-inline-block d-md-none d-lg-inline-block">${caption}</span>`
+      )
       buttonText.attr('data-i18n', datai18n.key)
       if (datai18n.opts) {
         buttonText.attr('data-i18n-opts', JSON.stringify(datai18n.opts))
@@ -1261,9 +1269,9 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
       const outputFrame = exercise.children('.tutorial-exercise-output-frame')
       if (outputFrame.find('.tutorial-hint').length === 0) {
         const panel = $(
-          '<div class="panel panel-default tutorial-hint-panel"></div>'
+          `<div class="${thiz.isBS3 ? 'panel panel-default' : 'card'} tutorial-hint-panel"></div>`
         )
-        const panelBody = $('<div class="panel-body"></div>')
+        const panelBody = $(`<div class="${thiz.isBS3 ? 'panel-body' : 'card-body'}></div>`)
         const hintDivClone = hintDiv
           .clone()
           .attr('id', '')
@@ -1301,117 +1309,142 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
     )
 
     // handle showing and hiding the popover
-    button.on('click', function () {
+    button.on('click', function (ev) {
       // record the request
       recordHintRequest(hintIndex)
 
       // determine solution text
       const solutionText = solution !== null ? solution : hints[hintIndex]
 
-      const visible = button.next('div.popover:visible').length > 0
-      if (!visible) {
-        const popover = button.popover({
-          placement: 'top',
-          template:
-            '<div class="popover tutorial-solution-popover" role="tooltip">' +
-            '<div class="arrow"></div>' +
-            '<div class="popover-title tutorial-panel-heading"></div>' +
-            '<div class="popover-content"></div>' +
-            '</div>',
-          content: solutionText,
-          trigger: 'manual'
+      const visible = button.parent().find('div.popover:visible').length > 0
+
+      if (visible) {
+        console.log('Removing hint popover', ev)
+        thiz.$removeSolution(exercise)
+        editor.focus()
+        return
+      }
+
+      console.log('Revealing hint popover', ev)
+      const popover = button.popover({
+        placement: 'top',
+        template:
+          '<div class="popover tutorial-solution-popover" role="tooltip">' +
+          '<div class="arrow"></div>' +
+          '<div class="popover-title tutorial-panel-heading"></div>' +
+          '<div class="popover-content"></div>' +
+          '</div>',
+        content: solutionText,
+        container: button.parent(),
+        boundary: $('.topics').get(0),
+        viewport: $('.topics').get(0)
+        // trigger: 'manual'
+      })
+
+      let popoverIsInserted = false
+
+      popover.on('inserted.bs.popover', function (ev) {
+        if (popoverIsInserted) return
+        console.log('Instantiating hint popover', ev)
+
+        // get popover element
+        const popoverTip = thiz.isBS3
+          ? popover.data('bs.popover').tip()
+          : $(window.bootstrap.Popover.getInstance(popover).tip)
+
+        const content = popoverTip.find('.popover-content')
+
+        // adjust editor and container height
+        const solutionEditor = thiz.$attachAceEditor(
+          content.get(0),
+          solutionText // FIXME get exercise engine
+        )
+        solutionEditor.setReadOnly(true)
+        solutionEditor.setOption('minLines', Math.min(editorLines, 10))
+        solutionEditor.setOption('maxLines', 10)
+        setTimeout(() => {
+          // Re-position the popover in the next tick when we know the height.
+          // We used to be able to do this by knowing the editor line height
+          // but in Ace >= 1.3 that value is populated asyncronously.
+          content.parent().css('top', `-${content.parent().height()}px`)
         })
-        popover.on('inserted.bs.popover', function () {
-          // get popover element
-          const dataPopover = popover.data('bs.popover')
-          const popoverTip = dataPopover.tip()
-          const content = popoverTip.find('.popover-content')
 
-          // adjust editor and container height
-          const solutionEditor = thiz.$attachAceEditor(
-            content.get(0),
-            solutionText // FIXME get exercise engine
+        // get title panel
+        const popoverTitle = popoverTip.find('.popover-title')
+
+        // add next hint button if we have > 1 hint
+        if (solution === null && hints.length > 1) {
+          const nextHintButton = $(
+            `<button class="btn btn-light ${thiz.isBS3 ? 'btn-xs' : 'btn-sm'} btn-tutorial-next-hint"></button>`
           )
-          solutionEditor.setReadOnly(true)
-          solutionEditor.setOption('minLines', Math.min(editorLines, 10))
-          solutionEditor.setOption('maxLines', 10)
-          setTimeout(() => {
-            // Re-position the popover in the next tick when we know the height.
-            // We used to be able to do this by knowing the editor line height
-            // but in Ace >= 1.3 that value is populated asyncronously.
-            content.parent().css('top', `-${content.parent().height()}px`)
-          })
-
-          // get title panel
-          const popoverTitle = popoverTip.find('.popover-title')
-
-          // add next hint button if we have > 1 hint
-          if (solution === null && hints.length > 1) {
-            const nextHintButton = $(
-              '<button class="btn btn-light btn-xs btn-tutorial-next-hint"></button>'
-            )
-            nextHintButton.append(
-              $('<span data-i18n="button.hintnext">Next Hint</span>')
-            )
-            nextHintButton.append(' ')
-            nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'))
-            nextHintButton.on('click', function () {
-              hintIndex = hintIndex + 1
-              solutionEditor.setValue(hints[hintIndex], -1)
-              if (hintIndex === hints.length - 1) {
-                nextHintButton.addClass('disabled')
-                nextHintButton.prop('disabled', true)
-              }
-              recordHintRequest(hintIndex)
-            })
+          nextHintButton.append(
+            $('<span data-i18n="button.hintnext">Next Hint</span>')
+          )
+          nextHintButton.append(' ')
+          nextHintButton.append($('<i class="fa fa-angle-double-right"></i>'))
+          nextHintButton.on('click', function () {
+            hintIndex = hintIndex + 1
+            solutionEditor.setValue(hints[hintIndex], -1)
             if (hintIndex === hints.length - 1) {
               nextHintButton.addClass('disabled')
               nextHintButton.prop('disabled', true)
             }
-            popoverTitle.append(nextHintButton)
+            recordHintRequest(hintIndex)
+          })
+          if (hintIndex === hints.length - 1) {
+            nextHintButton.addClass('disabled')
+            nextHintButton.prop('disabled', true)
           }
+          popoverTitle.append(nextHintButton)
+        }
 
-          // add copy button
-          const copyButton = $(
-            '<button class="btn btn-info btn-xs ' +
-              'btn-tutorial-copy-solution pull-right"></button>'
-          )
-          copyButton.append($('<i class="fa fa-copy"></i>'))
-          copyButton.append(' ')
-          copyButton.append(
-            $('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>')
-          )
-          popoverTitle.append(copyButton)
-          const clipboard = new ClipboardJS(copyButton[0], {
-            text: function (trigger) {
-              return solutionEditor.getValue()
-            }
-          })
-          clipboard.on('success', function (e) {
-            thiz.$removeSolution(exercise)
-            editor.focus()
-          })
-          copyButton.data('clipboard', clipboard)
+        // add copy button
+        const copyButton = $(
+          `<button class="btn btn-info ${thiz.isBS3 ? 'btn-xs' : 'btn-sm'} btn-tutorial-copy-solution pull-right"></button>`
+        )
+        copyButton.append($('<i class="fa fa-copy"></i>'))
+        copyButton.append(' ')
+        copyButton.append(
+          $('<span data-i18n="button.copyclipboard">Copy to Clipboard</span>')
+        )
+        popoverTitle.append(copyButton)
+        const clipboard = new ClipboardJS(copyButton[0], {
+          text: function (trigger) {
+            return solutionEditor.getValue()
+          }
         })
-        button.popover('show')
+        clipboard.on('success', function (e) {
+          thiz.$removeSolution(exercise)
+          editor.focus()
+        })
+        copyButton.data('clipboard', clipboard)
 
         // left position of popover and arrow
-        const popoverElement = exercise.find('.tutorial-solution-popover')
-        popoverElement.css('left', '0')
-        const popoverArrow = popoverElement.find('.arrow')
+        popoverTip.css('left', '0')
+        const popoverArrow = popoverTip.find('.arrow')
         popoverArrow.css(
           'left',
           button.position().left + button.outerWidth() / 2 + 'px'
         )
 
+        // translate the popover
+        popoverTip.trigger('i18n')
+
+        popoverIsInserted = true
+      })
+
+      button.on('shown.bs.popover', function () {
         // scroll into view if necessary
+        const popoverElement = $('.tutorial-solution-popover')
         thiz.scrollIntoView(popoverElement)
 
-        // translate the popover
-        popoverElement.trigger('i18n')
-      } else {
-        thiz.$removeSolution(exercise)
-      }
+        // resize popover element to fit contents
+        if (!thiz.isBS3) {
+          window.bootstrap.Popover.getInstance(popover).update()
+        }
+      })
+
+      button.popover('show')
 
       // always refocus editor
       editor.focus()
@@ -1429,9 +1462,13 @@ Tutorial.prototype.$removeSolution = function (exercise) {
 
   // destroy popover
   // If window.bootstrap is found (>= bs4), use `'dispose'` method name. Otherwise, use `'destroy'` (bs3)
-  exercise
-    .find('.btn-tutorial-solution')
-    .popover(window.bootstrap ? 'dispose' : 'destroy')
+  if (window.bootstrap) {
+    const popover = exercise.find('.tutorial-solution-popover')
+    if (!popover.length) return
+    window.bootstrap.Popover.getInstance(popover.get(0)).dispose()
+  } else {
+    exercise.find('.tutorial-solution-popover').popover('destroy')
+  }
 }
 
 /* Exercise evaluation */

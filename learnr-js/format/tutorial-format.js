@@ -226,11 +226,15 @@ $(document).ready(function () {
     )
 
     const topicsHeader = $('<div class="topicsHeader"></div>')
-    topicsHeader.append($('<h2 class="tutorialTitle">' + titleText + '</h2>'))
+    topicsHeader.append($('<h1 class="tutorialTitle">' + titleText + '</h1>'))
     const topicsCloser = $('<div class="paneCloser"></div>')
     topicsCloser.on('click', hideFloatingTopics)
     topicsHeader.append(topicsCloser)
     topicsList.append(topicsHeader)
+    const topicsNav = isBS3()
+      ? $('<ul class="nav nav-pills nav-stacked"></ul>')
+      : $('<ul class="nav flex-column"></ul>')
+    topicsList.append($('<nav>').append(topicsNav))
 
     $('#doc-metadata').appendTo(topicsList)
 
@@ -259,15 +263,13 @@ $(document).ready(function () {
       }
 
       const jqTopic = $(
-        '<div class="topic" index="' +
-          topicIndex +
-          '">' +
-          topic.titleText +
-          '</div>'
+        `<li class="topic${isBS3() ? '' : ' nav-item'}" index="${topicIndex}">` +
+        `<a href="#${topic.id}" class = "nav-link">${topic.titleText}</a>` +
+        '</li>'
       )
       jqTopic.on('click', handleTopicClick)
       topic.jqListElement = jqTopic
-      $(topicsList).append(jqTopic)
+      $(topicsNav).append(jqTopic)
 
       const topicActions = $('<div class="topicActions"></div>')
       if (topicIndex > 0) {
@@ -468,7 +470,7 @@ $(document).ready(function () {
     const allowSkipAttr = $('meta[name=allow-skip]').attr('content')
     docAllowSkip = allowSkipAttr === 'true' || allowSkipAttr === 'TRUE'
 
-    const tutorialTitle = $(`<h2 class="tutorialTitle">${titleText}</h2>`)
+    const tutorialTitle = $(`<h1 class="tutorialTitle">${titleText}</h1>`)
     tutorialTitle.on('click', showFloatingTopics)
     $('.topics').prepend(tutorialTitle)
 
@@ -479,12 +481,76 @@ $(document).ready(function () {
       updateVisibilityOfTopicElements(t)
     }
 
+    removeFootnoteLinks()
+
     function handleResize () {
       $('.topicsList').css('max-height', window.innerHeight)
     }
 
     handleResize()
     window.addEventListener('resize', handleResize)
+  }
+
+  /* Footnote links don't work in learnr, so we remove the anchor tags */
+  function removeFootnoteLinks () {
+    $('.footnote-ref').replaceWith(function () {
+      const el = $('<span>')
+      el.addClass($(this).class)
+      el.append($(this).html())
+      return el
+    })
+    $('.footnote-back').remove()
+  }
+
+  function isBS3 () {
+    // from https://github.com/rstudio/shiny/blob/474f14/srcts/src/utils/index.ts#L373-L376
+    return !window.bootstrap
+  }
+
+  function preTransformDOMMigrateFromBS3 () {
+    if (isBS3()) return
+
+    document.querySelectorAll('.btn-xs').forEach(el => {
+      el.classList.remove('btn-xs')
+      el.classList.add('btn-sm')
+    })
+
+    document.querySelectorAll('.sr-only').forEach(el => {
+      // .visually-hidden and .visually-hidden-focusable are mutually exclusive
+      if (el.classList.contains('visually-hidden-focusable')) return
+      el.classList.add('visually-hidden')
+    })
+
+    const panelMigration = {
+      panel: 'card',
+      'panel-default': '',
+      'panel-heading': 'card-header',
+      'panel-title': 'card-title',
+      'panel-body': 'card-body',
+      'panel-footer': 'card-footer'
+    }
+
+    const tutorialMigratePanels = document.querySelectorAll('.tutorial-exercise-input, .tutorial-question-container')
+
+    if (tutorialMigratePanels.length === 0) {
+      // no panels to migrate, all done with migrations!
+      return
+    }
+
+    tutorialMigratePanels.forEach(elPanel => {
+      Object.keys(panelMigration).forEach(classOrig => {
+        const els = [elPanel, ...elPanel.querySelectorAll(`.${classOrig}`)]
+        if (!els.length) return
+        const classNew = panelMigration[classOrig]
+        els.forEach(el => {
+          if (!el.classList.contains(classOrig)) return
+          el.classList.remove(classOrig)
+          if (classNew !== '') {
+            el.classList.add(classNew)
+          }
+        })
+      })
+    })
   }
 
   // support bookmarking of topics
@@ -650,6 +716,7 @@ $(document).ready(function () {
     updateVisibilityOfTopicElements(topicIndex)
   }
 
+  preTransformDOMMigrateFromBS3()
   transformDOM()
   handleLocationHash()
 

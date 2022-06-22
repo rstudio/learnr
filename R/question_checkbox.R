@@ -78,6 +78,7 @@ question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
 
   checkboxGroupInput(
     question$ids$answer,
+    inline = TRUE,
     label = question$question,
     choiceNames = choice_names,
     choiceValues = choice_values,
@@ -193,6 +194,7 @@ question_ui_completed.learnr_checkbox <- function(question, value, ...) {
     checkboxGroupInput(
       question$ids$answer,
       label = question$question,
+      inline = TRUE,
       choiceValues = choice_values,
       choiceNames = choice_names_final,
       selected = value

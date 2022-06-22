@@ -5,50 +5,70 @@
 
 #' Tutorial quiz questions
 #'
-#' Add interactive quiz questions to a tutorial.
-#' Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
-#' There are four default types of quiz questions:
+#' @description
+#' Add interactive quiz questions to a tutorial. Each quiz question is executed
+#' within a shiny runtime to provide more flexibility in the types of questions
+#' offered. There are four default types of quiz questions:
+#'
 #' \describe{
-#'   \item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
-#'   \item{\code{learnr_numeric}}{Numeric question.  This question type will allow for a number to be submitted by the user.  At least one number must be added for the user to submit their answer.}
+#' \item{\code{learnr_radio}}{Radio button question.  This question type will
+#' only allow for a single answer submission by the user.  An answer must be
+#' marked for the user to submit their answer.}
+#' \item{\code{learnr_checkbox}}{Check box question.  This question type will
+#' allow for one or more answers to be submitted by the user.  At least one
+#' answer must be marked for the user to submit their answer.}
+#' \item{\code{learnr_text}}{Text box question.  This question type will allow
+#' for free form text to be submitted by the user.  At least one non-whitespace
+#' character must be added for the user to submit their answer.}
+#' \item{\code{learnr_numeric}}{Numeric question.  This question type will allow
+#' for a number to be submitted by the user.  At least one number must be added
+#' for the user to submit their answer.}
 #' }
 #'
-#' Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
+#' Note, the print behavior has changed as the runtime is now Shiny based.  If
+#' \code{question}s and \code{quiz}es are printed in the console, the S3
+#' structure and information will be displayed.
 #'
 #'
-#' @seealso For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+#' @seealso For more information and question type extension examples, please
+#'   see the help documentation for [question_methods][question_ui_initialize()]
+#'   and view the \code{question_type} tutorial:
+#'   `learnr::run_tutorial("question_type", "learnr")`.
 #' @param text Question or option text
 #' @param ... One or more questions or answers
 #' @param caption Optional quiz caption (defaults to "Quiz")
-#' @param type Type of quiz question. Typically this can be automatically determined
-#'   based on the provided answers. Pass \code{"radio"} to indicate that even though
-#'   multiple correct answers are specified that inputs which include only one correct
-#'   answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
-#'   (as opposed to radio buttons) even though only once correct answer was provided.
-#' @param correct For \code{question}, text to print for a correct answer (defaults
-#'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
+#' @param type Type of quiz question. Typically this can be automatically
+#'   determined based on the provided answers. Pass `"radio"` to indicate that
+#'   even though multiple correct answers are specified that inputs which
+#'   include only one correct answer are still correct. Pass `"checkbox"` to
+#'   force the use of checkboxes (as opposed to radio buttons) even though only
+#'   once correct answer was provided.
+#' @param correct For `question`, text to print for a correct answer (defaults
+#'   to "Correct!"). For `answer`, a boolean indicating whether this answer is
 #'   correct.
-#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{FALSE}.
-#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{TRUE}.
-#' @param message Additional message to display along with correct/incorrect feedback.
-#'   This message is always displayed after a question submission.
-#' @param post_message Additional message to display along with correct/incorrect feedback.
-#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
-#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
-#'   message alongside the \code{message} message value.
-#' @param loading Loading text to display as a placeholder while the question is loaded
-#' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
-#' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
-#' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
+#' @param incorrect Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `FALSE`.
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
+#' @param message Additional message to display along with correct/incorrect
+#'   feedback. This message is always displayed after a question submission.
+#' @param post_message Additional message to display along with
+#'   correct/incorrect feedback. If `allow_retry` is `TRUE`, this
+#'   message will only be displayed after the correct submission.  If
+#'   `allow_retry` is `FALSE`, it will produce a second message
+#'   alongside the `message` message value.
+#' @param loading Loading text to display as a placeholder while the question is
+#'   loaded. If not provided, generic "Loading..." or placeholder elements will
+#'   be displayed.
+#' @param submit_button Label for the submit button. Defaults to `"Submit
+#'   Answer"`
+#' @param try_again_button Label for the try again button. Defaults to `"Submit
+#'   Answer"`
+#' @param allow_retry Allow retry for incorrect answers. Defaults to `FALSE`.
 #' @param random_answer_order Display answers in a random order.
-#' @param options Extra options to be stored in the question object.
-# TODO-barret link to sortable_question when sortable is added
-# '   This is useful when using custom question types.
-# '   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
+#' @param options Extra options to be stored in the question object. This is
+#'   useful when using custom question types. See [sortable::question_rank()]
+#'   for an example question implementation that uses the `options` parameter.
 #'
 #' @examples
 #' quiz(
@@ -117,7 +137,7 @@ question <- function(
     try_again = incorrect,
     message = NULL,
     post_message = NULL,
-    loading = c("**Loading:** ", format(text), "<br/><br/><br/>"),
+    loading = NULL,
     submit_button = rlang::missing_arg(),
     try_again_button = rlang::missing_arg(),
     allow_retry = FALSE,
@@ -210,7 +230,7 @@ question <- function(
       answer = NS(q_id)("answer"),
       question = q_id
     ),
-    loading = quiz_text(loading),
+    loading = if (!is.null(loading)) quiz_text(loading),
     random_answer_order = random_answer_order,
     allow_retry = allow_retry,
     # Set a seed for local testing, even though it is overwritten for each shiny session
@@ -238,9 +258,11 @@ quiz_text <- function(text) {
       fragment.only = TRUE,
       encoding = "UTF-8"
     )
-    # remove leading and trailing paragraph
-    md <- sub("^<p>", "", md)
-    md <- sub("</p>\n?$", "", md)
+    if (length(str_match_all(md, "</p>", fixed = TRUE)) == 1) {
+      # remove leading and trailing paragraph
+      md <- sub("^<p>", "", md)
+      md <- sub("</p>\n?$", "", md)
+    }
     HTML(md)
   }
   else {
@@ -352,7 +374,7 @@ question_prerendered_chunk <- function(question, ..., session = getDefaultReacti
 question_module_ui <- function(id) {
   ns <- NS(id)
   div(
-    class = "panel panel-default",
+    class = "panel panel-default tutorial-question-container",
     div(
       "data-label" = as.character(id),
       class = "tutorial-question panel-body",
@@ -369,7 +391,16 @@ question_module_server <- function(
   question
 ) {
 
-  output$answer_container <- renderUI({ div(class="loading", question$loading) })
+  output$answer_container <- renderUI({
+    if (is.null(question$loading)) {
+      question_ui_loading(question)
+    } else {
+      div(
+        class="loading",
+        question$loading
+      )
+    }
+  })
 
   # Setup reactive here that will be updated by the question modules
   question_state <- reactiveVal()
@@ -699,11 +730,44 @@ question_messages <- function(question, messages, is_correct, is_done) {
   )) {
     NULL
   } else {
-    tags$div(message_alert, always_message_alert, post_alert)
+    htmltools::tagList(message_alert, always_message_alert, post_alert)
   }
 }
 
+question_ui_loading <- function(question) {
+  n_paragraphs <- max(length(str_match_all(question$question, "</p>")), 1)
+  paras <- lapply(seq_len(n_paragraphs), function(...) {
+    spans <- lapply(seq_len(sample(2:8, 1)), function(...) {
+      htmltools::span(class = sprintf("placeholder col-%s", sample(2:7, 1)))
+    })
+    htmltools::p(spans)
+  })
 
+  q_opts <- NULL
+  if (question$type %in% c("learnr_radio", "learnr_checkbox")) {
+    q_opts <- htmltools::tags$ul(
+      lapply(seq_along(question$answers), function(...) {
+        htmltools::tags$li(
+          htmltools::span(class = "placeholder col-3")
+        )
+      })
+    )
+  }
+
+  button <- htmltools::tags$a(
+    href = "#",
+    tabindex = "-1",
+    class = "btn btn-primary disabled placeholder col-3",
+    `aria-hidden` = "true"
+  )
+
+  htmltools::div(
+    class = "loading placeholder-glow",
+    paras,
+    q_opts,
+    button
+  )
+}
 
 
 

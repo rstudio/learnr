@@ -19,7 +19,7 @@
   padding-bottom: 6px;
   padding-left: 8px;
   padding-right: 8px;
-  font-size: 13px;
+  font-size: 0.8em;
   font-weight: 500;
   width: 100%;
   display: flex;
@@ -29,6 +29,7 @@
 .tutorial-panel-heading-left,
 .tutorial-panel-heading-right {
   display: flex;
+  align-items: center;
 }
 
 .tutorial-quiz-title {
@@ -41,36 +42,125 @@
   width: 100%;
 }
 
+.tutorial-is-bs3 .tutorial-question .loading .placeholder {
+  display: none;
+}
+
+.tutorial-is-bs3 .tutorial-question .loading::before {
+  content: "Loading...";
+}
+
+.tutorial-question .loading ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tutorial-question .loading ul li {
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.tutorial-question-container {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
 .tutorial-question {
   padding-top: 10px;
   padding-bottom: 15px;
+}
+
+.tutorial-question .control-label {
+  margin-bottom: 1em;
+}
+
+.tutorial-question .control-label > :last-child {
+  margin-bottom: 0;
+}
+
+.tutorial-question .radio-inline,
+.tutorial-question .checkbox-inline {
+  display: block;
+  line-height: 1.5;
+}
+
+.tutorial-question .radio-inline + .radio-inline,
+.tutorial-question .checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+  margin-top: 10px;
+}
+
+.panel .tutorial-question .checkbox-inline,
+.panel .tutorial-question .radio-inline {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.panel .tutorial-question .checkbox-inline input,
+.panel .tutorial-question .radio-inline input {
+  position: absolute;
+  width: 1.25em;
+  top: 0px;
+}
+
+.tutorial-question .question-final .checkbox-inline,
+.tutorial-question .question-final .radio-inline {
+  position: relative;
+  padding-left: 1.25em;
+}
+
+.tutorial-question .question-final .checkbox-inline input,
+.tutorial-question .question-final .radio-inline input {
+  position: absolute;
+  width: 1.25em;
+  top: 0px;
 }
 
 .tutorial-question .question-final .correct::before {
   content: '\2713';
   position: absolute;
   left: 2px;
-  top: 1px;
+  top: 0;
 }
 
 .tutorial-question .question-final .incorrect::before {
   content: '\2717';
   position: absolute;
   left: 2px;
-  top: 1px;
+  top: 0;
 }
 
-.tutorial-question .question-final .radio label,
-.tutorial-question .question-final .checkbox label {
+.tutorial-question .question-final .radio-inline label,
+.tutorial-question .question-final .checkbox-inline label {
   position: relative;
+  padding-left: 1.25em;
 }
 
-.tutorial-question .question-final .radio input.disabled,
-.tutorial-question .question-final .checkbox input.disabled {
+.tutorial-question .question-final .radio-inline input.disabled,
+.tutorial-question .question-final .checkbox-inline input.disabled {
   display: none;
 }
 
-.tutorial-exercise-input .btn-xs {
+.tutorial-question [id$="message_container"] > div:last-of-type {
+  margin-bottom: 0;
+}
+
+.tutorial-question [id$="button_container"] {
+  margin-top: 1em;
+}
+
+.tutorial-exercise .tutorial-exercise-input {
+  margin-bottom: 1em;
+}
+
+.tutorial-exercise .card-body {
+  padding: 0;
+}
+
+.tutorial-exercise-input .btn-xs,
+.tutorial-exercise-input .btn-sm {
   margin-right: 0;
   margin-top: -1px;
   font-size: 11px;
@@ -94,13 +184,18 @@
   padding-right: 4px;
 }
 
-.tutorial-exercise-input .btn-xs i {
+.tutorial-exercise-input .btn-xs i
+.tutorial-exercise-input .btn-sm i{
   width: 10px;
   margin-right: 1px;
 }
 
 .tutorial-exercise-input .panel-body {
   padding: 0;
+}
+
+.tutorial-exercise-output .alert > :last-child {
+  margin-bottom: 0;
 }
 
 .tutorial-exercise-code-editor {

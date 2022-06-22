@@ -29,11 +29,11 @@ parameters passed onto \code{\link[=question]{question()}}. Answers with custom 
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
 correct.}
 
-\item{incorrect}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{FALSE}.}
+\item{incorrect}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to "Incorrect")
-when \code{allow_retry} is \code{TRUE}.}
+\item{try_again}{Text to print for an incorrect answer (defaults to
+"Incorrect") when \code{allow_retry} is \code{TRUE}.}
 
 \item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 
@@ -55,7 +55,9 @@ or \code{cols} are provided, the quiz input will use \code{\link[shiny:textAreaI
 for the text input, otherwise the default input element is a single-line
 \code{\link[shiny:textInput]{shiny::textInput()}}.}
 
-\item{options}{Extra options to be stored in the question object.}
+\item{options}{Extra options to be stored in the question object. This is
+useful when using custom question types. See \code{\link[sortable:question_rank]{sortable::question_rank()}}
+for an example question implementation that uses the \code{options} parameter.}
 }
 \value{
 Returns a learnr question of type \code{"learnr_text"}.
