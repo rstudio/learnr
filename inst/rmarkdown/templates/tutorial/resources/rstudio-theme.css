@@ -14,6 +14,10 @@ h1 {
   font-size: 2.4em;
   margin: .75em 0 .5em 0; }
 
+.tutorialTitle {
+  font-size: 1.75em;
+}
+
 h2 {
   font-size: 2.0em;
   margin: .75em 0 .5em 0; }
@@ -74,9 +78,30 @@ code {
   background-color: #e8e8e8
 }
 
+/* sidebar */
+.topicsList .topic {
+  line-height: 20px;
+  font-size: 15px;
+  padding-left: 10px;
+  cursor: pointer;
+  color: #404040;
 
+  background-color: unset;
+  background-repeat: no-repeat;
+  background-size: 2px 80px;
+  background-position: left 100%;
+  background-image: url(images/topicProgress.png);
+  border-bottom: 1px solid #f8f8f8;
+}
 
+.topicsList .topic .nav-link {
+  color: #555;
+}
 
+.topicsList .topic.current {
+  background-color: #f8f8f8;
+  font-weight: normal;
+}
 
 /* quiz css */
 
