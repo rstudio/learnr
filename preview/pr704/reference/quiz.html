@@ -261,14 +261,16 @@ be displayed.</p></dd>
 
 
 <dt>options</dt>
-<dd><p>Extra options to be stored in the question object.</p></dd>
+<dd><p>Extra options to be stored in the question object. This is
+useful when using custom question types. See <code>sortable::question_rank()</code>
+for an example question implementation that uses the <code>options</code> parameter.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>For more information and question type extension examples, please
-see the help documentation for question_methods and
-view the <code>question_type</code> tutorial:
+see the help documentation for <a href="question_methods.html">question_methods</a>
+and view the <code>question_type</code> tutorial:
 <code>learnr::run_tutorial("question_type", "learnr")</code>.</p>
 <p><code><a href="random_praise.html">random_praise()</a></code>, <code><a href="random_praise.html">random_encouragement()</a></code></p>
 <p>Other Interactive Questions: 
