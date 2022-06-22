@@ -12,6 +12,8 @@
 
 -   Custom CSS files are now loaded last, after all of learnr’s other web dependencies (#574).
 
+-   Footnotes now appear at the end of the section in which they appear (thanks @plukethep, #647).
+
 ## Setup Chunk Chaining
 
 -   Exercise chunks can now be “chained together” via chained setup chunks. The setup chunk of one exercise may depend on other chunks, including the setup chunks of other exercises, allowing the author to form a chain of setup code that allows interactive exercises to progressively work through a problem. These chains are defined using the `exercise.setup` chunk option; use `run_tutorial("setup_chunks", "learnr")` to run a demo tutorial (@nischalshrestha #390).

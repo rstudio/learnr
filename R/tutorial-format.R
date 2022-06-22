@@ -63,6 +63,9 @@ tutorial <- function(fig_width = 6.5,
   # use section divs
   args <- c(args, "--section-divs")
 
+  # footnotes are scoped to the block
+  args <- c(args, "--reference-location=section")
+
   # template
   args <- c(args, "--template", rmarkdown::pandoc_path_arg(
     system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",

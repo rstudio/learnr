@@ -481,12 +481,25 @@ $(document).ready(function () {
       updateVisibilityOfTopicElements(t)
     }
 
+    removeFootnoteLinks()
+
     function handleResize () {
       $('.topicsList').css('max-height', window.innerHeight)
     }
 
     handleResize()
     window.addEventListener('resize', handleResize)
+  }
+
+  /* Footnote links don't work in learnr, so we remove the anchor tags */
+  function removeFootnoteLinks () {
+    $('.footnote-ref').replaceWith(function () {
+      const el = $('<span>')
+      el.addClass($(this).class)
+      el.append($(this).html())
+      return el
+    })
+    $('.footnote-back').remove()
   }
 
   function isBS3 () {
