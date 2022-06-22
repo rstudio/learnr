@@ -45,7 +45,9 @@ correct.}
 
 \item{step}{Interval to use when stepping between min and max}
 
-\item{options}{Extra options to be stored in the question object.}
+\item{options}{Extra options to be stored in the question object. This is
+useful when using custom question types. See \code{\link[sortable:question_rank]{sortable::question_rank()}}
+for an example question implementation that uses the \code{options} parameter.}
 
 \item{tolerance}{Submitted values within an absolute difference less than or
 equal to \code{tolerance} will be considered equal to the answer value. Note

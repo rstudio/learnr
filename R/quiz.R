@@ -31,8 +31,8 @@
 #'
 #'
 #' @seealso For more information and question type extension examples, please
-#'   see the help documentation for [question_methods] and
-#'   view the \code{question_type} tutorial:
+#'   see the help documentation for [question_methods][question_ui_initialize()]
+#'   and view the \code{question_type} tutorial:
 #'   `learnr::run_tutorial("question_type", "learnr")`.
 #' @param text Question or option text
 #' @param ... One or more questions or answers
@@ -66,10 +66,9 @@
 #'   Answer"`
 #' @param allow_retry Allow retry for incorrect answers. Defaults to `FALSE`.
 #' @param random_answer_order Display answers in a random order.
-#' @param options Extra options to be stored in the question object.
-# TODO-barret link to sortable_question when sortable is added
-# '   This is useful when using custom question types.
-# '   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
+#' @param options Extra options to be stored in the question object. This is
+#'   useful when using custom question types. See [sortable::question_rank()]
+#'   for an example question implementation that uses the `options` parameter.
 #'
 #' @examples
 #' quiz(

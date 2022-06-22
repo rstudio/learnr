@@ -70,7 +70,9 @@ be displayed.}
 
 \item{random_answer_order}{Display answers in a random order.}
 
-\item{options}{Extra options to be stored in the question object.}
+\item{options}{Extra options to be stored in the question object. This is
+useful when using custom question types. See \code{\link[sortable:question_rank]{sortable::question_rank()}}
+for an example question implementation that uses the \code{options} parameter.}
 }
 \description{
 Add interactive quiz questions to a tutorial. Each quiz question is executed
@@ -120,8 +122,8 @@ quiz(
 }
 \seealso{
 For more information and question type extension examples, please
-see the help documentation for \link{question_methods} and
-view the \code{question_type} tutorial:
+see the help documentation for \link[=question_ui_initialize]{question_methods}
+and view the \code{question_type} tutorial:
 \code{learnr::run_tutorial("question_type", "learnr")}.
 
 \code{\link[=random_praise]{random_praise()}}, \code{\link[=random_encouragement]{random_encouragement()}}
