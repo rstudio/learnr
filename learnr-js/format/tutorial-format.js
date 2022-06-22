@@ -222,19 +222,19 @@ $(document).ready(function () {
   // and create/adorn the DOM for them as needed
   function buildTopicsList () {
     const topicsList = $(
-      '<div id="tutorial-topic" class="topicsList hideFloating"></div>'
+      '<nav id="tutorial-topic" class="topicsList hideFloating" aria-label="topic"></nav>'
     )
 
-    const topicsHeader = $('<div class="topicsHeader"></div>')
+    const topicsHeader = $('<header class="topicsHeader"></header>')
     topicsHeader.append($('<h1 class="tutorialTitle">' + titleText + '</h1>'))
     const topicsCloser = $('<div class="paneCloser"></div>')
     topicsCloser.on('click', hideFloatingTopics)
     topicsHeader.append(topicsCloser)
     topicsList.append(topicsHeader)
     const topicsNav = isBS3()
-      ? $('<ul class="nav nav-pills nav-stacked"></ul>')
-      : $('<ul class="nav flex-column"></ul>')
-    topicsList.append($('<nav>').append(topicsNav))
+      ? $('<ul class="nav nav-pills nav-stacked" role="menubar" aria-orientation="vertical" aria-label="topic"></ul>')
+      : $('<ul class="nav flex-column" role="menubar" aria-orientation="vertical" aria-label="topic"></ul>')
+    topicsList.append(topicsNav)
 
     $('#doc-metadata').appendTo(topicsList)
 
@@ -264,7 +264,7 @@ $(document).ready(function () {
 
       const jqTopic = $(
         `<li class="topic${isBS3() ? '' : ' nav-item'}" index="${topicIndex}">` +
-        `<a href="#${topic.id}" class = "nav-link">${topic.titleText}</a>` +
+        `<a href="#${topic.id}" class = "nav-link" role="menuitem" tabindex="0">${topic.titleText}</a>` +
         '</li>'
       )
       jqTopic.on('click', handleTopicClick)
@@ -369,7 +369,7 @@ $(document).ready(function () {
       topics.push(topic)
     })
 
-    const topicsFooter = $('<div class="topicsFooter"></div>')
+    const topicsFooter = $('<footer class="topicsFooter"></footer>')
 
     const resetButton = $(
       '<span class="resetButton" data-i18n="text.startover">Start Over</span>'
