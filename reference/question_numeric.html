@@ -81,20 +81,20 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">question_numeric</span><span class="op">(</span>
-  <span class="va">text</span>,
-  <span class="va">...</span>,
-  correct <span class="op">=</span> <span class="st">"Correct!"</span>,
-  incorrect <span class="op">=</span> <span class="st">"Incorrect"</span>,
-  try_again <span class="op">=</span> <span class="va">incorrect</span>,
-  allow_retry <span class="op">=</span> <span class="cn">FALSE</span>,
-  value <span class="op">=</span> <span class="cn">NULL</span>,
-  min <span class="op">=</span> <span class="cn">NA</span>,
-  max <span class="op">=</span> <span class="cn">NA</span>,
-  step <span class="op">=</span> <span class="cn">NA</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  tolerance <span class="op">=</span> <span class="fl">1.5e-08</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">question_numeric</span><span class="op">(</span></span>
+<span>  <span class="va">text</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  correct <span class="op">=</span> <span class="st">"Correct!"</span>,</span>
+<span>  incorrect <span class="op">=</span> <span class="st">"Incorrect"</span>,</span>
+<span>  try_again <span class="op">=</span> <span class="va">incorrect</span>,</span>
+<span>  allow_retry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  value <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  max <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  step <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  tolerance <span class="op">=</span> <span class="fl">1.5e-08</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -174,17 +174,17 @@ value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">question_numeric</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"What is pi rounded to 2 digits?"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3</span>, message <span class="op">=</span> <span class="st">"Don't forget to use the digits argument"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.1</span>, message <span class="op">=</span> <span class="st">"Too few digits"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.142</span>, message <span class="op">=</span> <span class="st">"Too many digits"</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.14</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">  allow_retry <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">  min <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">  max <span class="op">=</span> <span class="fl">4</span>,</span>
-<span class="r-in">  step <span class="op">=</span> <span class="fl">0.01</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">question_numeric</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"What is pi rounded to 2 digits?"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3</span>, message <span class="op">=</span> <span class="st">"Don't forget to use the digits argument"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.1</span>, message <span class="op">=</span> <span class="st">"Too few digits"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.142</span>, message <span class="op">=</span> <span class="st">"Too many digits"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="answer.html">answer</a></span><span class="op">(</span><span class="fl">3.14</span>, correct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  allow_retry <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  min <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>  max <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>  step <span class="op">=</span> <span class="fl">0.01</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Question: "What is pi rounded to 2 digits?"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   type: "learnr_numeric"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   allow_retry: TRUE</span>
@@ -203,18 +203,18 @@ value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide
 <span class="r-out co"><span class="r-pr">#&gt;</span>     max: 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     step: 0.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     tolerance: 1.5e-08 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">question_numeric</span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"Can you think of an even number?"</span>,</span>
-<span class="r-in">  <span class="fu"><a href="answer.html">answer_fn</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    <span class="kw">if</span> <span class="op">(</span><span class="va">value</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">      <span class="fu"><a href="mark_as_correct_incorrect.html">correct</a></span><span class="op">(</span><span class="st">"even"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">value</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">      <span class="fu"><a href="mark_as_correct_incorrect.html">incorrect</a></span><span class="op">(</span><span class="st">"odd"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">}</span></span>
-<span class="r-in">  <span class="op">}</span>, label <span class="op">=</span> <span class="st">"Is the number even?"</span><span class="op">)</span>,</span>
-<span class="r-in">  step <span class="op">=</span> <span class="fl">1</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">question_numeric</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"Can you think of an even number?"</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="answer.html">answer_fn</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="kw">if</span> <span class="op">(</span><span class="va">value</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="mark_as_correct_incorrect.html">correct</a></span><span class="op">(</span><span class="st">"even"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">value</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="mark_as_correct_incorrect.html">incorrect</a></span><span class="op">(</span><span class="st">"odd"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">}</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span>, label <span class="op">=</span> <span class="st">"Is the number even?"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  step <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Question: "Can you think of an even number?"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   type: "learnr_numeric"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   allow_retry: FALSE</span>
@@ -229,7 +229,7 @@ value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide
 <span class="r-out co"><span class="r-pr">#&gt;</span>     max: NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     step: 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     tolerance: 1.5e-08 </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -244,7 +244,7 @@ value grading, use <code><a href="answer.html">answer_fn()</a></code> to provide
 
 <div class="pkgdown-footer-right">
   <p></p><p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
   </div></footer></body></html>

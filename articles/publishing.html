@@ -127,8 +127,8 @@
 </h2>
 <p>A very convenient way to publish tutorials is within R packages. Tutorials included within R packages can be run via the <code><a href="../reference/run_tutorial.html">learnr::run_tutorial</a></code> function. For example, the following functions runs the “hello” and “slidy” sample tutorials built in to the <strong>learnr</strong> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"hello"</span>, package <span class="op">=</span> <span class="st">"learnr"</span><span class="op">)</span>
-<span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"slidy"</span>, package <span class="op">=</span> <span class="st">"learnr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"hello"</span>, package <span class="op">=</span> <span class="st">"learnr"</span><span class="op">)</span></span>
+<span><span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"slidy"</span>, package <span class="op">=</span> <span class="st">"learnr"</span><span class="op">)</span></span></code></pre></div>
 <p>To bundle a tutorial into an R package and make it available for running via the <code>run_tutorial</code> function you should:</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a <code>tutorials</code> directory within the <code>inst</code> sub-directory of your package and then create a directory for your tutorial there (e.g. <code>inst/tutorials/hello</code>, <code>inst/tutorials/slidy</code>, etc.).</p></li>
@@ -137,8 +137,8 @@
 <p>Once you’ve done this users can run your tutorial as follows (note they should be sure to install the <strong>learnr</strong> package before attempting to run the tutorial):</p>
 <p>Users would then simply install learnr directly before running your tutorial, for example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"learnr"</span><span class="op">)</span>
-<span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"introduction"</span>, package <span class="op">=</span> <span class="st">"mypackage"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"learnr"</span><span class="op">)</span></span>
+<span><span class="fu">learnr</span><span class="fu">::</span><span class="fu"><a href="../reference/run_tutorial.html">run_tutorial</a></span><span class="op">(</span><span class="st">"introduction"</span>, package <span class="op">=</span> <span class="st">"mypackage"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3 toc-ignore">
 <h3 class="toc-ignore" id="exercise-checkers">Exercise Checkers<a class="anchor" aria-label="anchor" href="#exercise-checkers"></a>
 </h3>
@@ -187,7 +187,7 @@
 </h4>
 <p>If your tutorial contains broken code within exercises for users to fix, the CRAN version of <a href="https://github.com/rstudio/packrat/" class="external-link"><code>packrat</code></a> will not find all of your dependencies to install when the tutorial is deployed. To deploy tutorials containing broken exercise code, install the development version of <code>packrat</code>. This version of <code>packrat</code> is able to find dependencies per R chunk, allowing for <em>broken</em> R chunks within the tutorial file.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/packrat"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rstudio/packrat"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -482,11 +482,11 @@ event_register_handler("section_viewed",
 ```</code></pre>
 <p>Technical note: The reason that <code><a href="../reference/one_time.html">one_time()</a></code> has an unusual interface is because it needs to be able to store data that persists across runs of the tutorial. The code will run one time, even if the user stops the document and starts it again; it resets when the user clicks on “Start Over”.</p>
 <p>The section IDs are generated automatically from the section title. For example, if this is the section heading:</p>
-<pre><code><span class="co">### This is a section</span></code></pre>
+<pre><code><span><span class="co">### This is a section</span></span></code></pre>
 <p>Then the ID will be <code>section-this-is-a-section</code>. If you want to use a different ID, you can supply it in curly braces, and it will be prepended with <code>section-</code>. This will set the ID to <code>section-myid</code>:</p>
-<pre><code><span class="co">### This is a section {#myid}</span></code></pre>
+<pre><code><span><span class="co">### This is a section {#myid}</span></span></code></pre>
 <p>You can even have sections that don’t have a title, but do have an ID:</p>
-<pre><code><span class="co">### {#myid}</span></code></pre>
+<pre><code><span><span class="co">### {#myid}</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="tutorial-identifiers">Tutorial Identifiers<a class="anchor" aria-label="anchor" href="#tutorial-identifiers"></a>
@@ -565,7 +565,7 @@ runtime: shiny_prerendered
 <div class="pkgdown-footer-right">
   <p></p>
 <p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
   </div></footer>
