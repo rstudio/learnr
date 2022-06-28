@@ -1,3 +1,5 @@
+# test_that()
+
 skip_on_cran()
 library(shinytest2)
 
@@ -18,7 +20,7 @@ it <- function(desc, code) {
 }
 
 describe("sequential hints", {
-  app <- AppDriver$new(test_path("tutorials/next-hint"))
+  app <- AppDriver$new(test_path("tutorials/hint-next"))
   withr::defer(app$stop())
 
   if (FALSE) {
