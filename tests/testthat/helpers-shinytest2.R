@@ -138,6 +138,14 @@ exercise_selector_hint_popover <- function(id) {
   )
 }
 
+exercise_selector_hint_src_div <- function(id) {
+  sprintf("#section-%s-hint.tutorial-hint", id)
+}
+
+exercise_selector_hint_panel <- function(id) {
+  sprintf('.tutorial-exercise[data-label="%s"] .tutorial-hint-panel', id)
+}
+
 exercise_selector_output <- function(id) {
   sprintf(
     "#tutorial-exercise-%s-output",
