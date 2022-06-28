@@ -47,6 +47,25 @@ const el = document.querySelector('%s')
   )
 }
 
+selector_computed_style <- function(selector, ...) {
+  if (length(c(...))) {
+    selector <- paste(selector, paste(c(...), collapse = " "))
+  }
+  sprintf(
+    "{
+const el = document.querySelector('%s')
+if (el) {
+  const compStyle = window.getComputedStyle(el)
+  Array.from(compStyle).reduce((acc, attr) => {
+    acc[attr] = compStyle.getPropertyValue(attr)
+    return acc
+  }, {})
+}
+}",
+    selector
+  )
+}
+
 selector_coordinates <- function(selector, ...) {
   if (length(c(...))) {
     selector <- paste(selector, paste(c(...), collapse = " "))
