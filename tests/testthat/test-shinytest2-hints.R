@@ -379,3 +379,85 @@ describe("copy button", {
     })
   })
 })
+
+describe("div hints", {
+  app <- AppDriver$new(
+    test_path("tutorials", "hint-div"),
+    variant = platform_variant()
+  )
+  withr::defer(app$stop())
+
+  describe("exercise 'html'", {
+    btn <- exercise_selector_hint_btn("html")
+    div <- exercise_selector_hint_src_div("html")
+    hint_panel <- exercise_selector_hint_panel("html")
+
+    it("has a hint button", {
+      app$wait_for_js(selector_exists(btn))
+    })
+
+    it("has a hidden hint div", {
+      app$
+        wait_for_js(selector_exists(div))$
+        expect(
+          "equal",
+          get_js(selector_computed_style(div))$display,
+          "none"
+        )
+    })
+
+    it("reveals hint when hint button is clicked", {
+      app$
+        click(selector = btn)$
+        wait_for_js(selector_exists(hint_panel, ".tutorial-hint"))$
+        expect(
+          "equal",
+          trimws(get_html(paste(hint_panel, ".tutorial-hint"), outer_html = FALSE)),
+          "<p>This is the <strong>HTML hint</strong>.</p>"
+        )
+    })
+
+    it("hides the hint when the button is clicked again", {
+      app$
+        click(selector = btn)$
+        wait_for_js(selector_doesnt_exist(hint_panel, ".tutorial-hint"))
+    })
+  })
+
+  describe("exercise 'md'", {
+    btn <- exercise_selector_hint_btn("md")
+    div <- exercise_selector_hint_src_div("md")
+    hint_panel <- exercise_selector_hint_panel("md")
+
+    it("has a hint button", {
+      app$wait_for_js(selector_exists(btn))
+    })
+
+    it("has a hidden hint div", {
+      app$
+        wait_for_js(selector_exists(div))$
+        expect(
+          "equal",
+          get_js(selector_computed_style(div))$display,
+          "none"
+        )
+    })
+
+    it("reveals hint when hint button is clicked", {
+      app$
+        click(selector = btn)$
+        wait_for_js(selector_exists(hint_panel, ".tutorial-hint"))$
+        expect(
+          "equal",
+          trimws(get_html(paste(hint_panel, ".tutorial-hint"), outer_html = FALSE)),
+          "<p>This is the <strong>md hint</strong>.</p>"
+        )
+    })
+
+    it("hides the hint when the button is clicked again", {
+      app$
+        click(selector = btn)$
+        wait_for_js(selector_doesnt_exist(hint_panel, ".tutorial-hint"))
+    })
+  })
+})
