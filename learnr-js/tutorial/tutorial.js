@@ -1271,7 +1271,7 @@ Tutorial.prototype.$addSolution = function (exercise, panelHeading, editor) {
         const panel = $(
           `<div class="${thiz.isBS3 ? 'panel panel-default' : 'card'} tutorial-hint-panel"></div>`
         )
-        const panelBody = $(`<div class="${thiz.isBS3 ? 'panel-body' : 'card-body'}></div>`)
+        const panelBody = $(`<div class="${thiz.isBS3 ? 'panel-body' : 'card-body'}"></div>`)
         const hintDivClone = hintDiv
           .clone()
           .attr('id', '')

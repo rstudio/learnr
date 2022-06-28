@@ -1,0 +1,27 @@
+---
+title: "Next hint tests"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+## Tests
+
+### HTML hint {#html}
+
+```{r html, exercise=TRUE}
+# html
+```
+
+<div id="html-hint">
+This is the <strong>HTML hint</strong>.
+</div>
+
+### Markdown hint {#md}
+
+```{r md, exercise=TRUE}
+# md
+```
+
+::: {#md-hint}
+This is the **md hint**.
+:::

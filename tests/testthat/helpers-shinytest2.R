@@ -47,6 +47,25 @@ const el = document.querySelector('%s')
   )
 }
 
+selector_computed_style <- function(selector, ...) {
+  if (length(c(...))) {
+    selector <- paste(selector, paste(c(...), collapse = " "))
+  }
+  sprintf(
+    "{
+const el = document.querySelector('%s')
+if (el) {
+  const compStyle = window.getComputedStyle(el)
+  Array.from(compStyle).reduce((acc, attr) => {
+    acc[attr] = compStyle.getPropertyValue(attr)
+    return acc
+  }, {})
+}
+}",
+    selector
+  )
+}
+
 selector_coordinates <- function(selector, ...) {
   if (length(c(...))) {
     selector <- paste(selector, paste(c(...), collapse = " "))
@@ -117,6 +136,14 @@ exercise_selector_hint_popover <- function(id) {
     "%s > .tutorial-panel-heading .tutorial-solution-popover",
     exercise_selector(id)
   )
+}
+
+exercise_selector_hint_src_div <- function(id) {
+  sprintf("#section-%s-hint.tutorial-hint", id)
+}
+
+exercise_selector_hint_panel <- function(id) {
+  sprintf('.tutorial-exercise[data-label="%s"] .tutorial-hint-panel', id)
 }
 
 exercise_selector_output <- function(id) {
