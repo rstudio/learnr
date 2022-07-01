@@ -251,7 +251,12 @@ internal_external_evaluator <- function(
                 event_trigger(session, "external_evaluator_result", r)
               }
 
-              result <<- p
+              valid_json <- jsonlite::validate(r)
+              if (!valid_json) {
+                stop(attr(valid_json, "err"))
+              }
+
+              result <<- r
             }, error = function(e){
               print(e)
               fail_cb(response_to_error(res))
