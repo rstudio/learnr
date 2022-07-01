@@ -413,3 +413,52 @@ test_that("forked_evaluator works as expected", {
   # finally check that $result() gives us our exercise feedback
   expect_equal(forked_eval_ex$result()$feedback$checker_result, 1:100)
 })
+
+test_that("external evaluator result roundtrip", {
+  local_edition(3)
+
+  # basic exercise
+  ex <- mock_exercise()
+  res <- evaluate_exercise(ex, new.env())
+
+  res_json <- external_evaluator_result_to_json(res)
+  expect_equal(
+    external_evaluator_result_from_json(res_json),
+    res,
+    ignore_attr = TRUE
+  )
+
+  # exercise without any output
+  ex_no_output <- mock_exercise("x <- 1", exercise.warn_invisible = FALSE)
+  res_no_output <- evaluate_exercise(ex_no_output, new.env())
+
+  res_no_output_json <- external_evaluator_result_to_json(res_no_output)
+
+  expect_equal(
+    external_evaluator_result_from_json(res_no_output_json),
+    res_no_output,
+    ignore_attr = TRUE
+  )
+
+  res_fdbck <- res
+  res_fdbck$feedback <- feedback(
+    message = "Great work!",
+    correct = TRUE,
+    type = "auto",
+    location = "append"
+  )
+  res_fdbck <- do.call(exercise_result, res_fdbck)
+
+  res_fdbck_json <- external_evaluator_result_to_json(res_fdbck)
+  res_fdbck_rt <- external_evaluator_result_from_json(res_fdbck_json)
+
+  # Feedback HTML should resolve to the same raw HTML
+  res_fdbck$feedback$html <- htmltools::HTML(format(res_fdbck$feedback$html))
+  res_fdbck_rt$feedback$html <- format(res_fdbck_rt$feedback$html)
+
+  expect_equal(
+    res_fdbck_rt,
+    res_fdbck,
+    ignore_attr = TRUE
+  )
+})
