@@ -321,7 +321,7 @@ internal_external_evaluator <- function(
           if (length(result) > 1) {
             result <- paste(result, collapse = "\n")
           }
-          external_evaluator_result_from_json(result)
+          exercise_result_from_json(result)
         }, error = function(e) {
           exercise_result_error_internal(
             exercise = exercise,
@@ -334,7 +334,7 @@ internal_external_evaluator <- function(
   }
 }
 
-external_evaluator_result_to_json <- function(result) {
+exercise_result_to_json <- function(result) {
   stringify_html <- function(result) {
     if (inherits(result, c("shiny.tag", "shiny.tag.list", "html"))) {
       return(format(result))
@@ -353,7 +353,7 @@ external_evaluator_result_to_json <- function(result) {
   jsonlite::toJSON(result, auto_unbox = TRUE, null = "null")
 }
 
-external_evaluator_result_from_json <- function(json) {
+exercise_result_from_json <- function(json) {
   result <- jsonlite::fromJSON(json, simplifyVector = FALSE)
 
   # Validate feedback and warn about problems, returning no feedback if there

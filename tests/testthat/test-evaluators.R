@@ -264,7 +264,7 @@ test_that("external_evaluator works", {
     headers = list(
       'Content-Type' = 'application/json'
     ),
-    body = external_evaluator_result_to_json(mockResult)
+    body = exercise_result_to_json(mockResult)
   )
 
   responses <- list(
@@ -345,7 +345,7 @@ test_that("bad statuses or invalid json are handled sanely", {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = external_evaluator_result_to_json(mockResult)
+      body = exercise_result_to_json(mockResult)
     ),
     `POST /learnr/invalidjson` = list(
       status = 200L,
@@ -433,9 +433,9 @@ test_that("external evaluator result roundtrip", {
   ex <- mock_exercise()
   res <- evaluate_exercise(ex, new.env())
 
-  res_json <- external_evaluator_result_to_json(res)
+  res_json <- exercise_result_to_json(res)
   expect_equal(
-    external_evaluator_result_from_json(res_json),
+    exercise_result_from_json(res_json),
     res,
     ignore_attr = TRUE
   )
@@ -444,10 +444,10 @@ test_that("external evaluator result roundtrip", {
   ex_no_output <- mock_exercise("x <- 1", exercise.warn_invisible = FALSE)
   res_no_output <- evaluate_exercise(ex_no_output, new.env())
 
-  res_no_output_json <- external_evaluator_result_to_json(res_no_output)
+  res_no_output_json <- exercise_result_to_json(res_no_output)
 
   expect_equal(
-    external_evaluator_result_from_json(res_no_output_json),
+    exercise_result_from_json(res_no_output_json),
     res_no_output,
     ignore_attr = TRUE
   )
@@ -461,8 +461,8 @@ test_that("external evaluator result roundtrip", {
   )
   res_fdbck <- do.call(exercise_result, res_fdbck)
 
-  res_fdbck_json <- external_evaluator_result_to_json(res_fdbck)
-  res_fdbck_rt <- external_evaluator_result_from_json(res_fdbck_json)
+  res_fdbck_json <- exercise_result_to_json(res_fdbck)
+  res_fdbck_rt <- exercise_result_from_json(res_fdbck_json)
 
   # Feedback HTML should resolve to the same raw HTML
   res_fdbck$feedback$html <- htmltools::HTML(format(res_fdbck$feedback$html))
