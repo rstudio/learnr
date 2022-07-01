@@ -461,7 +461,8 @@ test_that("exercise_result() doesn't concatenate feedback and code output", {
   )
 
   expect_s3_class(result, "learnr_exercise_result")
-  expect_equal(result$html_output, "<pre><code>## output</code></pre>")
+  expect_s3_class(result$html_output, "html")
+  expect_equal(format(result$html_output), "<pre><code>## output</code></pre>")
   expect_equal(
     result$feedback$html,
     feedback_as_html(feedback)
