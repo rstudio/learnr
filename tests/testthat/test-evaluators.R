@@ -9,48 +9,55 @@ pool <- curl::new_pool(total_con = 5, host_con = 5)
 #  skip these tests which makes that more complicated.
 # @param responses - a list indexed by `<verb> <path>` which maps to an httpuv
 #   response. e.g. list(`GET /` = list(status = 200L, headers = list(), body = "OK"))
-start_server <- function(responses){
+start_server <- function(responses, quiet = TRUE){
   srv <- NULL
   result <- new.env(parent=emptyenv())
   result$reqs <- NULL
 
   result$port <- httpuv::randomPort()
   result$url <- paste0("http://localhost:", result$port)
-  cat("Starting server on port", result$port, "\n")
+  if (!isTRUE(quiet)) {
+    cat("Starting server on port", result$port, "\n")
+  }
 
   req_to_id <- function(req){
     paste(req$REQUEST_METHOD, req$PATH_INFO)
   }
 
   # An HTTP server that stashes away all of the requests for later analysis
-  srv <- httpuv::startServer("127.0.0.1", port = result$port, list(
-    call = function(req) {
+  srv <- httpuv::startServer(
+    host = "127.0.0.1",
+    port = result$port,
+    quiet = quiet,
+    app = list(
+      call = function(req) {
 
-      body <- req$rook.input$read()
-      result$reqs[[ length(result$reqs) + 1 ]] <<- list(req = req, body=body)
+        body <- req$rook.input$read()
+        result$reqs[[ length(result$reqs) + 1 ]] <<- list(req = req, body=body)
 
-      # See if this method + path has a defined response
-      id <- req_to_id(req)
-      if (!is.null(responses[[id]])){
-        res <- responses[[id]]
-        if (is.function(res)){
-          # Invoke
-          return(res())
-        } else {
-          return(res)
+        # See if this method + path has a defined response
+        id <- req_to_id(req)
+        if (!is.null(responses[[id]])){
+          res <- responses[[id]]
+          if (is.function(res)){
+            # Invoke
+            return(res())
+          } else {
+            return(res)
+          }
         }
-      }
 
-      # Otherwise, 404
-      list(
-        status = 404L,
-        headers = list(
-          'Content-Type' = 'text/html'
-        ),
-        body = paste("Not found:", id)
-      )
-    }
-  ))
+        # Otherwise, 404
+        list(
+          status = 404L,
+          headers = list(
+            'Content-Type' = 'text/html'
+          ),
+          body = paste("Not found:", id)
+        )
+      }
+    )
+  )
   result$stop <- srv$stop
 
   result
@@ -68,7 +75,7 @@ test_that("initiate_external_session works", {
   ))
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   failed <- FALSE
   sess_ids <- NULL
@@ -96,7 +103,6 @@ test_that("initiate_external_session works", {
   expect_equal(jsonlite::fromJSON(rawToChar(srv$reqs[[1]]$body)), list(global_setup = ""))
 })
 
-
 test_that("initiate_external_session doesn't wait on all requests", {
   # We previously used curl::multi_run which, it turns out, waits for ALL
   # requests in the pool to resolve, not just the handle you provide. So this
@@ -114,7 +120,7 @@ test_that("initiate_external_session doesn't wait on all requests", {
   ))
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   result <- NULL
   cb <- function(result){
@@ -156,7 +162,7 @@ test_that("initiate_external_session fails with bad status", {
   ))
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   done <- FALSE
   cb <- function(sid, cookiefile){
@@ -189,7 +195,7 @@ test_that("initiate_external_session fails with invalid JSON", {
   ))
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   done <- FALSE
   cb <- function(sid, cookiefile){
@@ -200,14 +206,13 @@ test_that("initiate_external_session fails with invalid JSON", {
     done <<- TRUE
   }
 
-  initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
+  expect_output({
+    initiate_external_session(pool, paste0(srv$url, "/learnr/"), "") %>% then(cb, err_cb)
 
-  while(!done){
-    later::run_now()
-  }
-
-  # testthat deems this test empty if we don't have any expectations.
-  expect_equal(1, 1)
+    while(!done){
+      later::run_now()
+    }
+  })
 })
 
 test_that("initiate_external_session fails with failed curl", {
@@ -245,12 +250,10 @@ test_that("initiate_external_session fails with failed curl", {
   expect_equal(1, 1)
 })
 
-
 test_that("external_evaluator works", {
   testthat::skip_on_cran()
 
-  tf <- tempfile()
-  on.exit({unlink(tf)})
+  tf <- withr::local_tempfile()
   mock_initiate <- function(pool, url, global_setup){
     promises::promise(function(resolve, reject){ resolve(list(id="abcd1234", cookieFile=tf)) })
   }
@@ -261,7 +264,7 @@ test_that("external_evaluator works", {
     headers = list(
       'Content-Type' = 'application/json'
     ),
-    body = jsonlite::toJSON(mockResult)
+    body = external_evaluator_result_to_json(mockResult)
   )
 
   responses <- list(
@@ -270,7 +273,7 @@ test_that("external_evaluator works", {
   )
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   re <- internal_external_evaluator(srv$url, 5, mock_initiate)
 
@@ -316,14 +319,19 @@ test_that("external_evaluator handles initiate failures", {
   re <- internal_external_evaluator("http://doesntmatter", 5, mock_initiate)
 
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), list())
-  e$start()
 
-  while(!e$completed() || !e$completed()) {
-    later::run_now()
-  }
+  expect_output({
+    e$start()
 
-  print(e$result())
-  expect_equal(e$result()$error_message, "Error initiating session for external requests. Please try again later")
+    while(!e$completed()) {
+      later::run_now()
+    }
+  })
+
+  expect_equal(
+    e$result()$error_message,
+    "Error initiating session for external requests. Please try again later"
+  )
 })
 
 test_that("bad statuses or invalid json are handled sanely", {
@@ -337,7 +345,7 @@ test_that("bad statuses or invalid json are handled sanely", {
       headers = list(
         'Content-Type' = 'application/json'
       ),
-      body = jsonlite::toJSON(mockResult)
+      body = external_evaluator_result_to_json(mockResult)
     ),
     `POST /learnr/invalidjson` = list(
       status = 200L,
@@ -349,11 +357,10 @@ test_that("bad statuses or invalid json are handled sanely", {
   )
 
   srv <- start_server(responses)
-  on.exit(srv$stop(), add = TRUE)
+  withr::defer(srv$stop())
 
   ### Test with a bad status
-  tf <- tempfile()
-  on.exit({unlink(tf)})
+  tf <- withr::local_tempfile()
   mockInit <- promise(function(resolve, reject){ resolve(list(id="badstatus", cookieFile=tf)) })
   re <- internal_external_evaluator(srv$url, 5,
     function(pool, url, global_setup){ mockInit })
@@ -361,28 +368,33 @@ test_that("bad statuses or invalid json are handled sanely", {
   # Start a session
   mockSession <- list(onSessionEnded = function(callback){})
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
-  e$start()
 
-  while(!e$completed()) {
-    later::run_now()
-  }
+  expect_output({
+    e$start()
+
+    while(!e$completed()) {
+      later::run_now()
+    }
+  })
 
   res <- e$result()
   expect_match(res$error_message, "^Error submitting external exercise")
 
   ### Test with invalid JSON
-  tf <- tempfile()
-  on.exit({unlink(tf)})
+  tf <- withr::local_tempfile()
   re <- internal_external_evaluator(srv$url, 5,
     function(pool, url, global_setup){ promises::promise(function(resolve, reject){ resolve(list(id="invalidjson", cookieFile=tf)) }) })
 
   # Start a session
   e <- re(NULL, 30, list(options = list(exercise.timelimit = 5)), mockSession)
-  e$start()
 
-  while(!e$completed()) {
-    later::run_now()
-  }
+  expect_output({
+    e$start()
+
+    while(!e$completed()) {
+      later::run_now()
+    }
+  })
 
   res <- e$result()
   expect_match(res$error_message, "^Error submitting external exercise")
