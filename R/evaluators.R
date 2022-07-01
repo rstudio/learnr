@@ -314,7 +314,13 @@ internal_external_evaluator <- function(
       },
 
       result = function() {
+        if (is_exercise_result(result)) {
+          return(result)
+        }
         tryCatch({
+          if (length(result) > 1) {
+            result <- paste(result, collapse = "\n")
+          }
           external_evaluator_result_from_json(result)
         }, error = function(e) {
           exercise_result_error_internal(
