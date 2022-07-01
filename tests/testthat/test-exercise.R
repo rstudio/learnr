@@ -477,6 +477,11 @@ test_that("exercise_result() throws an error for invalid feedback", {
   expect_error(exercise_result(feedback = list(correct = "wrong")))
 })
 
+test_that("exercise_result() turns length-0 html_output into NULL", {
+  expect_null(exercise_result(html_output = character())$html_output)
+  expect_null(exercise_result(html_output = list())$html_output)
+})
+
 test_that("exercise_result_as_html() creates html for learnr", {
   expect_null(exercise_result_as_html("nope"))
   expect_null(exercise_result_as_html(list()))

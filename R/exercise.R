@@ -1126,6 +1126,8 @@ exercise_result <- function(
 
   if (is.character(html_output) && any(nzchar(html_output))) {
     html_output <- htmltools::HTML(html_output)
+  } else if (length(html_output) == 0) {
+    html_output <- NULL
   }
 
   structure(
