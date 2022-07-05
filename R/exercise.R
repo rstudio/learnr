@@ -309,7 +309,7 @@ standardize_code <- function(code) {
 }
 
 standardize_exercise_code <- function(exercise) {
-  ex_code_items <- c("error_check", "code_check", "check", "code", "global_setup")
+  ex_code_items <- c("error_check", "code_check", "check", "code", "global_setup", "tests")
   exercise[ex_code_items] <- lapply(exercise[ex_code_items], standardize_code)
   exercise
 }
