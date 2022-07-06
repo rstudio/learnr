@@ -70,3 +70,20 @@ test_that("Detection of chained setup cycle works", {
     fixed = TRUE
   )
 })
+
+test_that("Empty exercise code still creates an exercise", {
+  local_edition(3)
+
+  # empty and full exercises are the same, except that "full" has empty lines
+  # in the exercise chunk. They should result in identical exercises.
+  rmd_empty <- test_path("tutorials", "knitr-hooks_empty-exercise", "empty-exercise.Rmd")
+  rmd_full <- test_path("tutorials", "knitr-hooks_empty-exercise", "full-exercise.Rmd")
+
+  ex_empty <- get_tutorial_exercises(rmd_empty)
+  ex_full <- get_tutorial_exercises(rmd_full)
+
+  # One small difference that doesn't matter at all...
+  ex_full$empty$options$code <- NULL
+
+  expect_equal(ex_empty, ex_full)
+})

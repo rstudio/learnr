@@ -33,6 +33,27 @@ tutorial_knitr_options <- function() {
     eval(parse(text = label_query))
   }
 
+  ensure_knit_code_exists <- function(
+    label,
+    current = knitr::opts_current$get(),
+    all = knitr::opts_chunk$get()
+  ) {
+    # Recreate chunk options: unique to chunk or different from default
+    chunk_opts <- current[setdiff(names(current), names(all))]
+    for (opt in names(all)) {
+      if (!identical(all[[opt]], current[[opt]])) {
+        chunk_opts[[opt]] <- current[[opt]]
+      }
+    }
+
+    n_lines <- current[["exercise.lines"]] %||% all[["exercise.lines"]] %||% 3L
+    code <- rep_len("", n_lines)
+
+    # https://github.com/yihui/knitr/blob/0f0c9c26/R/parser.R#L118
+    chunk <- setNames(list(structure(code, chunk_opts = chunk_opts)), label)
+    knitr::knit_code$set(chunk)
+  }
+
   # helper to check for an exercise support chunk
   is_exercise_support_chunk <- function(
     options,
@@ -204,13 +225,9 @@ tutorial_knitr_options <- function() {
            call. = FALSE)
     }
 
-    # validate that the exercise chunk is 'defined'
+    # validate or ensure that the exercise chunk is 'defined'
     if (exercise_chunk && is.null(get_knitr_chunk(options$label))) {
-      stop(
-        "The exercise chunk '", options$label, "' doesn't have anything inside of it. ",
-        "Try adding empty line(s) inside the code chunk.",
-        call. = FALSE
-      )
+      ensure_knit_code_exists(options$label, options)
     }
 
     # if this is an exercise chunk then set various options

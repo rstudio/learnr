@@ -1,0 +1,32 @@
+---
+title: Empty Exercise Code
+output: learnr::tutorial
+runtime: shinyrmd
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+tutorial_options(exercise.lines = 4L)
+
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  custom_chunk_opt = "default",
+  fig.path = "figures",
+  cache.path = "cache"
+)
+```
+
+## Test
+
+### Empty
+
+```{r empty, exercise = TRUE, custom_chunk_opt = "custom"}
+```
+
+```{r empty-hint}
+# hint code
+```
+
+```{r empty-solution}
+mtcars
+```
