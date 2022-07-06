@@ -1124,6 +1124,12 @@ exercise_result <- function(
     feedback$html <- feedback_as_html(feedback)
   }
 
+  if (is.character(html_output) && any(nzchar(html_output))) {
+    html_output <- htmltools::HTML(html_output)
+  } else if (length(html_output) == 0) {
+    html_output <- NULL
+  }
+
   structure(
     list(
       feedback = feedback,

@@ -251,9 +251,12 @@ internal_external_evaluator <- function(
                 event_trigger(session, "external_evaluator_result", r)
               }
 
-              p <- jsonlite::fromJSON(r)
-              p$html_output <- htmltools::HTML(p$html_output)
-              result <<- p
+              valid_json <- jsonlite::validate(r)
+              if (!valid_json) {
+                stop(attr(valid_json, "err"))
+              }
+
+              result <<- r
             }, error = function(e){
               print(e)
               fail_cb(response_to_error(res))
@@ -311,15 +314,14 @@ internal_external_evaluator <- function(
       },
 
       result = function() {
+        if (is_exercise_result(result)) {
+          return(result)
+        }
         tryCatch({
-          result$feedback <- tryCatch(
-            feedback_validated(result$feedback),
-            error = function(e) {
-              warning(e$message)
-              NULL
-            }
-          )
-          do.call(exercise_result, result)
+          if (length(result) > 1) {
+            result <- paste(result, collapse = "\n")
+          }
+          exercise_result_from_json(result)
         }, error = function(e) {
           exercise_result_error_internal(
             exercise = exercise,
@@ -330,6 +332,41 @@ internal_external_evaluator <- function(
       }
     )
   }
+}
+
+exercise_result_to_json <- function(result) {
+  stringify_html <- function(result) {
+    if (inherits(result, c("shiny.tag", "shiny.tag.list", "html"))) {
+      return(format(result))
+    }
+    if (is.list(result)) {
+      result <- lapply(result, stringify_html)
+    }
+    result
+  }
+
+  result <- stringify_html(result)
+  if (!is.null(result$feedback)) {
+    result$feedback <- unclass(result$feedback)
+  }
+
+  jsonlite::toJSON(result, auto_unbox = TRUE, null = "null")
+}
+
+exercise_result_from_json <- function(json) {
+  result <- jsonlite::fromJSON(json, simplifyVector = FALSE)
+
+  # Validate feedback and warn about problems, returning no feedback if there
+  # are problems rather than failing completely
+  result$feedback <- tryCatch(
+    feedback_validated(result$feedback),
+    error = function(e) {
+      warning(e$message)
+      NULL
+    }
+  )
+
+  do.call(exercise_result, result)
 }
 
 #' Returns a promise representing a a unique session

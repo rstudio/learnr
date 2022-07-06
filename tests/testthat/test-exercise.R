@@ -461,7 +461,8 @@ test_that("exercise_result() doesn't concatenate feedback and code output", {
   )
 
   expect_s3_class(result, "learnr_exercise_result")
-  expect_equal(result$html_output, "<pre><code>## output</code></pre>")
+  expect_s3_class(result$html_output, "html")
+  expect_equal(format(result$html_output), "<pre><code>## output</code></pre>")
   expect_equal(
     result$feedback$html,
     feedback_as_html(feedback)
@@ -474,6 +475,11 @@ test_that("exercise_result() throws an error for invalid feedback", {
   expect_error(exercise_result(feedback = list(bad = TRUE)))
   expect_error(exercise_result(feedback = list(correct = FALSE)))
   expect_error(exercise_result(feedback = list(correct = "wrong")))
+})
+
+test_that("exercise_result() turns length-0 html_output into NULL", {
+  expect_null(exercise_result(html_output = character())$html_output)
+  expect_null(exercise_result(html_output = list())$html_output)
 })
 
 test_that("exercise_result_as_html() creates html for learnr", {
