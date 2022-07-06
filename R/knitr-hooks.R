@@ -36,9 +36,11 @@ tutorial_knitr_options <- function() {
 
     chunk_opts <- attr(get_knitr_chunk(label), "chunk_opts")
     if (!identical(options$exercise, chunk_opts$exercise)) {
-      # this looks like an exercise chunk, but knitr has a different chunk that
-      # isn't an exercise here, so there must be a problem (i.e. this is an
-      # empty chunk that didn't trigger knitr's duplicate chunk error)
+      # this looks like an exercise chunk, but knitr knows about a different
+      # chunk that isn't an exercise here. so there must be a problem (i.e. this
+      # is an empty chunk that didn't trigger knitr's duplicate chunk error).
+      # Note that we can't rely on knit_code$get() or options$code since they
+      # both report the code for the non-exercise chunk.
       msg <- sprintf("Cannot create exercise '%s': duplicate chunk label", label)
       rlang::abort(msg)
     }
@@ -58,7 +60,11 @@ tutorial_knitr_options <- function() {
   ) {
     label <- current$label
 
-    # Recreate chunk options: unique to chunk or different from default
+    # Recreate chunk options: unique to chunk or different from default.
+    # Typically, we'd use `knit_code$get()` to find the chunk options defined
+    # directly on the chunk, but that returns `NULL` for empty chunks and
+    # doesn't include the chunk options. If we call this function in the options
+    # hooks, we have an opportunity to infer the chunk options.
     chunk_opts <- current[setdiff(names(current), names(all))]
     for (opt in names(all)) {
       if (!identical(all[[opt]], current[[opt]])) {
