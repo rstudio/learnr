@@ -2,6 +2,9 @@ destination: reference
 
 url: https://pkgs.rstudio.com/learnr
 
+development: 
+  mode: auto
+  
 template:
   package: tidytemplate
   bootstrap: 5
