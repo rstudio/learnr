@@ -27,6 +27,25 @@ tutorial_knitr_options <- function() {
     isTRUE(options[["exercise"]])
   }
 
+  is_chunk_empty_or_mismatched_exercise <- function(options) {
+    label <- options$label
+
+    if (is.null(get_knitr_chunk(label))) {
+      return(TRUE)
+    }
+
+    chunk_opts <- attr(get_knitr_chunk(label), "chunk_opts")
+    if (!identical(options$exercise, chunk_opts$exercise)) {
+      # this looks like an exercise chunk, but knitr has a different chunk that
+      # isn't an exercise here, so there must be a problem (i.e. this is an
+      # empty chunk that didn't trigger knitr's duplicate chunk error)
+      msg <- sprintf("Cannot create exercise '%s': duplicate chunk label", label)
+      rlang::abort(msg)
+    }
+
+    FALSE
+  }
+
   # helper to find chunks that name a chunk as their setup chunk
   exercise_chunks_for_setup_chunk <- function(label) {
     label_query <- paste0("knitr::all_labels(exercise.setup == '", label, "')")
@@ -34,10 +53,11 @@ tutorial_knitr_options <- function() {
   }
 
   ensure_knit_code_exists <- function(
-    label,
     current = knitr::opts_current$get(),
     all = knitr::opts_chunk$get()
   ) {
+    label <- current$label
+
     # Recreate chunk options: unique to chunk or different from default
     chunk_opts <- current[setdiff(names(current), names(all))]
     for (opt in names(all)) {
@@ -226,8 +246,8 @@ tutorial_knitr_options <- function() {
     }
 
     # validate or ensure that the exercise chunk is 'defined'
-    if (exercise_chunk && is.null(get_knitr_chunk(options$label))) {
-      ensure_knit_code_exists(options$label, options)
+    if (exercise_chunk && is_chunk_empty_or_mismatched_exercise(options)) {
+      ensure_knit_code_exists(options)
     }
 
     # if this is an exercise chunk then set various options

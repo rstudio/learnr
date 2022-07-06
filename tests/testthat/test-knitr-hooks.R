@@ -87,3 +87,10 @@ test_that("Empty exercise code still creates an exercise", {
 
   expect_equal(ex_empty, ex_full)
 })
+
+test_that("Empty exercises with duplicate labels throw an error", {
+  local_edition(3)
+
+  rmd <- test_path("tutorials", "knitr-hooks_empty-exercise", "duplicate-label.Rmd")
+  expect_error(expect_message(get_tutorial_exercises(rmd), "duplicate"))
+})
