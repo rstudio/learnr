@@ -23,6 +23,15 @@ skip_if_pandoc <- function(ver = NULL) {
   }
 }
 
+skip_on_ci_if_not_pr <- function() {
+  # Don't skip locally
+  if (!nzchar(Sys.getenv("CI", ""))) return()
+  # If on CI, don't skip if envvar set by workflow is present
+  if (nzchar(Sys.getenv("CI_IN_PR", ""))) return()
+  # If on CI and not in a PR branch workflow... skip these tests
+  skip("Skipping on CI, tests run in PR checks only")
+}
+
 expect_marked_as <- function(object, correct, messages = NULL) {
   if (is.null(messages)) {
     expect_equal(object, mark_as(correct))

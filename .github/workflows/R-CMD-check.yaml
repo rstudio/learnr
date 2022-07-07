@@ -64,6 +64,12 @@ jobs:
           cache-version: 1
           extra-packages: any::rcmdcheck
 
+      # If events is a PR, set subdir to 'preview/pr<pr_number>'
+      - name: "[PR] Set optional tests in PR branch"
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "CI_IN_PR=true" >> $GITHUB_ENV
+
       - uses: r-lib/actions/check-r-package@v2
 
       - name: Show testthat output
