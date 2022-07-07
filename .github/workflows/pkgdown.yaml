@@ -16,7 +16,8 @@ on:
       - 'vignettes/**'
   push:
     tags:
-      - 'v*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'         # build on version tags
+      - '!v[0-9]+.[0-9]+.[0-9]+.[0-9]+' # but not if version involves a dev component
     branches:
       - main
   workflow_dispatch:
