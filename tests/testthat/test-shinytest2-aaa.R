@@ -1,5 +1,6 @@
 # https://github.com/rstudio/shinytest2/blob/c29b78e9/tests/testthat/test-aaa.R
 skip_on_cran() # Uses chromote
+skip_on_ci_if_not_pr()
 
 # Try to warm up chromote. IDK why it fails on older versions of R.
 test_that("Chromote loads", {

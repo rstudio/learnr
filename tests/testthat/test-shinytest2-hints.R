@@ -1,6 +1,7 @@
 # test_that()
-
 skip_on_cran()
+skip_on_ci_if_not_pr()
+
 library(shinytest2)
 
 check_popover_exists <- function(id) {
