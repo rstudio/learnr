@@ -76,7 +76,7 @@ tutorial_knitr_options <- function() {
     code <- rep_len("", n_lines)
 
     # https://github.com/yihui/knitr/blob/0f0c9c26/R/parser.R#L118
-    chunk <- setNames(list(structure(code, chunk_opts = chunk_opts)), label)
+    chunk <- utils::setNames(list(structure(code, chunk_opts = chunk_opts)), label)
     knitr::knit_code$set(chunk)
   }
 
