@@ -88,6 +88,8 @@
 
 -   Fixed exercise progress spinner being prematurely cleared (#384).
 
+-   Empty exercise chunks are now allowed. Please use caution: in very rare cases, knitr and learnr may not notice duplicate chunk labels when an exercise uses a duplicated label. Allowing empty exercise chunks improves the ergonomics when using [knitr's chunk option comments](https://yihui.org/en/2022/01/knitr-news/) (#712).
+
 ### Exercise Evaluation
 
 -   **Breaking Change:** If a `-code-check` chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a `-check` chunk (i.e., don’t provide a `-code-check` chunk) (#403).

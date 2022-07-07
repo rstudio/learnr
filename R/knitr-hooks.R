@@ -27,10 +27,57 @@ tutorial_knitr_options <- function() {
     isTRUE(options[["exercise"]])
   }
 
+  is_chunk_empty_or_mismatched_exercise <- function(options) {
+    label <- options$label
+
+    if (is.null(get_knitr_chunk(label))) {
+      return(TRUE)
+    }
+
+    chunk_opts <- attr(get_knitr_chunk(label), "chunk_opts")
+    if (!identical(options$exercise, chunk_opts$exercise)) {
+      # this looks like an exercise chunk, but knitr knows about a different
+      # chunk that isn't an exercise here. so there must be a problem (i.e. this
+      # is an empty chunk that didn't trigger knitr's duplicate chunk error).
+      # Note that we can't rely on knit_code$get() or options$code since they
+      # both report the code for the non-exercise chunk.
+      msg <- sprintf("Cannot create exercise '%s': duplicate chunk label", label)
+      rlang::abort(msg)
+    }
+
+    FALSE
+  }
+
   # helper to find chunks that name a chunk as their setup chunk
   exercise_chunks_for_setup_chunk <- function(label) {
     label_query <- paste0("knitr::all_labels(exercise.setup == '", label, "')")
     eval(parse(text = label_query))
+  }
+
+  ensure_knit_code_exists <- function(
+    current = knitr::opts_current$get(),
+    all = knitr::opts_chunk$get()
+  ) {
+    label <- current$label
+
+    # Recreate chunk options: unique to chunk or different from default.
+    # Typically, we'd use `knit_code$get()` to find the chunk options defined
+    # directly on the chunk, but that returns `NULL` for empty chunks and
+    # doesn't include the chunk options. If we call this function in the options
+    # hooks, we have an opportunity to infer the chunk options.
+    chunk_opts <- current[setdiff(names(current), names(all))]
+    for (opt in names(all)) {
+      if (!identical(all[[opt]], current[[opt]])) {
+        chunk_opts[[opt]] <- current[[opt]]
+      }
+    }
+
+    n_lines <- current[["exercise.lines"]] %||% all[["exercise.lines"]] %||% 3L
+    code <- rep_len("", n_lines)
+
+    # https://github.com/yihui/knitr/blob/0f0c9c26/R/parser.R#L118
+    chunk <- setNames(list(structure(code, chunk_opts = chunk_opts)), label)
+    knitr::knit_code$set(chunk)
   }
 
   # helper to check for an exercise support chunk
@@ -204,13 +251,9 @@ tutorial_knitr_options <- function() {
            call. = FALSE)
     }
 
-    # validate that the exercise chunk is 'defined'
-    if (exercise_chunk && is.null(get_knitr_chunk(options$label))) {
-      stop(
-        "The exercise chunk '", options$label, "' doesn't have anything inside of it. ",
-        "Try adding empty line(s) inside the code chunk.",
-        call. = FALSE
-      )
+    # validate or ensure that the exercise chunk is 'defined'
+    if (exercise_chunk && is_chunk_empty_or_mismatched_exercise(options)) {
+      ensure_knit_code_exists(options)
     }
 
     # if this is an exercise chunk then set various options
