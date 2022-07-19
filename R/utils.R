@@ -43,6 +43,10 @@ stop. <- function(...) {
 #' new_envir <- duplicate_env(envir)
 #' "key" %in% ls(envir = new_envir) # TRUE
 duplicate_env <- function(envir, parent = parent.env(envir)) {
+  # If we are duplicating the globalenv, we can't use the globalenv's parent
+  # as the new env's parent or the new env will be severed from the search path.
+  parent <- if (identical(envir, globalenv())) globalenv() else parent
+
   list2env(
     as.list.environment(envir, all.names = TRUE, sorted = FALSE),
     parent = parent
