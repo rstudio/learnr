@@ -1200,6 +1200,7 @@ prepare_exercise <- function(exercise) {
     echo = FALSE,
     cache = FALSE,
     child = NULL,
+    indent = NULL,
     dev = "png",
     dpi = 92
   )
