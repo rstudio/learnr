@@ -22,6 +22,8 @@ template:
 
 home:
   links:
+  - text: Get Help
+    href: https://github.com/rstudio/learnr/discussions
   - text: Learn more about R Markdown
     href: "https://rmarkdown.rstudio.com"
 
