@@ -744,7 +744,7 @@ question_ui_loading <- function(question) {
   })
 
   q_opts <- NULL
-  if (question$type %in% c("learnr_radio", "learnr_checkbox")) {
+  if (length(intersect(question$type, c("learnr_radio", "learnr_checkbox"))) > 0) {
     q_opts <- htmltools::tags$ul(
       lapply(seq_along(question$answers), function(...) {
         htmltools::tags$li(
