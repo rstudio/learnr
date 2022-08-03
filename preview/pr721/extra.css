@@ -1,0 +1,10 @@
+/* examples gallery */
+a.thumbnail.active,
+a.thumbnail:focus,
+a.thumbnail:hover {
+	border-color: #FEDB00;
+}
+
+.contents.gallery {
+  max-width: min(100%, 72rem);
+}
