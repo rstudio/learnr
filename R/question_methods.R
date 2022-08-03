@@ -28,7 +28,9 @@
 #' @param value user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
 #'
-#' @seealso For more information and question type extension examples, please view the `question_type` tutorial: `learnr::run_tutorial("question_type", "learnr")`.
+#' @seealso For more information and question type extension examples, please
+#'   see the **Custom Question Types** section of the `quiz_question` tutorial:
+#'   `learnr::run_tutorial("quiz_question", "learnr")`.
 #'
 #' @export
 #' @rdname question_methods
