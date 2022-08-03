@@ -67,5 +67,7 @@ should correspond to the \code{type = TYPE} supplied to the question.
 }
 }
 \seealso{
-For more information and question type extension examples, please view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+For more information and question type extension examples, please
+see the \strong{Custom Question Types} section of the \code{quiz_question} tutorial:
+\code{learnr::run_tutorial("quiz_question", "learnr")}.
 }
