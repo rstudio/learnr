@@ -1260,12 +1260,7 @@ render_exercise_prepare.sql <- function(exercise, ...) {
 
 #' @export
 render_exercise_prepare.python <- function(exercise, ...) {
-  if (!is_exercise_engine(exercise, "python")) {
-    return(NextMethod())
-  }
-
   rlang::check_installed("reticulate", "for Python exercises")
-  require("reticulate", character.only = TRUE)
 
   NextMethod()
 }
