@@ -1348,7 +1348,7 @@ render_exercise_rmd_user.sql <- function(exercise, ...) {
   c(
     rmd_src_user,
     "",
-    # knitr's sql chunk engine with either display the results or return the
+    # knitr's sql chunk engine will either display the results or return the
     # results back to R. We want both, so we ask knitr to return the result and
     # then we explicitly print it in the chunk below.
     '```{r eval=exists("___sql_result")}',
