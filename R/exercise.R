@@ -655,7 +655,7 @@ render_exercise <- function(exercise, envir) {
   }
 
   # Prepare code chunks containing exercise prep (setup) and user code
-  rmd_src_prep <- exercise_code_chunks_prep(exercise)
+  rmd_src_prep <- render_exercise_rmd_prep(exercise)
   rmd_src_user <- render_exercise_rmd_user(exercise)
 
   envir_prep <- duplicate_env(envir)
@@ -1307,7 +1307,17 @@ local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
 }
 
 # Render Exercise RMD -----------------------------------------------------
+# — Prep ----
+render_exercise_rmd_prep <- function(exercise, ...) {
+  UseMethod("render_exercise_rmd_prep", exercise)
+}
 
+#' @export
+render_exercise_rmd_prep.default <- function(exercise, ...) {
+  exercise_code_chunks_prep(exercise)
+}
+
+# — User ----
 render_exercise_rmd_user <- function(exercise, ...) {
   UseMethod("render_exercise_rmd_user", exercise)
 }
