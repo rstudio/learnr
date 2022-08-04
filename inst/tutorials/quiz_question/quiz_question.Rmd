@@ -25,7 +25,7 @@ You can include one or more multiple-choice quiz questions within a tutorial to 
 Include a question by calling the `question` function within an R code chunk:
 
 ````markdown
-`r ''````{r letter-a, echo=FALSE}
+```{r letter-a, echo=FALSE}`r ''`
 question("What number is the letter A in the English alphabet?",
   answer("8"),
   answer("14"),
@@ -40,7 +40,7 @@ question("What number is the letter A in the English alphabet?",
 The above example defines a question with a single correct answer. You can also create questions that require multiple answers to be specified:
 
 ````markdown
-`r ''````{r where-am-i, echo=FALSE}
+```{r where-am-i, echo=FALSE}`r ''`
 question("Where are you right now? (select ALL that apply)",
   answer("Planet Earth", correct = TRUE),
   answer("Pluto"),
@@ -84,7 +84,7 @@ question("Where are you right now? (select ALL that apply)",
 You can add answer-specific correct/incorrect messages using the `message` option. For example:
 
 ````markdown
-`r ''````{r letter-a-message, echo=FALSE}
+```{r letter-a-message, echo=FALSE}`r ''`
 question("What number is the letter A in the *English* alphabet?",
   answer("8"),
   answer("1", correct = TRUE),
@@ -111,7 +111,7 @@ question("What number is the letter A in the *English* alphabet?",
 You can use markdown to format text within questions, answers, and custom messages. You can also include embedded LaTeX math using the `$` delimiter. For example:
 
 ````markdown
-`r ''````{r math, echo=FALSE}
+```{r math, echo=FALSE}`r ''`
 x <- 42
 question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
   answer(sprintf("$\\sqrt{x} = %d$", x + 1)),
@@ -140,7 +140,7 @@ question(sprintf("Suppose $x = %s$. Choose the correct statement:", x),
 By default when an incorrect answer is provided users get the appropriate feedback and the correct answer(s) are highlighted. You can also provide an option for the user to try the question again. You can do this using the `allow_retry` option, for example:
 
 ````markdown
-`r ''````{r letter-a-allow-retry, echo=FALSE}
+```{r letter-a-allow-retry, echo=FALSE}`r ''`
 question("What number is the letter A in the English alphabet?",
   answer("8"),
   answer("14"),
@@ -169,7 +169,7 @@ question("What number is the letter A in the English alphabet?",
 If you want the answers to questions to be randomly arranged, you can add the `random_answer_order` option. For example:
 
 ````markdown
-`r ''````{r letter-a-random-answer-order, echo=FALSE}
+```{r letter-a-random-answer-order, echo=FALSE}`r ''`
 question("What number is the letter A in the English alphabet?",
   answer("8"),
   answer("14"),
@@ -197,7 +197,7 @@ question("What number is the letter A in the English alphabet?",
 You can present a group of related questions as a quiz by wrapping your questions within the `quiz` function. For example:
 
 ````markdown
-`r ''````{r quiz1, echo=FALSE}
+```{r quiz1, echo=FALSE}`r ''`
 quiz(caption = "Quiz 1",
   question("What number is the letter A in the *English* alphabet?",
     answer("8"),
@@ -254,7 +254,7 @@ There are four basic types of quiz questions: radio button, checkbox, text box, 
 When wanting only one answer from a user, use a radio button question.  Even if multiple options are correct, the user is only able to pick a single value.
 
 ````markdown
-`r ''````{r radio, echo = FALSE}
+```{r radio, echo = FALSE}`r ''`
 question_radio(
   "Is this a good question?",
   answer("yes", correct = TRUE),
@@ -279,7 +279,7 @@ question_radio(
 When wanting possibly **multiple** answers from a user, use a checkbox question.  All answers that are marked correct must be selected by the user to have the answer be correct.  A minimum of one correct answer is required.
 
 ````markdown
-`r ''````{r checkbox, echo = FALSE}
+```{r checkbox, echo = FALSE}`r ''`
 question_checkbox(
   "Select all the toppings that belong on a Margherita Pizza:",
   answer("tomato", correct = TRUE),
@@ -323,7 +323,7 @@ If you'd like users to submit open-ended answers, use a text box question.  Corr
 Text value inputs are trimmed before they are compared to answers provided.
 
 ````markdown
-`r ''````{r text_box, echo = FALSE}
+```{r text_box, echo = FALSE}`r ''`
 question_text(
   "Please enter the word 'C0rrect' below:",
   answer("correct", message = "Don't forget to capitalize"),
@@ -411,7 +411,7 @@ All the the arguments described below are also accepted by `question_radio`, `qu
 Example:
 
 ````markdown
-`r ''````{r options, echo = FALSE}
+```{r options, echo = FALSE}`r ''`
 question(
   "How many parameters are supplied in this question?",
   answer("1", message = "Really?"),
@@ -483,10 +483,12 @@ To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co
 If a vector of types is supplied to a question's `type`, the S3 methods will be dispatched starting with the first type value and ending with the last type value. For example, let us define a new question type that should behave like a learnr checkbox question, but have a special implementation of `question_is_correct` where the answer is always correct.
 
 ````markdown
-`r ''````{r custom_class, echo = FALSE}
+```{r custom_class, echo = FALSE}`r ''`
 question_is_correct.always_correct <- function(question, value, ...) {
-  return(learnr::mark_as(TRUE, messages = NULL))
+  learnr::mark_as(TRUE, messages = NULL)
 }
+
+registerS3method("question_is_correct", "always_correct", question_is_correct.always_correct)
 
 ques <- question(
   "Custom Method",
@@ -499,8 +501,10 @@ ques <- question(
 
 ```{r custom_class, echo = FALSE}
 question_is_correct.always_correct <- function(question, value, ...) {
-  return(learnr::mark_as(TRUE, messages = NULL))
+  learnr::mark_as(TRUE, messages = NULL)
 }
+
+registerS3method("question_is_correct", "always_correct", question_is_correct.always_correct)
 
 ques <- question(
   "Custom Method",
@@ -534,7 +538,7 @@ question_rank <- function(..., random_answer_order = TRUE, options = sortable::s
 ```
 
 ````markdown
-`r ''````{r sortable_question, echo = FALSE}
+```{r sortable_question, echo = FALSE}`r ''`
 rank_ex <- sortable::question_rank(
   "Sort the first 5 letters",
   learnr::answer(LETTERS[1:5], correct = TRUE),
