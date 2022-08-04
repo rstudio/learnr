@@ -688,7 +688,7 @@ render_exercise <- function(exercise, envir) {
       # Note: `envir_prep` is a copy of the R global environment
       # used to extract the checker function later, so we duplicate `py` and
       # store it for the Python exercise checker
-      envir_prep$py <- duplicate_py_env(py)
+      envir_prep$py <- duplicate_py_env(py_global_env())
     }
 
     # Create exercise.Rmd after running setup so it isn't accidentally overwritten
@@ -1399,9 +1399,9 @@ render_exercise_result.sql <- function(exercise, envir_render, envir_result, env
 #' @export
 render_exercise_result.python <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
   # make a copy of the Python environment module after executing exercise code
-  envir_result <- duplicate_py_env(exercise[["_py"]])
+  envir_result <- duplicate_py_env(py_global_env())
   # scrub `evaluate_result` for python exercises
-  NextMethod(evaluate_result = NULL)
+  NextMethod(evaluate_result = NULL, envir_result = envir_result)
 }
 
 

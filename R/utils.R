@@ -53,6 +53,11 @@ duplicate_env <- function(envir, parent = parent.env(envir)) {
   )
 }
 
+py_global_env <- function() {
+  rlang::check_installed("reticulate")
+  reticulate::py
+}
+
 #' Create a duplicate of a Python environment
 #'
 #' @param module the `py` module accessed via `reticulate`
