@@ -81,7 +81,8 @@ duplicate_py_env <- function(module) {
 
 # This clears the Python environment `py`.
 #
-# It will keep important starting objects so `py` such as `r`and builtins.
+# It will keep important initial objects such as `py` (main module), 
+# `r` (reticulate interface to R), and the `builtins` module.
 #
 # @examples
 # reticulate::py_run_string("x = 3")
