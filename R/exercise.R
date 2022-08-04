@@ -758,8 +758,8 @@ render_exercise <- function(exercise, envir) {
   render_exercise_result(
     exercise = exercise,
     envir_render = envir,
-    envir_result = envir_result,
     envir_prep = envir_prep,
+    envir_result = envir_result,
     evaluate_result = evaluate_result,
     last_value = last_value,
     html_output = html_output
@@ -1384,24 +1384,24 @@ render_exercise_post_stage_hook <- function(exercise, stage, envir, ...) {
 
 #' @export
 render_exercise_post_stage_hook.default <- function(exercise, ...) {
-  invisible(exercise)
+  invisible()
 }
 
 #' @export
 render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
   # Add copy of python environment into the prep/restult environment
   assign(".__py__", duplicate_py_env(py_global_env()), envir = envir)
-  invisible(exercise)
+  invisible()
 }
 
 # Render Exercise Result --------------------------------------------------
 
-render_exercise_result <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
+render_exercise_result <- function(exercise, envir_render, envir_prep, envir_result, evaluate_result, last_value, html_output, ...) {
   UseMethod("render_exercise_result", exercise)
 }
 
 #' @export
-render_exercise_result.default <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
+render_exercise_result.default <- function(exercise, envir_render, envir_prep, envir_result, evaluate_result, last_value, html_output, ...) {
   list(
     evaluate_result = evaluate_result,
     last_value = last_value,
@@ -1412,7 +1412,7 @@ render_exercise_result.default <- function(exercise, envir_render, envir_result,
 }
 
 #' @export
-render_exercise_result.sql <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
+render_exercise_result.sql <- function(exercise, envir_render, envir_result, envir_prep, last_value, ...) {
   # make sql result available as the last value from the exercise
   if (exists("___sql_result", envir = envir_result)) {
     if (!is.null(exercise[["options"]][["output.var"]])) {
@@ -1434,9 +1434,7 @@ render_exercise_result.sql <- function(exercise, envir_render, envir_result, env
 }
 
 #' @export
-render_exercise_result.python <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
-  # make a copy of the Python environment module after executing exercise code
-  envir_result$py <- duplicate_py_env(py_global_env())
+render_exercise_result.python <- function(exercise, ...) {
   # scrub `evaluate_result` for python exercises
   NextMethod(evaluate_result = NULL)
 }
