@@ -600,6 +600,9 @@ render_exercise <- function(exercise, envir) {
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
   exercise <- render_exercise_prepare(exercise)
 
+  # TODO: Refactor `output_format_exercise()` so that we can decouple it from
+  # the `output_format` arguments in `render_exercise_evaluate_{prep,user}()`.
+  #
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
@@ -654,42 +657,23 @@ render_exercise <- function(exercise, envir) {
     )
   }
 
-  # Prepare code chunks containing exercise prep (setup) and user code
-  rmd_src_prep <- render_exercise_rmd_prep(exercise)
-  rmd_src_user <- render_exercise_rmd_user(exercise)
-
+  # Set up prep and result environments (both will be modified during render)
   envir_prep <- duplicate_env(envir)
-  # placeholder envir_result in case an error occurs with setup chunks
   envir_result <- envir_prep
 
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
-    render_stage <- "setup"
-    local({
-      if (length(rmd_src_prep) > 0) {
-        rmd_file_prep <- "exercise_prep.Rmd"
-        writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
-        on.exit(unlink(dir(pattern = "exercise_prep")), add = TRUE)
+    # — Render Exercise Stage: Prep ----
+    # TODO: The render stage and everything associated with it should really be
+    #       named "setup", e.g. `envir_setup`, etc. The stage here is called
+    #       "prep" to avoid confusion with the current naming.
+    render_stage <- "prep"
 
-        # First pass without user code to get envir_prep
-        rmd_file_prep_html <- rmarkdown::render(
-          input = rmd_file_prep,
-          output_format = output_format_exercise(user = FALSE),
-          envir = envir_prep,
-          clean = TRUE,
-          quiet = TRUE,
-          run_pandoc = FALSE
-        )
-      }
-    })
-
-    # For Python, store the current global `py` environment into envir_prep
-    if (is_exercise_engine(exercise, "python")) {
-      # Note: `envir_prep` is a copy of the R global environment
-      # used to extract the checker function later, so we duplicate `py` and
-      # store it for the Python exercise checker
-      envir_prep$py <- duplicate_py_env(py_global_env())
-    }
+    render_exercise_evaluate_prep(
+      exercise = exercise,
+      envir_prep = envir_prep,
+      output_format_exercise(user = FALSE)
+    )
 
     # Create exercise.Rmd after running setup so it isn't accidentally overwritten
     if (file.exists("exercise.Rmd")) {
@@ -700,26 +684,19 @@ render_exercise <- function(exercise, envir) {
         immediate. = TRUE
       )
     }
-    rmd_file_user <- "exercise.Rmd"
-    writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
 
+    # — Render Exercise Stage: User ----
+    render_stage <- "user"
     # Copy in a full clone `envir_prep` before running user code in `envir_result`
     # By being a sibling to `envir_prep` (rather than a dependency),
     # alterations to `envir_prep` from eval'ing code in `envir_result`
     # are much more difficult
     envir_result <- duplicate_env(envir_prep)
 
-    render_stage <- "user"
-    with_masked_env_vars(
-      # Now render user code for final result
-      rmarkdown::render(
-        input = rmd_file_user,
-        output_format = output_format_exercise(user = TRUE),
-        envir = envir_result,
-        clean = FALSE,
-        quiet = TRUE,
-        run_pandoc = FALSE
-      )
+    render_exercise_evaluate_user(
+      exercise = exercise,
+      envir_result = envir_result,
+      output_format_exercise(user = TRUE)
     )
   }, error = function(e) {
     msg <- conditionMessage(e)
@@ -729,8 +706,8 @@ render_exercise <- function(exercise, envir) {
       return(exercise_result_timeout())
     }
 
-    if (render_stage == "setup") {
-      # errors in setup code should be returned as internal error results
+    if (render_stage == "prep") {
+      # errors in setup (prep) code should be returned as internal error results
       return(
         exercise_result_error_internal(
           exercise = exercise,
@@ -786,6 +763,48 @@ render_exercise <- function(exercise, envir) {
     evaluate_result = evaluate_result,
     last_value = last_value,
     html_output = html_output
+  )
+}
+
+render_exercise_evaluate_prep <- function(exercise, envir_prep, output_format) {
+  withr::defer(render_exercise_post_stage_hook(exercise, "prep", envir_prep))
+
+  rmd_src_prep <- render_exercise_rmd_prep(exercise)
+
+  if (length(rmd_src_prep) > 0) {
+    rmd_file_prep <- "exercise_prep.Rmd"
+    writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
+    on.exit(unlink(dir(pattern = "exercise_prep")), add = TRUE)
+
+    # First pass without user code to get envir_prep
+    rmd_file_prep_html <- rmarkdown::render(
+      input = rmd_file_prep,
+      output_format = output_format,
+      envir = envir_prep,
+      clean = TRUE,
+      quiet = TRUE,
+      run_pandoc = FALSE
+    )
+  }
+}
+
+render_exercise_evaluate_user <- function(exercise, envir_result, output_format) {
+  withr::defer(render_exercise_post_stage_hook(exercise, "user", envir_result))
+
+  rmd_src_user <- render_exercise_rmd_user(exercise)
+  rmd_file_user <- "exercise.Rmd"
+  writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
+
+  with_masked_env_vars(
+    # Now render user code for final result
+    rmarkdown::render(
+      input = rmd_file_user,
+      output_format = output_format,
+      envir = envir_result,
+      clean = FALSE,
+      quiet = TRUE,
+      run_pandoc = FALSE
+    )
   )
 }
 
@@ -1236,10 +1255,6 @@ render_exercise_prepare.default <- function(exercise, ...) {
 
 #' @export
 render_exercise_prepare.sql <- function(exercise, ...) {
-  if (!is_exercise_engine(exercise, "sql")) {
-    return(NextMethod())
-  }
-
   # Disable invisible warning (that's how sql chunks work)
   exercise[["options"]][["exercise.warn_invisible"]] <- FALSE
 
@@ -1357,6 +1372,28 @@ render_exercise_rmd_user.python <- function(exercise, ...) {
   )
 }
 
+# Render Exercise Stage Hook ----------------------------------------------
+
+# This generic is called AFTER rendering the exercise at the "prep" and "user"
+# stages. At the "prep" stage it receives the `envir_prep`, the environment
+# after evaluating the setup chunks. At the "user" stage it receives
+# `envir_result`, the environment after rendering the user's code.
+render_exercise_post_stage_hook <- function(exercise, stage, envir, ...) {
+  UseMethod("render_exercise_post_stage_hook", exercise)
+}
+
+#' @export
+render_exercise_post_stage_hook.default <- function(exercise, ...) {
+  invisible(exercise)
+}
+
+#' @export
+render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
+  # Add copy of python environment into the prep/restult environment
+  assign(".__py__", duplicate_py_env(py_global_env()), envir = envir)
+  invisible(exercise)
+}
+
 # Render Exercise Result --------------------------------------------------
 
 render_exercise_result <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
@@ -1399,9 +1436,9 @@ render_exercise_result.sql <- function(exercise, envir_render, envir_result, env
 #' @export
 render_exercise_result.python <- function(exercise, envir_render, envir_result, envir_prep, evaluate_result, last_value, html_output, ...) {
   # make a copy of the Python environment module after executing exercise code
-  envir_result <- duplicate_py_env(py_global_env())
+  envir_result$py <- duplicate_py_env(py_global_env())
   # scrub `evaluate_result` for python exercises
-  NextMethod(evaluate_result = NULL, envir_result = envir_result)
+  NextMethod(evaluate_result = NULL)
 }
 
 
