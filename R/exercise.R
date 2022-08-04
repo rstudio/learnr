@@ -1228,8 +1228,10 @@ filter_dependencies <- function(dependencies) {
   })
 }
 
+prepare_exercise <- function(exercise, ...) UseMethod("prepare_exercise", exercise)
 
-prepare_exercise <- function(exercise) {
+#' @export
+prepare_exercise.default <- function(exercise, ...) {
   forced_opts_exercise <- list(
     tutorial = NULL,
     engine = NULL,
@@ -1241,9 +1243,6 @@ prepare_exercise <- function(exercise) {
     dev = "png",
     dpi = 92
   )
-
-  exercise <- prepare_exercise_if_sql(exercise)
-  exercise <- prepare_exercise_if_python(exercise)
 
   exercise[["opts_chunk"]] <- merge_chunk_options(
     inherited = exercise[["options"]],
@@ -1290,9 +1289,10 @@ prepare_exercise <- function(exercise) {
   exercise
 }
 
-prepare_exercise_if_sql <- function(exercise) {
+#' @export
+prepare_exercise.sql <- function(exercise, ...) {
   if (!is_exercise_engine(exercise, "sql")) {
-    return(exercise)
+    return(NextMethod())
   }
 
   # Disable invisible warning (that's how sql chunks work)
@@ -1310,18 +1310,19 @@ prepare_exercise_if_sql <- function(exercise) {
     chunk
   })
 
-  exercise
+  NextMethod()
 }
 
-prepare_exercise_if_python <- function(exercise) {
+#' @export
+prepare_exercise.python <- function(exercise, ...) {
   if (!is_exercise_engine(exercise, "python")) {
-    return(exercise)
+    return(NextMethod())
   }
 
   rlang::check_installed("reticulate", "for Python exercises")
   require("reticulate", character.only = TRUE)
 
-  exercise
+  NextMethod()
 }
 
 # `chunk` are options that user supplied in Rmd (assumed to be strings)

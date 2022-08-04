@@ -78,7 +78,7 @@ duplicate_py_env <- function(module) {
 #'
 #' @param module the `py` module accessed via reticulate
 #'
-#' @return
+#' @return Nothing
 #' @export
 #'
 #' @examples
