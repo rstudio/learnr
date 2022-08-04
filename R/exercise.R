@@ -1,4 +1,4 @@
-current_exercise_version <- "3"
+current_exercise_version <- "4"
 
 # Shiny Exercise Handling -------------------------------------------------
 
@@ -251,7 +251,17 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
     exercise$version <- 3
   }
 
-  # Future logic to upgrade an exercise from version 3 to version N goes here...
+  if (exercise$version == 3) {
+    # upgrade from version 3 to version 4
+    # => exercise class now includes engine (first) and `tutorial_exercise` (last)
+    class(exercise) <- c(
+      setdiff(union(exercise$engine, class(exercise)), "tutorial_exercise"),
+      "tutorial_exercise"
+    )
+    exercise$version <- 4
+  }
+
+  # Future logic to upgrade an exercise from version 4 to version N goes here...
 
   if (identical(exercise$version, current_version)) {
     return(exercise)

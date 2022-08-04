@@ -440,7 +440,7 @@ tutorial_knitr_options <- function() {
             engine = options$engine,
             version = current_exercise_version
           ),
-          class = "tutorial_exercise"
+          class = c(options$engine, "tutorial_exercise")
         )
 
         # serialize the list of chunks to server
