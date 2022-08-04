@@ -779,21 +779,21 @@ render_exercise <- function(exercise, envir) {
   }
 
   if (is_exercise_engine(exercise, "sql")) {
-    # make sql result available as the last value from the exercise
-    if (exists("___sql_result", envir = envir_result)) {
-      if (!is.null(exercise[["options"]][["output.var"]])) {
-        # the author expected the sql results in a specific variable
-        assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
-      }
-      rm("___sql_result", envir = envir_result)
+  # make sql result available as the last value from the exercise
+  if (exists("___sql_result", envir = envir_result)) {
+    if (!is.null(exercise[["options"]][["output.var"]])) {
+      # the author expected the sql results in a specific variable
+      assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
     }
+    rm("___sql_result", envir = envir_result)
+  }
 
-    # make the connection object available in envir_prep (used by gradethis)
-    con_name <- exercise[["opts_chunk"]][["connection"]]
+  # make the connection object available in envir_prep (used by gradethis)
+  con_name <- exercise[["opts_chunk"]][["connection"]]
     con <- get0(con_name, envir = envir, ifnotfound = NULL)
-    if (!is.null(con) && isS4(con) && inherits(con, "DBIConnection")) {
-      assign(con_name, con, envir = envir_prep)
-    }
+  if (!is.null(con) && isS4(con) && inherits(con, "DBIConnection")) {
+    assign(con_name, con, envir = envir_prep)
+  }
   }
 
   if (is_exercise_engine(exercise, "python")) {
@@ -801,7 +801,7 @@ render_exercise <- function(exercise, envir) {
     envir_result <- duplicate_py_env(py)
     # we're currently not using `evaluate_result`
     evaluate_result <- NULL
-  }
+}
 
   list(
     evaluate_result = evaluate_result,
@@ -854,39 +854,49 @@ exercise_code_chunks <- function(chunks) {
   }, character(1))
 }
 
+exercise_code_chunks_user_rmd <- function(exercise, ...) {
+  UseMethod("exercise_code_chunks_user_rmd", exercise)
+}
 
-exercise_code_chunks_user_rmd <- function(exercise) {
-  rmd_src_user <- c(
+#' @export
+exercise_code_chunks_user_rmd.default <- function(exercise, ...) {
+  c(
     readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
     "",
     exercise_code_chunks_user(exercise)
   )
-
-  if (is_exercise_engine(exercise, "sql")) {
-    rmd_src_user <- c(
-      rmd_src_user,
-      "",
-      '```{r eval=exists("___sql_result")}',
-      'get("___sql_result")',
-      "```"
-    )
-  }
-
-  if (is_exercise_engine(exercise, "python")) {
-    # return the last value using Python's `_` to set `last_value`
-    rmd_src_user <- c(
-      rmd_src_user,
-      "",
-      '```{r results="hide"}',
-      'reticulate::py_run_string("import builtins")',
-      'reticulate::py_eval("builtins._")',
-      "```"
-    )
-  }
-
-  rmd_src_user
 }
 
+#' @export
+exercise_code_chunks_user_rmd.sql <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # knitr's sql chunk engine with either display the results or return the
+    # results back to R. We want both, so we ask knitr to return the result and
+    # then we explicitly print it in the chunk below.
+    '```{r eval=exists("___sql_result")}',
+    'get("___sql_result")',
+    "```"
+  )
+}
+
+#' @export
+exercise_code_chunks_user_rmd.python <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # this is how we get the `last_value` from the python session
+    '```{r include=FALSE}',
+    'reticulate::py_run_string("import builtins")',
+    'reticulate::py_eval("builtins._")',
+    "```"
+  )
+}
 
 exercise_get_blanks_pattern <- function(exercise) {
   exercise_blanks_opt <-
