@@ -1497,7 +1497,8 @@ format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
       if (is.null(x[[chunk]]) || !nzchar(x[[chunk]])) next
       support_chunk <- mock_chunk(
         label = paste0(label, "-", sub("_", "-", chunk)),
-        code = x[[chunk]]
+        code = x[[chunk]],
+        engine = if (chunk == "solution") x$engine
       )
       x$chunks <- c(x$chunks, list(support_chunk))
     }
