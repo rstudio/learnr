@@ -656,7 +656,7 @@ render_exercise <- function(exercise, envir) {
 
   # Prepare code chunks containing exercise prep (setup) and user code
   rmd_src_prep <- exercise_code_chunks_prep(exercise)
-  rmd_src_user <- exercise_code_chunks_user_rmd(exercise)
+  rmd_src_user <- render_exercise_rmd_user(exercise)
 
   envir_prep <- duplicate_env(envir)
   # placeholder envir_result in case an error occurs with setup chunks
@@ -829,50 +829,6 @@ exercise_code_chunks <- function(chunks) {
       "```"
     )
   }, character(1))
-}
-
-exercise_code_chunks_user_rmd <- function(exercise, ...) {
-  UseMethod("exercise_code_chunks_user_rmd", exercise)
-}
-
-#' @export
-exercise_code_chunks_user_rmd.default <- function(exercise, ...) {
-  c(
-    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
-    "",
-    exercise_code_chunks_user(exercise)
-  )
-}
-
-#' @export
-exercise_code_chunks_user_rmd.sql <- function(exercise, ...) {
-  rmd_src_user <- NextMethod()
-
-  c(
-    rmd_src_user,
-    "",
-    # knitr's sql chunk engine with either display the results or return the
-    # results back to R. We want both, so we ask knitr to return the result and
-    # then we explicitly print it in the chunk below.
-    '```{r eval=exists("___sql_result")}',
-    'get("___sql_result")',
-    "```"
-  )
-}
-
-#' @export
-exercise_code_chunks_user_rmd.python <- function(exercise, ...) {
-  rmd_src_user <- NextMethod()
-
-  c(
-    rmd_src_user,
-    "",
-    # this is how we get the `last_value` from the python session
-    '```{r include=FALSE}',
-    'reticulate::py_run_string("import builtins")',
-    'reticulate::py_eval("builtins._")',
-    "```"
-  )
 }
 
 exercise_get_blanks_pattern <- function(exercise) {
@@ -1348,6 +1304,52 @@ merge_chunk_options <- function(
 local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
   local_restore_options(.local_envir)
   local_restore_envvars(.local_envir)
+}
+
+# Render Exercise RMD -----------------------------------------------------
+
+render_exercise_rmd_user <- function(exercise, ...) {
+  UseMethod("render_exercise_rmd_user", exercise)
+}
+
+#' @export
+render_exercise_rmd_user.default <- function(exercise, ...) {
+  c(
+    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
+    "",
+    exercise_code_chunks_user(exercise)
+  )
+}
+
+#' @export
+render_exercise_rmd_user.sql <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # knitr's sql chunk engine with either display the results or return the
+    # results back to R. We want both, so we ask knitr to return the result and
+    # then we explicitly print it in the chunk below.
+    '```{r eval=exists("___sql_result")}',
+    'get("___sql_result")',
+    "```"
+  )
+}
+
+#' @export
+render_exercise_rmd_user.python <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # this is how we get the `last_value` from the python session
+    '```{r include=FALSE}',
+    'reticulate::py_run_string("import builtins")',
+    'reticulate::py_eval("builtins._")',
+    "```"
+  )
 }
 
 # Render Exercise Result --------------------------------------------------

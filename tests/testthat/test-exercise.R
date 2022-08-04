@@ -351,14 +351,14 @@ test_that("render_exercise() user code exercise.Rmd snapshot", {
       mock_chunk("ex-setup", "SETUP_CODE")
     )
   )
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex)))
+  expect_snapshot(writeLines(render_exercise_rmd_user(ex)))
 
   ex_sql <- mock_exercise(
     user_code = 'SELECT * FROM USER',
     solution_code = "SELECT * FROM SOLUTION",
     engine = "sql"
   )
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql)))
+  expect_snapshot(writeLines(render_exercise_rmd_user(ex_sql)))
 })
 
 # evaluate_exercise() -----------------------------------------------------
@@ -1294,7 +1294,7 @@ test_that("SQL exercises - without explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1342,7 +1342,7 @@ test_that("SQL exercises - with explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
