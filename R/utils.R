@@ -88,11 +88,9 @@ duplicate_py_env <- function(module) {
 # # this removes the `x`
 # clear_py_env(py)
 #
-# @param module the `py` module accessed via reticulate
-#
 # @return Nothing
 # @keywords internal
-clear_py_env <- function(module) {
+clear_py_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
     if (!obj_name %in% c("r", "sys", "builtins")) {
