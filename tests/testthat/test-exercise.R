@@ -1294,7 +1294,7 @@ test_that("SQL exercises - without explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1342,7 +1342,7 @@ test_that("SQL exercises - with explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1360,9 +1360,9 @@ test_that("SQL exercises - with explicit `output.var`", {
 })
 
 
-# prepare_exercise() ------------------------------------------------------
+# render_exercise_prepare() ------------------------------------------------------
 
-test_that("prepare_exercise() removes forced default chunk options from exercise chunk", {
+test_that("render_exercise_prepare() removes forced default chunk options from exercise chunk", {
   ex <- mock_exercise(
     label = "ex",
     check = TRUE,
@@ -1372,8 +1372,8 @@ test_that("prepare_exercise() removes forced default chunk options from exercise
   # `eval = FALSE` is set on the exercise chunk option
   expect_false(ex$chunks[[1]]$opts$eval)
 
-  # but `prepare_exercise()` removes that option
-  expect_null(prepare_exercise(ex)$chunks[[1]]$opts$eval)
+  # but `render_exercise_prepare()` removes that option
+  expect_null(render_exercise_prepare(ex)$chunks[[1]]$opts$eval)
 
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback$checker_args$last_value, 2)

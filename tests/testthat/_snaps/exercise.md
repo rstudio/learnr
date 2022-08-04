@@ -41,7 +41,7 @@
 # SQL exercises - without explicit `output.var`
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine)))
+      writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine)))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function
@@ -63,7 +63,7 @@
 # SQL exercises - with explicit `output.var`
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine)))
+      writeLines(exercise_code_chunks_user_rmd(render_exercise_prepare(ex_sql_engine)))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function

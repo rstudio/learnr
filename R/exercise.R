@@ -598,7 +598,7 @@ render_exercise <- function(exercise, envir) {
   local_restore_options_and_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
-  exercise <- prepare_exercise(exercise)
+  exercise <- render_exercise_prepare(exercise)
 
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
@@ -1215,10 +1215,12 @@ filter_dependencies <- function(dependencies) {
   })
 }
 
-prepare_exercise <- function(exercise, ...) UseMethod("prepare_exercise", exercise)
+render_exercise_prepare <- function(exercise, ...) {
+  UseMethod("render_exercise_prepare", exercise)
+}
 
 #' @export
-prepare_exercise.default <- function(exercise, ...) {
+render_exercise_prepare.default <- function(exercise, ...) {
   forced_opts_exercise <- list(
     tutorial = NULL,
     engine = NULL,
@@ -1277,7 +1279,7 @@ prepare_exercise.default <- function(exercise, ...) {
 }
 
 #' @export
-prepare_exercise.sql <- function(exercise, ...) {
+render_exercise_prepare.sql <- function(exercise, ...) {
   if (!is_exercise_engine(exercise, "sql")) {
     return(NextMethod())
   }
@@ -1301,7 +1303,7 @@ prepare_exercise.sql <- function(exercise, ...) {
 }
 
 #' @export
-prepare_exercise.python <- function(exercise, ...) {
+render_exercise_prepare.python <- function(exercise, ...) {
   if (!is_exercise_engine(exercise, "python")) {
     return(NextMethod())
   }
