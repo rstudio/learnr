@@ -58,17 +58,17 @@ py_global_env <- function() {
   reticulate::py
 }
 
-#' Create a duplicate of a Python environment
-#'
-#' @examples
-#' reticulate::py_run_string("x = 3")
-#' new_py_envir <- duplicate_py_env(py)
-#' new_py_envir$items()
-#'
-#' @param module the `py` module accessed via `reticulate`
-#'
-#' @return a Python `Dict` or dictionary that is not converted to an R data type
-#' @keywords internal
+# Create a duplicate of a Python environment
+#
+# @examples
+# reticulate::py_run_string("x = 3")
+# new_py_envir <- duplicate_py_env(py)
+# new_py_envir$items()
+#
+# @param module the `py` module accessed via `reticulate`
+#
+# @return a Python `Dict` or dictionary that is not converted to an R data type
+# @keywords internal
 duplicate_py_env <- function(module) {
   rlang::check_installed("reticulate", "Python exercise support")
 
@@ -79,19 +79,19 @@ duplicate_py_env <- function(module) {
   copy$copy(new_objs)
 }
 
-#' This clears the Python environment `py`.
-#'
-#' It will keep important starting objects so `py` such as `r`and builtins.
-#'
-#' @examples
-#' reticulate::py_run_string("x = 3")
-#' # this removes the `x`
-#' clear_py_env(py)
-#'
-#' @param module the `py` module accessed via reticulate
-#'
-#' @return Nothing
-#' @keywords internal
+# This clears the Python environment `py`.
+#
+# It will keep important starting objects so `py` such as `r`and builtins.
+#
+# @examples
+# reticulate::py_run_string("x = 3")
+# # this removes the `x`
+# clear_py_env(py)
+#
+# @param module the `py` module accessed via reticulate
+#
+# @return Nothing
+# @keywords internal
 clear_py_env <- function(module) {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
