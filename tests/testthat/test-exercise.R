@@ -1359,6 +1359,48 @@ test_that("SQL exercises - with explicit `output.var`", {
   DBI::dbDisconnect(con)
 })
 
+test_that("Python exercises - simple example", {
+  skip_if_not_installed("reticulate")
+  skip_if_not(reticulate::py_available(), "Python not available on this system")
+  withr::defer(clear_py_env())
+
+  ex_py <- mock_exercise(
+    user_code = "3 + 3",
+    solution_code = "3 + 3",
+    engine = "python"
+  )
+
+  res <- withr::with_tempdir(render_exercise(ex_py, new.env()))
+
+  expect_equal(res$last_value, 6)
+  expect_null(res$evaluate_result)
+  expect_match(as.character(res$html_output), "<code>6</code>")
+  expect_true(exists('.__py__', res$envir_prep))
+  expect_true(exists('.__py__', res$envir_result))
+})
+
+test_that("Python exercises - assignment example", {
+  skip_if_not_installed("reticulate")
+  skip_if_not(reticulate::py_available(), "Python not available on this system")
+  withr::defer(clear_py_env())
+
+  ex_py <- mock_exercise(
+    user_code = "x = 3 + 3",
+    solution_code = "x = 3 + 3",
+    engine = "python"
+  )
+
+  res <- withr::with_tempdir(render_exercise(ex_py, new.env()))
+
+  # TODO: invisible values should be more explicit
+  expect_equal(res$last_value, "__reticulate_placeholder__")
+  expect_null(res$evaluate_result)
+  expect_true(exists('.__py__', res$envir_prep))
+  expect_true(exists('.__py__', res$envir_result))
+  result <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  result <- reticulate::py_to_r(result)
+  expect_equal(result$x, 6)
+})
 
 # render_exercise_prepare() ------------------------------------------------------
 
