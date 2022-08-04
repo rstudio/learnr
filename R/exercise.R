@@ -1396,12 +1396,29 @@ render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) 
 
 # Render Exercise Result --------------------------------------------------
 
-render_exercise_result <- function(exercise, envir_render, envir_prep, envir_result, evaluate_result, last_value, html_output, ...) {
+render_exercise_result <- function(
+  exercise,
+  ...,
+  envir_render,
+  envir_prep,
+  envir_result,
+  evaluate_result,
+  last_value,
+  html_output
+) {
   UseMethod("render_exercise_result", exercise)
 }
 
 #' @export
-render_exercise_result.default <- function(exercise, envir_render, envir_prep, envir_result, evaluate_result, last_value, html_output, ...) {
+render_exercise_result.default <- function(
+  exercise,
+  envir_prep,
+  envir_result,
+  evaluate_result,
+  last_value,
+  html_output,
+  ...
+) {
   list(
     evaluate_result = evaluate_result,
     last_value = last_value,
@@ -1412,7 +1429,14 @@ render_exercise_result.default <- function(exercise, envir_render, envir_prep, e
 }
 
 #' @export
-render_exercise_result.sql <- function(exercise, envir_render, envir_result, envir_prep, last_value, ...) {
+render_exercise_result.sql <- function(
+  exercise,
+  envir_render,
+  envir_result,
+  envir_prep,
+  last_value,
+  ...
+) {
   # make sql result available as the last value from the exercise
   if (exists("___sql_result", envir = envir_result)) {
     if (!is.null(exercise[["options"]][["output.var"]])) {
