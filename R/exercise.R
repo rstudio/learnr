@@ -2,6 +2,13 @@ current_exercise_version <- "4"
 
 # Shiny Exercise Handling -------------------------------------------------
 
+cache_complete_exercise <- function(exercise) {
+  exercise_full <- get_exercise_cache(exercise$label)
+  exercise <- append(exercise, exercise_full)
+  class(exercise) <- class(exercise_full)
+  exercise
+}
+
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
 
@@ -82,7 +89,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # - checker code (check, code-check, error-check)
     # - solution
     # - engine
-    exercise <- append(exercise, get_exercise_cache(exercise$label))
+    exercise <- cache_complete_exercise(exercise)
 
     check_was_requested <- exercise$should_check
     # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
