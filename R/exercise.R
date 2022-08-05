@@ -209,8 +209,16 @@ setup_exercise_handler <- function(exercise_rx, session) {
 # mismatch between the version used to serve the tutorial and the version used
 # to evaluate the exercise (external evaluator).
 upgrade_exercise <- function(exercise, require_items = NULL) {
+  prepend_engine_class <- function(exercise) {
+    class(exercise) <- c(
+      setdiff(union(exercise$engine, class(exercise)), "tutorial_exercise"),
+      "tutorial_exercise"
+    )
+    exercise
+  }
+
   if (identical(exercise$version, current_exercise_version)) {
-    return(exercise)
+    return(prepend_engine_class(exercise))
   }
 
   if (!is.null(exercise$version)) {
@@ -261,10 +269,7 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
   if (exercise$version == 3) {
     # upgrade from version 3 to version 4
     # => exercise class now includes engine (first) and `tutorial_exercise` (last)
-    class(exercise) <- c(
-      setdiff(union(exercise$engine, class(exercise)), "tutorial_exercise"),
-      "tutorial_exercise"
-    )
+    exercise <- prepend_engine_class(exercise)
     exercise$version <- 4
   }
 
