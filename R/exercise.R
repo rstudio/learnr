@@ -1432,8 +1432,8 @@ render_exercise_result.default <- function(
 render_exercise_result.sql <- function(
   exercise,
   envir_render,
-  envir_result,
   envir_prep,
+  envir_result,
   last_value,
   ...
 ) {
