@@ -478,7 +478,7 @@ To address this, `learnr` utilizes five generic [S3 methods](http://adv-r.had.co
 * `question_is_valid.TYPE(question, value, ...)`
   * This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.  This defaults to check if the answer value is not `NULL`.
 * `question_is_correct.TYPE(question, value, ...)` (**required**)
-  * This method should return a boolean that determines if the input answer is correct.  This function's return value should be the output of `learnr::correct`, `learnr::incorrect`, or `learnr::mark_as`.
+  * This method determines if the input answer is correct.  This function's return value should be the output of `learnr::correct`, `learnr::incorrect`, or `learnr::mark_as`.
 
 If a vector of types is supplied to a question's `type`, the S3 methods will be dispatched starting with the first type value and ending with the last type value. For example, let us define a new question type that should behave like a learnr checkbox question, but have a special implementation of `question_is_correct` where the answer is always correct.
 
