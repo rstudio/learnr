@@ -87,7 +87,7 @@ duplicate_py_env <- function(module) {
 # @examples
 # reticulate::py_run_string("x = 3")
 # # this removes the `x`
-# clear_py_env(py)
+# clear_py_env()
 #
 # @return Nothing
 # @keywords internal

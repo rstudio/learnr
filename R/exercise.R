@@ -1379,7 +1379,7 @@ render_exercise_rmd_user.python <- function(exercise, ...) {
     # this is how we get the `last_value` from the python session
     '```{r include=FALSE}',
     'reticulate::py_run_string("import builtins")',
-    'reticulate::py_eval("builtins._")',
+    'reticulate::py_eval("builtins._", convert=FALSE)',
     "```"
   )
 }
