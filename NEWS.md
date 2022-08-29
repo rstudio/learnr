@@ -52,6 +52,8 @@
 
 -   Exercise editors now use syntax highlighting and basic autocompletion for exercises in languages other than R with syntax highlighting support for JavaScript, Julia, Python and SQL (#693).
 
+-   Broadly improved support for additional programming languages and added support for Python exercises (#724).
+
 ## Interactive Exercises and Questions
 
 ### Exercises
