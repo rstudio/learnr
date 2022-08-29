@@ -28,12 +28,12 @@ jobs:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: '3.6'}
-          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-18.04,   r: 'release'}
-          - {os: ubuntu-18.04,   r: 'oldrel-1'}
-          - {os: ubuntu-18.04,   r: 'oldrel-2'}
-          - {os: ubuntu-18.04,   r: 'oldrel-3'}
-          - {os: ubuntu-18.04,   r: 'oldrel-4'}
+          - {os: ubuntu-20.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-20.04,   r: 'release'}
+          - {os: ubuntu-20.04,   r: 'oldrel-1'}
+          - {os: ubuntu-20.04,   r: 'oldrel-2'}
+          - {os: ubuntu-20.04,   r: 'oldrel-3'}
+          - {os: ubuntu-20.04,   r: 'oldrel-4'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -54,10 +54,6 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install devel system dependencies
-        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'devel'
-        run: sudo apt-get install -y libcurl4-openssl-dev
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           pak-version: rc
@@ -71,22 +67,12 @@ jobs:
           echo "CI_IN_PR=true" >> $GITHUB_ENV
 
       - uses: r-lib/actions/check-r-package@v2
-
-      - name: Show testthat output
-        if: always()
-        run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.config.os }}-r${{ matrix.config.r }}-results
-          path: check
+          upload-snapshots: true
 
       - name: Schedule shinyapps.io deploy
         id: request-shinyapps-deploy
-        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'release'
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'release'
         run: |
           echo "::set-output name=requested::true"
 
