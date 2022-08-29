@@ -107,7 +107,7 @@ default_language <- function() {
 
 read_request <- function(session, name, default = NULL) {
   if (!is.null(name)) {
-    if (exists(name, envir = session$request))
+    if (is.environment(session$request) && exists(name, envir = session$request))
       get(name, envir = session$request)
     else
       default

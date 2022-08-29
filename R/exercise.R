@@ -1,6 +1,13 @@
-current_exercise_version <- "3"
+current_exercise_version <- "4"
 
 # Shiny Exercise Handling -------------------------------------------------
+
+cache_complete_exercise <- function(exercise) {
+  exercise_full <- get_exercise_cache(exercise$label)
+  exercise <- append(exercise, exercise_full)
+  class(exercise) <- class(exercise_full)
+  exercise
+}
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
@@ -82,7 +89,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # - checker code (check, code-check, error-check)
     # - solution
     # - engine
-    exercise <- append(exercise, get_exercise_cache(exercise$label))
+    exercise <- cache_complete_exercise(exercise)
 
     check_was_requested <- exercise$should_check
     # remove "should_check" item from exercise for legacy reasons, it's inferred downstream
@@ -202,8 +209,16 @@ setup_exercise_handler <- function(exercise_rx, session) {
 # mismatch between the version used to serve the tutorial and the version used
 # to evaluate the exercise (external evaluator).
 upgrade_exercise <- function(exercise, require_items = NULL) {
+  prepend_engine_class <- function(exercise) {
+    class(exercise) <- c(
+      setdiff(union(exercise$engine, class(exercise)), "tutorial_exercise"),
+      "tutorial_exercise"
+    )
+    exercise
+  }
+
   if (identical(exercise$version, current_exercise_version)) {
-    return(exercise)
+    return(prepend_engine_class(exercise))
   }
 
   if (!is.null(exercise$version)) {
@@ -251,7 +266,14 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
     exercise$version <- 3
   }
 
-  # Future logic to upgrade an exercise from version 3 to version N goes here...
+  if (exercise$version == 3) {
+    # upgrade from version 3 to version 4
+    # => exercise class now includes engine (first) and `tutorial_exercise` (last)
+    exercise <- prepend_engine_class(exercise)
+    exercise$version <- 4
+  }
+
+  # Future logic to upgrade an exercise from version 4 to version N goes here...
 
   if (identical(exercise$version, current_version)) {
     return(exercise)
@@ -588,8 +610,11 @@ render_exercise <- function(exercise, envir) {
   local_restore_options_and_envvars()
 
   # Make sure exercise (& setup) chunk options and code are prepped for rendering
-  exercise <- prepare_exercise(exercise)
+  exercise <- render_exercise_prepare(exercise)
 
+  # TODO: Refactor `output_format_exercise()` so that we can decouple it from
+  # the `output_format` arguments in `render_exercise_evaluate_{prep,user}()`.
+  #
   # capture the last value and use a regular output handler for value
   # https://github.com/r-lib/evaluate/blob/e81ba2ba181827a86525767371e6dfdeb364c8b7/R/output.r#L54-L56
   # @param value Function to handle the values returned from evaluation. If it
@@ -644,34 +669,23 @@ render_exercise <- function(exercise, envir) {
     )
   }
 
-  # Prepare code chunks containing exercise prep (setup) and user code
-  rmd_src_prep <- exercise_code_chunks_prep(exercise)
-  rmd_src_user <- exercise_code_chunks_user_rmd(exercise)
-
+  # Set up prep and result environments (both will be modified during render)
   envir_prep <- duplicate_env(envir)
-  # placeholder envir_result in case an error occurs with setup chunks
   envir_result <- envir_prep
 
   # First, Rmd to markdown (and exit early if any error)
   output_file <- tryCatch({
-    render_stage <- "setup"
-    local({
-      if (length(rmd_src_prep) > 0) {
-        rmd_file_prep <- "exercise_prep.Rmd"
-        writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
-        on.exit(unlink(dir(pattern = "exercise_prep")), add = TRUE)
+    # — Render Exercise Stage: Prep ----
+    # TODO: The render stage and everything associated with it should really be
+    #       named "setup", e.g. `envir_setup`, etc. The stage here is called
+    #       "prep" to avoid confusion with the current naming.
+    render_stage <- "prep"
 
-        # First pass without user code to get envir_prep
-        rmd_file_prep_html <- rmarkdown::render(
-          input = rmd_file_prep,
-          output_format = output_format_exercise(user = FALSE),
-          envir = envir_prep,
-          clean = TRUE,
-          quiet = TRUE,
-          run_pandoc = FALSE
-        )
-      }
-    })
+    render_exercise_evaluate_prep(
+      exercise = exercise,
+      envir_prep = envir_prep,
+      output_format_exercise(user = FALSE)
+    )
 
     # Create exercise.Rmd after running setup so it isn't accidentally overwritten
     if (file.exists("exercise.Rmd")) {
@@ -682,26 +696,19 @@ render_exercise <- function(exercise, envir) {
         immediate. = TRUE
       )
     }
-    rmd_file_user <- "exercise.Rmd"
-    writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
 
+    # — Render Exercise Stage: User ----
+    render_stage <- "user"
     # Copy in a full clone `envir_prep` before running user code in `envir_result`
     # By being a sibling to `envir_prep` (rather than a dependency),
     # alterations to `envir_prep` from eval'ing code in `envir_result`
     # are much more difficult
     envir_result <- duplicate_env(envir_prep)
 
-    render_stage <- "user"
-    with_masked_env_vars(
-      # Now render user code for final result
-      rmarkdown::render(
-        input = rmd_file_user,
-        output_format = output_format_exercise(user = TRUE),
-        envir = envir_result,
-        clean = FALSE,
-        quiet = TRUE,
-        run_pandoc = FALSE
-      )
+    render_exercise_evaluate_user(
+      exercise = exercise,
+      envir_result = envir_result,
+      output_format_exercise(user = TRUE)
     )
   }, error = function(e) {
     msg <- conditionMessage(e)
@@ -711,8 +718,8 @@ render_exercise <- function(exercise, envir) {
       return(exercise_result_timeout())
     }
 
-    if (render_stage == "setup") {
-      # errors in setup code should be returned as internal error results
+    if (render_stage == "prep") {
+      # errors in setup (prep) code should be returned as internal error results
       return(
         exercise_result_error_internal(
           exercise = exercise,
@@ -760,30 +767,56 @@ render_exercise <- function(exercise, envir) {
     )
   }
 
-  if (is_exercise_engine(exercise, "sql")) {
-    # make sql result available as the last value from the exercise
-    if (exists("___sql_result", envir = envir_result)) {
-      if (!is.null(exercise[["options"]][["output.var"]])) {
-        # the author expected the sql results in a specific variable
-        assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
-      }
-      rm("___sql_result", envir = envir_result)
-    }
-
-    # make the connection object available in envir_prep (used by gradethis)
-    con_name <- exercise[["opts_chunk"]][["connection"]]
-    con <- get0(con_name, envir = envir, ifnotfound = NULL)
-    if (!is.null(con) && isS4(con) && inherits(con, "DBIConnection")) {
-      assign(con_name, con, envir = envir_prep)
-    }
-  }
-
-  list(
+  render_exercise_result(
+    exercise = exercise,
+    envir_render = envir,
+    envir_prep = envir_prep,
+    envir_result = envir_result,
     evaluate_result = evaluate_result,
     last_value = last_value,
-    html_output = html_output,
-    envir_result = envir_result,
-    envir_prep = envir_prep
+    html_output = html_output
+  )
+}
+
+render_exercise_evaluate_prep <- function(exercise, envir_prep, output_format) {
+  withr::defer(render_exercise_post_stage_hook(exercise, "prep", envir_prep))
+
+  rmd_src_prep <- render_exercise_rmd_prep(exercise)
+
+  if (length(rmd_src_prep) > 0) {
+    rmd_file_prep <- "exercise_prep.Rmd"
+    writeLines(rmd_src_prep, con = rmd_file_prep, useBytes = TRUE)
+    on.exit(unlink(dir(pattern = "exercise_prep")), add = TRUE)
+
+    # First pass without user code to get envir_prep
+    rmd_file_prep_html <- rmarkdown::render(
+      input = rmd_file_prep,
+      output_format = output_format,
+      envir = envir_prep,
+      clean = TRUE,
+      quiet = TRUE,
+      run_pandoc = FALSE
+    )
+  }
+}
+
+render_exercise_evaluate_user <- function(exercise, envir_result, output_format) {
+  withr::defer(render_exercise_post_stage_hook(exercise, "user", envir_result))
+
+  rmd_src_user <- render_exercise_rmd_user(exercise)
+  rmd_file_user <- "exercise.Rmd"
+  writeLines(rmd_src_user, con = rmd_file_user, useBytes = TRUE)
+
+  with_masked_env_vars(
+    # Now render user code for final result
+    rmarkdown::render(
+      input = rmd_file_user,
+      output_format = output_format,
+      envir = envir_result,
+      clean = FALSE,
+      quiet = TRUE,
+      run_pandoc = FALSE
+    )
   )
 }
 
@@ -828,28 +861,6 @@ exercise_code_chunks <- function(chunks) {
     )
   }, character(1))
 }
-
-
-exercise_code_chunks_user_rmd <- function(exercise) {
-  rmd_src_user <- c(
-    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
-    "",
-    exercise_code_chunks_user(exercise)
-  )
-
-  if (is_exercise_engine(exercise, "sql")) {
-    rmd_src_user <- c(
-      rmd_src_user,
-      "",
-      '```{r eval=exists("___sql_result")}',
-      'get("___sql_result")',
-      "```"
-    )
-  }
-
-  rmd_src_user
-}
-
 
 exercise_get_blanks_pattern <- function(exercise) {
   exercise_blanks_opt <-
@@ -1149,7 +1160,7 @@ is_error_result <- function(x) {
   is_exercise_result(x) && length(x$error_message)
 }
 
-# Exercise Prep -----------------------------------------------------------
+# Render Exercise Prep ----------------------------------------------------
 
 is_exercise_engine <- function(exercise, engine) {
   identical(knitr_engine(exercise$engine), knitr_engine(engine))
@@ -1191,8 +1202,12 @@ filter_dependencies <- function(dependencies) {
   })
 }
 
+render_exercise_prepare <- function(exercise, ...) {
+  UseMethod("render_exercise_prepare", exercise)
+}
 
-prepare_exercise <- function(exercise) {
+#' @export
+render_exercise_prepare.default <- function(exercise, ...) {
   forced_opts_exercise <- list(
     tutorial = NULL,
     engine = NULL,
@@ -1204,8 +1219,6 @@ prepare_exercise <- function(exercise) {
     dev = "png",
     dpi = 92
   )
-
-  exercise <- prepare_exercise_if_sql(exercise)
 
   exercise[["opts_chunk"]] <- merge_chunk_options(
     inherited = exercise[["options"]],
@@ -1252,11 +1265,8 @@ prepare_exercise <- function(exercise) {
   exercise
 }
 
-prepare_exercise_if_sql <- function(exercise) {
-  if (!is_exercise_engine(exercise, "sql")) {
-    return(exercise)
-  }
-
+#' @export
+render_exercise_prepare.sql <- function(exercise, ...) {
   # Disable invisible warning (that's how sql chunks work)
   exercise[["options"]][["exercise.warn_invisible"]] <- FALSE
 
@@ -1272,7 +1282,14 @@ prepare_exercise_if_sql <- function(exercise) {
     chunk
   })
 
-  exercise
+  NextMethod()
+}
+
+#' @export
+render_exercise_prepare.python <- function(exercise, ...) {
+  rlang::check_installed("reticulate", "for Python exercises")
+
+  NextMethod()
 }
 
 # `chunk` are options that user supplied in Rmd (assumed to be strings)
@@ -1310,6 +1327,154 @@ local_restore_options_and_envvars <- function(.local_envir = parent.frame()) {
   local_restore_options(.local_envir)
   local_restore_envvars(.local_envir)
 }
+
+# Render Exercise RMD -----------------------------------------------------
+# — Prep ----
+render_exercise_rmd_prep <- function(exercise, ...) {
+  UseMethod("render_exercise_rmd_prep", exercise)
+}
+
+#' @export
+render_exercise_rmd_prep.default <- function(exercise, ...) {
+  exercise_code_chunks_prep(exercise)
+}
+
+# — User ----
+render_exercise_rmd_user <- function(exercise, ...) {
+  UseMethod("render_exercise_rmd_user", exercise)
+}
+
+#' @export
+render_exercise_rmd_user.default <- function(exercise, ...) {
+  c(
+    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
+    "",
+    exercise_code_chunks_user(exercise)
+  )
+}
+
+#' @export
+render_exercise_rmd_user.sql <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # knitr's sql chunk engine will either display the results or return the
+    # results back to R. We want both, so we ask knitr to return the result and
+    # then we explicitly print it in the chunk below.
+    '```{r eval=exists("___sql_result")}',
+    'get("___sql_result")',
+    "```"
+  )
+}
+
+#' @export
+render_exercise_rmd_user.python <- function(exercise, ...) {
+  rmd_src_user <- NextMethod()
+
+  c(
+    rmd_src_user,
+    "",
+    # this is how we get the `last_value` from the python session
+    '```{r include=FALSE}',
+    'reticulate::py_run_string("import builtins")',
+    'reticulate::py_eval("builtins._", convert=FALSE)',
+    "```"
+  )
+}
+
+# Render Exercise Stage Hook ----------------------------------------------
+
+# This generic is called AFTER rendering the exercise at the "prep" and "user"
+# stages. At the "prep" stage it receives the `envir_prep`, the environment
+# after evaluating the setup chunks. At the "user" stage it receives
+# `envir_result`, the environment after rendering the user's code.
+render_exercise_post_stage_hook <- function(exercise, stage, envir, ...) {
+  UseMethod("render_exercise_post_stage_hook", exercise)
+}
+
+#' @export
+render_exercise_post_stage_hook.default <- function(exercise, ...) {
+  invisible()
+}
+
+#' @export
+render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
+  # Add copy of python environment into the prep/restult environment
+  assign(".__py__", duplicate_py_env(py_global_env()), envir = envir)
+  invisible()
+}
+
+# Render Exercise Result --------------------------------------------------
+
+render_exercise_result <- function(
+  exercise,
+  ...,
+  envir_render,
+  envir_prep,
+  envir_result,
+  evaluate_result,
+  last_value,
+  html_output
+) {
+  UseMethod("render_exercise_result", exercise)
+}
+
+#' @export
+render_exercise_result.default <- function(
+  exercise,
+  envir_prep,
+  envir_result,
+  evaluate_result,
+  last_value,
+  html_output,
+  ...
+) {
+  list(
+    evaluate_result = evaluate_result,
+    last_value = last_value,
+    html_output = html_output,
+    envir_result = envir_result,
+    envir_prep = envir_prep
+  )
+}
+
+#' @export
+render_exercise_result.sql <- function(
+  exercise,
+  envir_render,
+  envir_prep,
+  envir_result,
+  last_value,
+  ...
+) {
+  # make sql result available as the last value from the exercise
+  if (exists("___sql_result", envir = envir_result)) {
+    if (!is.null(exercise[["options"]][["output.var"]])) {
+      # the author expected the sql results in a specific variable
+      assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
+    }
+    rm("___sql_result", envir = envir_result)
+  }
+
+  # make the connection object available in envir_prep (used by gradethis)
+  con_name <- exercise[["opts_chunk"]][["connection"]]
+  con <- get0(con_name, envir = envir_render, ifnotfound = NULL)
+  if (!is.null(con) && isS4(con) && inherits(con, "DBIConnection")) {
+    assign(con_name, con, envir = envir_prep)
+  }
+
+  # we've only modified environments, so we can return the default method
+  NextMethod()
+}
+
+#' @export
+render_exercise_result.python <- function(exercise, ...) {
+  # scrub `evaluate_result` for python exercises
+  NextMethod(evaluate_result = NULL)
+}
+
 
 # Exercise Eval Environment Helpers ---------------------------------------
 
@@ -1368,7 +1533,8 @@ format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
       if (is.null(x[[chunk]]) || !nzchar(x[[chunk]])) next
       support_chunk <- mock_chunk(
         label = paste0(label, "-", sub("_", "-", chunk)),
-        code = x[[chunk]]
+        code = x[[chunk]],
+        engine = if (chunk == "solution") x$engine
       )
       x$chunks <- c(x$chunks, list(support_chunk))
     }

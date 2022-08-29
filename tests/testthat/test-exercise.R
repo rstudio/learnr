@@ -351,14 +351,14 @@ test_that("render_exercise() user code exercise.Rmd snapshot", {
       mock_chunk("ex-setup", "SETUP_CODE")
     )
   )
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex)))
+  expect_snapshot(writeLines(render_exercise_rmd_user(ex)))
 
   ex_sql <- mock_exercise(
     user_code = 'SELECT * FROM USER',
     solution_code = "SELECT * FROM SOLUTION",
     engine = "sql"
   )
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(ex_sql)))
+  expect_snapshot(writeLines(render_exercise_rmd_user(ex_sql)))
 })
 
 # evaluate_exercise() -----------------------------------------------------
@@ -579,7 +579,7 @@ test_that("exercise versions upgrade correctly", {
   expect_match(ex_1_upgraded$tutorial$tutorial_id, "UPGRADE")
   expect_match(ex_1_upgraded$tutorial$tutorial_version, "-1")
   expect_match(ex_1_upgraded$tutorial$user_id, "UPGRADE")
-  expect_equal(paste(ex_1_upgraded$version), "3")
+  expect_equal(paste(ex_1_upgraded$version), current_exercise_version)
 
   ex_2 <- mock_exercise(version = "2")
   expect_type(ex_2$tutorial, "list")
@@ -596,6 +596,10 @@ test_that("exercise versions upgrade correctly", {
   ex_3 <- mock_exercise(version = "3")
   expect_type(ex_3$tutorial, "list")
   expect_identical(ex_3$tutorial, upgrade_exercise(ex_3)$tutorial)
+  expect_s3_class(upgrade_exercise(ex_3), "r")
+
+  ex_3_python <- mock_exercise(version = 3, engine = "python")
+  expect_s3_class(upgrade_exercise(ex_3_python), "python")
 
   # future versions
   ex_99 <- mock_exercise(version = 99)
@@ -1290,7 +1294,7 @@ test_that("SQL exercises - without explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1338,7 +1342,7 @@ test_that("SQL exercises - with explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1355,10 +1359,52 @@ test_that("SQL exercises - with explicit `output.var`", {
   DBI::dbDisconnect(con)
 })
 
+test_that("Python exercises - simple example", {
+  skip_if_not_installed("reticulate")
+  skip_if_not(reticulate::py_available(), "Python not available on this system")
+  withr::defer(clear_py_env())
 
-# prepare_exercise() ------------------------------------------------------
+  ex_py <- mock_exercise(
+    user_code = "3 + 3",
+    solution_code = "3 + 3",
+    engine = "python"
+  )
 
-test_that("prepare_exercise() removes forced default chunk options from exercise chunk", {
+  res <- withr::with_tempdir(render_exercise(ex_py, new.env()))
+
+  expect_equal(res$last_value, 6)
+  expect_null(res$evaluate_result)
+  expect_match(as.character(res$html_output), "<code>6</code>")
+  expect_true(exists('.__py__', res$envir_prep))
+  expect_true(exists('.__py__', res$envir_result))
+})
+
+test_that("Python exercises - assignment example", {
+  skip_if_not_installed("reticulate")
+  skip_if_not(reticulate::py_available(), "Python not available on this system")
+  withr::defer(clear_py_env())
+
+  ex_py <- mock_exercise(
+    user_code = "x = 3 + 3",
+    solution_code = "x = 3 + 3",
+    engine = "python"
+  )
+
+  res <- withr::with_tempdir(render_exercise(ex_py, new.env()))
+
+  # TODO: invisible values should be more explicit
+  expect_equal(res$last_value, "__reticulate_placeholder__")
+  expect_null(res$evaluate_result)
+  expect_true(exists('.__py__', res$envir_prep))
+  expect_true(exists('.__py__', res$envir_result))
+  result <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  result <- reticulate::py_to_r(result)
+  expect_equal(result$x, 6)
+})
+
+# render_exercise_prepare() ------------------------------------------------------
+
+test_that("render_exercise_prepare() removes forced default chunk options from exercise chunk", {
   ex <- mock_exercise(
     label = "ex",
     check = TRUE,
@@ -1368,8 +1414,8 @@ test_that("prepare_exercise() removes forced default chunk options from exercise
   # `eval = FALSE` is set on the exercise chunk option
   expect_false(ex$chunks[[1]]$opts$eval)
 
-  # but `prepare_exercise()` removes that option
-  expect_null(prepare_exercise(ex)$chunks[[1]]$opts$eval)
+  # but `render_exercise_prepare()` removes that option
+  expect_null(render_exercise_prepare(ex)$chunks[[1]]$opts$eval)
 
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback$checker_args$last_value, 2)

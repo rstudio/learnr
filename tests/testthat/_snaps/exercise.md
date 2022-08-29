@@ -1,7 +1,7 @@
 # render_exercise() user code exercise.Rmd snapshot
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(ex))
+      writeLines(render_exercise_rmd_user(ex))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function
@@ -19,7 +19,7 @@
 ---
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(ex_sql))
+      writeLines(render_exercise_rmd_user(ex_sql))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function
@@ -41,7 +41,7 @@
 # SQL exercises - without explicit `output.var`
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine)))
+      writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine)))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function
@@ -63,7 +63,7 @@
 # SQL exercises - with explicit `output.var`
 
     Code
-      writeLines(exercise_code_chunks_user_rmd(prepare_exercise(ex_sql_engine)))
+      writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine)))
     Output
       ```{r learnr-setup, include=FALSE}
       # hack the pager function so that we can print help with custom pager function

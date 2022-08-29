@@ -159,7 +159,12 @@ mock_exercise <- function(
     }
   }
 
-  structure(ex, class = c("mock_exercise", "tutorial_exercise"))
+  class <- c("mock_exercise", "tutorial_exercise")
+  if (version == 4) {
+    class <- c(engine, class)
+  }
+
+  structure(ex, class = class)
 }
 
 assert_unique_exercise_chunk_labels <- function(chunks, label) {
