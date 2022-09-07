@@ -51,9 +51,9 @@ evaluates the student's submission and returns a custom result.
 }
 \section{Functions}{
 \itemize{
-\item \code{answer}: Create an answer option
+\item \code{answer()}: Create an answer option
 
-\item \code{answer_fn}: Evaluate the student's submission to determine correctness
+\item \code{answer_fn()}: Evaluate the student's submission to determine correctness
 and to return feedback.
-}}
 
+}}

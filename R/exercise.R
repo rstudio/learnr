@@ -703,7 +703,7 @@ render_exercise <- function(exercise, envir) {
     # By being a sibling to `envir_prep` (rather than a dependency),
     # alterations to `envir_prep` from eval'ing code in `envir_result`
     # are much more difficult
-    envir_result <- duplicate_env(envir_prep)
+    envir_result <- render_exercise_duplicate_env(exercise, envir_prep)
 
     render_exercise_evaluate_user(
       exercise = exercise,
@@ -1399,11 +1399,26 @@ render_exercise_post_stage_hook.default <- function(exercise, ...) {
   invisible()
 }
 
+
+# Render Exercise Duplicate Env -------------------------------------------
+
+# This generic duplicates an environment, generally to take `envir_prep` and
+# provide a new environment to be used for `envir_result`.
+render_exercise_duplicate_env <- function(exercise, envir, ...) {
+  UseMethod("render_exercise_duplicate_env", exercise)
+}
+
 #' @export
-render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
+render_exercise_duplicate_env.default <- function(exercise, envir, ...) {
+  duplicate_env(envir)
+}
+
+#' @export
+render_exercise_duplicate_env.python <- function(exercise, envir, ...) {
+  envir <- NextMethod()
   # Add copy of python environment into the prep/restult environment
   assign(".__py__", duplicate_py_env(py_global_env()), envir = envir)
-  invisible()
+  envir
 }
 
 # Render Exercise Result --------------------------------------------------

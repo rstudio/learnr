@@ -78,11 +78,11 @@ having to create a learnr tutorial.
 }
 \section{Functions}{
 \itemize{
-\item \code{mock_exercise}: Create a learnr exercise object
+\item \code{mock_exercise()}: Create a learnr exercise object
 
-\item \code{mock_chunk}: Create a mock exercise-supporting chunk
+\item \code{mock_chunk()}: Create a mock exercise-supporting chunk
+
 }}
-
 \examples{
 mock_exercise(
   user_code = "1 + 1",
