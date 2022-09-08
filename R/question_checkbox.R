@@ -56,7 +56,7 @@ question_checkbox <- function(
   ...,
   correct = "Correct!",
   incorrect = "Incorrect",
-  try_again = incorrect,
+  try_again = "Incorrect. Be sure to select every correct answer.",
   allow_retry = FALSE,
   random_answer_order = FALSE
 ) {
