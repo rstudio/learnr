@@ -74,32 +74,26 @@ py_global_env <- function() {
 duplicate_py_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
+  # grab Python utility functions
+  py_utilities <- py_maybe_load_utilities()
+
   # extract all objects of `reticulate::py` (the main module)
   py_env <- reticulate::py_get_attr(py_global_env(), "__dict__")
 
-  # imports to help check and copy objects
-  builtins <- reticulate::import('builtins', convert = FALSE)
-  types <- reticulate::import('types', convert = FALSE)
-  copy <- reticulate::import('copy', convert = FALSE)
+  # deep copy Python environment
+  py_utilities$deep_copy(py_env)
+}
 
-  # create a new list of deep-copied objects
-  keys <- reticulate::py_to_r(builtins$list(py_env$keys()))
-  new_py_env <- lapply(
-    keys,
-    function(k) {
-      object <- reticulate::py_eval(k, F)
-      # exclude `r` and modules which cannot be deep copied
-      if (k == 'r' || reticulate::py_to_r(builtins$isinstance(object, types$ModuleType))) {
-        object
-      } else {
-        # copy all other objects
-        copy$deepcopy(object)
-      }
-    }
+py_maybe_load_utilities <- function() {
+  utilities <- reticulate::py[["__dict__"]][["__learnr__"]]
+  if (!is.null(utilities)) {
+    return(utilities)
+  }
+
+  reticulate::py_run_file(
+    system.file("internals", "learnr.py", package = "learnr"),
+    convert = FALSE
   )
-  # set keys back and convert to a Python dictionary
-  names(new_py_env) <- keys
-  reticulate::r_to_py(new_py_env)
 }
 
 #' This clears the Python environment `py`.
