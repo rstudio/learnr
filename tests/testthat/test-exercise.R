@@ -1361,8 +1361,8 @@ test_that("SQL exercises - with explicit `output.var`", {
 
 test_that("Python exercises - simple example", {
   skip_if_not_installed("reticulate")
-  skip_if_not(reticulate::py_available(initialize = TRUE), "Python not available on this system")
-  withr::defer(py_clear_env())
+  skip_if_not_py_available()
+  local_py_env()
 
   ex_py <- mock_exercise(
     user_code = "3 + 3",
@@ -1381,8 +1381,8 @@ test_that("Python exercises - simple example", {
 
 test_that("Python exercises - assignment example", {
   skip_if_not_installed("reticulate")
-  skip_if_not(reticulate::py_available(initialize = TRUE), "Python not available on this system")
-  withr::defer(py_clear_env())
+  skip_if_not_py_available()
+  local_py_env()
 
   ex_py <- mock_exercise(
     user_code = "x = 3 + 3",

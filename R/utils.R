@@ -58,6 +58,10 @@ py_global_env <- function() {
   reticulate::py
 }
 
+py_global_dict <- function() {
+  reticulate::py_get_attr(py_global_env(), "__dict__")
+}
+
 #' Create a duplicate of a Python environment
 #'
 #' @return a Python `Dict` or dictionary
@@ -77,14 +81,15 @@ py_copy_global_env <- function() {
   py_utils <- py_learnr_utilities()
 
   # extract all objects of `reticulate::py` (the main module)
-  py_env <- reticulate::py_get_attr(py_global_env(), "__dict__")
+  py_env_dict <- py_global_dict()
 
   # deep copy Python environment
-  py_utils$deep_copy(py_env)
+  reticulate::py_call(py_utils$deep_copy, py_env_dict)
 }
 
 py_learnr_utilities <- function() {
-  utilities <- reticulate::py[["__dict__"]][["__learnr__"]]
+  py_env_dict <- py_global_dict()
+  utilities <- py_env_dict[["__learnr__"]]
   if (!is.null(utilities)) {
     return(utilities)
   }
@@ -117,6 +122,10 @@ py_clear_env <- function() {
     }
   })
   return(invisible())
+}
+
+local_py_env <- function(envir = parent.frame()) {
+  withr::defer(py_clear_env())
 }
 
 # backport errorCondition for R < 3.6.0
