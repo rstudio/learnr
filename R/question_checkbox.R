@@ -66,6 +66,7 @@ question_checkbox <- function(
     type = "learnr_checkbox",
     correct = correct,
     incorrect = incorrect,
+    try_again = try_again,
     allow_retry = allow_retry,
     random_answer_order = random_answer_order
   )
