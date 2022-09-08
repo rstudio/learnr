@@ -66,25 +66,30 @@ py_global_env <- function() {
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' new_py_envir <- duplicate_py_env()
 #' new_py_envir$items()
+#' }
 duplicate_py_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
   # extract all objects of `reticulate::py` (the main module)
   py_env <- reticulate::py_get_attr(py_global_env(), "__dict__")
+
+  # imports to help check and copy objects
+  builtins <- reticulate::import('builtins', convert = FALSE)
   types <- reticulate::import('types', convert = FALSE)
   copy <- reticulate::import('copy', convert = FALSE)
 
   # create a new list of deep-copied objects
-  keys <- reticulate::py$builtins$list(py_env$keys())
+  keys <- reticulate::py_to_r(builtins$list(py_env$keys()))
   new_py_env <- lapply(
     keys,
     function(k) {
       object <- reticulate::py_eval(k, F)
       # exclude `r` and modules which cannot be deep copied
-      if (k == 'r' || reticulate::py$builtins$isinstance(object, types$ModuleType)) {
+      if (k == 'r' || reticulate::py_to_r(builtins$isinstance(object, types$ModuleType))) {
         object
       } else {
         # copy all other objects
@@ -107,9 +112,11 @@ duplicate_py_env <- function() {
 #' @return Nothing
 #'
 #' @examples
+#' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' # this removes the `x`
 #' clear_py_env()
+#' }
 clear_py_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
