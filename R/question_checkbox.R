@@ -56,7 +56,7 @@ question_checkbox <- function(
   ...,
   correct = "Correct!",
   incorrect = "Incorrect",
-  try_again = incorrect,
+  try_again = "Incorrect. Be sure to select every correct answer.",
   allow_retry = FALSE,
   random_answer_order = FALSE
 ) {
@@ -66,6 +66,7 @@ question_checkbox <- function(
     type = "learnr_checkbox",
     correct = correct,
     incorrect = incorrect,
+    try_again = try_again,
     allow_retry = allow_retry,
     random_answer_order = random_answer_order
   )
