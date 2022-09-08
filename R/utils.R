@@ -62,29 +62,28 @@ py_global_env <- function() {
 #'
 #' @return a Python `Dict` or dictionary
 #'
-#' @noRd
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
-#' new_py_envir <- duplicate_py_env()
+#' new_py_envir <- py_copy_global_env()
 #' new_py_envir$items()
 #' }
-duplicate_py_env <- function() {
+py_copy_global_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
   # grab Python utility functions
-  py_utilities <- py_maybe_load_utilities()
+  py_utils <- py_learnr_utilities()
 
   # extract all objects of `reticulate::py` (the main module)
   py_env <- reticulate::py_get_attr(py_global_env(), "__dict__")
 
   # deep copy Python environment
-  py_utilities$deep_copy(py_env)
+  py_utils$deep_copy(py_env)
 }
 
-py_maybe_load_utilities <- function() {
+py_learnr_utilities <- function() {
   utilities <- reticulate::py[["__dict__"]][["__learnr__"]]
   if (!is.null(utilities)) {
     return(utilities)
@@ -93,7 +92,7 @@ py_maybe_load_utilities <- function() {
   reticulate::py_run_file(
     system.file("internals", "learnr.py", package = "learnr"),
     convert = FALSE
-  )
+  )[["__learnr__"]]
 }
 
 #' This clears the Python environment `py`.
@@ -101,7 +100,6 @@ py_maybe_load_utilities <- function() {
 #' It will keep important initial objects such as `py` (main module),
 #' `r` (reticulate interface to R), and the `builtins` module.
 #'
-#' @noRd
 #' @keywords internal
 #' @return Nothing
 #'
@@ -109,9 +107,9 @@ py_maybe_load_utilities <- function() {
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' # this removes the `x`
-#' clear_py_env()
+#' py_clear_env()
 #' }
-clear_py_env <- function() {
+py_clear_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
     if (!obj_name %in% c("r", "sys", "builtins")) {
