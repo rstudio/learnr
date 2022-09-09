@@ -59,6 +59,7 @@ py_global_env <- function() {
 }
 
 py_global_dict <- function() {
+  # extract all objects of `reticulate::py` (the main module)
   reticulate::py_get_attr(py_global_env(), "__dict__")
 }
 
@@ -77,14 +78,10 @@ py_global_dict <- function() {
 py_copy_global_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
-  # grab Python utility functions
   py_utils <- py_learnr_utilities()
 
-  # extract all objects of `reticulate::py` (the main module)
-  py_env_dict <- py_global_dict()
-
-  # deep copy Python environment
-  reticulate::py_call(py_utils$deep_copy, py_env_dict)
+  # NOTE: we copy via `py_call` to retain the dictionary as a Python object
+  reticulate::py_call(py_utils$deep_copy, py_global_dict())
 }
 
 py_learnr_utilities <- function() {
@@ -94,10 +91,8 @@ py_learnr_utilities <- function() {
     return(utilities)
   }
 
-  reticulate::py_run_file(
-    system.file("internals", "learnr.py", package = "learnr"),
-    convert = FALSE
-  )[["__learnr__"]]
+  learnr_py <- system.file("internals", "learnr.py", package = "learnr")
+  reticulate::py_run_file(learnr_py,convert = FALSE)[["__learnr__"]]
 }
 
 #' This clears the Python environment `py`.
@@ -125,7 +120,7 @@ py_clear_env <- function() {
 }
 
 local_py_env <- function(envir = parent.frame()) {
-  withr::defer(py_clear_env())
+  withr::defer(py_clear_env(), envir = envir)
 }
 
 # backport errorCondition for R < 3.6.0

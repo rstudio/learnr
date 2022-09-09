@@ -1377,6 +1377,12 @@ test_that("Python exercises - simple example", {
   expect_match(as.character(res$html_output), "<code>6</code>")
   expect_true(exists('.__py__', res$envir_prep))
   expect_true(exists('.__py__', res$envir_result))
+
+  # envir_prep and envir_result should be different objects
+  envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
+  envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  id <- reticulate::py$builtins$id
+  expect_false(identical(id(envir_prep_py), id(envir_result_py)))
 })
 
 test_that("Python exercises - assignment example", {
@@ -1399,6 +1405,11 @@ test_that("Python exercises - assignment example", {
   expect_true(exists('.__py__', res$envir_result))
   result <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
   expect_equal(result$x, 6)
+
+  envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
+  envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  id <- reticulate::py$builtins$id
+  expect_false(identical(id(envir_prep_py), id(envir_result_py)))
 })
 
 # render_exercise_prepare() ------------------------------------------------------
