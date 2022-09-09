@@ -1381,8 +1381,9 @@ test_that("Python exercises - simple example", {
   # envir_prep and envir_result should be different objects
   envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
   envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
-  id <- reticulate::py$builtins$id
-  expect_false(identical(id(envir_prep_py), id(envir_result_py)))
+  expect_false(
+    identical(reticulate::py_id(envir_prep_py), reticulate::py_id(envir_result_py))
+  )
 })
 
 test_that("Python exercises - assignment example", {
@@ -1408,8 +1409,9 @@ test_that("Python exercises - assignment example", {
 
   envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
   envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
-  id <- reticulate::py$builtins$id
-  expect_false(identical(id(envir_prep_py), id(envir_result_py)))
+  expect_false(
+    identical(reticulate::py_id(envir_prep_py), reticulate::py_id(envir_result_py))
+  )
 })
 
 # render_exercise_prepare() ------------------------------------------------------
