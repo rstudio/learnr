@@ -80,7 +80,8 @@ py_copy_global_env <- function() {
 
   py_utils <- py_learnr_utilities()
 
-  # NOTE: we copy via `py_call` to retain the dictionary as a Python object
+  # Calling `py_utils$deep_copy` results in a hybrid R-Python object, but
+  # invoking via `py_call` returns a Python object without R conversion
   reticulate::py_call(py_utils$deep_copy, py_global_dict())
 }
 
