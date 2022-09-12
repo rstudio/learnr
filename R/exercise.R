@@ -1401,8 +1401,8 @@ render_exercise_post_stage_hook.default <- function(exercise, ...) {
 
 #' @export
 render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
-  # Add copy of python environment into the prep/restult environment
-  assign(".__py__", duplicate_py_env(py_global_env()), envir = envir)
+  # Add copy of python environment into the prep/result environment
+  assign(".__py__", py_copy_global_env(), envir = envir)
   invisible()
 }
 

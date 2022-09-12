@@ -58,40 +58,59 @@ py_global_env <- function() {
   reticulate::py
 }
 
-# Create a duplicate of a Python environment
-#
-# @examples
-# reticulate::py_run_string("x = 3")
-# new_py_envir <- duplicate_py_env(py)
-# new_py_envir$items()
-#
-# @param module the `py` module accessed via `reticulate`
-#
-# @return a Python `Dict` or dictionary that is not converted to an R data type
-# @keywords internal
-duplicate_py_env <- function(module) {
-  rlang::check_installed("reticulate", "Python exercise support")
-
-  # extract all objects within this module
-  new_objs <- reticulate::py_get_attr(module, "__dict__")
-  # then create copy of the dictionary with all objects
-  copy <- reticulate::import("copy", convert = FALSE)
-  copy$copy(new_objs)
+py_global_dict <- function() {
+  # extract all objects of `reticulate::py` (the main module)
+  reticulate::py_get_attr(py_global_env(), "__dict__")
 }
 
-# This clears the Python environment `py`.
-#
-# It will keep important initial objects such as `py` (main module), 
-# `r` (reticulate interface to R), and the `builtins` module.
-#
-# @examples
-# reticulate::py_run_string("x = 3")
-# # this removes the `x`
-# clear_py_env()
-#
-# @return Nothing
-# @keywords internal
-clear_py_env <- function() {
+#' Create a duplicate of a Python environment
+#'
+#' @return a Python `Dict` or dictionary
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' reticulate::py_run_string("x = 3")
+#' new_py_envir <- py_copy_global_env()
+#' new_py_envir$items()
+#' }
+py_copy_global_env <- function() {
+  rlang::check_installed("reticulate", "Python exercise support")
+
+  py_utils <- py_learnr_utilities()
+
+  # Calling `py_utils$deep_copy` results in a hybrid R-Python object, but
+  # invoking via `py_call` returns a Python object without R conversion
+  reticulate::py_call(py_utils$deep_copy, py_global_dict())
+}
+
+py_learnr_utilities <- function() {
+  py_env_dict <- py_global_dict()
+  utilities <- py_env_dict[["__learnr__"]]
+  if (!is.null(utilities)) {
+    return(utilities)
+  }
+
+  learnr_py <- system.file("internals", "learnr.py", package = "learnr")
+  reticulate::py_run_file(learnr_py,convert = FALSE)[["__learnr__"]]
+}
+
+#' This clears the Python environment `py`.
+#'
+#' It will keep important initial objects such as `py` (main module),
+#' `r` (reticulate interface to R), and the `builtins` module.
+#'
+#' @keywords internal
+#' @return Nothing
+#'
+#' @examples
+#' \dontrun{
+#' reticulate::py_run_string("x = 3")
+#' # this removes the `x`
+#' py_clear_env()
+#' }
+py_clear_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
     if (!obj_name %in% c("r", "sys", "builtins")) {
@@ -99,6 +118,10 @@ clear_py_env <- function() {
     }
   })
   return(invisible())
+}
+
+local_py_env <- function(envir = parent.frame()) {
+  withr::defer(py_clear_env(), envir = envir)
 }
 
 # backport errorCondition for R < 3.6.0

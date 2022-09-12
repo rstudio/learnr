@@ -32,6 +32,10 @@ skip_on_ci_if_not_pr <- function() {
   skip("Skipping on CI, tests run in PR checks only")
 }
 
+skip_if_not_py_available <- function() {
+  skip_if_not(reticulate::py_available(initialize = TRUE), "Python not available on this system")
+}
+
 expect_marked_as <- function(object, correct, messages = NULL) {
   if (is.null(messages)) {
     expect_equal(object, mark_as(correct))

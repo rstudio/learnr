@@ -4,6 +4,7 @@
 .Ruserdata
 .DS_Store
 .vscode
+__pycache__
 Untitled
 issues
 node_modules
