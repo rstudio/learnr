@@ -165,7 +165,7 @@
     -   `run_tutorial()` now renders tutorials in a temp directory if the R user does not have write permissions (#347).
 
 -   Many of the HTML dependencies used by learnr have been updated to more recent versions (#655). learnr now uses:
-    -   [Ace](https://ace.c9.io/) version [1.4.14](https://github.com/ajaxorg/ace/blob/HEAD/ChangeLog.txt)
+    -   [Ace](https://ace.c9.io/) version [1.10.1](https://github.com/ajaxorg/ace/blob/ff3dd698/CHANGELOG.md)
     -   [clipboard.js](https://clipboardjs.com/) version [2.0.10](https://github.com/zenorocha/clipboard.js/releases)
     -   [Bootbox](http://bootboxjs.com/) version [5.5.2](https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md)
     -   [i18next](https://www.i18next.com/) version [21.6.10](https://github.com/i18next/i18next/blob/master/CHANGELOG.md)
