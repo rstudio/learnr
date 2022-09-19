@@ -82,3 +82,28 @@
       get("___sql_result")
       ```
 
+# exercise print method
+
+    Code
+      example_exercise
+    Output
+      ```{r "ex", exercise=TRUE}
+      1 + 1
+      ```
+      
+      ```{r "ex-solution"}
+      2 + 2
+      ```
+      
+      ```{r "ex-code-check"}
+      3 + 3
+      ```
+      
+      ```{r "ex-check"}
+      5 + 5
+      ```
+      
+      ```{r "ex-error-check"}
+      4 + 4
+      ```
+

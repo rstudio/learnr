@@ -1432,3 +1432,20 @@ test_that("render_exercise_prepare() removes forced default chunk options from e
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback$checker_args$last_value, 2)
 })
+
+
+# Exercise Print Method ---------------------------------------------------
+
+test_that("exercise print method", {
+  local_edition(3)
+
+  example_exercise <- mock_exercise(
+    user_code = "1 + 1",
+    solution_code = "2 + 2",
+    code_check = "3 + 3",
+    error_check = "4 + 4",
+    check = "5 + 5"
+  )
+
+  expect_snapshot(example_exercise)
+})
