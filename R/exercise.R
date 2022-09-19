@@ -848,15 +848,17 @@ exercise_code_chunks_user <- function(exercise) {
   exercise_code_chunks(user_chunk)
 }
 
-exercise_code_chunks <- function(chunks) {
-  vapply(chunks, function(x) {
-    opts <- x$opts[setdiff(names(x$opts), "label")]
+exercise_code_chunks <- function(chunks, engine = "r") {
+  vapply(chunks, function(chunk) {
+    opts <- chunk$opts[setdiff(names(chunk$opts), "label")]
     opts <- paste(names(opts), unname(opts), sep = "=")
+    chunk_engine <- chunk$engine %||% engine %||% "r"
+    chunk_opts <- paste0(c(dput_to_string(chunk$label), opts), collapse = ", ")
     paste(
       sep = "\n",
       # we quote the label to ensure that it is treated as a label and not a symbol for instance
-      sprintf("```{%s %s}", x$engine, paste0(c(dput_to_string(x$label), opts), collapse = ", ")),
-      paste0(x$code, collapse = "\n"),
+      sprintf("```{%s %s}", chunk_engine, chunk_opts),
+      paste0(chunk$code, collapse = "\n"),
       "```"
     )
   }, character(1))
@@ -1534,12 +1536,12 @@ format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
       support_chunk <- mock_chunk(
         label = paste0(label, "-", sub("_", "-", chunk)),
         code = x[[chunk]],
-        engine = if (chunk == "solution") x$engine
+        engine = x$engine
       )
       x$chunks <- c(x$chunks, list(support_chunk))
     }
   }
-  chunks <- exercise_code_chunks(x$chunks)
+  chunks <- exercise_code_chunks(x$chunks, x$engine)
   paste(chunks, collapse = "\n\n")
 }
 
