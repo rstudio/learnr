@@ -182,11 +182,11 @@
 
 -   Support the updated Bootstrap 4+ popover dispose method name, previously destroy (#560).
 
--   Forked evaluator (used by default on Linux and [shinyapps.io](https://shinyapps.io)) now only collects the exercise evaluation result once, avoiding a "cannot wait for child" warning (thanks @tombeesley #449, #631).
+-   Forked evaluator (used by default on Linux and [shinyapps.io](https://www.shinyapps.io/)) now only collects the exercise evaluation result once, avoiding a "cannot wait for child" warning (thanks @tombeesley #449, #631).
 
 -   `learnr::tutorial()` now allows authors to adjust the value of `lib_dir` (#648).
 
--   learnr now uses and suggests [shinytest2](https://rstudio.github.io/shinytest2) for automated testing of tutorials in the browser. If you were previously using [shinytest](https://rstudio.github.io/shinytest) to test your tutorials, you may find the [Migrating from shinytest](https://rstudio.github.io/shinytest2/articles/z-migration.html) article to be helpful (#694).
+-   learnr now uses and suggests [shinytest2](https://rstudio.github.io/shinytest2/) for automated testing of tutorials in the browser. If you were previously using [shinytest](https://rstudio.github.io/shinytest/) to test your tutorials, you may find the [Migrating from shinytest](https://rstudio.github.io/shinytest2//articles/z-migration.html) article to be helpful (#694).
 
 # learnr 0.10.1
 
@@ -250,7 +250,7 @@
 
 -   Added a fail-safe to try-catch bad student code that would crash the tutorial (@adamblake #229).
 
--   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) (#269)
+-   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio/gradethis) (#269)
 
 -   Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. #303
 

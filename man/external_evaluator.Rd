@@ -17,5 +17,5 @@ external_evaluator(
 endpoint.}
 }
 \description{
-\href{https://www.tidyverse.org/lifecycle/#experimental}{Lifecycle: experimental}
+\href{https://lifecycle.r-lib.org/articles/stages.html}{Lifecycle: experimental}
 }

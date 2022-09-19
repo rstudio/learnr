@@ -158,7 +158,7 @@ forked_evaluator <- setup_forked_evaluator_factory(max_forked_procs = Inf)
 
 #' External execution evaluator
 #'
-#' [Lifecycle: experimental](https://www.tidyverse.org/lifecycle/#experimental)
+#' [Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html)
 #' @param endpoint The HTTP(S) endpoint to POST the exercises to
 #' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
 #'   endpoint.

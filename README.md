@@ -1,4 +1,4 @@
-# learnr <a href='https://pkgs.rstudio.com/learnr'><img src='man/figures/logo.png' align="right" height="138" /></a>
+# learnr <a href='https://rstudio.github.io/learnr/'><img src='man/figures/logo.png' align="right" height="138" /></a>
 
 <!-- badges: start -->
 
@@ -12,13 +12,13 @@ month](http://cranlogs.r-pkg.org/badges/learnr)](http://www.rpackages.io/package
 <br /> [![GitHub
 Discussions](https://img.shields.io/github/discussions/rstudio/learnr?logo=github&style=social)](https://github.com/rstudio/learnr/discussions)
 [![RStudio
-community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching)
+community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching/13)
 [![RStudio
 community](https://img.shields.io/badge/community-learnr-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/new-topic?title=&category_id=13&tags=learnr&body=%0A%0A%0A%20%20--------%0A%20%20%0A%20%20%3Csup%3EReferred%20here%20by%20%60learnr%60%27s%20GitHub%3C/sup%3E%0A&u=barret)
 <!-- badges: end -->
 
 The **learnr** package makes it easy to turn any [R
-Markdown](http://rmarkdown.rstudio.com) document into an interactive
+Markdown](https://rmarkdown.rstudio.com/) document into an interactive
 tutorial. Tutorials consist of content along with interactive components
 for checking and reinforcing understanding. Tutorials can include any or
 all of the following:
@@ -39,7 +39,7 @@ works on a few exercises or questions and returns to the tutorial later
 they can pick up right where they left off.
 
 Learn more about the **learnr** package and try example tutorials online
-at <https://pkgs.rstudio.com/learnr>.
+at <https://rstudio.github.io/learnr/>.
 
 ## Installation
 
