@@ -735,9 +735,10 @@ question_messages <- function(question, messages, is_correct, is_done) {
 }
 
 question_ui_loading <- function(question) {
-  n_paragraphs <- max(length(str_match_all(question$question, "</p>")), 1)
+  prompt <- format(question$question)
+  n_paragraphs <- max(length(str_match_all(prompt, "</p>")), 1)
   paras <- lapply(seq_len(n_paragraphs), function(...) {
-    spans <- lapply(seq_len(sample(2:8, 1)), function(...) {
+    spans <- lapply(seq_len(sample(2:4, 1)), function(...) {
       htmltools::span(class = sprintf("placeholder col-%s", sample(2:7, 1)))
     })
     htmltools::p(spans)
