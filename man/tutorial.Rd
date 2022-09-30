@@ -115,7 +115,14 @@ bootstrap, etc.) into. By default this will be the name of the document with
 
 \item{...}{Forward parameters to html_document}
 }
+\value{
+An \code{\link[rmarkdown:output_format]{rmarkdown::output_format()}} for \pkg{learnr} tutorials.
+}
 \description{
 Long-form tutorial which includes narrative, figures, videos, exercises, and
 questions.
+}
+\examples{
+tutorial()
+
 }

@@ -40,6 +40,9 @@ question_is_correct(question, value, ...)
 
 \item{...}{future parameter expansion and custom arguments to be used in dispatched s3 methods.}
 }
+\value{
+learnr question objects, UI elements, results or server methods.
+}
 \description{
 There are five methods used to define a custom question.  Each S3 method
 should correspond to the \code{type = TYPE} supplied to the question.
@@ -65,6 +68,17 @@ should correspond to the \code{type = TYPE} supplied to the question.
 \item Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to \code{question_ui_initialize}, this should should return a shiny UI object that can be displayed using \link[shiny:renderUI]{shiny::renderUI}.
 }
 }
+}
+\examples{
+q <- question(
+  "Which package helps you teach programming skills?",
+  answer("dplyr"),
+  answer("learnr", correct = TRUE),
+  answer("base")
+)
+question_is_correct(q, "dplyr")
+question_is_correct(q, "learnr")
+
 }
 \seealso{
 For more information and question type extension examples, please

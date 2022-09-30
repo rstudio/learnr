@@ -4,6 +4,11 @@
 #' Set various tutorial options that control the display and evaluation of
 #' exercises.
 #'
+#' @examples
+#' if (interactive()) {
+#'   tutorial_options(exercise.eval = TRUE, exercise.timelimt = 10)
+#' }
+#'
 #' @param exercise.cap Caption for exercise chunk (defaults to the engine's icon or the combination of the engine and \code{" code"}).
 #' @param exercise.eval Whether to pre-evaluate the exercise so the reader can
 #'   see some default output (defaults to \code{FALSE}).
@@ -24,6 +29,8 @@
 #' @param exercise.startover Show "Start Over" button on exercise.
 #' @param exercise.reveal_solution Whether to reveal the exercise solution if
 #'   a solution chunk is provided.
+#'
+#' @return Nothing. Invisibly sets [knitr::opts_chunk] settings.
 #'
 #' @export
 tutorial_options <- function(exercise.cap = NULL,

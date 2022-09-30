@@ -17,5 +17,6 @@ except two optional arguments \code{options} and \code{inline}; see
 the references below.}
 }
 \description{
-\code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and \code{\link{quiz}}
+\code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and
+\code{\link{quiz}}
 }

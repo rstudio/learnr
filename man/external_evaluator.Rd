@@ -16,6 +16,10 @@ external_evaluator(
 \item{max_curl_conns}{The maximum number of simultaneous HTTP requests to the
 endpoint.}
 }
+\value{
+A function that takes an expression (\code{expr}), \code{timelimit}, \code{exercise}
+and \code{session}.
+}
 \description{
 \href{https://lifecycle.r-lib.org/articles/stages.html}{Lifecycle: experimental}
 }

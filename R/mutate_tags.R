@@ -123,8 +123,6 @@ disable_tags <- function(ele, selector) {
 #'
 #' Method to disable all html tags to not allow users to interact with the html.
 #'
-#' @param ele html tag element
-#' @export
 #' @examples
 #' # add an href to all a tags
 #' disable_all_tags(
@@ -133,6 +131,13 @@ disable_tags <- function(ele, selector) {
 #'     htmltools::a()
 #'   )
 #' )
+#'
+#' @param ele html tag element
+#'
+#' @return An \pkg{htmltools} HTML object with appended `class = "disabled"` and
+#'   `disabled` attributes on all tags.
+#'
+#' @export
 disable_all_tags <- function(ele) {
   mutate_tags(ele, "*", disable_element_fn)
 }
@@ -154,6 +159,10 @@ disable_all_tags <- function(ele) {
 #' )
 #'
 #' @inheritParams disable_all_tags
+#'
+#' @return An \pkg{htmltools} HTML object with appropriately appended classes
+#'   such that a tutorial question is marked as the final answer.
+#'
 #' @export
 finalize_question <- function(ele) {
   ele <- disable_all_tags(ele)

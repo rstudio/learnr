@@ -72,6 +72,9 @@ exercise chunk.}
 \item{exercise}{In \code{mock_chunk()}, is this chunk the exercise chunk? If so,
 \code{mock_exercise()} will not create the exercise chunk for you.}
 }
+\value{
+An exercise object.
+}
 \description{
 Creates an interactive exercise object that can be used in tests without
 having to create a learnr tutorial.

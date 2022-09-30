@@ -21,12 +21,15 @@ expression; if two calls to \code{one_time()} uses the same label, there will be
 an ID collision and only one of them will execute. By default, \code{cond} is
 deparsed and used as the label.}
 }
+\value{
+The result of evaluating \code{expr} (\code{one_time()} is intended to be
+called within an event handler).
+}
 \description{
 This wraps an expression so that it will be executed one time for a tutorial,
 based on some condition. The first time the condition is true, the expression
 will be executed; after that, the expression will not be evaluated again.
-}
-\details{
+
 The execution state is stored so that if the expression is executed, then the
 user quits the tutorial and then returns to it, the expression will not be
 executed a second time.
@@ -54,4 +57,5 @@ event_register_handler("section_viewed",
 
 
 }
+
 }

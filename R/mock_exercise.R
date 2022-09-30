@@ -60,6 +60,8 @@
 #' @param ... Additional chunk options as if there were included in the
 #'   exercise chunk.
 #'
+#' @return An exercise object.
+#'
 #' @describeIn mock_exercise Create a learnr exercise object
 #' @keywords internal
 #' @export

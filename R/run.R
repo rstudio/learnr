@@ -2,6 +2,15 @@
 #'
 #' Run a tutorial provided by an installed R package.
 #'
+#' @examples
+#' # display all "learnr" tutorials
+#' available_tutorials("learnr")
+#'
+#' # run basic example within learnr
+#' \dontrun{
+#' run_tutorial("hello", "learnr")
+#' }
+#'
 #' @param name Tutorial name (subdirectory within \code{tutorials/} directory of
 #'   installed `package`). Alternatively, if `package` is not provided, `name`
 #'   may be a path to a local tutorial R Markdown file or a local directory
@@ -26,16 +35,9 @@
 #' @param ... Unused. Included for future expansion and to ensure named
 #'   arguments are used.
 #'
+#' @return Starts a Shiny server running the learnr tutorial.
+#'
 #' @seealso \code{\link{safe}} and \code{\link{available_tutorials}}
-#' @examples
-#' # display all "learnr" tutorials
-#' available_tutorials("learnr")
-#'
-#' # run basic example within learnr
-#' \dontrun{
-#' run_tutorial("hello", "learnr")
-#' }
-#'
 #' @export
 run_tutorial <- function(
   name = NULL,
@@ -314,6 +316,11 @@ run_clean_tutorial_prerendered <- function(path) {
 #' \code{callr::\link[callr]{r}}.  However, opening a browser is expected
 #' behavior within the learnr package and should not be suppressed.
 #'
+#' @examples
+#' safe_env()
+#'
+#' @return A list of envvars, modified from [callr::rcmd_safe_env()].
+#'
 #' @keywords internal
 #' @export
 safe_env <- function() {
@@ -347,13 +354,6 @@ callr_try_catch <- function(...) {
 #'
 #' Using \code{safe} should only be necessary when locally deployed.
 #'
-#' @param expr expression that contains all the necessary library calls to
-#'   execute.  Expressions within callr do not inherit the existing,
-#'   loaded libraries.
-#' @param ... parameters passed to \code{callr::\link[callr]{r}}
-#' @param show Logical that determines if output should be displayed
-#' @param env Environment to evaluate the document in
-#' @export
 #' @examples
 #' \dontrun{
 #' # Direct usage
@@ -368,6 +368,17 @@ callr_try_catch <- function(...) {
 #' tutorial <- "hello"
 #' safe(run_tutorial(!!tutorial, package = "learnr"))
 #' }
+#'
+#' @param expr expression that contains all the necessary library calls to
+#'   execute.  Expressions within callr do not inherit the existing,
+#'   loaded libraries.
+#' @param ... parameters passed to \code{callr::\link[callr]{r}}
+#' @param show Logical that determines if output should be displayed
+#' @param env Environment to evaluate the document in
+#'
+#' @return The result of `expr`.
+#'
+#' @export
 safe <- function(expr, ..., show = TRUE, env = safe_env()) {
   # do not make a quosure as the attached env is not passed.
   # should be evaluated in a clean global context

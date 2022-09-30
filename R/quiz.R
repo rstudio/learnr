@@ -30,10 +30,27 @@
 #' structure and information will be displayed.
 #'
 #'
-#' @seealso For more information and question type extension examples, please
-#'   see the help documentation for [question_methods][question_ui_initialize()]
-#'   and view the \code{question_type} tutorial:
-#'   `learnr::run_tutorial("question_type", "learnr")`.
+#' @examples
+#' quiz(
+#'   question("What number is the letter A in the alphabet?",
+#'     answer("8"),
+#'     answer("14"),
+#'     answer("1", correct = TRUE),
+#'     answer("23"),
+#'     incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
+#'     allow_retry = TRUE
+#'   ),
+#'
+#'   question("Where are you right now? (select ALL that apply)",
+#'     answer("Planet Earth", correct = TRUE),
+#'     answer("Pluto"),
+#'     answer("At a computing device", correct = TRUE),
+#'     answer("In the Milky Way", correct = TRUE),
+#'     incorrect = paste0("Incorrect. You're on Earth, ",
+#'                        "in the Milky Way, at a computer.")
+#'   )
+#' )
+#'
 #' @param text Question or option text
 #' @param ... One or more questions or answers
 #' @param caption Optional quiz caption (defaults to "Quiz")
@@ -70,30 +87,14 @@
 #'   useful when using custom question types. See [sortable::question_rank()]
 #'   for an example question implementation that uses the `options` parameter.
 #'
-#' @examples
-#' quiz(
-#'   question("What number is the letter A in the alphabet?",
-#'     answer("8"),
-#'     answer("14"),
-#'     answer("1", correct = TRUE),
-#'     answer("23"),
-#'     incorrect = "See [here](https://en.wikipedia.org/wiki/English_alphabet) and try again.",
-#'     allow_retry = TRUE
-#'   ),
-#'
-#'   question("Where are you right now? (select ALL that apply)",
-#'     answer("Planet Earth", correct = TRUE),
-#'     answer("Pluto"),
-#'     answer("At a computing device", correct = TRUE),
-#'     answer("In the Milky Way", correct = TRUE),
-#'     incorrect = paste0("Incorrect. You're on Earth, ",
-#'                        "in the Milky Way, at a computer.")
-#'   )
-#' )
-#'
-#' @seealso [random_praise()], [random_encouragement()]
+#' @return A learnr quiz, or collection of questions.
 #'
 #' @family Interactive Questions
+#' @seealso [random_praise()], [random_encouragement()]
+#' @seealso For more information and question type extension examples, please
+#'   see the help documentation for [question_methods][question_ui_initialize()]
+#'   and view the \code{question_type} tutorial:
+#'   `learnr::run_tutorial("question_type", "learnr")`.
 #' @name quiz
 #' @rdname quiz
 #' @export
@@ -288,11 +289,14 @@ shuffle <- function(x) {
 
 #' Knitr quiz print methods
 #'
-#' \code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and \code{\link{quiz}}
+#' \code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and
+#' \code{\link{quiz}}
+#'
 #' @inheritParams knitr::knit_print
-#' @export
+#'
 #' @importFrom knitr knit_print
 #' @method knit_print tutorial_question
+#' @export
 #' @rdname knit_print
 knit_print.tutorial_question <- function(x, ...) {
   question <- x
@@ -311,6 +315,7 @@ knit_print.tutorial_question <- function(x, ...) {
   # regular knit print the UI
   knitr::knit_print(ui)
 }
+
 #' @method knit_print tutorial_quiz
 #' @export
 #' @rdname knit_print

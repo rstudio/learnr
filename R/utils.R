@@ -27,11 +27,9 @@ stop. <- function(...) {
 
 #' Create a duplicate of an environment
 #'
-#' Copy all items from the environment to a new environment.
-#' By default, the new environment will share the same parent environment.
-#' @param envir environment to duplicate
-#' @param parent parent environment to set for the new environment.  Defaults to the parent environment of \code{envir}.
-#' @export
+#' Copy all items from the environment to a new environment. By default, the new
+#' environment will share the same parent environment.
+#'
 #' @examples
 #' # Make a new environment with the object 'key'
 #' envir <- new.env()
@@ -42,6 +40,14 @@ stop. <- function(...) {
 #' # Duplicate the envir and show it contains 'key'
 #' new_envir <- duplicate_env(envir)
 #' "key" %in% ls(envir = new_envir) # TRUE
+#'
+#' @param envir environment to duplicate
+#' @param parent parent environment to set for the new environment.  Defaults to
+#'   the parent environment of \code{envir}.
+#'
+#' @return A duplicated copy of `envir` whose parent env is `parent`.
+#'
+#' @export
 duplicate_env <- function(envir, parent = parent.env(envir)) {
   # If we are duplicating the globalenv, we can't use the globalenv's parent
   # as the new env's parent or the new env will be severed from the search path.

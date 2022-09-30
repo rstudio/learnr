@@ -3,6 +3,9 @@
 #' Long-form tutorial which includes narrative, figures, videos, exercises, and
 #' questions.
 #'
+#' @examples
+#' tutorial()
+#'
 #' @param theme Visual theme ("rstudio", default", "cerulean", "journal",
 #'   "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper",
 #'   "sandstone", "simplex", or "yeti").
@@ -29,29 +32,33 @@
 #' @inheritParams rmarkdown::html_document
 #' @inheritParams rmarkdown::html_document_base
 #'
+#' @return An [rmarkdown::output_format()] for \pkg{learnr} tutorials.
+#'
 #' @export
 #' @importFrom utils getFromNamespace
-tutorial <- function(fig_width = 6.5,
-                     fig_height = 4,
-                     fig_retina = 2,
-                     fig_caption = TRUE,
-                     progressive = FALSE,
-                     allow_skip = FALSE,
-                     dev = "png",
-                     df_print = "paged",
-                     smart = TRUE,
-                     theme = "rstudio",
-                     highlight = "textmate",
-                     ace_theme = "textmate",
-                     mathjax = "default",
-                     extra_dependencies = NULL,
-                     css = NULL,
-                     includes = NULL,
-                     md_extensions = NULL,
-                     pandoc_args = NULL,
-                     language = "en",
-                     lib_dir = NULL,
-                     ...) {
+tutorial <- function(
+  fig_width = 6.5,
+  fig_height = 4,
+  fig_retina = 2,
+  fig_caption = TRUE,
+  progressive = FALSE,
+  allow_skip = FALSE,
+  dev = "png",
+  df_print = "paged",
+  smart = TRUE,
+  theme = "rstudio",
+  highlight = "textmate",
+  ace_theme = "textmate",
+  mathjax = "default",
+  extra_dependencies = NULL,
+  css = NULL,
+  includes = NULL,
+  md_extensions = NULL,
+  pandoc_args = NULL,
+  language = "en",
+  lib_dir = NULL,
+  ...
+) {
 
   if ("anchor_sections" %in% names(list(...))) {
     stop("learnr tutorials do not support the `anchor_sections` option.")

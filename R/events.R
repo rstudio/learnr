@@ -112,6 +112,7 @@ event_trigger <- function(session, event, data = list()) {
 
 #' Wrap an expression that will be executed one time in an event handler
 #'
+#' @description
 #' This wraps an expression so that it will be executed one time for a tutorial,
 #' based on some condition. The first time the condition is true, the expression
 #' will be executed; after that, the expression will not be evaluated again.
@@ -122,17 +123,6 @@ event_trigger <- function(session, event, data = list()) {
 #'
 #' A common use for `one_time` is to execute an expression when a section is
 #' viewed for the first time.
-#'
-#' @param session A Shiny session object.
-#' @param cond A condition that is used as a filter. The first time the
-#'   condition evaluates to true, `expr` will be evaluated; after that, `expr`
-#'   will not be evaluated again.
-#' @param expr An expression that will be evaluated once, the first time that
-#'   `cond` is true.
-#' @param label A unique identifier. This is used as an ID for the condition and
-#'   expression; if two calls to `one_time()` uses the same label, there will be
-#'   an ID collision and only one of them will execute. By default, `cond` is
-#'   deparsed and used as the label.
 #'
 #' @examples
 #' \dontrun{
@@ -154,6 +144,21 @@ event_trigger <- function(session, event, data = list()) {
 #'
 #'
 #' }
+#'
+#' @param session A Shiny session object.
+#' @param cond A condition that is used as a filter. The first time the
+#'   condition evaluates to true, `expr` will be evaluated; after that, `expr`
+#'   will not be evaluated again.
+#' @param expr An expression that will be evaluated once, the first time that
+#'   `cond` is true.
+#' @param label A unique identifier. This is used as an ID for the condition and
+#'   expression; if two calls to `one_time()` uses the same label, there will be
+#'   an ID collision and only one of them will execute. By default, `cond` is
+#'   deparsed and used as the label.
+#'
+#' @return The result of evaluating `expr` (`one_time()` is intended to be
+#'   called within an event handler).
+#'
 #' @export
 one_time <- function(session, cond, expr, label = deparse(substitute(cond))) {
   # This is meant to be called within an event handler, instead of being
