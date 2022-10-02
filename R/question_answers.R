@@ -8,6 +8,10 @@
 #' numeric questions, `answer_fn()` can be used to provide a function that
 #' evaluates the student's submission and returns a custom result.
 #'
+#' @examples
+#' answer(32, correct = FALSE)
+#' answer(42, correct = TRUE, message = "The meaning of life.")
+#'
 #' @param text The answer text or value; for selection-type questions this value
 #'   is shown to the user.
 #' @param fn A function used to evaluate the submitted answer. The function is
