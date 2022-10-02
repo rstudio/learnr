@@ -4,6 +4,13 @@
 #' Random praises and encouragements sayings to compliment your question and
 #' quiz experience.
 #'
+#' @examples
+#' random_praise()
+#' random_praise()
+#'
+#' random_encouragement()
+#' random_encouragement()
+#'
 #' @param language The language for the random phrase. The currently supported
 #'   languages include: `en`, `es`, `pt`, `pl`, `tr`, `de`, `emo`, and `testing`
 #'   (static phrases).
