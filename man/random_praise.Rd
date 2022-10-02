@@ -21,3 +21,11 @@ Character string with a random saying
 Random praises and encouragements sayings to compliment your question and
 quiz experience.
 }
+\examples{
+random_praise()
+random_praise()
+
+random_encouragement()
+random_encouragement()
+
+}
