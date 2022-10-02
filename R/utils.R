@@ -71,16 +71,15 @@ py_global_dict <- function() {
 
 #' Create a duplicate of a Python environment
 #'
-#' @return a Python `Dict` or dictionary
-#'
-#' @keywords internal
-#'
 #' @examples
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' new_py_envir <- py_copy_global_env()
 #' new_py_envir$items()
 #' }
+#'
+#' @return a Python `Dict` or dictionary
+#' @noRd
 py_copy_global_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
@@ -107,15 +106,15 @@ py_learnr_utilities <- function() {
 #' It will keep important initial objects such as `py` (main module),
 #' `r` (reticulate interface to R), and the `builtins` module.
 #'
-#' @keywords internal
-#' @return Nothing
-#'
 #' @examples
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' # this removes the `x`
 #' py_clear_env()
 #' }
+#'
+#' @return Nothing
+#' @noRd
 py_clear_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed
