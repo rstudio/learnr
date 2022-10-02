@@ -1,0 +1,421 @@
+swagger: "2.0"
+info:
+  title: External Evaluator Service
+  description: Service for remotely invoking R for learnr exercises
+  version: ""
+host: 0.0.0.0:8080
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /healthcheck:
+    get:
+      tags:
+      - srvr
+      summary: healthcheck srvr
+      operationId: srvr#healthcheck
+      responses:
+        "200":
+          description: OK response.
+      schemes:
+      - http
+  /learnr/:
+    post:
+      tags:
+      - srvr
+      summary: initiate session srvr
+      description: Initiate a session in which exercises can be evaluated
+      operationId: srvr#initiate session
+      parameters:
+      - name: Initiate SessionRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SrvrInitiateSessionRequestBody'
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/SrvrInitiateSessionResponseBody'
+            required:
+            - id
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/SrvrInitiateSessionBadSetupResponseBody'
+        "503":
+          description: Service Unavailable response.
+          schema:
+            $ref: '#/definitions/SrvrInitiateSessionOverCapacityResponseBody'
+      schemes:
+      - http
+  /learnr/{session_id}:
+    post:
+      tags:
+      - srvr
+      summary: evaluate exercise srvr
+      description: Evaluate an exercise in a given session
+      operationId: srvr#evaluate exercise
+      parameters:
+      - name: session_id
+        in: path
+        description: The ID of session obtained during session initiation
+        required: true
+        type: string
+      - name: Evaluate ExerciseRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SrvrEvaluateExerciseRequestBody'
+          required:
+          - code
+          - options
+      responses:
+        "200":
+          description: The server was able to fulfill the request. This does _not_ imply that the provided R code didn't produce an error -- just that we were able to run it through to completion.
+          schema:
+            $ref: '#/definitions/SrvrEvaluateExerciseResponseBody'
+            required:
+            - feedback
+            - error_message
+            - timeout_exceeded
+            - html_output
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/SrvrEvaluateExerciseBadSetupResponseBody'
+        "503":
+          description: Service Unavailable response.
+          schema:
+            $ref: '#/definitions/SrvrEvaluateExerciseOverCapacityResponseBody'
+      schemes:
+      - http
+definitions:
+  Exercise FeedbackResponseBody:
+    title: Exercise FeedbackResponseBody
+    type: object
+    properties:
+      correct:
+        type: boolean
+        description: TRUE/FALSE logical value indicating whether the submitted answer was correct.
+        example: true
+      location:
+        type: string
+        description: Location for feedback (“append”, “prepend”, or “replace”).
+        example: Ipsum praesentium vero id.
+      message:
+        type: string
+        description: Feedback message. Can be a plain character vector or can HTML produced via the htmltools package.
+        example: Quia ut velit.
+      type:
+        type: string
+        description: Feedback type (visual presentation style). Can be “auto”, “success”, “info”, “warning”, “error”, or “custom”. Note that “custom” implies that the “message” field is custom HTML rather than a character vector.
+        example: Fugit eum non tempora voluptas.
+    example:
+      correct: false
+      location: Dignissimos quisquam voluptas deserunt voluptatem.
+      message: Numquam dolore.
+      type: Nesciunt nam ipsa saepe illo.
+  SrvrEvaluateExerciseBadSetupResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: Unable to run setup code or it took too long to run. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SrvrEvaluateExerciseOverCapacityResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: The server is over capacity. Please try again later. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SrvrEvaluateExerciseRequestBody:
+    title: SrvrEvaluateExerciseRequestBody
+    type: object
+    properties:
+      check:
+        description: TODO
+        example: Eveniet consequuntur repellat odit fugit fuga.
+      chunks:
+        description: List of setup knitr code chunks for the exercise when using the `exercise.setup` option.
+        example: Placeat fugit quam blanditiis dicta facere.
+      code:
+        type: string
+        description: The R code to execute
+        example: rnorm(5)
+      code_check:
+        description: TODO
+        example: Repellendus recusandae excepturi est quo aut optio.
+      engine:
+        type: string
+        description: The knitr engine of the exercise.
+        example: Omnis eius.
+      global_setup:
+        type: string
+        description: Setup code from the `setup-global-exercise` or `setup` chunk that should be run before every exercise
+        example: library(ggplot2)
+      label:
+        type: string
+        description: Label of the exercise.
+        example: Consectetur ut totam inventore quia ut consectetur.
+      options:
+        description: The exercise options
+        example: Quibusdam ipsam omnis id praesentium.
+      restore:
+        type: boolean
+        description: TODO
+        example: true
+      setup:
+        type: string
+        description: Setup code associated with this specific exercise
+        example: dataset <- iris
+      solution:
+        type: string
+        description: Unused, the solution code for this exercise
+        example: rnorm(1)
+      version:
+        type: string
+        description: Version of the exercise structure.
+        example: Deleniti omnis laudantium in.
+    example:
+      check: Est dignissimos suscipit quis voluptate quo.
+      chunks: Ab qui consectetur.
+      code: rnorm(5)
+      code_check: Officia quis praesentium voluptatem.
+      engine: Aperiam necessitatibus aut dolorem deleniti quis.
+      global_setup: library(ggplot2)
+      label: Non in id laboriosam nam.
+      options: Esse quas unde voluptas sed.
+      restore: true
+      setup: dataset <- iris
+      solution: rnorm(1)
+      version: Distinctio et officia.
+    required:
+    - code
+    - options
+  SrvrEvaluateExerciseResponseBody:
+    title: SrvrEvaluateExerciseResponseBody
+    type: object
+    properties:
+      error_message:
+        type: string
+        description: If an error occurred, the plain-text representation
+        example: object 'x' not found
+      feedback:
+        $ref: '#/definitions/Exercise FeedbackResponseBody'
+      html_output:
+        type: string
+        description: The output of the given command
+        example: |2
+
+
+
+          <pre><code>[1] -0.78207928  0.70263075 -0.08438296 -0.06020523  1.97638361</code></pre>
+      timeout_exceeded:
+        type: boolean
+        description: True if the time limit was exceeded; otherwise false
+        example: true
+    example:
+      error_message: object 'x' not found
+      feedback:
+        correct: true
+        location: Dolorem quidem sapiente esse consequatur blanditiis.
+        message: Laudantium similique.
+        type: In officiis consequatur omnis repellendus dolorum.
+      html_output: |2
+
+
+
+        <pre><code>[1] -0.78207928  0.70263075 -0.08438296 -0.06020523  1.97638361</code></pre>
+      timeout_exceeded: false
+    required:
+    - feedback
+    - error_message
+    - timeout_exceeded
+    - html_output
+  SrvrInitiateSessionBadSetupResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: Unable to run setup code or it took too long to run. (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SrvrInitiateSessionOverCapacityResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: The server is over capacity. Please try again later. (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SrvrInitiateSessionRequestBody:
+    title: SrvrInitiateSessionRequestBody
+    type: object
+    properties:
+      global_setup:
+        type: string
+        description: Setup code from the `setup-global-exercise` or `setup` chunk that should be run before every exercise
+        example: library(tidyverse)
+    example:
+      global_setup: library(tidyverse)
+  SrvrInitiateSessionResponseBody:
+    title: SrvrInitiateSessionResponseBody
+    type: object
+    properties:
+      id:
+        type: string
+        description: The ID of the session generated
+        example: 8rmci3kdkc
+    example:
+      id: 8rmci3kdkc
+    required:
+    - id
