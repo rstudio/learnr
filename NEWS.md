@@ -48,7 +48,7 @@
 
 -   The `exercise.cap` exercise/chunk option now accepts HTML input. If no `exercise.cap` is provided, the `exercise.cap` will default to the combination of the exercise engine and `" code"` (#397, #429).
 
--   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
+-   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises. See `run_tutorial("sql-exericse", "learnr")` or the [online SQL exercise demo](https://learnr-examples.shinyapps.io/sql-exercise) for an example tutorial with graded SQL exercises (#668).
 
 -   Exercise editors now use syntax highlighting and basic autocompletion for exercises in languages other than R with syntax highlighting support for JavaScript, Julia, Python and SQL (#693).
 
