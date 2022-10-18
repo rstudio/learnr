@@ -34,7 +34,7 @@ or review the [changelog](../../news.index.html) for a full list of updates.
 learnr tutorials are a great way to teach others R:
 it's in the package name, after all.
 And thanks to R Markdown's flexibility,
-learnr a great way to teach other programming languages as well,
+learnr is a great way to teach other programming languages as well,
 using the spoken language of your choice!
 
 ### Internationalization
@@ -98,9 +98,9 @@ The biggest improvement is for SQL exercises,
 where learners can execute SQL queries on a database.
 This was previously possible,
 but now tutorial authors can use grading packages like [gradethis]
-to grade the tables return by the student's queries.
-You can try this in action using 
-`run_tutorial("sql-exericse", "learnr")`
+to grade the tables returned by the student's queries.
+You can see this in action using 
+`run_tutorial("sql-exercise", "learnr")`
 ([SQL demo online version](https://learnr-examples.shinyapps.io/sql-exercise)).
 
 learnr also includes UI improvements in the interactive exercise component for other languages,
@@ -131,7 +131,7 @@ have received a number of updates and improvements.
 
 ### Setup chunk chaining
 
-Exercises can now be chained together via changed setup chunks
+Exercises can now be chained together via chained setup chunks
 such that an exercise may depend on other chunks,
 including the setup chunks of other exercises in the tutorial.
 This makes it easier for the author to progressively work through a problem
@@ -153,7 +153,7 @@ to see chained setup chunks in action.
 
 When teaching new programming concepts,
 it can be helpful to provide learners with some scaffolding in an exercise
-to focus their attention on practice skills they just recently learned.
+to focus their attention on skills they just recently learned.
 
 For example, if you are explaining the difference between
 the `names_from` and `values_from` arguments in `tidyr::pivot_wider()`,
