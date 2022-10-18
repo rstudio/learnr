@@ -30,7 +30,7 @@ This release collects many large and small improvements to the learnr package,
 all with the goal of making it easier to create interactive tutorials for teaching programming concepts and skills.
 
 Read on for an overview of the changes in version `0.11.0`,
-or review the [changelog](../../news.index.html) for a full list of updates.
+or review the [changelog] for a full list of updates.
 Use `install.packages()` to install the latest version of learnr,
 which includes demonstrations of many of the new features.
 
@@ -55,15 +55,28 @@ to allow learnr to include out-of-the-box support for the following languages:
 
 ```{=html}
 <ul>
-<li>Basque (eu) language support was contributed by <a href="https://github.com/mikelmadina" class="external-link">@mikelmadina</a> (<a href="https://github.com/rstudio/learnr/issues/489" class="external-link">#489</a>)</li>
-<li>Portuguese (pt) language support was contributed by <a href="https://github.com/beatrizmilz" class="external-link">@beatrizmilz</a> (<a href="https://github.com/rstudio/learnr/issues/488" class="external-link">#488</a>, <a href="https://github.com/rstudio/learnr/issues/551" class="external-link">#551</a>)</li>
-<li>Spanish (es) language support was contributed by <a href="https://github.com/yabellini" class="external-link">@yabellini</a> (<a href="https://github.com/rstudio/learnr/issues/483" class="external-link">#483</a>, <a href="https://github.com/rstudio/learnr/issues/546" class="external-link">#546</a>)</li>
-<li>Turkish (tr) language support was contributed by <a href="https://github.com/hyigit2" class="external-link">@hyigit2</a> and <a href="https://github.com/coatless" class="external-link">@coatless</a> (<a href="https://github.com/rstudio/learnr/issues/493" class="external-link">#493</a>, <a href="https://github.com/rstudio/learnr/issues/554" class="external-link">#554</a>)</li>
-<li>German (de) language support was contributed by <a href="https://github.com/NinaCorrelAid" class="external-link">@NinaCorrelAid</a> (<a href="https://github.com/rstudio/learnr/issues/611" class="external-link">#611</a>, <a href="https://github.com/rstudio/learnr/issues/612" class="external-link">#612</a>)</li>
-<li>Korean (ko) language support was contributed by <a href="https://github.com/choonghyunryu" class="external-link">@choonghyunryu</a> (<a href="https://github.com/rstudio/learnr/issues/634" class="external-link">#634</a>)</li>
-<li>Chinese (zh) language support was contributed by <a href="https://github.com/shalom-lab" class="external-link">@shalom-lab</a> (<a href="https://github.com/rstudio/learnr/issues/681" class="external-link">#681</a>)</li>
-<li>Polish (pl) language support was contributed by Jakub Jędrusiak (<a href="https://github.com/kuba58426" class="external-link">@kuba58426</a>) (<a href="https://github.com/rstudio/learnr/issues/686" class="external-link">#686</a>)</li>
+  <li>Basque (eu) language support was contributed by <a href="https://github.com/mikelmadina" class="external-link">Mikel Madina</a> (<a href="https://github.com/rstudio/learnr/issues/489" class="external-link">#489</a>)</li>
+  <li>
+    Portuguese (pt) language support was contributed by <a href="https://github.com/beatrizmilz" class="external-link">Beatriz Milz</a> (<a href="https://github.com/rstudio/learnr/issues/488" class="external-link">#488</a>,
+    <a href="https://github.com/rstudio/learnr/issues/551" class="external-link">#551</a>)
+  </li>
+  <li>
+    Spanish (es) language support was contributed by <a href="https://github.com/yabellini" class="external-link">Yanina Bellini Saibene</a> (<a href="https://github.com/rstudio/learnr/issues/483" class="external-link">#483</a>,
+    <a href="https://github.com/rstudio/learnr/issues/546" class="external-link">#546</a>)
+  </li>
+  <li>
+    Turkish (tr) language support was contributed by <a href="https://github.com/hyigit2" class="external-link">Hulya Yigit</a> and <a href="https://github.com/coatless" class="external-link">James J Balamuta</a> (
+    <a href="https://github.com/rstudio/learnr/issues/493" class="external-link">#493</a>, <a href="https://github.com/rstudio/learnr/issues/554" class="external-link">#554</a>)
+  </li>
+  <li>
+    German (de) language support was contributed by <a href="https://github.com/NinaCorrelAid" class="external-link">@NinaCorrelAid</a> (<a href="https://github.com/rstudio/learnr/issues/611" class="external-link">#611</a>,
+    <a href="https://github.com/rstudio/learnr/issues/612" class="external-link">#612</a>)
+  </li>
+  <li>Korean (ko) language support was contributed by <a href="https://github.com/choonghyunryu" class="external-link">Choonghyun Ryu</a> (<a href="https://github.com/rstudio/learnr/issues/634" class="external-link">#634</a>)</li>
+  <li>Chinese (zh) language support was contributed by <a href="https://github.com/shalom-lab" class="external-link">@shalom-lab</a> (<a href="https://github.com/rstudio/learnr/issues/681" class="external-link">#681</a>)</li>
+  <li>Polish (pl) language support was contributed by <a href="https://github.com/kuba58426" class="external-link">Jakub Jędrusiak</a> (<a href="https://github.com/rstudio/learnr/issues/686" class="external-link">#686</a>)</li>
 </ul>
+
 ```
 
 You can choose one of the above via the `language` setting in your tutorial's YAML frontmatter:
@@ -76,6 +89,10 @@ output:
 runtime: shinyrmd
 ---
 ````
+
+The language chosen for the tutorial is passed to the R session used to evaluate exercise code,
+so that translatable messages from R will also be presented in the specified language
+(thanks [Alex Rossell Hayes](https://github.com/rossellhayes)).
 
 In addition, you can customize the words displayed on specific UI elements using a named list.
 For example, the default text used on the "Run Code" button in Spanish is *Ejecutar código*.
@@ -140,11 +157,14 @@ have received a number of updates and improvements.
 
 ### Setup chunk chaining
 
-Exercises can now be chained together via chained setup chunks
-such that an exercise may depend on other chunks,
+Thanks to [Nischal Shrestha](https://github.com/nischalshrestha),
+exercises can now be chained together via chained setup chunks
+such that the setup of one exercise may depend on other exercises[^1],
 including the setup chunks of other exercises in the tutorial.
 This makes it easier for the author to progressively work through a problem
 with a series of interactive exercises that build on each other.
+
+[^1]: Note that with chained setup chunks, an exercise only ever uses the code as written in the chunks in the source document. Exercises are still completely independent of each other when viewed by a user.
 
 An exercise chunk —
 an R chunk with `exercise = TRUE` —
@@ -274,6 +294,7 @@ such as `.csv` or other files,
 as inputs for the user's code.
 
 To remedy this,
+thanks to work by [Alex Rossell Hayes](https://github.com/rossellhayes),
 learnr now treats a `data/` directory,
 stored adjacent to the tutorial,
 as special.
@@ -336,8 +357,14 @@ We are hugely thankful for the 101 community members
 who have contributed pull requests,
 submitted translations,
 or reported issues since our last release.
+There are many more contributions and updates to this version of learnr
+that aren't covered in this post;
+be sure to check out [the full list of changes][changelog].
+
 Thank you also to the previous maintainer of learnr, [Barrett Schloerke](https://github.com/schloerke)!
 (learnr is now maintained by me, [Garrick Aden-Buie](https://github.com/gadenbuie).)
+
+&#x1F64F; Big thank you to all of our contributors:
 
 [&#x0040;acarzfr](https://github.com/acarzfr),
 [&#x0040;acastleman](https://github.com/acastleman),
@@ -442,3 +469,4 @@ Thank you also to the previous maintainer of learnr, [Barrett Schloerke](https:/
 and [&#x0040;yabellini](https://github.com/yabellini).
 
 [gradethis]: https://pkgs.rstudio.com/gradethis
+[changelog]: ../../news/index.html#learnr-0110
