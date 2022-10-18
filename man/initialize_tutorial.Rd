@@ -6,6 +6,10 @@
 \usage{
 initialize_tutorial()
 }
+\value{
+If not previously run, initializes knitr hooks and provides the
+required \code{\link[rmarkdown:shiny_prerendered_chunk]{rmarkdown::shiny_prerendered_chunk()}}s to initialize \pkg{learnr}.
+}
 \description{
 One time initialization of R Markdown extensions required by the
 \pkg{learnr} package. This function is typically called automatically

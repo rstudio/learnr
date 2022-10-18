@@ -33,7 +33,7 @@ This will not be covered extensively here, as our main concern is optimizing tut
 Note that there are other options for hosting tutorials besides `shinyapps.io`, such as:
 
 -   [creating a tutorial package](https://rstudio.github.io/learnr/publishing.html#r_package) that students run locally (free, but requires students to be able to download and install packages, as well as run commands in R), or
--   setting up your own [free academic Shiny Server Pro account](https://rstudio.com/pricing/academic-pricing/) (free, provided you have a server at your institution that will host the software, which may require IT help).
+-   setting up your own [free academic Shiny Server Pro account](https://www.rstudio.com/pricing/academic-pricing/) (free, provided you have a server at your institution that will host the software, which may require IT help).
 
 Both of these require some configuration and setup, and may be beyond what either you or your students wish to undertake at the time (i.e. if you are running a short-term course).
 This leads to a third option that costs money, but may save you valuable time on system administration: deploying your learnr tutorial on `shinyapps.io`.

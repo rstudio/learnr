@@ -7,6 +7,9 @@
 #' \pkg{learnr} package. This function is typically called automatically
 #' as a result of using exercises or questions.
 #'
+#' @return If not previously run, initializes knitr hooks and provides the
+#'   required [rmarkdown::shiny_prerendered_chunk()]s to initialize \pkg{learnr}.
+#'
 #' @export
 initialize_tutorial <- function() {
 

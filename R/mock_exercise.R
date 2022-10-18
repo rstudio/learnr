@@ -3,7 +3,7 @@
 #' Creates an interactive exercise object that can be used in tests without
 #' having to create a learnr tutorial.
 #'
-#' @examples
+#' @examplesIf identical(Sys.getenv("IN_PKGDOWN"), "true")
 #' mock_exercise(
 #'   user_code = "1 + 1",
 #'   solution_code = "2 + 2",
@@ -59,6 +59,8 @@
 #'   will return an exercise that matches the current exercise version.
 #' @param ... Additional chunk options as if there were included in the
 #'   exercise chunk.
+#'
+#' @return An exercise object.
 #'
 #' @describeIn mock_exercise Create a learnr exercise object
 #' @keywords internal

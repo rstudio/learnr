@@ -40,6 +40,9 @@ on \code{user_code}}
 
 \item{...}{Not used (future compatibility)}
 }
+\value{
+Feedback for use in exercise debugging.
+}
 \description{
 An exercise checker for debugging that renders all of the expected arguments
 of the \code{exercise.checker} option into HTML. Additionally, this function is

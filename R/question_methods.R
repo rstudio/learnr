@@ -24,14 +24,25 @@
 #'
 #'     - Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to `question_ui_initialize`, this should should return a shiny UI object that can be displayed using [shiny::renderUI].
 #'
+#' @examples
+#' q <- question(
+#'   "Which package helps you teach programming skills?",
+#'   answer("dplyr"),
+#'   answer("learnr", correct = TRUE),
+#'   answer("base")
+#' )
+#' question_is_correct(q, "dplyr")
+#' question_is_correct(q, "learnr")
+#'
 #' @param question [question] object used
 #' @param value user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
 #'
+#' @return learnr question objects, UI elements, results or server methods.
+#'
 #' @seealso For more information and question type extension examples, please
 #'   see the **Custom Question Types** section of the `quiz_question` tutorial:
 #'   `learnr::run_tutorial("quiz_question", "learnr")`.
-#'
 #' @export
 #' @rdname question_methods
 question_ui_initialize <- function(question, value, ...) {

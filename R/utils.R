@@ -27,11 +27,9 @@ stop. <- function(...) {
 
 #' Create a duplicate of an environment
 #'
-#' Copy all items from the environment to a new environment.
-#' By default, the new environment will share the same parent environment.
-#' @param envir environment to duplicate
-#' @param parent parent environment to set for the new environment.  Defaults to the parent environment of \code{envir}.
-#' @export
+#' Copy all items from the environment to a new environment. By default, the new
+#' environment will share the same parent environment.
+#'
 #' @examples
 #' # Make a new environment with the object 'key'
 #' envir <- new.env()
@@ -42,6 +40,14 @@ stop. <- function(...) {
 #' # Duplicate the envir and show it contains 'key'
 #' new_envir <- duplicate_env(envir)
 #' "key" %in% ls(envir = new_envir) # TRUE
+#'
+#' @param envir environment to duplicate
+#' @param parent parent environment to set for the new environment.  Defaults to
+#'   the parent environment of \code{envir}.
+#'
+#' @return A duplicated copy of `envir` whose parent env is `parent`.
+#'
+#' @export
 duplicate_env <- function(envir, parent = parent.env(envir)) {
   # If we are duplicating the globalenv, we can't use the globalenv's parent
   # as the new env's parent or the new env will be severed from the search path.
@@ -65,16 +71,15 @@ py_global_dict <- function() {
 
 #' Create a duplicate of a Python environment
 #'
-#' @return a Python `Dict` or dictionary
-#'
-#' @keywords internal
-#'
 #' @examples
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' new_py_envir <- py_copy_global_env()
 #' new_py_envir$items()
 #' }
+#'
+#' @return a Python `Dict` or dictionary
+#' @noRd
 py_copy_global_env <- function() {
   rlang::check_installed("reticulate", "Python exercise support")
 
@@ -101,15 +106,15 @@ py_learnr_utilities <- function() {
 #' It will keep important initial objects such as `py` (main module),
 #' `r` (reticulate interface to R), and the `builtins` module.
 #'
-#' @keywords internal
-#' @return Nothing
-#'
 #' @examples
 #' \dontrun{
 #' reticulate::py_run_string("x = 3")
 #' # this removes the `x`
 #' py_clear_env()
 #' }
+#'
+#' @return Nothing
+#' @noRd
 py_clear_env <- function() {
   Map(names(py_global_env()), f = function(obj_name) {
     # prevent the "base" python objects from being removed

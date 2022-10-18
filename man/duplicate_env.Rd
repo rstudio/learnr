@@ -9,11 +9,15 @@ duplicate_env(envir, parent = parent.env(envir))
 \arguments{
 \item{envir}{environment to duplicate}
 
-\item{parent}{parent environment to set for the new environment.  Defaults to the parent environment of \code{envir}.}
+\item{parent}{parent environment to set for the new environment.  Defaults to
+the parent environment of \code{envir}.}
+}
+\value{
+A duplicated copy of \code{envir} whose parent env is \code{parent}.
 }
 \description{
-Copy all items from the environment to a new environment.
-By default, the new environment will share the same parent environment.
+Copy all items from the environment to a new environment. By default, the new
+environment will share the same parent environment.
 }
 \examples{
 # Make a new environment with the object 'key'
@@ -25,4 +29,5 @@ envir$key <- "value"
 # Duplicate the envir and show it contains 'key'
 new_envir <- duplicate_env(envir)
 "key" \%in\% ls(envir = new_envir) # TRUE
+
 }

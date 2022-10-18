@@ -5,7 +5,7 @@ on.exit({setwd(owd)})
 
 
 ROOT <- rprojroot::find_package_root_file()
-ACE_VERSION <- "1.4.14"
+ACE_VERSION <- "1.10.1"
 ACE_FILES <- c(
   "ace.js",
   "ext-language_tools.js",

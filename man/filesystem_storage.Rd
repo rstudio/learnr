@@ -15,8 +15,7 @@ filesystem_storage(dir, compress = TRUE)
 Storage handler suitable for \code{options(tutorial.storage = ...)}
 }
 \description{
-Tutorial state storage handler that uses the filesystem
-as a backing store. The directory will contain tutorial
-state data partitioned by user_id, tutorial_id, and
-tutorial_version (in that order)
+Tutorial state storage handler that uses the filesystem as a backing store.
+The directory will contain tutorial state data partitioned by \code{user_id},
+\code{tutorial_id}, and \code{tutorial_version} (in that order)
 }

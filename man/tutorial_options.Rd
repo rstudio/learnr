@@ -50,7 +50,16 @@ code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_cod
 \item{exercise.reveal_solution}{Whether to reveal the exercise solution if
 a solution chunk is provided.}
 }
+\value{
+Nothing. Invisibly sets \link[knitr:opts_chunk]{knitr::opts_chunk} settings.
+}
 \description{
 Set various tutorial options that control the display and evaluation of
 exercises.
+}
+\examples{
+if (interactive()) {
+  tutorial_options(exercise.eval = TRUE, exercise.timelimt = 10)
+}
+
 }

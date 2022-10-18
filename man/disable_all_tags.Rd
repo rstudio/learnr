@@ -9,6 +9,10 @@ disable_all_tags(ele)
 \arguments{
 \item{ele}{html tag element}
 }
+\value{
+An \pkg{htmltools} HTML object with appended \code{class = "disabled"} and
+\code{disabled} attributes on all tags.
+}
 \description{
 Method to disable all html tags to not allow users to interact with the html.
 }
@@ -20,4 +24,5 @@ disable_all_tags(
     htmltools::a()
   )
 )
+
 }

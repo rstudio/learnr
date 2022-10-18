@@ -9,6 +9,10 @@ finalize_question(ele)
 \arguments{
 \item{ele}{html tag element}
 }
+\value{
+An \pkg{htmltools} HTML object with appropriately appended classes
+such that a tutorial question is marked as the final answer.
+}
 \description{
 Mark a question as finalized by adding a \code{question-final} class to the HTML
 output at the top level, in addition to disabling all tags with

@@ -72,6 +72,9 @@ exercise chunk.}
 \item{exercise}{In \code{mock_chunk()}, is this chunk the exercise chunk? If so,
 \code{mock_exercise()} will not create the exercise chunk for you.}
 }
+\value{
+An exercise object.
+}
 \description{
 Creates an interactive exercise object that can be used in tests without
 having to create a learnr tutorial.
@@ -84,6 +87,7 @@ having to create a learnr tutorial.
 
 }}
 \examples{
+\dontshow{if (identical(Sys.getenv("IN_PKGDOWN"), "true")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mock_exercise(
   user_code = "1 + 1",
   solution_code = "2 + 2",
@@ -113,6 +117,6 @@ mock_exercise(
   setup_label = "prep-roxanne",
   global_setup = "library(learnr)\nlibrary(dplyr)"
 )
-
+\dontshow{\}) # examplesIf}
 }
 \keyword{internal}

@@ -326,10 +326,9 @@ tutorial_storage <- function(session) {
 
 #' Filesystem-based storage for tutor state data
 #'
-#' Tutorial state storage handler that uses the filesystem
-#' as a backing store. The directory will contain tutorial
-#' state data partitioned by user_id, tutorial_id, and
-#' tutorial_version (in that order)
+#' Tutorial state storage handler that uses the filesystem as a backing store.
+#' The directory will contain tutorial state data partitioned by `user_id`,
+#' `tutorial_id`, and `tutorial_version` (in that order)
 #'
 #' @param dir Directory to store state data within
 #' @param compress Should \code{.rds} files be compressed?

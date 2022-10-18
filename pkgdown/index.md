@@ -9,8 +9,10 @@ status](https://www.r-pkg.org/badges/version/learnr)](https://CRAN.R-project.org
 [![learnr downloads per
 month](http://cranlogs.r-pkg.org/badges/learnr)](http://www.rpackages.io/package/learnr)
 [![DOI](https://zenodo.org/badge/71377580.svg)](https://zenodo.org/badge/latestdoi/71377580)
-<br /> [![RStudio
-community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching)
+<br /> [![GitHub
+Discussions](https://img.shields.io/github/discussions/rstudio/learnr?logo=github&style=social)](https://github.com/rstudio/learnr/discussions)
+[![RStudio
+community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching/13)
 [![RStudio
 community](https://img.shields.io/badge/community-learnr-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/new-topic?title=&category_id=13&tags=learnr&body=%0A%0A%0A%20%20--------%0A%20%20%0A%20%20%3Csup%3EReferred%20here%20by%20%60learnr%60%27s%20GitHub%3C/sup%3E%0A&u=barret)
 <!-- badges: end -->
@@ -53,7 +55,7 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="card-text text-muted fs-6"><p>A tutorial featuring videos and interactive questions to guide a new R user through the installation and set up of everything they'll need to get started with R.</p>
 </div>
 </div>
-<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">Source</a></div>
+<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-setup-r/ex-setup-r.Rmd">Source</a></div>
 </div>
 </div>
 <div class="col">
@@ -68,7 +70,7 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="card-text text-muted fs-6"><p>An example tutorial teaching a common <code>data</code> transformation: <em>filtering</em> rows of a data frame with <code>dplyr::filter()</code>.</p>
 </div>
 </div>
-<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">Source</a></div>
+<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-filter/ex-data-filter.Rmd">Source</a></div>
 </div>
 </div>
 <div class="col">
@@ -83,26 +85,26 @@ Here are some examples of tutorials created with the **learnr** package.
 <div class="card-text text-muted fs-6"><p>An example tutorial where learners are introduced to <code>dplyr::summarise()</code>. Along the way, learners also gain practice with the pipe operator, <code>%&gt;%</code>, and <code>dplyr::group_by()</code>.</p>
 </div>
 </div>
-<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/master/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">Source</a></div>
+<div class="card-footer text-end"><a href="https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-summarise/ex-data-manip-summarise.Rmd">Source</a></div>
 </div>
 </div>
 </div>
 
 ## Installation
 
-Install the latest version of learnr from GitHub with the [remotes
-package](https://remotes.r-lib.org):
+Install the latest official learnr release from CRAN:
+
+    install.packages("learnr")
+
+Or you can install the most recent version in-development from GitHub
+with the [remotes package](https://remotes.r-lib.org):
 
     # install.packages("remotes")
     remotes::install_github("rstudio/learnr")
 
-Or you can install the **learnr** package from CRAN:
-
-    install.packages("learnr")
-
 learnr works best with a recent [version of
 RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
-or later) which include tools for easily running and previewing
+or later) which includes tools for easily running and previewing
 tutorials.
 
 ## Hello, Tutorial!

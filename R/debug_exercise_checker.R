@@ -19,6 +19,8 @@
 #' @param engine The engine of the exercise chunk
 #' @param ... Not used (future compatibility)
 #'
+#' @return Feedback for use in exercise debugging.
+#'
 #' @keywords internal
 debug_exercise_checker <- function(
     label,

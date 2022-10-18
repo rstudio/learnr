@@ -158,16 +158,21 @@ forked_evaluator <- setup_forked_evaluator_factory(max_forked_procs = Inf)
 
 #' External execution evaluator
 #'
-#' [Lifecycle: experimental](https://www.tidyverse.org/lifecycle/#experimental)
+#' [Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html)
+#'
 #' @param endpoint The HTTP(S) endpoint to POST the exercises to
 #' @param max_curl_conns The maximum number of simultaneous HTTP requests to the
 #'   endpoint.
+#'
+#' @return A function that takes an expression (`expr`), `timelimit`, `exercise`
+#'   and `session`.
+#'
 #' @import curl
 #' @export
 external_evaluator <- function(
   endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
-  max_curl_conns = 50){
-
+  max_curl_conns = 50
+){
   internal_external_evaluator(endpoint, max_curl_conns)
 }
 

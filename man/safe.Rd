@@ -17,6 +17,9 @@ loaded libraries.}
 
 \item{env}{Environment to evaluate the document in}
 }
+\value{
+The result of \code{expr}.
+}
 \description{
 When rendering (or running) a document with R markdown, it inherits the
 current R Global environment.  This will produce unexpected behaviors,
@@ -44,4 +47,5 @@ safe(!!expr)
 tutorial <- "hello"
 safe(run_tutorial(!!tutorial, package = "learnr"))
 }
+
 }

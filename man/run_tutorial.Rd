@@ -42,6 +42,9 @@ When running as an RStudio job, \code{run_tutorial()} sets or overrides the
 \code{shiny.launch.browser} global option in your current R session to set
 the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
 }
+\value{
+Starts a Shiny server running the learnr tutorial.
+}
 \description{
 Run a tutorial provided by an installed R package.
 }

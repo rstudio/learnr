@@ -57,3 +57,8 @@ evaluates the student's submission and returns a custom result.
 and to return feedback.
 
 }}
+\examples{
+answer(32, correct = FALSE)
+answer(42, correct = TRUE, message = "The meaning of life.")
+
+}

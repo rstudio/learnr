@@ -1,4 +1,4 @@
-# learnr (development version)
+# learnr 0.11.0
 
 ## Authoring
 
@@ -48,7 +48,7 @@
 
 -   The `exercise.cap` exercise/chunk option now accepts HTML input. If no `exercise.cap` is provided, the `exercise.cap` will default to the combination of the exercise engine and `" code"` (#397, #429).
 
--   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (#668).
+-   Improved support for SQL exercises makes it possible to check student submissions for SQL exercises. See `run_tutorial("sql-exericse", "learnr")` or the [online SQL exercise demo](https://learnr-examples.shinyapps.io/sql-exercise) for an example tutorial with graded SQL exercises (#668).
 
 -   Exercise editors now use syntax highlighting and basic autocompletion for exercises in languages other than R with syntax highlighting support for JavaScript, Julia, Python and SQL (#693).
 
@@ -165,7 +165,7 @@
     -   `run_tutorial()` now renders tutorials in a temp directory if the R user does not have write permissions (#347).
 
 -   Many of the HTML dependencies used by learnr have been updated to more recent versions (#655). learnr now uses:
-    -   [Ace](https://ace.c9.io/) version [1.4.14](https://github.com/ajaxorg/ace/blob/HEAD/ChangeLog.txt)
+    -   [Ace](https://ace.c9.io/) version [1.10.1](https://github.com/ajaxorg/ace/blob/ff3dd698/CHANGELOG.md)
     -   [clipboard.js](https://clipboardjs.com/) version [2.0.10](https://github.com/zenorocha/clipboard.js/releases)
     -   [Bootbox](http://bootboxjs.com/) version [5.5.2](https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md)
     -   [i18next](https://www.i18next.com/) version [21.6.10](https://github.com/i18next/i18next/blob/master/CHANGELOG.md)
@@ -182,11 +182,11 @@
 
 -   Support the updated Bootstrap 4+ popover dispose method name, previously destroy (#560).
 
--   Forked evaluator (used by default on Linux and [shinyapps.io](https://shinyapps.io)) now only collects the exercise evaluation result once, avoiding a "cannot wait for child" warning (thanks @tombeesley #449, #631).
+-   Forked evaluator (used by default on Linux and [shinyapps.io](https://www.shinyapps.io/)) now only collects the exercise evaluation result once, avoiding a "cannot wait for child" warning (thanks @tombeesley #449, #631).
 
 -   `learnr::tutorial()` now allows authors to adjust the value of `lib_dir` (#648).
 
--   learnr now uses and suggests [shinytest2](https://rstudio.github.io/shinytest2) for automated testing of tutorials in the browser. If you were previously using [shinytest](https://rstudio.github.io/shinytest) to test your tutorials, you may find the [Migrating from shinytest](https://rstudio.github.io/shinytest2/articles/z-migration.html) article to be helpful (#694).
+-   learnr now uses and suggests [shinytest2](https://rstudio.github.io/shinytest2/) for automated testing of tutorials in the browser. If you were previously using [shinytest](https://rstudio.github.io/shinytest/) to test your tutorials, you may find the [Migrating from shinytest](https://rstudio.github.io/shinytest2//articles/z-migration.html) article to be helpful (#694).
 
 # learnr 0.10.1
 
@@ -250,7 +250,7 @@
 
 -   Added a fail-safe to try-catch bad student code that would crash the tutorial (@adamblake #229).
 
--   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio-education/gradethis) (#269)
+-   Replaced references to `checkthat` and `grader` in docs with [gradethis](https://github.com/rstudio/gradethis) (#269)
 
 -   Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. #303
 

@@ -1,4 +1,4 @@
-# learnr <a href='https://pkgs.rstudio.com/learnr'><img src='man/figures/logo.png' align="right" height="138" /></a>
+# learnr <a href='https://rstudio.github.io/learnr/'><img src='man/figures/logo.png' align="right" height="138" /></a>
 
 <!-- badges: start -->
 
@@ -12,7 +12,7 @@ month](http://cranlogs.r-pkg.org/badges/learnr)](http://www.rpackages.io/package
 <br /> [![GitHub
 Discussions](https://img.shields.io/github/discussions/rstudio/learnr?logo=github&style=social)](https://github.com/rstudio/learnr/discussions)
 [![RStudio
-community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching)
+community](https://img.shields.io/badge/community-teaching-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/c/teaching/13)
 [![RStudio
 community](https://img.shields.io/badge/community-learnr-blue?style=social&logo=rstudio&logoColor=75AADB)](https://community.rstudio.com/new-topic?title=&category_id=13&tags=learnr&body=%0A%0A%0A%20%20--------%0A%20%20%0A%20%20%3Csup%3EReferred%20here%20by%20%60learnr%60%27s%20GitHub%3C/sup%3E%0A&u=barret)
 <!-- badges: end -->
@@ -39,21 +39,21 @@ works on a few exercises or questions and returns to the tutorial later
 they can pick up right where they left off.
 
 Learn more about the **learnr** package and try example tutorials online
-at <https://pkgs.rstudio.com/learnr>.
+at <https://rstudio.github.io/learnr/>.
 
 ## Installation
 
-Install the latest version of learnr from GitHub with the [remotes
-package](https://remotes.r-lib.org):
+Install the latest official learnr release from CRAN:
+
+    install.packages("learnr")
+
+Or you can install the most recent version in-development from GitHub
+with the [remotes package](https://remotes.r-lib.org):
 
     # install.packages("remotes")
     remotes::install_github("rstudio/learnr")
 
-Or you can install the **learnr** package from CRAN:
-
-    install.packages("learnr")
-
 learnr works best with a recent [version of
 RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
-or later) which include tools for easily running and previewing
+or later) which includes tools for easily running and previewing
 tutorials.

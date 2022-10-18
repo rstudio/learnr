@@ -68,3 +68,60 @@
     create custom HTML widgets with drag-and-drop capabilities that you can
     even use in learnr tutorials. This tutorial shows you what's possible with
     sortable and how to add drag-and-drop questions to your tutorials.
+
+- title: "DoSStoolkit"
+  image: images/example-community-dosstoolkit.png
+  link: https://rohanalexander.github.io/DoSStoolkit/
+  footer: <a href="https://github.com/RohanAlexander/DoSStoolkit/">GitHub</a>
+  group: community
+  text: >
+    The [Department of Statistical Sciences](http://www.utstat.utoronto.ca/)
+    (DoSS) toolkit is a free series of open source online modules written by
+    undergraduates, that their fellow students and the public can use to learn
+    the essentials of R.
+
+- title: "learntidymodels"
+  image: images/example-community-learntidymodels.png
+  link: https://github.com/tidymodels/learntidymodels
+  footer: <a href="https://github.com/tidymodels/learntidymodels">GitHub</a>
+  group: community
+  text: >
+    Learn [tidymodels](https://www.tidymodels.org/) in the browser or locally in
+    your RStudio IDE!
+
+- title: "qsslearnr"
+  image: images/example-community-qsslearnr.png
+  link: https://github.com/mattblackwell/qsslearnr
+  footer: <a href="https://github.com/mattblackwell/qsslearnr">GitHub</a>
+  group: community
+  text: >
+    This package contains learnr tutorials based on
+    [_Quantitative Social Science: An Introduction_](http://qss.princeton.press/)
+    by [Kosuke Imai](https://imai.fas.harvard.edu/) from Princeton University Press.
+
+- title: "Between the Pipes"
+  image: https://github.com/meghall06/personal-website/raw/8de36739/static/img/pipes_logo.png
+  link: https://github.com/meghall06/betweenthepipes
+  footer: <a href="https://github.com/meghall06/betweenthepipes">GitHub</a>
+  group: community
+  text: >
+    `betweenthepipes` is an R package with two tutorials, useful for learning
+    tidyverse basics with hockey data.
+
+- title: "afrilearnr"
+  image: images/example-community-afrilearnr.png
+  link: https://afrimapr.github.io/afrilearnr/
+  footer: <a href="https://github.com/afrimapr/afrilearnr">GitHub</a>
+  group: community
+  text: >
+    A growing collection of interactive learnr tutorials for learning spatial
+    data analytics while making African maps.
+
+- title: "RTLedu"
+  image: images/example-community-rtledu.png
+  link: https://github.com/risktoollib/RTLedu
+  footer: <a href="https://github.com/risktoollib/RTLedu">GitHub</a>
+  group: community
+  text: >
+    [RTLedu](https://github.com/risktoollib/RTLedu) contains learnr tutorials to
+    accompany the RTL R package by [@risktoollib](https://github.com/risktoollib).

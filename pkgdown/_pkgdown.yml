@@ -67,6 +67,15 @@ articles:
   contents:
   - '`articles/formats`'
   - '`multilang`'
+- title: Release Notes
+  navbar: ~
+  contents:
+  - '`articles/releases/learnr_v0-11-0`'
+
+news:
+  releases:
+  - text: "Version 0.11.0"
+    href: 'articles/releases/learnr_v0-11-0.html'
 
 # custom footer for rmarkdown ecosystem
 footer:

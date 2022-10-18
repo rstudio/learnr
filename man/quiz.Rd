@@ -74,6 +74,9 @@ be displayed.}
 useful when using custom question types. See \code{\link[sortable:question_rank]{sortable::question_rank()}}
 for an example question implementation that uses the \code{options} parameter.}
 }
+\value{
+A learnr quiz, or collection of questions.
+}
 \description{
 Add interactive quiz questions to a tutorial. Each quiz question is executed
 within a shiny runtime to provide more flexibility in the types of questions
@@ -121,12 +124,12 @@ quiz(
 
 }
 \seealso{
+\code{\link[=random_praise]{random_praise()}}, \code{\link[=random_encouragement]{random_encouragement()}}
+
 For more information and question type extension examples, please
 see the help documentation for \link[=question_ui_initialize]{question_methods}
 and view the \code{question_type} tutorial:
 \code{learnr::run_tutorial("question_type", "learnr")}.
-
-\code{\link[=random_praise]{random_praise()}}, \code{\link[=random_encouragement]{random_encouragement()}}
 
 Other Interactive Questions: 
 \code{\link{question_checkbox}()},
