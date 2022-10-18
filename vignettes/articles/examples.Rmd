@@ -37,3 +37,18 @@ These tutorials showcase specific learnr features or show you some possibilities
 ```{r example-cards-demo}
 example_cards("examples.yml", "demo")
 ```
+
+## Community Showcase
+
+learnr's community has built some excellent tutorials and resources
+for learning data science and programming.
+Here are just a few highlights.
+(Please [suggest your favorite learnr resources](https://github.com/rstudio/learnr/discussions/categories/show-and-tell).)
+
+```{r example-cards-community}
+example_cards("examples.yml", "community")
+```
+
+```{js echo=FALSE}
+document.getElementById('main').classList = ''
+```
