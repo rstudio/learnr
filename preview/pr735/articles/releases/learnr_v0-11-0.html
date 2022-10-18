@@ -137,7 +137,9 @@ R Markdown format for interactive programming tutorials.
 <h2 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
 </h2>
 <p>We are happy to announce that version <code>0.11.0</code> of learnr has arrived at a CRAN mirror near you. This release collects many large and small improvements to the learnr package, all with the goal of making it easier to create interactive tutorials for teaching programming concepts and skills.</p>
-<p>Read on for an overview of the changes in version <code>0.11.0</code>, or review the <a href="../../news.index.html">changelog</a> for a full list of updates.</p>
+<p>Read on for an overview of the changes in version <code>0.11.0</code>, or review the <a href="../../news.index.html">changelog</a> for a full list of updates. Use <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> to install the latest version of learnr, which includes demonstrations of many of the new features.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"learnr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learnr-speaks-more-than-r">learnr speaks more than R<a class="anchor" aria-label="anchor" href="#learnr-speaks-more-than-r"></a>
@@ -205,11 +207,11 @@ print(x)"><p>For exercise checking, learnr communicates the exercise engine to e
 </h3>
 <p>When teaching new programming concepts, it can be helpful to provide learners with some scaffolding in an exercise to focus their attention on skills they just recently learned.</p>
 <p>For example, if you are explaining the difference between the <code>names_from</code> and <code>values_from</code> arguments in <code>tidyr::pivot_wider()</code>, you might want to ask students to practice using the arguments without distracting them with writing code to set up a transformation. It’s common to use underscores or other patterns to indicate that students should fill in a missing piece.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>us_rent_income <span class="sc">%&gt;%</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">name =</span> NAME, variable, estimate) <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> ____, <span class="at">values_from =</span> ____)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>us_rent_income <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">name =</span> NAME, variable, estimate) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> ____, <span class="at">values_from =</span> ____)</span></code></pre></div>
 <p>If students submit code containing blanks, learnr will warn the student that they should replace the <code>____</code> with valid code.</p>
 <img src="images/blanks-warning.png" alt='A learnr exercise box with the feedback from submitting the code above. A red callout says "This exercise contains 2 blanks. Please replace ____ with valid code."'><p>Blanks are detected using regular expressions (since blanks may make the code unparsable), and learnr’s default pattern is to detect three or more consecutive underscores. Authors can choose the pattern for detecting blanks with the <code>exercise.blanks</code> chunk option. Setting <code>exercise.blanks = "[.]{2}[a-z]+[.]{2}"</code>, for example, would allow the author to use valid R syntax for blanks. The warning message shown to students calls out the blanks they need to fill in.</p>
 <img src="images/blanks-warning-custom.png" alt="A learnr exercise box with the feedback from submitting the example code with a custom exercise.blanks pattern. A red callout says &quot;This exercise contains 2 blanks. Please replace '..names..' and '..values..' with valid code.&quot;"><p>Another common problem in code involves character conversions when a student copies code from an application with automatic formatting and pastes the text into a learnr tutorial. We frequently see problems with quotation marks in code samples being converted to Unicode-formatted quotation marks (curly quotes). In general, these kinds of conversions make the R (or other language) code unparsable. Now learnr will detect these mistakes and suggest a replacement.</p>
