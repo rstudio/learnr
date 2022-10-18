@@ -138,7 +138,7 @@
 <div class="section level2">
 <h2 id="learnr-speaks-more-than-r">learnr speaks more than R<a class="anchor" aria-label="anchor" href="#learnr-speaks-more-than-r"></a>
 </h2>
-<p>learnr tutorials are a great way to teach others R: it’s in the package name, after all. And thanks to R Markdown’s flexibility, learnr a great way to teach other programming languages as well, using the spoken language of your choice!</p>
+<p>learnr tutorials are a great way to teach others R: it’s in the package name, after all. And thanks to R Markdown’s flexibility, learnr is a great way to teach other programming languages as well, using the spoken language of your choice!</p>
 <div class="section level3">
 <h3 id="internationalization">Internationalization<a class="anchor" aria-label="anchor" href="#internationalization"></a>
 </h3>
@@ -176,7 +176,7 @@ runtime: shinyrmd
 <div class="section level3">
 <h3 id="support-for-additional-programming-languages">Support for additional programming languages<a class="anchor" aria-label="anchor" href="#support-for-additional-programming-languages"></a>
 </h3>
-<p>In addition to spoken languages, learnr is now better at running code in programming languages other than R. The biggest improvement is for SQL exercises, where learners can execute SQL queries on a database. This was previously possible, but now tutorial authors can use grading packages like <a href="https://pkgs.rstudio.com/gradethis" class="external-link">gradethis</a> to grade the tables return by the student’s queries. You can try this in action using <code>run_tutorial("sql-exericse", "learnr")</code> (<a href="https://learnr-examples.shinyapps.io/sql-exercise" class="external-link">SQL demo online version</a>).</p>
+<p>In addition to spoken languages, learnr is now better at running code in programming languages other than R. The biggest improvement is for SQL exercises, where learners can execute SQL queries on a database. This was previously possible, but now tutorial authors can use grading packages like <a href="https://pkgs.rstudio.com/gradethis" class="external-link">gradethis</a> to grade the tables returned by the student’s queries. You can see this in action using <code>run_tutorial("sql-exercise", "learnr")</code> (<a href="https://learnr-examples.shinyapps.io/sql-exercise" class="external-link">SQL demo online version</a>).</p>
 <p>learnr also includes UI improvements in the interactive exercise component for other languages, including syntax highlighting and basic auto-completion for exercise code in languages such as Python, JavaScript, Julia and SQL. Try <code>run_tutorial("polyglot", "learnr")</code> (<a href="https://learnr-examples.shinyapps.io/polyglot/" class="external-link">polyglot online version</a>) to see several programming languages in use in the same tutorial.</p>
 <img src="images/r-python-exercise.png" alt="One R and one Python interactive exercise component, with the same source code but which evaluates differently in each language. The code is: 
 
@@ -192,14 +192,14 @@ print(x)"><p>For exercise checking, learnr communicates the exercise engine to e
 <div class="section level3">
 <h3 id="setup-chunk-chaining">Setup chunk chaining<a class="anchor" aria-label="anchor" href="#setup-chunk-chaining"></a>
 </h3>
-<p>Exercises can now be chained together via changed setup chunks such that an exercise may depend on other chunks, including the setup chunks of other exercises in the tutorial. This makes it easier for the author to progressively work through a problem with a series of interactive exercises that build on each other.</p>
+<p>Exercises can now be chained together via chained setup chunks such that an exercise may depend on other chunks, including the setup chunks of other exercises in the tutorial. This makes it easier for the author to progressively work through a problem with a series of interactive exercises that build on each other.</p>
 <p>An exercise chunk — an R chunk with <code>exercise = TRUE</code> — can specify its setup chunk using the <code>{label}-chunk</code> naming convention or with the <code>exercise.setup</code> chunk option. Any chunk being used as a setup chunk may also include an <code>execise.setup</code> option specifying its own parent chunk.</p>
 <p>Try <code>run_tutorial("setup-chunks", "learnr")</code> (<a href="https://learnr-examples.shinyapps.io/setup-chunks/" class="external-link">setup-chunks online version</a>) to see chained setup chunks in action.</p>
 </div>
 <div class="section level3">
 <h3 id="catching-common-code-issues">Catching common code issues<a class="anchor" aria-label="anchor" href="#catching-common-code-issues"></a>
 </h3>
-<p>When teaching new programming concepts, it can be helpful to provide learners with some scaffolding in an exercise to focus their attention on practice skills they just recently learned.</p>
+<p>When teaching new programming concepts, it can be helpful to provide learners with some scaffolding in an exercise to focus their attention on skills they just recently learned.</p>
 <p>For example, if you are explaining the difference between the <code>names_from</code> and <code>values_from</code> arguments in <code>tidyr::pivot_wider()</code>, you might want to ask students to practice using the arguments without distracting them with writing code to set up a transformation. It’s common to use underscores or other patterns to indicate that students should fill in a missing piece.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
