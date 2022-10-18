@@ -91,7 +91,13 @@ jobs:
         shell: Rscript {0}
         run: |
           subdir <- "${{ env.subdir }}"
-          pkgdown::deploy_to_branch(subdir = if (nzchar(subdir)) subdir, clean = nzchar(subdir))
+          pkgdown::deploy_to_branch(
+            subdir = if (nzchar(subdir)) subdir,
+            clean = nzchar(subdir),
+            override = if (!nzchar(subdir)) list() else list(
+              development = list(mode = if (grepl("^v([0-9]+\\.?){3}$", subdir)) "released" else "unreleased")
+            )
+          )
 
   pkgdown-clean:
     if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
