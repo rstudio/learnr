@@ -1,5 +1,8 @@
 ---
 title: "learnr v0.11.0"
+description: |
+  Everything new in the 0.11.0 release of learnr, an R package and
+  R Markdown format for interactive programming tutorials.
 author: Garrick Aden-Buie
 output: rmarkdown::html_vignette
 vignette: >
