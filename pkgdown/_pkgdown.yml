@@ -71,7 +71,6 @@ articles:
   - '`articles/formats`'
   - '`multilang`'
 - title: Release Notes
-  navbar: ~
   contents:
   - '`articles/releases/learnr_v0-11-0`'
 
