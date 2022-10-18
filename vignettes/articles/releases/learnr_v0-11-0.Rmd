@@ -221,7 +221,7 @@ Another common problem in code involves character conversions
 when a student copies code from an application with automatic formatting
 and pastes the text into a learnr tutorial.
 We frequently see problems with quotation marks in code samples being converted to Unicode-formatted quotation marks (curly quotes).
-In general, these kinds of conversions make the R (or other language) code unparsable.
+In general, these kinds of conversions make the R code unparsable.
 Now learnr will detect these mistakes and suggest a replacement.
 
 ```{=html}
