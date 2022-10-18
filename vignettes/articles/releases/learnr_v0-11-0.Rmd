@@ -31,6 +31,12 @@ all with the goal of making it easier to create interactive tutorials for teachi
 
 Read on for an overview of the changes in version `0.11.0`,
 or review the [changelog](../../news.index.html) for a full list of updates.
+Use `install.packages()` to install the latest version of learnr,
+which includes demonstrations of many of the new features.
+
+```r
+install.packages("learnr")
+```
 
 ## learnr speaks more than R
 

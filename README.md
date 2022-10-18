@@ -43,17 +43,17 @@ at <https://rstudio.github.io/learnr/>.
 
 ## Installation
 
-Install the latest version of learnr from GitHub with the [remotes
-package](https://remotes.r-lib.org):
+Install the latest official learnr release from CRAN:
+
+    install.packages("learnr")
+
+Or you can install the most recent version in-development from GitHub
+with the [remotes package](https://remotes.r-lib.org):
 
     # install.packages("remotes")
     remotes::install_github("rstudio/learnr")
 
-Or you can install the **learnr** package from CRAN:
-
-    install.packages("learnr")
-
 learnr works best with a recent [version of
 RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
-or later) which include tools for easily running and previewing
+or later) which includes tools for easily running and previewing
 tutorials.
