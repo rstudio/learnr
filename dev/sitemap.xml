@@ -10,6 +10,27 @@
     <loc>https://pkgs.rstudio.com/learnr/dev/PULL_REQUEST_TEMPLATE.html</loc>
   </url>
   <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/examples.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/exercises.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/formats.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/learnr.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/publishing.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/questions.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/articles/articles/releases/learnr_v0-11-0.html</loc>
+  </url>
+  <url>
     <loc>https://pkgs.rstudio.com/learnr/dev/articles/examples.html</loc>
   </url>
   <url>
@@ -43,10 +64,25 @@
     <loc>https://pkgs.rstudio.com/learnr/dev/authors.html</loc>
   </url>
   <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/examples.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/exercises.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/formats.html</loc>
+  </url>
+  <url>
     <loc>https://pkgs.rstudio.com/learnr/dev/index.html</loc>
   </url>
   <url>
     <loc>https://pkgs.rstudio.com/learnr/dev/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/publishing.html</loc>
+  </url>
+  <url>
+    <loc>https://pkgs.rstudio.com/learnr/dev/questions.html</loc>
   </url>
   <url>
     <loc>https://pkgs.rstudio.com/learnr/dev/reference/answer.html</loc>
