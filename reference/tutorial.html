@@ -18,7 +18,7 @@ questions."><meta property="og:image" content="https://pkgs.rstudio.com/learnr/l
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.7.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@ questions."><meta property="og:image" content="https://pkgs.rstudio.com/learnr/l
     <h6 class="dropdown-header" data-toc-skip>Customize</h6>
     <a class="dropdown-item" href="../articles/formats.html">Tutorial Formats</a>
     <a class="dropdown-item" href="../articles/multilang.html">Internationalization</a>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">learnr v0.11.0</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -53,8 +54,14 @@ questions."><meta property="og:image" content="https://pkgs.rstudio.com/learnr/l
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">Version 0.11.0</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -239,7 +246,351 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <dd><p>Forward parameters to html_document</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
 
+<p>An <code><a href="https://pkgs.rstudio.com/rmarkdown/reference/output_format.html" class="external-link">rmarkdown::output_format()</a></code> for <span class="pkg">learnr</span> tutorials.</p>
+    </div>
+
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">tutorial</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$dev</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "png"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$dpi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 96</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$fig.width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$fig.height</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$fig.retina</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$tutorial</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_chunk$max.print</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_knit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$knit_hooks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$knit_hooks$tutorial</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (before, options, envir) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!before) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         .learnr_messages$flush()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_wrapper_div &lt;- function(suffix = NULL, extra_html = NULL) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (before) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             if (!is.null(suffix)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 suffix &lt;- paste0("-", suffix)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             class &lt;- paste0("exercise", suffix)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             lines &lt;- ifelse(is.numeric(options$exercise.lines), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 options$exercise.lines, 0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             completion &lt;- as.numeric(options$exercise.completion %||% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 1 &gt; 0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             diagnostics &lt;- as.numeric(options$exercise.diagnostics %||% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 1 &gt; 0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             startover &lt;- as.numeric(options$exercise.startover %||% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 1 &gt; 0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             paste0("&lt;div class=\"tutorial-", class, "\" data-label=\"", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 options$label, "\" data-completion=\"", completion, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "\" data-diagnostics=\"", diagnostics, "\" data-startover=\"", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 startover, "\" data-lines=\"", lines, "\"&gt;")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             c(extra_html, "&lt;/div&gt;")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_exercise_chunk(options)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         extra_html &lt;- NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (before) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             verify_tutorial_chunk_label()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             knitr::knit_meta_add(list(list(ace_html_dependency()), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 list(clipboardjs_html_dependency())))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             exercise_server_chunk(options$label)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             options$engine &lt;- knitr_engine(options$engine)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             options$exercise.df_print &lt;- options$exercise.df_print %||% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 knitr::opts_knit$get("rmarkdown.df_print") %||% </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "default"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             options$exercise.checker &lt;- dput_to_string(options$exercise.checker)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             all_chunks &lt;- get_all_chunks(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             code_check_chunk &lt;- get_knitr_chunk(paste0(options$label, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "-code-check"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             error_check_chunk &lt;- get_knitr_chunk(paste0(options$label, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "-error-check"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             check_chunk &lt;- get_knitr_chunk(paste0(options$label, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "-check"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             solution &lt;- get_knitr_chunk(paste0(options$label, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "-solution"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             tests &lt;- get_knitr_chunk(paste0(options$label, "-tests"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             class(options) &lt;- NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             all_setup_code &lt;- NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             if (length(all_chunks) &gt; 1) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 all_setup_code &lt;- paste0(vapply(all_chunks[-length(all_chunks)], </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   function(x) x$code, character(1)), collapse = "\n")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             this_exercise &lt;- structure(list(label = options[["label"]], </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 global_setup = get_setup_global_exercise(), setup = all_setup_code, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 chunks = all_chunks, code_check = code_check_chunk, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 error_check = error_check_chunk, check = check_chunk, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 solution = solution, tests = tests, options = options[setdiff(names(options), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   "tutorial")], engine = options$engine, version = current_exercise_version), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 class = c(options$engine, "tutorial_exercise"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             rmarkdown::shiny_prerendered_chunk("server", sprintf("learnr:::store_exercise_cache(%s)", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 dput_to_string(this_exercise)))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             caption &lt;- if (!is.null(options$exercise.cap)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 as.character(options$exercise.cap)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 cap_engine &lt;- knitr_engine(options$engine)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 cap_engine_file &lt;- system.file(file.path("internals", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   "icons", paste0(cap_engine, ".svg")), package = "learnr")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 if (file.exists(cap_engine_file)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   as.character(htmltools::div(class = "tutorial_engine_icon", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     htmltools::HTML(readLines(cap_engine_file))))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   cap_engine_val &lt;- knitr_engine_caption(options[["engine"]])</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   i18n_span("text.enginecap", paste(cap_engine_val, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     "Code"), opts = list(engine = cap_engine_val))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ui_options &lt;- list(engine = options$engine, has_checker = (!is.null(check_chunk) || </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 !is.null(code_check_chunk)), caption = as.character(caption))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             extra_html &lt;- c("&lt;script type=\"application/json\" data-ui-opts=\"1\"&gt;", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 jsonlite::toJSON(ui_options, auto_unbox = TRUE), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "&lt;/script&gt;")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         exercise_wrapper_div(extra_html = extra_html)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else if (is_exercise_support_chunk(options)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (is_exercise_support_chunk(options, type = c("hint", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "hint-\\d+"))) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             exercise_wrapper_div(suffix = "support")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else if (is_exercise_support_chunk(options, type = "solution")) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             if (get_reveal_solution_option(options)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 exercise_wrapper_div(suffix = "support")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc843304c0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a847570&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_hooks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_hooks$tutorial</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (options) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_chunk &lt;- is_exercise_chunk(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_support_chunk &lt;- is_exercise_support_chunk(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_setup_chunk &lt;- is_exercise_support_chunk(options, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         type = "setup")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if ((exercise_chunk || exercise_support_chunk) &amp;&amp; !is_shiny_prerendered_active()) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stop("Tutorial exercises require the use of 'runtime: shiny_prerendered'", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             call. = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (exercise_chunk &amp;&amp; is_chunk_empty_or_mismatched_exercise(options)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ensure_knit_code_exists(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (exercise_chunk) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         initialize_tutorial()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$echo &lt;- TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$include &lt;- TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$highlight &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$comment &lt;- NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (!is.null(options$exercise.eval)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             options$eval &lt;- options$exercise.eval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else options$eval &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         return(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (exercise_support_chunk) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$echo &lt;- TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$include &lt;- TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$eval &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$highlight &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_exercise_support_chunk(options, type = c("code-check", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         "error-check", "check", "tests"))) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$include &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_exercise_support_chunk(options, type = "check")) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (is.null(knitr::opts_chunk$get("exercise.checker"))) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             stop("An exercise check chunk exists ('", options$label, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "') but an ", "exercise checker function is not configured for this tutorial. ", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 "Please use `tutorial_options()` to define an `exercise.checker`.")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_exercise_support_chunk(options, type = "solution")) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$echo &lt;- get_reveal_solution_option(options)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (exercise_setup_chunk) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         exercise_eval &lt;- knitr::opts_chunk$get("exercise.eval")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (is.null(exercise_eval)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             exercise_eval &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         labels &lt;- exercise_chunks_for_setup_chunk(options$label)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (grepl("-setup$", options$label)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             labels &lt;- c(labels, sub("-setup$", "", options$label))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         labels &lt;- paste0("\"", labels, "\"")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         labels &lt;- paste0("c(", paste(labels, collapse = ", "), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             ")")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         label_query &lt;- paste0("knitr::all_labels(label %in% ", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             labels, ", ", "identical(exercise.eval, ", !exercise_eval, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "))")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         default_reversed &lt;- length(eval(parse(text = label_query))) &gt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (default_reversed) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             exercise_eval &lt;- !exercise_eval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$eval &lt;- exercise_eval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         options$echo &lt;- FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is_exercise_support_chunk(options, type = "error-check") &amp;&amp; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         is.null(get_knitr_chunk(sub("-error", "", options$label)))) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         stop("Exercise '", sub("-error-check", "", options$label), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             "': ", "a *-check chunk is required when using an *-error-check chunk, but", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             " '", sub("-error", "", options$label), "' was not found in the tutorial.", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             call. = FALSE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     options</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc84338808&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a847570&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_template</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$to</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "html4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$from</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "markdown+autolink_bare_uris+tex_math_single_backslash"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$args</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "--self-contained"                                                                                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "bs3=TRUE"                                                                                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "--section-divs"                                                                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "--template"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "/home/runner/work/_temp/Library/rmarkdown/rmd/h/default.html"                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "--no-highlight"                                                                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "highlightjs=1"                                                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "--section-divs"                                                                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "--reference-location=section"                                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "--template"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "/home/runner/work/_temp/Library/learnr/rmarkdown/templates/tutorial/resources/tutorial-format.htm"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "--no-highlight"                                                                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "highlightjs=1"                                                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [18] "progressive=false"                                                                                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [20] "allow-skip=false"                                                                                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "--variable"                                                                                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "learnr-version=0.11.0"                                                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$keep_tex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$latex_engine</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "pdflatex"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$ext</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ".html"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pandoc$lua_filters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/work/_temp/Library/rmarkdown/rmarkdown/lua/pagebreak.lua"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/home/runner/work/_temp/Library/rmarkdown/rmarkdown/lua/latex-div.lua"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $keep_md</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $clean_supporting</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $df_print</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "paged"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pre_knit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (...) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc8609ae80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a938100&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $post_knit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (...) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc8609ae80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a937a00&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pre_processor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (...) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc8609ae80&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a937300&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $intermediates_generator</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (original_input, intermediates_dir) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     copy_render_intermediates(original_input, intermediates_dir, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         !self_contained)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc85fcc670&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a89a930&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $post_processor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function (metadata, input_file, output_file, ...) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     original_output_file &lt;- output_file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     output_file &lt;- overlay(metadata, input_file, output_file, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(attr(output_file, "post_process_original"))) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         base(metadata, input_file, original_output_file, ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     base(metadata, input_file, output_file, ...)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc8609b558&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a93a288&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $on_exit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> function () </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is.function(base)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         base()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is.function(overlay)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         overlay()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55dc8609d600&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55dc8a951b18&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "rmarkdown_output_format"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

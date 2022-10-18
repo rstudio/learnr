@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.7.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customize</h6>
     <a class="dropdown-item" href="../articles/formats.html">Tutorial Formats</a>
     <a class="dropdown-item" href="../articles/multilang.html">Internationalization</a>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">learnr v0.11.0</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -51,8 +52,14 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="active nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">Version 0.11.0</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -75,9 +82,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="learnr-development-version">learnr (development version)<a class="anchor" aria-label="anchor" href="#learnr-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.11.0" id="learnr-0110">learnr 0.11.0<a class="anchor" aria-label="anchor" href="#learnr-0110"></a></h2><p class="text-muted">CRAN release: 2022-10-16</p>
 <div class="section level3">
-<h3 id="authoring-development-version">Authoring<a class="anchor" aria-label="anchor" href="#authoring-development-version"></a></h3>
+<h3 id="authoring-0-11-0">Authoring<a class="anchor" aria-label="anchor" href="#authoring-0-11-0"></a></h3>
 <ul><li>
 <p>It is now possible to provide customized feedback when an exercise submission produces an evaluation error. The checking function applied when the user code results in an error is defined via the <code>exercise.error.checker</code> option of <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code> (<a href="https://github.com/rstudio/learnr/issues/403" class="external-link">#403</a>). <code>gradethis::grade_learnr_error()</code> is a sensible default for this option.</p>
 <p>Additionally, user submissions for R code exercises are now checked for parsing errors prior to any other checks. If the submitted code is unparsable, a friendly error feedback message is returned and no further evaluation or checking is performed (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/547" class="external-link">#547</a>).</p>
@@ -88,14 +95,14 @@
 <li><p>Footnotes now appear at the end of the section in which they appear (thanks <a href="https://github.com/plukethep" class="external-link">@plukethep</a>, <a href="https://github.com/rstudio/learnr/issues/647" class="external-link">#647</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="setup-chunk-chaining-development-version">Setup Chunk Chaining<a class="anchor" aria-label="anchor" href="#setup-chunk-chaining-development-version"></a></h3>
+<h3 id="setup-chunk-chaining-0-11-0">Setup Chunk Chaining<a class="anchor" aria-label="anchor" href="#setup-chunk-chaining-0-11-0"></a></h3>
 <ul><li>
 <p>Exercise chunks can now be “chained together” via chained setup chunks. The setup chunk of one exercise may depend on other chunks, including the setup chunks of other exercises, allowing the author to form a chain of setup code that allows interactive exercises to progressively work through a problem. These chains are defined using the <code>exercise.setup</code> chunk option; use <code>run_tutorial("setup_chunks", "learnr")</code> to run a demo tutorial (<a href="https://github.com/nischalshrestha" class="external-link">@nischalshrestha</a> <a href="https://github.com/rstudio/learnr/issues/390" class="external-link">#390</a>).</p>
 <ul><li>As part of this work, learnr now throws an error at pre-render when an author specifies an non-existent chunk label in the <code>exercise.setup</code> of an exercise.</li>
 <li>learnr also now forces the chunk option <code>include = FALSE</code> for setup chunks when evaluated as part of an exercise to avoid unexpected printing of results.</li>
 </ul></li></ul></div>
 <div class="section level3">
-<h3 id="internationalization-and-customization-development-version">Internationalization and Customization<a class="anchor" aria-label="anchor" href="#internationalization-and-customization-development-version"></a></h3>
+<h3 id="internationalization-and-customization-0-11-0">Internationalization and Customization<a class="anchor" aria-label="anchor" href="#internationalization-and-customization-0-11-0"></a></h3>
 <ul><li>
 <p>Text throughout the learnr interface can be customized or localized using the new language argument of <code><a href="../reference/tutorial.html">tutorial()</a></code> (<a href="https://github.com/rstudio/learnr/issues/456" class="external-link">#456</a>, <a href="https://github.com/rstudio/learnr/issues/479" class="external-link">#479</a>). The random positive and encourage phrases generated by learnr can also be translated (<a href="https://github.com/rstudio/learnr/issues/538" class="external-link">#538</a>). Community contributions for additional languages are welcomed, but it is possible to customize the language used for the learnr interface and phrases without requiring official support via the learnr package. You can read more about these features in <code><a href="../articles/multilang.html">vignette("multilang", package = "learnr")</a></code>.</p>
 <p>We are very grateful to the following community members for providing additional languages:</p>
@@ -112,18 +119,18 @@
 <li><p><strong>Breaking Change:</strong> <code><a href="../reference/random_praise.html">random_praise()</a></code> no longer includes the phrase <code>"Correct! "</code>. Instead, it simply returns a random praising statement (<a href="https://github.com/rstudio/learnr/issues/453" class="external-link">#453</a>, <a href="https://github.com/rstudio/learnr/issues/463" class="external-link">#463</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="support-for-additional-programming-languages-development-version">Support for Additional Programming Languages<a class="anchor" aria-label="anchor" href="#support-for-additional-programming-languages-development-version"></a></h3>
+<h3 id="support-for-additional-programming-languages-0-11-0">Support for Additional Programming Languages<a class="anchor" aria-label="anchor" href="#support-for-additional-programming-languages-0-11-0"></a></h3>
 <ul><li><p>Added a new polyglot tutorial to learnr. This tutorial demonstrates how learnr tutorials might mix R, Python, and SQL exercises. See <code>run_tutorial("polyglot", "learnr")</code> for a an example (<a href="https://github.com/rstudio/learnr/issues/397" class="external-link">#397</a>).</p></li>
 <li><p><code>engine</code> is now passed to the <code>exercise.checker</code> to communicate which programming language is being checked in the exercise (<a href="https://github.com/rstudio/learnr/issues/397" class="external-link">#397</a>).</p></li>
 <li><p>The <code>exercise.cap</code> exercise/chunk option now accepts HTML input. If no <code>exercise.cap</code> is provided, the <code>exercise.cap</code> will default to the combination of the exercise engine and <code>" code"</code> (<a href="https://github.com/rstudio/learnr/issues/397" class="external-link">#397</a>, <a href="https://github.com/rstudio/learnr/issues/429" class="external-link">#429</a>).</p></li>
-<li><p>Improved support for SQL exercises makes it possible to check student submissions for SQL exercises (<a href="https://github.com/rstudio/learnr/issues/668" class="external-link">#668</a>).</p></li>
+<li><p>Improved support for SQL exercises makes it possible to check student submissions for SQL exercises. See <code>run_tutorial("sql-exericse", "learnr")</code> or the <a href="https://learnr-examples.shinyapps.io/sql-exercise" class="external-link">online SQL exercise demo</a> for an example tutorial with graded SQL exercises (<a href="https://github.com/rstudio/learnr/issues/668" class="external-link">#668</a>).</p></li>
 <li><p>Exercise editors now use syntax highlighting and basic autocompletion for exercises in languages other than R with syntax highlighting support for JavaScript, Julia, Python and SQL (<a href="https://github.com/rstudio/learnr/issues/693" class="external-link">#693</a>).</p></li>
 <li><p>Broadly improved support for additional programming languages and added support for Python exercises (<a href="https://github.com/rstudio/learnr/issues/724" class="external-link">#724</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="interactive-exercises-and-questions-development-version">Interactive Exercises and Questions<a class="anchor" aria-label="anchor" href="#interactive-exercises-and-questions-development-version"></a></h3>
+<h3 id="interactive-exercises-and-questions-0-11-0">Interactive Exercises and Questions<a class="anchor" aria-label="anchor" href="#interactive-exercises-and-questions-0-11-0"></a></h3>
 <div class="section level4">
-<h4 id="exercises-development-version">Exercises<a class="anchor" aria-label="anchor" href="#exercises-development-version"></a></h4>
+<h4 id="exercises-0-11-0">Exercises<a class="anchor" aria-label="anchor" href="#exercises-0-11-0"></a></h4>
 <ul><li><p>Users are now warned if their submission contains blanks they are expected to fill in. The default blank pattern is three or more underscores, e.g. <code>____</code>. The pattern for blanks can be set with the <code>exercise.blanks</code> chunk or tutorial option (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/547" class="external-link">#547</a>).</p></li>
 <li><p>Users who submit unparsable code containing non-ASCII characters are now presented with more informative feedback. Non-ASCII characters are a common source of code problems and often appear in code when students copy and paste text from a source that applies automatic Unicode formatting. If the submission contains Unicode-formatted quotation marks (e.g. curly quotes) or dashes, the student is given a suggested replacement with ASCII characters. In other cases, the student is simply prompted to delete the non-ASCII characters and retype them manually (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/642" class="external-link">#642</a>).</p></li>
 <li><p>Authors can choose to reveal (default) or hide the solution to an exercise. Set <code>exercise.reveal_solution</code> in the chunk options of a <code>*-solution</code> chunk to choose whether or not the solution is revealed to the user. The option can also be set globally with <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code>. In a future version of learnr, the default will likely be changed to hide solutions (<a href="https://github.com/rstudio/learnr/issues/402" class="external-link">#402</a>).</p></li>
@@ -145,7 +152,7 @@
 <li><p>Empty exercise chunks are now allowed. Please use caution: in very rare cases, knitr and learnr may not notice duplicate chunk labels when an exercise uses a duplicated label. Allowing empty exercise chunks improves the ergonomics when using <a href="https://yihui.org/en/2022/01/knitr-news/" class="external-link">knitr’s chunk option comments</a> (<a href="https://github.com/rstudio/learnr/issues/712" class="external-link">#712</a>).</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="exercise-evaluation-development-version">Exercise Evaluation<a class="anchor" aria-label="anchor" href="#exercise-evaluation-development-version"></a></h4>
+<h4 id="exercise-evaluation-0-11-0">Exercise Evaluation<a class="anchor" aria-label="anchor" href="#exercise-evaluation-0-11-0"></a></h4>
 <ul><li><p><strong>Breaking Change:</strong> If a <code>-code-check</code> chunk returns feedback for an exercise submission, the result of the exercise is no longer displayed for a correct answer (only the feedback is displayed). If both the result and feedback should be displayed, all checking should be performed in a <code>-check</code> chunk (i.e., don’t provide a <code>-code-check</code> chunk) (<a href="https://github.com/rstudio/learnr/issues/403" class="external-link">#403</a>).</p></li>
 <li><p>Exercise checking is now conducted in the same temporary directory where exercises are evaluated (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/544" class="external-link">#544</a>).</p></li>
 <li><p>Exercises evaluation now communicates the stage of evaluation via a new <code>stage</code> argument passed to the checker function. Stages may be <code>"code_check"</code>, <code>"error_check"</code>, or <code>"check"</code>. This makes it easier for the exercise checking function to determine at which point checking is being applied in the exercise evaluation life cycle (<a href="https://github.com/rossellhayes" class="external-link">@rossellhayes</a> <a href="https://github.com/rstudio/learnr/issues/610" class="external-link">#610</a>).</p></li>
@@ -159,7 +166,7 @@
 <li><p>If an exercise includes a <code>-check</code> chunk but no <code>exercise.checker</code> function has been defined, learnr will now throw an error at render reminding the author to use <code><a href="../reference/tutorial_options.html">tutorial_options()</a></code> to define an exercise checker (<a href="https://github.com/rstudio/learnr/issues/640" class="external-link">#640</a>).</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="questions-development-version">Questions<a class="anchor" aria-label="anchor" href="#questions-development-version"></a></h4>
+<h4 id="questions-0-11-0">Questions<a class="anchor" aria-label="anchor" href="#questions-0-11-0"></a></h4>
 <ul><li><p>Authors can now provide function-answers with <code><a href="../reference/answer.html">answer_fn()</a></code>. Authors can provide a function that takes a single argument that will be passed the student’s question submission. This function decides if the question is correct and provides feedback by returning <code><a href="../reference/mark_as_correct_incorrect.html">correct()</a></code> or <code><a href="../reference/mark_as_correct_incorrect.html">incorrect()</a></code> with a feedback message (<a href="https://github.com/rstudio/learnr/issues/657" class="external-link">#657</a>).</p></li>
 <li><p>A new <code><a href="../reference/question_numeric.html">question_numeric()</a></code> question type allows authors to ask users to provide a number (<a href="https://github.com/rstudio/learnr/issues/461" class="external-link">#461</a>).</p></li>
 <li><p><code><a href="../reference/question_text.html">question_text()</a></code> gains <code>rows</code> and <code>cols</code> parameters. If either is provided, a multi-line <code>textAreaInput()</code> is used for the text input (thanks <a href="https://github.com/dtkaplan" class="external-link">@dtkaplan</a> <a href="https://github.com/rstudio/learnr/issues/455" class="external-link">#455</a>, <a href="https://github.com/rstudio/learnr/issues/460" class="external-link">#460</a>).</p></li>
@@ -170,7 +177,7 @@
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="events-and-state-development-version">Events and State<a class="anchor" aria-label="anchor" href="#events-and-state-development-version"></a></h3>
+<h3 id="events-and-state-0-11-0">Events and State<a class="anchor" aria-label="anchor" href="#events-and-state-0-11-0"></a></h3>
 <ul><li>
 <p><strong>Breaking Change:</strong> The <code>exercise_submission</code> event was renamed to <code>exercise_result</code> and now includes the following new fields (<a href="https://github.com/rstudio/learnr/issues/337" class="external-link">#337</a>):</p>
 <ul><li>
@@ -194,7 +201,7 @@
 <li><p>Fail gracefully when unable to open an indexedDB store (e.g. in cross-origin iframes in Safari) (<a href="https://github.com/rstudio/learnr/issues/417" class="external-link">#417</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="running-tutorials-development-version">Running Tutorials<a class="anchor" aria-label="anchor" href="#running-tutorials-development-version"></a></h3>
+<h3 id="running-tutorials-0-11-0">Running Tutorials<a class="anchor" aria-label="anchor" href="#running-tutorials-0-11-0"></a></h3>
 <ul><li>
 <p>Running learnr tutorials with <code><a href="../reference/run_tutorial.html">run_tutorial()</a></code> has been improved (<a href="https://github.com/rstudio/learnr/issues/601" class="external-link">#601</a>):</p>
 <ul><li>
@@ -210,7 +217,7 @@
 <li>
 <p>Many of the HTML dependencies used by learnr have been updated to more recent versions (<a href="https://github.com/rstudio/learnr/issues/655" class="external-link">#655</a>). learnr now uses:</p>
 <ul><li>
-<a href="https://ace.c9.io/" class="external-link">Ace</a> version <a href="https://github.com/ajaxorg/ace/blob/HEAD/ChangeLog.txt" class="external-link">1.4.14</a>
+<a href="https://ace.c9.io/" class="external-link">Ace</a> version <a href="https://github.com/ajaxorg/ace/blob/ff3dd698/CHANGELOG.md" class="external-link">1.10.1</a>
 </li>
 <li>
 <a href="https://clipboardjs.com/" class="external-link">clipboard.js</a> version <a href="https://github.com/zenorocha/clipboard.js/releases" class="external-link">2.0.10</a>
@@ -228,9 +235,9 @@
 <li><p>Added option for quickly restoring a tutorial without re-evaluating the last stored exercise submission. This feature is enabled by setting the global option <code>tutorial.quick_restore = TRUE</code> or the environment variable <code>TUTORIAL_QUICK_RESTORE=1</code> (thanks <a href="https://github.com/mstackhouse" class="external-link">@mstackhouse</a>, <a href="https://github.com/rstudio/learnr/issues/509" class="external-link">#509</a>).</p></li>
 <li><p><code>exercise_result()</code> no longer combines the code output and feedback; this now happens just before presenting the exercise result to the user (<a href="https://github.com/rstudio/learnr/issues/522" class="external-link">#522</a>).</p></li>
 <li><p>Support the updated Bootstrap 4+ popover dispose method name, previously destroy (<a href="https://github.com/rstudio/learnr/issues/560" class="external-link">#560</a>).</p></li>
-<li><p>Forked evaluator (used by default on Linux and <a href="https://shinyapps.io" class="external-link">shinyapps.io</a>) now only collects the exercise evaluation result once, avoiding a “cannot wait for child” warning (thanks <a href="https://github.com/tombeesley" class="external-link">@tombeesley</a> <a href="https://github.com/rstudio/learnr/issues/449" class="external-link">#449</a>, <a href="https://github.com/rstudio/learnr/issues/631" class="external-link">#631</a>).</p></li>
+<li><p>Forked evaluator (used by default on Linux and <a href="https://www.shinyapps.io/" class="external-link">shinyapps.io</a>) now only collects the exercise evaluation result once, avoiding a “cannot wait for child” warning (thanks <a href="https://github.com/tombeesley" class="external-link">@tombeesley</a> <a href="https://github.com/rstudio/learnr/issues/449" class="external-link">#449</a>, <a href="https://github.com/rstudio/learnr/issues/631" class="external-link">#631</a>).</p></li>
 <li><p><code><a href="../reference/tutorial.html">learnr::tutorial()</a></code> now allows authors to adjust the value of <code>lib_dir</code> (<a href="https://github.com/rstudio/learnr/issues/648" class="external-link">#648</a>).</p></li>
-<li><p>learnr now uses and suggests <a href="https://rstudio.github.io/shinytest2" class="external-link">shinytest2</a> for automated testing of tutorials in the browser. If you were previously using <a href="https://rstudio.github.io/shinytest" class="external-link">shinytest</a> to test your tutorials, you may find the <a href="https://rstudio.github.io/shinytest2/articles/z-migration.html" class="external-link">Migrating from shinytest</a> article to be helpful (<a href="https://github.com/rstudio/learnr/issues/694" class="external-link">#694</a>).</p></li>
+<li><p>learnr now uses and suggests <a href="https://rstudio.github.io/shinytest2/" class="external-link">shinytest2</a> for automated testing of tutorials in the browser. If you were previously using <a href="https://rstudio.github.io/shinytest/" class="external-link">shinytest</a> to test your tutorials, you may find the <a href="https://rstudio.github.io/shinytest2//articles/z-migration.html" class="external-link">Migrating from shinytest</a> article to be helpful (<a href="https://github.com/rstudio/learnr/issues/694" class="external-link">#694</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -276,7 +283,7 @@
 <h3 id="bug-fixes-0-10-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-10-0"></a></h3>
 <ul><li><p>Fixed a spurious console warning when running exercises using Pandoc 2.0 (<a href="https://github.com/rstudio/learnr/issues/154" class="external-link">#154</a>).</p></li>
 <li><p>Added a fail-safe to try-catch bad student code that would crash the tutorial (<a href="https://github.com/adamblake" class="external-link">@adamblake</a> <a href="https://github.com/rstudio/learnr/issues/229" class="external-link">#229</a>).</p></li>
-<li><p>Replaced references to <code>checkthat</code> and <code>grader</code> in docs with <a href="https://github.com/rstudio-education/gradethis" class="external-link">gradethis</a> (<a href="https://github.com/rstudio/learnr/issues/269" class="external-link">#269</a>)</p></li>
+<li><p>Replaced references to <code>checkthat</code> and <code>grader</code> in docs with <a href="https://github.com/rstudio/gradethis" class="external-link">gradethis</a> (<a href="https://github.com/rstudio/learnr/issues/269" class="external-link">#269</a>)</p></li>
 <li><p>Removed a warning created by pandoc when evaluating exercises where pandoc was wanting a title or pagetitle. <a href="https://github.com/rstudio/learnr/issues/303" class="external-link">#303</a></p></li>
 </ul></div>
 </div>

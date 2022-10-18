@@ -49,7 +49,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.7.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,6 +78,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customize</h6>
     <a class="dropdown-item" href="../articles/formats.html">Tutorial Formats</a>
     <a class="dropdown-item" href="../articles/multilang.html">Internationalization</a>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">learnr v0.11.0</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -85,8 +86,14 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-news">News</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-news">
+    <h6 class="dropdown-header" data-toc-skip>Releases</h6>
+    <a class="dropdown-item" href="../articles/releases/learnr_v0-11-0.html">Version 0.11.0</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../news/index.html">Changelog</a>
+  </div>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -106,6 +113,8 @@
     
   </div>
 </nav><div class="container template-article" id="container">
+
+
 
 
 
@@ -132,7 +141,7 @@
 <ul>
 <li>
 <a href="https://rstudio.github.io/learnr/publishing.html#r_package" class="external-link">creating a tutorial package</a> that students run locally (free, but requires students to be able to download and install packages, as well as run commands in R), or</li>
-<li>setting up your own <a href="https://rstudio.com/pricing/academic-pricing/" class="external-link">free academic Shiny Server Pro account</a> (free, provided you have a server at your institution that will host the software, which may require IT help).</li>
+<li>setting up your own <a href="https://www.rstudio.com/pricing/academic-pricing/" class="external-link">free academic Shiny Server Pro account</a> (free, provided you have a server at your institution that will host the software, which may require IT help).</li>
 </ul>
 <p>Both of these require some configuration and setup, and may be beyond what either you or your students wish to undertake at the time (i.e. if you are running a short-term course). This leads to a third option that costs money, but may save you valuable time on system administration: deploying your learnr tutorial on <code>shinyapps.io</code>.</p>
 <p><strong>Note</strong>: Currently, the free <code>shinyapps.io</code> service is designed for no more than three to five users at once. If you would like multiple users to be able to access the service without the tutorial crashing, you will need to <a href="https://www.shinyapps.io/#pricing" class="external-link">pay for a hosted <code>shinyapps.io</code> service</a>.</p>
