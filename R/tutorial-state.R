@@ -176,10 +176,27 @@ set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()
 #' correspond to the current tutorial.
 #'
 #' @examples
-#' tutorial_rmd <- system.file(
-#'   "tutorials", "hello", "hello.Rmd", package = "learnr"
-#' )
-#' get_tutorial_info(tutorial_rmd)
+#' if (rmarkdown::pandoc_available("1.4")) {
+#'   tutorial_rmd <- local({
+#'     # Use a temp copy of "Hello learnr" tutorial for this example
+#'     src <- system.file(
+#'       "tutorials", "hello", "hello.Rmd", package = "learnr"
+#'     )
+#'     dest <- tempfile(fileext = ".Rmd")
+#'     file.copy(src, dest)
+#'     dest
+#'   })
+#'
+#'   # ---- This is the example! ------------ #
+#'   info <- get_tutorial_info(tutorial_rmd)
+#'   # -------------------------------------- #
+#'
+#'   # clean up the temporary Rmd used in this example
+#'   unlink(tutorial_rmd)
+#'
+#'   # This is the result of the example
+#'   info
+#' }
 #'
 #' @inheritParams get_tutorial_state
 #' @param tutorial_path Path to a tutorial `.Rmd` source file
