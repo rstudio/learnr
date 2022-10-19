@@ -18,7 +18,7 @@ community](https://img.shields.io/badge/community-learnr-blue?style=social&logo=
 <!-- badges: end -->
 
 The **learnr** package makes it easy to turn any [R
-Markdown](http://rmarkdown.rstudio.com) document into an interactive
+Markdown](http://rmarkdown.rstudio.com/) document into an interactive
 tutorial. Tutorials consist of content along with interactive components
 for checking and reinforcing understanding. Tutorials can include any or
 all of the following:

@@ -1,4 +1,6 @@
-# learnr (development version)
+# learnr 0.11.1
+
+This is a maintenance release that adjusts an example and several tests for CRAN.
 
 # learnr 0.11.0
 
