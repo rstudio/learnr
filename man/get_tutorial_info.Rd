@@ -108,10 +108,20 @@ the tutorial is completely initialized. If called in a non-reactive context,
 correspond to the current tutorial.
 }
 \examples{
-tutorial_rmd <- system.file(
-  "tutorials", "hello", "hello.Rmd", package = "learnr"
-)
+tutorial_rmd <- local({
+  # Use a temp copy of "Hello learnr" tutorial for this example
+  src <- system.file(
+    "tutorials", "hello", "hello.Rmd", package = "learnr"
+  )
+  dest <- tempfile(fileext = ".Rmd")
+  file.copy(src, dest)
+  dest
+})
+
 get_tutorial_info(tutorial_rmd)
+
+# clean up the temporary Rmd used in this example
+unlink(tutorial_rmd)
 
 }
 \seealso{
