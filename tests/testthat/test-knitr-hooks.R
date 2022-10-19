@@ -72,6 +72,7 @@ test_that("Detection of chained setup cycle works", {
 })
 
 test_that("Empty exercise code still creates an exercise", {
+  skip_if_not_pandoc("1.14")
   local_edition(3)
 
   # empty and full exercises are the same, except that "full" has empty lines
@@ -89,6 +90,7 @@ test_that("Empty exercise code still creates an exercise", {
 })
 
 test_that("Empty exercises with duplicate labels throw an error", {
+  skip_if_not_pandoc("1.14")
   local_edition(3)
 
   rmd <- test_path("tutorials", "knitr-hooks_empty-exercise", "duplicate-label.Rmd")
