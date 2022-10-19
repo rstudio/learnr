@@ -1,0 +1,24 @@
+/* examples gallery */
+a.thumbnail.active,
+a.thumbnail:focus,
+a.thumbnail:hover {
+	border-color: #FEDB00;
+}
+
+.contents.gallery {
+  max-width: min(100%, 72rem);
+}
+
+#banner {
+  margin-top: 90px;
+  height: 300px;
+  width: 100%;
+  z-index: 0;
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+
+#banner + .row > main {
+  margin-top: 0;
+}
