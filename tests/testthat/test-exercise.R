@@ -1360,6 +1360,7 @@ test_that("SQL exercises - with explicit `output.var`", {
 })
 
 test_that("Python exercises - simple example", {
+  skip_on_cran()
   skip_if_not_installed("reticulate")
   skip_if_not_py_available()
   local_py_env()
@@ -1387,6 +1388,7 @@ test_that("Python exercises - simple example", {
 })
 
 test_that("Python exercises - assignment example", {
+  skip_on_cran()
   skip_if_not_installed("reticulate")
   skip_if_not_py_available()
   local_py_env()
