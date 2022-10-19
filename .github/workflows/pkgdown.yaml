@@ -91,12 +91,12 @@ jobs:
         shell: Rscript {0}
         run: |
           subdir <- "${{ env.subdir }}"
+          if (nzhcar(subdir)) {
+            Sys.setenv("PKGDOWN_DEV_MODE" = if (grepl("^v([0-9]+\\.?){3}$", subdir)) "released" else "unreleased")
+          }
           pkgdown::deploy_to_branch(
             subdir = if (nzchar(subdir)) subdir,
-            clean = nzchar(subdir),
-            override = if (!nzchar(subdir)) list() else list(
-              development = list(mode = if (grepl("^v([0-9]+\\.?){3}$", subdir)) "released" else "unreleased")
-            )
+            clean = nzchar(subdir)
           )
 
   pkgdown-clean:
