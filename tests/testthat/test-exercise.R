@@ -166,6 +166,8 @@ test_that("evaluate_exercise() returns error in exercise result if no error chec
 })
 
 test_that("evaluate_exercise() errors from setup chunks aren't checked by error checker", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "stop('user')",
     chunks = list(mock_chunk("setup-1", "stop('setup')")),
@@ -184,6 +186,8 @@ test_that("evaluate_exercise() errors from setup chunks aren't checked by error 
 })
 
 test_that("evaluate_exercise() errors from user code are checked by error_checker", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "stop('user')",
     error_check = I("'error_check'"),
@@ -202,6 +206,8 @@ test_that("evaluate_exercise() errors from user code are checked by error_checke
 })
 
 test_that("evaluate_exercise() errors from user code are checked by default error checker as a fallback", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = "stop('user')",
     check = I("stop('test failed')"),
@@ -221,6 +227,8 @@ test_that("evaluate_exercise() errors from user code are checked by default erro
 })
 
 test_that("evaluate_exercise() returns an internal error for global setup chunk evaluation errors", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(global_setup = "stop('global setup failure')")
   expect_warning(
     res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
@@ -232,7 +240,9 @@ test_that("evaluate_exercise() returns an internal error for global setup chunk 
 })
 
 test_that("evaluate_exercise() returns an internal error when `render_exercise()` fails", {
+  skip_if_not_pandoc("1.14")
   local_edition(2)
+
   with_mock(
     "learnr:::render_exercise" = function(...) stop("render error"),
     expect_warning(
@@ -330,6 +340,8 @@ test_that("render_exercise() warns if exercise setup overwrites exercise.Rmd", {
 })
 
 test_that("render_exercise() exercise chunk options are used when rendering user code", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     user_code = "knitr::opts_current$get('a_custom_user_chunk_opt')",
     a_custom_user_chunk_opt = "'PASS'"
@@ -342,6 +354,7 @@ test_that("render_exercise() exercise chunk options are used when rendering user
 })
 
 test_that("render_exercise() user code exercise.Rmd snapshot", {
+  skip_if_not_pandoc("1.14")
   local_edition(3)
 
   ex <- mock_exercise(
@@ -364,6 +377,8 @@ test_that("render_exercise() user code exercise.Rmd snapshot", {
 # evaluate_exercise() -----------------------------------------------------
 
 test_that("serialized exercises produce equivalent evaluate_exercise() results", {
+  skip_if_not_pandoc("1.14")
+
   exercise <- mock_exercise(
     user_code = c("z <- 3", "z"),
     chunks = list(
@@ -432,6 +447,8 @@ test_that("standardize_exercise_result() ensures top-level code is length-1 stri
 })
 
 test_that("evaluate_exercise() handles default vs. explicit error check code", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     "stop('boom!')",
     check = I("stop('test failed')"),
@@ -446,6 +463,8 @@ test_that("evaluate_exercise() handles default vs. explicit error check code", {
 })
 
 test_that("evaluate_exercise() works even with CRLF", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(user_code = "1 +\r\n1 +\r\n1", check = I("last_value"))
   expect_silent(res <- evaluate_exercise(ex, new.env()))
   expect_equal(res$feedback$checker_result, 3)
@@ -628,7 +647,9 @@ test_that("exercise versions upgrade correctly", {
 # data files -----------------------------------------------------------------
 
 test_that("data/ - files in data/ directory can be accessed", {
+  skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
 
@@ -638,6 +659,7 @@ test_that("data/ - files in data/ directory can be accessed", {
 })
 
 test_that("data/ - no issues if data directory does not exist", {
+  skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
 
   ex  <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
@@ -646,7 +668,9 @@ test_that("data/ - no issues if data directory does not exist", {
 })
 
 test_that("data/ - original files are modified by exercise code", {
+  skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
 
@@ -663,8 +687,10 @@ test_that("data/ - original files are modified by exercise code", {
 })
 
 test_that("data/ - specify alternate data directory with envvar", {
+  skip_if_not_pandoc("1.14")
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("DEFAULT", "data/test.txt")
   dir.create("envvar")
@@ -688,8 +714,10 @@ test_that("data/ - specify alternate data directory with envvar", {
 })
 
 test_that("data/ - errors if envvar directory does not exist", {
+  skip_if_not_pandoc("1.14")
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("DEFAULT", "data/test.txt")
 
@@ -701,7 +729,9 @@ test_that("data/ - errors if envvar directory does not exist", {
 })
 
 test_that("data/ - specify alternate data directory with `options()`", {
+  skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("DEFAULT", "data/test.txt")
   dir.create("nested/structure/data", recursive = TRUE)
@@ -736,7 +766,9 @@ test_that("data/ - specify alternate data directory with `options()`", {
 })
 
 test_that("data/ - errors if `options()` directory does not exist", {
+  skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
+
   ex <- mock_exercise(
     user_code    = 'readLines("data/test.txt")',
     global_setup = 'options(tutorial.data_dir = "nested/structure")'
@@ -748,8 +780,10 @@ test_that("data/ - errors if `options()` directory does not exist", {
 })
 
 test_that("data/ - data directory option has precendence over envvar", {
+  skip_if_not_pandoc("1.14")
   withr::local_envvar(list("TUTORIAL_DATA_DIR" = "envvar"))
   withr::local_dir(withr::local_tempdir())
+
   dir.create("data")
   writeLines("DEFAULT", "data/test.txt")
   dir.create("nested/structure/data", recursive = TRUE)
@@ -769,7 +803,9 @@ test_that("data/ - data directory option has precendence over envvar", {
 # global options are restored after running user code ---------------------
 
 test_that("options() are protected from student modification", {
+  skip_if_not_pandoc("1.14")
   withr::local_options(test = "WITHR")
+
   expect_match(getOption("test"), "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
@@ -781,6 +817,7 @@ test_that("options() are protected from student modification", {
 })
 
 test_that("options() can be set in setup chunk", {
+  skip_if_not_pandoc("1.14")
   withr::local_options(test = "WITHR")
 
   ex <- mock_exercise(
@@ -807,6 +844,7 @@ test_that("options() can be set in setup chunk", {
 })
 
 test_that("options() can be set in global setup chunk", {
+  skip_if_not_pandoc("1.14")
   withr::local_options(test = "WITHR")
 
   ex <- mock_exercise(
@@ -843,7 +881,9 @@ test_that("options() can be set in global setup chunk", {
 })
 
 test_that("envvars are protected from student modification", {
+  skip_if_not_pandoc("1.14")
   withr::local_envvar(list(TEST = "WITHR"))
+
   expect_match(Sys.getenv("TEST"), "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
@@ -855,6 +895,7 @@ test_that("envvars are protected from student modification", {
 })
 
 test_that("options are protected from both user and author modification", {
+  skip_if_not_pandoc("1.14")
   withr::local_options(list(TEST = "APP"))
 
   ex <- mock_exercise(
@@ -881,6 +922,7 @@ test_that("options are protected from both user and author modification", {
 })
 
 test_that("env vars are protected from both user and author modification", {
+  skip_if_not_pandoc("1.14")
   withr::local_envvar(list(TEST = "APP"))
 
   ex <- mock_exercise(
@@ -909,6 +951,8 @@ test_that("env vars are protected from both user and author modification", {
 # Blanks ------------------------------------------------------------------
 
 test_that("evaluate_exercise() returns a message if code contains ___", {
+  skip_if_not_pandoc("1.14")
+
   ex     <- mock_exercise(user_code = '____("test")')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
@@ -932,6 +976,8 @@ test_that("evaluate_exercise() returns a message if code contains ___", {
 })
 
 test_that("setting a different blank for the blank checker", {
+  skip_if_not_pandoc("1.14")
+
   ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
@@ -955,6 +1001,8 @@ test_that("setting a different blank for the blank checker", {
 })
 
 test_that("setting a different blank for the blank checker in global setup", {
+  skip_if_not_pandoc("1.14")
+
   # global setup code, when evaluated, pollutes our global knitr options
   withr::defer(knitr::opts_chunk$set(exercise.blanks = NULL))
 
@@ -971,6 +1019,8 @@ test_that("setting a different blank for the blank checker in global setup", {
 })
 
 test_that("setting a regex blank for the blank checker", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     user_code       = '..function..("..string..")',
     exercise.blanks = "\\.\\.\\S+?\\.\\."
@@ -984,6 +1034,8 @@ test_that("setting a regex blank for the blank checker", {
 })
 
 test_that("use underscores as blanks if exercise.blanks is TRUE", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     user_code = 'print("____")', exercise.blanks = TRUE
   )
@@ -1004,6 +1056,8 @@ test_that("use underscores as blanks if exercise.blanks is TRUE", {
 })
 
 test_that("default message if exercise.blanks is FALSE", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     user_code = 'print("____")', exercise.blanks = FALSE
   )
@@ -1028,6 +1082,8 @@ test_that("default message if exercise.blanks is FALSE", {
 # Unparsable Code ---------------------------------------------------------
 
 test_that("evaluate_exercise() returns a message if code is unparsable", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(user_code = 'print("test"')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
@@ -1060,6 +1116,8 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
 })
 
 test_that("evaluate_exercise() passes parse error to explicit exercise checker function", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(
     "_foo",
     check = "check",
@@ -1076,12 +1134,16 @@ test_that("evaluate_exercise() passes parse error to explicit exercise checker f
 })
 
 test_that("exericse_check_code_is_parsable() gives error checker a 'parse_error' condition", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(user_code = 'print("test"', error_check = I("last_value"))
   result <- evaluate_exercise(ex, new.env())
   expect_s3_class(result$feedback$checker_result, class = c("parse_error", "condition"))
 })
 
 test_that("Errors with global setup code result in an internal error", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(global_setup = "stop('boom')")
   expect_warning(
     res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE),
@@ -1097,6 +1159,8 @@ test_that("Errors with global setup code result in an internal error", {
 # Unparsable Unicode ------------------------------------------------------
 
 test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
+  skip_if_not_pandoc("1.14")
+
   # Curly double quotes
   ex <- mock_exercise(
     user_code = "str_detect(\u201ctest\u201d, \u201ct.+t\u201d)"
@@ -1147,7 +1211,9 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
 })
 
 test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
+  skip_if_not_pandoc("1.14")
   skip_on_os("windows")
+
   # Greek variable name and interrobang in character string
   ex <- mock_exercise(
     user_code =
@@ -1163,6 +1229,7 @@ test_that("Exercise timelimit error is returned when exercise takes too long", {
   skip_on_cran()
   skip_on_os("windows")
   skip_on_os("mac")
+  skip_if_not_pandoc("1.14")
 
   ex <- mock_exercise(user_code = "Sys.sleep(3)", exercise.timelimit = 1)
 
@@ -1189,6 +1256,8 @@ test_that("Exercise timelimit error is returned when exercise takes too long", {
 # Sensitive env vars and options are masked from user -----------------------
 
 test_that("Shiny session is diabled", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(user_code = "shiny::getDefaultReactiveDomain()")
 
   shiny::withReactiveDomain(list(internal_test = TRUE), {
@@ -1201,6 +1270,8 @@ test_that("Shiny session is diabled", {
 })
 
 test_that("Sensitive env vars and options are masked", {
+  skip_if_not_pandoc("1.14")
+
   ex <- mock_exercise(user_code = paste(
     "list(",
     "  Sys.getenv('CONNECT_API_KEY', 'USER_LOCAL_CONNECT_API_KEY'),",
@@ -1264,6 +1335,7 @@ test_that("is_exercise_engine()", {
 })
 
 test_that("SQL exercises - without explicit `output.var`", {
+  skip_if_not_pandoc("1.14")
   skip_if_not_installed("DBI")
   skip_if_not_installed("RSQLite")
   local_edition(3)
@@ -1311,6 +1383,7 @@ test_that("SQL exercises - without explicit `output.var`", {
 })
 
 test_that("SQL exercises - with explicit `output.var`", {
+  skip_if_not_pandoc("1.14")
   skip_if_not_installed("DBI")
   skip_if_not_installed("RSQLite")
   local_edition(3)
@@ -1389,6 +1462,7 @@ test_that("Python exercises - simple example", {
 
 test_that("Python exercises - assignment example", {
   skip_on_cran()
+  skip_if_not_pandoc("1.14")
   skip_if_not_installed("reticulate")
   skip_if_not_py_available()
   local_py_env()
@@ -1431,6 +1505,7 @@ test_that("render_exercise_prepare() removes forced default chunk options from e
   # but `render_exercise_prepare()` removes that option
   expect_null(render_exercise_prepare(ex)$chunks[[1]]$opts$eval)
 
+  skip_if_not_pandoc("1.14")
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback$checker_args$last_value, 2)
 })
