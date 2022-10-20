@@ -92,7 +92,7 @@ jobs:
         run: |
           subdir <- "${{ env.subdir }}"
           if (nzchar(subdir)) {
-            Sys.setenv("PKGDOWN_DEV_MODE" = if (grepl("^v([0-9]+\\.?){3}$", subdir)) "released" else "unreleased")
+            Sys.setenv("PKGDOWN_DEV_MODE" = if (grepl("^v([0-9]+\\.?){3}$", subdir)) "release" else "unreleased")
           }
           pkgdown::deploy_to_branch(
             subdir = if (nzchar(subdir)) subdir,
