@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   Bumped **markdown** package version requirement to v1.3 and stopped using deprecated functions and options from its older versions (#745).
+
 # learnr 0.11.1
 
 This is a maintenance release that adjusts an example and several tests for CRAN.
