@@ -501,6 +501,16 @@ test_that("exercise_result() turns length-0 html_output into NULL", {
   expect_null(exercise_result(html_output = list())$html_output)
 })
 
+test_that("exercise_result() doesn't drop html dependencies from `html_output`", {
+  html_output <- htmltools::attachDependencies(
+    htmltools::HTML("<p>A basic paragraph.</p>"),
+    clipboardjs_html_dependency()
+  )
+  res <- exercise_result(html_output = html_output)
+  expect_equal(as.character(res$html_output), as.character(html_output))
+  expect_equal(htmltools::htmlDependencies(res$html_output), list(clipboardjs_html_dependency()))
+})
+
 test_that("exercise_result_as_html() creates html for learnr", {
   expect_null(exercise_result_as_html("nope"))
   expect_null(exercise_result_as_html(list()))
