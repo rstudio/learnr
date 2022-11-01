@@ -19,7 +19,6 @@
 #' @importFrom knitr opts_knit
 #' @importFrom knitr spin
 #' @importFrom lifecycle deprecated
-#' @importFrom markdown markdownToHTML
 #' @importFrom rprojroot find_root
 #' @importFrom rprojroot is_r_package
 #' @importFrom shiny invalidateLater
