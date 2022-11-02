@@ -1213,6 +1213,8 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
 test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
   skip_if_not_pandoc("1.14")
   skip_on_os("windows")
+  # Skip if OS does not support UTF-8
+  skip_if(!isTRUE(l10n_info()[["UTF-8"]]))
 
   # Greek variable name and interrobang in character string
   ex <- mock_exercise(
