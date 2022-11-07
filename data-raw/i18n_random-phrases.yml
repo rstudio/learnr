@@ -167,6 +167,23 @@ praise:
     - Bardzo dobrze!
     - Jeśli to zadanie jest skocznią, to Ty jesteś Małyszem!
     - Gratulacje!
+  nl:
+    - Zeer goed!
+    - Goed werk!
+    - Super!
+    - Doe zo verder!
+    - Bravo!
+    - Prachtig!
+    - Uitstekend!
+    - Kon niet beter!
+    - Indrukwekkend!
+    - Goed gewerkt!
+    - Prima!
+    - Erg goed!
+    - Proficiat!
+    - Uitstekend werk!
+    - Prima gedaan!
+    - Zo moet het!
 
 encouragement:
   testing:
@@ -254,3 +271,12 @@ encouragement:
     - Wytrwałość to klucz do sukcesu, spróbujmy jeszcze raz.
     - Do skutku! Tak możemy się uczyć.
     - Nikodemowi Dyzmie też na początku nie było łatwo!
+  nl:
+    - Probeer het nog een keer.
+    - Mmmm, nog niet helemaal goed. Nieuwe poging!
+    - Nogmaals proberen!
+    - Nog niet helemaal. Doe nog eens een poging.
+    - Niet opgeven… probeer nog eenmaal!
+    - Probeer nog een keertje… het gaat elke keer beter!
+    - Probeer nog eens keer… de volhouder wint.
+    - Doe nog eens een poging… volgende keer lukt het vast wel.
