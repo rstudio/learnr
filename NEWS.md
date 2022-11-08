@@ -1,3 +1,5 @@
+# learnr (development version)
+
 # learnr 0.11.2
 
 -   Fixed an issue that prevented htmlwidgets from working in exercise code unless similar widgets were added to the tutorial prose (thanks @munoztd0 #744, #745).
