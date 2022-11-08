@@ -49,7 +49,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.11.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.11.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,64 +130,110 @@
 
     
     
-<p>You may be interested in deploying your learnr tutorial on <a href="https://www.shinyapps.io/" class="external-link">shinyapps.io</a> so that students can access them from the web browser.</p>
-<p>However, you will need to know how to optimize your application settings so that your tutorials are able to handle a large number of users at once (for example, a 60-person class logging onto the same tutorial to complete interactive exercises during a statistics lecture).</p>
-<p>In order to publish your tutorials on <code>shinyapps.io</code>, you can follow the <a href="https://rstudio.github.io/learnr/publishing.html#rstudio_connect_and_shinyappsio" class="external-link">normal process of publishing your tutorials from the RStudio IDE</a> to <code>shinyapps.io</code>. This will not be covered extensively here, as our main concern is optimizing tutorial performance.</p>
+<p>You may be interested in deploying your learnr tutorial on <a href="https://www.shinyapps.io/" class="external-link">shinyapps.io</a> so that students can
+access them from the web browser.</p>
+<p>However, you will need to know how to optimize your application
+settings so that your tutorials are able to handle a large number of
+users at once (for example, a 60-person class logging onto the same
+tutorial to complete interactive exercises during a statistics
+lecture).</p>
+<p>In order to publish your tutorials on <code>shinyapps.io</code>, you
+can follow the <a href="https://rstudio.github.io/learnr/publishing.html#rstudio_connect_and_shinyappsio" class="external-link">normal
+process of publishing your tutorials from the RStudio IDE</a> to
+<code>shinyapps.io</code>. This will not be covered extensively here, as
+our main concern is optimizing tutorial performance.</p>
 <div class="section level2">
 <h2 id="alternative-options-for-hosting-learnr-tutorials">Alternative options for hosting learnr tutorials<a class="anchor" aria-label="anchor" href="#alternative-options-for-hosting-learnr-tutorials"></a>
 </h2>
-<p>Note that there are other options for hosting tutorials besides <code>shinyapps.io</code>, such as:</p>
+<p>Note that there are other options for hosting tutorials besides
+<code>shinyapps.io</code>, such as:</p>
 <ul>
 <li>
-<a href="https://rstudio.github.io/learnr/publishing.html#r_package" class="external-link">creating a tutorial package</a> that students run locally (free, but requires students to be able to download and install packages, as well as run commands in R), or</li>
-<li>setting up your own <a href="https://www.rstudio.com/pricing/academic-pricing/" class="external-link">free academic Shiny Server Pro account</a> (free, provided you have a server at your institution that will host the software, which may require IT help).</li>
+<a href="https://rstudio.github.io/learnr/publishing.html#r_package" class="external-link">creating
+a tutorial package</a> that students run locally (free, but requires
+students to be able to download and install packages, as well as run
+commands in R), or</li>
+<li>setting up your own <a href="https://posit.co/pricing/academic/" class="external-link">free academic Shiny Server Pro
+account</a> (free, provided you have a server at your institution that
+will host the software, which may require IT help).</li>
 </ul>
-<p>Both of these require some configuration and setup, and may be beyond what either you or your students wish to undertake at the time (i.e. if you are running a short-term course). This leads to a third option that costs money, but may save you valuable time on system administration: deploying your learnr tutorial on <code>shinyapps.io</code>.</p>
-<p><strong>Note</strong>: Currently, the free <code>shinyapps.io</code> service is designed for no more than three to five users at once. If you would like multiple users to be able to access the service without the tutorial crashing, you will need to <a href="https://www.shinyapps.io/#pricing" class="external-link">pay for a hosted <code>shinyapps.io</code> service</a>.</p>
+<p>Both of these require some configuration and setup, and may be beyond
+what either you or your students wish to undertake at the time (i.e. if
+you are running a short-term course). This leads to a third option that
+costs money, but may save you valuable time on system administration:
+deploying your learnr tutorial on <code>shinyapps.io</code>.</p>
+<p><strong>Note</strong>: Currently, the free <code>shinyapps.io</code>
+service is designed for no more than three to five users at once. If you
+would like multiple users to be able to access the service without the
+tutorial crashing, you will need to <a href="https://www.shinyapps.io/#pricing" class="external-link">pay for a hosted
+<code>shinyapps.io</code> service</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="optimal-settings-for-shinyapps-io">Optimal settings for shinyapps.io<a class="anchor" aria-label="anchor" href="#optimal-settings-for-shinyapps-io"></a>
 </h2>
 <p>As an educator, we assume you have a few concerns:</p>
 <ol style="list-style-type: decimal">
-<li>How can my students access the same tutorials concurrently, over multiple sessions, over a long period of time?</li>
+<li>How can my students access the same tutorials concurrently, over
+multiple sessions, over a long period of time?</li>
 <li>How can I reduce the cost of tutorial hosting?</li>
 </ol>
-<p>Balancing these two things will be a part of figuring out your optimal configuration settings.</p>
+<p>Balancing these two things will be a part of figuring out your
+optimal configuration settings.</p>
 <div class="section level3">
 <h3 id="optimizing-for-classroom-settings">Optimizing for classroom settings<a class="anchor" aria-label="anchor" href="#optimizing-for-classroom-settings"></a>
 </h3>
-<p>Once you have published your tutorials to <code>shinyapps.io</code>, log into your account, click on the application page and configure the following:</p>
+<p>Once you have published your tutorials to <code>shinyapps.io</code>,
+log into your account, click on the application page and configure the
+following:</p>
 <ul>
 <li>
-<strong>Instances</strong>: increase to maximum amount allowed. This is the total number of independent servers that are available to run your tutorial. The more, the better! This will help handle “flash traffic” (having numerous students load the tutorial all at once) at the beginning of class.</li>
+<strong>Instances</strong>: increase to maximum amount allowed. This
+is the total number of independent servers that are available to run
+your tutorial. The more, the better! This will help handle “flash
+traffic” (having numerous students load the tutorial all at once) at the
+beginning of class.</li>
 </ul>
 <p><img src="img/shinyapps-publishing-instances.png" width="433" style="display: block; margin: auto;"></p>
-<p>Then go to <code>Settings &gt; General</code> and configure the following:</p>
+<p>Then go to <code>Settings &gt; General</code> and configure the
+following:</p>
 <ul>
 <li>
-<strong>Instance Size</strong>: increase to maximum size possible. The larger the instance, the more memory you will have to work with. The larger the memory, the more students can be concurrently working.</li>
+<strong>Instance Size</strong>: increase to maximum size possible.
+The larger the instance, the more memory you will have to work with. The
+larger the memory, the more students can be concurrently working.</li>
 </ul>
 <p><img src="img/shinyapps-publishing-instance-size.png" width="600" style="display: block; margin: auto;"></p>
-<p>Finally, go to the Settings &gt; Advanced page and configure the following:</p>
+<p>Finally, go to the Settings &gt; Advanced page and configure the
+following:</p>
 <ul>
 <li>
-<strong>Max Worker Processes</strong>: reduce if possible, possibly to 2. Keep this equation in mind:</li>
+<strong>Max Worker Processes</strong>: reduce if possible, possibly
+to 2. Keep this equation in mind:</li>
 </ul>
-<p>(Instance Size) / (Worker Processes * Max Connections) = Amount of memory available for each new student accessing your tutorial.</p>
+<p>(Instance Size) / (Worker Processes * Max Connections) = Amount of
+memory available for each new student accessing your tutorial.</p>
 <ul>
 <li>
-<strong>Max Connections</strong>: reduce if possible, possibly to 20 or so.</li>
+<strong>Max Connections</strong>: reduce if possible, possibly to 20
+or so.</li>
 <li>
-<strong>Start Count</strong>: increase to maximum size possible. This is the number of servers (“instances”) that will launch when a single person accesses the tutorial. This means that the first student to access your tutorial during class will start all the servers so that others can access them more quickly.</li>
+<strong>Start Count</strong>: increase to maximum size possible.
+This is the number of servers (“instances”) that will launch when a
+single person accesses the tutorial. This means that the first student
+to access your tutorial during class will start all the servers so that
+others can access them more quickly.</li>
 </ul>
 <p><img src="img/shinyapps-publishing-advanced.png" width="538" style="display: block; margin: auto;"></p>
-<p>We recommend you set the <strong>Start Count</strong> and <strong>Instance Size</strong> to the maximum, monitor hours used, and adjust settings from there.</p>
+<p>We recommend you set the <strong>Start Count</strong> and
+<strong>Instance Size</strong> to the maximum, monitor hours used, and
+adjust settings from there.</p>
 </div>
 <div class="section level3">
 <h3 id="reducing-cost">Reducing cost<a class="anchor" aria-label="anchor" href="#reducing-cost"></a>
 </h3>
-<p>Because you are paying for the active hours of use per month, you will want to minimize this to stay within your subscription limits. To do this, you can adjust any of the following:</p>
+<p>Because you are paying for the active hours of use per month, you
+will want to minimize this to stay within your subscription limits. To
+do this, you can adjust any of the following:</p>
 <ul>
 <li>Reduce <strong>Start Count</strong>
 </li>
@@ -200,7 +246,8 @@
 <li>Reduce <strong>Instance Size</strong>
 </li>
 </ul>
-<p>A good workflow is to change only one setting, observe usage metrics, and modify as needed.</p>
+<p>A good workflow is to change only one setting, observe usage metrics,
+and modify as needed.</p>
 </div>
 </div>
 <div class="section level2">
@@ -209,47 +256,78 @@
 <div class="section level3">
 <h3 id="context">Context<a class="anchor" aria-label="anchor" href="#context"></a>
 </h3>
-<p>Suppose you are teaching a statistical programming seminar over 5 weeks for several class sections of 60 people each. The course is short and students have just been introduced to R and RStudio, so it may not be worth setting up a full server for hosting the seminar tutorials or asking students to configure their own R package.</p>
-<p>A browser-based interface is also friendly to those who may have trouble understanding or navigating the RStudio interface during their first weeks of classes.</p>
-<p>A few sections are back-to-back, so ideally, the settings on learnr tutorials are robust enough to allow the next section’s students to access them.</p>
+<p>Suppose you are teaching a statistical programming seminar over 5
+weeks for several class sections of 60 people each. The course is short
+and students have just been introduced to R and RStudio, so it may not
+be worth setting up a full server for hosting the seminar tutorials or
+asking students to configure their own R package.</p>
+<p>A browser-based interface is also friendly to those who may have
+trouble understanding or navigating the RStudio interface during their
+first weeks of classes.</p>
+<p>A few sections are back-to-back, so ideally, the settings on learnr
+tutorials are robust enough to allow the next section’s students to
+access them.</p>
 </div>
 <div class="section level3">
 <h3 id="initial-settings">Initial settings<a class="anchor" aria-label="anchor" href="#initial-settings"></a>
 </h3>
-<p>For my situation, I had my department purchase the Standard <code>shinyapps.io</code> subscription for $100/month, which gave me <strong>2,000 Active Hours</strong> per month. (Note that <strong>Active Hours</strong> refers to the amount of time spent launching the tutorial and actively processing R code and input submitted by students on each instance.)</p>
+<p>For my situation, I had my department purchase the Standard
+<code>shinyapps.io</code> subscription for $100/month, which gave me
+<strong>2,000 Active Hours</strong> per month. (Note that <strong>Active
+Hours</strong> refers to the amount of time spent launching the tutorial
+and actively processing R code and input submitted by students on each
+instance.)</p>
 <p>For each tutorial I deployed, I set up:</p>
 <ul>
 <li>
-<strong>5 XXX-Large Instances (8 GB)</strong> on <code>shinyapps.io</code>,</li>
-<li>with <strong>2 Worker Processes</strong> each and <strong>10 Max Connections</strong>.</li>
-<li>I also set the <strong>Start Count to 5</strong>, so that all tutorials launched at once.</li>
+<strong>5 XXX-Large Instances (8 GB)</strong> on
+<code>shinyapps.io</code>,</li>
+<li>with <strong>2 Worker Processes</strong> each and <strong>10 Max
+Connections</strong>.</li>
+<li>I also set the <strong>Start Count to 5</strong>, so that all
+tutorials launched at once.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="adjusting-based-on-usage-metrics">Adjusting based on usage metrics<a class="anchor" aria-label="anchor" href="#adjusting-based-on-usage-metrics"></a>
 </h3>
-<p>I then observed my usage metrics in the <code>shinyapps.io</code> dashboard in <code>Metrics</code>. After noticing that my tutorials did not require excessive memory, I:</p>
+<p>I then observed my usage metrics in the <code>shinyapps.io</code>
+dashboard in <code>Metrics</code>. After noticing that my tutorials did
+not require excessive memory, I:</p>
 <ul>
-<li>changed the size of the Instances to <strong>X-Large (2 GB)</strong>
+<li>changed the size of the Instances to <strong>X-Large (2
+GB)</strong>
 </li>
 <li>increased <strong>Max Connections to 15</strong> and</li>
-<li>reduced <strong>Start Count to 2</strong> once we had completed that week’s sections.</li>
+<li>reduced <strong>Start Count to 2</strong> once we had completed that
+week’s sections.</li>
 </ul>
 <p>After the 5-week course was done, I:</p>
 <ul>
 <li>canceled our <code>shinyapps.io</code> Standard subscription,</li>
-<li>reduced Instance Count and Instance Size to a single <strong>Large Instance (1 GB)</strong>, and</li>
+<li>reduced Instance Count and Instance Size to a single <strong>Large
+Instance (1 GB)</strong>, and</li>
 <li>left Worker Processes and Max Connections as is.</li>
 </ul>
-<p>This enabled students to return to the tutorial after the workshop was done, without being optimized for mass numbers of students accessing the tutorial at once.</p>
-<p>We used around 1000 Active Hours in our first month, and around 300 in our second month of the course, so next year, I will likely purchase the Standard subscription (&lt;= 2000 hours / month) for one month, and reduce to the Basic level (&lt;= 500 hours / month) in the second month.</p>
+<p>This enabled students to return to the tutorial after the workshop
+was done, without being optimized for mass numbers of students accessing
+the tutorial at once.</p>
+<p>We used around 1000 Active Hours in our first month, and around 300
+in our second month of the course, so next year, I will likely purchase
+the Standard subscription (&lt;= 2000 hours / month) for one month, and
+reduce to the Basic level (&lt;= 500 hours / month) in the second
+month.</p>
 <p>Example of the usage metrics dashboard below:</p>
 <p><img src="img/shinyapps-publishing-metrics.png" width="686" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="troubleshooting-beyond-settings">Troubleshooting beyond settings<a class="anchor" aria-label="anchor" href="#troubleshooting-beyond-settings"></a>
 </h3>
-<p>For consecutive classes, we still had some issues with lingering open server connections from the previous class getting in the way. I published an identical learnr tutorial with a different name (i.e. <code>"tutorial-2"</code>), so I could direct some students to a different link as needed.</p>
+<p>For consecutive classes, we still had some issues with lingering open
+server connections from the previous class getting in the way. I
+published an identical learnr tutorial with a different name
+(i.e. <code>"tutorial-2"</code>), so I could direct some students to a
+different link as needed.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
