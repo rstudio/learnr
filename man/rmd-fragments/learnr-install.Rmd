@@ -11,4 +11,4 @@ Or you can install the most recent version in-development from GitHub with the [
 remotes::install_github("rstudio/learnr")
 ```
 
-learnr works best with a recent [version of RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136 or later) which includes tools for easily running and previewing tutorials.
+learnr works best with a recent [version of RStudio](https://posit.co/download/rstudio-desktop/) (v1.0.136 or later) which includes tools for easily running and previewing tutorials.
