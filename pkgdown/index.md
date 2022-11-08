@@ -18,7 +18,7 @@ community](https://img.shields.io/badge/community-learnr-blue?style=social&logo=
 <!-- badges: end -->
 
 The **learnr** package makes it easy to turn any [R
-Markdown](http://rmarkdown.rstudio.com/) document into an interactive
+Markdown](https://rmarkdown.rstudio.com/) document into an interactive
 tutorial. Tutorials consist of content along with interactive components
 for checking and reinforcing understanding. Tutorials can include any or
 all of the following:
@@ -103,9 +103,8 @@ with the [remotes package](https://remotes.r-lib.org):
     remotes::install_github("rstudio/learnr")
 
 learnr works best with a recent [version of
-RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
-or later) which includes tools for easily running and previewing
-tutorials.
+RStudio](https://posit.co/download/rstudio-desktop/) (v1.0.136 or later)
+which includes tools for easily running and previewing tutorials.
 
 ## Hello, Tutorial!
 

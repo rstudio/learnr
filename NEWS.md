@@ -1,6 +1,10 @@
-# learnr (development version)
+# learnr 0.11.2
 
--   Bumped **markdown** package version requirement to v1.3 and stopped using deprecated functions and options from its older versions (#745).
+-   Fixed an issue that prevented htmlwidgets from working in exercise code unless similar widgets were added to the tutorial prose (thanks @munoztd0 #744, #745).
+
+-   learnr now requires **markdown** version 1.3 or later (#745).
+
+-   Fixed a test involving UTF-8 character strings (#749).
 
 # learnr 0.11.1
 
