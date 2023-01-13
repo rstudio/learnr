@@ -1,0 +1,30 @@
+---
+title: "Test: Exercise Option is a Symbol"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+do_exercise <- TRUE
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Topic
+
+### Exercise T
+
+*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r symbol, exercise = T}
+"symbol"
+```
+
+### Exercise Variable
+
+```{r variable, exercise = do_exercise}
+"variable (also a symbol)"
+```
