@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   Fixed an issue that prevented authors from using symbols, such as `T` or a variable, as the value of the `exercise` chunk option, which caused tutorials with chunks with `exercise = T` to fail to render (thanks @cknotz #757, #758).
+
 # learnr 0.11.2
 
 -   Fixed an issue that prevented htmlwidgets from working in exercise code unless similar widgets were added to the tutorial prose (thanks @munoztd0 #744, #745).
