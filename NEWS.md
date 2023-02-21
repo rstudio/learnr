@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   The embedded Ace editor used in learnr exercises now defaults to a tab width of 2, aligning with the Tidyverse style guide (#761).
+
 # learnr 0.11.2
 
 -   Fixed an issue that prevented htmlwidgets from working in exercise code unless similar widgets were added to the tutorial prose (thanks @munoztd0 #744, #745).
