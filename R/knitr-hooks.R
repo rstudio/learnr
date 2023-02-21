@@ -34,8 +34,13 @@ tutorial_knitr_options <- function() {
       return(TRUE)
     }
 
-    chunk_opts <- attr(get_knitr_chunk(label), "chunk_opts")
-    if (!identical(options$exercise, chunk_opts$exercise)) {
+    chunk_opt_exercise <- attr(get_knitr_chunk(label), "chunk_opts")[["exercise"]]
+    if (is.symbol(chunk_opt_exercise)) {
+      # original chunk options might not be evaluated yet, see #757
+      chunk_opt_exercise <- eval(chunk_opt_exercise, knitr::knit_global())
+    }
+
+    if (!identical(options$exercise, chunk_opt_exercise)) {
       # this looks like an exercise chunk, but knitr knows about a different
       # chunk that isn't an exercise here. so there must be a problem (i.e. this
       # is an empty chunk that didn't trigger knitr's duplicate chunk error).

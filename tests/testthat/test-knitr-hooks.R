@@ -96,3 +96,17 @@ test_that("Empty exercises with duplicate labels throw an error", {
   rmd <- test_path("tutorials", "knitr-hooks_empty-exercise", "duplicate-label.Rmd")
   expect_error(expect_message(get_tutorial_exercises(rmd), "duplicate"))
 })
+
+test_that("Exercise chunk option can be symbols", {
+  skip_if_not_pandoc("1.14")
+  local_edition(3)
+
+  rmd_src <- test_path("tutorials", "exercise-option-is-symbol.Rmd")
+  rmd <- withr::local_tempfile(fileext = ".Rmd")
+  html <- withr::local_tempfile(fileext = ".html")
+  file.copy(rmd_src, rmd, overwrite = TRUE)
+
+  expect_no_error(
+    rmarkdown::render(rmd, output_file = basename(html), quiet = TRUE)
+  )
+})
