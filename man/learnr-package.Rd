@@ -20,20 +20,20 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Garrick Aden-Buie \email{garrick@rstudio.com} (\href{https://orcid.org/0000-0002-7111-0077}{ORCID})
+\strong{Maintainer}: Garrick Aden-Buie \email{garrick@posit.co} (\href{https://orcid.org/0000-0002-7111-0077}{ORCID})
 
 Authors:
 \itemize{
-  \item Barret Schloerke \email{barret@rstudio.com} (\href{https://orcid.org/0000-0001-9986-114X}{ORCID})
-  \item JJ Allaire \email{jj@rstudio.com} [conceptor]
+  \item Barret Schloerke \email{barret@posit.co} (\href{https://orcid.org/0000-0001-9986-114X}{ORCID})
+  \item JJ Allaire \email{jj@posit.co} [conceptor]
+  \item Alexander Rossell Hayes \email{alex.rossellhayes@posit.co} (\href{https://orcid.org/0000-0001-9412-0457}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Alexander Rossell Hayes \email{alex.rossellhayes@rstudio.com} (\href{https://orcid.org/0000-0001-9412-0457}{ORCID}) [contributor]
-  \item Nischal Shrestha \email{nischal@rstudio.com} (\href{https://orcid.org/0000-0003-3321-1712}{ORCID}) [contributor]
+  \item Nischal Shrestha \email{nischal@posit.co} (\href{https://orcid.org/0000-0003-3321-1712}{ORCID}) [contributor]
   \item Angela Li \email{angelali921@gmail.com} (vignette) [contributor]
-  \item RStudio [copyright holder, funder]
+  \item Posit, PBC [copyright holder, funder]
   \item  Ajax.org B.V. (Ace library) [contributor, copyright holder]
   \item Zeno Rocha (clipboard.js library) [contributor, copyright holder]
   \item Nick Payne (Bootbox library) [contributor, copyright holder]
