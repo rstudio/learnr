@@ -1045,6 +1045,7 @@ unparsable_unicode_message <- function(
   code <- unlist(strsplit(code, "\n"))[[line]]
 
   character <- str_extract(code, pattern)
+  highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern, line)
 
   suggestion <- if (!is.null(replacement_pattern)) {
     html_code_block(str_replace_all(code, replacement_pattern))
@@ -1055,14 +1056,18 @@ unparsable_unicode_message <- function(
   code <- exercise_highlight_unparsable_unicode(code, pattern, line)
 
   text <- i18n_translations()$en$translation$text[[i18n_key]]
-  text <- glue::glue(text, .open = "{{", .close = "}}")
+  text <- sub("{{character}}", character, text, fixed = TRUE)
+  text <- sub("{{code}}", highlighted_code, text, fixed = TRUE)
+  if (!is.null(suggestion)) {
+    text <- sub("{{suggestion}}", suggestion, text, fixed = TRUE)
+  }
 
   i18n_div(
     paste0("text.", i18n_key),
     HTML(text),
     opts = list(
       character = character,
-      code = code,
+      code = highlighted_code,
       suggestion = suggestion,
       interpolation = list(escapeValue = FALSE)
     )
