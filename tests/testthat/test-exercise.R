@@ -1171,52 +1171,42 @@ test_that("Errors with global setup code result in an internal error", {
 test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
   skip_if_not_pandoc("1.14")
 
+  expect_unparsable_message <- function(user_code, problem, key) {
+    ex <- mock_exercise(user_code = user_code)
+    feedback <- evaluate_exercise(ex, new.env())$feedback
+    expect_equal(feedback, exercise_check_code_is_parsable(ex)$feedback)
+    expect_match(feedback$message, regexp = key, fixed = TRUE)
+    for (character in problem) {
+      expect_match(feedback$message, regexp = character, fixed = TRUE)
+    }
+  }
+
   # Curly double quotes
-  ex <- mock_exercise(
-    user_code = "str_detect(\u201ctest\u201d, \u201ct.+t\u201d)"
-  )
-  result <- evaluate_exercise(ex, new.env())
-  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
-  expect_match(result$feedback$message, "text.unparsablequotes")
-  expect_match(
-    result$feedback$message,
-    i18n_translations()$en$translation$text$unparsablequotes,
-    fixed = TRUE
+  expect_unparsable_message(
+    "str_detect(\u201ctest\u201d, \u201ct.+t\u201d)",
+    problem = c("\u201c", "\u201d"),
+    key = "text.unparsablequotes"
   )
 
   # Curly single quotes
-  ex <- mock_exercise(
-    user_code = "str_detect(\u2018test\u2019, \u2018t.+t\u2019)"
-  )
-  result <- evaluate_exercise(ex, new.env())
-  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
-  expect_match(result$feedback$message, "text.unparsablequotes")
-  expect_match(
-    result$feedback$message,
-    i18n_translations()$en$translation$text$unparsablequotes,
-    fixed = TRUE
+  expect_unparsable_message(
+    "str_detect(\u2018test\u2019, \u2018t.+t\u2019)",
+    problem = c("\u2018", "\u2019"),
+    key = "text.unparsablequotes"
   )
 
   # En dash
-  ex     <- mock_exercise(user_code = "63 \u2013 21")
-  result <- evaluate_exercise(ex, new.env())
-  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
-  expect_match(result$feedback$message, "text.unparsableunicodesuggestion")
-  expect_match(
-    result$feedback$message,
-    i18n_translations()$en$translation$text$unparsableunicodesuggestion,
-    fixed = TRUE
+  expect_unparsable_message(
+    "63 \u2013 21",
+    problem = "\u2013",
+    key = "text.unparsableunicodesuggestion"
   )
 
   # Plus-minus sign
-  ex     <- mock_exercise(user_code = "63 \u00b1 21")
-  result <- evaluate_exercise(ex, new.env())
-  expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
-  expect_match(result$feedback$message, "text.unparsableunicode")
-  expect_match(
-    result$feedback$message,
-    i18n_translations()$en$translation$text$unparsableunicode,
-    fixed = TRUE
+  expect_unparsable_message(
+    "63 \u00b1 21",
+    problem = "\u00b1",
+    key = "text.unparsableunicode"
   )
 })
 

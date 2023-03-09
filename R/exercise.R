@@ -1039,20 +1039,32 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
   )
 }
 
-unparsable_unicode_message <- function(i18n_key, code, line, pattern, replacement_pattern = NULL) {
+unparsable_unicode_message <- function(
+  i18n_key, code, line, pattern, replacement_pattern = NULL
+) {
   code <- unlist(strsplit(code, "\n"))[[line]]
 
   character <- str_extract(code, pattern)
   highlighted_code <- exercise_highlight_unparsable_unicode(code, pattern, line)
 
-  suggestion <- NULL
-  if (!is.null(replacement_pattern)) {
-    suggestion <- html_code_block(str_replace_all(code, replacement_pattern))
+  suggestion <- if (!is.null(replacement_pattern)) {
+    html_code_block(str_replace_all(code, replacement_pattern))
+  } else {
+    NULL
+  }
+
+  code <- exercise_highlight_unparsable_unicode(code, pattern, line)
+
+  text <- i18n_translations()$en$translation$text[[i18n_key]]
+  text <- sub("{{character}}", character, text, fixed = TRUE)
+  text <- sub("{{code}}", highlighted_code, text, fixed = TRUE)
+  if (!is.null(suggestion)) {
+    text <- sub("{{suggestion}}", suggestion, text, fixed = TRUE)
   }
 
   i18n_div(
     paste0("text.", i18n_key),
-    HTML(i18n_translations()$en$translation$text[[i18n_key]]),
+    HTML(text),
     opts = list(
       character = character,
       code = highlighted_code,
