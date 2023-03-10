@@ -187,7 +187,7 @@ This is a maintenance release that adjusts an example and several tests for CRAN
 -   Many of the HTML dependencies used by learnr have been updated to more recent versions (#655). learnr now uses:
     -   [Ace](https://ace.c9.io/) version [1.10.1](https://github.com/ajaxorg/ace/blob/ff3dd698/CHANGELOG.md)
     -   [clipboard.js](https://clipboardjs.com/) version [2.0.10](https://github.com/zenorocha/clipboard.js/releases)
-    -   [Bootbox](http://bootboxjs.com/) version [5.5.2](https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md)
+    -   [Bootbox](https://bootboxjs.com/) version [5.5.2](https://github.com/bootboxjs/bootbox/blob/HEAD/CHANGELOG.md)
     -   [i18next](https://www.i18next.com/) version [21.6.10](https://github.com/i18next/i18next/blob/master/CHANGELOG.md)
 
 -   learnr’s knitr hooks are now set by the `learnr::tutorial` R Markdown format. They are also registered for any tutorials run by `run_tutorial()` (thanks @czucca #598, #599).
