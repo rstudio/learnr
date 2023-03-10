@@ -4,7 +4,7 @@
 
 -   The embedded Ace editor used in learnr exercises now defaults to a tab width of 2, aligning with the Tidyverse style guide (#761).
 
--   Add a fallback to generate a comprehensible English feedback message for code that fails to parse because it contains non-ASCII characters. Previously, if i18next was unavailable, the feedback would contain uninterpolated i18next markup. Now the feedback is pre-interpolated so students will always see a comprehensible message (#765).
+-   learnr now pre-renders (in English) the feedback message it provides when non-ASCII characters are included in submitted unparsable R code. This makes the feedback useful even if learnr's in-browser translations aren't available (#765).
 
 # learnr 0.11.2
 
