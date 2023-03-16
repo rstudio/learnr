@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 ## Language codes and names borrowed from BootBox
 # library(rvest)
-# read_html("http://bootboxjs.com/documentation.html#bb-locales") %>% 
-#   html_table() %>% 
-#   .[[6]] %>% 
+# read_html("https://bootboxjs.com/v5.x/documentation.html") %>%
+#   html_table() %>%
+#   .[[6]] %>%
 #   {dplyr::bind_rows(.[, 1:2], .[, 3:4])}
 
 languages <- c("Arabic","Bulgarian","Czech",
@@ -65,7 +65,7 @@ bb_langs_code <- paste0("`", names(languages), "`")
 
 To change the language of the UI element, you can use the following parameter in your YAML:
 
-    output: 
+    output:
       learnr::tutorial:
         language: fr
 
@@ -209,7 +209,7 @@ language: custom_language.json
 Complete translations are provided by the internal function `i18n_translations()`.
 To contribute a complete translation for a language not currently provided by learnr, please submit a pull request to [github.com/rstudio/learnr](https://github.com/rstudio/learnr) updating the list in `data-raw/i18n_translations.yml`, following the format described in that file.
 
-Note that for the language to be available inside the alert boxes of learnr, you'll need to set the language to one of the [language codes used by bootbox](http://bootboxjs.com/documentation.html#bb-locales)[^1].
+Note that for the language to be available inside the alert boxes of learnr, you'll need to set the language to one of the [language codes used by bootbox](https://bootboxjs.com/v5.x/documentation.html)[^1].
 If your language is not available for `bootbox`, then the buttons will default to English.
 
 [^1]: `r knitr::combine_words(bb_langs_code, and = " or ")`

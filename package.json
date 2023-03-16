@@ -9,9 +9,9 @@
     "build:esbuild": "node learnr-js/build.js",
     "lint": "standard --fix learnr-js",
     "copy": "npm run copy:clipboard && npm run copy:bootbox && npm run copy:i18next",
-    "copy:clipboard": "cpy 'node_modules/clipboard/dist/clipboard.min.js' inst/lib/clipboardjs",
-    "copy:bootbox": "cpy 'node_modules/bootbox/dist/bootbox.min.js' inst/lib/bootbox",
-    "copy:i18next": "cpy 'node_modules/i18next/i18next.min.js' inst/lib/i18next"
+    "copy:clipboard": "cpy 'clipboard.min.js' ../../../inst/lib/clipboardjs --cwd node_modules/clipboard/dist/",
+    "copy:bootbox": "cpy 'bootbox.min.js' ../../../inst/lib/bootbox --cwd node_modules/bootbox/dist/",
+    "copy:i18next": "cpy 'i18next.min.js' ../../inst/lib/i18next --cwd node_modules/i18next/"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
