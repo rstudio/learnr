@@ -252,7 +252,7 @@ quiz_text <- function(text) {
       text <- format(text)
     }
     # convert markdown
-    md <- markdown::mark_html(text = text, options = "-standalone")
+    md <- markdown::mark(text = text)
     if (length(str_match_all(md, "</p>", fixed = TRUE)) == 1) {
       # remove leading and trailing paragraph
       md <- sub("^<p>", "", md)
