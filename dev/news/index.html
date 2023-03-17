@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.11.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.11.3.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,9 +82,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="learnr-development-version">learnr (development version)<a class="anchor" aria-label="anchor" href="#learnr-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.11.3" id="learnr-0113">learnr 0.11.3<a class="anchor" aria-label="anchor" href="#learnr-0113"></a></h2><p class="text-muted">CRAN release: 2023-03-15</p>
 <ul><li><p>Fixed an issue that prevented authors from using symbols, such as <code>T</code> or a variable, as the value of the <code>exercise</code> chunk option, which caused tutorials with chunks with <code>exercise = T</code> to fail to render (thanks <a href="https://github.com/cknotz" class="external-link">@cknotz</a> <a href="https://github.com/rstudio/learnr/issues/757" class="external-link">#757</a>, <a href="https://github.com/rstudio/learnr/issues/758" class="external-link">#758</a>).</p></li>
 <li><p>The embedded Ace editor used in learnr exercises now defaults to a tab width of 2, aligning with the Tidyverse style guide (<a href="https://github.com/rstudio/learnr/issues/761" class="external-link">#761</a>).</p></li>
-<li><p>Add a fallback to generate a comprehensible English feedback message for code that fails to parse because it contains non-ASCII characters. Previously, if i18next was unavailable, the feedback would contain uninterpolated i18next markup. Now the feedback is pre-interpolated so students will always see a comprehensible message (<a href="https://github.com/rstudio/learnr/issues/765" class="external-link">#765</a>).</p></li>
+<li><p>learnr now pre-renders (in English) the feedback message it provides when non-ASCII characters are included in submitted unparsable R code. This makes the feedback useful even if learnr’s in-browser translations aren’t available (<a href="https://github.com/rstudio/learnr/issues/765" class="external-link">#765</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.2" id="learnr-0112">learnr 0.11.2<a class="anchor" aria-label="anchor" href="#learnr-0112"></a></h2><p class="text-muted">CRAN release: 2022-11-08</p>
@@ -240,7 +243,7 @@
 <a href="https://clipboardjs.com/" class="external-link">clipboard.js</a> version <a href="https://github.com/zenorocha/clipboard.js/releases" class="external-link">2.0.10</a>
 </li>
 <li>
-<a href="http://bootboxjs.com/" class="external-link">Bootbox</a> version <a href="https://github.com/makeusabrew/bootbox/blob/master/CHANGELOG.md" class="external-link">5.5.2</a>
+<a href="https://bootboxjs.com/" class="external-link">Bootbox</a> version <a href="https://github.com/bootboxjs/bootbox/blob/HEAD/CHANGELOG.md" class="external-link">5.5.2</a>
 </li>
 <li>
 <a href="https://www.i18next.com/" class="external-link">i18next</a> version <a href="https://github.com/i18next/i18next/blob/master/CHANGELOG.md" class="external-link">21.6.10</a>
