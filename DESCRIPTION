@@ -34,7 +34,6 @@ URL: https://rstudio.github.io/learnr/, https://github.com/rstudio/learnr
 BugReports: https://github.com/rstudio/learnr/issues
 Imports:
     checkmate,
-    curl,
     digest,
     ellipsis (>= 0.2.0.1),
     evaluate,
@@ -58,6 +57,7 @@ Imports:
 Suggests:
     bslib,
     callr,
+    curl,
     DBI (>= 0.4-1),
     httpuv,
     later,
