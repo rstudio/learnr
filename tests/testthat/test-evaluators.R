@@ -1,5 +1,4 @@
-
-context("evaluators")
+skip_if_not_installed("curl")
 
 library(promises)
 
