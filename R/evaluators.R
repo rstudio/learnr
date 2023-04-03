@@ -171,6 +171,7 @@ external_evaluator <- function(
   endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
   max_curl_conns = 50
 ){
+  rlang::check_installed("curl", "to use an external evaluator.")
   internal_external_evaluator(endpoint, max_curl_conns)
 }
 
