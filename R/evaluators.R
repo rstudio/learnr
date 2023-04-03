@@ -166,8 +166,6 @@ forked_evaluator <- setup_forked_evaluator_factory(max_forked_procs = Inf)
 #'
 #' @return A function that takes an expression (`expr`), `timelimit`, `exercise`
 #'   and `session`.
-#'
-#' @import curl
 #' @export
 external_evaluator <- function(
   endpoint = getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)),
@@ -432,7 +430,7 @@ initiate_external_session <- function(pool, url, global_setup, retry_count = 0){
         return()
       })
 
-      cookies <- handle_cookies(handle)
+      cookies <- curl::handle_cookies(handle)
       cookieFile <- tempfile("cookies")
       write_cookies(cookies, cookieFile)
       resolve(list(id = id, cookieFile = cookieFile))
