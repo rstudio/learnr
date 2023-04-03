@@ -1,3 +1,29 @@
+test_that("forked_evaluator works as expected", {
+  skip_on_cran()
+  skip_if(is_windows(), message = "Skipping forked evaluator testing on Windows")
+  skip_if(is_mac(), message = "Skipping forked evaluator testing on macOS")
+
+  ex <- mock_exercise("Sys.sleep(1)\n1:100", check = I("last_value"))
+  forked_eval_ex <- forked_evaluator_factory(evaluate_exercise(ex, new.env()), 2)
+
+  # not yet started
+  expect_equal(forked_eval_ex$completed(), NA)
+  expect_null(forked_eval_ex$result())
+
+  # start evaluator and check that it's running (not completed)
+  forked_eval_ex$start()
+  # right away, the forked evaluator is *certainly* not complete yet
+  expect_silent(expect_equal(forked_eval_ex$completed(), FALSE))
+  # poll the forked evaluator until it's ready
+  while (!expect_silent(forked_eval_ex$completed())) {
+    Sys.sleep(0.1)
+  }
+  # when the evaluator is complete, we should be able to call $completed() again
+  expect_silent(expect_equal(forked_eval_ex$completed(), TRUE))
+  # finally check that $result() gives us our exercise feedback
+  expect_equal(forked_eval_ex$result()$feedback$checker_result, 1:100)
+})
+
 skip_if_not_installed("curl")
 
 library(promises)
@@ -397,32 +423,6 @@ test_that("bad statuses or invalid json are handled sanely", {
 
   res <- e$result()
   expect_match(res$error_message, "^Error submitting external exercise")
-})
-
-test_that("forked_evaluator works as expected", {
-  skip_on_cran()
-  skip_if(is_windows(), message = "Skipping forked evaluator testing on Windows")
-  skip_if(is_mac(), message = "Skipping forked evaluator testing on macOS")
-
-  ex <- mock_exercise("Sys.sleep(1)\n1:100", check = I("last_value"))
-  forked_eval_ex <- forked_evaluator_factory(evaluate_exercise(ex, new.env()), 2)
-
-  # not yet started
-  expect_equal(forked_eval_ex$completed(), NA)
-  expect_null(forked_eval_ex$result())
-
-  # start evaluator and check that it's running (not completed)
-  forked_eval_ex$start()
-  # right away, the forked evaluator is *certainly* not complete yet
-  expect_silent(expect_equal(forked_eval_ex$completed(), FALSE))
-  # poll the forked evaluator until it's ready
-  while (!expect_silent(forked_eval_ex$completed())) {
-    Sys.sleep(0.1)
-  }
-  # when the evaluator is complete, we should be able to call $completed() again
-  expect_silent(expect_equal(forked_eval_ex$completed(), TRUE))
-  # finally check that $result() gives us our exercise feedback
-  expect_equal(forked_eval_ex$result()$feedback$checker_result, 1:100)
 })
 
 test_that("external evaluator result roundtrip", {
