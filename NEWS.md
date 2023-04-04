@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   Added an option to customise the "continue" button text in sub-topics. You can now add 'data-continue-text' as a property to a sub-topic to replace the "continue" text just for that topic. E.g.: `### Subtopic Title {data-continue-text="Show Solution"}`.
+
 # learnr 0.11.3
 
 -   Fixed an issue that prevented authors from using symbols, such as `T` or a variable, as the value of the `exercise` chunk option, which caused tutorials with chunks with `exercise = T` to fail to render (thanks @cknotz #757, #758).
