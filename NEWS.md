@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
+
 # learnr 0.11.3
 
 -   Fixed an issue that prevented authors from using symbols, such as `T` or a variable, as the value of the `exercise` chunk option, which caused tutorials with chunks with `exercise = T` to fail to render (thanks @cknotz #757, #758).
