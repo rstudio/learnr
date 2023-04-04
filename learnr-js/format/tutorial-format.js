@@ -311,19 +311,34 @@ $(document).ready(function () {
       const sectionsDOM = $(topicElement).children('.section.level3')
       sectionsDOM.each(function (sectionIndex, sectionElement) {
         if (topic.progressiveReveal) {
+          const sectionButtonText =
+            $(sectionElement).attr("data-continue-text");
+
+          // if custom text is specified, remove i18n key
+          // otherwise the default translation will overwrite the custom text
+          let sectionButtoni18n = 'data-i18n="button.continue"';
+          if (sectionButtonText) {
+            sectionButtoni18n = "";
+          } else {
+            sectionButtonText = 'Continue'
+          }
+
           const continueButton = $(
             '<button class="btn btn-default skip" id="' +
-              'continuebutton-' +
+              "continuebutton-" +
               sectionElement.id +
               '" data-section-id="' +
               sectionElement.id +
-              '" data-i18n="button.continue">Continue</button>'
-          )
-          continueButton.data('n_clicks', 0)
-          continueButton.on('click', handleSkipClick)
-          const actions = $('<div class="exerciseActions"></div>')
-          actions.append(continueButton)
-          $(sectionElement).append(actions)
+              sectionButtoni18n +
+              ">" +
+              sectionButtonText +
+              "</button>"
+          );
+          continueButton.data("n_clicks", 0);
+          continueButton.on("click", handleSkipClick);
+          const actions = $('<div class="exerciseActions"></div>');
+          actions.append(continueButton);
+          $(sectionElement).append(actions);
         }
 
         $(sectionElement).on('shown', function () {
