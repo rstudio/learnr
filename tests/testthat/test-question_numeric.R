@@ -12,27 +12,27 @@ test_that("question_numeric() correctly grades a question", {
   # correct
   ans <- question_is_correct(q, 1.234)
   expect_true(ans$correct)
-  expect_match(ans$message, "yes", fixed = TRUE)
+  expect_match(ans$messages, "yes", fixed = TRUE)
 
   # below lower bound
   ans <- question_is_correct(q, 0)
   expect_false(ans$correct)
-  expect_match(ans$message, "at least 1", fixed = TRUE)
+  expect_match(ans$messages, "at least 1", fixed = TRUE)
 
   # above upper bound
   ans <- question_is_correct(q, 3.5)
   expect_false(ans$correct)
-  expect_match(ans$message, "at most 2", fixed = TRUE)
+  expect_match(ans$messages, "at most 2", fixed = TRUE)
 
   # above upper bound and specifically wrong
   ans <- question_is_correct(q, 3)
   expect_false(ans$correct)
-  expect_match(ans$message, "three", fixed = TRUE)
+  expect_match(ans$messages, "three", fixed = TRUE)
 
   # within bound and specifically wrong
   ans <- question_is_correct(q, 1.2)
   expect_false(ans$correct)
-  expect_match(ans$message, "one two", fixed = TRUE)
+  expect_match(ans$messages, "one two", fixed = TRUE)
 })
 
 test_that("question_numeric() checks inputs", {
