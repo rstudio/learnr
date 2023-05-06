@@ -125,7 +125,7 @@ test_that("render_exercise() returns envir_result up to error", {
     )
   )
 
-  expect_s3_class(exercise_result$parent, "simpleError")
+  expect_s3_class(exercise_result$parent, "error")
   expect_equal(conditionMessage(exercise_result$parent), "boom")
 
   expect_false(
@@ -181,7 +181,7 @@ test_that("evaluate_exercise() errors from setup chunks aren't checked by error 
   )
   expect_match(exercise_result$feedback$message, "internal error occurred")
   # internal error condition is passed around in $feedback$error
-  expect_s3_class(exercise_result$feedback$error, "simpleError")
+  expect_s3_class(exercise_result$feedback$error, "error")
   expect_match(conditionMessage(exercise_result$feedback$error), "setup")
 })
 
@@ -198,7 +198,7 @@ test_that("evaluate_exercise() errors from user code are checked by error_checke
   # check that error check function was called
   expect_equal(exercise_result$feedback$checker_result, "error_check")
   expect_equal(exercise_result$error_message, "user")
-  expect_s3_class(exercise_result$feedback$checker_args$last_value, "simpleError")
+  expect_s3_class(exercise_result$feedback$checker_args$last_value, "error")
   expect_equal(
     conditionMessage(exercise_result$feedback$checker_args$last_value),
     exercise_result$error_message
@@ -219,7 +219,7 @@ test_that("evaluate_exercise() errors from user code are checked by default erro
   # check that default error check function was called
   expect_equal(exercise_result$feedback$checker_result, "default_error_check")
   expect_equal(exercise_result$error_message, "user")
-  expect_s3_class(exercise_result$feedback$checker_args$last_value, "simpleError")
+  expect_s3_class(exercise_result$feedback$checker_args$last_value, "error")
   expect_equal(
     conditionMessage(exercise_result$feedback$checker_args$last_value),
     exercise_result$error_message
@@ -236,7 +236,7 @@ test_that("evaluate_exercise() returns an internal error for global setup chunk 
   )
   expect_equal(conditionMessage(res$feedback$error), "global setup failure")
   expect_match(res$feedback$message, "setting up the tutorial")
-  expect_s3_class(res$feedback$error, "simpleError")
+  expect_s3_class(res$feedback$error, "error")
 })
 
 test_that("evaluate_exercise() returns an internal error when `render_exercise()` fails", {
@@ -251,7 +251,7 @@ test_that("evaluate_exercise() returns an internal error when `render_exercise()
   )
 
   expect_match(res$feedback$message, "evaluating your exercise")
-  expect_s3_class(res$feedback$error, "simpleError")
+  expect_s3_class(res$feedback$error, "error")
   expect_equal(conditionMessage(res$feedback$error), "render error")
 })
 
@@ -458,7 +458,7 @@ test_that("evaluate_exercise() handles default vs. explicit error check code", {
 
   res <- evaluate_exercise(ex, new.env())
   expect_equal(res$feedback$checker_result, "default_error_check_code")
-  expect_s3_class(res$feedback$checker_args$last_value, "simpleError")
+  expect_s3_class(res$feedback$checker_args$last_value, "error")
   expect_match(conditionMessage(res$feedback$checker_args$last_value), "boom")
 })
 
@@ -1162,7 +1162,7 @@ test_that("Errors with global setup code result in an internal error", {
 
   expect_null(res$error_message)
   expect_match(res$feedback$message, "internal error occurred while setting up the tutorial")
-  expect_s3_class(res$feedback$error, "simpleError")
+  expect_s3_class(res$feedback$error, "error")
   expect_match(conditionMessage(res$feedback$error), "boom")
 })
 
