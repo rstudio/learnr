@@ -129,3 +129,42 @@ test_that("loading placeholder is correctly generated for HTML question texts", 
     )
   )
 })
+
+test_that("question() message depends on whether type is checkbox", {
+
+  q_radio <- question(
+    "test",
+    answer("A", correct = TRUE),
+    answer("B", correct = FALSE),
+    answer("C", correct = FALSE)
+  )
+
+  out_radio <- question_messages(
+    question = q_radio,
+    messages = NULL,
+    is_correct = FALSE,
+    is_done = FALSE
+  )
+  expect_equal(
+    as.character(out_radio[[1]]$children[[1]]),
+    "Incorrect"
+  )
+
+  q_checkbox <- question(
+    "test",
+    answer("A", correct = TRUE),
+    answer("B", correct = TRUE),
+    answer("C", correct = FALSE)
+  )
+
+  out_checkbox <- question_messages(
+    question = q_checkbox,
+    messages = NULL,
+    is_correct = FALSE,
+    is_done = FALSE
+  )
+  expect_equal(
+    as.character(out_checkbox[[1]]$children[[1]]),
+    "Incorrect. Be sure to select every correct answer."
+  )
+})

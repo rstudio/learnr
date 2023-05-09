@@ -29,8 +29,9 @@ correct.}
 \item{incorrect}{Text to print for an incorrect answer (defaults to
 "Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to
-"Incorrect") when \code{allow_retry} is \code{TRUE}.}
+\item{try_again}{Text to print for an incorrect answer
+(defaults to "Incorrect. Be sure to select every correct answer.")
+when \code{allow_retry} is \code{TRUE}.}
 
 \item{allow_retry}{Allow retry for incorrect answers. Defaults to \code{FALSE}.}
 

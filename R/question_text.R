@@ -37,6 +37,8 @@
 #'   }, label = "fizz or buzz")
 #' )
 #'
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
 #' @param rows,cols Defines the size of the text input area in terms of the
 #'   number of rows or character columns visible to the user. If either `rows`
 #'   or `cols` are provided, the quiz input will use [shiny::textAreaInput()]

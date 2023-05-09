@@ -16,6 +16,8 @@
 #' )
 #'
 #' @inheritParams question
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
 #' @param ... Answers created with [answer()] or extra parameters passed onto
 #'   [question()]. Function answers are ignored for radio questions because the
 #'   user is required to select a single answer.
