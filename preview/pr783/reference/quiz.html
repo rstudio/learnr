@@ -180,8 +180,7 @@ structure and information will be displayed.</p>
 <span>    <span class="st">"learnr_text"</span>, <span class="st">"learnr_numeric"</span><span class="op">)</span>,</span>
 <span>  correct <span class="op">=</span> <span class="st">"Correct!"</span>,</span>
 <span>  incorrect <span class="op">=</span> <span class="st">"Incorrect"</span>,</span>
-<span>  try_again <span class="op">=</span> <span class="va">incorrect</span>,</span>
-<span>  try_again_checkbox <span class="op">=</span> <span class="st">"Incorrect. Be sure to select every correct answer."</span>,</span>
+<span>  try_again <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  post_message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  loading <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -228,14 +227,10 @@ correct.</p></dd>
 
 
 <dt>try_again</dt>
-<dd><p>Text to print for an incorrect answer (defaults to
-"Incorrect") when <code>allow_retry</code> is <code>TRUE</code> and <code>type</code> is not <code>"checkbox"</code>.</p></dd>
-
-
-<dt>try_again_checkbox</dt>
-<dd><p>Text to print for an incorrect answer
-(defaults to "Incorrect. Be sure to select every correct answer.")
-when <code>allow_retry</code> is <code>TRUE</code> and <code>type</code> is <code>"checkbox"</code>.</p></dd>
+<dd><p>Text to print for an incorrect answer when <code>allow_retry</code>
+is <code>TRUE</code>.
+Defaults to "Incorrect. Be sure to select every correct answer." for
+checkbox questions and "Incorrect" for non-checkbox questions.</p></dd>
 
 
 <dt>message</dt>
