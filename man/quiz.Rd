@@ -15,6 +15,7 @@ question(
   correct = "Correct!",
   incorrect = "Incorrect",
   try_again = incorrect,
+  try_again_checkbox = "Incorrect. Be sure to select every correct answer.",
   message = NULL,
   post_message = NULL,
   loading = NULL,
@@ -37,7 +38,7 @@ determined based on the provided answers. Pass \code{"radio"} to indicate that
 even though multiple correct answers are specified that inputs which
 include only one correct answer are still correct. Pass \code{"checkbox"} to
 force the use of checkboxes (as opposed to radio buttons) even though only
-once correct answer was provided.}
+one correct answer was provided.}
 
 \item{correct}{For \code{question}, text to print for a correct answer (defaults
 to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
@@ -47,7 +48,11 @@ correct.}
 "Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
 \item{try_again}{Text to print for an incorrect answer (defaults to
-"Incorrect") when \code{allow_retry} is \code{TRUE}.}
+"Incorrect") when \code{allow_retry} is \code{TRUE} and \code{type} is not \code{"checkbox"}.}
+
+\item{try_again_checkbox}{Text to print for an incorrect answer
+(defaults to "Incorrect. Be sure to select every correct answer.")
+when \code{allow_retry} is \code{TRUE} and \code{type} is \code{"checkbox"}.}
 
 \item{message}{Additional message to display along with correct/incorrect
 feedback. This message is always displayed after a question submission.}
