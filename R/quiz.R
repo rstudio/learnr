@@ -65,11 +65,10 @@
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to
 #'   "Incorrect") when `allow_retry` is `FALSE`.
-#' @param try_again Text to print for an incorrect answer (defaults to
-#'   "Incorrect") when `allow_retry` is `TRUE` and `type` is not `"checkbox"`.
-#' @param try_again_checkbox Text to print for an incorrect answer
-#'   (defaults to "Incorrect. Be sure to select every correct answer.")
-#'   when `allow_retry` is `TRUE` and `type` is `"checkbox"`.
+#' @param try_again Text to print for an incorrect answer when `allow_retry`
+#'   is `TRUE`.
+#'   Defaults to "Incorrect. Be sure to select every correct answer." for
+#'   checkbox questions and "Incorrect" for non-checkbox questions.
 #' @param message Additional message to display along with correct/incorrect
 #'   feedback. This message is always displayed after a question submission.
 #' @param post_message Additional message to display along with
@@ -138,8 +137,7 @@ question <- function(
     type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
     correct = "Correct!",
     incorrect = "Incorrect",
-    try_again = incorrect,
-    try_again_checkbox = "Incorrect. Be sure to select every correct answer.",
+    try_again = NULL,
     message = NULL,
     post_message = NULL,
     loading = NULL,
@@ -189,10 +187,12 @@ question <- function(
       type
     )
   }
-  try_again <- if (identical(type, "learnr_checkbox")) {
-    try_again_checkbox
-  } else {
-    try_again
+  if (is.null(try_again)) {
+    try_again <- if (identical(type, "learnr_checkbox")) {
+      "Incorrect. Be sure to select every correct answer."
+    } else {
+      incorrect
+    }
   }
 
   # ensure we have at least one correct answer, if required

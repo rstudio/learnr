@@ -14,8 +14,7 @@ question(
     "learnr_text", "learnr_numeric"),
   correct = "Correct!",
   incorrect = "Incorrect",
-  try_again = incorrect,
-  try_again_checkbox = "Incorrect. Be sure to select every correct answer.",
+  try_again = NULL,
   message = NULL,
   post_message = NULL,
   loading = NULL,
@@ -47,12 +46,10 @@ correct.}
 \item{incorrect}{Text to print for an incorrect answer (defaults to
 "Incorrect") when \code{allow_retry} is \code{FALSE}.}
 
-\item{try_again}{Text to print for an incorrect answer (defaults to
-"Incorrect") when \code{allow_retry} is \code{TRUE} and \code{type} is not \code{"checkbox"}.}
-
-\item{try_again_checkbox}{Text to print for an incorrect answer
-(defaults to "Incorrect. Be sure to select every correct answer.")
-when \code{allow_retry} is \code{TRUE} and \code{type} is \code{"checkbox"}.}
+\item{try_again}{Text to print for an incorrect answer when \code{allow_retry}
+is \code{TRUE}.
+Defaults to "Incorrect. Be sure to select every correct answer." for
+checkbox questions and "Incorrect" for non-checkbox questions.}
 
 \item{message}{Additional message to display along with correct/incorrect
 feedback. This message is always displayed after a question submission.}
