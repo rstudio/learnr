@@ -42,6 +42,9 @@
 #' )
 #'
 #' @inheritParams question
+#' @param try_again Text to print for an incorrect answer
+#'   (defaults to "Incorrect. Be sure to select every correct answer.")
+#'   when `allow_retry` is `TRUE`.
 #' @param ... Answers created with [answer()] or [answer_fn()], or extra
 #'   parameters passed onto [question()]. Function answers do not
 #'   appear in the checklist, but are checked first in the order they are
@@ -67,6 +70,7 @@ question_checkbox <- function(
     correct = correct,
     incorrect = incorrect,
     try_again = try_again,
+    try_again_checkbox = try_again,
     allow_retry = allow_retry,
     random_answer_order = random_answer_order
   )
