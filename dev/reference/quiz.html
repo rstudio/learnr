@@ -180,7 +180,7 @@ structure and information will be displayed.</p>
 <span>    <span class="st">"learnr_text"</span>, <span class="st">"learnr_numeric"</span><span class="op">)</span>,</span>
 <span>  correct <span class="op">=</span> <span class="st">"Correct!"</span>,</span>
 <span>  incorrect <span class="op">=</span> <span class="st">"Incorrect"</span>,</span>
-<span>  try_again <span class="op">=</span> <span class="va">incorrect</span>,</span>
+<span>  try_again <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  post_message <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  loading <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -212,7 +212,7 @@ determined based on the provided answers. Pass <code>"radio"</code> to indicate 
 even though multiple correct answers are specified that inputs which
 include only one correct answer are still correct. Pass <code>"checkbox"</code> to
 force the use of checkboxes (as opposed to radio buttons) even though only
-once correct answer was provided.</p></dd>
+one correct answer was provided.</p></dd>
 
 
 <dt>correct</dt>
@@ -227,8 +227,10 @@ correct.</p></dd>
 
 
 <dt>try_again</dt>
-<dd><p>Text to print for an incorrect answer (defaults to
-"Incorrect") when <code>allow_retry</code> is <code>TRUE</code>.</p></dd>
+<dd><p>Text to print for an incorrect answer when <code>allow_retry</code>
+is <code>TRUE</code>.
+Defaults to "Incorrect. Be sure to select every correct answer." for
+checkbox questions and "Incorrect" for non-checkbox questions.</p></dd>
 
 
 <dt>message</dt>
