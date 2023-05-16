@@ -1087,7 +1087,7 @@ Tutorial.prototype.$initializeExerciseEditors = function () {
         }
       })
     }
-    bindInsertKey('insertPipe', 'Ctrl+Shift+M', { r: ' %>% ' })
+    bindInsertKey('insertPipe', 'Ctrl+Shift+M', { r: ' |> ' })
     bindInsertKey('insertArrow', 'Alt+-', { r: ' <- ', fallback: ' = ' })
 
     // re-focus the editor on run button click
