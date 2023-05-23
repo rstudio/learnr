@@ -1,0 +1,305 @@
+---
+title: "Crea nuevas variables"
+output:
+  learnr::tutorial:
+    language: es
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Aprendre como seleccionar, crear, y modificar variables en un _data frame_.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(nycflights13)
+library(Lahman)
+library(datos)
+
+tutorial_options(
+  exercise.timelimit = 60,
+  # A simple checker function that just returns the message in the check chunk
+  exercise.checker = function(check_code, ...) {
+    list(
+      message = eval(parse(text = check_code)),
+      correct = logical(0),
+      type = "info",
+      location = "append"
+    )
+  }
+)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Bienvenida
+
+En este tutorial, aprenderás cómo derivar variables a partir de un _data frame_, lo que incluye:
+
+* Cómo crear nuevas variables con `mutate()`
+* Cómo reconocer las familias de funciones más útiles para usar con `mutate()`
+
+Las lecturas de este tutorial siguen el libro [_R for Data Science_ (v1)](https://es.r4ds.hadley.nz/), sección 5.5.
+
+### Configuración
+
+Para practicar estas habilidades, usaremos el conjunto de datos `vuelos` del paquete datos, que conociste en [Conceptos básicos de datos](https://es.r4ds.hadley.nz/transform.html#introducci%C3%B3n-2). Este _data frame_ proviene de la [Oficina de Estadísticas de Transporte de EE.UU.](http://www.trastats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) y contiene todos los `r format(nrow(datos::vuelos), big.mark = ",")` vuelos que partieron de la ciudad de Nueva York en 2013. Está documentado en `?vuelos`.
+
+He precargado los paquetes para este tutorial con
+
+```{r eval = FALSE}
+library(tidyverse) # carga dplyr, ggplot2, y otros
+library(nycflights13) # carga los datos en inglés
+library(datos) # carga las traducciones de datos al castellano
+```
+
+## Agrega nuevas variables con mutate()
+
+Un conjunto de datos a menudo contiene información que puedes usar para calcular nuevas variables. `mutate()` te ayuda a calcular esas variables. Dado que `mutate()` siempre agrega nuevas columnas al final de un conjunto de datos, comenzaremos creando un conjunto de datos estrecho que nos permitirá ver las nuevas variables (si agregásemos nuevas variables a `vuelos`, las nuevas columnas se agregarían fuera del lateral de la pantalla, lo que las haría difíciles de ver).
+
+### select()
+
+Puedes seleccionar un subconjunto de variables por nombre con la función `select()` en dplyr. Ejecuta el código a continuación para ver el conjunto de datos estrecho que crea `select()`.
+
+```{r select, exercise = TRUE, exercise.eval = FALSE}
+vuelos_peq <- select(vuelos,
+  atraso_llegada,
+  atraso_salida,
+  distancia,
+  tiempo_vuelo
+)
+```
+
+### mutate()
+
+El siguiente código crea dos nuevas variables con la función `mutate()` de dplyr. `mutate()` devuelve un _data frame_ nuevo que contiene las nuevas variables añadidas a una copia del conjunto de datos original. Tómate un momento para imaginarte cómo se verá esto y luego haz clic en "Ejecutar código" para averiguarlo.
+
+```{r mutate1-setup}
+vuelos_peq <- select(vuelos,
+  atraso_llegada,
+  atraso_salida,
+  distancia,
+  tiempo_vuelo
+)
+```
+
+```{r mutate1, exercise = TRUE, exercise.eval = FALSE}
+mutate(vuelos_peq,
+  ganancia = atraso_llegada - atraso_salida,
+  velocidad = distancia / tiempo_vuelo * 60
+)
+```
+
+Ten en cuenta que cuando usas `mutate()` puedes crear múltiples variables a la vez, e incluso puedes hacer referencia a las variables que se crearon antes en la llamada para crear otras variables más adelante en la llamada:
+
+```{r echo = FALSE}
+vuelos_peq <- select(vuelos,
+  atraso_llegada,
+  atraso_salida,
+  distancia,
+  tiempo_vuelo
+)
+```
+
+```{r}
+mutate(vuelos_peq,
+  ganancia = atraso_llegada - atraso_salida,
+  horas = tiempo_vuelo / 60,
+  ganancia_por_hora = ganancia / horas
+)
+```
+
+### transmute()
+
+`mutate()` siempre devolverá las nuevas variables añadidas a una copia de los datos originales. Si deseas devolver solo las nuevas variables, usa `transmute()`. En el siguiente código, reemplaza `mutate()` con `transmute()` y luego detecta la diferencia en los resultados.
+
+```{r transmute, exercise = TRUE, exercise.eval = FALSE}
+mutate(vuelos,
+  ganancia = atraso_llegada - atraso_salida,
+  horas = tiempo_vuelo / 60,
+  ganancia_por_hora = ganancia / horas
+)
+```
+
+```{r transmute-solution}
+transmute(vuelos,
+  ganancia = atraso_llegada - atraso_salida,
+  horas = tiempo_vuelo / 60,
+  ganancia_por_hora = ganancia / horas
+)
+```
+
+```{r transmute-check}
+"¡Excelente trabajo! `transmute()` y `mutate()` hacen lo mismo, pero `transmute()` solo devuelve las nuevas variables. `mutate()` devuelve una copia del conjunto de datos original con las nuevas variables añadidas."
+```
+
+## Funciones útiles de mutate
+
+Puedes usar cualquier función dentro de `mutate()` siempre que la función esté **vectorizada**. Una función vectorizada toma un vector de valores como entrada y devuelve un vector con el mismo número de valores como salida.
+
+Con el tiempo, descubrí que varias familias de funciones vectorizadas son particularmente útiles con `mutate()`:
+
+* **Operadores aritméticos**: `+`, `-`, `*`, `/`, `^`. Todos ellos están vectorizados, utilizando las llamadas "reglas de reciclaje". Si un parámetro es más corto que el otro, se repetirá automáticamente varias veces para crear un vector de la misma longitud. Esto es más útil cuando uno de los argumentos es un solo número: `tiempo_vuelo / 60`, `hora * 60 + minuto`, etc.
+
+* **Aritmética modular**: `%/%` (división de enteros) y `%%` (resto), donde `x == y * (x %/% y) + (x %% y)`. La aritmética modular es una herramienta útil porque te permite dividir números enteros en partes. Por ejemplo, en el conjunto de datos de vuelos, puedes calcular `hora` y `minuto` a partir de `horario_salida` con:
+
+    ```{r}
+    transmute(vuelos,
+      horario_salida,
+      hora_ = horario_salida %/% 100,
+      minuto_ = horario_salida %% 100
+    )
+    ```
+
+* **Logs**: `log()`, `log2()`, `log10()`. Los logaritmos son una transformación increíblemente útil para manejar datos que varían en múltiples órdenes de magnitud. También convierten las relaciones multiplicativas en aditivas, una característica a la que volveremos en el modelado.
+
+     En igualdad de condiciones, recomiendo usar `log2()` porque es fácil de interpretar: una diferencia de 1 en la escala logarítmica corresponde a duplicar la escala original y una diferencia de -1 corresponde a reducir a la mitad.
+
+* **Desplazamientos**: `lead()` y `lag()` te permiten referirte a valores adelantados o atrasados. Esto te permite calcular las diferencias de ejecución (por ejemplo, `x - lag(x)`) o encontrar cuándo cambian los valores (`x != lag(x))`. Son más útiles si se usan junto con `group_by()`, sobre el cual aprenderás en breve.
+
+    ```{r}
+    (x <- 1:10)
+    lag(x)
+    lead(x)
+    ```
+
+* **Agregados acumulativos y móviles**: R proporciona funciones para ejecutar sumas, productos, mínimos y máximos: `cumsum()`, `cumprod()`, `cummin()`, `cummax()`; y dplyr proporciona `cummean()` para medias acumulativas. Si necesitas agregados móviles (es decir, una suma calculada en una ventana móvil), prueba el paquete RcppRoll.
+
+    ```{r}
+    x
+    cumsum(x)
+    cummean(x)
+    ```
+
+* **Comparaciones lógicas**, `<`, `<=`, `>`, `>=`, `!=`, que aprendiste anteriormente. Si estás realizando una secuencia compleja de operaciones lógicas, a menudo es una buena idea almacenar los valores intermedios en nuevas variables para que puedas comprobar que cada paso funciona como se esperaba.
+
+* **Clasificación**: hay varias funciones de clasificación, pero debes comenzar con `min_rank()`. Realiza el tipo de clasificación más habitual (por ejemplo, 1º, 2º, 2º, 4º). El valor predeterminado da los valores más pequeños a los rangos pequeños; usa `desc(x)` para dar a los valores más grandes los rangos más pequeños.
+
+    ```{r}
+    y <- c(1, 2, 2, NA, 3, 4)
+    min_rank(y)
+    min_rank(desc(y))
+    ```
+
+    Si `min_rank()` no hace lo que necesitas, mira las variantes
+    `row_number()`, `dense_rank()`, `percent_rank()`, `cume_dist()`,
+    `ntile()`.  Mira sus páginas ed ayuda para más detalles.
+
+    ```{r}
+    row_number(y)
+    dense_rank(y)
+    percent_rank(y)
+    cume_dist(y)
+    ```
+
+## Ejercicios
+
+```{r, eval = FALSE, echo = FALSE}
+vuelos <- vuelos %>% mutate(
+  horario_salida = hora * 60 + minuto,
+  horario_llegada = (horario_llegada %/% 100) * 60 + (horario_llegada %% 100),
+  tiempovuelo2 = horario_llegada - horario_salida,
+  hora_prog_salida = horario_salida + atraso_salida
+)
+
+ggplot(vuelos, aes(hora_prog_salida)) + geom_histogram(binwidth = 60)
+ggplot(vuelos, aes(hora_prog_salida %% 60)) + geom_histogram(binwidth = 1)
+ggplot(vuelos, aes(tiempo_vuelo - tiempovuelo2)) + geom_histogram()
+```
+
+### Ejercicio 1
+
+Actualmente `horario_salida` y `salida_programada` son convenientes para verlos, pero difíciles de calcular porque en realidad no son números continuos. Conviértelos en una representación más conveniente de la cantidad de minutos que han pasado desde la medianoche.
+
+```{r mutateex1, exercise = TRUE}
+
+```
+```{r mutateex1-solution}
+mutate(vuelos, horario_salida = horario_salida %/% 100 * 60 + horario_salida %% 100,
+       salida_programada = salida_programada %/% 100 * 60 + salida_programada %% 100)
+```
+
+<div id="mutateex1-hint">
+**Pista:** `423 %% 100` retorna `23`, `423 %/% 100` retorna `4`.
+</div>
+
+```{r mutateex1-check}
+"¡Buen trabajo!"
+```
+
+### Ejercicio 2
+
+Compara `tiempo_vuelo` con `horario_llegada - horario_salida`. ¿Qué esperas ver? ¿Qué ves? ¿Cómo explicas esto?
+
+```{r mutateex2, exercise = TRUE}
+# vuelos <- mutate(vuelos, tiempo_total = _____________)
+# horas_de_vuelo <- select(vuelos, tiempo_vuelo, tiempo_total)
+# filter(horas_de_vuelo, tiempo_vuelo != tiempo_total)
+```
+```{r mutateex2-solution}
+vuelos <- mutate(vuelos, tiempo_total = horario_llegada - horario_salida)
+horas_de_vuelo <- select(vuelos, tiempo_vuelo, tiempo_total)
+filter(horas_de_vuelo, tiempo_vuelo != tiempo_total)
+```
+
+```{r mutateex2-check}
+"¡Buen trabajo! No tiene sentido hacer operaciones matemáticas con `horario_llegada` y `horario_salida` hasta que conviertas los valores a minutos pasada la medianoche (como hiciste con `horario_salida` y `salida_programada` en el ejercicio anterior)."
+```
+
+### Ejercicio 3
+
+Compara `horario_salida`, `salida_programada` y `atraso_salida`. ¿Cómo esperarías que se relacionaran esos tres números?
+
+```{r mutateex3, exercise = TRUE}
+
+```
+
+### Ejercicio 4
+
+Encuentra los 10 vuelos más retrasados (`atraso_salida`) usando una función de clasificación. ¿Cómo quieres manejar los empates? Lea atentamente la documentación de `min_rank()`.
+
+Find the 10 most delayed vuelos (`atraso_salida`) using a ranking function. How do you want to handle ties? Carefully read the documentation for `min_rank()`.
+
+```{r mutateex4, exercise = TRUE}
+
+```
+```{r mutateex4-solution}
+?min_rank
+vuelos <- mutate(vuelos, clasif_retraso = min_rank(atraso_salida))
+filter(vuelos, clasif_retraso <= 10)
+```
+
+<div id="mutateex4-hint">
+**Pista:** Una vez que calculas un rango, puedes filtrar el conjunto de datos en función de los rangos.
+</div>
+
+```{r mutateex4-check}
+"¡Excelente! No es posible elegir exactamente 10 vuelos a menos que elijas un método arbitrario para elegir entre empates."
+```
+
+### Ejercicio 5
+
+¿Qué devuelve `1:3 + 1:10`? ¿Porqué?
+
+```{r mutateex5, exercise = TRUE}
+
+```
+```{r mutateex5-solution}
+1:3 + 1:10
+```
+
+<div id="mutateex5-hint">
+**Pista:** Recuerda las reglas de reciclaje de R.
+</div>
+
+```{r mutateex5-check}
+"¡Bien! R repite 1:3 tres veces para crear un vector lo suficientemente largo como para sumar 1:10. Dado que la longitud del nuevo vector no es exactamente la longitud de 1:10, R también devuelve un mensaje de advertencia."
+```
+
+### Ejercicio 6
+
+¿Qué funciones trigonométricas proporciona R? Sugerencia: busca en la página de ayuda `Trig`.
+
+```{r mutateex6, exercise = TRUE}
+
+```

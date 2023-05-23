@@ -1,0 +1,205 @@
+---
+title: "Conceptos básicos de datos"
+output:
+  learnr::tutorial:
+    language: es
+    progressive: true
+    allow_skip: true
+    df_print: default
+runtime: shiny_prerendered
+description: >
+  Obtén información sobre los tipos básicos de datos en R. Explora los _data_
+  _frames_ de R y aprende cómo interactuar con _data frames_ y sus columnas.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(nycflights13)
+library(datos)
+millas <- as.data.frame(datos::millas) # Hack temporal del traductor del Tutorial. Forzamos aquí a mantener "millas" como data.frame() en memoria de R porque justamente el tutorial quiere mostrar la diferencia entre un tibble y un data.frame usando "millas" como data.frame, y parece que en el paquete "datos", el objeto millas se carga como data frame por omisión en la memoria de R. 
+tutorial_options(exercise.timelimit = 60)
+```
+
+## Bienvenidos
+
+En este tutorial, aprenderás a usar R para inspeccionar el contenido de un _data frame_ o _tibble_. Los _data frames_ y los _tibbles_ son estructuras de R para almacenar datos tabulares; si heredas un conjunto de datos tabulares en R, es casi seguro que vendrá como una de estas estructuras.
+
+Aquí aprenderás cómo hacer tres cosas con _data frames_ y _tibbles_:
+
+1. Mirar el contenido de un _data frame_ o _tibble_
+2. Abrir una página de ayuda que describa un _data frame_ o _tibble_
+3. Identificar las variables y sus tipos en un _tibble_
+
+También conocerás los conjuntos de datos `millas` (equivalente a `mpg` de la versión inglesa del libro) y `vuelos` (equivalente a `flights` de la versión inglesa del libro). Estos conjuntos de datos aparecen con frecuencia en los ejemplos de R.
+
+Las lecturas de este tutorial siguen el libro [_R for Data Science_ (v1)](https://es.r4ds.hadley.nz/), secciones 3.2 y 5.1.
+
+## `Data frames`
+
+### ¿Qué es un `data frame`?
+
+Un ___data frame___ es una colección rectangular de valores, generalmente organizados de modo que las variables aparezcan en las columnas y las observaciones en las filas.
+
+Por ejemplo: el _data frame_ `millas` contiene observaciones recopiladas por la Agencia de Protección Ambiental de EE. UU. en 38 modelos de automóviles. Para ver el _data frame_ `millas`, escribe `millas` en el fragmento de código a continuación y luego haz clic en "Ejecutar código".
+
+```{r mpg-setup}
+millas <- as.data.frame(millas)
+```
+
+```{r mpg, exercise = TRUE}
+
+```
+
+<div id="mpg-hint">
+**Pista:** Escribe `millas` y haz en el botón de "Ejecutar código".
+</div>
+
+### Una nota sobre `millas`
+
+El código de encima funcionó porque te he cargado antes el paquete ggplot2 en este tutorial: `mpg` viene en paquete ggplot2 (y su traducción `millas` viene en el paquete `datos`). Si quieres mirar `millas` en tu ordenador, necesitas cargar los paquetes ggplot2 y datos primero. Lo puedes hacer en dos pasos:
+
+1. Ejecuta `install.packages(c('ggplot2', 'datos'))` para instalar ggplot2 y datos si no los tienes todavía.
+2. Carga ggplot2 y datos con las instrucciones `library(ggplot2)` y `library(datos)`
+
+Después de esto, podrás acceder a cualquier objeto en ggplot2 o datos —incluyendo `mpg` o `millas`— hasta que cierres la sesión de R.
+
+###
+
+¿Notaste cuánta información había dentro de `millas`? Yo también. A veces, el contenido de un _data frame_ no cabe en una sola pantalla, lo que dificulta su inspección. Pronto veremos una alternativa para usar y examinar _data frames_. Pero primero consigamos algo de ayuda...
+
+## Páginas de ayuda
+
+### Como abrir una página de ayuda
+
+Puedes aprender más sobre `millas` abriendo su página de ayuda. La página de ayuda explicará de donde viene el conjunto de datos  `millas` y qué describe cada variable en `millas`. Para abrir la página de ayuda, escribe `?millas` en el fragmento de código de debajo y haz clic en "Ejecutar código".
+
+```{r help, exercise = TRUE}
+
+```
+
+<div id="help-hint">
+**Pista:** Escribe `?millas` y haz clic en el botón de Ejecutar código.
+</div>
+
+### ? sintaxis
+
+Puedes abrir una página de ayuda para cualquier objeto que venga con R o con un paquete R. Para abrir la página de ayuda, escribe un `?` antes del nombre del objeto y luego ejecuta el comando, como lo hiziste con `?millas`. Esta técnica funciona para funciones, paquetes y más.
+
+Ten en cuenta que los objetos creados por ti y tus colegas no tendrán una página de ayuda (a menos que crees una).
+
+### Ejercicios
+
+Usa el código de debajo para responder las siguientes preguntas.
+
+```{r exercises1, exercise = TRUE}
+
+```
+
+```{r quiz1, echo = FALSE}
+quiz(caption = "Test",
+  question("¿Qué significa la variable `traccion` de `millas`?  Lee la ayuda para `?millas` para averiguarlo.",
+           answer("Si el vehículo tiene airbags laterales para la persona conductora o no"),
+           answer("Si el vehículo tiene transmisión automática o manual"),
+           answer("El número de cilindros del motor del vehículo"),
+           answer("Algo diferente", correct = TRUE, message = "`traccion` describe el tipo de tracción en el vehículo: d = delantera, t = trasera, 4 = 4 ruedas."),
+           allow_retry = TRUE
+  ),
+  question("Cuantas filas tiene el _data frame_ llamado `cars`?",
+           answer("2"),
+           answer("25"),
+           answer("50", correct = TRUE),
+           answer("100"),
+           incorrect = "Incorrecto.\nPista: R numera las filas de un _data frame_ cuando muestra el contenido del _data frame_. Como resultado, puedes detectar el número de filas en `cars` por medio de examinar `cars` en el bloque de código de arriba.",
+           allow_retry = TRUE
+  ),
+  question("Cuantas columnas hay en el _data frame_ llamado `cars`?",
+           answer("1"),
+           answer("2", correct = TRUE),
+           answer("4"),
+           answer("más de cuatro"),
+           incorrect = "Incorrecto.\nPista: Si inspeccionas el contenido de `cars` en el bloque de código de arriba, debería ser bastante fácil contar su número de columnas.",
+           allow_retry = TRUE
+  )
+)
+```
+
+## _tibbles_
+
+### ¿Qué es un _tibble_?
+
+El _data frame_ `vuelos` en el paquete `datos` (traducción del _data frame_ `flights` en el paquete `nycflights13`) es un ejemplo de un _tibble_. Los _tibbles_ son _data frames_ con algunas propiedades extra.
+
+Para ver a lo que me refiero, usa el fragmento de código de debajo para mostrar el contenido de `vuelos`.
+
+```{r flights, exercise = TRUE}
+
+```
+
+<div id="flights-hint">
+**Pista:** Escribe el nombre del _data frame_ que quieres imprimir y haz clic en el botón de Ejecutar código. He cargado los paquetes `nycflight13` y `datos` para ti ya.
+</div>
+
+###
+
+Buen trabajo. `vuelos` describe cada vuelo que ha salido de la ciudad de Nueva York en 2013. Los datos provienen de la [Oficina de Estadísticas de Transporte de EE. UU.](http://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0), y el conjunto de datos está documentado en `?vuelos`.
+
+
+### La visualización de un _tibble_
+
+Quizás te darás cuenta que `vuelos` se ve un poco diferente que `millas`. `vuelos` muestra solo las primeras filas del _data frame_ y solo las columnas que caben en pantalla.
+
+`vuelos` se imprime de forma diferente porque es un ___tibble___. Los _tibbles_ son _data frames_ que se modifican ligeramente para que sean más fáciles de usar. Por ejemplo, R no intenta mostrarte todo un _tibble_ a la vez (pero intentará mostrarte todo un _data frame_ que no sea un _tibble_).
+
+Puedes usar `as_tibble()` para devolver una versión _tibble_ de cualquier _data frame_. Por ejemplo, esto devolvería una versión _tibble_ de `millas`: `as_tibble(millas)`.
+
+
+## Tipos de datos
+
+### Códigos de tipo
+
+```{r flights3, echo = FALSE}
+vuelos
+```
+
+¿Te diste cuenta de que debajo de los nombres de las columnas de `vuelos` aparece una fila de tres (o cuatro) abreviaturas de letras? Estas abreviaturas describen el _tipo_ de datos que se almacenan en cada columna de `vuelos`:
+
+* `int` significa números enteros.
+
+* `dbl` significa dobles o números reales.
+
+* `chr` significa vectores de caracteres o cadenas de texto.
+
+* `dttm` significa fecha-hora (una fecha + una hora; de las siglas en inglès data-time).
+
+Hay otros tres tipos comunes de variables que no se usan en este conjunto de datos pero se usan en otros conjuntos de datos:
+
+* `lgl` significa vectores lógicos que contienen solo `VERDADERO` o `FALSO`.
+
+* `fctr` significa factores, que R usa para representar variables categóricas
+   con posibles valores fijos.
+
+* `fecha` significa fechas.
+
+Esta fila de tipos de datos es exclusiva de _tibbles_ y es una de las formas en que los _tibbles_ intentan ser más fáciles de usar que los _data frames_.
+
+
+### Comprueba tu conocimiento
+
+```{r quiz2, echo=FALSE}
+question("¿Qué tipos de variables contiene `vuelos`? Marca todo lo que corresponda.",
+         type = "multiple",
+         allow_retry = TRUE,
+         incorrect = "No exactamente. Mira con más detalle en `vuelos`.",
+         answer("enteros (integers)", correct = TRUE),
+         answer("dobles (doubles)", correct = TRUE),
+         answer("factores (factors)"),
+         answer("caracteres (characters)", correct = TRUE),
+         correct = "¡Buen trabajo!"
+)
+```
+
+### Felicidades
+
+Has conocido las estructuras básicas de tablas en R: _data frames_ y _tibbles_; y has aprendido a inspeccionar su contenido. Cuando estés listo/a, continúa con el siguiente tutorial para comenzar a visualizar tus datos.
+

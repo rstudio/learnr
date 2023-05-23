@@ -1,0 +1,147 @@
+---
+title: "Puesta a punto"
+output:
+  learnr::tutorial:
+    language: es
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Aprende a configurar R y RStudio en tu máquina. También demostraremos
+  cómo instalar paquetes de R desde CRAN e instalaremos el paquete tidyverse.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+tutorial_options(exercise.timelimit = 60)
+```
+
+## Bienvenida
+
+Este es un tutorial de demostración. Compárarlo con el [código fuente](https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-setup-r/ex-setup-r.Rmd) que lo hizo.
+
+### Idea general
+
+Este tutorial te ayudará a configurar tu ordenador para usar R. Es para ti si necesitas:
+
+* Instalar R en tu ordenador
+* Instalar RStudio como Entorno de Desarrollo Integrado (IDE, de sus siglas en inglés)
+* Instalar el paquete `tidyverse` de R
+
+Puedes omitir este tutorial si ya has hecho estas cosas.
+
+### ¿Este tutorial es para ti?
+
+¿Necesitas trabajar con el tutorial? Responde el cuestionario a continuación para averiguarlo.
+
+```{r quiz1, echo = FALSE}
+question("Marca todo lo que NO has hecho:",
+  answer("He instalado R en mi ordenador", message = "* Instala R"),
+  answer("He instalado RStudio (como _IDE_, o entorno de desarrollo integrado, de sus siglas en inglés, para trabajar con R)", message = "* Instala RStudio"),
+  answer("He instalado el paquete tidyverse de R", message = "* Instala Paquetes"),
+  answer("Ninguna de las anteriores. Los he hecho todos.", correct = TRUE, message = "¡Puedes saltarte este tutorial!"),
+  type = "multiple",
+  incorrect = "¡Este tutorial está aquí para ayudarte! Para ponerlo a punto lee:"
+)
+```
+
+## Instala R
+
+### Como instalar R
+
+![](https://vimeo.com/203516510)
+
+### Prueba tus conocimientos
+
+```{r quiz2, echo=FALSE}
+quiz(caption = "Cuestionario - Instalar R",
+  question("¿Es R gratuito y libre para descargar y usar?",
+    answer("¡Sí!", correct = TRUE, message = "R es gratuito __y__ de código abierto, lo que significa que cualquiera puede leer/usar, copiar, modificar y redistribuir el código fuente del lenguaje R."),
+    answer("No.")
+  ),
+  question("¿Dónde se descarga R?",
+    answer("www.rstudio.com/download"),
+    answer("[cloud.r-project.org](https://cloud.r-project.org)", correct = TRUE, message = "También lo puedes descargar desde [cran.r-project.org](https://cran.r-project.org)"),
+    answer("www.r-project.org", message = "Buen intento, pero no exactamente. www.r-project.org no proporciona un enlace de descarga, pero sí proporciona un enlace a uno de los sitios web anteriores."),
+    answer("www.r.com"),
+    allow_retry = TRUE
+  ),
+  question("¿Con qué frecuencia debes actualizar R?",
+    answer("Cada vez que lo uso", message = "¡Esto será demasiado a menudo a menos que uses R muy raramente!"),
+    answer("Aproximadamente una vez al año", correct = TRUE, "Se lanza una nueva versión de R aproximadamente una vez al año. Actualiza antes si encuentras un error que no puedes explicar."),
+    answer("Nunca", message = "Se lanza una nueva versión de R aproximadamente una vez al año. Asumiré que estás utilizando la versión más reciente de R, que será la versión más rápida con la menor cantidad de comportamientos inesperados." ),
+    allow_retry = TRUE
+  )
+)
+```
+
+## Instala RStudio
+
+### Cómo instalar RStudio
+
+RStudio es un entorno de desarrollo integrado para R. ¿Qué significa eso? Bueno, si piensas en R como un lenguaje, que lo es, puedes pensar en RStudio como un programa que te ayuda a escribir y trabajar en el lenguaje. ¡RStudio hace que la programación en R sea mucho más fácil y te sugiero que lo uses!
+
+![](https://vimeo.com/203516968)
+
+### Prueba tus conocimientos
+
+```{r quiz3, echo=FALSE}
+quiz(caption = "Cuestionario - Instalar RStudio",
+  question("¿Qué es el IDE de RStudio?",
+    answer("Una aplicación que facilita el uso de R.", correct = TRUE, message = "RStudio organiza tu espacio de trabajo y facilita escribir, usar, depurar y guardar código R. Lo recomiendo encarecidamente y me basaré en RStudio en varios tutoriales"),
+    answer("Una aplicación que te permite usar R sin escribir ningún código", message = "¡Y gracias a Dios! El código proporciona un registro reproducible de tu trabajo, que es esencial para la ciencia de datos."),
+    answer("Un programa de hoja de cálculo como Microsoft Excel."),
+    answer("Otro nombre para R", message = "R y RStudio son dos cosas separadas. R es un idioma, como el inglés. Piensa en RStudio como un programa que te ayuda a usar el idioma, algo así como un programa de procesamiento de textos donde tú escribes en inglés."),
+    allow_retry = TRUE
+   ),
+   question("¿Es gratis descargar y usar el IDE de RStudio?",
+     answer("¡Sí!", correct = TRUE, message = "Al igual que R, RStudio es gratuito y de código abierto. Existen versiones profesionales de RStudio con funciones mejoradas, pero no nos basaremos en esas funciones en estos tutoriales.") ,
+     answer("No.", message = "Al igual que R, RStudio es gratuito y de código abierto. Existen versiones profesionales de RStudio con funciones mejoradas, pero no nos basaremos en esas funciones en estos tutoriales.")
+   ),
+   question("¿De dónde descargamos RStudio?",
+     answer("www.rstudio.com/download", correct = TRUE, message = "Para estos tutoriales, descarga e instala el RStudio Desktop de licencia de código abierto"),
+     answer("[cloud.r-project.org](http://cloud.r-project.org)", message = "Aquí es donde descargas R, no RStudio"),
+     answer("www.r-project.org"),
+     answer("[cran.rstudio.org](http://cran.rstudio.org)"),
+    allow_retry = TRUE
+   ),
+   question("¿Necesitas instalar R si ya tienes RStudio?",
+     answer("Sí.", correct = TRUE),
+     answer("No.", message = "R no viene con RStudio; necesitas instalar R por separado.")
+   )
+)           
+```
+
+## Instala Paquetes
+
+### Como instalar paquetes de R
+
+![](https://vimeo.com/203516241)
+
+### Prueba tus conocimientos
+
+```{r names, echo = FALSE}
+quiz(caption = "Cuestionario - Trabajar con Paquetes",
+   question("¿Qué comando usas para instalar paquetes?",
+     answer("`library()`", message = "Veremos qué hace `library()` más adelante."),
+     answer("`install.packages()`", correct = TRUE),
+     answer("`install_packages()`"),
+     answer("No hay ningún comando específico. Debes visitar [cran.r-project.org](http://cran.r-project.org) y descargar paquetes manualmente.", message = "R facilita la descarga de paquetes. Te conectas a Internet y luego ejecutas uno de los comandos anteriores."),
+     allow_retry = TRUE
+   ),
+   question("¿Con qué frecuencia necesitas instalar un paquete en tu ordenador?",
+     answer("Cada vez que reinicias R"),
+     answer("Cada vez que reinicias tu ordenador"),
+     answer("Solo una vez. Luego, R puede encontrarlo en su disco duro según sea necesario.", correct = TRUE),
+     answer("Nunca, mientras esté conectado a Internet.", message = "Esto podría ser cierto si estás usando R en un servicio en la nube. Sin embargo, si estás usando R localmente en tu propio ordenador, necesitarás instalar cada paquete que uses en tu ordenador"),
+     allow_retry = TRUE
+   ),
+   question("¿Qué es el tidyverse?",
+     answer("Una colección de paquetes que funcionan bien juntos y proporcionan herramientas para tareas comunes de ciencia de datos.", correct = TRUE, message = 'Puedes instalar todos los paquetes de tidyverse a la vez con `install.packages("tidyverse")`.'),
+     answer("Un programa de procesamiento de textos para R"),
+     answer("Un estilo de código que se lee como poesía"),
+     answer("Un universo alternativo donde todos son programadores de R"),
+     allow_retry = TRUE
+   )
+)
+```
