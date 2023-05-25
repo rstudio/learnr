@@ -1,7 +1,8 @@
-# learnr (development version)
+# learnr 0.11.4
 
 -   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
--   The default `try_again` message for checkbox questions now prompts the student to "select every correct answer" regardless of whether the question was created by `qustion()` or `question_checkbox()` (#783).
+
+-   The default `try_again` message for checkbox questions now prompts the student to "select every correct answer" regardless of whether the question was created by `question()` or `question_checkbox()` (#783).
 
 # learnr 0.11.3
 
