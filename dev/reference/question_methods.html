@@ -52,7 +52,7 @@ Determines how the question is displayed to the users while  the "Try again" scr
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.11.3.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.11.4.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -119,15 +119,15 @@ Determines how the question is displayed to the users while  the "Try again" scr
 
     <div class="ref-description section level2">
     <p>There are five methods used to define a custom question.  Each S3 method
-should correspond to the <code>type = TYPE</code> supplied to the question.</p><ul><li><p><code>question_ui_initialize.TYPE(question, value, ...)</code></p><ul><li><p>Determines how the question is initially displayed to the users. This should return a shiny UI object that can be displayed using <a href="https://shiny.rstudio.com/reference/shiny/latest/renderUI.html" class="external-link">shiny::renderUI</a>. For example, in the case of <code>question_ui_initialize.radio</code>, it returns a <a href="https://shiny.rstudio.com/reference/shiny/latest/radioButtons.html" class="external-link">shiny::radioButtons</a> object. This method will be re-executed if the question is attempted again.</p></li>
+should correspond to the <code>type = TYPE</code> supplied to the question.</p><ul><li><p><code>question_ui_initialize.TYPE(question, value, ...)</code></p><ul><li><p>Determines how the question is initially displayed to the users. This should return a shiny UI object that can be displayed using <a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">shiny::renderUI</a>. For example, in the case of <code>question_ui_initialize.radio</code>, it returns a <a href="https://rdrr.io/pkg/shiny/man/radioButtons.html" class="external-link">shiny::radioButtons</a> object. This method will be re-executed if the question is attempted again.</p></li>
 </ul></li>
-<li><p><code>question_ui_completed.TYPE(question, ...)</code></p><ul><li><p>Determines how the question is displayed after a submission.  Just like <code>question_ui_initialize</code>, this method should return an shiny UI object that can be displayed using <a href="https://shiny.rstudio.com/reference/shiny/latest/renderUI.html" class="external-link">shiny::renderUI</a>.</p></li>
+<li><p><code>question_ui_completed.TYPE(question, ...)</code></p><ul><li><p>Determines how the question is displayed after a submission.  Just like <code>question_ui_initialize</code>, this method should return an shiny UI object that can be displayed using <a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">shiny::renderUI</a>.</p></li>
 </ul></li>
 <li><p><code>question_is_valid.TYPE(question, value, ...)</code></p><ul><li><p>This method should return a boolean that determines if the input answer is valid.  Depending on the value, this function enables and disables the submission button.</p></li>
 </ul></li>
 <li><p><code>question_is_correct.TYPE(question, value, ...)</code></p><ul><li><p>This function should return the output of <a href="mark_as_correct_incorrect.html">correct</a>, <a href="mark_as_correct_incorrect.html">incorrect</a>, or <a href="mark_as_correct_incorrect.html">mark_as</a>. Each method allows for custom messages in addition to the determination of an answer being correct.  See <a href="mark_as_correct_incorrect.html">correct</a>, <a href="mark_as_correct_incorrect.html">incorrect</a>, or <a href="mark_as_correct_incorrect.html">mark_as</a> for more details.</p></li>
 </ul></li>
-<li><p><code>question_ui_try_again &lt;- function(question, value, ...)</code></p><ul><li><p>Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to <code>question_ui_initialize</code>, this should should return a shiny UI object that can be displayed using <a href="https://shiny.rstudio.com/reference/shiny/latest/renderUI.html" class="external-link">shiny::renderUI</a>.</p></li>
+<li><p><code>question_ui_try_again &lt;- function(question, value, ...)</code></p><ul><li><p>Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to <code>question_ui_initialize</code>, this should should return a shiny UI object that can be displayed using <a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">shiny::renderUI</a>.</p></li>
 </ul></li>
 </ul></div>
 
