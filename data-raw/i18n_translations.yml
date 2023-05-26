@@ -395,7 +395,7 @@ text:
   blank:
     en: "blank"
     fr: ~
-    es: ~
+    es: "espacio en blanco"
     pt: ~
     tr: ~
     emo: ~
@@ -407,7 +407,7 @@ text:
   blank_plural:
     en: "blanks"
     fr: ~
-    es: ~
+    es: "espacios en blanco"
     pt: ~
     tr: ~
     emo: ~
@@ -420,7 +420,7 @@ text:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
     fr: ~
-    es: ~
+    es: "Este ejercicio contiene {{count}} $t(text.blank)."
     pt: ~
     tr: ~
     emo: ~
@@ -433,7 +433,7 @@ text:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
     fr: ~
-    es: ~
+    es: "Reemplaza {{blank}} con código válido, por favor."
     pt: ~
     tr: ~
     emo: ~
@@ -452,7 +452,14 @@ text:
       or <code>{</code> with a matching <code>&quot;</code>, <code>'</code>,
       <code>)</code> or <code>}</code>.
     fr: ~
-    es: ~
+    es: >
+      Parece que esto podría no ser un código de R válido.
+      R no puede determinar cómo convertir tu texto en un comando completo.
+      Es posible que hayas olvidado completar un espacio en blanco,
+      eliminar un guión bajo, incluir una coma entre argumentos,
+      o cerrar un <code>&quot;</code>, <code>'</code>, <code>(</code>
+      o <code>{</code> inicial con un <code>&quot;</code>, <code>'</code>,
+      <code>)</code> o <code>}</code> final.
     pt: ~
     tr: ~
     emo: ~
@@ -500,7 +507,18 @@ text:
       There may be other places that need to be fixed, too.</p>
       {{suggestion}}
     fr: ~
-    es: ~
+    es: >
+      <p>Parece que tu código R contiene comillas con un formato especial
+      o comillas &quot;rizadas&quot; (<code>{{character}}</code>)
+      alrededor de cadenas de caracteres, haciendo que tu código no sea válido.
+      R requiere que los valores de los caracteres estén entre marcas de
+      comillas simples o apóstrofes (<code>&quot;</code> o <code>'</code>).</p>
+      {{code}}
+      <p>No te preocupes, esta es una fuente común de errores cuando copias
+      código de otra aplicación que aplica su propio formato al texto.
+      Puedes intentar reemplazar el código en esa línea con lo siguiente.
+      Es posible que también haya otros lugares que deban corregirse.</p>
+      {{suggestion}}
     pt: ~
     tr: ~
     emo: ~
@@ -537,7 +555,15 @@ text:
       Try deleting the special character from your code and retyping
       it manually.</p>
     fr: ~
-    es: ~
+    es: >
+      <p>Parece que tu código R contiene un carácter especial inesperado
+      (<code>{{character}}</code>) que hace que tu código no sea válido.</p>
+      {{code}}
+      <p>A veces, tu código puede contener un carácter especial que parece un
+      carácter regular, especialmente si copias y pegas el código desde
+      otra aplicación.
+      Prueba de nuevo eliminando el carácter especial de tu código y vuelviendo
+      a escribirlo manualmente.</p>
     pt: ~
     tr: ~
     emo: ~
@@ -568,7 +594,16 @@ text:
       There may be other places that need to be fixed, too.</p>
       {{suggestion}}
     fr: ~
-    es: ~
+    es: >
+      <p>Parece que tu código R contiene un carácter especial inesperado
+      (<code>{{character}}</code>) que hace que tu código no sea válido.</p>
+      {{code}}
+      <p>A veces, tu código puede contener un carácter especial que parece un
+      carácter regular, especialmente si copias y pegas el código desde
+      otra aplicación.
+      Prueba de nuevo reemplazando el código de esa linea con lo siguiente.
+      Es posible que también haya otros lugares que deban corregirse.</p>
+      {{suggestion}}
     pt: ~
     tr: ~
     emo: ~
@@ -618,7 +653,7 @@ text:
     #   separating list items
     en: ", "
     fr: ~
-    es: ~
+    es: ", "
     pt: ~
     tr: ~
     emo: ~
@@ -630,7 +665,7 @@ text:
   oxfordcomma:
     en: ","
     fr: ""
-    es: ""
+    es: ","
     pt: ""
     tr: ""
     emo: ""
