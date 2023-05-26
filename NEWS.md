@@ -6,6 +6,8 @@
 
 -   The default `try_again` message for checkbox questions now prompts the student to "select every correct answer" regardless of whether the question was created by `question()` or `question_checkbox()` (#783).
 
+-   Added translation to Spanish of the first 5 tutorials (which refer to the book r4ds v1 translated elsewhere into Spanish also - https://github.com/cienciadedatos/r4ds )
+
 # learnr 0.11.3
 
 -   Fixed an issue that prevented authors from using symbols, such as `T` or a variable, as the value of the `exercise` chunk option, which caused tutorials with chunks with `exercise = T` to fail to render (thanks @cknotz #757, #758).

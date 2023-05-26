@@ -1,0 +1,592 @@
+---
+title: "Resumir Tablas"
+output:
+  learnr::tutorial:
+    language: es
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Aprende a resumir las columnas disponibles en un _data frame_ de R con
+  `summarise()`. También aprenderás a encadenar operaciones junto con el
+  operador `%>%` (del paquete magrittr), y cómo calcular resúmenes agrupados
+  usando `group_by()` junto con `summarise()`.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(nycflights13)
+library(Lahman)
+library(datos)
+
+tutorial_options(
+  exercise.timelimit = 60,
+  # A simple checker function that just returns the message in the check chunk
+  exercise.checker = function(check_code, ...) {
+    list(
+      message = eval(parse(text = check_code)),
+      correct = logical(0),
+      type = "info",
+      location = "append"
+    )
+  }
+)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Bienvenida
+
+En este tutorial, aprenderás cómo resumir una tabla de datos, incluyendo:
+
+* Cómo resumir tablas con `summarise()`
+* Cómo reconocer las familias de funciones más útiles para combinar con `summarise()`
+* Cómo combinar varias operaciones de dplyr con la tubería, `%>%`
+* Cómo calcular recuentos de observaciones con `n()`
+* Cómo resumir grupos de observaciones con `group_by()` y `summarise()`
+
+Las lecturas de este tutorial siguen el libro [_R for Data Science_ (v1)](https://es.r4ds.hadley.nz/), sección 5.6.
+
+### Configuración
+
+Para practicar estas habilidades, utilizaremos el conjunto de datos `vuelos` del paquete datos (traducidos del inglés a partir de nycflights13), que conociste en el tutorial [Conceptos básicos de datos](https://learnr-examples.shinyapps.io/ex-data-basics). Este _data frame_ proviene de la [Oficina de Estadísticas de Transporte de EE.UU.](http://www.trastats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) y contiene todos los `r format(nrow(datos::vuelos), big.mark = ",")` vuelos que partieron de la ciudad de Nueva York en 2013. Está documentado en `?vuelos`.
+
+Para visualizar los datos, usaremos el paquete ggplot2.
+
+He precargado los paquetes para este tutorial con
+
+
+```{r eval = FALSE}
+library(tidyverse) # loads dplyr, ggplot2, and others
+library(nycflights13)
+library(datos)
+```
+
+## Resumir grupos con summarise()
+
+### summarise()
+
+`summarise()` contrae un _data frame_ en una sola fila de resúmenes. Puedes elegir cuántos resúmenes aparecen en la fila y cómo se calculan:
+
+```{r summarize}
+summarise(vuelos, atraso = mean(atraso_salida, na.rm = TRUE),
+                  total =  sum(atraso_salida, na.rm = TRUE))
+```
+
+(Regresaremos a lo que significa `na.rm = TRUE` muy pronto).
+
+Fíjate que la sintaxis de `summarise()` es similar a `mutate()`. Al igual que con `mutate()`, le das a `summarise()`:
+
+1. El nombre de un _data frame_ para transformar
+2. Uno o más nombres de columna que aparecerán en la salida transformada. Cada nombre de columna se establece igual a la expresión de R que generará el contenido de la columna.
+
+La principal diferencia entre `summarise()` y `mutate()` es el tipo de función que usas para generar las nuevas columnas. `mutate()` toma funciones que devuelven un vector completo de salida (para agregar al _data frame_ original). `summarise()` toma funciones que devuelven un solo valor (o resumen). Estos valores aparecerán en un nuevo _data frame_ que tiene solo una fila.
+
+### group_by()
+
+`summarise()` no es muy útil a menos que lo combines con `group_by()`. `group_by()` cambia la unidad de análisis del _data frame_: asigna observaciones en el _data frame_ a grupos separados e indica a dplyr que aplique funciones por separado a cada grupo. `group_by()` asigna grupos poniendo juntas observaciones que tienen las mismas combinaciones de valores para las variables que pasas a `group_by()`.
+
+Por ejemplo, el código `summarise()` anterior calcula el atraso promedio para todo el conjunto de datos. Si aplicamos exactamente el mismo código a un conjunto de datos que ha sido agrupado por fecha (es decir, las combinaciones únicas de `anio`, `mes` y `dia`), obtenemos el atraso promedio por fecha. Haz clic en "Ejecutar código" para ver lo que quiero decir:
+
+```{r summarise, exercise = TRUE, exercise.eval = FALSE}
+por_fecha <- group_by(vuelos, anio, mes, dia)
+summarise(por_fecha, atraso = mean(atraso_salida, na.rm = TRUE),
+                  total = sum(atraso_salida, na.rm = TRUE))
+```
+
+```{r summarise-check}
+"¡Buen trabajo!"
+```
+
+
+### Ejercicio 1
+
+¿Qué aerolínea tiene los peores retrasos? Desafío: ¿puedes desentrañar los efectos de los malos aeropuertos frente a los malos transportistas? ¿Por qué/por qué no? (Pista: piensa en `vuelos %>% group_by(aerolinea, destino) %>% summarise(n())`)
+
+```{r summariseex4, exercise = TRUE}
+
+```
+
+```{r summariseex4-solution}
+vuelos %>%
+  group_by(aerolinea) %>%
+  summarise(atraso_medio = mean(atraso_salida, na.rm = TRUE)) %>%
+  mutate(rank = min_rank(desc(atraso_medio))) %>%
+  filter(rank == 1)
+```
+
+<div id="summariseex4-hint">
+**Pista:** Usa`min_rank(desc(atraso_medio))` para clasificar `atraso_medio` (por ejemplo) de modo que el mayor retraso reciba el rango uno.
+</div>
+
+```{r summariseex4-check}
+"¡Buen trabajo! Frontier airlines (`F9`) fue el retraso de salida promedio más alto."
+```
+
+### Ejercicio 2
+
+Para cada avión, cuenta el número de vuelos antes del primer retraso mayor a 1 hora.
+
+```{r summariseex5, exercise = TRUE}
+
+```
+
+```{r summariseex5-solution}
+vuelos %>%
+  filter(!is.na(atraso_salida)) %>%
+  group_by(codigo_cola) %>%
+  mutate(gran_atraso = atraso_salida > 60,
+         antes = !cumany(gran_atraso)) %>%
+  summarise(sum(antes))
+```
+
+<div id="summariseex5-hint">
+**Pista:** Para cada avión, cuenta el número de vuelos antes del primer retraso mayor a 1 hora.
+Una estrategia sería:
+* filtrar todas las filas donde `atraso_salida` es `NA`.
+* Luego agrupar por avión,
+* crear una variable que pruebe si cada vuelo se retrasó más de una hora
+* crear una variable que identifique los vuelos que ocurren antes del primer gran retraso con `!cumany()`
+* sumar el número de verdaderos
+</div>
+
+```{r summariseex5-check}
+"¡Excelente trabajo! Eso fue difícil. Asegúrate de comprender cada uno de los pasos y funciones involucrados."
+```
+
+### Agrupación por múltiples variables
+
+Cuando agrupa por múltiples variables, cada resumen elimina un nivel de la agrupación. Eso facilita la acumulación progresiva de un conjunto de datos. Ejecuta el código a continuación e inspecciona cada resultado para ver cómo ha cambiado su criterio de agrupación (el criterio de agrupación se muestra en la parte superior del tibble).
+
+```{r unwrap, exercise = TRUE}
+diariamente <- group_by(vuelos, anio, mes, dia)
+(por_dia <- summarise(diariamente, total = sum(atraso_salida, na.rm = TRUE)))
+(por_mes <- summarise(por_dia, total = sum(total, na.rm = TRUE)))
+(por_anio  <- summarise(por_mes, total = sum(total, na.rm = TRUE)))
+```
+
+Ten cuidado cuando resumas progresivamente los resúmenes: está bien para sumas y conteos, pero debes pensar en ponderar medias y varianzas, y no es posible hacerlo exactamente para estadísticas basadas en rangos como la mediana. En otras palabras, la suma de las sumas de los grupos es la suma total, pero la mediana de las medianas de los grupos no es la mediana general.
+
+### Desagrupar
+
+Si necesitas eliminar la agrupación y volver a las operaciones en datos desagrupados, usa `ungroup()`.
+
+```{r echo = FALSE}
+diariamente <- group_by(vuelos, anio, mes, dia)
+```
+
+```{r}
+diariamente <- ungroup(diariamente) # ya no están agrupados por fecha
+summarise(diariamente, total = sum(atraso_salida, na.rm = TRUE))  # todos los vuelos
+```
+
+### Grupos y dplyr
+
+`group_by()` también funciona con las otras funciones de dplyr; dplyr aplicará `filter()`, `select()`, `arrange()` y `mutate()` de forma grupal a los datos agrupados. Sin embargo, `group_by()` es el más útil cuando se combina con `summarise()`. Juntos, `group_by()` y `summarise()` proporcionan una de las herramientas que usarás más comúnmente cuando trabajes con dplyr: resúmenes agrupados. Pero antes de ir más allá con esto, necesitamos introducir una nueva y poderosa idea: la __tubería__ para combinar operaciones secuencialmente una detrás de la otra.
+
+## Combinando múltiples operaciones
+
+### Múltiples pasos
+
+Imagina que queremos explorar la relación entre la distancia y el retraso medio para cada destino en `vuelos`. Usando lo que sabes sobre dplyr, puedes escribir un código como este:
+
+```{r, fig.width = 6, message = FALSE}
+by_destino <- group_by(vuelos, destino)
+atraso <- summarise(by_destino,
+  conteo = n(),
+  dist = mean(distancia, na.rm = TRUE),
+  atraso = mean(atraso_llegada, na.rm = TRUE)
+)
+atraso <- filter(atraso, conteo > 20, destino != "HNL")
+
+ggplot(data = atraso, mapping = aes(x = dist, y = atraso)) +
+  geom_point(aes(size = conteo), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+```
+
+El código funciona y encontramos un efecto interesante: parece que los retrasos aumentan con la distancia hasta ~750 millas y luego disminuyen. ¿Tal vez a medida que los vuelos se hacen más largos, hay más capacidad para compensar los retrasos en el aire?
+
+Ahora veamos cómo preparamos los datos. Hay tres pasos:
+
+1. Agrupar vuelos por destino.
+
+1. Resumir para calcular distancia, atraso promedio y número de vuelos.
+
+1. Filtrar para eliminar los puntos ruidosos y el aeropuerto de Honolulu, que está casi el doble de lejos que el siguiente aeropuerto más cercano.
+
+Este código es un poco frustrante de escribir porque tenemos que dar un nombre a cada _data frame_ intermedio, aunque no nos importe. Nombrar cosas es difícil, por lo que ralentiza nuestro análisis.
+
+### Pipes
+
+Hay otra forma de abordar el mismo problema. Podemos convertir el código en una canalización con el operador de canalizaciones (_pipe_, en inglés, también traducido como _tubería_ a veces), `%>%`:
+
+```{r}
+atrasos <- vuelos %>%
+  group_by(destino) %>%
+  summarise(
+    conteo = n(),
+    dist = mean(distancia, na.rm = TRUE),
+    atraso = mean(atraso_llegada, na.rm = TRUE)
+  ) %>%
+  filter(conteo > 20, destino != "HNL")
+```
+
+Detrás de escena, `x %>% f(y)` se convierte en `f(x, y)`, y `x %>% f(y) %>% g(z)` se convierte en `g(f( x, y), z)` y así sucesivamente. Puedes usar la canalización (_pipe_) para reescribir varias operaciones de manera que puedas leer de izquierda a derecha y de arriba a abajo.
+
+Esto pone el foco en las transformaciones, no en lo que se está transformando, lo que hace que el código sea más fácil de leer. Puedes leerlo como una serie de declaraciones imperativas: agrupar, luego resumir, luego filtrar. Como sugiere esta lectura, una buena manera de pronunciar `%>%` cuando se lee código es "entonces".
+
+A partir de ahora, usaremos _pipes_ con frecuencia porque mejora considerablemente la legibilidad del código, y volveremos a ello con más detalle en [Pipes](https://es.r4ds.hadley.nz/pipes.html).
+
+El _pipe_ es una característica definitoria del tidyverse: todos los paquetes en el tidyverse contienen funciones que están diseñadas para trabajar con el _pipe_. La única excepción es ggplot2: fue escrito antes de que se descubriera el _pipe_. Desafortunadamente, la próxima iteración de ggplot2, ggvis, que usa el _pipe_, aún no está lista para un uso general.
+
+## Funciones de resumen útiles {#summarise-funs}
+
+### Funciones de agregación
+
+Puedes recorrer un largo camino con las medias y la suma; pero R proporciona muchas otras funciones útiles para usar con el resumen. Cada una de estas funciones actúa como una **función de agregación**: toma un vector de valores y devuelve un solo valor.
+
+Demostremos algunas de las funciones de agregación más útiles con este conjunto de datos, que elimina los vuelos que no tienen información de retraso (porque fueron cancelados).
+
+```{r}
+no_cancelados <- vuelos %>%
+  filter(!is.na(atraso_salida), !is.na(atraso_llegada))
+```
+
+*   **Medidas de ubicación**: hemos usado `media(x)`, pero `mediana(x)` también es útil. La media es la suma dividida por la longitud; la mediana es un valor donde el 50% de `x` está por encima y el 50% está por debajo.
+
+    A veces es útil combinar la agregación con subconjuntos lógicos. Todavía no hemos hablado de este tipo de subconjuntos, pero obtendrás más información al respecto en [Subconjuntos (_Subsetting_)](https://es.r4ds.hadley.nz/vectores.html#subconjuntos-subsetting).
+     
+    ```{r}
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      summarise(
+        atraso_medio1 = mean(atraso_llegada),
+        atraso_medio2 = mean(atraso_llegada[atraso_llegada > 0]) # el atraso medio positivo
+      )
+    ```
+
+*   **Medidas de dispersión**: `sd(x)`, `IQR(x)`, `mad(x)`. La desviación media al cuadrado, o desviación estándar o sd para abreviar, es la medida estándar de dispersión. El rango intercuartílico 'IQR()' y la desviación mediana absoluta 'mad(x)' son equivalentes robustos que pueden ser más útiles si tiene valores atípicos (_outliers_).
+
+    ```{r}
+    # ¿Por qué la distancia a algunos destinos es más variable que a otros?
+    no_cancelados %>%
+      group_by(destino) %>%
+      summarise(distancia_desvest = sd(distancia)) %>%
+      arrange(desc(distancia_desvest))
+    ```
+
+*   **Medidas de rango**: `min(x)`, `quantil(x, 0.25)`, `max(x)`. Los cuantiles son una generalización de la mediana. Por ejemplo, `quantile(x, 0.25)` encontrará un valor de `x` que es mayor que el 25% de los valores y menor que el 75 % restante.
+
+    ```{r}
+    # Cuando salen el primer y último vuelo de cada día?
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      summarise(
+        primero = min(horario_salida),
+        ultimo = max(horario_salida)
+      )
+    ```
+
+*   **Medidas de posición**: `first(x)`, `nth(x, 2)`, `last(x)`. Estas funcionan de manera similar a `x[1]`, `x[2]` y `x[length(x)]` pero te permiten establecer un valor predeterminado si esa posición no existe (es decir, estás tratando de obtener el 3er elemento de un grupo que solo tiene dos elementos). Por ejemplo, podemos encontrar la primera y la última salida para cada dia:
+
+    ```{r}
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      summarise(
+        primera_sal = first(horario_salida),
+        ultima_sal = last(horario_salida)
+      )
+    ```
+
+    Estas funciones son complementarias al filtrado por rangos. El filtrado te brinda todas las variables, con cada observación en una fila separada:
+
+    ```{r}
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      mutate(r = min_rank(desc(horario_salida))) %>%
+      filter(r %in% range(r))
+    ```
+
+*   **Conteos**: en la siguiente sección, encontrarás `n()`, que no acepta argumentos y devuelve el tamaño del grupo actual. También puedes contar otras cantidades útiles. Para contar el número de valores que no faltan, usa `sum(!is.na(x))`. Para contar el número de valores distintos (únicos), usa `n_distinct(x)`.
+
+    ```{r}
+    # Which destinations have the most carriers?
+    no_cancelados %>%
+      group_by(destino) %>%
+      summarise(aerolineas = n_distinct(aerolinea)) %>%
+      arrange(desc(aerolineas))
+    ```
+
+*   **Conteos y proporciones de valores lógicos**: `sum(x > 10)`, `mean(y == 0)`. Cuando se usa con funciones numéricas, `TRUE` se convierte en 1 y `FALSE` en 0. Esto hace que 'sum()' y 'mean()' sean muy útiles: 'sum(x)' da el número de `TRUE`s en `x`, y `mean(x)` da la proporción.
+
+    ```{r}
+    # ¿Cuántos vuelos salieron antes de las 5 am? (Estos generalmente indican 
+    # vuelos retrasados desde el dia anterior)
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      summarise(n_early = sum(horario_salida < 500))
+
+    # ¿Qué proporción de vuelos se retrasan más de una hora?
+    no_cancelados %>%
+      group_by(anio, mes, dia) %>%
+      summarise(hour_perc = mean(atraso_llegada > 60))
+    ```
+
+### Ejercicio 3
+
+Haz una lluvia de ideas sobre al menos 5 formas diferentes de evaluar las características típicas de retraso de un grupo de vuelos. Considera los siguientes escenarios:
+
+* Un vuelo llega 15 minutos antes el 50% del tiempo y 15 minutos tarde el 50% del tiempo.
+
+* Un vuelo siempre llega 10 minutos tarde.
+
+* Un vuelo llega 30 minutos antes el 50% del tiempo y 30 minutos tarde el 50% del tiempo.
+
+* 99% del tiempo un vuelo es puntual. El 1% de las veces llega 2 horas tarde.
+
+¿Qué es más importante: el retraso en la llegada o el retraso en la salida?
+
+```{r summariseex1, exercise = TRUE}
+
+```
+
+<div id="summariseex1-hint">
+**Pista:** Considera las medidas de ubicación y las medidas de dispersión de R.
+</div>
+
+
+### Valores faltantes
+
+Es posible que te hayas preguntado sobre el argumento `na.rm` que usamos en una sección anterior. ¿Qué pasa si no lo configuramos?
+
+```{r}
+vuelos %>%
+  group_by(anio, mes, dia) %>%
+  summarise(media = mean(atraso_salida))
+```
+
+¡Obtenemos muchos valores faltantes! Esto se debe a que las funciones de agregación obedecen la regla habitual de los valores faltantes: si falta algún valor en la entrada, la salida será un valor faltante. Afortunadamente, todas las funciones de agregación tienen un argumento `na.rm` que elimina antes del cálculo los valores que faltan:
+
+```{r}
+vuelos %>%
+  group_by(anio, mes, dia) %>%
+  summarise(media = mean(atraso_salida, na.rm = TRUE))
+```
+
+En este caso, donde los valores faltantes representan vuelos cancelados, también podríamos abordar el problema eliminando primero los vuelos cancelados, como hicimos para crear `no_cancelados`.
+
+```{r}
+no_cancelados <- vuelos %>%
+  filter(!is.na(atraso_salida), !is.na(atraso_llegada))
+
+no_cancelados %>%
+  group_by(anio, mes, dia) %>%
+  summarise(media = mean(atraso_salida))
+```
+
+### Ejercicio 4
+
+Nuestra definición de vuelos cancelados (`is.na(atraso_salida) | is.na(atraso_llegada)`) es ligeramente subóptima. ¿Por qué? ¿Cuál es la columna más importante?
+
+## Conteos
+
+### n()
+
+Siempre que realices una agregación, es una buena idea incluir un conteo (`n()`) o un conteo de valores que no faltan (`sum(!is.na(x))`). De esta manera, puedes verificar que no estás sacando conclusiones basadas en cantidades muy pequeñas de datos. Por ejemplo, veamos los aviones (identificados por su número de cola) que tienen los retrasos medios más altos:
+
+```{r}
+atrasos <- no_cancelados %>%
+  group_by(codigo_cola) %>%
+  summarise(
+    atraso = mean(atraso_llegada)
+  )
+
+ggplot(data = atrasos, mapping = aes(x = atraso)) +
+  geom_freqpoly(binwidth = 10)
+```
+
+Vaya, ¡hay algunos aviones que tienen un atraso _promedio_ de 5 horas (300 minutos)!
+
+La historia es en realidad un poco más matizada. Podemos obtener más información si dibujamos un diagrama de dispersión del número de vuelos frente al atraso promedio. Completa el código en blanco a continuación para calcularlo y luego trazar el número de vuelos por el atraso medio de llegada (`atraso_llegada`).
+
+```{r atrasos, exercise = TRUE}
+# atrasos <- no_cancelados %>%
+#   group_by(codigo_cola) %>%
+#   summarise(
+#     atraso = _________,
+#     n = n()
+#   )
+#
+# ggplot(data = atrasos, mapping = aes(x = n, y = atraso)) +
+#   geom_point(alpha = 1/10)
+```
+
+```{r atrasos-solution}
+atrasos <- no_cancelados %>%
+  group_by(codigo_cola) %>%
+  summarise(
+    atraso = mean(atraso_llegada),
+    n = n()
+  )
+
+ggplot(data = atrasos, mapping = aes(x = n, y = atraso)) +
+  geom_point(alpha = 1/10)
+```
+
+No es sorprendente que haya una variación mucho mayor en el retraso promedio cuando hay pocos vuelos. La forma de esta gráfica es muy característica: cada vez que graficas una media (u otro resumen) frente al tamaño del grupo, verás que la variación disminuye a medida que aumenta el tamaño de la muestra.
+
+### Contabilización de la variación basada en el tamaño de la muestra
+
+Al mirar este tipo de gráfico, a menudo es útil filtrar los grupos con el menor número de observaciones, para que puedas ver más del patrón y menos de la variación extrema en los grupos más pequeños. Esto es lo que hace el siguiente código, además de mostrarte un patrón útil para integrar ggplot2 en los flujos de dplyr. Es un poco doloroso tener que cambiar de `%>%` a `+`, pero una vez que le coges el tranquillo, es muy conveniente.
+
+```{r echo = FALSE}
+atrasos <- no_cancelados %>%
+  group_by(codigo_cola) %>%
+  summarise(
+    atraso = mean(atraso_llegada),
+    n = n()
+  )
+```
+
+
+```{r}
+atrasos %>%
+  filter(n > 25) %>%
+  ggplot(mapping = aes(x = n, y = atraso)) +
+    geom_point(alpha = 1/10)
+```
+
+--------------------------------------------------------------------------------
+
+Consejo de RStudio: un atajo de teclado útil es Cmd/Ctrl + Shift + P. Esto reenvía el fragmento enviado previamente desde el editor a la consola. Esto es muy conveniente cuando estás (por ejemplo) explorando el valor de `n` en el ejemplo anterior. Envías el bloque completo una vez con Cmd/Ctrl + Enter, luego modificas el valor de `n` y presionas Cmd/Ctrl + Shift + P para volver a enviar el bloque completo.
+
+--------------------------------------------------------------------------------
+
+### Tamaño de la muestra, rendimiento promedio y rango
+
+Hay otra variación común de este tipo de patrón. Veamos cómo se relaciona el rendimiento promedio de los bateadores en el béisbol con la cantidad de veces que están al bate. Aquí utilizo datos del paquete __Lahman__ (traducidos en el paquete `datos` habitual) para calcular el promedio de bateo (cantidad de veces que le dan/cantidad de intentos) de cada jugador de béisbol de las grandes ligas.
+
+Cuando dibujo la habilidad del bateador (medida por el promedio de bateo, `ba`) contra el número de oportunidades para batear la pelota (medida por el número de veces al bate, `ab`), se ven dos patrones:
+
+1. Como arriba, la variación en nuestro agregado disminuye a medida que obtenemos más puntos de datos.
+
+2. Existe una correlación positiva entre la habilidad (`ba`) y las oportunidades de golpear la pelota (`ab`). Esto se debe a que los equipos controlan quién juega y, obviamente, elegirán a sus mejores jugadores.
+
+```{r}
+# Conviértelo en un tibble para que se imprima bien
+bateo <- as_tibble(datos::bateadores) # Originalmente en Lahman::Batting
+
+bateadoras <- bateo %>%
+  group_by(id_jugador) %>%
+  summarise(
+    ba = sum(golpes, na.rm = TRUE) / sum(al_bate, na.rm = TRUE),
+    ab = sum(al_bate, na.rm = TRUE)
+  )
+
+bateadoras %>%
+  filter(ab > 100) %>%
+  ggplot(mapping = aes(x = ab, y = ba)) +
+    geom_point() +
+    geom_smooth(se = FALSE)
+```
+
+Esto también tiene implicaciones importantes para la clasificación. Si miras de cerca, las personas con los mejores promedios de bateo son claramente afortunadas, no hábiles.
+
+Puede encontrar una buena explicación de este problema en  <http://varianceexplained.org/r/empirical_bayes_baseball/> y <http://www.evanmiller.org/how-not-to-sort-by-average-rating.html>.
+
+### count()
+
+Los conteos son tan útiles que dplyr proporciona una ayuda simple si todo lo que desea es un conteo:
+
+```{r}
+no_cancelados %>%
+  count(destino)
+```
+
+    Opcionalmente, puedes proporcionar una variable de peso. Por ejemplo, podrías usar esto para "contar" (sumar) el número total de millas que voló un avión:
+
+```{r}
+no_cancelados %>%
+  count(codigo_cola, wt = distancia)
+```
+
+### Ejercicio 5
+
+Inventa otro enfoque que te dará el mismo resultado que `no_cancelados %>% count(destino)` y `no_cancelados %>% count(codigo_cola, wt = distancia)` (sin usar `count()`).
+
+```{r summariseex2, exercise = TRUE}
+
+```
+```{r summariseex2-solution}
+no_cancelados %>%
+  group_by(destino) %>%
+  summarise(n = n())
+
+no_cancelados %>%
+  group_by(codigo_cola) %>%
+  summarise(n = sum(distancia))
+```
+
+<div id="summariseex2-hint">
+**Pista:** Considera las herramientas a tu disposición "`group_by()`, `summarise()`, `n()`, `sum()`", y `?count`
+</div>
+
+```{r summariseex2-check}
+"¡Excelente trabajo! Esta respuesta fue complicada, pero ahora puedes ver que `count()` es un atajo útil para `group_by()` + `summarise()` + `n()` (o `sum()`)."
+```
+
+### Ejercicio 6
+
+¿Qué hace el argumento `sort` a `count()`? ¿Cuándo podrías usarlo?
+
+```{r summariseex6, exercise = TRUE}
+?count
+```
+
+### Ejercicio 7
+
+Mira la cantidad de vuelos cancelados por día. ¿Hay un patrón? ¿La proporción de vuelos cancelados está relacionada con el atraso promedio?
+
+```{r summariseex3, exercise = TRUE}
+# Tarea 1
+# comienza con una variable que muestra el dia del año
+# vuelos %>%
+#   mutate(fecha = as.Date(paste(anio, mes, dia, sep = "-"))) %>%
+# crea una variable que muestre si un vuelo está cancelado
+# agrúpalo por dia
+# crea un resumen contando el número de vuelos donde cancelados sea VERDADERO
+# Dibuja el resultado contra el día
+
+# Tarea 2
+# recrea los datos agrupados arriba
+# crea un resumen tomando la media de la variable cancelados
+# ...así como el atraso promedio
+# traza uno contra el otro
+```
+
+```{r summariseex3-solution}
+vuelos %>%
+  mutate(fecha = as.Date(paste(anio, mes, dia, sep = "-"))) %>%
+  mutate(cancelados = is.na(atraso_salida) | is.na(atraso_llegada)) %>%
+  group_by(fecha) %>%
+  summarise(n = sum(cancelados)) %>%
+  ggplot(aes(x = fecha, y = n)) +
+    geom_point() +
+    geom_smooth()
+
+vuelos %>%
+  mutate(fecha = as.Date(paste(anio, mes, dia, sep = "-"))) %>%
+  mutate(cancelados = is.na(atraso_salida) | is.na(atraso_llegada)) %>%
+  group_by(fecha) %>%
+  summarise(prop = mean(cancelados), atraso_medio = mean(atraso_salida, na.rm = TRUE)) %>%
+  ggplot(aes(x = prop, y = atraso_medio)) +
+    geom_point()
+```
+
+<div id="summariseex3-hint">
+**Pista:** No te olvides de usar `na.rm = TRUE` cuando corresponda.
+</div>
+
+```{r summariseex3-check}
+"¡Guau! Lo hiciste increíble."
+```

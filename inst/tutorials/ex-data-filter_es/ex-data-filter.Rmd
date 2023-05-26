@@ -1,0 +1,385 @@
+---
+title: "Filtrar observaciones"
+output:
+  learnr::tutorial:
+    language: es
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+   Aprende a filtrar observaciones en un _data frame_. Usa `filter()` para 
+   extraer observaciones de un _data frame_, y usa `&`, `|` y `!` para escribir
+   comprobaciones de lógica.
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(nycflights13)
+library(Lahman)
+library(datos)
+
+tutorial_options(
+  exercise.timelimit = 60,
+  # A simple checker function that just returns the message in the check chunk
+  exercise.checker = function(check_code, ...) {
+    list(
+      message = eval(parse(text = check_code)),
+      correct = logical(0),
+      type = "info",
+      location = "append"
+    )
+  }
+)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Bienvenidos/as
+
+Este es un tutorial de demostración. compáralo con el [código fuente](https://github.com/rstudio/learnr/tree/main/inst/tutorials/ex-data-filter/ex-data-filter.Rmd) que lo hizo.
+
+###
+
+En este tutorial, aprenderás cómo:
+
+* use `filter()` para extraer observaciones de un _data frame_ o _tibble_
+* escribir pruebas lógicas en R
+* combinar pruebas lógicas con operadores booleanos
+* manejar los valores faltantes dentro de las pruebas lógicas
+
+Las lecturas de este tutorial siguen el libro [_R for Data Science_ (v1)](https://es.r4ds.hadley.nz/), sección 5.2.
+
+### Prerequisitos
+
+Para practicar estas habilidades, utilizaremos el conjunto de datos `vuelos` del paquete datos (que originalmente en inglés proviene del paquete nycflights13). Este _data frame_ proviene de la [Oficina de Estadísticas de Transporte de EE. UU.](http://www.trastats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0) y contiene todos los `r format(nrow(datos::vuelos), big.mark = ",")` vuelos que partieron de la ciudad de Nueva York en 2013. Está documentado en `?vuelos`.
+
+Si estás listo/a para comenzar, haz clic en el botón de __Continuar__!
+
+## Filtra filas con `filter()`
+
+### filter()
+
+`filter()` te permite usar una prueba lógica para extraer filas específicas de un _data frame_. Para usar `filter()`, pásale el _data frame_ seguido de una o más pruebas lógicas. `filter()` devolverá cada fila que pase cada prueba lógica.
+
+Entonces, por ejemplo, podemos usar `filter()` para seleccionar cada vuelo en vuelos que partieron el 1 de enero. Haz clic en Ejecutar código para probarlo:
+
+```{r filter1, exercise = TRUE, exercise.eval = FALSE}
+filter(vuelos, mes == 1, dia == 1)
+```
+
+
+### salida
+
+Como en todas las funciones de dplyr, `filter()` devuelve un nuevo _data frame_ para que lo guardes o uses. No sobrescribe el _data frame_ anterior.
+
+Si deseas guardar la salida de `filter()`, deberás usar el operador de asignación, `<-`.
+
+Vuelve a ejecutar el comando en el fragmento de código a continuación, pero primero organiza el código para guardar la salida en un objeto llamado `jan1`.
+
+```{r filter2, exercise = TRUE, exercise.eval = FALSE}
+filter(vuelos, mes == 1, dia == 1)
+```
+
+```{r filter2-solution}
+jan1 <- filter(vuelos, mes == 1, dia == 1)
+```
+
+###
+
+¡Buen trabajo! Ahora puedes ver los resultados ejecutando el nombre `jan1` por sí solo. O puedes pasar `jan1` a una función que tome _data frames_ como entrada.
+
+¿Notaste que este código usaba el operador igual doble, `==`? `==` es uno de los operadores de comparación lógica de R. Los operadores de comparación son clave para usar `filter()`, así que echémosles un vistazo.
+
+## Comparaciones lógicas
+
+### Operadores de comparación
+
+R proporciona un conjunto de operadores de comparación que puedes usar para comparar valores: `>`, `>=`, `<`, `<=`, `!=` (distinto) y `==` (igual) . Cada uno crea una prueba lógica. Por ejemplo, ¿es `pi` mayor que tres?
+
+```{r}
+pi > 3
+```
+
+###
+
+Cuando colocas una prueba lógica dentro de `filter()`, el filtro aplica la prueba a cada fila en el _data frame_ y luego devuelve las filas que pasan, como un nuevo _data frame_
+
+Nuestro código anterior devolvió cada fila cuyo valor de mes era igual a uno _y_ cuyo valor de día era igual a uno.
+
+### ¡Cuidado!
+
+Cuando comienzas con R, el error más fácil de cometer es probar la igualdad con `=` en lugar de `==`. Cuando esto suceda obtendrás un error informativo:
+
+```{r, error = TRUE}
+filter(vuelos, mes = 1)
+```
+
+### Múltiples pruebas
+
+Si le das a `filter()` más de una prueba lógica, `filter()` combinará las pruebas con un "y" implícito. En otras palabras, `filter()` devolverá solo las filas que devuelven `VERDADERO` para cada prueba. Puede combinar pruebas de otras formas con operadores booleanos...
+
+## Operadores booleanos
+
+### &, |, y !
+
+R usa operadores booleanos para combinar múltiples comparaciones lógicas en una sola prueba lógica. Estos incluyen `&` (_y_), `|` (_o_), `!` (_no_ o _negación_) y `xor()` (_exactamente o_).
+
+Tanto `|` como `xor()` devolverán VERDADERO si una u otra comparación lógica devuelve VERDADERO. `xor()` se diferencia de `|` en que devolverá FALSO si ambas comparaciones lógicas devuelven VERDADERO. El nombre _xor_ significa _exactamente o_.
+
+Estudie el siguiente diagrama para tener una idea de cómo funcionan estos operadores.
+
+```{r fig1, echo = FALSE, out.width = "100%", fig.cap = "En la figura anterior, `x` es el círculo de la izquierda, `y` es el círculo de la derecha, y la región sombreada muestra qué partes selecciona cada comando."}
+knitr::include_graphics("images/transform-logical.png")
+```
+
+### Prueba tus conocimientos
+
+```{r logicals, echo = FALSE}
+question(" ¿Qué devolverá el siguiente código?: `filter(vuelos, mes == 11 | mes == 12)`",
+         answer("Todos los vuelos que partieron en noviembre _o_ diciembre", correct = TRUE),
+         answer("Todos los vuelos que partieron en noviembre _y_ diciembre", message = "Técnicamente un vuelo no podría haver partido en noviembre _y_ diciembre a menos que partiera dos veces."),
+         answer("Todos los vuelos _excepto_ los que partieron en noviembre o diciembre"),
+         answer("Un error. Esta es una forma incorrecta de combinar pruebas.", message = "La siguiente sección dirá un poco más sobre la combinación de pruebas."),
+         allow_retry = TRUE
+)
+```
+
+### Errores habituales
+
+En R, el orden de las operaciones no funciona como en inglés. No puedes escribir `filter(vuelos, mes == 11 | 12)`, aunque podrías decir "busca todos los vuelos que salieron en noviembre o diciembre". Asegúrate de escribir una prueba _completa_ en cada lado de un operador booleano.
+
+Aquí hay cuatro consejos más para ayudarte a usar pruebas lógicas y operadores booleanos en R:
+
+###
+
+1. Una abreviatura útil para este problema es `x %in% y`. Esto seleccionará cada fila donde `x` es uno de los valores en `y`. Podríamos usarlo para reescribir el código en la pregunta anterior:
+
+    ```{r, eval = FALSE}
+    nov_dec <- filter(vuelos, mes %in% c(11, 12))
+    ```
+
+###
+
+2. A veces puedes simplificar subconjuntos complicados recordando la ley de _De Morgan_: `!(x & y)` es lo mismo que `!x | !y`, y `!(x | y)` es lo mismo que `!x & !y`. Por ejemplo, si deseas buscar vuelos que no se hayan retrasado (a la llegada o a la salida) más de dos horas, puede utilizar cualquiera de los dos filtros siguientes:
+
+    ```{r, eval = FALSE}
+    filter(vuelos, !(atraso_llegada > 120 | atraso_salida > 120))
+    filter(vuelos, atraso_llegada <= 120, atraso_salida <= 120)
+    ```
+
+###
+
+3. Además de `&` y `|`, R también tiene `&&` y `||`. ¡No los uses con `filter()`! Aprenderás más adelante cuándo debes usarlos.
+
+###
+
+4. Cada vez que comiences a usar expresiones complicadas con varias partes en `filter()`, considera convertirlas en variables explícitas en su lugar. Eso hace que sea mucho más fácil verificar tu trabajo. Aprenderás a crear nuevas variables en breve.
+
+## Valores faltantes
+
+### NA
+
+Los valores faltantes pueden dificultar las comparaciones en R. R usa `NA` (del inglés, _Non Available_) para representar valores faltantes o desconocidos. Los `NA` son "contagiosos" porque casi cualquier operación que involucre un valor desconocido (`NA`) también será desconocida (`NA`). Por ejemplo, ¿puedes determinar qué valor deben retornar estas expresiones que usan valores faltantes? Haz una predicción y luego haz clic en "Enviar respuesta".
+
+```{r nas, exercise = TRUE}
+NA > 5
+10 == NA
+NA + 10
+NA / 2
+NA == NA
+```
+
+```{r nas-check}
+"En todos los casos, R no tiene suficiente información para calcular un resultado. Por lo tanto, cada resultado es un valor desconocido, `NA`."
+```
+
+### is.na()
+
+El resultado más confuso de arriba es éste:
+
+```{r}
+NA == NA
+```
+
+Es más fácil entender por qué esto es cierto con un poco más de contexto:
+
+```{r}
+# Sea x la edad de María. No sabemos cuántos años tiene.
+x <- NA
+
+# Sea y la edad de Juan. No sabemos cuántos años tiene.
+y <- NA
+
+# ¿Juan y María tienen la misma edad?
+x == y
+# ¡No lo sabemos!
+```
+
+Si deseas saber si falta un valor, usa `is.na()`:
+
+```{r}
+is.na(x)
+```
+
+### filter() y NAs
+
+`filter()` solo incluye filas donde la condición es `VERDADERA`; excluye los valores `FALSO` y `NA`. Si deseas conservar los valores faltantes, solicítalos explícitamente:
+
+```{r}
+df <- tibble(x = c(1, NA, 3))
+filter(df, x > 1)
+filter(df, is.na(x) | x > 1)
+```
+
+## Ejercicios
+
+### Ejercicio 1
+
+Usa los fragmentos de código a continuación para encontrar todos los vuelos que
+
+1. Tuvieron un retraso de llegada de dos o más horas.
+
+    ```{r filterex1, exercise = TRUE}
+
+    ```
+    
+    ```{r filterex1-solution}
+    filter(vuelos, atraso_llegada >= 120) # atraso_llegada está en minutos
+    ```
+
+1. Volaron a Houston (`IAH` o `HOU`)
+
+    ```{r filterex2, exercise = TRUE}
+
+    ```
+    ```{r filterex2-solution}
+    filter(vuelos, destino %in% c("IAH", "HOU"))
+    ```
+
+    <div id="filterex2-hint">
+    **Pista:** Este es un buen caso para el operador `%in%`.
+    </div>
+
+1. Fueron operados por United (`UA`), American (`AA`) o Delta (`DL`)
+
+    ```{r filterex3, exercise = TRUE}
+
+    ```
+    ```{r filterex3-solution}
+    filter(vuelos, aerolinea %in% c("UA", "AA", "DL"))
+    ```
+
+    <div id="filterex3-hint">
+    **Pista:** La variable `aerolinea` muestra la aerolínea que operó cada vuelo. Este es otro buen caso para el operador `%in%`.
+    </div>
+
+1. Partieron en verano (julio, agosto, y septiembre)
+
+    ```{r filterex4, exercise = TRUE}
+
+    ```
+    ```{r filterex4-solution}
+    filter(vuelos, 6 < mes, mes < 10)
+    ```
+
+    <div id="filterex4-hint">
+    **Pista:** Cuando se convierten a números, julio, agosto y septiembre se convierten en 7, 8 y 9.
+    </div>
+
+1. Llegaron más de dos horas tarde, pero no se fueron tarde.
+
+    ```{r filterex5, exercise = TRUE}
+
+    ```
+    ```{r filterex5-solution}
+    filter(vuelos, atraso_llegada > 120, atraso_salida <= 0)
+    ```
+
+    <div id="filterex5-hint">
+    **Pista:** Recuerda que los retrasos de salida y llegada se registran en _minutos_.
+    </div>
+
+1. Se retrasaron más de una hora, pero recuperaron más de 30 minutos en vuelo
+
+    ```{r filterex6, exercise = TRUE}
+
+    ```
+    ```{r filterex6-solution}
+    filter(vuelos, atraso_salida > 60, (atraso_salida - atraso_llegada) > 30)
+    ```
+
+    <div id="filterex6-hint">
+    **Pista:** El tiempo que recupera un avión es `atraso_salida - atraso_llegada`.
+    </div>
+
+1. Salieron entre la medianoche y las 6 a.m. (incluidas)
+
+    ```{r filterex7, exercise = TRUE}
+
+    ```
+    ```{r filterex7-solution}
+    filter(vuelos, horario_salida <= 600 | horario_salida == 2400)
+    ```
+
+    <div id="filterex7-hint">
+    **Pista:** No olvides los vuelos que salían exactamente a la medianoche (`2400`). Este es un buen caso para un operador "o".
+    </div>
+
+### Ejercicio 2
+
+Otro ayudante útil para el filtrado de dplyr es `between()`. ¿Qué hace? ¿Puedes usar `entre()` para simplificar el código necesario para responder a los desafíos anteriores?
+
+```{r filterex8, exercise = TRUE}
+?between
+```
+
+### Exercise 3
+
+¿A cuántos vuelos les falta el `horario_salida`? ¿Qué otras variables faltan? ¿Qué podrían representar estas filas?
+
+```{r filterex9, exercise = TRUE}
+
+```
+```{r filterex9-solution}
+filter(vuelos, is.na(horario_salida))
+```
+
+<div id="filterex9-hint">
+**Pista:** Este es un buen caso para `is.na()`.
+</div>
+
+```{r filterex9-check}
+"los vuelos con una hora de salida faltante son probablemente vuelos cancelados."
+```
+
+### Ejercicio 4
+
+¿Por qué no falta `NA ^ 0`? ¿Por qué `NA | VERDADERO` no falta?
+¿Por qué no falta `FALSE & NA`? ¿Puedes averiguar la regla general?
+(`NA * 0` es un contraejemplo engañoso!)
+
+```{r filterex10, exercise = TRUE}
+
+```
+```{r filterex10-hint-1}
+# cualquier numero con exponente cero es igual a uno
+NA ^ 0
+```
+
+```{r filterex10-hint-2}
+# valor desconocido o verdadero se evalúa como verdadero
+# (porque si un operando de "o" es verdadero, podemos estar seguros de que el resultado es verdadero)
+NA | TRUE
+```
+
+```{r filterex10-hint-3}
+# valor falso y desconocido se evalúa como falso
+# (porque si un operando de "y" es verdadero, podemos estar seguros de que el resultado es falso)
+FALSE & NA
+```
+
+```{r filterex10-hint-4}
+# esta no es una comparación lógica, es un cálculo numérico que implica un
+# valor desconocido, lo que resulta en un valor desconocido
+NA * 0
+```
