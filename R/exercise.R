@@ -9,6 +9,14 @@ cache_complete_exercise <- function(exercise) {
   exercise
 }
 
+get_opt_quick_restore <- function() {
+  env <- Sys.getenv("TUTORIAL_QUICK_RESTORE", NA)
+  if (!is.na(env)) return(env)
+
+  opt <- getOption("tutorial.quick_restore", NA)
+  if (!is.na(opt)) as.character(opt) else "0"
+}
+
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
 
@@ -36,6 +44,12 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
+      if (identical(get_opt_quick_restore(), "1"))) {
+        # quick_restore: don't evaluate at all if super fast restore is enabled
+        rv$result <- list()
+        return()
+      }
+
       object <- get_exercise_submission(session = session, label = exercise$label)
       if (!is.null(object) && !is.null(object$data$output)) {
         # restore user state, but don't report correct
@@ -60,13 +74,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
         return()
       }
 
-      if (
-        getOption(
-          "tutorial.quick_restore",
-          identical(Sys.getenv("TUTORIAL_QUICK_RESTORE", "0"), "1")
-        )
-      ) {
-        # don't evaluate if quick_restore is enabled
+      if (identical(get_opt_quick_restore(), "2")) {
+        # quick_restore: previous evaluated output wasn't stored, don't eval now
         rv$result <- list()
         return()
       }
