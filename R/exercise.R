@@ -14,6 +14,8 @@ get_opt_quick_restore <- function() {
   if (!is.na(env)) return(env)
 
   opt <- getOption("tutorial.quick_restore", NA)
+  if (isTRUE(opt)) return("1")
+  if (isFALSE(opt)) return("0")
   if (!is.na(opt)) as.character(opt) else "0"
 }
 
