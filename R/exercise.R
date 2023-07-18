@@ -46,7 +46,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
     # short circuit for restore (we restore some outputs like errors so that
     # they are not re-executed when bringing the tutorial back up)
     if (exercise$restore) {
-      if (identical(get_opt_quick_restore(), "1"))) {
+      if (identical(get_opt_quick_restore(), "1")) {
         # quick_restore: don't evaluate at all if super fast restore is enabled
         rv$result <- list()
         return()
