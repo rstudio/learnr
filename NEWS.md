@@ -1,6 +1,6 @@
 # learnr (development version)
 
--   Added an option to customise the "continue" button text in sub-topics. You can now add 'data-continue-text' as a property to a sub-topic to replace the "continue" text just for that topic. E.g.: `### Subtopic Title {data-continue-text="Show Solution"}`.
+-   You can now customize the "continue" button text in sub-topics by adding 'data-continue-text' with your custom label as a property of the section heading — e.g. `### Subtopic Title {data-continue-text="Show Solution"}` (@dave-mills #777).
 
 # learnr 0.11.4
 
