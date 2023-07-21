@@ -1,10 +1,13 @@
 # learnr (development version)
 
+-   You can now customize the "continue" button text in sub-topics by adding 'data-continue-text' with your custom label as a property of the section heading — e.g. `### Subtopic Title {data-continue-text="Show Solution"}` (@dave-mills #777).
+
 # learnr 0.11.4
 
 -   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
 
 -   The default `try_again` message for checkbox questions now prompts the student to "select every correct answer" regardless of whether the question was created by `question()` or `question_checkbox()` (#783).
+
 
 # learnr 0.11.3
 

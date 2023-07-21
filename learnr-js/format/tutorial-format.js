@@ -311,13 +311,23 @@ $(document).ready(function () {
       const sectionsDOM = $(topicElement).children('.section.level3')
       sectionsDOM.each(function (sectionIndex, sectionElement) {
         if (topic.progressiveReveal) {
+          let sectionButtonI18n = 'data-i18n="button.continue"'
+          let sectionButtonText = 'Continue'
+
+          if (sectionElement.dataset.continueText) {
+            // if custom text is specified, set button text
+            sectionButtonText = sectionElement.dataset.continueText
+            // and remove i18n (otherwise translation overwrites custom text)
+            sectionButtonI18n = ''
+          }
+
           const continueButton = $(
-            '<button class="btn btn-default skip" id="' +
-              'continuebutton-' +
-              sectionElement.id +
-              '" data-section-id="' +
-              sectionElement.id +
-              '" data-i18n="button.continue">Continue</button>'
+            `<button
+              class="btn btn-default skip"
+              id="continuebutton-${sectionElement.id}"
+              data-section-id="${sectionElement.id}"
+              ${sectionButtonI18n}
+            >${sectionButtonText}</button>`
           )
           continueButton.data('n_clicks', 0)
           continueButton.on('click', handleSkipClick)
