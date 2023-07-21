@@ -1,7 +1,7 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.11.3.9000
+Version: 0.11.4.9000
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
@@ -34,7 +34,6 @@ URL: https://rstudio.github.io/learnr/, https://github.com/rstudio/learnr
 BugReports: https://github.com/rstudio/learnr/issues
 Imports:
     checkmate,
-    curl,
     digest,
     ellipsis (>= 0.2.0.1),
     evaluate,
@@ -58,6 +57,7 @@ Imports:
 Suggests:
     bslib,
     callr,
+    curl,
     DBI (>= 0.4-1),
     httpuv,
     later,

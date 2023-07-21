@@ -59,14 +59,16 @@
 #'   even though multiple correct answers are specified that inputs which
 #'   include only one correct answer are still correct. Pass `"checkbox"` to
 #'   force the use of checkboxes (as opposed to radio buttons) even though only
-#'   once correct answer was provided.
+#'   one correct answer was provided.
 #' @param correct For `question`, text to print for a correct answer (defaults
 #'   to "Correct!"). For `answer`, a boolean indicating whether this answer is
 #'   correct.
 #' @param incorrect Text to print for an incorrect answer (defaults to
 #'   "Incorrect") when `allow_retry` is `FALSE`.
-#' @param try_again Text to print for an incorrect answer (defaults to
-#'   "Incorrect") when `allow_retry` is `TRUE`.
+#' @param try_again Text to print for an incorrect answer when `allow_retry`
+#'   is `TRUE`.
+#'   Defaults to "Incorrect. Be sure to select every correct answer." for
+#'   checkbox questions and "Incorrect" for non-checkbox questions.
 #' @param message Additional message to display along with correct/incorrect
 #'   feedback. This message is always displayed after a question submission.
 #' @param post_message Additional message to display along with
@@ -135,7 +137,7 @@ question <- function(
     type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
     correct = "Correct!",
     incorrect = "Incorrect",
-    try_again = incorrect,
+    try_again = NULL,
     message = NULL,
     post_message = NULL,
     loading = NULL,
@@ -184,6 +186,13 @@ question <- function(
       # allows for s3 methods
       type
     )
+  }
+  if (is.null(try_again)) {
+    try_again <- if (identical(type, "learnr_checkbox")) {
+      "Incorrect. Be sure to select every correct answer."
+    } else {
+      incorrect
+    }
   }
 
   # ensure we have at least one correct answer, if required

@@ -35,6 +35,37 @@ test_that("question_checkbox() does not include correct messages for incorrect a
   expect_marked_as(question_is_correct(q, "F"), correct = FALSE)
 })
 
+test_that("question_checkbox() message depends on whether allow_retry = TRUE", {
+
+  incorrect_message <- "incorrect"
+  try_again_message <- "try_again"
+
+  q <- question_checkbox(
+    "test",
+    answer("A", correct = TRUE),
+    answer("B", correct = TRUE),
+    answer("C", correct = FALSE),
+    incorrect = incorrect_message,
+    try_again = try_again_message
+  )
+
+  out_no_retry <- question_messages(
+    question = q,
+    messages = NULL,
+    is_correct = FALSE,
+    is_done = TRUE
+  )
+  expect_equal(as.character(out_no_retry[[1]]$children[[1]]), incorrect_message)
+
+  out_retry <- question_messages(
+    question = q,
+    messages = NULL,
+    is_correct = FALSE,
+    is_done = FALSE
+  )
+  expect_equal(as.character(out_retry[[1]]$children[[1]]), try_again_message)
+})
+
 test_that("question_checkbox() evaluates function answers first", {
   q <- question_checkbox(
     "test",

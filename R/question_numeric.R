@@ -27,6 +27,8 @@
 #'   step = 1
 #' )
 #'
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
 #' @param tolerance Submitted values within an absolute difference less than or
 #'   equal to `tolerance` will be considered equal to the answer value. Note
 #'   that this tolerance is for all [answer()] values. For more specific answer

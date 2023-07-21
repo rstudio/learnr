@@ -2,6 +2,13 @@
 
 -   Added an option to customise the "continue" button text in sub-topics. You can now add 'data-continue-text' as a property to a sub-topic to replace the "continue" text just for that topic. E.g.: `### Subtopic Title {data-continue-text="Show Solution"}`.
 
+# learnr 0.11.4
+
+-   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
+
+-   The default `try_again` message for checkbox questions now prompts the student to "select every correct answer" regardless of whether the question was created by `question()` or `question_checkbox()` (#783).
+
+
 # learnr 0.11.3
 
 -   Fixed an issue that prevented authors from using symbols, such as `T` or a variable, as the value of the `exercise` chunk option, which caused tutorials with chunks with `exercise = T` to fail to render (thanks @cknotz #757, #758).
