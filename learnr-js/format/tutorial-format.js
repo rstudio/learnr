@@ -311,34 +311,29 @@ $(document).ready(function () {
       const sectionsDOM = $(topicElement).children('.section.level3')
       sectionsDOM.each(function (sectionIndex, sectionElement) {
         if (topic.progressiveReveal) {
-          const sectionButtonText =
-            $(sectionElement).attr("data-continue-text");
+          let sectionButtonI18n = 'data-i18n="button.continue"'
+          let sectionButtonText = 'Continue'
 
-          // if custom text is specified, remove i18n key
-          // otherwise the default translation will overwrite the custom text
-          let sectionButtoni18n = 'data-i18n="button.continue"';
-          if (sectionButtonText) {
-            sectionButtoni18n = "";
-          } else {
-            sectionButtonText = 'Continue'
+          if (sectionElement.dataset.continueText) {
+            // if custom text is specified, set button text
+            sectionButtonText = sectionElement.dataset.continueText
+            // and remove i18n (otherwise translation overwrites custom text)
+            sectionButtonI18n = ''
           }
 
           const continueButton = $(
-            '<button class="btn btn-default skip" id="' +
-              "continuebutton-" +
-              sectionElement.id +
-              '" data-section-id="' +
-              sectionElement.id +
-              sectionButtoni18n +
-              ">" +
-              sectionButtonText +
-              "</button>"
-          );
-          continueButton.data("n_clicks", 0);
-          continueButton.on("click", handleSkipClick);
-          const actions = $('<div class="exerciseActions"></div>');
-          actions.append(continueButton);
-          $(sectionElement).append(actions);
+            `<button
+              class="btn btn-default skip"
+              id="continuebutton-${sectionElement.id}"
+              data-section-id="${sectionElement.id}"
+              ${sectionButtonI18n}
+            >${sectionButtonText}</button>`
+          )
+          continueButton.data('n_clicks', 0)
+          continueButton.on('click', handleSkipClick)
+          const actions = $('<div class="exerciseActions"></div>')
+          actions.append(continueButton)
+          $(sectionElement).append(actions)
         }
 
         $(sectionElement).on('shown', function () {
