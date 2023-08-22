@@ -2,6 +2,8 @@
 
 -   You can now customize the "continue" button text in sub-topics by adding 'data-continue-text' with your custom label as a property of the section heading — e.g. `### Subtopic Title {data-continue-text="Show Solution"}` (@dave-mills #777).
 
+-   learnr tutorials now work when Quarto comment-style chunk options are used to set the chunk `label` (thanks @jimjam-slam, #795).
+
 # learnr 0.11.4
 
 -   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
