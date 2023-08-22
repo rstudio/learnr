@@ -210,7 +210,7 @@ copied into the output directory). You can pass an alternate URL or pass
 <dt>css</dt>
 <dd><p>CSS and/or Sass files to include. Files with an extension of .sass
 or .scss are compiled to CSS via <code><a href="https://rstudio.github.io/sass/reference/sass.html" class="external-link">sass::sass()</a></code>. Also, if <code>theme</code> is a
-<code><a href="https://rstudio.github.io/bslib/reference/bs_theme.html" class="external-link">bslib::bs_theme()</a></code> object, Sass code may reference the relevant Bootstrap
+<code><a href="https://rdrr.io/pkg/bslib/man/bs_theme.html" class="external-link">bslib::bs_theme()</a></code> object, Sass code may reference the relevant Bootstrap
 Sass variables, functions, mixins, etc.</p></dd>
 
 
@@ -387,14 +387,15 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed9155eab0&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed961878a0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6eaef2f48&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e93c63b0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_hooks</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_hooks$tutorial</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (options) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     options$label &lt;- unname(options$label)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_chunk &lt;- is_exercise_chunk(options)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_support_chunk &lt;- is_exercise_support_chunk(options)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     exercise_setup_chunk &lt;- is_exercise_support_chunk(options, </span>
@@ -466,8 +467,8 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     options</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed9154c128&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed961878a0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6eaee7ed0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e93c63b0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $knitr$opts_template</span>
@@ -537,24 +538,24 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8eb4ad08&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed96267160&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ef152b60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e91cb330&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $post_knit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (...) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8eb4ad08&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed96266a60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ef152b60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e91c7c00&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pre_processor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (...) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     op(base(...), overlay(...))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8eb4ad08&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed9626a190&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ef152b60&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e91c8338&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $intermediates_generator</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (original_input, intermediates_dir) </span>
@@ -562,8 +563,8 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span>     copy_render_intermediates(original_input, intermediates_dir, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         !self_contained)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8ed1fc58&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed961d4df8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ed1722d0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e92a2450&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $post_processor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (metadata, input_file, output_file, ...) </span>
@@ -575,8 +576,11 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span>         base(metadata, input_file, original_output_file, ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     base(metadata, input_file, output_file, ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8eb42528&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed962692e8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ef1532a8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e91c9250&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $file_scope</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $on_exit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function () </span>
@@ -586,8 +590,8 @@ bootstrap, etc.) into. By default this will be the name of the document with
 <span class="r-out co"><span class="r-pr">#&gt;</span>     if (is.function(overlay)) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         overlay()</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55ed8eb40758&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55ed9627ff38&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x55e6ecbd1f50&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55e6e91831c0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "rmarkdown_output_format"</span>
