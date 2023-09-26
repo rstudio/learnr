@@ -205,6 +205,7 @@ test_that("i18n_span() returns an i18n span", {
 
 test_that("i18n_set_language_option() changes message language", {
   skip_if_not_pandoc("1.14")
+  skip_if_not(isTRUE(i18n_try_setenv_language("es")))
 
   withr::defer(i18n_set_language_option("en"))
 
@@ -234,6 +235,7 @@ test_that("i18n_set_language_option() changes message language", {
 
 test_that("i18n_set_language_option() sets up language inheritance", {
   skip_if_not_pandoc("1.14")
+  skip_if_not(isTRUE(i18n_try_setenv_language("es")))
 
   withr::defer(i18n_set_language_option("en"))
 
@@ -252,6 +254,8 @@ test_that("i18n_set_language_option() sets up language inheritance", {
   ex$tutorial$language <- "pt"
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$error_message, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+
+  i18n_set_language_option("en")
 
   ex <- mock_exercise(
     user_code = "mean$x",
