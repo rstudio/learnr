@@ -1,14 +1,18 @@
 # learnr 0.11.5
 
+## New Features
+
 -   You can now customize the "continue" button text in sub-topics by adding 'data-continue-text' with your custom label as a property of the section heading — e.g. `### Subtopic Title {data-continue-text="Show Solution"}` (@dave-mills #777).
+
+-   A new `exercise.pipe` tutorial or exercise chunk option can now be used to determine which pipe operator is used for interactive exercises. The default is `"|>"` (the native R pipe) when the tutorial is rendered with R >= 4.1.0, or `"%>%"` otherwise (the magrittr pipe). You can set the pipe used for the tutorial using `tutorial_options()`, or you can use `exercise.pipe` as a knitr chunk option on an individual exercise chunk. (#804)
+
+## Bug fixes and improvements
 
 -   learnr tutorials now work when Quarto comment-style chunk options are used to set the chunk `label` (thanks @jimjam-slam, #795).
 
--   When the `LC_ALL` environment variable is `"C"` or `"C.UTF-8"`, R may ignore the `LANGUAGE` environment variable, which means that learnr may not be able to control the language of R's messages. learnr's tests no longer test R message translations in these cases. If you are deploying a tutorial written in a language other than English, you should ensure that the `LC_ALL` environment variable is not set to `"C"` or `"C.UTF-8"` and you may need to set the `LANGUAGE` variable via an `.Renviron` file rather than relying on learnr (#801).
-
 -   Added a new quick restore option that restores both the last submitted exercise code and the output of that submission, if the output is available to be restored. This option is enabled by setting the global option `tutorial.quick_restore = 2` or the environment variable `TUTORIAL_QUICK_RESTORE=2`. This option augments the quick restore value when `TRUE` or `1`, wherein only the last submitted **code** is restored, such that users will need to click the "Submit" button to evaluate and see the output. (#794)
 
--   A new `exercise.pipe` tutorial or exercise chunk option can now be used to determine which pipe operator is used for interactive exercises. The default is `"|>"` (the native R pipe) when the tutorial is rendered with R >= 4.1.0, or `"%>%"` otherwise (the magrittr pipe). You can set the pipe used for the tutorial using `tutorial_options()`, or you can use `exercise.pipe` as a knitr chunk option on an individual exercise chunk. (#804)
+-   When the `LC_ALL` environment variable is `"C"` or `"C.UTF-8"`, R may ignore the `LANGUAGE` environment variable, which means that learnr may not be able to control the language of R's messages. learnr's tests no longer test R message translations in these cases. If you are deploying a tutorial written in a language other than English, you should ensure that the `LC_ALL` environment variable is not set to `"C"` or `"C.UTF-8"` and you may need to set the `LANGUAGE` variable via an `.Renviron` file rather than relying on learnr (#801).
 
 # learnr 0.11.4
 
