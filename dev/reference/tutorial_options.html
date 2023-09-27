@@ -95,6 +95,7 @@ exercises.</p>
 <span>  exercise.eval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  exercise.timelimit <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  exercise.lines <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  exercise.pipe <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exercise.blanks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exercise.checker <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exercise.error.check.code <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -124,6 +125,15 @@ see some default output (defaults to <code>FALSE</code>).</p></dd>
 <dt>exercise.lines</dt>
 <dd><p>Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).</p></dd>
+
+
+<dt>exercise.pipe</dt>
+<dd><p>The characters to enter when the user presses the
+"Insert Pipe" keyboard shortcut in the exercise editor
+(<code>Ctrl/Cmd + Shift + M</code>). This can be set at the tutorial level or for an
+individual exercise. If <code>NULL</code> (default), the base R pipe (<code>|&gt;</code>) is used
+when the tutorial is rendered in R &gt;= 4.1.0, otherwise the <span class="pkg">magrittr</span>
+pipe (<code>%&gt;%</code>) is used.</p></dd>
 
 
 <dt>exercise.blanks</dt>

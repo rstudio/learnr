@@ -163,44 +163,50 @@ default output (defaults to <code>FALSE</code>).</td>
 chunk).</td>
 </tr>
 <tr class="even">
+<td><code>exercise.pipe</code></td>
+<td>The code to insert when the user presses
+<code>Ctrl/Cmd + Shift + M</code> (defaults to <code>|&gt;</code> for R
+&gt;= 4.1.0, otherwise <code>%&gt;%</code>).</td>
+</tr>
+<tr class="odd">
 <td><code>exercise.timelimit</code></td>
 <td>Number of seconds to limit execution time to (defaults to 30).</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.checker</code></td>
 <td>Function used to check exercise answers (e.g.,
 <code>gradethis::grade_learnr()</code>).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.blanks</code></td>
 <td>Regular expression to find blanks requiring replacement in the
 exercise code. See <a href="#checking-blanks">Checking Blanks</a>
 below.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.error.check.code</code></td>
 <td>A string containing R code to use for checking code when an exercise
 evaluation error occurs (e.g.,
 <code>"gradethis::grade_code()"</code>).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.completion</code></td>
 <td>Whether to enable code completion in the exercise editor.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.diagnostics</code></td>
 <td>Whether to enable code diagnostics in the exercise editor.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.startover</code></td>
 <td>Whether to include a “Start Over” button for the exercise.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.warn_invisible</code></td>
 <td>Whether to display an invisible result warning if the last value
 returned is invisible.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.reveal_solution</code></td>
 <td>Whether or not the solution should be revealed to the user (defaults
 to `TRUE`). See <a href="#hiding-solutions">Hiding Solutions</a>
