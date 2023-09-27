@@ -245,6 +245,8 @@ tutorial_knitr_options <- function() {
 
   # hook to turn off evaluation/highlighting for exercise related chunks
   tutorial_opts_hook <-  function(options) {
+    # ensure label is an unnamed string (yihui/knitr#2280)
+    options$label <- unname(options$label)
 
     # check for chunk type
     exercise_chunk <- is_exercise_chunk(options)
