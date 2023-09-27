@@ -16,6 +16,12 @@
 #'   (defaults to \code{30}).
 #' @param exercise.lines Lines of code for exercise editor (defaults to the
 #'   number of lines in the code chunk).
+#' @param exercise.pipe The characters to enter when the user presses the
+#'   "Insert Pipe" keyboard shortcut in the exercise editor
+#'   (`Ctrl/Cmd + Shift + M`). This can be set at the tutorial level or for an
+#'   individual exercise. If `NULL` (default), the base R pipe (`|>`) is used
+#'   when the tutorial is rendered in R >= 4.1.0, otherwise the \pkg{magrittr}
+#'   pipe (`%>%`) is used.
 #' @param exercise.blanks A regular expression to be used to identify blanks in
 #'   submitted code that the user should fill in. If `TRUE` (default), blanks
 #'   are three or more underscores in a row. If `FALSE`, blank checking is not
@@ -37,6 +43,7 @@ tutorial_options <- function(exercise.cap = NULL,
                              exercise.eval = FALSE,
                              exercise.timelimit = 30,
                              exercise.lines = NULL,
+                             exercise.pipe = NULL,
                              exercise.blanks = NULL,
                              exercise.checker = NULL,
                              exercise.error.check.code = NULL,
@@ -53,6 +60,7 @@ tutorial_options <- function(exercise.cap = NULL,
   eval(parse(text = sprintf(set_option_code, "exercise.eval")))
   eval(parse(text = sprintf(set_option_code, "exercise.timelimit")))
   eval(parse(text = sprintf(set_option_code, "exercise.lines")))
+  eval(parse(text = sprintf(set_option_code, "exercise.pipe")))
   eval(parse(text = sprintf(set_option_code, "exercise.blanks")))
   eval(parse(text = sprintf(set_option_code, "exercise.checker")))
   eval(parse(text = sprintf(set_option_code, "exercise.error.check.code")))

@@ -1,0 +1,56 @@
+---
+title: "Exercise Pipe Option"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Ceci n'est pas une pipe
+
+Qu'est-ce qu'une pipe, sinon l'idée d'une pipe?
+
+You can set the characters used for the pipe shortcut at the tutorial level with
+
+```r
+knitr::opts_chunk$set(exercise.pipe = "%>%")
+```
+
+Or you can set the pipe option at the individual level using the `exercise.pipe` chunk option.
+
+````{verbatim echo = TRUE}
+```{r base-pipe, exercise=TRUE, exercise.pipe="|>"}
+mtcars count(cyl)
+```
+````
+
+By default, if not set otherwise set, learnr will use the base R pipe (`|>`) when the tutorial is rendered in R >= 4.1.0.
+
+### Old school
+
+In this next chunk, pressing `Ctrl/Cmd + Shift + M` enters the magrittr pipe: `%>%`.
+
+```{r magrittr, exercise=TRUE, exercise.pipe="%>%"}
+mtcars count(cyl)
+```
+
+### New school
+
+In this next chunk, pressing `Ctrl/Cmd + Shift + M` enters the base R pipe: `|>`.
+
+```{r pipe, exercise=TRUE, exercise.pipe="|>"}
+mtcars count(cyl)
+```
+
+### Night school
+
+In this next chunk, pressing `Ctrl/Cmd + Shift + M` enters the pipe that matches your R version. It's the base R pipe for R >= 4.1.
+
+```{r auto, exercise=TRUE}
+mtcars count(cyl)
+```
