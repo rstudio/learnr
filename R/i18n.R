@@ -184,78 +184,49 @@ i18n_set_language_option <- function(language = NULL) {
 
 i18n_setenv_language <- function(lang) {
   lang <- i18n_determine_base_r_language(lang)
-  could_set_language <- i18n_try_setenv_language(lang)
-
-  if (identical(could_set_language, FALSE)) {
-    rlang::warn(c(
-      "This version of R does not support changing the current language. Messages from R will not be translated.",
-      "i" = sprintf("The requested language was %s", lang),
-      "i" = sprintf("The current language is %s", Sys.getenv("LANGUAGE", unset = "en"))
-    ))
-  }
-}
-
-i18n_try_setenv_language <- function(lang) {
-  lang <- i18n_determine_base_r_language(lang)
 
   old_lang <- Sys.getenv("LANGUAGE", unset = "en")
-
-  if (identical(lang, i18n_determine_base_r_language(old_lang))) {
-    return(NA)
-  }
-
-  i18n_invalidate_language_cache()
   old_text <- gettext("subscript out of bounds", domain = "R")
+
   Sys.setenv("LANGUAGE" = lang)
 
   new_lang <- Sys.getenv("LANGUAGE", unset = "en")
-  i18n_invalidate_language_cache()
   new_text <- gettext("subscript out of bounds", domain = "R")
 
-  !identical(old_text, new_text)
-}
-
-i18n_invalidate_language_cache <- function() {
-  # On Linux, message translations are cached
-  # Messages from the old language may be shown in the new language
-  # If this happens, invalidate the cache so new messages have to generate
-  base_dir <- bindtextdomain("R-base")
-  bindtextdomain("R-base", tempfile())
-  bindtextdomain("R-base", base_dir)
+  if (!identical(old_lang, new_lang) && identical(old_text, new_text)) {
+    # On Linux, message translations are cached
+    # Messages from the old language may be shown in the new language
+    # If this happens, invalidate the cache so new messages have to generate
+    base_dir <- bindtextdomain("R-base")
+    bindtextdomain("R-base", tempfile())
+    bindtextdomain("R-base", base_dir)
+  }
 }
 
 i18n_determine_base_r_language <- function(lang) {
-  if (inherits(lang, "learnr_i18n_lang")) {
-    return(lang)
-  }
-
   lang <- gsub("-", "_", lang)
 
   # Find available translations of base R
   base_langs <- dir(bindtextdomain("R"))
   base_langs <- base_langs[grepl("^[a-z]{2,3}(_[A-Z]{2})?$", base_langs)]
 
-  as_learnr_lang <- function(lang) {
-    structure(lang, class = "learnr_i18n_lang")
-  }
-
   # If `lang` is a base R translation, return `lang`
   if (!length(base_langs) || lang %in% base_langs) {
-    return(as_learnr_lang(lang))
+    return(lang)
   }
 
   lang_code <- substr(lang, 1, 2)
 
   # If `lang` is a variant of English, base R does not need to be translated
   if (lang_code == "en") {
-    return(as_learnr_lang(lang))
+    return(lang)
   }
 
   # Special case for Hong Kong and Macao, which should inherit Traditional
   # Chinese (zh_TW) before Simplified Chinese (zh_CN)
   if (lang %in% c("zh_HK", "zh_MO")) {
     zh_langs <- intersect(c("zh_TW", "zh_CN"), base_langs)
-    return(as_learnr_lang(paste0(c(lang, zh_langs), collapse = ":")))
+    return(paste0(c(lang, zh_langs), collapse = ":"))
   }
 
   # If `lang` is a variant of a language with a base R translation,
@@ -268,7 +239,7 @@ i18n_determine_base_r_language <- function(lang) {
     lang <- c(lang, base_lang_variants)
   }
 
-  as_learnr_lang(paste(lang, collapse = ":"))
+  paste(lang, collapse = ":")
 }
 
 i18n_get_language_option <- function() {
