@@ -9,6 +9,7 @@ tutorial_options(
   exercise.eval = FALSE,
   exercise.timelimit = 30,
   exercise.lines = NULL,
+  exercise.pipe = NULL,
   exercise.blanks = NULL,
   exercise.checker = NULL,
   exercise.error.check.code = NULL,
@@ -29,6 +30,13 @@ see some default output (defaults to \code{FALSE}).}
 
 \item{exercise.lines}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
+
+\item{exercise.pipe}{The characters to enter when the user presses the
+"Insert Pipe" keyboard shortcut in the exercise editor
+(\code{Ctrl/Cmd + Shift + M}). This can be set at the tutorial level or for an
+individual exercise. If \code{NULL} (default), the base R pipe (\verb{|>}) is used
+when the tutorial is rendered in R >= 4.1.0, otherwise the \pkg{magrittr}
+pipe (\verb{\%>\%}) is used.}
 
 \item{exercise.blanks}{A regular expression to be used to identify blanks in
 submitted code that the user should fill in. If \code{TRUE} (default), blanks
