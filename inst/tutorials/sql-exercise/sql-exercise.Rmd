@@ -12,7 +12,9 @@ description: >
 
 ```{r setup, include=FALSE}
 library(learnr)
-# requires gradethis (>= 0.2.6.9000)
+if (!rlang::is_installed("gradethis", version = "0.2.6.9000")) {
+  stop("Please install `gradethis` from GitHub (rstudio/gradethis) for this example.")
+}
 library(gradethis)
 
 # Create an ephemeral in-memory RSQLite database
@@ -95,19 +97,19 @@ grade_this({
   .solution <- DBI::dbGetQuery(db_con, .solution_code)
 
   cols_expected <- c("name", "mpg", "cyl")
-  
+
   for (column in cols_expected) {
     if (!column %in% names(.result)) {
       fail("Did you forget to include `{column}`?")
     }
   }
-  
+
   extra_cols <- setdiff(names(.result), cols_expected)
   if (length(extra_cols)) {
     extra_cols <- knitr::combine_words(extra_cols, and = " or ", before = "`")
     fail("You don't need the columns {extra_cols}.")
   }
-  
+
   pass_if_equal(x = .result[cols_expected])
   fail()
 })
@@ -134,19 +136,19 @@ grade_this({
   .solution <- DBI::dbGetQuery(db_con, .solution_code)
 
   cols_expected <- c("name", "mpg", "cyl")
-  
+
   for (column in cols_expected) {
     if (!column %in% names(.result)) {
       fail("Did you forget to include `{column}`?")
     }
   }
-  
+
   extra_cols <- setdiff(names(.result), cols_expected)
   if (length(extra_cols)) {
     extra_cols <- knitr::combine_words(extra_cols, and = " or ", before = "`")
     fail("You don't need the columns {extra_cols}.")
   }
-  
+
   pass_if_equal(x = .result[cols_expected])
   fail()
 })

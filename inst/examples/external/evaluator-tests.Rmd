@@ -6,6 +6,10 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+if (!rlang::is_installed("gradethis")) {
+  stop("Please install `gradethis` from GitHub (rstudio/gradethis) for this example.")
+}
+
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(exercise.checker = function(...){
   library(gradethis)
@@ -158,7 +162,7 @@ Enter the number 4, then click "Submit Answer" (**not Run Code**)
 3
 #4
 ```
- 
+
 ```{r excheck-check}
 gradethis::grade_result(
   gradethis::fail_if(~ identical(.result, 1), "Custom message for value 1."),
@@ -182,7 +186,7 @@ The following should work just as the previous example did. Click "Submit Answer
 3
 #4
 ```
- 
+
 ```{r excheck2-check}
 grade_result(
   fail_if(~ identical(.result, 1), "Custom message for value 1."),
