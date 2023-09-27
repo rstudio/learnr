@@ -4,6 +4,8 @@
 
 -   learnr tutorials now work when Quarto comment-style chunk options are used to set the chunk `label` (thanks @jimjam-slam, #795).
 
+-   When the `LC_ALL` environment variable is `"C"` or `"C.UTF-8"`, R may ignore the `LANGUAGE` environment variable, which means that learnr may not be able to control the language of R's messages. learnr's tests no longer test R message translations in these cases. If you are deploying a tutorial written in a language other than English, you should ensure that the `LC_ALL` environment variable is not set to `"C"` or `"C.UTF-8"` and you may need to set the `LANGUAGE` variable via an `.Renviron` file rather than relying on learnr (#801).
+
 # learnr 0.11.4
 
 -   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
