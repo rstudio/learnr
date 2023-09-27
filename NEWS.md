@@ -8,6 +8,8 @@
 
 -   Added a new quick restore option that restores both the last submitted exercise code and the output of that submission, if the output is available to be restored. This option is enabled by setting the global option `tutorial.quick_restore = 2` or the environment variable `TUTORIAL_QUICK_RESTORE=2`. This option augments the quick restore value when `TRUE` or `1`, wherein only the last submitted **code** is restored, such that users will need to click the "Submit" button to evaluate and see the output. (#794)
 
+-   A new `exercise.pipe` tutorial or exercise chunk option can now be used to determine which pipe operator is used for interactive exercises. The default is `"|>"` (the native R pipe) when the tutorial is rendered with R >= 4.1.0, or `"%>%"` otherwise (the magrittr pipe). You can set the pipe used for the tutorial using `tutorial_options()`, or you can use `exercise.pipe` as a knitr chunk option on an individual exercise chunk. (#804)
+
 # learnr 0.11.4
 
 -   Moved curl from Imports to Suggests. curl is only required when using an external evaluator (#776).
