@@ -1,7 +1,7 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.11.4.9000
+Version: 0.11.5
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
