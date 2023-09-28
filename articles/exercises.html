@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.6/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.6/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -47,7 +47,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">learnr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.11.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.11.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,44 +162,50 @@ default output (defaults to <code>FALSE</code>).</td>
 chunk).</td>
 </tr>
 <tr class="even">
+<td><code>exercise.pipe</code></td>
+<td>The code to insert when the user presses
+<code>Ctrl/Cmd + Shift + M</code> (defaults to <code>|&gt;</code> for R
+&gt;= 4.1.0, otherwise <code>%&gt;%</code>).</td>
+</tr>
+<tr class="odd">
 <td><code>exercise.timelimit</code></td>
 <td>Number of seconds to limit execution time to (defaults to 30).</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.checker</code></td>
 <td>Function used to check exercise answers (e.g.,
 <code>gradethis::grade_learnr()</code>).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.blanks</code></td>
 <td>Regular expression to find blanks requiring replacement in the
 exercise code. See <a href="#checking-blanks">Checking Blanks</a>
 below.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.error.check.code</code></td>
 <td>A string containing R code to use for checking code when an exercise
 evaluation error occurs (e.g.,
 <code>"gradethis::grade_code()"</code>).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.completion</code></td>
 <td>Whether to enable code completion in the exercise editor.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.diagnostics</code></td>
 <td>Whether to enable code diagnostics in the exercise editor.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.startover</code></td>
 <td>Whether to include a “Start Over” button for the exercise.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>exercise.warn_invisible</code></td>
 <td>Whether to display an invisible result warning if the last value
 returned is invisible.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>exercise.reveal_solution</code></td>
 <td>Whether or not the solution should be revealed to the user (defaults
 to `TRUE`). See <a href="#hiding-solutions">Hiding Solutions</a>
