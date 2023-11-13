@@ -74,10 +74,15 @@ Currently, `r length(learnr_langs)` language translations are supported:
 ```{r echo=FALSE, results="asis"}
 for (lng in learnr_langs) {
   lng_name <- if (lng %in% names(languages)) paste(" for", languages[lng])
-  if (lng == "en") paste(lng_name, "(default)")
+  if (lng == "en") 
+    lng_name <- paste(lng_name, "(default)")
+  if (lng == "zh")
+    lng_name <- " for Chinese"
   cat("\n- `", lng, "`", lng_name, sep = "")
 }
 ```
+
+Note that `"no"` needs to be quoted because it is a reserved word in YAML.
 
 ## Customizable UI elements:
 

@@ -1,5 +1,7 @@
 # learnr (development version)
 
+-   Added Norwegian translation contributed by @jonovik. (#806)
+
 # learnr 0.11.5
 
 ## New Features

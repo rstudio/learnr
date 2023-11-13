@@ -1,5 +1,9 @@
 #### NOTE: This file is the original data for {learnr} by data-raw/i18n_translations.R ####
 
+# After editing this file, run data-raw/i18n_translations.R 
+# to regenerate inst/internals/i18n_translations.rds 
+# and inst/internals/i18n_random_phrases.rds.
+
 # Translations for {learnr} Documents ------------------------------------------
 #
 # ## Re-using keys
@@ -27,14 +31,14 @@
 # ## Tilde and Empty Strings
 #
 # * Use `~` to indicate NULL values that should fall back to the default
-#   English text.
+#   English text
 # * Use an empty string, `""`, when no text should be printed at all
 #   (use with caution)
 # * Quote all strings with double quotes
 #
 # ## Language Codes
 #
-# {learnr}'s internationalization doesn't impose strict requirements around The
+# {learnr}'s internationalization doesn't impose strict requirements around the
 # formatting of the language code. However, for best results, please use one of
 # the language codes used in the bootbox library, to ensure that modals used in
 # tutorials are also translated:
@@ -65,6 +69,7 @@ button:
     ko: "코드 실행"
     zh: "运行代码"
     pl: "Uruchom kod"
+    "no": "Kjør kode"
   runcodetitle:
     # {{kbd}} — The keyboard shortcut that triggers the runcode button
     en: "$t(button.runcode) ({{kbd}})"
@@ -78,6 +83,7 @@ button:
     ko: "$t(button.runcode) ({{kbd}})"
     zh: "$t(button.runcode) ({{kbd}})"
     pl: "$t(button.runcode) ({{kbd}})"
+    "no": "$t(button.runcode) ({{kbd}})"
   hint:
     en: "Hint"
     fr: "Indication"
@@ -90,6 +96,7 @@ button:
     ko: "힌트"
     zh: "提示"
     pl: "Podpowiedź"
+    "no": "Hint"
   hint_plural:
     en: "Hints"
     fr: "Indications"
@@ -102,6 +109,7 @@ button:
     ko: "힌트들"
     zh: "提示"
     pl: "Podpowiedzi"
+    "no": "Hint"
   hinttitle:
     en: "$t(button.hint)"
     fr: "$t(button.hint)"
@@ -114,6 +122,7 @@ button:
     ko: "$t(button.hint)"
     zh: "$t(button.hint)"
     pl: "$t(button.hint)"
+    "no": "$t(button.hint)"
   hintnext:
     en: "Next Hint"
     fr: "Indication Suivante"
@@ -126,6 +135,7 @@ button:
     ko: "다음 힌트"
     zh: "下一个提示"
     pl: "Następna podpowiedź"
+    "no": "Neste hint"
   hintprev:
     en: "Previous Hint"
     fr: "Indication Précédente"
@@ -138,6 +148,7 @@ button:
     ko: "이전 힌트"
     zh: "上一个提示"
     pl: "Poprzednia podpowiedź"
+    "no": "Forrige hint"
   solution:
     en: "Solution"
     fr: "Solution"
@@ -150,6 +161,7 @@ button:
     ko: "솔루션"
     zh: "答案"
     pl: "Rozwiązanie"
+    "no": "Løsning"
   solutiontitle:
     en: "$t(button.solution)"
     fr: "$t(button.solution)"
@@ -162,6 +174,7 @@ button:
     ko: "$t(button.solution)"
     zh: "$t(button.solution)"
     pl: "$t(button.solution)"
+    "no": "$t(button.solution)"
   copyclipboard:
     en: "Copy to Clipboard"
     fr: "Copier dans le Presse-papier"
@@ -174,6 +187,7 @@ button:
     ko: "클립보드에 복사"
     zh: "复制到剪切板"
     pl: "Kopiuj do schowka"
+    "no": "Kopier til utklippstavle"
   startover:
     en: "Start Over"
     fr: "Recommencer"
@@ -186,6 +200,7 @@ button:
     ko: "재학습"
     zh: "重新开始"
     pl: "Zacznij od początku"
+    "no": "Start på nytt"
   startovertitle:
     en: "$t(button.startover)"
     fr: "$t(button.startover)"
@@ -198,6 +213,7 @@ button:
     ko: "$t(button.startover)"
     zh: "$t(button.startover)"
     pl: "$t(button.startover)"
+    "no": "$t(button.startover)"
   continue:
     en: "Continue"
     fr: "Continuer"
@@ -210,6 +226,7 @@ button:
     ko: "다음 학습으로"
     zh: "继续"
     pl: "Kontynuuj"
+    "no": "Fortsett"
   submitanswer:
     en: "Submit Answer"
     fr: "Soumettre"
@@ -222,6 +239,7 @@ button:
     ko: "정답 제출"
     zh: "提交答案"
     pl: "Wyślij"
+    "no": "Send inn svar"
   submitanswertitle:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -234,6 +252,7 @@ button:
     ko: "$t(button.submitanswer)"
     zh: "$t(button.submitanswer)"
     pl: "$t(button.submitanswer)"
+    "no": "$t(button.submitanswer)"
   previoustopic:
     en: "Previous Topic"
     fr: "Chapitre Précédent"
@@ -246,6 +265,7 @@ button:
     ko: "이전 토픽"
     zh: "上一专题"
     pl: "Poprzednia sekcja"
+    "no": "Forrige tema"
   nexttopic:
     en: "Next Topic"
     fr: "Chapitre Suivant"
@@ -258,6 +278,7 @@ button:
     ko: "다음 토픽"
     zh: "下一专题"
     pl: "Następna sekcja"
+    "no": "Neste tema"
   questionsubmit:
     en: "$t(button.submitanswer)"
     fr: "$t(button.submitanswer)"
@@ -270,6 +291,7 @@ button:
     ko: "$t(button.submitanswer)"
     zh: "$t(button.submitanswer)"
     pl: "$t(button.submitanswer)"
+    "no": "$t(button.submitanswer)"
   questiontryagain:
     en: "Try Again"
     fr: "Réessayer"
@@ -282,6 +304,7 @@ button:
     ko: "재시도"
     zh: "再试一次"
     pl: "Spróbuj ponownie"
+    "no": "Prøv igjen"
 text:
   startover:
     en: "Start Over"
@@ -295,8 +318,9 @@ text:
     ko: "재학습"
     zh: "重置"
     pl: "Zacznij od początku"
+    "no": "Start på nytt"
   areyousure:
-    en: "Are you sure you want to start over? (all exercise progress will be reset)"
+    en: "Are you sure you want to start over? (All exercise progress will be reset)"
     fr: "Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)"
     es: "¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)"
     pt: "Tem certeza que deseja começar novamente? (todo o progresso feito será perdido)"
@@ -307,6 +331,7 @@ text:
     ko: "다시 시작 하시겠습니까? (모든 예제의 진행 정보가 재설정됩니다)"
     zh: "你确定要重新开始吗? (所有当前进度将被重置)"
     pl: "Czy na pewno chcesz zacząć od początku? (cały postęp w zadaniu zostanie utracony)"
+    "no": "Er du sikker på at du vil starte på nytt? (All fremgang vil bli slettet)"
   youmustcomplete:
     en: "You must complete the"
     fr: "Vous devez d'abord compléter"
@@ -319,6 +344,7 @@ text:
     ko: "당신은 완료해야 합니다"
     zh: "你必须完成"
     pl: "Musisz ukończyć"
+    "no": "Du må fullføre"
   exercise:
     en: "exercise"
     fr: "l'exercice"
@@ -331,6 +357,7 @@ text:
     ko: "연습문제"
     zh: "练习"
     pl: "ćwiczenie"
+    "no": "oppgave"
   exercise_plural:
     en: "exercises"
     fr: "des exercices"
@@ -343,6 +370,7 @@ text:
     ko: "연습문제들"
     zh: "练习"
     pl: "ćwiczenia"
+    "no": "oppgaver"
   inthissection:
     en: "in this section before continuing."
     fr: "de cette section avec de continuer."
@@ -355,6 +383,7 @@ text:
     ko: "이 섹션을 실행하기 전에"
     zh: "在进行本节之前"
     pl: "w tej sekcji przed kontynuowaniem"
+    "no": "i denne seksjonen før du fortsetter."
   code:
     en: "Code"
     fr: "Code"
@@ -367,6 +396,7 @@ text:
     ko: "코드"
     zh: "代码"
     pl: "Kod"
+    "no": "kode"
   enginecap:
     # {{engine}} — The code engine used by the exercise, e.g. "R", "SQL", "JavaScript"
     en: "{{engine}} $t(text.code)"
@@ -380,6 +410,7 @@ text:
     ko: "$t(text.code) {{engine}}"
     zh: "$t(text.code) {{engine}}"
     pl: "$t(text.code) {{engine}}"
+    "no": "{{engine}}-$t(text.code)"
   quiz:
     en: "Quiz"
     fr: "Quiz"
@@ -392,6 +423,7 @@ text:
     ko: "퀴즈"
     zh: "测试"
     pl: "Quiz"
+    "no": "Quiz"
   blank:
     en: "blank"
     fr: ~
@@ -404,6 +436,7 @@ text:
     ko: "공백"
     zh: "空"
     pl: "luka"
+    "no": "tomrom"
   blank_plural:
     en: "blanks"
     fr: ~
@@ -416,6 +449,7 @@ text:
     ko: "공백들"
     zh: "空"
     pl: "luk(i)"
+    "no": "tomrom"
   exercisecontainsblank:
     # {{count}} - the number of blanks detected in the exercise
     en: "This exercise contains {{count}} $t(text.blank)."
@@ -429,6 +463,7 @@ text:
     ko: "이 연습문제에는 {{count}}개의 $t(text.blank)이 포함되어 있습니다."
     zh: "本练习包含{{count}}个$t(text.blank)"
     pl: "To ćwiczenie zawiera {{count}} $t(text.blank)."
+    "no": "Denne oppgaven inneholder {{count}} $t(text.blank)."
   pleasereplaceblank:
     # {{blank}} - the string representing a blank in the exercise (e.g. "___")
     en: "Please replace {{blank}} with valid code."
@@ -442,6 +477,7 @@ text:
     ko: "{{blank}}를 유효한 코드로 바꾸십시오."
     zh: "请在{{blank}}内填写恰当的代码"
     pl: "Proszę uzupełnić {{blank}} prawidłowym kodem."
+    "no": "Erstatt {{blank}} med gyldig kode."
   unparsable:
     en: >
       It looks like this might not be valid R code.
@@ -486,6 +522,14 @@ text:
       lub zamknąć znak <code>&quot;</code>, <code>'</code>, <code>(</code>
       lub <code>{</code> odpowiadającym <code>&quot;</code>, <code>'</code>,
       <code>)</code> lub <code>}</code>.
+    "no": >
+      Dette ser ikke ut til å være gyldig R-kode.
+      Slik R ser det, utgjør ikke teksten en fullstendig kommando.
+      Du kan ha glemt å fylle ut en luke,
+      å fjerne en understrek, å inkludere et komma mellom argumenter,
+      eller å lukke et åpnende <code>&quot;</code>, <code>'</code>, <code>(</code>
+      eller <code>{</code> med et tilsvarende <code>&quot;</code>, <code>'</code>,
+      <code>)</code> eller <code>}</code>.
   unparsablequotes:
     en: >
       <p>It looks like your R code contains specially formatted quotation marks
@@ -525,7 +569,18 @@ text:
       Możesz spróbować zastąpić swój kod następującym kodem.
       Mogą być też inne miejsca, które wymagają poprawienia.</p>
       {{suggestion}}
-
+    "no": >
+      <p>Det ser ut som om R-koden din inneholder spesielt formaterte
+      anførselstegn eller &quot;krøllete&quot; anførselstegn
+      (<code>{{character}}</code>) rundt tekststrenger, noe som gjør koden din
+      ugyldig. R krever at tekstverdier skal være inneholdt i rette anførselstegn
+      (<code>&quot;</code> eller <code>'</code>).</p>
+      {{code}}
+      <p>Dette er et vanlig problem når du kopierer kode fra et annet program
+      som bruker sin egen formatering på tekst. 
+      Du kan prøve å erstatte koden i den linjen med følgende.
+      Kanskje er det også andre steder som må fikses.</p>
+      {{suggestion}}
   unparsableunicode:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -556,6 +611,15 @@ text:
       <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak
       zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu.
       Spróbuj usunąć znak specjalny i wpisać do ponownie ręcznie.</p>
+    "no": >
+      <p>Det ser ut som om R-koden din inneholder et uventet spesialtegn
+      (<code>{{character}}</code>) som gjør koden din ugyldig.</p>
+      {{code}}
+      <p>Noen ganger kan koden din inneholde et spesialtegn som ser ut som et
+      vanlig tegn, spesielt hvis du kopierer og limer inn koden fra et annet
+      program.
+      Prøv å slette spesialtegnet fra koden din og skriv det inn på nytt
+      for hånd.</p>
   unparsableunicodesuggestion:
     en: >
       <p>It looks like your R code contains an unexpected special character
@@ -589,6 +653,16 @@ text:
       Możesz spróbować zastąpić swój kod następującym kodem.
       Mogą być też inne miejsca, które wymagają poprawienia.</p>
       {{suggestion}}
+    "no": >
+      <p>Det ser ut som om R-koden din inneholder et uventet spesialtegn
+      (<code>{{character}}</code>) som gjør koden din ugyldig.</p>
+      {{code}}
+      <p>Noen ganger kan koden din inneholde et spesialtegn som ser ut som et
+      vanlig tegn, spesielt hvis du kopierer og limer inn koden fra et annet
+      program.
+      Du kan prøve å erstatte koden i den linjen med følgende.
+      Kanskje er det også andre steder som må fikses.</p>
+      {{suggestion}}
   and:
     en: "and"
     fr: "et"
@@ -601,6 +675,7 @@ text:
     ko: "그리고"
     zh: "且"
     pl: "i"
+    "no": "og"
   or:
     en: "or"
     fr: "ou"
@@ -613,6 +688,7 @@ text:
     ko: "혹은"
     zh: "或"
     pl: "lub"
+    "no": "eller"
   listcomma:
     # Some languages (e.g. Chinese, Korean) use a different punctuation mark for
     #   separating list items
@@ -627,6 +703,7 @@ text:
     ko: ", "
     zh: ","
     pl: ", "
+    "no": ", "
   oxfordcomma:
     en: ","
     fr: ""
@@ -639,3 +716,4 @@ text:
     ko: ""
     zh: ","
     pl: ""
+    "no": ""

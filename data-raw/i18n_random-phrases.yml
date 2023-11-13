@@ -167,7 +167,40 @@ praise:
     - Bardzo dobrze!
     - Jeśli to zadanie jest skocznią, to Ty jesteś Małyszem!
     - Gratulacje!
-
+  "no":
+    - Fabelaktig!
+    - Glimrende!
+    - Supert!
+    - Nydelig!
+    - Bravo!
+    - Bra jobba!
+    - Lekkert!
+    - Utmerket!
+    - Fantastisk!
+    - Flott arbeid!
+    - Kunne ikke gjort det bedre selv.
+    - Imponerende!
+    - Pent arbeid!
+    - Strålende!
+    - Helt vilt!
+    - Knallbra!
+    - Her har vi noen som vet hva de driver med :)
+    - Utsøkt jobb!
+    - Suksess!
+    - Superb!
+    - Alle tiders!
+    - Herlig!
+    - Førsteklasses svar!
+    - Hinsides bra!
+    - Utrulig!
+    - Meget bra!
+    - Godt gjort!
+    - Førsteklasses arbeid!
+    - Kløktig!
+    - Vidunderlig!
+    - Dét naila du!
+    - Du, altså!
+    - Du kan være stolt av deg selv.
 encouragement:
   testing:
     - RANDOM ENCOURAGEMENT.
@@ -180,7 +213,7 @@ encouragement:
     - But no need to fret, try it again.
     - Try it again. I have a good feeling about this.
     - Try it again. You get better each time.
-    - Try it again. Perseverence is the key to success.
+    - Try it again. Perseverance is the key to success.
     - "That's okay: you learn more from mistakes than successes. Let's do it one more time."
   pt:
     - Tente novamente, sinto que na próxima vai dar certo!
@@ -254,3 +287,14 @@ encouragement:
     - Wytrwałość to klucz do sukcesu, spróbujmy jeszcze raz.
     - Do skutku! Tak możemy się uczyć.
     - Nikodemowi Dyzmie też na początku nie było łatwo!
+  "no":
+    - Prøv igjen 8-)
+    - Ett forsøk til!
+    - Prøv en gang til.
+    - Én gang til nå, så sitter det sikkert!
+    - Ikke gi opp nå! Prøv én gang til.
+    - Ingen ting å deppe over. Prøv igjen!
+    - Gi det ett forsøk til. Jeg føler på meg at du er like ved å klare det.
+    - Prøv igjen. Du blir bedre for hver gang.
+    - Prøv igjen. Utholdenhet lønner seg!
+    - Det gjør ingen ting. Du lærer ofte mer av å mislykkes enn av å ha det enkelt. La oss prøve en gang til.
