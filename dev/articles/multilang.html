@@ -138,10 +138,10 @@ parameter in your YAML:</p>
 <pre><code><span><span class="va">output</span><span class="op">:</span></span>
 <span>  <span class="fu">learnr</span><span class="fu">::</span><span class="va"><a href="../reference/tutorial.html">tutorial</a></span><span class="op">:</span></span>
 <span>    <span class="va">language</span><span class="op">:</span> <span class="va">fr</span></span></code></pre>
-<p>Currently, 10 language translations are supported:</p>
+<p>Currently, 11 language translations are supported:</p>
 <ul>
 <li>
-<code>en</code> for English</li>
+<code>en</code> for English (default)</li>
 <li>
 <code>fr</code> for French / Français</li>
 <li>
@@ -156,10 +156,15 @@ parameter in your YAML:</p>
 <code>de</code> for German</li>
 <li>
 <code>ko</code> for Korean</li>
-<li><code>zh</code></li>
+<li>
+<code>zh</code> for Chinese</li>
 <li>
 <code>pl</code> for Polish</li>
+<li>
+<code>no</code> for Norwegian</li>
 </ul>
+<p>Note that <code>"no"</code> needs to be quoted because it is a
+reserved word in YAML.</p>
 </div>
 <div class="section level2">
 <h2 id="customizable-ui-elements">Customizable UI elements:<a class="anchor" aria-label="anchor" href="#customizable-ui-elements"></a>
@@ -201,7 +206,7 @@ customized.</p>
 <p>The following keys are available for translating text elements:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span><span class="kw">:</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">startover</span><span class="kw">:</span><span class="at"> Start Over</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">areyousure</span><span class="kw">:</span><span class="at"> Are you sure you want to start over? (all exercise progress will be reset)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">areyousure</span><span class="kw">:</span><span class="at"> Are you sure you want to start over? (All exercise progress will be reset)</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">youmustcomplete</span><span class="kw">:</span><span class="at"> You must complete the</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">exercise</span><span class="kw">:</span><span class="at"> exercise</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">exercise_plural</span><span class="kw">:</span><span class="at"> exercises</span></span>
@@ -240,10 +245,10 @@ used in a particular language.</p>
 provides complete translations for <code>"en"</code>, <code>"fr"</code>,
 <code>"es"</code>, <code>"pt"</code>, <code>"tr"</code>,
 <code>"eu"</code>, <code>"de"</code>, <code>"ko"</code>,
-<code>"zh"</code>, and <code>"pl"</code>. A translation does not need to
-be available for you to use as the default language, in particular if
-you are providing a custom translation for a language without an
-available complete translation.</p>
+<code>"zh"</code>, <code>"pl"</code>, and <code>"no"</code>. A
+translation does not need to be available for you to use as the default
+language, in particular if you are providing a custom translation for a
+language without an available complete translation.</p>
 <p>If you only want to change the default language, use:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">language</span><span class="kw">:</span><span class="at"> </span><span class="st">"fr"</span></span></code></pre></div>
 <p>If you are also providing language customizations, the first language
