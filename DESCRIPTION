@@ -35,7 +35,6 @@ BugReports: https://github.com/rstudio/learnr/issues
 Imports:
     checkmate,
     digest,
-    ellipsis (>= 0.2.0.1),
     evaluate,
     htmltools (>= 0.3.5),
     htmlwidgets,
@@ -47,7 +46,7 @@ Imports:
     promises,
     rappdirs,
     renv (>= 0.8.0),
-    rlang,
+    rlang (>= 1.0.0),
     rmarkdown (>= 1.12.0),
     rprojroot,
     shiny (>= 1.0),

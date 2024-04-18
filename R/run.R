@@ -47,7 +47,7 @@ run_tutorial <- function(
   clean = FALSE,
   as_rstudio_job = NULL
 ) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
   checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
 
