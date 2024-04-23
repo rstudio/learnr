@@ -10,6 +10,7 @@ mutate_tags <- function(ele, selector, fn, ...) {
   UseMethod("mutate_tags", ele)
 }
 
+#' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
   if (any(
     c(
@@ -31,6 +32,7 @@ mutate_tags.default <- function(ele, selector, fn, ...) {
   )
 }
 
+#' @export
 mutate_tags.list <- function(ele, selector, fn, ...) {
   # set values to maintain attrs and class values
   ele[] <- lapply(
@@ -42,6 +44,7 @@ mutate_tags.list <- function(ele, selector, fn, ...) {
   ele
 }
 
+#' @export
 mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
   # # vectorize selector.  (Currently not used, so removed)
   # if (inherits(selector, "character")) {
