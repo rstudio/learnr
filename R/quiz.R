@@ -152,7 +152,7 @@ question <- function(
   initialize_tutorial()
 
   # capture/validate answers
-  ellipsis::check_dots_unnamed() # validate all answers are not named and not a misspelling
+  rlang::check_dots_unnamed() # validate all answers are not named and not a misspelling
   answers <- list(...)
   lapply(answers, function(answer) {
     checkmate::assert_class(answer, "tutorial_question_answer")
