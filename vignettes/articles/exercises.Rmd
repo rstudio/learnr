@@ -80,6 +80,12 @@ This option can also be set either globally or per-chunk:
 insert_snippet("exerciseeval")
 ```
 
+It may be necessary to slow down successive exercise submissions, otherwise users may overwhelm your server by running exercise code chunks in fast repetition. You can do so globally by setting the option `tutorial.exercise.debounce` to an amount of time (in milliseconds) that is waited before the next code execution is performed:
+
+```{r snippet-exercisedebounce, echo = FALSE}
+insert_snippet("exercisedebounce")
+```
+
 ## Exercise Setup {#exercise-setup}
 
 Code chunks with `exercise=TRUE` are evaluated within standalone environments.
