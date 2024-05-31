@@ -547,13 +547,11 @@ remove_knitr_hooks <- function() {
 
 exercise_server_chunk <- function(label) {
   # reactive for exercise execution
-  debounce_ms <- getOption("tutorial.exercise_debounce", 0)
-
   rmarkdown::shiny_prerendered_chunk('server', sprintf(
-'`tutorial-exercise-%s-result` <- learnr:::setup_exercise_handler(debounce(reactive(req(input$`tutorial-exercise-%s-code-editor`)), %d), session)
+'`tutorial-exercise-%s-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-%s-code-editor`)), session)
 output$`tutorial-exercise-%s-output` <- renderUI({
   `tutorial-exercise-%s-result`()
-})', label, label, debounce_ms, label, label))
+})', label, label, label, label))
 }
 
 

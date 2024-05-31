@@ -33,9 +33,13 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
 
+  # debounce option to slow down successive exercise execution requests
+  debounce_ms <- getOption("tutorial.exercise.debounce", 0)   # value in milliseconds
+  if (debounce_ms > 0)
+    exercise_rx <- debounce(exercise_rx, debounce_ms)
+
   # observe input
   observeEvent(exercise_rx(), {
-
     # get exercise from app
     exercise <- exercise_rx()
     # Add tutorial information
