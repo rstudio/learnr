@@ -1,5 +1,6 @@
 # learnr (development version)
 
+-   Added option `tutorial.exercise.debounce` to slow down successive exercise execution (@internaut)
 -   Removed dependency on ellipsis (@olivroy, #809)
 -   Added Norwegian translation contributed by @jonovik. (#806)
 
