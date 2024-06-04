@@ -2,6 +2,7 @@ card <- function(title, link, image, alt = NULL, text = NULL, footer = NULL, ...
   alt <- alt %||% paste0("Preview image of ", title)
 
   bslib::card(
+    class = "shadow-sm",
     bslib::card_header(htmltools::a(href = link, title)),
     bslib::card_body(
       bslib::card_image(file = NULL, src = image, href = link, alt = alt),
