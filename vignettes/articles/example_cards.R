@@ -24,5 +24,5 @@ example_cards <- function(yml, group) {
   examples <- purrr::keep(examples, function(x) x[["group"]] %in% group)
   cards <- purrr::map(examples, function(x) purrr::exec(card, !!!x))
 
-  bslib::layout_column_wrap(!!!cards, width = 1/3)
+  bslib::layout_column_wrap(!!!cards, width = "300px")
 }
