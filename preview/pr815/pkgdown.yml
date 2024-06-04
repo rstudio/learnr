@@ -1,0 +1,18 @@
+pandoc: 3.1.11
+pkgdown: 2.0.9
+pkgdown_sha: ~
+articles:
+  examples: examples.html
+  exercises: exercises.html
+  formats: formats.html
+  learnr_v0-11-0: releases/learnr_v0-11-0.html
+  learnr: learnr.html
+  multilang: multilang.html
+  publishing: publishing.html
+  questions: questions.html
+  shinyapps-publishing: shinyapps-publishing.html
+last_built: 2024-06-04T21:18Z
+urls:
+  reference: https://pkgs.rstudio.com/learnr/preview/pr815/reference
+  article: https://pkgs.rstudio.com/learnr/preview/pr815/articles
+
