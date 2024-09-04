@@ -27,7 +27,6 @@ jobs:
         config:
           - { os: macOS-latest, r: "release" }
           - { os: windows-latest, r: "release" }
-          # - {os: windows-latest, r: '3.6'} # Difficulty building packages on windows w/ R 3.6
           - { os: ubuntu-20.04, r: "devel", http-user-agent: "release" }
           - { os: ubuntu-20.04, r: "release" }
           - { os: ubuntu-20.04, r: "oldrel-1" }
