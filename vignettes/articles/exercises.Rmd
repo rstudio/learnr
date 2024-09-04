@@ -82,14 +82,16 @@ insert_snippet("exerciseeval")
 
 It may be necessary to slow down successive exercise submissions, otherwise users may overwhelm your server by running exercise code chunks in fast repetition. You can do so globally by setting the option `tutorial.exercise.debounce` to an amount of time (in seconds) that is waited before the same user's next code execution is performed. This option is set to 1 second by default.
 
-```{r snippet-exercisedebounce, echo = FALSE}
-insert_snippet("exercisedebounce")
+```{r snippet-exercisedebounce, eval = FALSE}
+# Set exercise submission debounce time to 5 seconds
+options("tutorial.exercise.debounce" = 5)
 ```
 
 To disable of this behavior, you can set the option to 0:
 
-```{r snippet-exercisedebounceoff, echo = FALSE}
-insert_snippet("exercisedebounceoff")
+```{r snippet-exercisedebounceoff, eval = FALSE}
+# Disable exercise submission debounce
+options("tutorial.exercise.debounce" = 0)
 ```
 
 ## Exercise Setup {#exercise-setup}
