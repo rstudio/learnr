@@ -34,7 +34,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
   rv <- reactiveValues(triggered = 0, result = NULL)
 
   # debounce option to slow down successive exercise execution requests
-  debounce_s <- getOption("tutorial.exercise.debounce", 0) # value in seconds
+  debounce_s <- getOption("tutorial.exercise.debounce", 1) # in seconds
   if (is.numeric(debounce_s) && debounce_s > 0) {
     exercise_rx <- debounce(exercise_rx, debounce_s * 1000) # in milliseconds
   }
