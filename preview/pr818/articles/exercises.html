@@ -267,19 +267,19 @@ filter(nycflights, month == 1)
 ```</code>
 </pre>
 </div>
-<script type="text/javascript">loadSnippet('exerciseeval')</script><p>It may be necessary to slow down successive exercise submissions,
-otherwise users may overwhelm your server by running exercise code
-chunks in fast repetition. You can do so globally by setting the option
-<code>tutorial.exercise.debounce</code> to an amount of time (in
-seconds) that is waited before the same user’s next code execution is
-performed. This option is set to 1 second by default.</p>
+<script type="text/javascript">loadSnippet('exerciseeval')</script><p>To prevent server overload caused by users rapidly clicking the “Run
+Code” button, you can set a delay between exercise code submissions
+using the <code>tutorial.exercise.throttle</code> option (in seconds).
+This will ensure that the same user can only start the evaluation of the
+same exercise per <code>tutorial.exercise.throttle</code> seconds. This
+option is set globally and the default is a throttle of of 1 second.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set exercise submission debounce time to 5 seconds</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"tutorial.exercise.debounce"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Set exercise submission throttle time to 5 seconds</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"tutorial.exercise.throttle"</span> <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>To disable of this behavior, you can set the option to 0:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Disable exercise submission debounce</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"tutorial.exercise.debounce"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Disable exercise submission throttle</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"tutorial.exercise.throttle"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="exercise-setup">Exercise Setup<a class="anchor" aria-label="anchor" href="#exercise-setup"></a>
