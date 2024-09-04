@@ -33,10 +33,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
 
-  # debounce option to slow down successive exercise execution requests
-  debounce_s <- getOption("tutorial.exercise.debounce", 1) # in seconds
-  if (is.numeric(debounce_s) && debounce_s > 0) {
-    exercise_rx <- debounce(exercise_rx, debounce_s * 1000) # in milliseconds
+  # throttle option to slow down successive exercise execution requests
+  throttle_s <- getOption("tutorial.exercise.throttle", 1) # in seconds
+  if (is.numeric(throttle_s) && throttle_s > 0) {
+    exercise_rx <- throttle(exercise_rx, throttle_s * 1000) # in milliseconds
   }
   # observe input
   observeEvent(exercise_rx(), {
