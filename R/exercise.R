@@ -36,8 +36,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # debounce option to slow down successive exercise execution requests
   debounce_s <- getOption("tutorial.exercise.debounce", 0) # value in seconds
   if (is.numeric(debounce_s) && debounce_s > 0) {
-    # Convert debounce time to milliseconds
-    exercise_rx <- debounce(exercise_rx, debounce_s / 1000)
+    exercise_rx <- debounce(exercise_rx, debounce_s * 1000) # in milliseconds
   }
   # observe input
   observeEvent(exercise_rx(), {
