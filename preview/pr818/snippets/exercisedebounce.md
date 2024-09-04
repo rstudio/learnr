@@ -1,2 +1,2 @@
-# Set exercise submission debounce time to 1 second
-options("tutorial.exercise.debounce" = 1)
+# Set exercise submission debounce time to 5 seconds
+options("tutorial.exercise.debounce" = 5)
