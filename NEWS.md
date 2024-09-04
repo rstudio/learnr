@@ -1,6 +1,6 @@
 # learnr (development version)
 
--   Added option `tutorial.exercise.debounce` to slow down successive exercise execution (@internaut)
+-   Added new option, `tutorial.exercise.debounce`, option to slow down successive exercise execution. This option should be set to the number of seconds a user will have to wait before their next code execution is performed. (@internaut, #814)
 -   Removed dependency on ellipsis (@olivroy, #809)
 -   Added Norwegian translation contributed by @jonovik. (#806)
 
