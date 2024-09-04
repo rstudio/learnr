@@ -33,9 +33,13 @@ setup_exercise_handler <- function(exercise_rx, session) {
   # setup reactive values for return
   rv <- reactiveValues(triggered = 0, result = NULL)
 
+  # throttle option to slow down successive exercise execution requests
+  throttle_s <- getOption("tutorial.exercise.throttle", 1) # in seconds
+  if (is.numeric(throttle_s) && throttle_s > 0) {
+    exercise_rx <- throttle(exercise_rx, throttle_s * 1000) # in milliseconds
+  }
   # observe input
   observeEvent(exercise_rx(), {
-
     # get exercise from app
     exercise <- exercise_rx()
     # Add tutorial information

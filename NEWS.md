@@ -1,6 +1,9 @@
 # learnr (development version)
 
+-   Added a new option, `tutorial.exercise.throttle`, to slow down successive exercise execution. This option should be set to the number of seconds a user will have to wait between performing code executions. The option defaults to 1 second to deter rapid code executions. To disable submission throttling, call `options(tutorial.exercise.throttle = 0)` within your setup chunk. (@internaut, #818)
+
 -   Removed dependency on ellipsis (@olivroy, #809)
+
 -   Added Norwegian translation contributed by @jonovik. (#806)
 
 # learnr 0.11.5

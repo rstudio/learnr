@@ -80,6 +80,20 @@ This option can also be set either globally or per-chunk:
 insert_snippet("exerciseeval")
 ```
 
+To prevent server overload caused by users rapidly clicking the "Run Code" button, you can set a delay between exercise code submissions using the `tutorial.exercise.throttle` option (in seconds). This will ensure that the same user can only start the evaluation of the same exercise per `tutorial.exercise.throttle` seconds. This option is set globally and the default is a throttle of of 1 second.
+
+```{r snippet-exercisethrottle, eval = FALSE}
+# Set exercise submission throttle time to 5 seconds
+options("tutorial.exercise.throttle" = 5)
+```
+
+To disable of this behavior, you can set the option to 0:
+
+```{r snippet-exercisethrottleoff, eval = FALSE}
+# Disable exercise submission throttle
+options("tutorial.exercise.throttle" = 0)
+```
+
 ## Exercise Setup {#exercise-setup}
 
 Code chunks with `exercise=TRUE` are evaluated within standalone environments.
