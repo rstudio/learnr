@@ -244,7 +244,7 @@ test_that("evaluate_exercise() returns an internal error when `render_exercise()
   local_edition(2)
 
   with_mocked_bindings(
-    "learnr:::render_exercise" = function(...) stop("render error"),
+    render_exercise = function(...) stop("render error"),
     expect_warning(
       res <- evaluate_exercise(mock_exercise(), new.env())
     )
