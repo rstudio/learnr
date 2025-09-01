@@ -243,7 +243,7 @@ test_that("evaluate_exercise() returns an internal error when `render_exercise()
   skip_if_not_pandoc("1.14")
   local_edition(2)
 
-  with_mock(
+  with_mocked_bindings(
     "learnr:::render_exercise" = function(...) stop("render error"),
     expect_warning(
       res <- evaluate_exercise(mock_exercise(), new.env())
