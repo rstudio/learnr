@@ -41,7 +41,12 @@
 #' @export
 answer <- function(text, correct = FALSE, message = NULL, label = text) {
   if (!is_html_tag(message)) {
-    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
+    checkmate::assert_character(
+      message,
+      len = 1,
+      null.ok = TRUE,
+      any.missing = FALSE
+    )
   }
 
   answer_new(
@@ -86,12 +91,12 @@ answer_fn <- function(fn, label = NULL) {
 #' @param type Is this a literal answer (directly compare with `option` or `value`)
 #'   or is this a function to evaluate the submission.
 answer_new <- function(
-    value,
-    label = value,
-    option = as.character(value),
-    correct = NULL,
-    message = NULL,
-    type = "literal"
+  value,
+  label = value,
+  option = as.character(value),
+  correct = NULL,
+  message = NULL,
+  type = "literal"
 ) {
   if (!is.character(option)) {
     option <- as.character(option)
@@ -162,7 +167,12 @@ incorrect <- function(messages = NULL) {
 #' @rdname mark_as_correct_incorrect
 #' @export
 mark_as <- function(correct, messages = NULL) {
-  checkmate::assert_logical(correct, len = 1, null.ok = FALSE, any.missing = FALSE)
+  checkmate::assert_logical(
+    correct,
+    len = 1,
+    null.ok = FALSE,
+    any.missing = FALSE
+  )
   ret <- list(
     correct = correct,
     messages = messages

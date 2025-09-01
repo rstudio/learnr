@@ -1,20 +1,23 @@
-
 broadcast_progress_event_to_client <- function(session, event, data) {
-  session$sendCustomMessage("tutorial.progress_event", list(
-    event = event,
-    data = data
-  ))
+  session$sendCustomMessage(
+    "tutorial.progress_event",
+    list(
+      event = event,
+      data = data
+    )
+  )
 }
 
 broadcast_question_event_to_client <- function(session, label, answer) {
-  broadcast_progress_event_to_client(session = session,
-                                     event = "question_submission",
-                                     data = list(label = label, answer = answer))
+  broadcast_progress_event_to_client(
+    session = session,
+    event = "question_submission",
+    data = list(label = label, answer = answer)
+  )
 }
 
 
 register_default_event_handlers <- function() {
-
   event_register_handler(
     "session_start",
     function(session, event, data) {
@@ -82,16 +85,16 @@ register_default_event_handlers <- function() {
       # notify client side listeners
       broadcast_question_event_to_client(
         session = session,
-        label   = data$label,
-        answer  = data$answer
+        label = data$label,
+        answer = data$answer
       )
 
       # store submission for later replay
       save_question_submission(
-        session  = session,
-        label    = data$label,
+        session = session,
+        label = data$label,
         question = data$question,
-        answer   = data$answer
+        answer = data$answer
       )
     }
   )
@@ -106,11 +109,10 @@ register_default_event_handlers <- function() {
         list(label = data$label, answer = NULL)
       )
 
-
       # store submission for later replay
       save_reset_question_submission(
-        session  = session,
-        label    = data$label,
+        session = session,
+        label = data$label,
         question = data$question
       )
     }
@@ -131,7 +133,6 @@ register_default_event_handlers <- function() {
     }
   )
 
-
   event_register_handler(
     "exercise_result",
     function(session, event, data) {
@@ -144,28 +145,32 @@ register_default_event_handlers <- function() {
       #   1. Some code is submitted
       #   2. A check is not required OR the submission was checked
       # (correctness does not affect completion)
-      completed <- nzchar(trimws(data$code)) && (!requires_check || data$checked)
+      completed <- nzchar(trimws(data$code)) &&
+        (!requires_check || data$checked)
 
       # notify client side listeners
       broadcast_progress_event_to_client(
         session = session,
         event = "exercise_submission",
-        data = list(label = data$label, correct = correct, completed = completed)
+        data = list(
+          label = data$label,
+          correct = correct,
+          completed = completed
+        )
       )
 
       # save submission for later replay
       save_exercise_submission(
-        session       = session,
-        label         = data$label,
-        code          = data$code,
-        output        = data$output,
+        session = session,
+        label = data$label,
+        code = data$code,
+        output = data$output,
         error_message = data$error_message,
-        checked       = data$checked,
-        feedback      = data$feedback
+        checked = data$checked,
+        feedback = data$feedback
       )
     }
   )
-
 
   event_register_handler(
     "video_progress",

@@ -1,4 +1,3 @@
-
 str_trim <- function(x, side = "both", character = "\\s") {
   if (side %in% c("both", "left", "start")) {
     rgx <- sprintf("^%s+", character)

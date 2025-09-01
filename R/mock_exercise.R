@@ -73,10 +73,10 @@ mock_exercise <- function(
   global_setup = NULL,
   setup_label = NULL,
   solution_code = NULL,
-  code_check = NULL,  # code_check chunk
+  code_check = NULL, # code_check chunk
   error_check = NULL, # error_check chunk
-  check = NULL,       # check chunk
-  tests = NULL,       # tests chunk
+  check = NULL, # check chunk
+  tests = NULL, # tests chunk
   exercise.checker = NULL,
   exercise.error.check.code = NULL,
   exercise.df_print = "default",
@@ -102,7 +102,8 @@ mock_exercise <- function(
     fig.retina = fig.retina,
     engine = engine,
     max.print = 1000,
-    exercise.checker = exercise.checker %||% dput_to_string(debug_exercise_checker),
+    exercise.checker = exercise.checker %||%
+      dput_to_string(debug_exercise_checker),
     label = label,
     exercise = TRUE,
     exercise.setup = setup_label,
@@ -111,22 +112,26 @@ mock_exercise <- function(
     exercise.df_print = exercise.df_print,
     exercise.warn_invisible = exercise.warn_invisible,
     exercise.timelimit = exercise.timelimit,
-    exercise.error.check.code = exercise.error.check.code %||% dput_to_string(debug_exercise_checker)
+    exercise.error.check.code = exercise.error.check.code %||%
+      dput_to_string(debug_exercise_checker)
   )
 
   assert_unique_exercise_chunk_labels(chunks, label)
 
   # create non-existent exercise chunk from global options
-  chunks <- c(chunks, list(
-    mock_chunk(
-      label,
-      user_code,
-      exercise = TRUE,
-      engine = engine,
-      exercise.setup = setup_label,
-      ...
+  chunks <- c(
+    chunks,
+    list(
+      mock_chunk(
+        label,
+        user_code,
+        exercise = TRUE,
+        engine = engine,
+        exercise.setup = setup_label,
+        ...
+      )
     )
-  ))
+  )
 
   assert_unique_chunk_labels(chunks)
 
@@ -136,7 +141,7 @@ mock_exercise <- function(
     restore = FALSE,
     timestamp = as.numeric(Sys.time()),
     global_setup = paste(global_setup, collapse = "\n"), # added by get_global_setup()
-    setup = mock_prep_setup(chunks, setup_label),        # walk setup chain
+    setup = mock_prep_setup(chunks, setup_label), # walk setup chain
     chunks = chunks,
     solution = solution_code,
     code_check = code_check,
@@ -177,7 +182,12 @@ assert_unique_exercise_chunk_labels <- function(chunks, label) {
   if (!any(is_exercise_chunk)) {
     return()
   }
-  exercise_chunk_labels <- vapply(chunks[is_exercise_chunk], `[[`, character(1), "label")
+  exercise_chunk_labels <- vapply(
+    chunks[is_exercise_chunk],
+    `[[`,
+    character(1),
+    "label"
+  )
   n_ex_label_chunks <- sum(exercise_chunk_labels == label)
   if (n_ex_label_chunks == 0) {
     return()
@@ -225,7 +235,8 @@ mock_prep_setup <- function(chunks, setup_label) {
       stop(
         "Cycles detected in setup chunks: ",
         paste(visited_setup_chunks, collapse = " -> "),
-        " -> ", setup_label
+        " -> ",
+        setup_label
       )
     }
     found_chunk <- FALSE

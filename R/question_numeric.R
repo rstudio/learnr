@@ -56,14 +56,20 @@ question_numeric <- function(
   options = list(),
   tolerance = 1.5e-8
 ) {
-  min  <- min  %||% NA_real_
-  max  <- max  %||% NA_real_
+  min <- min %||% NA_real_
+  max <- max %||% NA_real_
   step <- step %||% NA_real_
 
   checkmate::assert_numeric(value, len = 1, null.ok = TRUE, any.missing = FALSE)
   checkmate::assert_numeric(min, len = 1, null.ok = FALSE)
   checkmate::assert_numeric(max, len = 1, null.ok = FALSE)
-  checkmate::assert_numeric(step, len = 1, null.ok = FALSE, lower = 0, finite = TRUE)
+  checkmate::assert_numeric(
+    step,
+    len = 1,
+    null.ok = FALSE,
+    lower = 0,
+    finite = TRUE
+  )
 
   learnr::question(
     text = text,
@@ -85,7 +91,6 @@ question_numeric <- function(
     )
   )
 }
-
 
 
 #' @export
@@ -115,7 +120,10 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
 
   if (length(value) == 0 || is.na(value)) {
     if (!is.null(shiny::getDefaultReactiveDomain())) {
-      showNotification("Please enter a number before submitting", type = "error")
+      showNotification(
+        "Please enter a number before submitting",
+        type = "error"
+      )
     }
     shiny::validate("Please enter a number")
   }
@@ -130,7 +138,10 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
   }
 
   check_answer <- function(answer) {
-    answer_checker <- eval(parse(text = answer$value), envir = rlang::caller_env(2))
+    answer_checker <- eval(
+      parse(text = answer$value),
+      envir = rlang::caller_env(2)
+    )
     answer_checker(value)
   }
 
@@ -146,10 +157,16 @@ question_is_correct.learnr_numeric <- function(question, value, ...) {
   }
 
   if (!is.na(question$options$min) && value < question$options$min) {
-    return(mark_as(FALSE, paste0("The number is at least ", question$options$min, ".")))
+    return(mark_as(
+      FALSE,
+      paste0("The number is at least ", question$options$min, ".")
+    ))
   }
   if (!is.na(question$options$max) && value > question$options$max) {
-    return(mark_as(FALSE, paste0("The number is at most ", question$options$max, ".")))
+    return(mark_as(
+      FALSE,
+      paste0("The number is at most ", question$options$max, ".")
+    ))
   }
 
   mark_as(FALSE, NULL)

@@ -1,4 +1,3 @@
-
 #' List available tutorials
 #'
 #' List the tutorials that are currently available via installed R packages.
@@ -15,7 +14,6 @@
 #'
 #' @export
 available_tutorials <- function(package = NULL) {
-
   info <-
     if (is.null(package)) {
       all_available_tutorials()
@@ -45,7 +43,6 @@ available_tutorials <- function(package = NULL) {
 #'    "yaml_front_matter": list column of all yaml header info; [list()]
 #' @noRd
 available_tutorials_for_package <- function(package) {
-
   an_error <- function(...) {
     list(
       tutorials = NULL,
@@ -53,22 +50,32 @@ available_tutorials_for_package <- function(package) {
     )
   }
 
-  if (!file.exists(
-    system.file(package = package)
-  )) {
+  if (
+    !file.exists(
+      system.file(package = package)
+    )
+  ) {
     return(an_error(
-      "No package found with name: \"", package, "\""
+      "No package found with name: \"",
+      package,
+      "\""
     ))
   }
 
   tutorials_dir <- system.file("tutorials", package = package)
   if (!file.exists(tutorials_dir)) {
     return(an_error(
-      "No tutorials found for package: \"", package, "\""
+      "No tutorials found for package: \"",
+      package,
+      "\""
     ))
   }
 
-  tutorial_folders <- list.dirs(tutorials_dir, full.names = TRUE, recursive = FALSE)
+  tutorial_folders <- list.dirs(
+    tutorials_dir,
+    full.names = TRUE,
+    recursive = FALSE
+  )
   names(tutorial_folders) <- basename(tutorial_folders)
   rmd_info <- lapply(tutorial_folders, function(tut_dir) {
     dir_rmd_file <- run_find_tutorial_rmd(tut_dir)
@@ -83,7 +90,9 @@ available_tutorials_for_package <- function(package) {
       title = yaml_front_matter$title %||% NA,
       description = yaml_front_matter$description %||% NA,
       private = yaml_front_matter$private %||% FALSE,
-      package_dependencies = I(list(tutorial_dir_package_dependencies(tut_dir))),
+      package_dependencies = I(list(tutorial_dir_package_dependencies(
+        tut_dir
+      ))),
       yaml_front_matter = I(list(yaml_front_matter)),
       stringsAsFactors = FALSE,
       row.names = FALSE
@@ -93,7 +102,9 @@ available_tutorials_for_package <- function(package) {
   has_no_rmd <- vapply(rmd_info, is.null, logical(1))
   if (all(has_no_rmd)) {
     return(an_error(
-      "No tutorial .Rmd files found for package: \"", package, "\""
+      "No tutorial .Rmd files found for package: \"",
+      package,
+      "\""
     ))
   }
 
@@ -115,7 +126,7 @@ available_tutorials_for_package <- function(package) {
 #' @noRd
 all_available_tutorials <- function() {
   ret <- list()
-  all_pkgs <- installed.packages()[,"Package"]
+  all_pkgs <- installed.packages()[, "Package"]
 
   for (pkg in all_pkgs) {
     info <- available_tutorials_for_package(pkg)
@@ -136,21 +147,29 @@ all_available_tutorials <- function() {
 
 
 get_tutorial_path <- function(name, package) {
-
   tutorial_path <- system.file("tutorials", name, package = package)
 
   # validate that it's a direcotry
   if (!utils::file_test("-d", tutorial_path)) {
     tutorials <- available_tutorials(package)
     possible_tutorials <- tutorials$name
-    msg <- paste0("Tutorial \"", name, "\" was not found in the \"", package, "\" package.")
+    msg <- paste0(
+      "Tutorial \"",
+      name,
+      "\" was not found in the \"",
+      package,
+      "\" package."
+    )
     # if any tutorial names are _close_ tell the user
     adist_vals <- utils::adist(possible_tutorials, name, ignore.case = TRUE)
     if (any(adist_vals <= 3)) {
       best_match <- possible_tutorials[which.min(adist_vals)]
       msg <- paste0(
-        msg, "\n",
-        "Did you mean \"", best_match, "\"?"
+        msg,
+        "\n",
+        "Did you mean \"",
+        best_match,
+        "\"?"
       )
     }
     stop.(msg, "\n", format(tutorials))
@@ -188,8 +207,11 @@ format.learnr_available_tutorials <- function(x, ...) {
     )
 
     ret <- paste0(
-      ret, "\n",
-      "* ", pkg, "\n",
+      ret,
+      "\n",
+      "* ",
+      pkg,
+      "\n",
       paste0(txts, collapse = "\n")
     )
   }

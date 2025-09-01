@@ -1,8 +1,6 @@
-
 # Given a line buffer, return a list of possible auto completions.
 # If there is a valid label, then attach the server env to allow for local overrides of functions
 auto_complete_r <- function(line, label = NULL, server_env = NULL) {
-
   # If the last line includes comments then we don't return any completions.
   # It's okay to consider only the last line for comments: Comment detection
   # takes into account quotes on the same line, but `quotes = FALSE` in the
@@ -17,18 +15,31 @@ auto_complete_r <- function(line, label = NULL, server_env = NULL) {
 
   # set completion settings
   options <- utils::rc.options()
-  utils::rc.options(package.suffix = "::",
-                    funarg.suffix = " = ",
-                    function.suffix = "(")
+  utils::rc.options(
+    package.suffix = "::",
+    funarg.suffix = " = ",
+    function.suffix = "("
+  )
   on.exit(do.call(utils::rc.options, as.list(options)), add = TRUE)
 
   # If and when exercises gain access to files, then we should evaluate this
   # code in the exercise dir with `quotes = TRUE` (and sanitize to keep
   # filename lookup local to exercise dir)
   settings <- utils::rc.settings()
-  utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
-                      ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
-                      argdb = TRUE, fuzzy = FALSE, files = FALSE, quotes = FALSE)
+  utils::rc.settings(
+    ops = TRUE,
+    ns = TRUE,
+    args = TRUE,
+    func = FALSE,
+    ipck = TRUE,
+    S3 = TRUE,
+    data = TRUE,
+    help = TRUE,
+    argdb = TRUE,
+    fuzzy = FALSE,
+    files = FALSE,
+    quotes = FALSE
+  )
   on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
 
   # temporarily attach global setup to search path
@@ -55,15 +66,19 @@ auto_complete_r <- function(line, label = NULL, server_env = NULL) {
 
   # detect functions
   splat <- strsplit(completions, ":{2,3}")
-  fn <- vapply(splat, function(el) {
-    n <- length(el)
-    envir  <- if (n == 1) .GlobalEnv else asNamespace(el[[1]])
-    symbol <- if (n == 2) el[[2]] else el[[1]]
-    tryCatch(
-      is.function(get(symbol, envir = envir)),
-      error = function(e) FALSE
-    )
-  }, logical(1))
+  fn <- vapply(
+    splat,
+    function(el) {
+      n <- length(el)
+      envir <- if (n == 1) .GlobalEnv else asNamespace(el[[1]])
+      symbol <- if (n == 2) el[[2]] else el[[1]]
+      tryCatch(
+        is.function(get(symbol, envir = envir)),
+        error = function(e) FALSE
+      )
+    },
+    logical(1)
+  )
 
   # remove a leading '::', ':::' from autocompletion results, as
   # those won't be inserted as expected in Ace
@@ -102,8 +117,12 @@ detect_comment <- function(line = "") {
       next
     }
     in_escape <- FALSE
-    if (!identical(char, "#")) next
-    if (in_quote) next
+    if (!identical(char, "#")) {
+      next
+    }
+    if (in_quote) {
+      next
+    }
     return(TRUE)
   }
 

@@ -48,8 +48,18 @@ run_tutorial <- function(
   as_rstudio_job = NULL
 ) {
   rlang::check_dots_empty()
-  checkmate::assert_character(name, any.missing = FALSE, max.len = 1, null.ok = TRUE)
-  checkmate::assert_character(package, any.missing = FALSE, max.len = 1, null.ok = TRUE)
+  checkmate::assert_character(
+    name,
+    any.missing = FALSE,
+    max.len = 1,
+    null.ok = TRUE
+  )
+  checkmate::assert_character(
+    package,
+    any.missing = FALSE,
+    max.len = 1,
+    null.ok = TRUE
+  )
 
   if (is.null(name)) {
     tutorials <- available_tutorials(package = package)
@@ -100,40 +110,46 @@ run_tutorial <- function(
   }
 
   render_args <-
-    tryCatch({
-      local({
-        # try to save a file to check for write permissions
-        tmp_save_file <- file.path(tutorial$dir, "__learnr_test_file")
-        # make sure it's deleted
-        on.exit({
-          if (file.exists(tmp_save_file)) {
-            unlink(tmp_save_file)
-          }
-        }, add = TRUE)
-        # write to the test file
-        suppressWarnings(cat("test", file = tmp_save_file))
-        # if no errors have occurred, return an empty list of render_args
-        list()
-      })
-    }, error = function(e) {
-      # Could not write in the tutorial folder
-      message(
-        "Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ",
-        tutorial$dir
-      )
+    tryCatch(
+      {
+        local({
+          # try to save a file to check for write permissions
+          tmp_save_file <- file.path(tutorial$dir, "__learnr_test_file")
+          # make sure it's deleted
+          on.exit(
+            {
+              if (file.exists(tmp_save_file)) {
+                unlink(tmp_save_file)
+              }
+            },
+            add = TRUE
+          )
+          # write to the test file
+          suppressWarnings(cat("test", file = tmp_save_file))
+          # if no errors have occurred, return an empty list of render_args
+          list()
+        })
+      },
+      error = function(e) {
+        # Could not write in the tutorial folder
+        message(
+          "Rendering tutorial in a temp folder since `learnr` does not have write permissions in the tutorial folder: ",
+          tutorial$dir
+        )
 
-      # Set rmarkdown args to render in tmp dir
-      # This will cause the tutorial to be re-rendered in each R session
-      temp_output_dir <- file.path(tempdir(), "learnr", package, name)
-      if (!dir.exists(temp_output_dir)) {
-        dir.create(temp_output_dir, recursive = TRUE)
+        # Set rmarkdown args to render in tmp dir
+        # This will cause the tutorial to be re-rendered in each R session
+        temp_output_dir <- file.path(tempdir(), "learnr", package, name)
+        if (!dir.exists(temp_output_dir)) {
+          dir.create(temp_output_dir, recursive = TRUE)
+        }
+        list(
+          output_dir = temp_output_dir,
+          intermediates_dir = temp_output_dir,
+          knit_root_dir = temp_output_dir
+        )
       }
-      list(
-        output_dir = temp_output_dir,
-        intermediates_dir = temp_output_dir,
-        knit_root_dir = temp_output_dir
-      )
-    })
+    )
 
   if (isTRUE(clean)) {
     run_clean_tutorial_prerendered(tutorial$dir)
@@ -151,7 +167,12 @@ run_tutorial <- function(
       # is currently running in a server, do not allow for prerender (rmarkdown::render)
       withr::local_envvar(c(RMARKDOWN_RUN_PRERENDER = "0"))
     }
-    rmarkdown::run(file = tutorial$file, dir = tutorial$dir, shiny_args = shiny_args, render_args = render_args)
+    rmarkdown::run(
+      file = tutorial$file,
+      dir = tutorial$dir,
+      shiny_args = shiny_args,
+      render_args = render_args
+    )
   })
 }
 
@@ -162,12 +183,22 @@ run_stop_invalid_name <- function(name = NULL, package = NULL, n_parent = 1) {
       name
     )
   } else if (!is.null(name)) {
-    sprintf("'%s' is not the name of a tutorial in the package '%s'.", name, package)
+    sprintf(
+      "'%s' is not the name of a tutorial in the package '%s'.",
+      name,
+      package
+    )
   } else {
     "When `package` is provided, `name` must be the name of a tutorial in the package. Otherwise `name` is the path to a tutorial or the path to a directory containing a tutorial."
   }
   if (!is.null(package)) {
-    msg <- paste(msg, sprintf("Use `learnr::run_tutorial(package = \"%s\")` to list available tutorials in this package.", package))
+    msg <- paste(
+      msg,
+      sprintf(
+        "Use `learnr::run_tutorial(package = \"%s\")` to list available tutorials in this package.",
+        package
+      )
+    )
   }
   stop(errorCondition(msg, call = sys.call(which = n_parent)))
 }
@@ -187,7 +218,9 @@ run_validate_tutorial_path <- function(path = NULL) {
 }
 
 run_validate_tutorial_dir <- function(path = NULL) {
-  if (is.null(path)) return(list(valid = FALSE, dir = NULL))
+  if (is.null(path)) {
+    return(list(valid = FALSE, dir = NULL))
+  }
 
   # remove trailing slash, otherwise file.exists() returns FALSE on Windows
   # even if the directory exits. At this point we want to check that the input
@@ -204,7 +237,12 @@ run_validate_tutorial_dir <- function(path = NULL) {
 
 run_validate_tutorial_file <- function(path) {
   # A tutorial is valid if it's a scalar path to a single existing file that is a shiny rmd
-  is_valid <- checkmate::test_character(path, len = 1, null.ok = FALSE, any.missing = FALSE) &&
+  is_valid <- checkmate::test_character(
+    path,
+    len = 1,
+    null.ok = FALSE,
+    any.missing = FALSE
+  ) &&
     utils::file_test("-f", path) &&
     run_check_is_shiny_rmd(path)
 
@@ -262,7 +300,10 @@ run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
 
   if (length(rmds) == 0) {
     if (isTRUE(stop_if_not)) {
-      stop.("No `shiny_prerenderd` or `shinyrmd` R Markdown files found in the directory ", path)
+      stop.(
+        "No `shiny_prerenderd` or `shinyrmd` R Markdown files found in the directory ",
+        path
+      )
     }
     return(NULL)
   }
@@ -280,8 +321,10 @@ run_find_tutorial_rmd <- function(path, stop_if_not = FALSE) {
     stop.(
       "Unable to determine which of multiple R Markdown files is the primary app. ",
       "Name the primary app `index` with extension `.Rmd` or `.qmd`.",
-      "\ndirectory: ", path,
-      "\n     rmds: ", paste(rmds, collapse = ", ")
+      "\ndirectory: ",
+      path,
+      "\n     rmds: ",
+      paste(rmds, collapse = ", ")
     )
   }
 
@@ -294,18 +337,21 @@ run_clean_tutorial_prerendered <- function(path) {
     return(FALSE)
   }
 
-  tryCatch({
-    rmarkdown::shiny_prerendered_clean(file.path(path, rmd))
-    TRUE
-  }, error = function(err) {
-    msg <- sprintf(
-      'Could not clean shiny prerendered content. Error found while running `rmarkdown::shiny_prerendered_clean("%s")`:\n%s',
-      file.path(path, rmd),
-      conditionMessage(err)
-    )
-    message(msg)
-    FALSE
-  })
+  tryCatch(
+    {
+      rmarkdown::shiny_prerendered_clean(file.path(path, rmd))
+      TRUE
+    },
+    error = function(err) {
+      msg <- sprintf(
+        'Could not clean shiny prerendered content. Error found while running `rmarkdown::shiny_prerendered_clean("%s")`:\n%s',
+        file.path(path, rmd),
+        conditionMessage(err)
+      )
+      message(msg)
+      FALSE
+    }
+  )
 }
 
 
@@ -411,12 +457,18 @@ can_run_rstudio_job <- function(stop_if_not = FALSE) {
   }
 
   has_needed_pkgs <- vapply(
-    c("rstudioapi", "httpuv"), requireNamespace, logical(1), quietly = TRUE
+    c("rstudioapi", "httpuv"),
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
   )
 
   if (any(!has_needed_pkgs)) {
     if (isTRUE(stop_if_not)) {
-      rlang::check_installed(c("rstudioapi", "httpuv"), "Required to run a tutorial as an RStudio job")
+      rlang::check_installed(
+        c("rstudioapi", "httpuv"),
+        "Required to run a tutorial as an RStudio job"
+      )
     }
     return(FALSE)
   }
@@ -425,7 +477,12 @@ can_run_rstudio_job <- function(stop_if_not = FALSE) {
   rstudioapi::hasFun("runScriptJob")
 }
 
-run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean = FALSE) {
+run_tutorial_as_job <- function(
+  name,
+  package = NULL,
+  shiny_args = list(),
+  clean = FALSE
+) {
   if (!can_run_rstudio_job() || !requireNamespace("httpuv", quietly = TRUE)) {
     stop("Cannot run tutorial as RStudio job")
   }
@@ -436,18 +493,24 @@ run_tutorial_as_job <- function(name, package = NULL, shiny_args = list(), clean
 
   shiny_args$launch.browser <- function(url) {
     message("\n+", strrep("-", getOption("width", 60) * 0.9), "+")
-    tryCatch({
-      job_call_parent <- function(expr) {
-        expr <- rlang::parse_expr(expr)
-        utils::getFromNamespace("callRemote", "rstudioapi")(expr, .GlobalEnv)
+    tryCatch(
+      {
+        job_call_parent <- function(expr) {
+          expr <- rlang::parse_expr(expr)
+          utils::getFromNamespace("callRemote", "rstudioapi")(expr, .GlobalEnv)
+        }
+        job_call_parent(
+          sprintf(
+            'getOption("shiny.launch.browser", utils::browseURL)("%s")',
+            url
+          )
+        )
+        message("\u2713 Opened tutorial available at ", url)
+      },
+      error = function(e) {
+        message("\u2713 Open the tutorial in your browser: ", url)
       }
-      job_call_parent(
-        sprintf('getOption("shiny.launch.browser", utils::browseURL)("%s")', url)
-      )
-      message("\u2713 Opened tutorial available at ", url)
-    }, error = function(e) {
-      message("\u2713 Open the tutorial in your browser: ", url)
-    })
+    )
     message("! Stop or cancel this job to stop running the tutorial")
     message("+", strrep("-", getOption("width", 60) * 0.9), "+\n")
   }

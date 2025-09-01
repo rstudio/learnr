@@ -1,6 +1,4 @@
-
 test_that("question_checkbox() does not include correct messages for incorrect answer", {
-
   q <- question_checkbox(
     "test",
     answer("A", correct = TRUE, message = "msg **1**"),
@@ -36,7 +34,6 @@ test_that("question_checkbox() does not include correct messages for incorrect a
 })
 
 test_that("question_checkbox() message depends on whether allow_retry = TRUE", {
-
   incorrect_message <- "incorrect"
   try_again_message <- "try_again"
 

@@ -11,17 +11,22 @@ cache_complete_exercise <- function(exercise) {
 
 get_opt_quick_restore <- function() {
   env <- Sys.getenv("TUTORIAL_QUICK_RESTORE", NA)
-  if (!is.na(env)) return(env)
+  if (!is.na(env)) {
+    return(env)
+  }
 
   opt <- getOption("tutorial.quick_restore", NA)
-  if (isTRUE(opt)) return("1")
-  if (isFALSE(opt)) return("0")
+  if (isTRUE(opt)) {
+    return("1")
+  }
+  if (isFALSE(opt)) {
+    return("0")
+  }
   if (!is.na(opt)) as.character(opt) else "0"
 }
 
 # run an exercise and return HTML UI
 setup_exercise_handler <- function(exercise_rx, session) {
-
   # get the environment where shared setup and data is located. one environment up
   # includes all of the shiny housekeeping (e.g. inputs, output, etc.); two
   # environments up will be an empty environment
@@ -56,7 +61,10 @@ setup_exercise_handler <- function(exercise_rx, session) {
         return()
       }
 
-      object <- get_exercise_submission(session = session, label = exercise$label)
+      object <- get_exercise_submission(
+        session = session,
+        label = exercise$label
+      )
       if (!is.null(object) && !is.null(object$data$output)) {
         # restore user state, but don't report correct
         # since the user's code wasn't re-evaluated
@@ -72,8 +80,11 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
         # ensure that html dependencies only reference package files
         dependencies <- htmltools::htmlDependencies(output)
-        if (!is.null(dependencies))
-          htmltools::htmlDependencies(output) <- filter_dependencies(dependencies)
+        if (!is.null(dependencies)) {
+          htmltools::htmlDependencies(output) <- filter_dependencies(
+            dependencies
+          )
+        }
 
         # assign to rv and return
         rv$result <- output
@@ -88,15 +99,22 @@ setup_exercise_handler <- function(exercise_rx, session) {
     }
 
     # get exercise evaluator factory function (allow replacement via global option)
-    evaluator_factory <- getOption("tutorial.exercise.evaluator", default = NULL)
+    evaluator_factory <- getOption(
+      "tutorial.exercise.evaluator",
+      default = NULL
+    )
     if (is.null(evaluator_factory)) {
-      remote_host <- getOption("tutorial.external.host", Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA))
-      if (!is.na(remote_host)){
+      remote_host <- getOption(
+        "tutorial.external.host",
+        Sys.getenv("TUTORIAL_EXTERNAL_EVALUATOR_HOST", NA)
+      )
+      if (!is.na(remote_host)) {
         evaluator_factory <- external_evaluator(remote_host)
-      } else if (!is_windows() && !is_mac())
+      } else if (!is_windows() && !is_mac()) {
         evaluator_factory <- forked_evaluator_factory
-      else
+      } else {
         evaluator_factory <- inline_evaluator
+      }
     }
 
     # retrieve exercise cache information:
@@ -118,8 +136,9 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # get timelimit option (either from chunk option or from global option)
     timelimit <- exercise$options$exercise.timelimit
-    if (is.null(timelimit))
+    if (is.null(timelimit)) {
       timelimit <- getOption("tutorial.exercise.timelimit", default = 30)
+    }
 
     # placeholder for current learnr version to deal with exercise structure differences
     # with other learnr versions
@@ -133,8 +152,12 @@ setup_exercise_handler <- function(exercise_rx, session) {
     }
 
     # create exercise evaluator
-    evaluator <- evaluator_factory(evaluate_exercise(exercise, envir),
-                                   timelimit, exercise, session)
+    evaluator <- evaluator_factory(
+      evaluate_exercise(exercise, envir),
+      timelimit,
+      exercise,
+      session
+    )
 
     # Create exercise ID to map the associated events.
     ex_id <- random_id("lnr_ex")
@@ -144,9 +167,9 @@ setup_exercise_handler <- function(exercise_rx, session) {
       session,
       "exercise_submitted",
       data = list(
-        label   = exercise$label,
-        id      = ex_id,
-        code    = exercise$code,
+        label = exercise$label,
+        id = ex_id,
+        code = exercise$code,
         restore = exercise$restore
       )
     )
@@ -158,9 +181,7 @@ setup_exercise_handler <- function(exercise_rx, session) {
 
     # poll for completion
     o <- observe({
-
       if (evaluator$completed()) {
-
         # get the result
         result <- evaluator$result()
 
@@ -169,20 +190,26 @@ setup_exercise_handler <- function(exercise_rx, session) {
           session,
           "exercise_result",
           data = list(
-            label            = exercise$label,
-            id               = ex_id,
-            code             = exercise$code,
-            output           = result$html_output,
+            label = exercise$label,
+            id = ex_id,
+            code = exercise$code,
+            output = result$html_output,
             timeout_exceeded = result$timeout_exceeded,
-            time_elapsed     = as.numeric(difftime(Sys.time(), start, units="secs")),
-            error_message    = result$error_message,
-            checked          = check_was_requested,
-            feedback         = result$feedback
+            time_elapsed = as.numeric(difftime(
+              Sys.time(),
+              start,
+              units = "secs"
+            )),
+            error_message = result$error_message,
+            checked = check_was_requested,
+            feedback = result$feedback
           )
         )
 
         # assign reactive result to be sent to the UI
-        rv$triggered <- isolate({ rv$triggered + 1})
+        rv$triggered <- isolate({
+          rv$triggered + 1
+        })
         rv$result <- exercise_result_as_html(result)
 
         isolate({
@@ -199,10 +226,8 @@ setup_exercise_handler <- function(exercise_rx, session) {
           }
         })
 
-
         # destroy the observer
         o$destroy()
-
       } else {
         invalidateLater(100, session)
       }
@@ -255,7 +280,9 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
     }
 
     stop(
-      "Received an exercise with ", v, ", most likely because it's ",
+      "Received an exercise with ",
+      v,
+      ", most likely because it's ",
       "from an older version of {learnr}. This is {learnr} version ",
       utils::packageVersion("learnr")
     )
@@ -304,18 +331,28 @@ upgrade_exercise <- function(exercise, require_items = NULL) {
     # this exercise will work out. Or at least won't result in surfacing an
     # internal learnr error as the culprit.
     warning(
-      "Expected exercise version ", current_version, ", but received version ",
-      exercise$version, ". This version of {learnr} is likely able to evaluate ",
-      "version ", exercise$version, " exercises, but there may be differences. ",
+      "Expected exercise version ",
+      current_version,
+      ", but received version ",
+      exercise$version,
+      ". This version of {learnr} is likely able to evaluate ",
+      "version ",
+      exercise$version,
+      " exercises, but there may be differences. ",
       "Please upgrade {learnr}; this version is ",
-      utils::packageVersion("learnr"), "."
+      utils::packageVersion("learnr"),
+      "."
     )
     return(exercise)
   }
 
   stop(
-    "Expected exercise version ", current_version, ", but received version ",
-    exercise$version, ". These versions are incompatible. ", exercise_problem
+    "Expected exercise version ",
+    current_version,
+    ", but received version ",
+    exercise$version,
+    ". These versions are incompatible. ",
+    exercise_problem
   )
 }
 
@@ -327,7 +364,10 @@ validate_exercise <- function(exercise, require_items = NULL) {
   required_names <- c("code", "label", "options", "chunks", require_items)
   missing_names <- setdiff(required_names, names(exercise))
   if (length(missing_names)) {
-    return(paste("Missing exercise items:", paste(missing_names, collapse = ", ")))
+    return(paste(
+      "Missing exercise items:",
+      paste(missing_names, collapse = ", ")
+    ))
   }
 
   NULL
@@ -346,7 +386,15 @@ standardize_code <- function(code) {
 }
 
 standardize_exercise_code <- function(exercise) {
-  ex_code_items <- c("error_check", "code_check", "check", "code", "global_setup", "solution", "tests")
+  ex_code_items <- c(
+    "error_check",
+    "code_check",
+    "check",
+    "code",
+    "global_setup",
+    "solution",
+    "tests"
+  )
   exercise[ex_code_items] <- lapply(exercise[ex_code_items], standardize_code)
   exercise
 }
@@ -364,9 +412,11 @@ standardize_exercise_code <- function(exercise) {
 #   evaluators, if they choose to use this function, might want to include the
 #   global setup.
 evaluate_exercise <- function(
-  exercise, envir, evaluate_global_setup = FALSE, data_dir = NULL
+  exercise,
+  envir,
+  evaluate_global_setup = FALSE,
+  data_dir = NULL
 ) {
-
   # Exercise Prep and Standardization ---------------------------------------
   # Protect global options and environment vars from permanent modification
   local_restore_options_and_envvars()
@@ -392,17 +442,20 @@ evaluate_exercise <- function(
   # Evaluate Global Setup ---------------------------------------------------
   if (evaluate_global_setup) {
     res_global <-
-      tryCatch({
-        eval(parse(text = exercise$global_setup), envir = envir)
-        NULL
-      }, error = function(err) {
-        exercise_result_error_internal(
-          exercise,
-          err,
-          task_internal = "evaluating the global setup",
-          task_external = "setting up the tutorial"
-        )
-      })
+      tryCatch(
+        {
+          eval(parse(text = exercise$global_setup), envir = envir)
+          NULL
+        },
+        error = function(err) {
+          exercise_result_error_internal(
+            exercise,
+            err,
+            task_internal = "evaluating the global setup",
+            task_external = "setting up the tutorial"
+          )
+        }
+      )
 
     if (is_exercise_result(res_global)) {
       return(res_global)
@@ -470,15 +523,23 @@ evaluate_exercise <- function(
       if (!inherits(err_render, "learnr_render_exercise_error")) {
         # render exercise errors are expected, but something really went wrong
         return(
-          exercise_result_error_internal(exercise, err_render, "evaluating your exercise", "inside render_exercise()")
+          exercise_result_error_internal(
+            exercise,
+            err_render,
+            "evaluating your exercise",
+            "inside render_exercise()"
+          )
         )
       }
       error_feedback <- NULL
       error_check_code <- exercise$error_check
-      error_should_check <- nzchar(exercise$check) || nzchar(exercise$code_check)
+      error_should_check <- nzchar(exercise$check) ||
+        nzchar(exercise$code_check)
       if (error_should_check && !nzchar(error_check_code)) {
         # If there is no locally defined error check code, look for globally defined error check option
-        error_check_code <- standardize_code(exercise$options$exercise.error.check.code)
+        error_check_code <- standardize_code(
+          exercise$options$exercise.error.check.code
+        )
       }
       if (nzchar(error_check_code)) {
         # Error check -------------------------------------------------------
@@ -536,9 +597,14 @@ evaluate_exercise <- function(
 
 
 try_checker <- function(
-  exercise, stage,
-  name = "exercise.checker", check_code = NULL, envir_result = NULL,
-  evaluate_result = NULL, envir_prep, last_value = NULL,
+  exercise,
+  stage,
+  name = "exercise.checker",
+  check_code = NULL,
+  envir_result = NULL,
+  evaluate_result = NULL,
+  envir_prep,
+  last_value = NULL,
   engine = exercise$engine
 ) {
   checker_func <- tryCatch(
@@ -576,7 +642,8 @@ try_checker <- function(
     } else {
       msg <- sprintf(
         "Either add ... or the following arguments to the '%s' function: '%s'",
-        name, paste(missing_args, collapse = "', '")
+        name,
+        paste(missing_args, collapse = "', '")
       )
       message(msg)
       rlang::return_from(rlang::caller_env(), exercise_result_error(msg))
@@ -612,8 +679,13 @@ get_checker_func <- function(exercise, name, envir) {
   if (is.function(checker)) {
     environment(checker) <- envir
     return(checker)
-  } else if(!is.null(checker)) {
-    warning("Ignoring the ", name, " option since it isn't a function", call. = FALSE)
+  } else if (!is.null(checker)) {
+    warning(
+      "Ignoring the ",
+      name,
+      " option since it isn't a function",
+      call. = FALSE
+    )
   }
   function(...) NULL
 }
@@ -646,7 +718,10 @@ render_exercise <- function(exercise, envir) {
 
     if (isTRUE(user)) {
       knitr_options$knit_hooks$evaluate <- function(
-        code, envir, ..., output_handler # knitr's output_handler
+        code,
+        envir,
+        ...,
+        output_handler # knitr's output_handler
       ) {
         has_visible_arg <- length(formals(output_handler$value)) > 1
         # wrap `output_handler$value` to be able to capture the `last_value`
@@ -667,7 +742,9 @@ render_exercise <- function(exercise, envir) {
           }
         }
         evaluate_result <<- evaluate::evaluate(
-          code, envir, ...,
+          code,
+          envir,
+          ...,
           output_handler = output_handler
         )
         evaluate_result
@@ -689,70 +766,75 @@ render_exercise <- function(exercise, envir) {
   envir_result <- envir_prep
 
   # First, Rmd to markdown (and exit early if any error)
-  output_file <- tryCatch({
-    # — Render Exercise Stage: Prep ----
-    # TODO: The render stage and everything associated with it should really be
-    #       named "setup", e.g. `envir_setup`, etc. The stage here is called
-    #       "prep" to avoid confusion with the current naming.
-    render_stage <- "prep"
+  output_file <- tryCatch(
+    {
+      # — Render Exercise Stage: Prep ----
+      # TODO: The render stage and everything associated with it should really be
+      #       named "setup", e.g. `envir_setup`, etc. The stage here is called
+      #       "prep" to avoid confusion with the current naming.
+      render_stage <- "prep"
 
-    render_exercise_evaluate_prep(
-      exercise = exercise,
-      envir_prep = envir_prep,
-      output_format_exercise(user = FALSE)
-    )
-
-    # Create exercise.Rmd after running setup so it isn't accidentally overwritten
-    if (file.exists("exercise.Rmd")) {
-      warning(
-        "Evaluating user code in exercise '", exercise$label, "' created ",
-        "'exercise.Rmd'. If the setup code for this exercise creates a file ",
-        "with that name, please choose another name.",
-        immediate. = TRUE
+      render_exercise_evaluate_prep(
+        exercise = exercise,
+        envir_prep = envir_prep,
+        output_format_exercise(user = FALSE)
       )
-    }
 
-    # — Render Exercise Stage: User ----
-    render_stage <- "user"
-    # Copy in a full clone `envir_prep` before running user code in `envir_result`
-    # By being a sibling to `envir_prep` (rather than a dependency),
-    # alterations to `envir_prep` from eval'ing code in `envir_result`
-    # are much more difficult
-    envir_result <- duplicate_env(envir_prep)
-
-    render_exercise_evaluate_user(
-      exercise = exercise,
-      envir_result = envir_result,
-      output_format_exercise(user = TRUE)
-    )
-  }, error = function(e) {
-    msg <- conditionMessage(e)
-    # make the time limit error message a bit more friendly
-    pattern <- gettext("reached elapsed time limit", domain = "R")
-    if (grepl(pattern, msg, fixed = TRUE)) {
-      return(exercise_result_timeout())
-    }
-
-    if (render_stage == "prep") {
-      # errors in setup (prep) code should be returned as internal error results
-      return(
-        exercise_result_error_internal(
-          exercise = exercise,
-          error = e,
-          task_external = "setting up the exercise",
-          task_internal = "rendering exercise setup"
+      # Create exercise.Rmd after running setup so it isn't accidentally overwritten
+      if (file.exists("exercise.Rmd")) {
+        warning(
+          "Evaluating user code in exercise '",
+          exercise$label,
+          "' created ",
+          "'exercise.Rmd'. If the setup code for this exercise creates a file ",
+          "with that name, please choose another name.",
+          immediate. = TRUE
         )
+      }
+
+      # — Render Exercise Stage: User ----
+      render_stage <- "user"
+      # Copy in a full clone `envir_prep` before running user code in `envir_result`
+      # By being a sibling to `envir_prep` (rather than a dependency),
+      # alterations to `envir_prep` from eval'ing code in `envir_result`
+      # are much more difficult
+      envir_result <- duplicate_env(envir_prep)
+
+      render_exercise_evaluate_user(
+        exercise = exercise,
+        envir_result = envir_result,
+        output_format_exercise(user = TRUE)
+      )
+    },
+    error = function(e) {
+      msg <- conditionMessage(e)
+      # make the time limit error message a bit more friendly
+      pattern <- gettext("reached elapsed time limit", domain = "R")
+      if (grepl(pattern, msg, fixed = TRUE)) {
+        return(exercise_result_timeout())
+      }
+
+      if (render_stage == "prep") {
+        # errors in setup (prep) code should be returned as internal error results
+        return(
+          exercise_result_error_internal(
+            exercise = exercise,
+            error = e,
+            task_external = "setting up the exercise",
+            task_internal = "rendering exercise setup"
+          )
+        )
+      }
+
+      rlang::abort(
+        class = "learnr_render_exercise_error",
+        envir_result = envir_result,
+        evaluate_result = evaluate_result,
+        envir_prep = envir_prep,
+        parent = e
       )
     }
-
-    rlang::abort(
-      class = "learnr_render_exercise_error",
-      envir_result = envir_result,
-      evaluate_result = evaluate_result,
-      envir_prep = envir_prep,
-      parent = e
-    )
-  })
+  )
 
   if (is_exercise_result(output_file)) {
     # this only happens when the render result is a timeout error or setup error
@@ -762,8 +844,11 @@ render_exercise <- function(exercise, envir) {
   # Render markdown to HTML
   dependencies <- filter_dependencies(attr(output_file, "knit_meta"))
   output_file <- rmarkdown::render(
-    input = output_file, output_format = output_format_exercise(user = TRUE),
-    envir = envir_result, quiet = TRUE, clean = FALSE
+    input = output_file,
+    output_format = output_format_exercise(user = TRUE),
+    envir = envir_result,
+    quiet = TRUE,
+    clean = FALSE
   )
   output <- readLines(output_file, warn = FALSE, encoding = "UTF-8")
   html_output <- htmltools::attachDependencies(
@@ -771,10 +856,13 @@ render_exercise <- function(exercise, envir) {
     dependencies
   )
 
-  if (!last_value_is_visible && isTRUE(exercise$options$exercise.warn_invisible)) {
+  if (
+    !last_value_is_visible && isTRUE(exercise$options$exercise.warn_invisible)
+  ) {
     invisible_feedback <- list(
       message = "The submitted code didn't produce a visible value, so exercise checking may not work correctly.",
-      type = "warning", correct = FALSE
+      type = "warning",
+      correct = FALSE
     )
     html_output <- htmltools::tagList(
       feedback_as_html(invisible_feedback),
@@ -815,7 +903,11 @@ render_exercise_evaluate_prep <- function(exercise, envir_prep, output_format) {
   }
 }
 
-render_exercise_evaluate_user <- function(exercise, envir_result, output_format) {
+render_exercise_evaluate_user <- function(
+  exercise,
+  envir_result,
+  output_format
+) {
   withr::defer(render_exercise_post_stage_hook(exercise, "user", envir_result))
 
   rmd_src_user <- render_exercise_rmd_user(exercise)
@@ -864,19 +956,26 @@ exercise_code_chunks_user <- function(exercise) {
 }
 
 exercise_code_chunks <- function(chunks, engine = "r") {
-  vapply(chunks, function(chunk) {
-    opts <- chunk$opts[setdiff(names(chunk$opts), "label")]
-    opts <- paste(names(opts), unname(opts), sep = "=")
-    chunk_engine <- chunk$engine %||% engine %||% "r"
-    chunk_opts <- paste0(c(dput_to_string(chunk$label), opts), collapse = ", ")
-    paste(
-      sep = "\n",
-      # we quote the label to ensure that it is treated as a label and not a symbol for instance
-      sprintf("```{%s %s}", chunk_engine, chunk_opts),
-      paste0(chunk$code, collapse = "\n"),
-      "```"
-    )
-  }, character(1))
+  vapply(
+    chunks,
+    function(chunk) {
+      opts <- chunk$opts[setdiff(names(chunk$opts), "label")]
+      opts <- paste(names(opts), unname(opts), sep = "=")
+      chunk_engine <- chunk$engine %||% engine %||% "r"
+      chunk_opts <- paste0(
+        c(dput_to_string(chunk$label), opts),
+        collapse = ", "
+      )
+      paste(
+        sep = "\n",
+        # we quote the label to ensure that it is treated as a label and not a symbol for instance
+        sprintf("```{%s %s}", chunk_engine, chunk_opts),
+        paste0(chunk$code, collapse = "\n"),
+        "```"
+      )
+    },
+    character(1)
+  )
 }
 
 exercise_get_blanks_pattern <- function(exercise) {
@@ -940,14 +1039,23 @@ exercise_check_code_for_blanks <- function(exercise) {
       key = "text.pleasereplaceblank",
       opts = list(
         count = length(blanks),
-        blank = i18n_combine_words(unique(blanks), before = "<code>", after = "</code>"),
+        blank = i18n_combine_words(
+          unique(blanks),
+          before = "<code>",
+          after = "</code>"
+        ),
         interpolation = list(escapeValue = FALSE)
       )
     )
   )
 
   exercise_result(
-    list(message = HTML(msg), correct = FALSE, location = "prepend", type = "error")
+    list(
+      message = HTML(msg),
+      correct = FALSE,
+      location = "prepend",
+      type = "error"
+    )
   )
 }
 
@@ -1023,7 +1131,13 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
     names(replacement_pattern) <- c(single_quote_pattern, double_quote_pattern)
 
     return(
-      unparsable_unicode_message("unparsablequotes", code, line, quote_pattern, replacement_pattern)
+      unparsable_unicode_message(
+        "unparsablequotes",
+        code,
+        line,
+        quote_pattern,
+        replacement_pattern
+      )
     )
   }
 
@@ -1042,7 +1156,13 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
     names(replacement_pattern) <- dash_pattern
 
     return(
-      unparsable_unicode_message("unparsableunicodesuggestion", code, line, dash_pattern, replacement_pattern)
+      unparsable_unicode_message(
+        "unparsableunicodesuggestion",
+        code,
+        line,
+        dash_pattern,
+        replacement_pattern
+      )
     )
   }
 
@@ -1050,12 +1170,21 @@ exercise_check_unparsable_unicode <- function(exercise, error_message) {
   # Regex searches for any codepoints not in the ASCII range (00-7F)
   non_ascii_pattern <- "[^\u01-\u7f]"
   return(
-    unparsable_unicode_message("unparsableunicode", code, line, non_ascii_pattern)
+    unparsable_unicode_message(
+      "unparsableunicode",
+      code,
+      line,
+      non_ascii_pattern
+    )
   )
 }
 
 unparsable_unicode_message <- function(
-  i18n_key, code, line, pattern, replacement_pattern = NULL
+  i18n_key,
+  code,
+  line,
+  pattern,
+  replacement_pattern = NULL
 ) {
   code <- unlist(strsplit(code, "\n"))[[line]]
 
@@ -1111,7 +1240,12 @@ exercise_result_timeout <- function() {
 
 # @param timeout_exceeded represents whether or not the error was triggered
 #   because the exercise exceeded the timeout. Use NA if unknown
-exercise_result_error <- function(error_message, feedback = NULL, timeout_exceeded = NA, style = "code") {
+exercise_result_error <- function(
+  error_message,
+  feedback = NULL,
+  timeout_exceeded = NA,
+  style = "code"
+) {
   exercise_result(
     feedback = feedback,
     timeout_exceeded = timeout_exceeded,
@@ -1126,8 +1260,14 @@ exercise_result_error_internal <- function(
   task_external = "",
   task_internal = task_external
 ) {
-  task_external <- paste0(if (nzchar(task_external %||% "")) " while ", task_external)
-  task_internal <- paste0(if (nzchar(task_internal %||% "")) " while ", task_internal)
+  task_external <- paste0(
+    if (nzchar(task_external %||% "")) " while ",
+    task_external
+  )
+  task_internal <- paste0(
+    if (nzchar(task_internal %||% "")) " while ",
+    task_internal
+  )
 
   msg_internal <- sprintf(
     "An error occurred%s for exercise '%s'",
@@ -1164,7 +1304,11 @@ exercise_result <- function(
     feedback$html <- feedback_as_html(feedback)
   }
 
-  if (!inherits(html_output, "html") && is.character(html_output) && any(nzchar(html_output))) {
+  if (
+    !inherits(html_output, "html") &&
+      is.character(html_output) &&
+      any(nzchar(html_output))
+  ) {
     html_output <- htmltools::HTML(html_output)
   } else if (length(html_output) == 0) {
     html_output <- NULL
@@ -1222,9 +1366,11 @@ filter_dependencies <- function(dependencies) {
     } else if (!is.null(dependency$package)) {
       TRUE
     } else {
-      ! is.null(tryCatch(
-        rprojroot::find_root(rprojroot::is_r_package,
-                             path = dependency$src$file),
+      !is.null(tryCatch(
+        rprojroot::find_root(
+          rprojroot::is_r_package,
+          path = dependency$src$file
+        ),
         error = function(e) NULL
       ))
     }
@@ -1259,7 +1405,6 @@ render_exercise_prepare.default <- function(exercise, ...) {
   }
 
   exercise$chunks <- lapply(exercise[["chunks"]], function(chunk) {
-
     if (identical(chunk[["label"]], exercise[["label"]])) {
       # Exercise Chunk ----
       chunk[["opts"]] <- discard_forced_opts(chunk[["opts"]])
@@ -1269,8 +1414,13 @@ render_exercise_prepare.default <- function(exercise, ...) {
         inherited = I(exercise[["opts_chunk"]])
       )
       # keep only unique options that we over-rode when prepping specific ex type (e.g. sql)
-      different_ex_opt <- function(opt, name) !identical(opt, exercise[["opts_chunk"]][[name]])
-      chunk[["opts"]] <- chunk[["opts"]][imap_lgl(chunk[["opts"]], different_ex_opt)]
+      different_ex_opt <- function(opt, name) {
+        !identical(opt, exercise[["opts_chunk"]][[name]])
+      }
+      chunk[["opts"]] <- chunk[["opts"]][imap_lgl(
+        chunk[["opts"]],
+        different_ex_opt
+      )]
       # move user submission code into the exercise chunk
       chunk[["code"]] <- exercise[["code"]]
     } else {
@@ -1341,7 +1491,7 @@ merge_chunk_options <- function(
   option_names <- unique(c(names(chunk), names(inherited), names(forced)))
   opts <- lapply(option_names, function(option_name) {
     # first we want manually set options, then user's, then exercise
-    forced[[option_name]]  %||%
+    forced[[option_name]] %||%
       chunk[[option_name]] %||%
       inherited[[option_name]]
   })
@@ -1376,7 +1526,12 @@ render_exercise_rmd_user <- function(exercise, ...) {
 #' @export
 render_exercise_rmd_user.default <- function(exercise, ...) {
   c(
-    readLines(system.file("internals", "templates", "exercise-setup.Rmd", package = "learnr")),
+    readLines(system.file(
+      "internals",
+      "templates",
+      "exercise-setup.Rmd",
+      package = "learnr"
+    )),
     "",
     exercise_code_chunks_user(exercise)
   )
@@ -1429,7 +1584,12 @@ render_exercise_post_stage_hook.default <- function(exercise, ...) {
 }
 
 #' @export
-render_exercise_post_stage_hook.python <- function(exercise, stage, envir, ...) {
+render_exercise_post_stage_hook.python <- function(
+  exercise,
+  stage,
+  envir,
+  ...
+) {
   # Add copy of python environment into the prep/result environment
   assign(".__py__", py_copy_global_env(), envir = envir)
   invisible()
@@ -1482,7 +1642,11 @@ render_exercise_result.sql <- function(
   if (exists("___sql_result", envir = envir_result)) {
     if (!is.null(exercise[["options"]][["output.var"]])) {
       # the author expected the sql results in a specific variable
-      assign(exercise[["options"]][["output.var"]], last_value, envir = envir_result)
+      assign(
+        exercise[["options"]][["output.var"]],
+        last_value,
+        envir = envir_result
+      )
     }
     rm("___sql_result", envir = envir_result)
   }
@@ -1539,15 +1703,15 @@ local_restore_envvars <- function(.local_envir = parent.frame()) {
 }
 
 restore_options <- function(old) {
-  current    <- options()
-  nulls      <- setdiff(names(current), names(old))
+  current <- options()
+  nulls <- setdiff(names(current), names(old))
   old[nulls] <- list(NULL)
   options(old)
 }
 
 restore_envvars <- function(old) {
   current <- Sys.getenv()
-  nulls   <- setdiff(names(current), names(old))
+  nulls <- setdiff(names(current), names(old))
   Sys.unsetenv(nulls)
   do.call(Sys.setenv, as.list(old))
 }
@@ -1555,11 +1719,19 @@ restore_envvars <- function(old) {
 # Print Methods -----------------------------------------------------------
 
 #' @export
-format.tutorial_exercise <- function (x, ..., setup_chunk_only = FALSE) {
+format.tutorial_exercise <- function(x, ..., setup_chunk_only = FALSE) {
   label <- x$label
   if (!isTRUE(setup_chunk_only)) {
-    for (chunk in c("solution", "code_check", "check", "error_check", "tests")) {
-      if (is.null(x[[chunk]]) || !nzchar(x[[chunk]])) next
+    for (chunk in c(
+      "solution",
+      "code_check",
+      "check",
+      "error_check",
+      "tests"
+    )) {
+      if (is.null(x[[chunk]]) || !nzchar(x[[chunk]])) {
+        next
+      }
       support_chunk <- mock_chunk(
         label = paste0(label, "-", sub("_", "-", chunk)),
         code = x[[chunk]],

@@ -2,8 +2,8 @@ test_that("question_radio() throws an error when using only answer_fn() answers"
   expect_error(
     question_radio(
       "test",
-      answer_fn(~ "one"),
-      answer_fn(~ "two")
+      answer_fn(~"one"),
+      answer_fn(~"two")
     )
   )
 })
@@ -12,7 +12,7 @@ test_that("question_radio() throws an error if it doesn't include a correct answ
   expect_error(
     question_radio(
       "test",
-      answer_fn(~ "one"),
+      answer_fn(~"one"),
       answer("two", correct = FALSE)
     )
   )
@@ -29,7 +29,7 @@ test_that("question_radio() warns when using answer_fn() answers", {
   expect_warning(
     q_fn <- question_radio(
       "test",
-      answer_fn(~ "one"),
+      answer_fn(~"one"),
       answer("two", correct = TRUE)
     )
   )

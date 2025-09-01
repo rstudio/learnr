@@ -3,9 +3,11 @@ context("install tutorial dependencies")
 create_test_tutorial <- function(code) {
   tutorial_dir <- file.path(tempdir(), "tutorial-deps")
   dir.create(tutorial_dir)
-  tutorial_path <- tempfile("tutorial-deps",
-                            tmpdir = tutorial_dir,
-                            fileext = ".R")
+  tutorial_path <- tempfile(
+    "tutorial-deps",
+    tmpdir = tutorial_dir,
+    fileext = ".R"
+  )
   writeLines(code, con = tutorial_path)
   invisible(tutorial_dir)
 }

@@ -50,7 +50,9 @@ i18n_process_language_options <- function(language = NULL) {
 
       language[[lng]] <- i18n_validate_customization(language[[lng]])
 
-      if (is.null(language[[lng]])) next
+      if (is.null(language[[lng]])) {
+        next
+      }
       custom[[lng]] <- list(custom = language[[lng]])
     }
   }
@@ -68,7 +70,11 @@ i18n_process_language_options <- function(language = NULL) {
 
 i18n_read_json <- function(path) {
   tryCatch(
-    jsonlite::read_json(path, simplifyDataFrame = FALSE, simplifyMatrix = FALSE),
+    jsonlite::read_json(
+      path,
+      simplifyDataFrame = FALSE,
+      simplifyMatrix = FALSE
+    ),
     error = function(e) {
       message("Unable to read custom language JSON file at: ", path)
       NULL
@@ -100,7 +106,8 @@ i18n_validate_customization <- function(lng) {
   extra_group_keys <- setdiff(names(lng), group_keys)
   if (length(extra_group_keys)) {
     warning(
-      "Ignoring extra customization groups ", paste(extra_group_keys, collapse = ", "),
+      "Ignoring extra customization groups ",
+      paste(extra_group_keys, collapse = ", "),
       immediate. = TRUE
     )
   }
@@ -109,7 +116,9 @@ i18n_validate_customization <- function(lng) {
     extra_keys <- setdiff(names(lng[[group]]), names(default[[group]]))
     if (length(extra_keys)) {
       warning(
-        "Ignoring extra ", group, " language customizations: ",
+        "Ignoring extra ",
+        group,
+        " language customizations: ",
         paste(extra_keys, collapse = ", "),
         immediate. = TRUE
       )
@@ -137,10 +146,14 @@ i18n_div <- function(key, ..., opts = NULL) {
 }
 
 i18n_combine_words <- function(
-  words, and = c("and", "or"), before = "", after = before, oxford_comma = TRUE
+  words,
+  and = c("and", "or"),
+  before = "",
+  after = before,
+  oxford_comma = TRUE
 ) {
-  and   <- match.arg(and)
-  and   <- sprintf(" $t(text.%s) ", and)
+  and <- match.arg(and)
+  and <- sprintf(" $t(text.%s) ", and)
   words <- paste0(before, words, after)
 
   n <- length(words)
@@ -151,7 +164,8 @@ i18n_combine_words <- function(
   knitr::combine_words(
     words,
     sep = "$t(text.listcomma) ",
-    and = and, oxford_comma = FALSE
+    and = and,
+    oxford_comma = FALSE
   )
 }
 

@@ -1,8 +1,6 @@
-
 context("duplicate_env")
 
 test_that("it duplicates", {
-
   e <- new.env(parent = baseenv())
   e$x <- 1
   e$.key <- "value"

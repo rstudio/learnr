@@ -9,15 +9,18 @@
 #   is_installed
 
 is_localhost <- function(location) {
-  if (is.null(location))
+  if (is.null(location)) {
     # caused when using devtools::load_all(), which is a localhost
     TRUE
-  else if (location$hostname %in% c("localhost", "127.0.0.1"))
+  } else if (location$hostname %in% c("localhost", "127.0.0.1")) {
     TRUE
-  else if (nzchar(Sys.getenv("RSTUDIO")) && grepl("/p/\\d+/", location$pathname))
+  } else if (
+    nzchar(Sys.getenv("RSTUDIO")) && grepl("/p/\\d+/", location$pathname)
+  ) {
     TRUE
-  else
+  } else {
     FALSE
+  }
 }
 
 stop. <- function(...) {
@@ -98,7 +101,7 @@ py_learnr_utilities <- function() {
   }
 
   learnr_py <- system.file("internals", "learnr.py", package = "learnr")
-  reticulate::py_run_file(learnr_py,convert = FALSE)[["__learnr__"]]
+  reticulate::py_run_file(learnr_py, convert = FALSE)[["__learnr__"]]
 }
 
 #' This clears the Python environment `py`.
@@ -150,7 +153,6 @@ str_match <- function(x, pattern) {
   if_no_match_return_null(
     regmatches(x, regexpr(pattern, x))
   )
-
 }
 str_match_all <- function(x, pattern, ...) {
   if_no_match_return_null(
@@ -158,11 +160,15 @@ str_match_all <- function(x, pattern, ...) {
   )
 }
 str_replace <- function(x, pattern, replacement) {
-  if (is.null(x)) return(NULL)
+  if (is.null(x)) {
+    return(NULL)
+  }
   sub(pattern, replacement, x)
 }
 str_replace_all <- function(x, pattern, replacement) {
-  if (is.null(x)) return(NULL)
+  if (is.null(x)) {
+    return(NULL)
+  }
 
   if (!is.null(names(pattern))) {
     for (i in seq_along(pattern)) {

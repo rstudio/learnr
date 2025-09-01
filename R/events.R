@@ -26,10 +26,13 @@ event_handlers <- new.env(parent = emptyenv())
 #'
 #' @export
 event_register_handler <- function(event, callback) {
-  if (!is.function(callback) ||
-      !identical(names(formals(callback)), c("session", "event", "data")))
-  {
-    stop("`callback` must be a function that takes three arguments, `session`, `event`, and `data`.")
+  if (
+    !is.function(callback) ||
+      !identical(names(formals(callback)), c("session", "event", "data"))
+  ) {
+    stop(
+      "`callback` must be a function that takes three arguments, `session`, `event`, and `data`."
+    )
   }
 
   if (is.null(event_handlers[[event]])) {
@@ -77,9 +80,10 @@ create_event_handler_remover <- function(event, id) {
 
 # Remove an event handler.
 event_remove_handler <- function(event, id) {
-  if (is.null(event_handlers[[event]]) ||
-      is.null(event_handlers[[event]][[id]]))
-  {
+  if (
+    is.null(event_handlers[[event]]) ||
+      is.null(event_handlers[[event]][[id]])
+  ) {
     return(invisible(FALSE))
   }
 

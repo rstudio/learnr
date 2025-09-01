@@ -59,7 +59,6 @@ tutorial <- function(
   lib_dir = NULL,
   ...
 ) {
-
   if ("anchor_sections" %in% names(list(...))) {
     stop("learnr tutorials do not support the `anchor_sections` option.")
   }
@@ -74,27 +73,41 @@ tutorial <- function(
   args <- c(args, "--reference-location=section")
 
   # template
-  args <- c(args, "--template", rmarkdown::pandoc_path_arg(
-    system.file("rmarkdown/templates/tutorial/resources/tutorial-format.htm",
-                package = "learnr")
-  ))
+  args <- c(
+    args,
+    "--template",
+    rmarkdown::pandoc_path_arg(
+      system.file(
+        "rmarkdown/templates/tutorial/resources/tutorial-format.htm",
+        package = "learnr"
+      )
+    )
+  )
 
   # content includes
   args <- c(args, rmarkdown::includes_to_pandoc_args(includes))
 
   # pagedtables
   if (identical(df_print, "paged")) {
-    extra_dependencies <- append(extra_dependencies,
-                                 list(rmarkdown::html_dependency_pagedtable()))
+    extra_dependencies <- append(
+      extra_dependencies,
+      list(rmarkdown::html_dependency_pagedtable())
+    )
   }
 
   # highlight
-  rmarkdown_pandoc_html_highlight_args <- getFromNamespace("pandoc_html_highlight_args", "rmarkdown")
+  rmarkdown_pandoc_html_highlight_args <- getFromNamespace(
+    "pandoc_html_highlight_args",
+    "rmarkdown"
+  )
   rmarkdown_is_highlightjs <- getFromNamespace("is_highlightjs", "rmarkdown")
   args <- c(args, rmarkdown_pandoc_html_highlight_args("default", highlight))
   # add highlight.js html_dependency if required
   if (rmarkdown_is_highlightjs(highlight)) {
-    extra_dependencies <- append(extra_dependencies, list(rmarkdown::html_dependency_highlightjs(highlight)))
+    extra_dependencies <- append(
+      extra_dependencies,
+      list(rmarkdown::html_dependency_highlightjs(highlight))
+    )
   }
 
   # ace theme
@@ -114,17 +127,23 @@ tutorial <- function(
   # tutorial_html_dependency() within our list of dependencies to ensure that
   # tutorial.js (and the API it provides) is always loaded prior to our
   # tutorial-format.js file.
-  extra_dependencies <- append(extra_dependencies, list(
-    tutorial_html_dependency(),
-    tutorial_i18n_html_dependency(language),
-    htmltools::htmlDependency(
-      name = "tutorial-format",
-      version = utils::packageVersion("learnr"),
-      src = system.file("rmarkdown/templates/tutorial/resources", package = "learnr"),
-      script = "tutorial-format.js",
-      stylesheet = stylesheets
+  extra_dependencies <- append(
+    extra_dependencies,
+    list(
+      tutorial_html_dependency(),
+      tutorial_i18n_html_dependency(language),
+      htmltools::htmlDependency(
+        name = "tutorial-format",
+        version = utils::packageVersion("learnr"),
+        src = system.file(
+          "rmarkdown/templates/tutorial/resources",
+          package = "learnr"
+        ),
+        script = "tutorial-format.js",
+        stylesheet = stylesheets
+      )
     )
-  ))
+  )
 
   # additional pandoc variables specific to learnr
   jsbool <- function(value) ifelse(value, "true", "false")
@@ -132,15 +151,26 @@ tutorial <- function(
     args,
     rmarkdown::pandoc_variable_arg("progressive", jsbool(progressive)),
     rmarkdown::pandoc_variable_arg("allow-skip", jsbool(allow_skip)),
-    rmarkdown::pandoc_variable_arg("learnr-version", utils::packageVersion("learnr"))
+    rmarkdown::pandoc_variable_arg(
+      "learnr-version",
+      utils::packageVersion("learnr")
+    )
   )
 
   # knitr and pandoc options
-  knitr_options <- rmarkdown::knitr_options_html(fig_width, fig_height, fig_retina, keep_md = FALSE , dev)
-  pandoc_options <- rmarkdown::pandoc_options(to = "html4",
+  knitr_options <- rmarkdown::knitr_options_html(
+    fig_width,
+    fig_height,
+    fig_retina,
+    keep_md = FALSE,
+    dev
+  )
+  pandoc_options <- rmarkdown::pandoc_options(
+    to = "html4",
     from = rmarkdown::from_rmarkdown(fig_caption, md_extensions),
     args = args,
-    ext = ".html")
+    ext = ".html"
+  )
 
   tutorial_opts <- tutorial_knitr_options()
   knitr_options <- utils::modifyList(knitr_options, tutorial_opts)
@@ -163,9 +193,11 @@ tutorial <- function(
   )
 
   # return new output format
-  rmarkdown::output_format(knitr = knitr_options,
-                           pandoc = pandoc_options,
-                           clean_supporting = FALSE,
-                           df_print = df_print,
-                           base_format = base_format)
+  rmarkdown::output_format(
+    knitr = knitr_options,
+    pandoc = pandoc_options,
+    clean_supporting = FALSE,
+    df_print = df_print,
+    base_format = base_format
+  )
 }

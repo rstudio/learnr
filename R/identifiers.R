@@ -1,23 +1,25 @@
-
 initialize_session_state <- function(session, metadata, location, request) {
-
   # helper to read rook headers
   as_rook_header <- function(name) {
-    if (!is.null(name))
+    if (!is.null(name)) {
       paste0("HTTP_", toupper(gsub("-", "_", name, fixed = TRUE)))
-    else
+    } else {
       NULL
+    }
   }
 
   # function to initialize an identifier (read from http header or take default)
   initialize_identifier <- function(identifier, default) {
-
     # determine whether a custom header provides the value (fallback to default)
-    header <- as_rook_header(getOption(sprintf("tutorial.http_header_%s", identifier)))
-    if (!is.null(header) && exists(header, envir = request))
+    header <- as_rook_header(getOption(sprintf(
+      "tutorial.http_header_%s",
+      identifier
+    )))
+    if (!is.null(header) && exists(header, envir = request)) {
       value <- get(header, envir = request)
-    else
+    } else {
       value <- default
+    }
 
     # write it into the request for reading later on
     write_request(session, sprintf("tutorial.%s", identifier), value)
@@ -64,10 +66,16 @@ package_info <- function() {
   }
 }
 
-default_tutorial_id <- function(id = NULL, location = NULL, pkg = package_info()) {
+default_tutorial_id <- function(
+  id = NULL,
+  location = NULL,
+  pkg = package_info()
+) {
   # determine default tutorial id (metadata first then filesystem-based for
   # localhost and remote URL based for other configurations)
-  if (!is.null(id)) return(id)
+  if (!is.null(id)) {
+    return(id)
+  }
 
   if (!is_localhost(location)) {
     return(paste0(location$host, location$pathname))
@@ -86,7 +94,9 @@ default_tutorial_id <- function(id = NULL, location = NULL, pkg = package_info()
 
 default_tutorial_version <- function(version = NULL, pkg = package_info()) {
   # determine default version (if in a package use the package version)
-  if (!is.null(version)) return(version)
+  if (!is.null(version)) {
+    return(version)
+  }
 
   if (!is.null(pkg$dir)) {
     return(pkg$info$Version)
@@ -107,10 +117,13 @@ default_language <- function() {
 
 read_request <- function(session, name, default = NULL) {
   if (!is.null(name)) {
-    if (is.environment(session$request) && exists(name, envir = session$request))
+    if (
+      is.environment(session$request) && exists(name, envir = session$request)
+    ) {
       get(name, envir = session$request)
-    else
+    } else {
       default
+    }
   } else {
     default
   }
@@ -121,4 +134,3 @@ write_request <- function(session, name, value) {
   session$request[[name]] <- value
   do.call("lockBinding", list("request", session))
 }
-

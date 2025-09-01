@@ -1,14 +1,19 @@
 test_that("R auto complete finds runif vars", {
-
   expect_equal(auto_complete_r("method not found"), list())
-  expect_equal(auto_complete_r("runif"), list(
-    list("runif", TRUE)
-  ))
-  expect_equal(auto_complete_r("runif("), list(
-    list("n = ", FALSE),
-    list("min = ", FALSE),
-    list("max = ", FALSE)
-  ))
+  expect_equal(
+    auto_complete_r("runif"),
+    list(
+      list("runif", TRUE)
+    )
+  )
+  expect_equal(
+    auto_complete_r("runif("),
+    list(
+      list("n = ", FALSE),
+      list("min = ", FALSE),
+      list("max = ", FALSE)
+    )
+  )
 })
 
 test_that("R auto completions are not added when the line is a comment or quotes", {
@@ -47,15 +52,21 @@ test_that("Local env overrides global env", {
 
   # Find functions defined within the test env
   expect_equal(auto_complete_r("test_runif", NULL, NULL), list())
-  expect_equal(auto_complete_r("test_runif", NULL, test_env), list(
-    list("test_runif", TRUE)
-  ))
+  expect_equal(
+    auto_complete_r("test_runif", NULL, test_env),
+    list(
+      list("test_runif", TRUE)
+    )
+  )
 
   # Find custom runif function in a label's env
   expect_equal(auto_complete_r("custom_runif", NULL, NULL), list())
-  expect_equal(auto_complete_r("custom_runif", "my_label", test_env), list(
-    list("custom_runif", TRUE)
-  ))
+  expect_equal(
+    auto_complete_r("custom_runif", "my_label", test_env),
+    list(
+      list("custom_runif", TRUE)
+    )
+  )
   expect_equal(auto_complete_r("custom_runif", "other_label", test_env), list())
 
   # # Auto complete currently (and previously) returned both the global and local runif parameters
@@ -82,7 +93,9 @@ test_that("detect_comments()", {
   expect_false(detect_comment("paste('# not a comment')"))
   expect_false(detect_comment("paste('# \'still\' # not a comment')"))
   expect_false(detect_comment("paste('# \"still\" # not a comment')"))
-  expect_true(detect_comment("paste('# \"still\" # not a comment') # is a comment"))
+  expect_true(detect_comment(
+    "paste('# \"still\" # not a comment') # is a comment"
+  ))
 
   expect_false(detect_comment('" \' # "'))
   expect_true(detect_comment('" \' # " # runif'))

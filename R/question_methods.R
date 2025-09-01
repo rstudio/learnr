@@ -75,11 +75,15 @@ question_stop <- function(name, question) {
   class_txt <-
     if (length(classes) == 1) {
       classes
-    } else{
+    } else {
       paste0("{", paste0(classes, collapse = "/"), "}")
     }
   stop(
-    "`", name, ".", class_txt, "(question, ...)` has not been implemented",
+    "`",
+    name,
+    ".",
+    class_txt,
+    "(question, ...)` has not been implemented",
     call. = FALSE
   )
 }

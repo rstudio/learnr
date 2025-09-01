@@ -1,5 +1,4 @@
 get_needed_pkgs <- function(dir) {
-
   pkgs <- tutorial_dir_package_dependencies(dir)
 
   pkgs[!pkgs %in% utils::installed.packages()]
@@ -10,35 +9,36 @@ format_needed_pkgs <- function(needed_pkgs) {
 }
 
 ask_pkgs_install <- function(needed_pkgs) {
-  question <- sprintf("Would you like to install the following packages?\n%s",
-                      format_needed_pkgs(needed_pkgs))
+  question <- sprintf(
+    "Would you like to install the following packages?\n%s",
+    format_needed_pkgs(needed_pkgs)
+  )
 
-  utils::menu(choices = c("yes", "no"),
-              title = question)
+  utils::menu(choices = c("yes", "no"), title = question)
 }
 
 install_tutorial_dependencies <- function(dir) {
   needed_pkgs <- get_needed_pkgs(dir)
 
-  if(length(needed_pkgs) == 0) {
+  if (length(needed_pkgs) == 0) {
     return(invisible(NULL))
   }
 
-  if(!interactive()) {
-    stop("The following packages need to be installed:\n",
-         format_needed_pkgs(needed_pkgs))
+  if (!interactive()) {
+    stop(
+      "The following packages need to be installed:\n",
+      format_needed_pkgs(needed_pkgs)
+    )
   }
 
   answer <- ask_pkgs_install(needed_pkgs)
 
-  if(answer == 2) {
+  if (answer == 2) {
     stop("The tutorial is missing required packages and cannot be rendered.")
   }
 
   utils::install.packages(needed_pkgs)
 }
-
-
 
 
 #' List tutorial dependencies

@@ -13,11 +13,14 @@ render_tutorial_with_reveal_solution <- function(opt_string) {
   tut_html <- rmarkdown::render(tut_rmd, quiet = TRUE)
 
   # overwrite exit handler to remove all tutorial files
-  on.exit({
-    rmarkdown::shiny_prerendered_clean(tut_rmd)
-    unlink(tut_html)
-    unlink(tut_rmd)
-  }, add = FALSE)
+  on.exit(
+    {
+      rmarkdown::shiny_prerendered_clean(tut_rmd)
+      unlink(tut_html)
+      unlink(tut_rmd)
+    },
+    add = FALSE
+  )
 
   paste(readLines(tut_html), collapse = "\n")
 }
@@ -32,7 +35,9 @@ var_show_solution <- "<code># SHOWN VAR SOLUTION aba888</code>"
 test_that("Solutions are revealed or hidden with tutorial_options()", {
   skip_if_not(rmarkdown::pandoc_available())
 
-  ex_show <- render_tutorial_with_reveal_solution("tutorial_options(exercise.reveal_solution = TRUE)")
+  ex_show <- render_tutorial_with_reveal_solution(
+    "tutorial_options(exercise.reveal_solution = TRUE)"
+  )
   expect_match(ex_show, default_solution, fixed = TRUE)
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
@@ -40,7 +45,9 @@ test_that("Solutions are revealed or hidden with tutorial_options()", {
   expect_failure(expect_match(ex_show, var_hide_solution, fixed = TRUE))
   expect_match(ex_show, var_show_solution, fixed = TRUE)
 
-  ex_hide <- render_tutorial_with_reveal_solution("tutorial_options(exercise.reveal_solution = FALSE)")
+  ex_hide <- render_tutorial_with_reveal_solution(
+    "tutorial_options(exercise.reveal_solution = FALSE)"
+  )
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)
@@ -52,7 +59,9 @@ test_that("Solutions are revealed or hidden with tutorial_options()", {
 test_that("Solutions are revealed or hidden with global option", {
   skip_if_not(rmarkdown::pandoc_available())
 
-  ex_show <- render_tutorial_with_reveal_solution("options(tutorial.exercise.reveal_solution = TRUE)")
+  ex_show <- render_tutorial_with_reveal_solution(
+    "options(tutorial.exercise.reveal_solution = TRUE)"
+  )
   expect_match(ex_show, default_solution, fixed = TRUE)
   expect_failure(expect_match(ex_show, hidden_solution, fixed = TRUE))
   expect_match(ex_show, shown_solution, fixed = TRUE)
@@ -60,7 +69,9 @@ test_that("Solutions are revealed or hidden with global option", {
   expect_failure(expect_match(ex_show, var_hide_solution, fixed = TRUE))
   expect_match(ex_show, var_show_solution, fixed = TRUE)
 
-  ex_hide <- render_tutorial_with_reveal_solution("options(tutorial.exercise.reveal_solution = FALSE)")
+  ex_hide <- render_tutorial_with_reveal_solution(
+    "options(tutorial.exercise.reveal_solution = FALSE)"
+  )
   expect_failure(expect_match(ex_hide, default_solution, fixed = TRUE))
   expect_failure(expect_match(ex_hide, hidden_solution, fixed = TRUE))
   expect_match(ex_hide, shown_solution, fixed = TRUE)

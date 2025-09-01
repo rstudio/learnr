@@ -1,4 +1,3 @@
-
 #' Tutorial HTML dependency
 #'
 #' HTML dependency for core tutorial JS and CSS. This should be included as a
@@ -25,8 +24,7 @@ html_dependency_src <- function(...) {
     r_dir <- utils::getSrcDirectory(html_dependency_src, unique = TRUE)
     pkg_dir <- dirname(r_dir)
     file.path(pkg_dir, "inst", ...)
-  }
-  else {
+  } else {
     system.file(..., package = "learnr")
   }
 }
