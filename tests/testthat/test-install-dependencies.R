@@ -29,20 +29,6 @@ test_that("tutorial dependency check returns NULL for no dependencies", {
   expect_silent(install_tutorial_dependencies(tutorial_dir))
 })
 
-# test_that("tutorial dependency check works (interactive)", {
-#   skip_if_not(interactive())
-#
-#   tutorial_dir <- create_test_tutorial("library(pkg1)\npkg2::n()")
-#   on.exit(unlink(tutorial_dir, recursive = TRUE), add = TRUE)
-#
-#   expect_error(
-#     with_mock(
-#       ask_pkgs_install = function(x) 2,
-#       install_tutorial_dependencies(tutorial_dir)
-#     )
-#   )
-# })
-
 test_that("tutorial dependency check works (not interactive)", {
   skip_if(interactive())
 
