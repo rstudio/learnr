@@ -194,7 +194,7 @@ if (rmarkdown::pandoc_available("1.4")) {
   info
 }
 #> $tutorial_id
-#> [1] "/tmp/RtmpZepmBx"
+#> [1] "/tmp/RtmpNknibZ"
 #> 
 #> $tutorial_version
 #> [1] "1.0"

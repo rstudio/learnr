@@ -213,8 +213,9 @@ tutorial()
 #>     }
 #>     exercise_wrapper_div <- function(suffix = NULL, extra_html = NULL) {
 #>         if (before) {
-#>             if (!is.null(suffix)) 
+#>             if (!is.null(suffix)) {
 #>                 suffix <- paste0("-", suffix)
+#>             }
 #>             class <- paste0("exercise", suffix)
 #>             lines <- ifelse(is.numeric(options$exercise.lines), 
 #>                 options$exercise.lines, 0)
@@ -311,8 +312,8 @@ tutorial()
 #>         }
 #>     }
 #> }
-#> <bytecode: 0x55ffd255e1f8>
-#> <environment: 0x55ffd09e0e38>
+#> <bytecode: 0x55d6aa549d38>
+#> <environment: 0x55d6aae4b400>
 #> 
 #> 
 #> $knitr$opts_hooks
@@ -337,9 +338,12 @@ tutorial()
 #>         options$include <- TRUE
 #>         options$highlight <- FALSE
 #>         options$comment <- NA
-#>         if (!is.null(options$exercise.eval)) 
+#>         if (!is.null(options$exercise.eval)) {
 #>             options$eval <- options$exercise.eval
-#>         else options$eval <- FALSE
+#>         }
+#>         else {
+#>             options$eval <- FALSE
+#>         }
 #>         return(options)
 #>     }
 #>     if (exercise_support_chunk) {
@@ -364,11 +368,13 @@ tutorial()
 #>     }
 #>     if (exercise_setup_chunk) {
 #>         exercise_eval <- knitr::opts_chunk$get("exercise.eval")
-#>         if (is.null(exercise_eval)) 
+#>         if (is.null(exercise_eval)) {
 #>             exercise_eval <- FALSE
+#>         }
 #>         labels <- exercise_chunks_for_setup_chunk(options$label)
-#>         if (grepl("-setup$", options$label)) 
+#>         if (grepl("-setup$", options$label)) {
 #>             labels <- c(labels, sub("-setup$", "", options$label))
+#>         }
 #>         labels <- paste0("\"", labels, "\"")
 #>         labels <- paste0("c(", paste(labels, collapse = ", "), 
 #>             ")")
@@ -377,8 +383,9 @@ tutorial()
 #>             "))")
 #>         default_reversed <- length(eval(parse(text = label_query))) > 
 #>             0
-#>         if (default_reversed) 
+#>         if (default_reversed) {
 #>             exercise_eval <- !exercise_eval
+#>         }
 #>         options$eval <- exercise_eval
 #>         options$echo <- FALSE
 #>     }
@@ -391,8 +398,8 @@ tutorial()
 #>     }
 #>     options
 #> }
-#> <bytecode: 0x55ffd2554150>
-#> <environment: 0x55ffd09e0e38>
+#> <bytecode: 0x55d6aa541e18>
+#> <environment: 0x55d6aae4b400>
 #> 
 #> 
 #> $knitr$opts_template
@@ -462,24 +469,24 @@ tutorial()
 #> {
 #>     op(base(...), overlay(...))
 #> }
-#> <bytecode: 0x55ffceef98f0>
-#> <environment: 0x55ffcf07fb50>
+#> <bytecode: 0x55d6a607eb10>
+#> <environment: 0x55d6aa0701b8>
 #> 
 #> $post_knit
 #> function (...) 
 #> {
 #>     op(base(...), overlay(...))
 #> }
-#> <bytecode: 0x55ffceef98f0>
-#> <environment: 0x55ffcf0802c0>
+#> <bytecode: 0x55d6a607eb10>
+#> <environment: 0x55d6aa075808>
 #> 
 #> $pre_processor
 #> function (...) 
 #> {
 #>     op(base(...), overlay(...))
 #> }
-#> <bytecode: 0x55ffceef98f0>
-#> <environment: 0x55ffcf07c870>
+#> <bytecode: 0x55d6a607eb10>
+#> <environment: 0x55d6aa0750d0>
 #> 
 #> $intermediates_generator
 #> function (original_input, intermediates_dir) 
@@ -487,8 +494,8 @@ tutorial()
 #>     copy_render_intermediates(original_input, intermediates_dir, 
 #>         !self_contained)
 #> }
-#> <bytecode: 0x55ffcf01d118>
-#> <environment: 0x55ffcf2553b0>
+#> <bytecode: 0x55d6a614aad0>
+#> <environment: 0x55d6aa8ff8f8>
 #> 
 #> $post_processor
 #> function (metadata, input_file, output_file, ...) 
@@ -500,8 +507,8 @@ tutorial()
 #>         base(metadata, input_file, original_output_file, ...)
 #>     base(metadata, input_file, output_file, ...)
 #> }
-#> <bytecode: 0x55ffceef56c0>
-#> <environment: 0x55ffcf07a598>
+#> <bytecode: 0x55d6a607a6e8>
+#> <environment: 0x55d6aa074148>
 #> 
 #> $file_scope
 #> NULL
@@ -514,8 +521,8 @@ tutorial()
 #>     if (is.function(overlay)) 
 #>         overlay()
 #> }
-#> <bytecode: 0x55ffceeee4d0>
-#> <environment: 0x55ffcf02bff8>
+#> <bytecode: 0x55d6a6074e90>
+#> <environment: 0x55d6aa08df18>
 #> 
 #> attr(,"class")
 #> [1] "rmarkdown_output_format"
