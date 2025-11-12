@@ -95,7 +95,6 @@ question_ui_initialize.learnr_checkbox <- function(question, value, ...) {
 
 #' @export
 question_is_correct.learnr_checkbox <- function(question, value, ...) {
-
   append_message <- function(x, ans) {
     message <- ans$message
     if (is.null(message)) {
@@ -112,7 +111,10 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
   # Check function answers first
   for (q_answer in q_answers[["function"]]) {
-    answer_checker <- eval(parse(text = q_answer$value), envir = rlang::caller_env())
+    answer_checker <- eval(
+      parse(text = q_answer$value),
+      envir = rlang::caller_env()
+    )
     ret <- answer_checker(value)
     if (inherits(ret, "learnr_mark_as")) {
       return(ret)
@@ -164,13 +166,14 @@ question_is_correct.learnr_checkbox <- function(question, value, ...) {
 
 #' @export
 question_ui_completed.learnr_checkbox <- function(question, value, ...) {
-
   choice_values <- answer_values(question, exclude_answer_fn = TRUE)
 
   answers <- answers_split_type(question$answers)[["literal"]]
 
   correct_answers <- Reduce(answers, init = c(), f = function(acc, answer) {
-    if (!isTRUE(answer$correct)) return(acc)
+    if (!isTRUE(answer$correct)) {
+      return(acc)
+    }
     c(acc, answer$option)
   })
 

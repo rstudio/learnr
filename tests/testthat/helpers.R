@@ -1,4 +1,3 @@
-
 # https://github.com/rstudio/rmarkdown/blob/2faee0040a39008a47bdf1ba840bf402cba15a65/tests/testthat/helpers.R
 
 skip_if_not_pandoc <- function(ver = NULL) {
@@ -25,15 +24,22 @@ skip_if_pandoc <- function(ver = NULL) {
 
 skip_on_ci_if_not_pr <- function() {
   # Don't skip locally
-  if (!nzchar(Sys.getenv("CI", ""))) return()
+  if (!nzchar(Sys.getenv("CI", ""))) {
+    return()
+  }
   # If on CI, don't skip if envvar set by workflow is present
-  if (nzchar(Sys.getenv("CI_IN_PR", ""))) return()
+  if (nzchar(Sys.getenv("CI_IN_PR", ""))) {
+    return()
+  }
   # If on CI and not in a PR branch workflow... skip these tests
   skip("Skipping on CI, tests run in PR checks only")
 }
 
 skip_if_not_py_available <- function() {
-  skip_if_not(reticulate::py_available(initialize = TRUE), "Python not available on this system")
+  skip_if_not(
+    reticulate::py_available(initialize = TRUE),
+    "Python not available on this system"
+  )
 }
 
 expect_marked_as <- function(object, correct, messages = NULL) {

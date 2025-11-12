@@ -9,10 +9,22 @@ test_that("exercise mocks: mock_prep_setup()", {
   expect_equal(mock_prep_setup(chunks, "setup-1"), "x <- 1")
 
   # random order
-  expect_equal(mock_prep_setup(chunks[3:1], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(1, 3, 2)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(2, 3, 1)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
-  expect_equal(mock_prep_setup(chunks[c(2, 1, 3)], "setup-3"), "x <- 1\ny <- 2\nz <- 3")
+  expect_equal(
+    mock_prep_setup(chunks[3:1], "setup-3"),
+    "x <- 1\ny <- 2\nz <- 3"
+  )
+  expect_equal(
+    mock_prep_setup(chunks[c(1, 3, 2)], "setup-3"),
+    "x <- 1\ny <- 2\nz <- 3"
+  )
+  expect_equal(
+    mock_prep_setup(chunks[c(2, 3, 1)], "setup-3"),
+    "x <- 1\ny <- 2\nz <- 3"
+  )
+  expect_equal(
+    mock_prep_setup(chunks[c(2, 1, 3)], "setup-3"),
+    "x <- 1\ny <- 2\nz <- 3"
+  )
 
   # checks that setup chunk is in chunks
   expect_error(mock_prep_setup(chunks, "setup-Z"), "setup-Z")

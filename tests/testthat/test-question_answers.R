@@ -1,5 +1,4 @@
 test_that("no message-correct", {
-
   q <- question(
     "test",
     answer("A", correct = TRUE),
@@ -10,18 +9,21 @@ test_that("no message-correct", {
 
   ans <- question_is_correct(q, c("A"))
 
-  out <- question_messages(q, ans$messages, ans$correct, (!isTRUE(q$allow_retry)) || ans$correct)
+  out <- question_messages(
+    q,
+    ans$messages,
+    ans$correct,
+    (!isTRUE(q$allow_retry)) || ans$correct
+  )
 
   expect_s3_class(out, "shiny.tag.list")
   expect_equivalent(as.character(out[[1]]$children[[1]]), "test-correct")
   expect_true(is.null(out$children[[2]]))
   expect_true(is.null(out$children[[3]]))
-
 })
 
 
 test_that("no message-incorrect", {
-
   q <- question(
     "test",
     answer("A", correct = TRUE),
@@ -32,18 +34,21 @@ test_that("no message-incorrect", {
 
   ans <- question_is_correct(q, c("B"))
 
-  out <- question_messages(q, ans$messages, ans$correct, (!isTRUE(q$allow_retry)) || ans$correct)
+  out <- question_messages(
+    q,
+    ans$messages,
+    ans$correct,
+    (!isTRUE(q$allow_retry)) || ans$correct
+  )
 
   expect_s3_class(out, "shiny.tag.list")
   expect_equivalent(as.character(out[[1]]$children[[1]]), "test-incorrect")
   expect_true(is.null(out$children[[2]]))
   expect_true(is.null(out$children[[3]]))
-
 })
 
 
 test_that("all messages-correct", {
-
   q <- question(
     "test",
     answer("A", correct = TRUE, message = "msg **1**"),
@@ -56,18 +61,27 @@ test_that("all messages-correct", {
 
   ans <- question_is_correct(q, c("A"))
 
-  out <- question_messages(q, ans$messages, ans$correct, (!isTRUE(q$allow_retry)) || ans$correct)
+  out <- question_messages(
+    q,
+    ans$messages,
+    ans$correct,
+    (!isTRUE(q$allow_retry)) || ans$correct
+  )
 
   expect_s3_class(out, "shiny.tag.list")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[1]]), "test-correct")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[3]]), "msg <strong>1</strong>")
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[1]]),
+    "test-correct"
+  )
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[3]]),
+    "msg <strong>1</strong>"
+  )
   expect_equivalent(as.character(out[[2]]$children[[1]]), "test-message")
   expect_equivalent(as.character(out[[3]]$children[[1]]), "test-post")
-
 })
 
 test_that("all messages-incorrect", {
-
   q <- question(
     "test",
     answer("A", correct = TRUE, message = "msg **1**"),
@@ -80,20 +94,28 @@ test_that("all messages-incorrect", {
 
   ans <- question_is_correct(q, c("B"))
 
-  out <- question_messages(q, ans$messages, ans$correct, (!isTRUE(q$allow_retry)) || ans$correct)
+  out <- question_messages(
+    q,
+    ans$messages,
+    ans$correct,
+    (!isTRUE(q$allow_retry)) || ans$correct
+  )
 
   expect_s3_class(out, "shiny.tag.list")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[1]]), "test-incorrect")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[3]]), "msg <em>2</em>")
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[1]]),
+    "test-incorrect"
+  )
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[3]]),
+    "msg <em>2</em>"
+  )
   expect_equivalent(as.character(out[[2]]$children[[1]]), "test-message")
   expect_equivalent(as.character(out[[3]]$children[[1]]), "test-post")
-
 })
 
 
-
 test_that("custom message", {
-
   q <- question(
     "test",
     answer("A", correct = TRUE, message = htmltools::tags$div("_Test_")),
@@ -104,22 +126,34 @@ test_that("custom message", {
 
   ans <- question_is_correct(q, c("A"))
 
-  out <- question_messages(q, ans$messages, ans$correct, (!isTRUE(q$allow_retry)) || ans$correct)
+  out <- question_messages(
+    q,
+    ans$messages,
+    ans$correct,
+    (!isTRUE(q$allow_retry)) || ans$correct
+  )
 
   expect_s3_class(out, "shiny.tag.list")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[1]]), "test-correct")
-  expect_equivalent(as.character(out[[1]]$children[[1]][[1]][[3]]$children), "_Test_")
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[1]]),
+    "test-correct"
+  )
+  expect_equivalent(
+    as.character(out[[1]]$children[[1]][[1]][[3]]$children),
+    "_Test_"
+  )
   expect_true(is.null(out$children[[2]]))
   expect_true(is.null(out$children[[3]]))
-
 })
 
 test_that("answer options must have unique values (option)", {
   expect_error(
-    answer_values(list(answers = list(
-      answer("same"),
-      answer("same")
-    )))
+    answer_values(list(
+      answers = list(
+        answer("same"),
+        answer("same")
+      )
+    ))
   )
 })
 
@@ -161,7 +195,7 @@ test_that("answer functions: filtering and splitting", {
     answer("apple", TRUE, "correct"),
     answer_fn(function(x) "F1", "f1"),
     answer("banana", FALSE, "incorrect"),
-    answer_fn(~ "F2", "f2"),
+    answer_fn(~"F2", "f2"),
     answer("mango", FALSE, "also incorrect")
   )
 

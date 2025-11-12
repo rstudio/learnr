@@ -27,13 +27,13 @@
 #' @family Interactive Questions
 #' @export
 question_radio <- function(
-    text,
-    ...,
-    correct = "Correct!",
-    incorrect = "Incorrect",
-    try_again = incorrect,
-    allow_retry = FALSE,
-    random_answer_order = FALSE
+  text,
+  ...,
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = incorrect,
+  allow_retry = FALSE,
+  random_answer_order = FALSE
 ) {
   question <-
     learnr::question(
@@ -63,7 +63,6 @@ question_radio <- function(
 
 #' @export
 question_ui_initialize.learnr_radio <- function(question, value, ...) {
-
   choice_names <- answer_labels(question, exclude_answer_fn = TRUE)
   choice_values <- answer_values(question, exclude_answer_fn = TRUE)
 

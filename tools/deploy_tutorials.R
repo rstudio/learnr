@@ -1,5 +1,6 @@
-
-if (!requireNamespace("remotes")) install.packages("remotes")
+if (!requireNamespace("remotes")) {
+  install.packages("remotes")
+}
 
 # install rsconnect
 remotes::install_cran("rsconnect")
@@ -13,7 +14,7 @@ remotes::install_cran("renv")
 remotes::install_cran(
   setdiff(
     unique(renv::dependencies("inst/tutorials/")$Package),
-    unname(installed.packages()[,"Package"])
+    unname(installed.packages()[, "Package"])
   )
 )
 

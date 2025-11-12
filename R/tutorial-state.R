@@ -15,7 +15,7 @@ store_tutorial_cache <- function(name, object, overwrite = FALSE) {
   if (!overwrite && name %in% names(tutorial_cache_env$objects)) {
     return(FALSE)
   }
-  if (is.null(object)){
+  if (is.null(object)) {
     return(FALSE)
   }
   tutorial_cache_env$objects[[name]] <- object
@@ -59,7 +59,7 @@ store_exercise_cache <- function(exercise, overwrite = FALSE) {
 }
 
 # Return the exercise object from the cache for a given label
-get_exercise_cache <- function(label = NULL){
+get_exercise_cache <- function(label = NULL) {
   exercises <- get_tutorial_cache(type = "exercise")
   if (is.null(label)) {
     return(exercises)
@@ -78,13 +78,13 @@ clear_exercise_setup_chunks <- clear_exercise_cache_env
 
 # Questions ---------------------------------------------------------------
 
-store_question_cache <- function(question, overwrite = FALSE){
+store_question_cache <- function(question, overwrite = FALSE) {
   label <- question$label
   store_tutorial_cache(name = label, object = question, overwrite = overwrite)
 }
 
 # Return a list of knitr chunks for a given exercise label (exercise + setup chunks).
-get_question_cache <- function(label = NULL){
+get_question_cache <- function(label = NULL) {
   questions <- get_tutorial_cache(type = "question")
   if (is.null(label)) {
     return(questions)
@@ -136,7 +136,10 @@ clear_question_cache_env <- function() {
 #'
 #' @seealso [get_tutorial_info()]
 #' @export
-get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain()) {
+get_tutorial_state <- function(
+  label = NULL,
+  session = getDefaultReactiveDomain()
+) {
   object_labels <- names(get_tutorial_cache())
   if (is.null(label)) {
     state <- shiny::reactiveValuesToList(session$userData$tutorial_state)
@@ -146,7 +149,11 @@ get_tutorial_state <- function(label = NULL, session = getDefaultReactiveDomain(
   }
 }
 
-set_tutorial_state <- function(label, data, session = getDefaultReactiveDomain()) {
+set_tutorial_state <- function(
+  label,
+  data,
+  session = getDefaultReactiveDomain()
+) {
   stopifnot(is.character(label))
   if (is.reactive(data)) {
     data <- data()
@@ -264,7 +271,9 @@ get_tutorial_info <- function(
     }
 
   tutorial_language <-
-    if (is.list(metadata$output) && "learnr::tutorial" %in% names(metadata$output)) {
+    if (
+      is.list(metadata$output) && "learnr::tutorial" %in% names(metadata$output)
+    ) {
       language_front_matter <- metadata$output[["learnr::tutorial"]]$language
       # get default tutorial language from the yaml header
       i18n_process_language_options(language_front_matter)$language
@@ -276,7 +285,8 @@ get_tutorial_info <- function(
         key,
         "tutorial.tutorial_id" = metadata$tutorial$id %||%
           withr::with_dir(dirname(tutorial_path), default_tutorial_id()),
-        "tutorial.tutorial_version" = metadata$tutorial$version %||% default_tutorial_version(),
+        "tutorial.tutorial_version" = metadata$tutorial$version %||%
+          default_tutorial_version(),
         "tutorial.user_id" = default_user_id(),
         "tutorial.language" = tutorial_language %||% default_language(),
         NULL
@@ -296,8 +306,16 @@ get_tutorial_info <- function(
   )
 }
 
-get_tutorial_exercises <- function(tutorial_path, session = getDefaultReactiveDomain(), ...) {
-  info <- get_tutorial_info(tutorial_path = tutorial_path, session = session, ...)
+get_tutorial_exercises <- function(
+  tutorial_path,
+  session = getDefaultReactiveDomain(),
+  ...
+) {
+  info <- get_tutorial_info(
+    tutorial_path = tutorial_path,
+    session = session,
+    ...
+  )
   items_exercises <- info$items[info$items$type == "exercise", ]
   ex <- items_exercises$data
   names(ex) <- items_exercises$label
@@ -328,7 +346,9 @@ describe_tutorial_items <- function() {
   )
 
   for (i in seq_along(items[["data"]])) {
-    if (items[["type"]][[i]] != "exercise") next
+    if (items[["type"]][[i]] != "exercise") {
+      next
+    }
 
     label <- items[["label"]][[i]]
     code_chunks <- Filter(
@@ -357,7 +377,10 @@ prepare_tutorial_cache_from_source <- function(path_rmd, render_args = NULL) {
   # 3. Evaluate the prerendered code to populate the tutorial cache
   # 4. Clean up files on exit
   path_rmd <- normalizePath(path_rmd)
-  path_html <- file.path(dirname(path_rmd), basename(tempfile(fileext = ".html")))
+  path_html <- file.path(
+    dirname(path_rmd),
+    basename(tempfile(fileext = ".html"))
+  )
 
   # remove html and supporting files on exit
   withr::defer({
@@ -403,7 +426,8 @@ prepare_tutorial_cache_from_html <- function(path_html, path_rmd = NULL) {
   is_cache_chunk <- vapply(
     prerendered_chunks,
     function(x) {
-      as.character(x[[1]])[3] %in% c("store_exercise_cache", "question_prerendered_chunk")
+      as.character(x[[1]])[3] %in%
+        c("store_exercise_cache", "question_prerendered_chunk")
     },
     logical(1)
   )
@@ -433,7 +457,10 @@ prepare_tutorial_cache_from_html <- function(path_html, path_rmd = NULL) {
   if (length(idx_metadata_chunk) > 0) {
     idx_metadata_chunk <- idx_metadata_chunk[[1]]
     env <- rlang::env(session = NULL)
-    metadata <- eval(prerendered_chunks[idx_metadata_chunk][["metadata"]], envir = env)
+    metadata <- eval(
+      prerendered_chunks[idx_metadata_chunk][["metadata"]],
+      envir = env
+    )
   }
 
   assign("metadata", metadata, envir = tutorial_cache_env)

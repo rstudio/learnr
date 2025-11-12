@@ -1,4 +1,3 @@
-
 #' An Exercise Checker for Debugging
 #'
 #' An exercise checker for debugging that renders all of the expected arguments
@@ -23,16 +22,16 @@
 #'
 #' @keywords internal
 debug_exercise_checker <- function(
-    label,
-    user_code,
-    solution_code,
-    check_code,
-    envir_result,
-    evaluate_result,
-    envir_prep,
-    last_value,
-    engine,
-    ...
+  label,
+  user_code,
+  solution_code,
+  check_code,
+  envir_result,
+  evaluate_result,
+  envir_prep,
+  last_value,
+  engine,
+  ...
 ) {
   # Use I() around check_code to indicate that we want to evaluate the check code
   checker_result <- if (is_AsIs(check_code)) {
@@ -109,16 +108,16 @@ debug_exercise_checker <- function(
     location = "replace",
     checker_result = checker_result,
     checker_args = list(
-      label           = label,
-      user_code       = user_code,
-      solution_code   = solution_code,
-      check_code      = check_code,
-      envir_result    = envir_result,
+      label = label,
+      user_code = user_code,
+      solution_code = solution_code,
+      check_code = check_code,
+      envir_result = envir_result,
       evaluate_result = evaluate_result,
-      envir_prep      = envir_prep,
-      last_value      = last_value,
-      engine          = engine,
-      "..."           = list(...)
+      envir_prep = envir_prep,
+      last_value = last_value,
+      engine = engine,
+      "..." = list(...)
     )
   )
 }

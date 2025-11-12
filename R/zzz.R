@@ -1,4 +1,3 @@
-
 # install knitr hooks when package is attached to search path
 .onAttach <- function(libname, pkgname) {
   install_knitr_hooks()
@@ -20,7 +19,6 @@
     snapshotPreprocessInput(name, snapshotPreprocessorLearnrExercise)
     x
   })
-
 
   if ("shinytest2" %in% loadedNamespaces()) {
     register_shinytest_inputprocessor()

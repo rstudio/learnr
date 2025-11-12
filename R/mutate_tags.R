@@ -1,5 +1,3 @@
-
-
 # ' S3 method to recursively look for elements according to a basic css string.
 # ' This method should not be used publically until adopted by \code{htmltools}.
 # ' @param selector css selector string
@@ -12,14 +10,20 @@ mutate_tags <- function(ele, selector, fn, ...) {
 
 #' @export
 mutate_tags.default <- function(ele, selector, fn, ...) {
-  if (any(
-    c(
-      "NULL",
-      "numeric", "integer", "complex",
-      "logical",
-      "character", "factor"
-    ) %in% class(ele)
-  )) {
+  if (
+    any(
+      c(
+        "NULL",
+        "numeric",
+        "integer",
+        "complex",
+        "logical",
+        "character",
+        "factor"
+      ) %in%
+        class(ele)
+    )
+  ) {
     return(ele)
   }
 
@@ -76,7 +80,9 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
     }
     # match on class values
     if (is_match && !is.null(cur_selector$classes)) {
-      is_match <- all(strsplit(ele$attribs$class %||% "", " ")[[1]] %in% cur_selector$classes)
+      is_match <- all(
+        strsplit(ele$attribs$class %||% "", " ")[[1]] %in% cur_selector$classes
+      )
     }
 
     # if it is a match, drop a selector
@@ -97,8 +103,8 @@ mutate_tags.shiny.tag <- function(ele, selector, fn, ...) {
     if (
       # it is a "leaf" match
       length(selector) == 0 ||
-      # or should match everything
-      cur_selector$match_everything
+        # or should match everything
+        cur_selector$match_everything
     ) {
       # update it
       ele <- fn(ele, ...)
@@ -171,7 +177,9 @@ finalize_question <- function(ele) {
   ele <- disable_all_tags(ele)
   if (inherits(ele, "shiny.tag.list")) {
     ele_class <- class(ele)
-    ele <- lapply(ele, function(el) tagAppendAttributes(el, class = "question-final"))
+    ele <- lapply(ele, function(el) {
+      tagAppendAttributes(el, class = "question-final")
+    })
     class(ele) <- ele_class
   } else {
     ele <- tagAppendAttributes(ele, class = "question-final")

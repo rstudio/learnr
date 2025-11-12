@@ -16,7 +16,7 @@
       if (length(queue)) queue
     },
     flush = function() {
-      while(length(queue)) {
+      while (length(queue)) {
         cnd <- queue[[1]]
         if (inherits(cnd, "error")) {
           # throw errors, they're immediate
@@ -49,7 +49,10 @@ learnr_render_message <- function(..., level = c("inform", "warn", "abort")) {
     warn = rlang::warn,
     abort = rlang::abort
   )
-  cnd <- rlang::catch_cnd(create_cnd(paste0(..., "\n"), "learnr_render_message"))
+  cnd <- rlang::catch_cnd(create_cnd(
+    paste0(..., "\n"),
+    "learnr_render_message"
+  ))
 
   if (isTRUE(getOption('knitr.in.progress'))) {
     .learnr_messages$add(cnd)

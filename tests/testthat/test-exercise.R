@@ -1,4 +1,3 @@
-
 # exercise_code_chunks() --------------------------------------------------
 
 test_that("exercise_code_chunks_prep() returns setup/user chunks", {
@@ -121,7 +120,8 @@ test_that("render_exercise() returns envir_result up to error", {
 
   exercise_result <- withr::with_tempdir(
     rlang::catch_cnd(
-      render_exercise(exercise, new.env()), "learnr_render_exercise_error"
+      render_exercise(exercise, new.env()),
+      "learnr_render_exercise_error"
     )
   )
 
@@ -243,8 +243,8 @@ test_that("evaluate_exercise() returns an internal error when `render_exercise()
   skip_if_not_pandoc("1.14")
   local_edition(2)
 
-  with_mock(
-    "learnr:::render_exercise" = function(...) stop("render error"),
+  with_mocked_bindings(
+    render_exercise = function(...) stop("render error"),
     expect_warning(
       res <- evaluate_exercise(mock_exercise(), new.env())
     )
@@ -284,7 +284,10 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
   exercise <- mock_exercise(
     user_code = c("writeLines('nope', 'nope.txt')", "dir()"),
     # setup chunk throws an error
-    chunks = list(mock_chunk("ex-setup", c("rlang::abort('setup-error', dir = dir())"))),
+    chunks = list(mock_chunk(
+      "ex-setup",
+      c("rlang::abort('setup-error', dir = dir())")
+    )),
     # get file listing after error in setup chunk happens
     error_check = I("dir()")
   )
@@ -298,7 +301,7 @@ test_that("render_exercise() cleans up exercise_prep files even when setup fails
         list(
           before = before,
           during = res$feedback$error$dir,
-          after  = dir()
+          after = dir()
         )
       }),
       "exercise_prep.Rmd"
@@ -391,7 +394,12 @@ test_that("serialized exercises produce equivalent evaluate_exercise() results",
   )
 
   # From internal_external_evaluator() in R/evaluators.R
-  exercise_serialized <- jsonlite::toJSON(exercise, auto_unbox = TRUE, null = "null", force = TRUE)
+  exercise_serialized <- jsonlite::toJSON(
+    exercise,
+    auto_unbox = TRUE,
+    null = "null",
+    force = TRUE
+  )
   # use parse_json() for safest parsing of serialized JSON (simplifyVector = FALSE)
   exercise_unserialized <- jsonlite::parse_json(exercise_serialized)
 
@@ -508,7 +516,10 @@ test_that("exercise_result() doesn't drop html dependencies from `html_output`",
   )
   res <- exercise_result(html_output = html_output)
   expect_equal(as.character(res$html_output), as.character(html_output))
-  expect_equal(htmltools::htmlDependencies(res$html_output), list(clipboardjs_html_dependency()))
+  expect_equal(
+    htmltools::htmlDependencies(res$html_output),
+    list(clipboardjs_html_dependency())
+  )
 })
 
 test_that("exercise_result_as_html() creates html for learnr", {
@@ -575,8 +586,7 @@ test_that("filter_dependencies() excludes non-list knit_meta objects", {
   skip_if_not_pandoc("1.14")
 
   ex <- mock_exercise(
-    user_code =
-      "htmltools::tagList(
+    user_code = "htmltools::tagList(
         htmltools::tags$head(htmltools::tags$style(\".leaflet-container {backround:#FFF}\")),
         idb_html_dependency()
       )"
@@ -663,7 +673,7 @@ test_that("data/ - files in data/ directory can be accessed", {
   dir.create("data")
   writeLines("ORIGINAL", "data/test.txt")
 
-  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  ex <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "ORIGINAL")
 })
@@ -672,7 +682,7 @@ test_that("data/ - no issues if data directory does not exist", {
   skip_if_not_pandoc("1.14")
   withr::local_dir(withr::local_tempdir())
 
-  ex  <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
+  ex <- mock_exercise(user_code = '"SUCCESS"', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "SUCCESS")
 })
@@ -693,7 +703,7 @@ test_that("data/ - original files are modified by exercise code", {
   )
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
-  expect_equal(readLines("data/test.txt"),           "ORIGINAL")
+  expect_equal(readLines("data/test.txt"), "ORIGINAL")
 })
 
 test_that("data/ - specify alternate data directory with envvar", {
@@ -706,7 +716,7 @@ test_that("data/ - specify alternate data directory with envvar", {
   dir.create("envvar")
   writeLines("ENVVAR", "envvar/test.txt")
 
-  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  ex <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "ENVVAR")
 
@@ -719,8 +729,8 @@ test_that("data/ - specify alternate data directory with envvar", {
   )
   res <- evaluate_exercise(ex, envir = new.env())
   expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
-  expect_equal(readLines("data/test.txt"),           "DEFAULT")
-  expect_equal(readLines("envvar/test.txt"),         "ENVVAR")
+  expect_equal(readLines("data/test.txt"), "DEFAULT")
+  expect_equal(readLines("envvar/test.txt"), "ENVVAR")
 })
 
 test_that("data/ - errors if envvar directory does not exist", {
@@ -747,16 +757,16 @@ test_that("data/ - specify alternate data directory with `options()`", {
   dir.create("nested/structure/data", recursive = TRUE)
   writeLines("NESTED", "nested/structure/test.txt")
 
-  ex  <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
+  ex <- mock_exercise(user_code = 'readLines("data/test.txt")', check = TRUE)
   res <- evaluate_exercise(ex, envir = new.env())
-  expect_equal(res$feedback$checker_args$last_value,   "DEFAULT")
-  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(res$feedback$checker_args$last_value, "DEFAULT")
+  expect_equal(readLines("data/test.txt"), "DEFAULT")
   expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 
   ex <- mock_exercise(
-    user_code    = 'readLines("data/test.txt")',
+    user_code = 'readLines("data/test.txt")',
     global_setup = 'options(tutorial.data_dir = "nested/structure")',
-    check        = TRUE
+    check = TRUE
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_equal(res$feedback$checker_args$last_value, "NESTED")
@@ -767,11 +777,11 @@ test_that("data/ - specify alternate data directory with `options()`", {
       readLines("data/test.txt")
     ',
     global_setup = 'options(tutorial.data_dir = "nested/structure")',
-    check        = TRUE
+    check = TRUE
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_equal(res$feedback$checker_args$last_value,   "MODIFIED")
-  expect_equal(readLines("data/test.txt"),             "DEFAULT")
+  expect_equal(res$feedback$checker_args$last_value, "MODIFIED")
+  expect_equal(readLines("data/test.txt"), "DEFAULT")
   expect_equal(readLines("nested/structure/test.txt"), "NESTED")
 })
 
@@ -780,7 +790,7 @@ test_that("data/ - errors if `options()` directory does not exist", {
   withr::local_dir(withr::local_tempdir())
 
   ex <- mock_exercise(
-    user_code    = 'readLines("data/test.txt")',
+    user_code = 'readLines("data/test.txt")',
     global_setup = 'options(tutorial.data_dir = "nested/structure")'
   )
   expect_error(
@@ -802,9 +812,9 @@ test_that("data/ - data directory option has precendence over envvar", {
   writeLines("ENVVAR", "envvar/test.txt")
 
   ex <- mock_exercise(
-    user_code    = 'readLines("data/test.txt")',
+    user_code = 'readLines("data/test.txt")',
     global_setup = 'options(tutorial.data_dir = "nested/structure")',
-    check        = TRUE
+    check = TRUE
   )
   res <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
   expect_equal(res$feedback$checker_args$last_value, "NESTED")
@@ -823,7 +833,7 @@ test_that("options() are protected from student modification", {
   )
   output <- evaluate_exercise(ex, envir = new.env())
   expect_match(output$html_output, "USER", fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 })
 
 test_that("options() can be set in setup chunk", {
@@ -831,26 +841,30 @@ test_that("options() can be set in setup chunk", {
   withr::local_options(test = "WITHR")
 
   ex <- mock_exercise(
-    user_code   = "getOption('test')",
-    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    user_code = "getOption('test')",
+    chunks = list(mock_chunk("setup", "options(test = 'SETUP')")),
     setup_label = "setup"
   )
   output <- evaluate_exercise(
-    ex, envir = new.env(), evaluate_global_setup = TRUE
+    ex,
+    envir = new.env(),
+    evaluate_global_setup = TRUE
   )
   expect_match(output$html_output, "SETUP", fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
-    user_code    = "options(test = 'USER')\ngetOption('test')",
-    chunks      = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    user_code = "options(test = 'USER')\ngetOption('test')",
+    chunks = list(mock_chunk("setup", "options(test = 'SETUP')")),
     setup_label = "setup"
   )
   output <- evaluate_exercise(
-    ex, envir = new.env(), evaluate_global_setup = TRUE
+    ex,
+    envir = new.env(),
+    evaluate_global_setup = TRUE
   )
   expect_match(output$html_output, "USER", fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 })
 
 test_that("options() can be set in global setup chunk", {
@@ -858,36 +872,42 @@ test_that("options() can be set in global setup chunk", {
   withr::local_options(test = "WITHR")
 
   ex <- mock_exercise(
-    user_code    = "getOption('test')",
+    user_code = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')"
   )
   output <- evaluate_exercise(
-    ex, envir = new.env(), evaluate_global_setup = TRUE
+    ex,
+    envir = new.env(),
+    evaluate_global_setup = TRUE
   )
   expect_match(output$html_output, "GLOBAL", fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR",  fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
-    user_code    = "options(test = 'USER')\ngetOption('test')",
+    user_code = "options(test = 'USER')\ngetOption('test')",
     global_setup = "options(test = 'GLOBAL')"
   )
   output <- evaluate_exercise(
-    ex, envir = new.env(), evaluate_global_setup = TRUE
+    ex,
+    envir = new.env(),
+    evaluate_global_setup = TRUE
   )
-  expect_match(output$html_output, "USER",  fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+  expect_match(output$html_output, "USER", fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 
   ex <- mock_exercise(
-    user_code    = "getOption('test')",
+    user_code = "getOption('test')",
     global_setup = "options(test = 'GLOBAL')",
-    chunks       = list(mock_chunk("setup", "options(test = 'SETUP')")),
-    setup_label  = "setup"
+    chunks = list(mock_chunk("setup", "options(test = 'SETUP')")),
+    setup_label = "setup"
   )
   output <- evaluate_exercise(
-    ex, envir = new.env(), evaluate_global_setup = TRUE
+    ex,
+    envir = new.env(),
+    evaluate_global_setup = TRUE
   )
   expect_match(output$html_output, "SETUP", fixed = TRUE)
-  expect_match(getOption("test"),  "WITHR", fixed = TRUE)
+  expect_match(getOption("test"), "WITHR", fixed = TRUE)
 })
 
 test_that("envvars are protected from student modification", {
@@ -901,7 +921,7 @@ test_that("envvars are protected from student modification", {
   )
   output <- evaluate_exercise(ex, envir = new.env())
   expect_match(output$html_output, "USER", fixed = TRUE)
-  expect_match(Sys.getenv("TEST"),  "WITHR", fixed = TRUE)
+  expect_match(Sys.getenv("TEST"), "WITHR", fixed = TRUE)
 })
 
 test_that("options are protected from both user and author modification", {
@@ -963,51 +983,69 @@ test_that("env vars are protected from both user and author modification", {
 test_that("evaluate_exercise() returns a message if code contains ___", {
   skip_if_not_pandoc("1.14")
 
-  ex     <- mock_exercise(user_code = '____("test")')
+  ex <- mock_exercise(user_code = '____("test")')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "This exercise contains 1 blank.")
-  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>____</code> with valid code."
+  )
 
-  ex     <- mock_exercise(user_code = '____(____)')
+  ex <- mock_exercise(user_code = '____(____)')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
   expect_match(result$feedback$message, "This exercise contains 2 blanks.")
-  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>____</code> with valid code."
+  )
 
-  ex     <- mock_exercise(user_code = '____("____")')
+  ex <- mock_exercise(user_code = '____("____")')
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
   expect_match(result$feedback$message, "This exercise contains 2 blanks.")
-  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>____</code> with valid code."
+  )
 })
 
 test_that("setting a different blank for the blank checker", {
   skip_if_not_pandoc("1.14")
 
-  ex     <- mock_exercise(user_code = '####("test")', exercise.blanks = "###")
+  ex <- mock_exercise(user_code = '####("test")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "This exercise contains 1 blank.")
-  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>###</code> with valid code."
+  )
 
-  ex     <- mock_exercise(user_code = '####(####)', exercise.blanks = "###")
+  ex <- mock_exercise(user_code = '####(####)', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
   expect_match(result$feedback$message, "This exercise contains 2 blanks.")
-  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>###</code> with valid code."
+  )
 
-  ex     <- mock_exercise(user_code = '####("####")', exercise.blanks = "###")
+  ex <- mock_exercise(user_code = '####("####")', exercise.blanks = "###")
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:2")
   expect_match(result$feedback$message, "This exercise contains 2 blanks.")
-  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>###</code> with valid code."
+  )
 })
 
 test_that("setting a different blank for the blank checker in global setup", {
@@ -1017,7 +1055,7 @@ test_that("setting a different blank for the blank checker in global setup", {
   withr::defer(knitr::opts_chunk$set(exercise.blanks = NULL))
 
   ex <- mock_exercise(
-    user_code    = '####("test")',
+    user_code = '####("test")',
     global_setup = 'knitr::opts_chunk$set(exercise.blanks = "###")'
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
@@ -1025,14 +1063,17 @@ test_that("setting a different blank for the blank checker in global setup", {
   expect_match(result$feedback$message, "&quot;count&quot;:1")
 
   expect_match(result$feedback$message, "This exercise contains 1 blank.")
-  expect_match(result$feedback$message, "Please replace <code>###</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>###</code> with valid code."
+  )
 })
 
 test_that("setting a regex blank for the blank checker", {
   skip_if_not_pandoc("1.14")
 
   ex <- mock_exercise(
-    user_code       = '..function..("..string..")',
+    user_code = '..function..("..string..")',
     exercise.blanks = "\\.\\.\\S+?\\.\\."
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
@@ -1040,49 +1081,63 @@ test_that("setting a regex blank for the blank checker", {
   expect_match(result$feedback$message, "&quot;count&quot;:2")
 
   expect_match(result$feedback$message, "This exercise contains 2 blanks.")
-  expect_match(result$feedback$message, "Please replace <code>..function..</code> and <code>..string..</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>..function..</code> and <code>..string..</code> with valid code."
+  )
 })
 
 test_that("use underscores as blanks if exercise.blanks is TRUE", {
   skip_if_not_pandoc("1.14")
 
   ex <- mock_exercise(
-    user_code = 'print("____")', exercise.blanks = TRUE
+    user_code = 'print("____")',
+    exercise.blanks = TRUE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "This exercise contains 1 blank.")
-  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>____</code> with valid code."
+  )
 
   ex <- mock_exercise(
-    user_code = '____("test")', exercise.blanks = TRUE
+    user_code = '____("test")',
+    exercise.blanks = TRUE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_equal(result$feedback, exercise_check_code_for_blanks(ex)$feedback)
   expect_match(result$feedback$message, "&quot;count&quot;:1")
   expect_match(result$feedback$message, "This exercise contains 1 blank.")
-  expect_match(result$feedback$message, "Please replace <code>____</code> with valid code.")
+  expect_match(
+    result$feedback$message,
+    "Please replace <code>____</code> with valid code."
+  )
 })
 
 test_that("default message if exercise.blanks is FALSE", {
   skip_if_not_pandoc("1.14")
 
   ex <- mock_exercise(
-    user_code = 'print("____")', exercise.blanks = FALSE
+    user_code = 'print("____")',
+    exercise.blanks = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_null(result$feedback$message)
   expect_null(exercise_check_code_for_blanks(ex))
 
   ex <- mock_exercise(
-    user_code = '____("test")', exercise.blanks = FALSE
+    user_code = '____("test")',
+    exercise.blanks = FALSE
   )
   result <- evaluate_exercise(ex, new.env())
   expect_null(exercise_check_code_for_blanks(ex))
   expect_match(result$feedback$message, "text.unparsable")
   expect_match(
-    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsable,
     fixed = TRUE
   )
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
@@ -1099,7 +1154,8 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
   expect_match(
-    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsable,
     fixed = TRUE
   )
   expect_match(result$error_message, "unexpected end of input")
@@ -1109,7 +1165,8 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
   expect_match(
-    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsable,
     fixed = TRUE
   )
   expect_match(result$error_message, "unexpected INCOMPLETE_STRING")
@@ -1119,7 +1176,8 @@ test_that("evaluate_exercise() returns a message if code is unparsable", {
   expect_equal(result$feedback, exercise_check_code_is_parsable(ex)$feedback)
   expect_match(result$feedback$message, "text.unparsable")
   expect_match(
-    result$feedback$message, i18n_translations()$en$translation$text$unparsable,
+    result$feedback$message,
+    i18n_translations()$en$translation$text$unparsable,
     fixed = TRUE
   )
   expect_match(result$error_message, "unexpected symbol")
@@ -1148,7 +1206,10 @@ test_that("exericse_check_code_is_parsable() gives error checker a 'parse_error'
 
   ex <- mock_exercise(user_code = 'print("test"', error_check = I("last_value"))
   result <- evaluate_exercise(ex, new.env())
-  expect_s3_class(result$feedback$checker_result, class = c("parse_error", "condition"))
+  expect_s3_class(
+    result$feedback$checker_result,
+    class = c("parse_error", "condition")
+  )
 })
 
 test_that("Errors with global setup code result in an internal error", {
@@ -1161,7 +1222,10 @@ test_that("Errors with global setup code result in an internal error", {
   )
 
   expect_null(res$error_message)
-  expect_match(res$feedback$message, "internal error occurred while setting up the tutorial")
+  expect_match(
+    res$feedback$message,
+    "internal error occurred while setting up the tutorial"
+  )
   expect_s3_class(res$feedback$error, "error")
   expect_match(conditionMessage(res$feedback$error), "boom")
 })
@@ -1224,8 +1288,7 @@ test_that("evaluate_exercise() does not return a message for parsable non-ASCII 
 
   # Non-ASCII variable name
   ex <- mock_exercise(
-    user_code =
-      '\u03bc\u03b5\u03c4\u03b1\u03b2\u03bb\u03b7\u03c4\u03ae <- "What?"'
+    user_code = '\u03bc\u03b5\u03c4\u03b1\u03b2\u03bb\u03b7\u03c4\u03ae <- "What?"'
   )
   result <- evaluate_exercise(ex, new.env())
   expect_null(result$feedback)
@@ -1260,7 +1323,6 @@ test_that("Exercise timelimit error is returned when exercise takes too long", {
 })
 
 
-
 # Sensitive env vars and options are masked from user -----------------------
 
 test_that("Shiny session is diabled", {
@@ -1280,14 +1342,16 @@ test_that("Shiny session is diabled", {
 test_that("Sensitive env vars and options are masked", {
   skip_if_not_pandoc("1.14")
 
-  ex <- mock_exercise(user_code = paste(
-    "list(",
-    "  Sys.getenv('CONNECT_API_KEY', 'USER_LOCAL_CONNECT_API_KEY'),",
-    "  Sys.getenv('CONNECT_SERVER', 'USER_LOCAL_CONNECT_SERVER'),",
-    "  getOption('shiny.sharedSecret', 'USER_LOCAL_sharedSecret')",
-    ")",
-    sep = "\n"
-  ))
+  ex <- mock_exercise(
+    user_code = paste(
+      "list(",
+      "  Sys.getenv('CONNECT_API_KEY', 'USER_LOCAL_CONNECT_API_KEY'),",
+      "  Sys.getenv('CONNECT_SERVER', 'USER_LOCAL_CONNECT_SERVER'),",
+      "  getOption('shiny.sharedSecret', 'USER_LOCAL_sharedSecret')",
+      ")",
+      sep = "\n"
+    )
+  )
 
   env_connect <- list(
     CONNECT_API_KEY = "T_CONNECT_API_KEY",
@@ -1374,7 +1438,9 @@ test_that("SQL exercises - without explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(
+    ex_sql_engine
+  ))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1423,7 +1489,9 @@ test_that("SQL exercises - with explicit `output.var`", {
   res <- res_sql_engine$feedback$checker_args
 
   # snapshots
-  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(ex_sql_engine))))
+  expect_snapshot(writeLines(render_exercise_rmd_user(render_exercise_prepare(
+    ex_sql_engine
+  ))))
 
   # connection exists in envir_prep
   expect_true(exists("db_con", res$envir_prep, inherits = FALSE))
@@ -1462,9 +1530,16 @@ test_that("Python exercises - simple example", {
 
   # envir_prep and envir_result should be different objects
   envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
-  envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  envir_result_py <- get0(
+    ".__py__",
+    envir = res$envir_result,
+    ifnotfound = NULL
+  )
   expect_false(
-    identical(reticulate::py_id(envir_prep_py), reticulate::py_id(envir_result_py))
+    identical(
+      reticulate::py_id(envir_prep_py),
+      reticulate::py_id(envir_result_py)
+    )
   )
 })
 
@@ -1484,7 +1559,10 @@ test_that("Python exercises - assignment example", {
   res <- withr::with_tempdir(render_exercise(ex_py, new.env()))
 
   # TODO: invisible values should be more explicit
-  expect_equal(reticulate::py_to_r(res$last_value), "__reticulate_placeholder__")
+  expect_equal(
+    reticulate::py_to_r(res$last_value),
+    "__reticulate_placeholder__"
+  )
   expect_null(res$evaluate_result)
   expect_true(exists('.__py__', res$envir_prep))
   expect_true(exists('.__py__', res$envir_result))
@@ -1492,9 +1570,16 @@ test_that("Python exercises - assignment example", {
   expect_equal(result$x, 6)
 
   envir_prep_py <- get0(".__py__", envir = res$envir_prep, ifnotfound = NULL)
-  envir_result_py <- get0(".__py__", envir = res$envir_result, ifnotfound = NULL)
+  envir_result_py <- get0(
+    ".__py__",
+    envir = res$envir_result,
+    ifnotfound = NULL
+  )
   expect_false(
-    identical(reticulate::py_id(envir_prep_py), reticulate::py_id(envir_result_py))
+    identical(
+      reticulate::py_id(envir_prep_py),
+      reticulate::py_id(envir_result_py)
+    )
   )
 })
 

@@ -55,7 +55,7 @@ test_that("i18n_process_language_options() multiple customizations", {
     ),
     en = list(
       button = list(runcode = "EN run"),
-      text= list(areyousure = "EN sure")
+      text = list(areyousure = "EN sure")
     )
   ))
 
@@ -169,7 +169,9 @@ test_that("i18n_process_language_options() warns if a language is not a single c
 
 test_that("i18n_process_language_options() warns unexpected keys are present", {
   expect_warning(
-    i18n_process_language_options(list(en = list(foo = list(), button = list()))),
+    i18n_process_language_options(list(
+      en = list(foo = list(), button = list())
+    )),
     "foo"
   )
 
@@ -200,7 +202,11 @@ test_that("i18n_span() returns an i18n span", {
   expect_s3_class(span, "character")
   expect_match(span, 'data-i18n="KEY"')
   expect_match(span, ">DEFAULT</span>")
-  expect_match(span, 'data-i18n-opts="{&quot;interp&quot;:&quot;STRING&quot;}"', fixed = TRUE)
+  expect_match(
+    span,
+    'data-i18n-opts="{&quot;interp&quot;:&quot;STRING&quot;}"',
+    fixed = TRUE
+  )
 })
 
 test_that("i18n_set_language_option() changes message language", {
@@ -253,14 +259,20 @@ test_that("i18n_set_language_option() sets up language inheritance", {
   ex <- mock_exercise(user_code = "mean$x")
   ex$tutorial$language <- "pt"
   result <- evaluate_exercise(ex, new.env())
-  expect_equal(result$error_message, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+  expect_equal(
+    result$error_message,
+    "objeto de tipo 'closure' não possível dividir em subconjuntos"
+  )
 
   ex <- mock_exercise(
     user_code = "mean$x",
     global_setup = "i18n_set_language_option('pt')"
   )
   result <- evaluate_exercise(ex, new.env(), evaluate_global_setup = TRUE)
-  expect_equal(result$error_message, "objeto de tipo 'closure' não possível dividir em subconjuntos")
+  expect_equal(
+    result$error_message,
+    "objeto de tipo 'closure' não possível dividir em subconjuntos"
+  )
 
   ex <- mock_exercise(
     user_code = c(

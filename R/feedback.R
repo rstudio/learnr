@@ -13,27 +13,47 @@ feedback_validated <- function(feedback) {
   if (!length(feedback)) {
     return(feedback)
   }
-  if (!(is.list(feedback) && all(c("message", "correct") %in% names(feedback)))) {
-    stop("Feedback must be a list with 'message' and 'correct' fields", call. = FALSE)
+  if (
+    !(is.list(feedback) && all(c("message", "correct") %in% names(feedback)))
+  ) {
+    stop(
+      "Feedback must be a list with 'message' and 'correct' fields",
+      call. = FALSE
+    )
   }
-  if (!(is.character(feedback$message) || inherits(feedback$message, c("shiny.tag", "shiny.tag.list")))) {
-    stop("The 'message' field of feedback must be a character vector or an htmltools tag or tagList", call. = FALSE)
+  if (
+    !(is.character(feedback$message) ||
+      inherits(feedback$message, c("shiny.tag", "shiny.tag.list")))
+  ) {
+    stop(
+      "The 'message' field of feedback must be a character vector or an htmltools tag or tagList",
+      call. = FALSE
+    )
   }
   if (!is.logical(feedback$correct)) {
-    stop("The 'correct' field of feedback must be a logical (i.e., boolean) value", call. = FALSE)
+    stop(
+      "The 'correct' field of feedback must be a logical (i.e., boolean) value",
+      call. = FALSE
+    )
   }
   # Fill in type/location defaults and check their value
   feedback$type <- feedback$type[1] %||% "auto"
   feedback$location <- feedback$location[1] %||% "append"
   feedback_types <- c("auto", "success", "info", "warning", "error", "custom")
   if (!feedback$type %in% feedback_types) {
-    stop("Feedback 'type' field must be one of these values: ",
-         paste(feedback_types, collapse = ", "), call. = FALSE)
+    stop(
+      "Feedback 'type' field must be one of these values: ",
+      paste(feedback_types, collapse = ", "),
+      call. = FALSE
+    )
   }
   feedback_locations <- c("append", "prepend", "replace")
   if (!feedback$location %in% feedback_locations) {
-    stop("Feedback 'location' field must be one of these values: ",
-         paste(feedback_locations, collapse = ", "), call. = FALSE)
+    stop(
+      "Feedback 'location' field must be one of these values: ",
+      paste(feedback_locations, collapse = ", "),
+      call. = FALSE
+    )
   }
   if (feedback$type %in% "auto") {
     feedback$type <- if (feedback$correct) "success" else "error"

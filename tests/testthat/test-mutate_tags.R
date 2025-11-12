@@ -1,7 +1,13 @@
 has_class <- function(el, .class, ...) {
   class_idx <- which(names(el$attribs) == "class")
-  if (!length(class_idx)) return(FALSE)
-  el_class <- vapply(class_idx, function(i) el$attribs[[i]], FUN.VALUE = character(1))
+  if (!length(class_idx)) {
+    return(FALSE)
+  }
+  el_class <- vapply(
+    class_idx,
+    function(i) el$attribs[[i]],
+    FUN.VALUE = character(1)
+  )
   grepl(.class, paste(el_class, collapse = " "), ...)
 }
 

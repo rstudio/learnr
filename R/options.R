@@ -1,4 +1,3 @@
-
 #' Set tutorial options
 #'
 #' Set various tutorial options that control the display and evaluation of
@@ -39,19 +38,20 @@
 #' @return Nothing. Invisibly sets [knitr::opts_chunk] settings.
 #'
 #' @export
-tutorial_options <- function(exercise.cap = NULL,
-                             exercise.eval = FALSE,
-                             exercise.timelimit = 30,
-                             exercise.lines = NULL,
-                             exercise.pipe = NULL,
-                             exercise.blanks = NULL,
-                             exercise.checker = NULL,
-                             exercise.error.check.code = NULL,
-                             exercise.completion = TRUE,
-                             exercise.diagnostics = TRUE,
-                             exercise.startover = TRUE,
-                             exercise.reveal_solution = TRUE)
-{
+tutorial_options <- function(
+  exercise.cap = NULL,
+  exercise.eval = FALSE,
+  exercise.timelimit = 30,
+  exercise.lines = NULL,
+  exercise.pipe = NULL,
+  exercise.blanks = NULL,
+  exercise.checker = NULL,
+  exercise.error.check.code = NULL,
+  exercise.completion = TRUE,
+  exercise.diagnostics = TRUE,
+  exercise.startover = TRUE,
+  exercise.reveal_solution = TRUE
+) {
   # string to evalute for setting chunk options  %1$s
   set_option_code <- 'if (!missing(%1$s)) knitr::opts_chunk$set(%1$s = %1$s)'
 

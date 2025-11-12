@@ -1,4 +1,3 @@
-
 knitr_engine_caption <- function(engine = NULL) {
   if (is.null(engine)) {
     engine <- "r"

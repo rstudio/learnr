@@ -1,7 +1,7 @@
 # TODO - Allow for messages to be functions
-  ## defer to v2
+## defer to v2
 # X - Allow for null input$answer
-  ## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
+## No.  If the quiz module wants a null value, it can provide a placeholder value that is not NULL
 
 #' Tutorial quiz questions
 #'
@@ -101,12 +101,11 @@
 #' @rdname quiz
 #' @export
 quiz <- function(..., caption = rlang::missing_arg()) {
-
   # create table rows from questions
   index <- 1
   questions <- lapply(list(...), function(question) {
     if (!is.null(question$label)) {
-      label <- paste(question$label, index, sep="-")
+      label <- paste(question$label, index, sep = "-")
       question$label <- label
       question$ids$answer <- NS(label)("answer")
       question$ids$question <- label
@@ -132,22 +131,29 @@ quiz <- function(..., caption = rlang::missing_arg()) {
 #' @import shiny
 #' @export
 question <- function(
-    text,
-    ...,
-    type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
-    correct = "Correct!",
-    incorrect = "Incorrect",
-    try_again = NULL,
-    message = NULL,
-    post_message = NULL,
-    loading = NULL,
-    submit_button = rlang::missing_arg(),
-    try_again_button = rlang::missing_arg(),
-    allow_retry = FALSE,
-    random_answer_order = FALSE,
-    options = list()
+  text,
+  ...,
+  type = c(
+    "auto",
+    "single",
+    "multiple",
+    "learnr_radio",
+    "learnr_checkbox",
+    "learnr_text",
+    "learnr_numeric"
+  ),
+  correct = "Correct!",
+  incorrect = "Incorrect",
+  try_again = NULL,
+  message = NULL,
+  post_message = NULL,
+  loading = NULL,
+  submit_button = rlang::missing_arg(),
+  try_again_button = rlang::missing_arg(),
+  allow_retry = FALSE,
+  random_answer_order = FALSE,
+  options = list()
 ) {
-
   # one time tutor initialization
   initialize_tutorial()
 
@@ -163,7 +169,12 @@ question <- function(
 
   # count total correct answers to decide between radio/checkbox
   answers_split <- answers_split_type(answers)
-  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
+  total_correct <- sum(vapply(
+    answers_split[["literal"]],
+    `[[`,
+    logical(1),
+    "correct"
+  ))
 
   # determine or resolve question type
   if (missing(type)) {
@@ -178,7 +189,8 @@ question <- function(
     }
   }
   if (length(type) == 1) {
-    type <- switch(type,
+    type <- switch(
+      type,
       "radio" = ,
       "single" = "learnr_radio",
       "checkbox" = ,
@@ -196,7 +208,8 @@ question <- function(
   }
 
   # ensure we have at least one correct answer, if required
-  must_have_correct <- identical(type, "learnr_radio") || is.null(answers_split[["function"]])
+  must_have_correct <- identical(type, "learnr_radio") ||
+    is.null(answers_split[["function"]])
   if (must_have_correct && total_correct == 0) {
     stop("At least one correct answer must be supplied")
   }
@@ -268,8 +281,7 @@ quiz_text <- function(text) {
       md <- sub("</p>\n?$", "", md)
     }
     HTML(md)
-  }
-  else {
+  } else {
     NULL
   }
 }
@@ -358,9 +370,11 @@ retrieve_question_submission_answer <- function(session, question_label) {
 }
 
 
-
-
-question_prerendered_chunk <- function(question, ..., session = getDefaultReactiveDomain()) {
+question_prerendered_chunk <- function(
+  question,
+  ...,
+  session = getDefaultReactiveDomain()
+) {
   store_question_cache(question)
 
   question_state <-
@@ -395,16 +409,17 @@ question_module_ui <- function(id) {
 }
 
 question_module_server <- function(
-  input, output, session,
+  input,
+  output,
+  session,
   question
 ) {
-
   output$answer_container <- renderUI({
     if (is.null(question$loading)) {
       question_ui_loading(question)
     } else {
       div(
-        class="loading",
+        class = "loading",
         question$loading
       )
     }
@@ -416,18 +431,25 @@ question_module_server <- function(
   observeEvent(
     req(session$userData$learnr_state() == "restored"),
     once = TRUE,
-    question_module_server_impl(input, output, session, question, question_state)
+    question_module_server_impl(
+      input,
+      output,
+      session,
+      question,
+      question_state
+    )
   )
 
   question_state
 }
 
 question_module_server_impl <- function(
-  input, output, session,
+  input,
+  output,
+  session,
   question,
   question_state = NULL
 ) {
-
   ns <- getDefaultReactiveDomain()$ns
   # set a seed for each user session for question methods to use
   question$seed <- random_seed()
@@ -439,21 +461,26 @@ question_module_server_impl <- function(
 
   is_correct_info <- reactive(label = "is_correct_info", {
     # question has not been submitted
-    if (is.null(submitted_answer())) return(NULL)
+    if (is.null(submitted_answer())) {
+      return(NULL)
+    }
     # find out if answer is right
     ret <- question_is_correct(question, submitted_answer())
     if (!inherits(ret, "learnr_mark_as")) {
-      stop("`question_is_correct(question, input$answer)` must return a result from `correct`, `incorrect`, or `mark_as`")
+      stop(
+        "`question_is_correct(question, input$answer)` must return a result from `correct`, `incorrect`, or `mark_as`"
+      )
     }
     ret
   })
 
   # should present all messages?
   is_done <- reactive(label = "is_done", {
-    if (is.null(is_correct_info())) return(NULL)
+    if (is.null(is_correct_info())) {
+      return(NULL)
+    }
     (!isTRUE(question$allow_retry)) || is_correct_info()$correct
   })
-
 
   button_type <- reactive(label = "button type", {
     if (is.null(submitted_answer())) {
@@ -493,20 +520,24 @@ question_module_server_impl <- function(
     if (question$random_answer_order) {
       # Shuffle visible answer options (i.e. static, non-function answers)
       is_visible_option <- !answer_type_is_function(question$answers)
-      question$answers[is_visible_option] <<- shuffle(question$answers[is_visible_option])
+      question$answers[is_visible_option] <<- shuffle(question$answers[
+        is_visible_option
+      ])
     }
     submitted_answer(restoreValue)
   }
 
   # restore past submission
   #  If no prior submission, it returns NULL
-  past_submission_answer <- retrieve_question_submission_answer(session, question$label)
+  past_submission_answer <- retrieve_question_submission_answer(
+    session,
+    question$label
+  )
   # initialize like normal... nothing has been submitted
   #   or
   # initialize with the past answer
   #  this should cascade throughout the app to display correct answers and final outputs
   init_question(past_submission_answer)
-
 
   output$action_button_container <- renderUI({
     question_button_label(
@@ -569,9 +600,7 @@ question_module_server_impl <- function(
     )
   })
 
-
   observeEvent(input$action_button, {
-
     if (button_type() == "try_again") {
       # maintain current submission / do not randomize answer order
       # only reset the submitted answers
@@ -583,7 +612,7 @@ question_module_server_impl <- function(
         session,
         "reset_question_submission",
         data = list(
-          label    = as.character(question$label),
+          label = as.character(question$label),
           question = as.character(question$question)
         )
       )
@@ -595,15 +624,14 @@ question_module_server_impl <- function(
     # submit question to server
     event_trigger(
       session = session,
-      event   = "question_submission",
-      data    = list(
-        label    = as.character(question$label),
+      event = "question_submission",
+      data = list(
+        label = as.character(question$label),
         question = as.character(question$question),
-        answer   = as.character(input$answer),
-        correct  = is_correct_info()$correct
+        answer = as.character(input$answer),
+        correct = is_correct_info()$correct
       )
     )
-
   })
 
   observe({
@@ -619,9 +647,15 @@ question_module_server_impl <- function(
 }
 
 
-
-question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
-  label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
+question_button_label <- function(
+  question,
+  label_type = "submit",
+  is_valid = TRUE
+) {
+  label_type <- match.arg(
+    label_type,
+    c("submit", "try_again", "correct", "incorrect")
+  )
 
   if (label_type %in% c("correct", "incorrect")) {
     # No button when answer is correct or incorrect (wrong without try again)
@@ -638,7 +672,8 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
 
   if (label_type == "submit") {
     button <- actionButton(
-      action_button_id, button_label,
+      action_button_id,
+      button_label,
       class = default_class
     )
     if (!is_valid) {
@@ -648,7 +683,8 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   } else if (label_type == "try_again") {
     mutate_tags(
       actionButton(
-        action_button_id, button_label,
+        action_button_id,
+        button_label,
         class = warning_class
       ),
       paste0("#", action_button_id),
@@ -661,7 +697,6 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
 }
 
 question_messages <- function(question, messages, is_correct, is_done) {
-
   # Always display the incorrect, correct, or try again messages
   default_message <-
     if (is_correct) {
@@ -699,7 +734,13 @@ question_messages <- function(question, messages, is_correct, is_done) {
     if (length(messages) > 1) {
       # add breaks inbetween similar messages
       break_tag <- list(tags$br(), tags$br())
-      all_messages <- replicate(length(messages) * 2 - 1, {break_tag}, simplify = FALSE)
+      all_messages <- replicate(
+        length(messages) * 2 - 1,
+        {
+          break_tag
+        },
+        simplify = FALSE
+      )
       # store in all _odd_ positions
       all_messages[(seq_along(messages) * 2) - 1] <- messages
       messages <- tagList(all_messages)
@@ -709,7 +750,6 @@ question_messages <- function(question, messages, is_correct, is_done) {
       messages
     )
   }
-
 
   if (is.null(question$messages$message)) {
     always_message_alert <- NULL
@@ -731,11 +771,13 @@ question_messages <- function(question, messages, is_correct, is_done) {
   }
 
   # set UI message
-  if (all(
-    is.null(message_alert),
-    is.null(always_message_alert),
-    is.null(post_alert)
-  )) {
+  if (
+    all(
+      is.null(message_alert),
+      is.null(always_message_alert),
+      is.null(post_alert)
+    )
+  ) {
     NULL
   } else {
     htmltools::tagList(message_alert, always_message_alert, post_alert)
@@ -753,7 +795,9 @@ question_ui_loading <- function(question) {
   })
 
   q_opts <- NULL
-  if (length(intersect(question$type, c("learnr_radio", "learnr_checkbox"))) > 0) {
+  if (
+    length(intersect(question$type, c("learnr_radio", "learnr_checkbox"))) > 0
+  ) {
     q_opts <- htmltools::tags$ul(
       lapply(seq_along(question$answers), function(...) {
         htmltools::tags$li(
@@ -777,7 +821,6 @@ question_ui_loading <- function(question) {
     button
   )
 }
-
 
 
 withLearnrMathJax <- function(...) {

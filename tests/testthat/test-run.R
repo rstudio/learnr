@@ -19,13 +19,28 @@ test_that("run_tutorial() with bad inputs", {
 test_that("validating and finding tutorials", {
   # value when nothing is provided
   expect_equal(run_validate_tutorial_dir(NULL), list(valid = FALSE, dir = NULL))
-  expect_equal(run_validate_tutorial_file(NULL), list(valid = FALSE, dir = NULL))
-  expect_equal(run_validate_tutorial_path(NULL), list(valid = FALSE, dir = NULL))
+  expect_equal(
+    run_validate_tutorial_file(NULL),
+    list(valid = FALSE, dir = NULL)
+  )
+  expect_equal(
+    run_validate_tutorial_path(NULL),
+    list(valid = FALSE, dir = NULL)
+  )
 
   # returns name if not an existing file
-  expect_equal(run_validate_tutorial_dir("foo"), list(valid = FALSE, dir = "foo"))
-  expect_equal(run_validate_tutorial_file("foo"), list(valid = FALSE, dir = "foo"))
-  expect_equal(run_validate_tutorial_path("foo"), list(valid = FALSE, dir = "foo"))
+  expect_equal(
+    run_validate_tutorial_dir("foo"),
+    list(valid = FALSE, dir = "foo")
+  )
+  expect_equal(
+    run_validate_tutorial_file("foo"),
+    list(valid = FALSE, dir = "foo")
+  )
+  expect_equal(
+    run_validate_tutorial_path("foo"),
+    list(valid = FALSE, dir = "foo")
+  )
   expect_null(run_find_tutorial_rmd("foo"))
 
   tmpdir <- tempfile()
@@ -162,4 +177,3 @@ test_that("safe() executes code expression directly and programmatically", {
   safe(cat(!!x, file = !!file))
   expect_equal(readLines(file), "3")
 })
-

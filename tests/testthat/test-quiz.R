@@ -1,4 +1,3 @@
-
 # Test quiz() -------------------------------------------------------------
 
 create_question <- function() {
@@ -21,7 +20,6 @@ test_that("quiz questions can be created", {
   expect_s3_class(a$label, "html")
   expect_type(a$correct, "logical")
   expect_type(a$message, "NULL")
-
 
   expect_s3_class(q, "learnr_radio")
   expect_s3_class(q, "tutorial_question")
@@ -76,7 +74,6 @@ test_that("questions can be aggregated via quiz", {
 
 # Test question() ---------------------------------------------------------
 
-
 test_that("bad ellipses are found", {
   expect_silent(
     question("title", answer("5", correct = TRUE))
@@ -88,11 +85,17 @@ test_that("bad ellipses are found", {
 
 test_that("loading placeholder is correctly generated for HTML question texts", {
   expect_silent(
-    q1 <- question(htmltools::tags$p("Did this work?"), answer("yes", correct = TRUE))
+    q1 <- question(
+      htmltools::tags$p("Did this work?"),
+      answer("yes", correct = TRUE)
+    )
   )
 
   expect_silent(
-    q2 <- question(htmltools::HTML("<p>Did this work?</p>"), answer("yes", correct = TRUE))
+    q2 <- question(
+      htmltools::HTML("<p>Did this work?</p>"),
+      answer("yes", correct = TRUE)
+    )
   )
 
   expect_equal(q1$loading, q2$loading)
@@ -102,16 +105,20 @@ test_that("loading placeholder is correctly generated for HTML question texts", 
       'Does this equal two?
 
 <pre class="r"><code>1 + 1
-</code></pre>', answer("yes", correct = TRUE)
+</code></pre>',
+      answer("yes", correct = TRUE)
     )
   )
 
   expect_silent(
     question(
-      htmltools::HTML('<p>Does this equal two?</p>
+      htmltools::HTML(
+        '<p>Does this equal two?</p>
 
 <pre class="r"><code>1 + 1
-</code></pre>'), answer("yes", correct = TRUE)
+</code></pre>'
+      ),
+      answer("yes", correct = TRUE)
     )
   )
 
@@ -125,13 +132,12 @@ test_that("loading placeholder is correctly generated for HTML question texts", 
         "```",
         sep = "\n"
       ),
-      answer(2, correct =TRUE)
+      answer(2, correct = TRUE)
     )
   )
 })
 
 test_that("question() message depends on whether type is checkbox", {
-
   q_radio <- question(
     "test",
     answer("A", correct = TRUE),

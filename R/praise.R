@@ -1,4 +1,3 @@
-
 #' Random praise and encouragement
 #'
 #' Random praises and encouragements sayings to compliment your question and
@@ -29,7 +28,11 @@ random_encouragement <- function(language = NULL) {
 }
 
 read_random_phrases <- function() {
-  readRDS(system.file("internals", "i18n_random_phrases.rds", package = "learnr"))
+  readRDS(system.file(
+    "internals",
+    "i18n_random_phrases.rds",
+    package = "learnr"
+  ))
 }
 
 random_phrases_languages <- function() {
@@ -43,7 +46,10 @@ random_phrases <- function(type, language = NULL) {
   if (!type %in% names(.random_phrases)) {
     stop.(
       "`type` should be one of ",
-      knitr::combine_words(paste0("'", names(.random_phrases), "'"), and = " or ")
+      knitr::combine_words(
+        paste0("'", names(.random_phrases), "'"),
+        and = " or "
+      )
     )
   }
 
@@ -55,7 +61,11 @@ random_phrases <- function(type, language = NULL) {
     }
     if (!language %in% names(.random_phrases[[type]])) {
       learnr_render_message(
-        "learnr doesn't know how to provide ", type, " in the language '", language, "'",
+        "learnr doesn't know how to provide ",
+        type,
+        " in the language '",
+        language,
+        "'",
         level = "warn"
       )
       return(warn_unsupported_language(default))
@@ -118,7 +128,11 @@ random_phrases <- function(type, language = NULL) {
 #'   rendered chunk.
 #'
 #' @export
-random_phrases_add <- function(language = "en", praise = NULL, encouragement = NULL) {
+random_phrases_add <- function(
+  language = "en",
+  praise = NULL,
+  encouragement = NULL
+) {
   phrases <- list()
   if (!is.null(praise)) {
     stopifnot(is.character(praise))
@@ -130,9 +144,7 @@ random_phrases_add <- function(language = "en", praise = NULL, encouragement = N
     phrases$encouragement <- list()
     phrases$encouragement[[language]] <- encouragement
   }
-  if (
-    isTRUE(getOption('knitr.in.progress'))
-  ) {
+  if (isTRUE(getOption('knitr.in.progress'))) {
     if (!identical(knitr::opts_current$get("label"), "setup")) {
       rmarkdown::shiny_prerendered_chunk(
         context = "server-start",

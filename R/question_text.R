@@ -73,7 +73,12 @@ question_text <- function(
   cols = NULL,
   options = list()
 ) {
-  checkmate::assert_character(placeholder, len = 1, null.ok = TRUE, any.missing = FALSE)
+  checkmate::assert_character(
+    placeholder,
+    len = 1,
+    null.ok = TRUE,
+    any.missing = FALSE
+  )
   checkmate::assert_logical(trim, len = 1, null.ok = FALSE, any.missing = FALSE)
 
   if (!identical(random_answer_order, FALSE)) {
@@ -81,7 +86,9 @@ question_text <- function(
       lifecycle::deprecate_warn(
         when = "0.11.0",
         what = "question_text(random_answer_order)",
-        details = c(i = "Random answer order is automatically disabled for text questions.")
+        details = c(
+          i = "Random answer order is automatically disabled for text questions."
+        )
       )
     )
   }
@@ -115,7 +122,11 @@ question_ui_initialize.learnr_text <- function(question, value, ...) {
       textInput
     } else {
       function(...) {
-        textAreaInput(..., cols = question$options$cols, rows = question$options$rows)
+        textAreaInput(
+          ...,
+          cols = question$options$cols,
+          rows = question$options$rows
+        )
       }
     }
 
@@ -134,17 +145,19 @@ question_is_valid.learnr_text <- function(question, value, ...) {
   }
   if (isTRUE(question$options$trim)) {
     return(nchar(str_trim(value)) > 0)
-  } else{
+  } else {
     return(nchar(value) > 0)
   }
 }
 
 #' @export
 question_is_correct.learnr_text <- function(question, value, ...) {
-
   if (nchar(value) == 0) {
     if (!is.null(shiny::getDefaultReactiveDomain())) {
-      showNotification("Please enter some text before submitting", type = "error")
+      showNotification(
+        "Please enter some text before submitting",
+        type = "error"
+      )
     }
     shiny::validate("Please enter some text")
   }
@@ -164,7 +177,10 @@ question_is_correct.learnr_text <- function(question, value, ...) {
   }
 
   check_answer <- function(answer) {
-    answer_checker <- eval(parse(text = answer$value), envir = rlang::caller_env(2))
+    answer_checker <- eval(
+      parse(text = answer$value),
+      envir = rlang::caller_env(2)
+    )
     answer_checker(value)
   }
 
