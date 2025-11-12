@@ -1,6 +1,6 @@
 test_that("R auto complete finds runif vars", {
 
-  expect_equal(auto_complete_r("method not found"), list())
+  expect_equal(auto_complete_r("this_variable_will_not_be_found"), list())
   expect_equal(auto_complete_r("runif"), list(
     list("runif", TRUE)
   ))
