@@ -1,6 +1,6 @@
 # learnr 0.11.6
 
-- Fixed a test that was failing on CRAN's Fedora gcc environment. (#827)
+-   Fixed a test that was failing on CRAN's Fedora gcc environment. (#827)
 
 -   Added a new option, `tutorial.exercise.throttle`, to slow down successive exercise execution. This option should be set to the number of seconds a user will have to wait between performing code executions. The option defaults to 1 second to deter rapid code executions. To disable submission throttling, call `options(tutorial.exercise.throttle = 0)` within your setup chunk. (@internaut, #818)
 
