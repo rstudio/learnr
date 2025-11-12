@@ -6,18 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Interactive Exercises • learnr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Interactive Exercises">
 <meta name="description" content="Learn how to create interactive exercises with code chunks in R Markdown documents.">
@@ -319,8 +318,19 @@ tutorial. For example:</p>
 <div id="exercisesetup" class="sourceCode">
 <pre class="markdown">
 <code>```{r setup, include=FALSE}
-nycflights 
-</code></pre>
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```
+
+```{r arrange, exercise=TRUE}
+# Change the sort order to Ascending
+arrange(nycflights, desc(arr_delay))
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetup')</script>
 </div>
@@ -336,8 +346,19 @@ re-write the previous example to use a shared setup chunk named
 <div id="exercisesetupshared" class="sourceCode">
 <pre class="markdown">
 <code>```{r prepare-flights}
-nycflights 
-</code></pre>
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE, exercise.setup = "prepare-flights"}
+# Change the filter to select February rather than January
+filter(nycflights, month == 1)
+```
+
+```{r arrange, exercise=TRUE, exercise.setup = "prepare-flights"}
+# Change the sort order to Ascending
+arrange(nycflights, desc(arr_delay))
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupshared')</script>
 </div>
@@ -353,8 +374,14 @@ the setup chunk for the <code>filter</code> exercise:</p>
 <div id="exercisesetupsuffix" class="sourceCode">
 <pre class="markdown">
 <code>```{r filter-setup}
-nycflights 
-</code></pre>
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filter, exercise=TRUE}
+# Change the filter to select February rather than January
+nycflights &lt;- filter(nycflights, month == 1)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupsuffix')</script>
 </div>
@@ -375,8 +402,19 @@ filter the data and store it and can be referenced inside the
 <div id="exercisesetupchained" class="sourceCode">
 <pre class="markdown">
 <code>```{r prepare-flights}
-nycflights 
-</code></pre>
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filtered-flights, exercise.setup = "prepare-flights"}
+# Prepare a filtered nycflights to select February rather than January
+flights_february &lt;- filter(nycflights, month == 2)
+```
+
+```{r arrange, exercise=TRUE, exercise.setup = "filtered-flights"}
+# Change the sort order to Ascending
+arrange(flights_february, desc(arr_delay))
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesetupchained')</script><p>You can chain use exercise chunks in the setup chunk chain, but keep
 in mind that the code as it appears in the R Markdown source is used to
@@ -387,8 +425,19 @@ its setup:</p>
 <div id="exercisechained" class="sourceCode">
 <pre class="markdown">
 <code>```{r prepare-flights}
-nycflights 
-</code></pre>
+nycflights &lt;- nycflights13::flights
+```
+
+```{r filtered-flights, exercise=TRUE, exercise.setup = "prepare-flights"}
+# Filter to select February rather than January
+flights_february &lt;- filter(nycflights, month == 2)
+```
+
+```{r arrange, exercise=TRUE, exercise.setup = "filtered-flights"}
+# Change the sort order to Ascending
+arrange(flights_february, desc(arr_delay))
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisechained')</script>
 </div>
@@ -425,7 +474,8 @@ with <code>read_csv()</code>.</p>
 <code>```{r setup}
 library(tidyverse)
 
-flights_jan % 
+flights_jan &lt;- 
+  nycflights13::flights %&gt;% 
   filter(month == 2)
   
 dir.create("data",  showWarnings = FALSE)
@@ -455,8 +505,13 @@ chunk with “-hint” or “-solution” chunk label suffix. For example:</p>
 <pre class="markdown">
 <code>```{r filter, exercise=TRUE}
 # Change the filter to select February rather than January
-nycflights 
-</code></pre>
+nycflights &lt;- filter(nycflights, month == 1)
+```
+
+```{r filter-solution}
+nycflights &lt;- filter(nycflights, month == 2)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exercisesolution')</script><p>A “Hint” or “Solution” button is added to the left side of the
 exercise header region:</p>
@@ -866,8 +921,24 @@ the “message” field is custom HTML rather than a character vector.</td>
 <div id="customchecker" class="sourceCode">
 <pre class="markdown">
 <code>```r
-custom_checker 
-</code></pre>
+custom_checker &lt;- function(label, user_code, check_code, envir_result, evaluate_result, last_value, stage, ...) {
+  # this is a code check
+  if (stage == "code_check") {
+    if (is_bad_code(user_code, check_code)) {
+      return(list(message = "I wasn't expecting that code", correct = FALSE))
+    }
+    return(list(message = "Nice code!", correct = TRUE))
+  }
+  # this is a fully evaluated chunk check
+  if (is_bad_result(last_value, check_code)) {
+    return(list(message = "I wasn't expecting that result", correct = FALSE))
+  }
+  list(message = "Great job!", correct = TRUE, location = "append")
+}
+
+tutorial_options(exercise.checker = custom_checker)
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('customchecker')</script><p>See the table below for a full description of all the arguments
 supplied to <code>exercise.checker</code>.</p>
@@ -1034,8 +1105,11 @@ that the exercise code editor should be 15 lines high:</p>
 <pre class="markdown">
 <code>```{r add-function, exercise=TRUE, exercise.lines=15}
 # Write a function to add two numbers together
-add_numbers 
-</code></pre>
+add_numbers &lt;- function(a, b) {
+  
+}
+```</code>
+</pre>
 </div>
 <script type="text/javascript">loadSnippet('exerciselines')</script>
 </div>
@@ -1080,7 +1154,7 @@ execute. Correspondingly, the default value for
 
 <div class="pkgdown-footer-right">
   <p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, Alexander Rossell Hayes, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
   </div></footer>

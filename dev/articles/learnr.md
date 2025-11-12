@@ -1,0 +1,352 @@
+# Get Started with learnr
+
+## Getting Started
+
+### Installation
+
+Install the latest version of learnr from GitHub with the [remotes
+package](https://remotes.r-lib.org):
+
+``` r
+# install.packages("remotes")
+remotes::install_github("rstudio/learnr")
+```
+
+Or you can install the **learnr** package from CRAN:
+
+``` r
+install.packages("learnr")
+```
+
+learnr works best with a recent [version of
+RStudio](https://www.rstudio.com/products/rstudio/download/) (v1.0.136
+or later) which include tools for easily running and previewing
+tutorials.
+
+### Creating a Tutorial
+
+A tutorial is just a directory that contains a standard R Markdown
+document with three additional attributes:
+
+1.  Loads the **learnr** package,
+2.  Includes one or more interactive components (exercises, quiz
+    questions, etc.),
+3.  Uses the `runtime: shiny_prerendered` directive in the YAML header,
+4.  Provides a short description in the top-level `description:` field
+    of the YAML header.
+
+The `runtime: shiny_prerendered` element included in the YAML hints at
+the underlying implementation of tutorials: they are simply Shiny
+applications which use an R Markdown document as their user-interface
+rather than the traditional `ui.R` file.
+
+#### Tutorial Format
+
+While you can use tutorial elements in many different R Markdown formats
+(see the article on [Tutorial
+Formats](https://pkgs.rstudio.com/learnr/dev/articles/formats.md) for
+details), the **learnr** package also includes a custom
+[`learnr::tutorial`](https://pkgs.rstudio.com/learnr/dev/reference/tutorial.md)
+format which provides some default layout and behavior (including
+progress tracking) which you’ll likely want to use in many of your
+tutorials.
+
+You can create a new
+[`learnr::tutorial`](https://pkgs.rstudio.com/learnr/dev/reference/tutorial.md)
+document from a template via the **New R Markdown** dialog in RStudio:
+
+![](images/create-new-tutorial.png)
+
+This is what the YAML metadata looks like for an Rmd file that uses the
+tutorial format:
+
+``` markdown
+---
+title: "Hello, Tutorial!"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: "Welcome to learnr tutorials!"
+---
+```
+
+Note that tutorials aren’t just the Rmd source file, rather they are
+directories that contain the Rmd source file as well as other supporting
+files (e.g. figures and other images). As a result the default behavior
+is to create new tutorials within their own directory.
+
+#### Chunk Labels
+
+There is one other requirement related to R code chunks that contain
+exercises or quiz questions: they must have a unique chunk label. For
+example, this chunk is labeled `addition`:
+
+```` markdown
+```{r addition, exercise=TRUE}
+1 + 1
+```
+````
+
+This requirement exists to ensure that a stable identifier is associated
+with each interactive component. This in turn makes it possible to save
+and restore user work as well as facilitates aggregation and reporting
+on responses.
+
+### Running Tutorials
+
+Tutorials are Shiny applications that are run using the
+[`rmarkdown::run`](https://pkgs.rstudio.com/rmarkdown/reference/run.html)
+function rather than the
+[`shiny::runApp`](https://rdrr.io/pkg/shiny/man/runApp.html) function.
+For example:
+
+``` r
+rmarkdown::run("tutorial.Rmd")
+```
+
+If your tutorial is included within an R package you can also run it via
+the
+[`learnr::run_tutorial`](https://pkgs.rstudio.com/learnr/dev/reference/run_tutorial.md)
+function. For example, you can run a live version of the “Hello, Tutor”
+example provided above with:
+
+``` r
+learnr::run_tutorial("hello", package = "learnr")
+```
+
+## Tutorial Types
+
+There are two main types of tutorial documents:
+
+1.  Tutorials which are mostly narrative and/or video content which also
+    include some runnable code chunks. These documents are very similar
+    to vignettes in that their principal goal is communicating concepts.
+    The interactive tutorial features are then used to allow further
+    experimentation by the reader.
+
+2.  Tutorials which provide a structured learning experience with
+    multiple exercises, quiz questions, and tailored feedback.
+
+The first type of tutorial is of course much easier to author while
+still being very useful. These documents will typically add
+`exercise = TRUE` to selected code chunks and also set
+`exercise.eval = TRUE` so the chunk output is visible by default. The
+reader can simply look at the R code and move on or can play with it to
+reinforce their understanding.
+
+The second type of tutorial provides much richer feedback and assessment
+but of course considerably more effort to author. If you are primarily
+interested in this sort of tutorial there are many features to support
+it including exercise [hints and
+solutions](https://pkgs.rstudio.com/learnr/dev/articles/exercises.html#hints-and-solutions),
+automated exercise
+[checkers](https://pkgs.rstudio.com/learnr/dev/articles/exercises.html#exercise-checking),
+and multiple choice
+[quizzes](https://pkgs.rstudio.com/learnr/dev/articles/questions.md)
+with custom feedback.
+
+The most straightforward path is to start with the first type of
+tutorial (executable chunks with pre-evaluated output) and then move
+into more sophisticated assessment and feedback over time.
+
+## Interactive Components
+
+### Exercises
+
+Exercises are interactive R code chunks that allow readers to directly
+execute R code and see its results:
+
+![](images/exercises.png)
+
+Exercises can include hints or solutions as well as custom checking code
+to provide feedback on user answers. The
+[Exercises](https://pkgs.rstudio.com/learnr/dev/articles/exercises.md)
+page includes a more in depth discussion of exercises and their various
+available options and behaviors.
+
+### Questions
+
+You can include one or more multiple-choice quiz questions within a
+tutorial to help verify that readers understand the concepts presented.
+Questions can either have a single or multiple correct answers.
+
+Include a question by calling the `question` function within an R code
+chunk:
+
+```` markdown
+```{r letter-a, echo=FALSE}
+question("What number is the letter A in the English alphabet?",
+  answer("8"),
+  answer("14"),
+  answer("1", correct = TRUE),
+  answer("23")
+)
+```
+````
+
+Here’s what the above question would look like within a tutorial:
+
+![](images/question.png)
+
+The
+[Questions](https://pkgs.rstudio.com/learnr/dev/articles/questions.md)
+page includes additional information on using questions within
+tutorials.
+
+### Videos
+
+You can include videos published on either
+[YouTube](https://www.youtube.com) or [Vimeo](https://vimeo.com) within
+a tutorial using the standard markdown image syntax. Note that any valid
+YouTube or Vimeo URL will work. For example, the following are all valid
+examples of video embedding:
+
+``` markdown
+![](https://youtu.be/zNzZ1PfUDNk)
+![](https://www.youtube.com/watch?v=zNzZ1PfUDNk)
+ 
+![](https://vimeo.com/142172484)
+![](https://player.vimeo.com/video/142172484)
+```
+
+#### Video Size
+
+Videos are responsively displayed at 100% of their container’s width
+(with height automatically determined based on a 16x9 aspect ratio). You
+can change this behavior by adding attributes to the markdown where you
+reference the video.
+
+You can specify an alternate percentage for the video’s width or an
+alternate fixed width and height. For example:
+
+``` markdown
+![](https://youtu.be/zNzZ1PfUDNk){width="90%"}
+
+![](https://youtu.be/zNzZ1PfUDNk){width="560" height="315"}
+```
+
+### Shiny Components
+
+The **learnr** package uses `runtime: shiny_prerendered` to turn regular
+R Markdown documents into live tutorials. Since tutorials are Shiny
+applications at their core, it’s also possible to add other forms of
+interactivity using Shiny (e.g. for teaching a statistical concept
+interactively).
+
+The basic technique is to add a `context="server"` attribute to code
+chunks that are part of the Shiny server as opposed to UI definition.
+For example:
+
+```` markdown
+```{r, echo=FALSE}
+sliderInput("bins", "Number of bins:", min = 1, max = 50, value = 30)
+plotOutput("distPlot")
+```
+
+```{r, context="server"}
+output$distPlot <- renderPlot({
+  x <- faithful[, 2]  # Old Faithful Geyser data
+  bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  hist(x, breaks = bins, col = 'darkgray', border = 'white')
+})
+```
+````
+
+You can learn more by reading the [Prerendered Shiny
+Documents](http://rmarkdown.rstudio.com/authoring_shiny_prerendered.md)
+article on the R Markdown website.
+
+## External Resources
+
+You may wish to include external resources (images, videos, CSS, etc.)
+within your tutorial documents. Since the tutorial will be deployed as a
+Shiny application, you need to ensure that these resources are placed
+within one of several directories which are reachable by the Shiny web
+server:
+
+| Directory | Description                                  |
+|-----------|----------------------------------------------|
+| `images/` | Image files (e.g. PNG, JPEG, etc.)           |
+| `css/`    | CSS stylesheets                              |
+| `js/`     | JavaScript scripts                           |
+| `www/`    | Any other files (e.g. downloadable datasets) |
+
+The reason that all files within the directory of the main Rmd can’t be
+referenced from within the web document is that you may not want all
+files within your tutorial’s directory to be downloadable by end users.
+By restricting the files which can be referenced to the above
+directories you can control which files are downloadable and which are
+not.
+
+## Preserving Work
+
+Tutorials store the various pieces of work done within them (exercise
+input and output, answers to questions, etc.) and automatically restore
+it when users revisit them. Locally run tutorials store user work in the
+local filesystem and tutorials run from a server store user work within
+the storage provided by the end user’s web browser.
+
+### Managing Changes
+
+One thing to keep in mind about preserved work is that if your tutorial
+changes significantly then the work restored may no longer match up well
+with the contents of your tutorial! (e.g. the nature and content of
+exercises and/or questions may have changed).
+
+Tutorial work is restored using the R chunk label of a given exercise or
+question, so if a chunk changes significantly you can invalidate the
+stored work by changing the chunk label.
+
+#### Tutorial Identifiers
+
+You can also invalidate stored work by changing the ID or version of
+your tutorial. If you publish tutorials within R packages then the
+version is automatically derived from the version of the package. You
+can also explicitly set the ID and version of a tutorial using YAML
+metadata, for example:
+
+``` markdown
+---
+title: "Hello, Tutorial!"
+tutorial:
+  id: "com.example.tutorials.my-first-tutorial"
+  version: 2.1
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+```
+
+Note that we use a reversed domain name for the tutorial id
+(`com.example.tutorials.my-first-tutorial`). This is to ensure that it
+is globally unique when deployed on a server with other tutorials. You
+could also choose to use a Universally Unique Identifier (UUID) created
+using the
+[**uuid**](https://cran.rstudio.com/web/packages/uuid/index.html)
+package.
+
+When you change the ID or version of a tutorial all stored work
+associated with the tutorial is invalidated and users of the tutorial
+will start fresh when accessing it again. It’s therefore good practice
+to change the version whenever you make significant modifications to the
+exercises and questions within a tutorial (again, this occurs
+automatically for tutorials within R packages so long as the version of
+the R package is changed).
+
+## Publishing
+
+Tutorials can be published all of the same ways that Shiny applications
+can, including running locally on an end-user’s machine or running on a
+Shiny Server or hosting service like shinyapps.io.
+
+The most straightforward way to deploy a tutorial is to include it
+within an [R
+package](https://pkgs.rstudio.com/learnr/dev/articles/publishing.html#r-package)
+and have users run it directly via the
+[`learnr::run_tutorial`](https://pkgs.rstudio.com/learnr/dev/reference/run_tutorial.md)
+function.
+
+The
+[Publishing](https://pkgs.rstudio.com/learnr/dev/articles/publishing.md)
+page includes an in-depth discussion of the various publishing options
+as well as some special considerations around resources, concurrent
+usage, and security which come into play when deploying tutorials on a
+server.

@@ -6,18 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Publishing on shinyapps.io • learnr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Publishing on shinyapps.io">
 <meta name="description" content="An in-depth guide to publishing learnr tutorials on [shinyapps.io](https://www.rstudio.com/products/shinyapps/), with advice on sizing your Shiny app instances to meet the demands of students when learnr tutorials are used for workshops or in class rooms.
@@ -180,7 +179,7 @@ your tutorial. The more, the better! This will help handle “flash
 traffic” (having numerous students load the tutorial all at once) at the
 beginning of class.</li>
 </ul>
-<p><img src="img/shinyapps-publishing-instances.png" width="433" style="display: block; margin: auto;"></p>
+<p><img src="img/shinyapps-publishing-instances.png" class="r-plt" width="433" style="display: block; margin: auto;"></p>
 <p>Then go to <code>Settings &gt; General</code> and configure the
 following:</p>
 <ul>
@@ -189,7 +188,7 @@ following:</p>
 The larger the instance, the more memory you will have to work with. The
 larger the memory, the more students can be concurrently working.</li>
 </ul>
-<p><img src="img/shinyapps-publishing-instance-size.png" width="600" style="display: block; margin: auto;"></p>
+<p><img src="img/shinyapps-publishing-instance-size.png" class="r-plt" width="600" style="display: block; margin: auto;"></p>
 <p>Finally, go to the Settings &gt; Advanced page and configure the
 following:</p>
 <ul>
@@ -210,7 +209,7 @@ single person accesses the tutorial. This means that the first student
 to access your tutorial during class will start all the servers so that
 others can access them more quickly.</li>
 </ul>
-<p><img src="img/shinyapps-publishing-advanced.png" width="538" style="display: block; margin: auto;"></p>
+<p><img src="img/shinyapps-publishing-advanced.png" class="r-plt" width="538" style="display: block; margin: auto;"></p>
 <p>We recommend you set the <strong>Start Count</strong> and
 <strong>Instance Size</strong> to the maximum, monitor hours used, and
 adjust settings from there.</p>
@@ -305,7 +304,7 @@ the Standard subscription (&lt;= 2000 hours / month) for one month, and
 reduce to the Basic level (&lt;= 500 hours / month) in the second
 month.</p>
 <p>Example of the usage metrics dashboard below:</p>
-<p><img src="img/shinyapps-publishing-metrics.png" width="686" style="display: block; margin: auto;"></p>
+<p><img src="img/shinyapps-publishing-metrics.png" class="r-plt" width="686" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="troubleshooting-beyond-settings">Troubleshooting beyond settings<a class="anchor" aria-label="anchor" href="#troubleshooting-beyond-settings"></a>
@@ -331,7 +330,7 @@ different link as needed.</p>
 
 <div class="pkgdown-footer-right">
   <p>Developed by <a href="https://www.garrickadenbuie.com" class="external-link">Garrick Aden-Buie</a>, <a href="http://schloerke.com/" class="external-link">Barret Schloerke</a>, JJ Allaire, Alexander Rossell Hayes, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" width="62" style="margin-bottom: 3px;"></a>.</p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
   </div></footer>
