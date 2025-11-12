@@ -1,4 +1,4 @@
-# learnr (development version)
+# learnr 0.11.6
 
 - Fixed a test that was failing on CRAN's Fedora gcc environment. (#827)
 
