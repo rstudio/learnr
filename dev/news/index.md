@@ -2,6 +2,10 @@
 
 ## learnr (development version)
 
+## learnr 0.11.6
+
+CRAN release: 2025-11-13
+
 - Fixed a test that was failing on CRAN’s Fedora gcc environment.
   ([\#827](https://github.com/rstudio/learnr/issues/827))
 

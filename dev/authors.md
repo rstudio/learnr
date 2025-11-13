@@ -43,13 +43,13 @@ Source:
 [`DESCRIPTION`](https://github.com/rstudio/learnr/blob/main/DESCRIPTION)
 
 Aden-Buie G, Schloerke B, Allaire J, Rossell Hayes A (2025). *learnr:
-Interactive Tutorials for R*. R package version 0.11.5.9000,
+Interactive Tutorials for R*. R package version 0.11.6.9000,
 <https://rstudio.github.io/learnr/>.
 
     @Manual{,
       title = {learnr: Interactive Tutorials for R},
       author = {Garrick Aden-Buie and Barret Schloerke and JJ Allaire and Alexander {Rossell Hayes}},
       year = {2025},
-      note = {R package version 0.11.5.9000},
+      note = {R package version 0.11.6.9000},
       url = {https://rstudio.github.io/learnr/},
     }
