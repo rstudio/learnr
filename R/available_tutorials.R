@@ -36,11 +36,11 @@ available_tutorials <- function(package = NULL) {
 #'   `tutorials` is a \code{data.frame} containing
 #'    "package": name of package; string
 #'    "name": Tutorial directory. (can be passed in as `run_tutorial(NAME, PKG)`; string
-#'    "title": Tutorial title from yaml header; [NA]
-#'    "description": Tutorial description from yaml header; [NA]
-#'    "package_dependencies": Packages needed to run tutorial; [lsit()]
-#'    "private": Boolean describing if tutorial should be indexed / displayed; [FALSE]
-#'    "yaml_front_matter": list column of all yaml header info; [list()]
+#'    "title": Tutorial title from yaml header; [`NA`]
+#'    "description": Tutorial description from yaml header; [`NA`]
+#'    "package_dependencies": Packages needed to run tutorial; [`list()`]
+#'    "private": Boolean describing if tutorial should be indexed / displayed; [`FALSE`]
+#'    "yaml_front_matter": list column of all yaml header info; [`list()`]
 #' @noRd
 available_tutorials_for_package <- function(package) {
   an_error <- function(...) {
